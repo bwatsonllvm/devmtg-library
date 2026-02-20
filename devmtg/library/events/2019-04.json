@@ -1520,7 +1520,7 @@
       "meetingName": "2019 European LLVM Developers' Meeting",
       "meetingLocation": "Brussels, Belgium",
       "meetingDate": "April 8-9, 2019",
-      "category": "bof",
+      "category": "technical-talk",
       "title": "LLVM Numerics Improvements",
       "speakers": [
         {
