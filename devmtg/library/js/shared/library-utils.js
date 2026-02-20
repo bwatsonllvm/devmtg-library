@@ -53,6 +53,73 @@
     }
   }
 
+  const SPEAKER_AFFILIATION_HINT_RE = /\b(university|college|institute|laboratory|lab|labs|research|center|centre|foundation|inc\.?|corp\.?|corporation|company|ltd\.?|llc|gmbh|technologies|technology|systems|intel|apple|google|microsoft|meta|facebook|amazon|ibm|amd|nvidia|arm|qualcomm|oracle|xilinx|broadcom|moderator)\b/i;
+
+  function collapseWhitespace(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function looksLikeAffiliationLabel(value) {
+    const text = collapseWhitespace(value);
+    if (!text) return false;
+    if (SPEAKER_AFFILIATION_HINT_RE.test(text)) return true;
+    if (/[\/&]/.test(text)) return true;
+    if (/^[A-Z]{2,}(?:\s+[A-Za-z][\w.-]*)*$/.test(text)) return true;
+    return false;
+  }
+
+  function splitSpeakerName(rawName) {
+    const input = collapseWhitespace(rawName);
+    if (!input) return { name: '', affiliation: '' };
+
+    let name = input;
+    let extractedAffiliation = '';
+
+    const parenMatch = name.match(/^(.*?)\s*\(([^()]+)\)\s*$/);
+    if (parenMatch && looksLikeAffiliationLabel(parenMatch[2])) {
+      name = collapseWhitespace(parenMatch[1]);
+      extractedAffiliation = collapseWhitespace(parenMatch[2]);
+    }
+
+    if (!extractedAffiliation) {
+      const dashMatch = name.match(/^(.*?)\s+-\s+(.+)$/);
+      if (dashMatch && looksLikeAffiliationLabel(dashMatch[2])) {
+        name = collapseWhitespace(dashMatch[1]);
+        extractedAffiliation = collapseWhitespace(dashMatch[2]);
+      }
+    }
+
+    if (!extractedAffiliation) {
+      const commaMatch = name.match(/^(.*?),\s+(.+)$/);
+      if (commaMatch && looksLikeAffiliationLabel(commaMatch[2])) {
+        name = collapseWhitespace(commaMatch[1]);
+        extractedAffiliation = collapseWhitespace(commaMatch[2]);
+      }
+    }
+
+    return {
+      name: name || input,
+      affiliation: extractedAffiliation,
+    };
+  }
+
+  function normalizeSpeakerName(value) {
+    const parsed = splitSpeakerName(value);
+    return parsed.name || collapseWhitespace(value);
+  }
+
+  function normalizeSpeakerRecord(rawSpeaker) {
+    const speaker = (rawSpeaker && typeof rawSpeaker === 'object')
+      ? { ...rawSpeaker }
+      : { name: String(rawSpeaker || '') };
+
+    const parsed = splitSpeakerName(speaker.name);
+    const existingAffiliation = collapseWhitespace(speaker.affiliation);
+    speaker.name = parsed.name;
+    speaker.affiliation = existingAffiliation || parsed.affiliation;
+    return speaker;
+  }
+
   function normalizeTalkRecord(talk) {
     if (!talk || typeof talk !== 'object') return talk;
 
@@ -64,13 +131,19 @@
     if (!normalized.videoUrl && derivedVideoId) {
       normalized.videoUrl = `https://youtu.be/${derivedVideoId}`;
     }
+
+    normalized.speakers = Array.isArray(normalized.speakers)
+      ? normalized.speakers
+          .map(normalizeSpeakerRecord)
+          .filter((speaker) => isNonEmptyString(speaker.name))
+      : [];
+
     return normalized;
   }
 
   function normalizeTalks(rawTalks) {
     return Array.isArray(rawTalks) ? rawTalks.map(normalizeTalkRecord) : [];
   }
-
   function parseCsvParam(value) {
     if (!isNonEmptyString(value)) return [];
     return value
@@ -274,7 +347,7 @@
 
     return {
       query: isNonEmptyString(params.q) ? params.q.trim() : '',
-      speaker: isNonEmptyString(params.speaker) ? params.speaker.trim() : '',
+      speaker: isNonEmptyString(params.speaker) ? normalizeSpeakerName(params.speaker) : '',
       meeting,
       meetingName,
       categories: parseCsvParam(params.category),
@@ -298,7 +371,7 @@
     const scroll = Number(parsed.scrollY);
     return {
       query: isNonEmptyString(parsed.query) ? parsed.query : '',
-      speaker: isNonEmptyString(parsed.speaker) ? parsed.speaker : '',
+      speaker: isNonEmptyString(parsed.speaker) ? normalizeSpeakerName(parsed.speaker) : '',
       categories: Array.isArray(parsed.categories) ? parsed.categories.filter(isNonEmptyString) : [],
       years: Array.isArray(parsed.years) ? parsed.years.filter(isNonEmptyString) : [],
       tags: Array.isArray(parsed.tags) ? parsed.tags.filter(isNonEmptyString) : [],
@@ -333,6 +406,7 @@
     extractYouTubeId,
     formatMeetingDateUniversal,
     isYouTubeVideoId,
+    normalizeSpeakerName,
     normalizeTalkRecord,
     normalizeTalks,
     parseMeetingDateRange,
