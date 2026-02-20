@@ -805,9 +805,7 @@
       "videoId": "L90XghBdn94",
       "slidesUrl": "https://llvm.org/devmtg/2023-10/slides/techtalks/Vancsa-Finding_the_order_within_CHAOSS.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2023-10-029",
@@ -959,9 +957,7 @@
       "videoId": "lx9z5n6ZEIE",
       "slidesUrl": "https://llvm.org/devmtg/2023-10/slides/techtalks/Yenamandra-Romanov-LargeScaleDeploymentoflibToolingDerviedTools.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2023-10-034",
@@ -1249,9 +1245,7 @@
       "videoId": "wm1RLCuaWio",
       "slidesUrl": "https://llvm.org/devmtg/2023-10/slides/lightning-talks/04-LLVM_ Secondary Caching.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2023-10-045",
@@ -1301,9 +1295,7 @@
       "videoId": "skwbczvpL0M",
       "slidesUrl": "https://llvm.org/devmtg/2023-10/slides/lightning-talks/06-Optional-Expected-Error-OhMy.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2023-10-047",
@@ -2119,13 +2111,11 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/Dn6UnPgzMeI",
-      "videoId": "Dn6UnPgzMeI",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2023-10/slides/poster/He-SpecificCompilationFramework.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2023-10-077",

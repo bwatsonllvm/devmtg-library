@@ -1643,8 +1643,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/CPokKMqAVdY",
-      "videoId": "CPokKMqAVdY",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Lee-Safely_optimizing_casts_between_pointers_and_integers.pdf",
       "projectGithub": "",
       "tags": []
@@ -1726,8 +1726,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/-j9qjfTwt3k",
-      "videoId": "-j9qjfTwt3k",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Halkenhauser-An_alternative_OpenMP_backend_for_Polly.pdf",
       "projectGithub": "",
       "tags": [
@@ -1837,8 +1837,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/01WoFnyw6zE",
-      "videoId": "01WoFnyw6zE",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Zhou-Handling_all_Facebook_requests_with_JITed_C++_code.pdf",
       "projectGithub": "",
       "tags": []
@@ -1868,8 +1868,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/8K8ClHoZzHw",
-      "videoId": "8K8ClHoZzHw",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Wahlster-Implementing_SPMD_control_flow_in_LLVM_using_reconverging_CFG.pdf",
       "projectGithub": "",
       "tags": []
@@ -1892,8 +1892,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/k9D2yanT6Oo",
-      "videoId": "k9D2yanT6Oo",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": []
@@ -1961,8 +1961,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/sOCFYfF3iwE",
-      "videoId": "sOCFYfF3iwE",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Rocha-Function_merging_by_sequence_alignment.pdf",
       "projectGithub": "",
       "tags": []
@@ -1999,8 +1999,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/rMOfcvMYev8",
-      "videoId": "rMOfcvMYev8",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-TuanVu-Compilation_and_optimization_with_security_annotations.pdf",
       "projectGithub": "",
       "tags": [
@@ -2154,8 +2154,8 @@
         }
       ],
       "abstract": "",
-      "videoUrl": "https://youtu.be/FpCFl-JHcrs",
-      "videoId": "FpCFl-JHcrs",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Lopez-Gomez-Adding_support_for_C++_contracts_to_Clang.pdf",
       "projectGithub": "",
       "tags": [

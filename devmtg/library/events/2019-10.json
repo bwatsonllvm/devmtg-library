@@ -607,9 +607,7 @@
       "videoId": "Oj1BNoL1jpM",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2019-10-021",
@@ -774,9 +772,7 @@
       "videoId": "CzWkc_JcfS0",
       "slidesUrl": "https://llvm.org/devmtg/2019-10/slides/Doerfert-Attributor.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2019-10-027",
@@ -1042,9 +1038,7 @@
       "videoId": "HVvvCSSLiTw",
       "slidesUrl": "https://llvm.org/devmtg/2019-10/slides/Doerfert-Attributor.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2019-10-035",
@@ -1154,9 +1148,7 @@
       "videoId": "J5xExRGaIIY",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2019-10-038",
@@ -1187,9 +1179,7 @@
       "videoId": "C5Y977rLqpw",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2019-10-039",
@@ -2112,9 +2102,7 @@
       "videoId": "bdiQM0IPMio",
       "slidesUrl": "http://llvm.org/devmtg/2019-10/slides/Mittertreiner-MakingALanguageCrossPlatform.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2019-10-071",
@@ -2338,8 +2326,8 @@
         }
       ],
       "abstract": "LLVM automatically derives facts that are only used while the respective translation unit, or LLVM module, is processed (i.e. constant function, error-throwing, etc). This is true both in standard compilation but also link-time-optimization (LTO) in which the module is (partially) merged with others in the same project at link time. LTO is able to take advantage of this to optimize functions calls to outside the translation unit. However, LTO doesn't solve the problem for two reasons of practicality: LTO comes with a nontrivial compile-time investment; and many libraries upon which a program could depend, do not ship with LTO information, simply headers and binaries. In this extended abstract, we solve the problem by generating annotated versions of the source code that also include this derived information. Such an approach has the benefits of both worlds: allowing optimizations previously limited to LTO without running LTO and only providing headers. Such headers are created by modifying Clang to understand three custom attributes to represent arbitrary LLVM function attributes and modifying LLVM to emit C-compatible headers with the aforementioned attribute. Finally, we test the approach experimentally on the DOE RSBench proxy application and verify that it provides the expected speedups.",
-      "videoUrl": "https://youtu.be/elmio6AoyK0",
-      "videoId": "elmio6AoyK0",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2368,8 +2356,8 @@
         }
       ],
       "abstract": "TBD",
-      "videoUrl": "https://youtu.be/ZqEXZp9URIY",
-      "videoId": "ZqEXZp9URIY",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2394,8 +2382,8 @@
         }
       ],
       "abstract": "Using the FLiT compilation tool, we evaluate Physics-related high-performance codebases, by recompiling each one with LLVM, GCC, and Intel, at every optimization level and all sorts of FP-related flags.",
-      "videoUrl": "https://youtu.be/5Jy3VCoft58",
-      "videoId": "5Jy3VCoft58",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2421,8 +2409,8 @@
         }
       ],
       "abstract": "To contact the organizer, email Tanya Lattner",
-      "videoUrl": "https://youtu.be/9ZPQpo8QuyI",
-      "videoId": "9ZPQpo8QuyI",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2447,8 +2435,8 @@
         }
       ],
       "abstract": "Supporting scalable vector ISA such as ARM SVE, RISC-V Vector is a hot topic in LLVM. In this talk, we will introduce the scalable vector ISA in \"SX-Aurora TSUBASA\" vector computer that is only one market available computer on which the LLVM developers can play with scalable vector. The scalar LLVM backend for SX-Aurora is available, and developers can immediately try interesting topics such as design of IR and auto vectorization. We will also describe design of vector IR based on LLVM-VP and code generation technique for it.",
-      "videoUrl": "https://youtu.be/SW60DrfOuGw",
-      "videoId": "SW60DrfOuGw",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2474,8 +2462,8 @@
         }
       ],
       "abstract": "When debugging applications, whilst LLDB handles high level operations, it abstracts and offloads lower level operations to a debug server which is responsible for controlling the process or hardware. The debug server is capable of very simple operations, such as reading/writing registers and memory, starting and single-stepping the processor and reporting back when the processor halts. The two communicate with each other using a very simple text based serial protocol. The GNU debugger has long been served by a number of debug server options, including the gdbserver program for Linux class embedded systems and tools such as OpenOCD for deeply embedded systems. LLDB is not so well served, even though it uses an almost identical protocol to talk to the debug server. In most cases, the built in lldb-server program is used for this purpose, but this is ill suited for bare metal applications on embedded platforms. We present a new free and open source debug server for deeply embedded systems which fully supports LLDB. It is capable of controlling the simplest hardware, through to complex multicore heterogenous architectures. In particular, it can also run in lockstep mode, where two targets (for example an architectural model and a hardware implementation) are controlled together, to identify any points where behavior diverges.",
-      "videoUrl": "https://youtu.be/IMq3a_SSzFw",
-      "videoId": "IMq3a_SSzFw",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2501,8 +2489,8 @@
         }
       ],
       "abstract": "Using the ORC JIT APIs we have developed support for speculative compilation. This feature aims to use early compilation on dedicated additional threads to hide compilation latency in the JIT'd program without interfering with execution. Speculative decisions are made based on the branch probability of control flow graphs which is derived from static heuristics and IR instrumentation based profiling of JIT'd code. We have seen a consistent reduction in compilation overhead experienced by the execution thread. Finally, we will show our results for selected applications.",
-      "videoUrl": "https://youtu.be/MUyf2466PbI",
-      "videoId": "MUyf2466PbI",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2528,8 +2516,8 @@
         }
       ],
       "abstract": "Instrumentation tools often focus on single tasks, such as gathering performance numbers or detecting race conditions. While gathering important information for the user, these tools are not often designed to allow the end-user a more general code exploration as executed. Loom is a framework for general-purpose instrumentation and transformation of software in the LLVM intermediate representation. Loom provides both a standalone tool and a library with an API designed to allow for the implementation of custom instrumentation passes. Loom's current functionality is presented, including real-world applications for Loom in a recent research project. We present comparisons of both performance and functionality of Loom to existing instrumentation tools, including X-Ray, CSI, D-Trace and Intel Pin. Finally, we will present security use cases that are not addressed by any of these instrumentation tools and are the motivation for new Loom developments.",
-      "videoUrl": "https://youtu.be/T8qGbze3apo",
-      "videoId": "T8qGbze3apo",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
@@ -2556,8 +2544,8 @@
         }
       ],
       "abstract": "We are working on a RISCV 32 bit GPU ISA, which is an unofficial extension over RV32 having custom instructions specifically designed for GPGPU. This will help in improving programmability of the second generation design of open source RISC-V manycore processor (bjump.org/manycore).",
-      "videoUrl": "https://youtu.be/Vb4wj8aR1xI",
-      "videoId": "Vb4wj8aR1xI",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [

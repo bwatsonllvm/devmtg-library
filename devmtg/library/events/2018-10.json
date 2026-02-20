@@ -2183,42 +2183,7 @@
       "title": "NEC SX-Aurora - A Scalable Vector Architecture",
       "speakers": [
         {
-          "name": "Kazuhisa Ishizaka",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
-        },
-        {
-          "name": "Kazushi Marukawa",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
-        },
-        {
           "name": "Erich Focht",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
-        },
-        {
-          "name": "Simon Moll",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
-        },
-        {
-          "name": "Matthias Kurtenacker",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
-        },
-        {
-          "name": "Sebastian Hack",
           "affiliation": "",
           "github": "",
           "linkedin": "",
@@ -2226,8 +2191,8 @@
         }
       ],
       "abstract": "The NEC SX-Aurora Vector Engine is a vector-length parametric wide-SIMD architecture. This makes it a candidate for the Scalable Vector Extension that is currently being developed for LLVM. SX-Aurora hardware is available today and work is underway to develop an open source LLVM backend for it. The development of LLVM SVE so far has centered around the ARM SVE ISA and RVV, the RISC-V V extension. This is a proposal to introduce NEC SX-Aurora to the LLVM community and to coordinate on the development of the Scalable Vector Extension for LLVM.",
-      "videoUrl": "https://youtu.be/Ujixa4WI8ek",
-      "videoId": "Ujixa4WI8ek",
+      "videoUrl": "",
+      "videoId": "",
       "slidesUrl": null,
       "projectGithub": "",
       "tags": [
