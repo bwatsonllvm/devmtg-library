@@ -12,6 +12,7 @@ let viewMode = 'grid'; // 'grid' | 'list'
 let debounceTimer = null;
 let searchMode = 'browse'; // 'browse' | 'exact' | 'fuzzy'
 let meetingOptions = [];
+let yearFilterTouched = false; // true once user directly toggles a year chip this session
 
 const state = {
   query: '',
@@ -770,6 +771,10 @@ function initFilters() {
       const option = meetingOptions.find((item) => item.slug === slug);
       state.meeting = slug;
       state.meetingName = option ? option.name : slug;
+      if (!yearFilterTouched && state.years.size > 0) {
+        state.years.clear();
+        syncYearChipsFromState();
+      }
       renderMeetingFilterOptions();
       updateClearBtn();
       syncUrl();
@@ -823,6 +828,7 @@ function initFilters() {
           chip.classList.add('active');
           chip.setAttribute('aria-checked', 'true');
         }
+        yearFilterTouched = true;
         if (state.meeting) {
           const selectedMeeting = meetingOptions.find((item) => item.slug === state.meeting);
           if (!selectedMeeting || (state.years.size > 0 && !state.years.has(selectedMeeting.year))) {
@@ -1029,6 +1035,7 @@ function clearFilters() {
   state.activeTag = '';
   state.categories.clear();
   state.years.clear();
+  yearFilterTouched = false;
   state.hasVideo = false;
   state.hasSlides = false;
 
@@ -1111,6 +1118,7 @@ function loadStateFromUrl() {
     state.hasSlides = params.get('slides') === '1';
   }
 
+  yearFilterTouched = false;
   state.activeTag = resolveCanonicalTag(state.query);
   if (state.meeting) {
     const selectedMeeting = meetingOptions.find((item) => item.slug === state.meeting);
@@ -1823,6 +1831,7 @@ function removeYearFilter(year) {
       chip.setAttribute('aria-checked', 'false');
     }
   });
+  yearFilterTouched = true;
   if (state.meeting) {
     const selectedMeeting = meetingOptions.find((item) => item.slug === state.meeting);
     if (!selectedMeeting || (state.years.size > 0 && !state.years.has(selectedMeeting.year))) {
