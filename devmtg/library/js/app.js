@@ -1392,25 +1392,158 @@ async function copyTextToClipboard(text) {
   }
 }
 
-function initCopyLinkButton() {
-  const btn = document.getElementById('copy-link-btn');
-  if (!btn) return;
-  const defaultLabel = btn.textContent.trim() || 'Copy Link';
-  let resetTimer = null;
+function initMobileNavMenu() {
+  const menu = document.getElementById('mobile-nav-menu');
+  const toggle = document.getElementById('mobile-nav-toggle');
+  const panel = document.getElementById('mobile-nav-panel');
+  if (!menu || !toggle || !panel) return;
 
-  const setButtonState = (label, success = false) => {
-    btn.textContent = label;
-    btn.classList.toggle('is-success', success);
-    if (resetTimer) window.clearTimeout(resetTimer);
-    resetTimer = window.setTimeout(() => {
-      btn.textContent = defaultLabel;
-      btn.classList.remove('is-success');
-    }, 1400);
+  const openMenu = () => {
+    menu.classList.add('open');
+    panel.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
   };
 
-  btn.addEventListener('click', async () => {
-    const copied = await copyTextToClipboard(window.location.href);
-    setButtonState(copied ? 'Copied' : 'Copy failed', copied);
+  const closeMenu = () => {
+    menu.classList.remove('open');
+    panel.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+
+  const isInsideMenu = (target) => menu.contains(target);
+
+  closeMenu();
+
+  toggle.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (menu.classList.contains('open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  panel.addEventListener('click', (event) => {
+    const target = event.target.closest('a,button');
+    if (target) closeMenu();
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    if (!isInsideMenu(event.target)) closeMenu();
+  });
+
+  document.addEventListener('focusin', (event) => {
+    if (!isInsideMenu(event.target)) closeMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menu.classList.contains('open')) {
+      closeMenu();
+      toggle.focus();
+    }
+  });
+}
+
+function initShareMenu() {
+  const menu = document.getElementById('share-menu');
+  const toggle = document.getElementById('share-btn');
+  const panel = document.getElementById('share-panel');
+  const copyBtn = document.getElementById('share-copy-link');
+  const emailLink = document.getElementById('share-email-link');
+  const xLink = document.getElementById('share-x-link');
+  const linkedInLink = document.getElementById('share-linkedin-link');
+  if (!menu || !toggle || !panel || !copyBtn || !emailLink || !xLink || !linkedInLink) return;
+
+  const shareUrl = window.location.href;
+  const shareTitle = document.title || "LLVM Developers' Meeting Library";
+  const defaultLabel = toggle.textContent.trim() || 'Share';
+  let resetTimer = null;
+
+  emailLink.href = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(`${shareTitle} - ${shareUrl}`)}`;
+  xLink.href = `https://x.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`;
+  linkedInLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+
+  const setButtonState = (label, success = false) => {
+    toggle.textContent = label;
+    toggle.classList.toggle('is-success', success);
+    if (resetTimer) window.clearTimeout(resetTimer);
+    resetTimer = window.setTimeout(() => {
+      toggle.textContent = defaultLabel;
+      toggle.classList.remove('is-success');
+    }, 1500);
+  };
+
+  const openMenu = () => {
+    menu.classList.add('open');
+    panel.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+  };
+
+  const closeMenu = () => {
+    menu.classList.remove('open');
+    panel.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+
+  const isInsideMenu = (target) => menu.contains(target);
+
+  const shouldUseNativeShare = () => {
+    if (typeof navigator.share !== 'function') return false;
+    if (typeof window.matchMedia !== 'function') return true;
+    return window.matchMedia('(max-width: 900px)').matches;
+  };
+
+  closeMenu();
+
+  toggle.addEventListener('click', async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (shouldUseNativeShare()) {
+      try {
+        await navigator.share({ title: shareTitle, url: shareUrl });
+        setButtonState('Shared', true);
+        closeMenu();
+        return;
+      } catch (error) {
+        if (error && error.name === 'AbortError') return;
+      }
+    }
+
+    if (menu.classList.contains('open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  copyBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const copied = await copyTextToClipboard(shareUrl);
+    setButtonState(copied ? 'Link copied' : 'Copy failed', copied);
+    if (copied) closeMenu();
+  });
+
+  [emailLink, xLink, linkedInLink].forEach((link) => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    if (!isInsideMenu(event.target)) closeMenu();
+  });
+
+  document.addEventListener('focusin', (event) => {
+    if (!isInsideMenu(event.target)) closeMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menu.classList.contains('open')) {
+      closeMenu();
+      toggle.focus();
+    }
   });
 }
 
@@ -1979,7 +2112,8 @@ async function init() {
   initTheme();
   initTextSize();
   initCustomizationMenu();
-  initCopyLinkButton();
+  initMobileNavMenu();
+  initShareMenu();
 
   // View mode
   const savedView = localStorage.getItem('llvm-hub-view') || 'grid';

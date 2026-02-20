@@ -56,52 +56,74 @@
       <span>LLVM Developers' Meeting Library</span>
     </a>
 
-    <nav class="site-nav" aria-label="Main navigation">
-      <a href="index.html" class="nav-link active" aria-current="page" aria-label="Talks">
-        <span aria-hidden="true">Talks</span>
-      </a>
-      <a href="meetings.html" class="nav-link" aria-label="Meetings">
-        <span aria-hidden="true">Meetings</span>
-      </a>
-      <button class="nav-link nav-btn-about" id="about-btn" aria-label="About this site" aria-expanded="false" aria-controls="about-modal">
-        <span aria-hidden="true">About</span>
-      </button>
-    </nav>
+<nav class="site-nav" aria-label="Main navigation">
+  <a href="index.html" class="nav-link active" aria-current="page" aria-label="Talks">
+    <span aria-hidden="true">Talks</span>
+  </a>
+  <a href="meetings.html" class="nav-link" aria-label="Meetings">
+    <span aria-hidden="true">Meetings</span>
+  </a>
+  <button class="nav-link nav-btn-about" id="about-btn" data-open-about="true" aria-label="About this site" aria-expanded="false" aria-controls="about-modal">
+    <span aria-hidden="true">About</span>
+  </button>
+</nav>
 
-    <div class="header-right">
-      <button class="header-action-btn copy-link-btn" id="copy-link-btn" aria-label="Copy shareable link for this view" title="Copy link">
-        Copy Link
-      </button>
-      <div class="customization-menu" id="customization-menu">
-        <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
-          <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
-            <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
-            <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
-            <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
-          </svg>
-        </button>
-        <div class="customization-panel" id="customization-panel" hidden>
-          <div class="customization-group">
-            <label class="customization-label" for="custom-theme-select">Theme</label>
-            <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
-              <option value="system">System</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-          <div class="customization-group">
-            <label class="customization-label" for="custom-text-size-select">Text Size</label>
-            <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
-              <option value="small">Small</option>
-              <option value="default">Default</option>
-              <option value="large">Large</option>
-            </select>
-          </div>
-          <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
-        </div>
-      </div>
+<div class="mobile-nav-menu" id="mobile-nav-menu">
+  <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
+    Browse
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+  <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+    <a href="index.html" class="mobile-nav-link active" aria-current="page">Talks</a>
+    <a href="meetings.html" class="mobile-nav-link">Meetings</a>
+    <button class="mobile-nav-link mobile-nav-link--button" id="about-btn-mobile" type="button" data-open-about="true" aria-label="About this site" aria-expanded="false" aria-controls="about-modal">About</button>
+  </div>
+</div>
+
+<div class="header-right">
+  <div class="share-menu" id="share-menu">
+    <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this view" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
+      Share
+    </button>
+    <div class="share-panel" id="share-panel" hidden>
+      <button class="share-option" id="share-copy-link" type="button">Copy link</button>
+      <a class="share-option" id="share-email-link" href="#">Email</a>
+      <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+      <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
     </div>
+  </div>
+  <div class="customization-menu" id="customization-menu">
+  <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+    <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+      <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+      <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
+    </svg>
+  </button>
+  <div class="customization-panel" id="customization-panel" hidden>
+    <div class="customization-group">
+      <label class="customization-label" for="custom-theme-select">Theme</label>
+      <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+    <div class="customization-group">
+      <label class="customization-label" for="custom-text-size-select">Text Size</label>
+      <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+        <option value="small">Small</option>
+        <option value="default">Default</option>
+        <option value="large">Large</option>
+      </select>
+    </div>
+    <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
+  </div>
+</div>
+</div>
   </header>
 
   <!-- ======================================================
@@ -396,41 +418,63 @@
     </div>
   </div>
 
-  <script>
-    (function () {
-      var btn = document.getElementById('about-btn');
-      var modal = document.getElementById('about-modal');
-      var closeBtn = document.getElementById('about-modal-close');
+<script>
+  (function () {
+    var triggers = Array.prototype.slice.call(document.querySelectorAll('[data-open-about="true"]'));
+    var modal = document.getElementById('about-modal');
+    var closeBtn = document.getElementById('about-modal-close');
+    var lastTrigger = null;
 
-      function openModal() {
-        modal.hidden = false;
-        document.body.style.overflow = 'hidden';
-        btn.setAttribute('aria-expanded', 'true');
-        closeBtn.focus();
-      }
+    if (!triggers.length || !modal || !closeBtn) return;
 
-      function closeModal() {
-        modal.hidden = true;
-        document.body.style.overflow = '';
-        btn.setAttribute('aria-expanded', 'false');
-        btn.focus();
-      }
-
-      btn.addEventListener('click', function () {
-        if (modal.hidden) { openModal(); } else { closeModal(); }
+    function setExpanded(expanded) {
+      var value = expanded ? 'true' : 'false';
+      triggers.forEach(function (trigger) {
+        trigger.setAttribute('aria-expanded', value);
       });
+    }
 
-      closeBtn.addEventListener('click', closeModal);
+    function openModal(trigger) {
+      lastTrigger = trigger || null;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      setExpanded(true);
+      closeBtn.focus();
+    }
 
-      modal.addEventListener('click', function (e) {
-        if (e.target === modal) { closeModal(); }
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      setExpanded(false);
+      if (lastTrigger && document.contains(lastTrigger) && !lastTrigger.closest('[hidden]')) {
+          lastTrigger.focus();
+        } else {
+          var fallbackTrigger = document.getElementById('about-btn');
+          if (fallbackTrigger) fallbackTrigger.focus();
+        }
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        if (modal.hidden) {
+          openModal(trigger);
+        } else {
+          closeModal();
+        }
       });
+    });
 
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && !modal.hidden) { closeModal(); }
-      });
-    })();
-  </script>
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) { closeModal(); }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !modal.hidden) { closeModal(); }
+    });
+  })();
+</script>
 
   <!-- Event data loader -->
   <script src="js/events-data.js?v=20260220-11"></script>
