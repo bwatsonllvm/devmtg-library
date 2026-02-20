@@ -891,8 +891,7 @@ function initFilterAccordions() {
 
 function setFilterSidebarCollapsed(collapsed, persist = true) {
   const collapseBtn = document.getElementById('filter-collapse-btn');
-  const sidebarBody = document.getElementById('filter-sidebar-body');
-  if (!collapseBtn || !sidebarBody) return;
+  if (!collapseBtn) return;
 
   document.body.classList.toggle('filter-collapsed', collapsed);
   collapseBtn.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
@@ -906,7 +905,6 @@ function setFilterSidebarCollapsed(collapsed, persist = true) {
 
 function initFilterSidebarCollapse() {
   const collapseBtn = document.getElementById('filter-collapse-btn');
-  const sidebarBody = document.getElementById('filter-sidebar-body');
   const filterSection = document.querySelector('.filter-section');
   const mobileOpenBtn = document.getElementById('mobile-filter-open');
   const mobileCloseBtn = document.getElementById('mobile-filter-close');
