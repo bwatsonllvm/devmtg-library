@@ -1,0 +1,1840 @@
+{
+  "meeting": {
+    "slug": "2025-04",
+    "name": "2025 European LLVM Developers' Meeting",
+    "date": "April 14-16, 2025",
+    "location": "Berlin, Germany",
+    "canceled": false,
+    "talkCount": 63
+  },
+  "talks": [
+    {
+      "id": "2025-04-001",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "keynote",
+      "title": "A Recipe for Eliminating Entire Classes of Memory Safety Vulnerabilities in C and C++",
+      "speakers": [
+        {
+          "name": "Devin Coughlin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk describes a \"recipe\" for developing compiler-backed secure programming models that eliminate entire classes of memory-safety security vulnerabilities in C-based languages. We will explain how we used this recipe to design Clang's -fbounds-safety language extension, Clang's -Wunsafe-buffer-usage programming model and the Clang Static Analyzer's WebKit smart pointer checks. We will also describe the need for new Clang-based static analysis infrastructure to enable faster, lower-developer-cost adoption of these programming models.",
+      "videoUrl": "https://youtu.be/rYOCPBUM1Hs",
+      "videoId": "rYOCPBUM1Hs",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/keynote/coughlin_memory.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Security",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2025-04-002",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "keynote",
+      "title": "Deep Dive into the MLIR to LLVM IR Translation Mechanism",
+      "speakers": [
+        {
+          "name": "Alex Zinenko",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "MLIR is now an inherent part of the LLVM compiler infrastructure, but what connects the two representations? In theory, the conceptual similarity of the core representation. In practice, a highly important, yet often overlooked, module translation subsystem. This talk will present the multi-dialect translation mechanism available in MLIR to target LLVM IR, explain how to use it for a custom dialect, and argue why it may not always be the best idea. It will also discuss interoperability between MLIR and LLVM IR functions, including ABI for built-in types and calling conventions.",
+      "videoUrl": "https://youtu.be/hkgWi0oN_L8",
+      "videoId": "hkgWi0oN_L8",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/keynote/zinenko_deep_dive.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-003",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "berlin: symbol lookup error: libeurollvm.so.2025: undefined symbol: _Z11abiBreakingChange",
+      "speakers": [
+        {
+          "name": "Domján Dániel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "A lightweight talk presenting a Clang Tool that detects binary compatibility breaking changes in C++ libraries. Edit: the title is a valid error message produced by such a change",
+      "videoUrl": "https://youtu.be/u1X-l-1Gfv0",
+      "videoId": "u1X-l-1Gfv0",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/daniel_lookup.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2025-04-004",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Integration of LLVM-JIT Compiler with Interpreter and manually prepared machine code snippets",
+      "speakers": [
+        {
+          "name": "Marc Auberer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Lukas Rapp",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this talk, we will demonstrate how LLVM-based JIT compilation, an interpreter, and manually prepared machine code snippets can be integrated to create a unified SQL query execution engine with low latency and high throughput.",
+      "videoUrl": "https://youtu.be/5vQs4NJB11k",
+      "videoId": "5vQs4NJB11k",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/auberer_integration.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "JIT",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-005",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Debugging Regressions: Interactive Differential Debugging",
+      "speakers": [
+        {
+          "name": "Vipul Cariappa",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Martin Vassilev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Software systems have become increasingly complex, with millions of lines of code developed by large teams, making debugging challenging. Differential debugging, which compares a system's current version to a previous one, helps isolate regressions, but current methods lack integration between the two versions being debugged. The presentation introduces Interactive Differential Debugging (IDD), a tool that improves this process by automating the identification of irrelevant execution paths and providing tools for comparing execution states between two versions. IDD integrates with LLDB, offering a streamlined way to detect functional or performance regressions.",
+      "videoUrl": "https://youtu.be/sI-jxB0tGpM",
+      "videoId": "sI-jxB0tGpM",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/cariappa_debugging.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-006",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "How to bring your Neural Network into Upstream MLIR Dialects",
+      "speakers": [
+        {
+          "name": "Maximilian Bartel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "MLIR is a key technology in modern ML compilers, but beginners often struggle with a common question: How do I import my neural network into MLIR's upstream dialects? This talk provides a practical introduction to model import workflows, covering TensorFlow Lite to TOSA, PyTorch to MLIR via Torch-MLIR and torch.export, ONNX to MLIR using ONNX-MLIR and Torch-MLIR, and a brief discussion on JAX. Designed for newcomers, this session will walk through concrete examples to help lower the barrier to entry and clarify how ML models connect to MLIR's ecosystem.",
+      "videoUrl": "https://youtu.be/Uzct1s22BSU",
+      "videoId": "Uzct1s22BSU",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/bartel_upstream.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "Beginner",
+        "IR",
+        "ML",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-007",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "TK Wave: A Symbolic Python/MLIR DSL and Compiler for High Performance Machine Learning",
+      "speakers": [
+        {
+          "name": "Ivan Butygin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We introduce Wave, a Python DSL and compiler for high performance machine learning. Wave exposes a high level kernel language and user constraints to specify the distribution strategy for the kernel while using the existing IREE/MLIR stack for the low-level optimizations and code generation. The language and compiler make extensive use of symbolic data types to represent tensor shapes and memory access patterns that make it easier to reason about the kernel.",
+      "videoUrl": "https://youtu.be/TKMWJ3oh85E",
+      "videoId": "TKMWJ3oh85E",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/butygin_tk_wave.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "ML",
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-008",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "llvmlite: A python gym for LLVM",
+      "speakers": [
+        {
+          "name": "Yashwant Singh",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM has been used in countless innovative ways, and llvmlite is no exception. While it describes itself as \"a lightweight LLVM Python binding for writing JIT compilers,\" its potential extends far beyond JIT compilation. This talk will explore how llvmlite empowers developers to i) Build an LLVM- based compiler frontend in Python, ii) Experiment with LLVM optimizations and pipelines, and iii) Dynamically execute IR code using LLVM's JIT engine. Whether you're an LLVM expert or just getting started with compiler tooling, this session will demonstrate how Python can simplify LLVM development, making rapid prototyping and experimentation more accessible than ever.",
+      "videoUrl": "https://youtu.be/IkFun9QzrsE",
+      "videoId": "IkFun9QzrsE",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/singh_llvmlite.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "Frontend",
+        "JIT",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2025-04-009",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Making LoopAccessAnalysis more precise",
+      "speakers": [
+        {
+          "name": "Ramkumar Ramachandra",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We talk about recent and ongoing work to make LoopAccessAnalysis more precise, leading to better vectorization results.",
+      "videoUrl": "https://youtu.be/2Gs-eAKuoXQ",
+      "videoId": "2Gs-eAKuoXQ",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/ramachandra_loopaccessanalysis.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2025-04-010",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "C++ interoperability with memory-safe languages",
+      "speakers": [
+        {
+          "name": "Gabor Horvath",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "As the adoption of memory-safe languages increases and code written in memory-unsafe languages remain widespread, polyglot projects—where multiple languages interact—are becoming more common. This introduces new challenges around ensuring safe, efficient, and ergonomic interoperability between these languages. This talk aims to spark a conversation about how Clang can evolve to better facilitate interoperability with memory-safe languages.",
+      "videoUrl": "https://youtu.be/AVmgL-97kqo",
+      "videoId": "AVmgL-97kqo",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/horvath_cplusplus.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2025-04-011",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Canonicalization in MLIR - Uniqueness and Equivalence",
+      "speakers": [
+        {
+          "name": "Javed Absar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Canonicalization is a part of dialect, op and pass design in MLIR. It can be a much debated issue with numerous valid concerns. In this talk, I will present : (a) What is canonicalization and why it is important? (b) Canonicalization in MLIR i.e. how it works; interesting examples etc. (c) The different perspectives and concerns when it comes to canonicalization",
+      "videoUrl": "https://youtu.be/929JVLlbtRU",
+      "videoId": "929JVLlbtRU",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/absar_canonicalization.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-012",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Solving Compiler Puzzles: Debug Methods in MLIR",
+      "speakers": [
+        {
+          "name": "Christopher McGirr",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Debugging MLIR-based compilers can be challenging, from complex pass pipelines to subtle rewrite pattern mismatches. This talk provides a deep-dive of the essential debugging tools and techniques, helping novice developers efficiently diagnose and resolve issues. Topics include IR printing mechanisms, useful mlir-opt arguments, reproducers, LLDB integration, and MLIR Reduce.",
+      "videoUrl": "https://youtu.be/iyfW6uIRtTU",
+      "videoId": "iyfW6uIRtTU",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/mcgirr_solving_compiler_puzzlespdf.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-013",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Function multi-versioning: compiler aided function specialization with runtime dispatch.",
+      "speakers": [
+        {
+          "name": "Alexandros Lamprineas",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We have implemented a new compiler feature for AArch64 and we need user feedback to further develop/refine it. Function Multi Versioning (FMV) lets the compiler generate multiple function versions and auto-dispatch between them. This is useful when running your code on CPUs which implement optional instructions that are not guaranteed to be present on the target of compilation.",
+      "videoUrl": "https://youtu.be/k54MFimPz-A",
+      "videoId": "k54MFimPz-A",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/lamprineas_function_multi-versioning.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2025-04-014",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Bringing NVIDIA Blackwell support to LLVM and MLIR",
+      "speakers": [
+        {
+          "name": "Guray Ozen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Durgadoss Ramanathan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Pradeep Kumar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "NVIDIA's latest Blackwell architecture packs a great deal of new features for Generative AI and accelerated computing towards Tensor Compute. Platform support for these features is being actively added in upstream LLVM and MLIR projects. This comes in various forms mainly in the form of intrinsics, newer type additions to the APFloat subsystem, as well as exposing them in the NVGPU/NVVM dialects of MLIR. In the first-part of the talk, we will discuss the challenges we faced in modelling these features as intrinsics, evaluated alternatives, as well as the lessons learnt in implementing them in the NVPTX backend as well as in the NVVM Dialect. The second-part of the talk aims to provide a hands-on tutorial on writing sample kernels using NVDSL in python.",
+      "videoUrl": "https://youtu.be/qavOwgaieIo",
+      "videoId": "qavOwgaieIo",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/ozen_blackwell.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "Backend",
+        "CUDA",
+        "GPU",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-015",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Pass Plugins: Past, Present and Future",
+      "speakers": [
+        {
+          "name": "Stefan Gränitz",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM has been driving the diversification of compiler-based tools successfully for many years. And we still keep implementing everything in the monorepo upstream. This pulls more and more domain- specific features into general purpose toolchains. The advent of the RealtimeSanitizer in Clang 20 illustrates this very well. Pass plugins allow 3rd-party additions in both, LLVM and MLIR already without further bloat in our codebase. But so far their capabilities are limited. This talk will give an overview of the history and present state of pass plugins. Based on that it proposes an initial set of changes that would allow domain-specific extensions to utilize the plugin interface for sanitizer-like tasks. It's meant as a kick-off to bring interested parties to a round table and discuss how a version 2 of the plugin interface could look like.",
+      "videoUrl": "https://youtu.be/pHfYFGVFczs",
+      "videoId": "pHfYFGVFczs",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/graenitz_pass_plugins.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Dynamic Analysis",
+        "Infrastructure",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-016",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Parallelizing the LLVM Pipeline with MCLink",
+      "speakers": [
+        {
+          "name": "Weiwei Chen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Like many programming languages and compiler systems built on top of the MLIR framework with LLVM as the backend, the LLVM pipeline is the bottleneck for compilation time for the Mojo compiler. In this talk, we will discuss our approach on LLVM pipeline parallelization and a unique component called MCLink which helps to significantly reduce the time spent in LLVM of overall Mojo compilation time with no modifications in the generated code.",
+      "videoUrl": "https://youtu.be/6Ro6XTHAffY",
+      "videoId": "6Ro6XTHAffY",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/chen_parallelizing.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "MLIR",
+        "Mojo",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2025-04-017",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Devise Loop Distribution with Scalar Expansion for Enhancing Auto-Vectorization in LLVM",
+      "speakers": [
+        {
+          "name": "Hung-Ming Lai",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jenq-Kuen Lee",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this work, we present a novel approach that integrates Data Dependence Graph (DDG) and Scalar Expansion techniques into LLVM's LoopDistribute pass to enhance auto-vectorization optimization. We identify key limitations in the current LoopDistribution pass and devise a DDG-based partitioning algorithm with scalar expansion technique to enable more precise loop distribution and better vectorization opportunities. The talks will cover both the algorithm for the proposed method and a compile-time regression report for our initial implementation on benchmarks.",
+      "videoUrl": "https://youtu.be/YtTLpnK9dE8",
+      "videoId": "YtTLpnK9dE8",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/lai_loop_distribution.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Loop transformations",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-018",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "How to trust your peephole rewrites: automatically verifying them for arbitrary width!",
+      "speakers": [
+        {
+          "name": "Siddharth Bhat",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We develop algorithms to prove peephole optimzations correct in a bitwidth-generic fashion, and apply it to hacker's delight, rewrites mined from InstCombine, and challenging problems from program deobfuscation. We explain the core ideas of the algorithm, as well as the implementation, evaluation, and proofs which we performed in the Lean proof assistant. Finally, we demo the interface to the end-user, which provides a command (bv_automata) to prove theorems about bitvector rewrites that are universally quantified over the bitwidth. We hope to use our algorithm to simplify the many thousands of lines of proof in the Lean bitvector standard library, and more broadly, hope to provide effective proof automation for bitvector predicates that quantify over bitwidth.",
+      "videoUrl": "https://youtu.be/WtsInfbzxjs",
+      "videoId": "WtsInfbzxjs",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/bhat_peephole.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2025-04-019",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Accidental Dataflow Analysis: Extending the RISC-V VL Optimizer",
+      "speakers": [
+        {
+          "name": "Luke Lau",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "A tour of some recent work on the RISC-V backend, motivated by the ongoing effort to implement VL tail folding for the vector extension. We showcase an engineering-first approach to a classical compiler problem: Looking at how to identify areas of code generation to improve, how some incremental changes to the VL optimizer pass led to a form of dataflow analysis, and how we can guarantee some properties by looking at the underpinning mathematical theory.",
+      "videoUrl": "https://youtu.be/Mfb5fRSdJAc",
+      "videoId": "Mfb5fRSdJAc",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/lau_accidental_dataflow.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Optimizations",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2025-04-020",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "LLVM IR -- Past, Present and Future",
+      "speakers": [
+        {
+          "name": "Nikita Popov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM IR (intermediate representation) is the foundation that LLVM is built on. It has stood the test of time, with many fundamentals remaining unchanged since its inception. At the same time, LLVM IR is continuously evolving to enable new optimizations and keep up with changing requirements. This talk will cover some high-level design considerations, past changes to IR design, as well as changes planned for the future.",
+      "videoUrl": "https://youtu.be/gIQEZ3QJz1w",
+      "videoId": "gIQEZ3QJz1w",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/popov_llvm_ir.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2025-04-021",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Faster Compilation — Improvements in LLVM 20 and Beyond",
+      "speakers": [
+        {
+          "name": "Alexis Engelke",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Over the last two release cycles, LLVM's back-end has seen substantial performance improvements of up to 18% (-O0 x86-64). In this talk, we will describe how these improvements were achieved, summarize lessons learned from finding and implementing these optimizations, and outline paths and ideas for further compile-time reductions in the future.",
+      "videoUrl": "https://youtu.be/O1V1N9m35Xo",
+      "videoId": "O1V1N9m35Xo",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/engelke_faster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-022",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Bridging LLVM and SPIR-V for Heterogeneous Computing",
+      "speakers": [
+        {
+          "name": "Vyacheslav Levytskyy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Michal Paszkowski",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This presentation showcases the key changes to the SPIR-V backend that have solidified its position as a robust, vendor-agnostic alternative to the Khronos LLVM/SPIR-V Translator. We explore recent feature enhancements, translation time optimizations, and quality assurance processes that enabled seamless integration with other projects for heterogeneous computing workflows, including GPU programming for neural networks. Emphasis is placed on bridging the requirements of the SPIR-V standard, relevant execution environment specifications, and LLVM's code-lowering infrastructure. Key topics include technical solutions for the SPIR-V type system, module vs. function scope handling, and managing the logical layout of modules—factors essential to both performance and maintainability. We also discuss our use of TableGen-based register classes, improvements to type deduction passes, and how these strategies ensure formal correctness while expanding support for SPIR-V extensions, built-ins, and intrinsics. Finally, the talk covers insights into introducing the backend into the DPC++ compiler and OpenAI Triton backend for Intel GPUs, along with details on the broader quality assurance and integration efforts that benefit both compute-centric and graphical use cases alike.",
+      "videoUrl": "https://youtu.be/WYPqSVT8QBw",
+      "videoId": "WYPqSVT8QBw",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/levytskyy_bridging.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "Backend",
+        "GPU",
+        "IR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-023",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Instrumentor: Easily Customizable Code Instrumentation",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Kevin Sala",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The Instrumentor is a new LLVM pass that allows instrumenting code in a simple and customizable way. It can be used from within LLVM as any other pass, or from any frontend via a descriptive JSON file. The Instrumentor provides a unified and simple method for instrumenting code, reducing maintainability costs and code replication, as well as paving the path for future instrumentation- based tools. Our technical talk will cover the functionalities of the Instrumentor, which will be helpful for compiler, runtime and tool developers, and we will show its versatility through several use cases.",
+      "videoUrl": "https://youtu.be/-BU_pGuiMZc",
+      "videoId": "-BU_pGuiMZc",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/sala_instrumentor.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2025-04-024",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Advances in Function Merging and Symbolication",
+      "speakers": [
+        {
+          "name": "Alex Borcan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Kyungwoo Lee",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Optimizing code size is crucial for mobile applications, and function merging is a key technique to achieve this by consolidating identical or similar functions. Recent advancements in global function merging and identical code folding (ICF) at link time have resulted in significant size reductions, with a 3% reduction on top of the state-of-the-art global outliner and affecting 15% of total functions. Additionally, a new safe_thunks mode has been introduced to improve binary size reduction without compromising runtime safety, achieving an additional 0.45% size savings over regular safe ICF. However, function merging poses challenges for symbolication, which have been addressed through enhancements such as a new DWARF attribute and extended GSYM format support, laying the groundwork for more accurate symbolication in optimized binaries.",
+      "videoUrl": "https://youtu.be/Y-7arpmKfv4",
+      "videoId": "Y-7arpmKfv4",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/technical_talk/lee_function_merging.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Debug Information",
+        "LLD"
+      ]
+    },
+    {
+      "id": "2025-04-025",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "tutorial",
+      "title": "Adopting -fbounds-safety in practice",
+      "speakers": [
+        {
+          "name": "Henrik Olsson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Patryk Stefanski",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "fbounds-safety is a C extension in Clang for enforcing bounds safety in C, developed and deployed internally at Apple. The implementation is currently in the process of being upstreamed to mainline LLVM, and a preview is now available to try out in a fork of LLVM. While previously outline in a talk at EuroLLVM 2023, this time we will cover the practical details of -fbounds-safety adoption.",
+      "videoUrl": "https://youtu.be/rlevLn831R4",
+      "videoId": "rlevLn831R4",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/tutorial/olsonn-stefaniski_fbounds.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2025-04-026",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "tutorial",
+      "title": "How to reduce an llvm bug",
+      "speakers": [
+        {
+          "name": "Matthew Arsenault",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this talk, I will provide a walkthrough of hoƒizebw to reduce common types of bugs (primarily crashes) in the middle end and backend. This will serve as an introduction to and documentation of how to use llvm-reduce. I will discuss common roadblocks and bugs you may need to workaround (some of which should probably be fixed). I will also argue that it is long overdue to delete bugpoint and discuss how to add new reduction passes if there is time.",
+      "videoUrl": "https://youtu.be/M5eccFzr_DE",
+      "videoId": "M5eccFzr_DE",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/tutorial/arsenault_reduce.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Beginner"
+      ]
+    },
+    {
+      "id": "2025-04-027",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "tutorial",
+      "title": "An Introduction to Tensor Tiling in MLIR",
+      "speakers": [
+        {
+          "name": "Kunwar Grover",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Mahesh Ravishankar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk will introduce the audience to TileAndFuse, an algorithm in upstream MLIR which allows tiling tensor operations and fusing these tiled tensor operations. The talk will cover how the algorithm works, how users can use it in their compiler and different tiling and distribution pipelines that can be built using it.",
+      "videoUrl": "https://youtu.be/FLEb30WyroA",
+      "videoId": "FLEb30WyroA",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-028",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "What is LLDB-DAP?",
+      "speakers": [
+        {
+          "name": "Jonas Devlieghere",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "lldb-dap is a utility that allows LLDB to work with editors and IDEs that support the Debug Adapter Protocol (DAP), such as Visual Studio Code. It builds on LLDB's stable API and uses a standardized protocol to act as a bridge between LLDB and other developer tools. It is part of the Xcode developer tools and the open source Swift toolchain. It is also the name of the official VS Code extension, which is available in the Marketplace. We'll talk about the Debugger Adapter Protocol, how we support it in LLDB and where the line is between the IDE-agnostic tool and the VSCode extension.",
+      "videoUrl": "https://youtu.be/sfJkf7U2FUg",
+      "videoId": "sfJkf7U2FUg",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/devlieghere_lldb-dap.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2025-04-029",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "sd-visualiser: Interactive graph visualisation for SSA-based IRs",
+      "speakers": [
+        {
+          "name": "Alex Rice",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We present \"sd-visualiser\", an interactive graph visualisation program. It is specialised for drawing constructions common in LLVM and MLIR, such as regions, blocks, nodes with multiple ordered inputs and outputs, and SSA-values with multiple uses. We will demo the tool, and show off some of its interactive features.",
+      "videoUrl": "https://youtu.be/fMtGvyWgkXc",
+      "videoId": "fMtGvyWgkXc",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/rice_sd-visualiser.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-030",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "Beyond Pattern-based Optimization: What Can LLM Reshape Auto-vectorization?",
+      "speakers": [
+        {
+          "name": "Long Cheng",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Our talk, \"Beyond Pattern-based Optimization: What Can LLM Reshape Auto-vectorization?\", presents a novel LLM-driven framework integrated into LLVM-based compilers. By combining the semantic reasoning capbility of LLM(Deepseek V3) with the precision of traditional LLVM-based compilers, we tackle complex vectorization scenarios which is generally hard to be done for naive LLVM-based compilers. We'll share results from TSVC-2 HPC and Skia benchmarks, demonstrating significant performance improvements (1.42× to 1.91×) on SVE/Neon for Arm CPUs. Learn how this approach reshapes auto-vectorization and discover future directions for LLM-native compiler optimization.",
+      "videoUrl": "https://youtu.be/OLuzmHx0JZ4",
+      "videoId": "OLuzmHx0JZ4",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/cheng_beyond_pattern.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "Autovectorization",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-031",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "Why add an IR Reader to the llvm-debuginfo-analyzer tool?",
+      "speakers": [
+        {
+          "name": "Carlos Alberto Enciso",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The llvm-debuginfo-analyzer is a tool developed by Sony, as part of the open-source LLVM project. We have added support for the LLVM IR format. This talk will cover the benefits to allow compare IRs at different stages and determine any specific changes.",
+      "videoUrl": "https://youtu.be/jwHgqBPt_Xo",
+      "videoId": "jwHgqBPt_Xo",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/alberto_enciso_ir_reader.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Debug Information",
+        "IR"
+      ]
+    },
+    {
+      "id": "2025-04-032",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "To be OR NOT to be",
+      "speakers": [
+        {
+          "name": "Piotr Fusik",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "RISC-V has inverted bitwise operations such as \"or not\". I will present a few scenarios where they are useful and how I implemented them in LLVM.",
+      "videoUrl": "https://youtu.be/82kQW7WEQJw",
+      "videoId": "82kQW7WEQJw",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/fusik_to_be.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2025-04-033",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "Accidentally quadratic in compiler-rt/asan",
+      "speakers": [
+        {
+          "name": "Artem Pianykh",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "You build your binary with ASan, you run it... and nothing happens for 10 seconds. Without ASan the binary starts instantly. This talk will discuss how a bad asymptotic in the ODR checker's runtime code turned into a practical performance bottleneck, the fix to this problem, and the importance of tight upper bounds.",
+      "videoUrl": "https://youtu.be/S9943zeZN5c",
+      "videoId": "S9943zeZN5c",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/pianykh_quadratic.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Dynamic Analysis",
+        "Libraries",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-034",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "Dialects as a Dialect: Bringing native C++ registration to IRDL",
+      "speakers": [
+        {
+          "name": "Ivan Ho",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "IRDL allows to define dialects in MLIR in a declarative and easy to analyse fashion. While this feature set was useful on its own, IRDL-defined dialects were not tightly integrated into MLIR: it was notably impossible to realistically use C++ patterns on them, or use dialect conversion with them. We present how we created a new MLIR tool capable of generating C++ definitions for dialects, just like ODS with TableGen. With our tool, IRDL-defined dialects are now tightly integrated into MLIR and indistinguishable from ODS dialects from a user's perspective. We also present how we wish to improve the code template rendering tooling in LLVM.",
+      "videoUrl": "https://youtu.be/RzkT3ZQN8iI",
+      "videoId": "RzkT3ZQN8iI",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/ho_dialects.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-035",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "Autocheck – Clang-Based Checker for Automotive: Status and Issues",
+      "speakers": [
+        {
+          "name": "Djordje Todorovic",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Autocheck is a clang-based source code analysis tool designed to enforce compliance with the automotive standards, ensuring that critical automotive software adheres to strict safety and quality guidelines. In this talk, I will present the current status of Autocheck, discussing its implementation using the clang API, the challenges we have encountered—particularly around open-sourcing due to licensing and approval hurdles—and our roadmap for supporting both the current and new versions of the automotive standards, usage of AI, and more.",
+      "videoUrl": "https://youtu.be/ygIFcIFEBHw",
+      "videoId": "ygIFcIFEBHw",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/todorovic_autocheck.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2025-04-036",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "LLDB Statusline",
+      "speakers": [
+        {
+          "name": "Jonas Devlieghere",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Motivated by a better place to show progress events and a way to display the current state of the debugger, I extended command-line LLDB with a statusline. This dedicated area at the bottom of the screen shows things like the current target, the stop reason, and progress updates. The statusline can be customized using LLDB's format strings. I'll talk a little bit about the motivation, the implementation, and how to configure it.",
+      "videoUrl": "https://youtu.be/BQFwcsN1dJU",
+      "videoId": "BQFwcsN1dJU",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/devlieghere_lldb_statusline.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2025-04-037",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "lightning-talk",
+      "title": "Defining and verifying MLIR operations with constraints",
+      "speakers": [
+        {
+          "name": "Alex Rice",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk describes work in progress on a new constraint-based system for defining MLIR operations, which can be used to declaritely specify complex verification procedures, as well as providing inference of operation fields used when defining custom syntax of MLIR operations.",
+      "videoUrl": "https://youtu.be/ZU9Lz1Hhnwk",
+      "videoId": "ZU9Lz1Hhnwk",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/lightning_talk/rice_constraints.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-038",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "Leveraging \"nsw\" in Flang's LLVM IR Generation for Vectorization",
+      "speakers": [
+        {
+          "name": "Yusuke Minato",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Flang is the Fortran frontend in the LLVM project. Its quality and performance have been improving, so that its driver has been renamed from \"flang-new\" to \"flang\" since LLVM 20. With respect to optimizations, loop vectorization plays an important role because it can reduce the number of operations in a loop by half or more. This talk focuses on Flang's capability of vectorization in the backend and our work on \"nsw\" to improve the capability. As a result of our work, loop vectorization for Fortran has been enhanced by introducing several options related to integer overflow into Flang.",
+      "videoUrl": "https://youtu.be/n-B-JWanf6g",
+      "videoId": "n-B-JWanf6g",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/minato_nsw.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Backend",
+        "Flang",
+        "Frontend",
+        "IR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-039",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "Instruction Cache Prefetching",
+      "speakers": [
+        {
+          "name": "Oriel Avraham",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk explores the addition of a lightweight, non-blocking instruction cache prefetching mechanism tailored for simple hardware architectures without built-in I$ optimization components. We will discuss how the LLVM framework can be used to identify strategical points for prefetch insertion through static analysis.",
+      "videoUrl": "https://youtu.be/pA1JHAWplUE",
+      "videoId": "pA1JHAWplUE",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/avraham_prefetching.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2025-04-040",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "#embed in clang: one directive to embed them all",
+      "speakers": [
+        {
+          "name": "Lukas Sommer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The C23 standard defines the #embed directive – a fast, simple, tooling-friendly, cross-platform standardized way to include binary data into an application. For 40+ years of C and C++ implementations every compiler, every linker, every platform had its own little bespoke way of putting data into your executable. Since 2024 with C23 we now have #embed in clang: just one directive to (rule) embed them all. This talk will present the language feature design, feature status in clang, clang implementation details, and challenges faced during the implementation.",
+      "videoUrl": "https://youtu.be/AGgVzI6rpN0",
+      "videoId": "AGgVzI6rpN0",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/podchishchaeva_embed.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "LLD"
+      ]
+    },
+    {
+      "id": "2025-04-041",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "LLVM_ENABLE_RUNTIMES=flang-rt",
+      "speakers": [
+        {
+          "name": "Michael Kruse",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Flang's runtime library was changed from being compiled as part of Flang itself, to using LLVM's mechanism for runtime libraries. On this occasion this talk is about the motivation behind this change, design choices, the implications for users, experiences of the conversion, the purpose of runtime libraries, comparison to Clang's runtime libraries, and the differences between LLVM_ENABLE_PROJECTS and LLVM_ENABLE_RUNTIMES.",
+      "videoUrl": "https://youtu.be/AGrInJLxJ0Q",
+      "videoId": "AGrInJLxJ0Q",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/kruse_flang-rt.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Flang"
+      ]
+    },
+    {
+      "id": "2025-04-042",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "LLDB support for Propeller optimized code",
+      "speakers": [
+        {
+          "name": "Pavel Labath",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Propeller optimization boosts binary performance by up to 20%, but creates challenges for LLDB due to non-continuous functions. This talk unveils how LLDB was adapted to handle these complexities and explains how to avoid common pitfalls when writing new LLDB code.",
+      "videoUrl": "https://youtu.be/osE0UDJULoM",
+      "videoId": "osE0UDJULoM",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/labath_propeller.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB",
+        "Optimizations",
+        "PGO",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-043",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "1:N Dialect Conversion in MLIR",
+      "speakers": [
+        {
+          "name": "Matthias Springer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The dialect conversion framework, one of the core pattern drivers in MLIR, has recently been extended with 1:N support: replacing one SSA value with multiple other SSA values. This talk illustrates how to use the new infrastructure and migrate existing passes that are currently relying on workarounds",
+      "videoUrl": "https://youtu.be/UaV1TmqGLfc",
+      "videoId": "UaV1TmqGLfc",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/springer_dialect_conversion.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-044",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "Enhancing Tile & Fuse Transformation in MLIR with a Planning Interface",
+      "speakers": [
+        {
+          "name": "Aviad Cohen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The MLIR project provides a Tile & Fuse transformation to enhance memory locality by breaking down computations into smaller tiles and merging tiled loops. While the transformation utilities exist, determining optimal tiling and fusion decisions is challenging due to the lack of readily available iteration domain mapping information. This talk proposes a new interface to expose this critical mapping independent of the transformation process, enabling more informed and flexible tiling and fusion strategies. By providing a common solution, this interface aims to benefit both in-tree and out-of-tree dialects, addressing challenges faced by downstream projects and improving the broader MLIR ecosystem.",
+      "videoUrl": "https://youtu.be/Iv8HBkpHr2c",
+      "videoId": "Iv8HBkpHr2c",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/cohen_planning_interface.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-045",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "LTO/BOLT Optimised Clang/LLD AArch64 toolchain",
+      "speakers": [
+        {
+          "name": "Elvina Yakubova",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this talk, we present our work on building a faster AArch64 Clang compiler by using an advanced LTO-PGO-BOLT build. We'll show that using the default settings leads to regressions in some applications due to its training on C++ codebases. To address this issue, efforts are made to diversify the training phase and merge profiles from applications with different codebases to develop a LTO-PGO-BOLT-optimized compiler that achieves higher performance across a wider range of applications.",
+      "videoUrl": "https://youtu.be/1NEpinve_DY",
+      "videoId": "1NEpinve_DY",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/yakubova_lto_bolt.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "LLD",
+        "LTO",
+        "PGO",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-046",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "MLIR Tensor Compiler Charter Update",
+      "speakers": [
+        {
+          "name": "Rolf Morel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This will be an update on the current efforts to consolidate the MLIR charter via the recently formed design group. In the two months before EuroLLVM, we'll collect rationale, design and implementation documents, review contents and propose changes and reach a state where we'll be in a position to start making more assertive suggestions based on the community's feedback on current progress. This effort will continue upstream, in the open, but we recognize that the volume and intensity of discussions can be daunting, so we plan to present a summary of the current state and potential futures, which will lead into a round table for discussions, and follow-up forum threads to finally reach back the rest of the community.",
+      "videoUrl": "https://youtu.be/mhCs8ARhtSk",
+      "videoId": "mhCs8ARhtSk",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/morel_mlir_tensor.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-04-047",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "Accurate Runtime Performance Estimation for Predictably Training ML Guided Register Eviction Policies",
+      "speakers": [
+        {
+          "name": "Aiden Grossman",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Within this talk, we describe how we trained a machine-learned register allocation heuristic using a new trace-based runtime estimation methodology. We outline how our new performance estimation system works, our overall training process, and our results, where we were able to achieve performance gains of around 1% on some server binaries.",
+      "videoUrl": "https://youtu.be/6iQ8q3H3zI0",
+      "videoId": "6iQ8q3H3zI0",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/grossman_accurate_runtime.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-048",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "The New Premerge System",
+      "speakers": [
+        {
+          "name": "Aiden Grossman",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Here we talk through the redesigned premerge system. We show a demo of the system in action from the contributor perspective, talk through the public analytics to understand system performance and reliability, explain the SLO and on-call process, provide a technical overview of the system, and answer any questions the audience might have.",
+      "videoUrl": "https://youtu.be/6iQ8q3H3zI0",
+      "videoId": "6iQ8q3H3zI0",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/grossman_premerge_system.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Infrastructure",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-049",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "Measuring the health of the LLVM community",
+      "speakers": [
+        {
+          "name": "Jeremy Bennett",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this short talk, I look at how data mining of git activity and mailing lists can give insight to the health for a community project. The talk offers no prescriptions, its purpose is to share techniques that may be useful to the community.",
+      "videoUrl": "https://youtu.be/DmAMrE6lfl4",
+      "videoId": "DmAMrE6lfl4",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/bennett_community_health.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2025-04-050",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "Lessons learned from leveling up RISC-V LLVM testing",
+      "speakers": [
+        {
+          "name": "Alex Bradbury",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Testing is essential to ensuring the quality of LLVM's releases and maintaining its development velocity. LLVM has built an extensive collection of CI and testing infrastructure over the years, but it can be challenging to stand up builders that provide a reasonable cycle time for scenarios such as testing a backend of target configuration where high performance hardware isn't (yet) readily available. This talk describes work done to improve the situation for RISC-V, including extending support for qemu and cross-compilation scenarios, improvements to documentation and the ability to test buildbot configurations locally, balancing available compute resource vs configuration coverage vs test cycle time, and the path to providing feedback beyond functional testing (e.g. code size, performance).",
+      "videoUrl": "https://youtu.be/BYwJl181B4M",
+      "videoId": "BYwJl181B4M",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/bradbury_lessons_learned.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Performance",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2025-04-051",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "quick-talk",
+      "title": "Small Changes, Big Impact: GitHub Workflows for the LLVM Project",
+      "speakers": [
+        {
+          "name": "David Spickett",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM contributors benefit from GitHub workflows every day, but did you know that if you want to write one of your own, all you need is a GitHub account? Find out how to get started, iterate and test, then finally submit your workflow to LLVM where 100s of developers can benefit from it.",
+      "videoUrl": "https://youtu.be/8AvXA094Io8",
+      "videoId": "8AvXA094Io8",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/quick_talk/spickett_github_workflows.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2025-04-052",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Clang Static Analyzer: Supporting Multithreaded Code",
+      "speakers": [
+        {
+          "name": "Isaac Nudelman",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Writing multithreaded code is notoriously difficult. Compounding this, static analysis is not particularly effective, as most analyzers (including Clang) are limited to evaluating a single thread of symbolic execution. This talk will describe changes to the Clang Static Analyzer to support analysis across threads, the challenges with the implementation, and the resulting improvement in analysis quality for multithreaded codebases. In particular, we will show multiple bugs that can now be detected using static analysis.",
+      "videoUrl": "https://youtu.be/a6lbsWiywuM",
+      "videoId": "a6lbsWiywuM",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/student_technical_talk/nudelman_clang_static.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2025-04-053",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Integrating XRay into the HPC Tool Ecosystem",
+      "speakers": [
+        {
+          "name": "Sebastian Kreutzer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "XRay, Clang's dynamic function tracing system, offers runtime-adaptable instrumentation with minimal overhead. However, its adoption in HPC has been limited due to missing support for shared libraries (DSOs) and insufficient integration with parallel programming models like MPI and OpenMP. This talk presents our efforts to bridge these gaps, including our recently upstreamed extension for DSO instrumentation and the integration of XRay into established performance tools such as Score-P, TALP, and Extrae. Additionally, we present ideas for future work to enhance XRay's filtering mechanisms and instrumentation flexibility.",
+      "videoUrl": "https://youtu.be/atUFOPBsxAc",
+      "videoId": "atUFOPBsxAc",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/student_technical_talk/kreutzer_integrating_xray.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-054",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Automatic LLVM compiler backend generation with OpenVADL",
+      "speakers": [
+        {
+          "name": "Kevin Per",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Language (VADL) is a processor description language for rapid design space exploration. OpenVADL is the open source implementation of VADL. One of the generated artifacts is an LLVM compiler backend. This talk provides an overview of how an automatic compiler backend generator was implemented and discusses the problems and limitations it faces. More details are described in an article available at https://arxiv.org//2402.09087",
+      "videoUrl": "https://youtu.be/PGE_C70Ddx0",
+      "videoId": "PGE_C70Ddx0",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/student_technical_talk/per_openvadl.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2025-04-055",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Pattern Matching, Transform and Code Replacement using LLVM's Polly library",
+      "speakers": [
+        {
+          "name": "Benedikt Huber",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Multidimensional Match, Transform and Replace (MMTR), is an extension to LLVM's Polly library, capable of matching, transforming and replacing nested loops using the polyhedral model. According to a user defined, target specific pattern, MMTR identifies nested loops that are semantically equivalent to an optimized target implementation. On a successful match, it transforms the nested loop in such a way that it can be replaced by a call to this optimized target implementation.",
+      "videoUrl": "https://youtu.be/wqVUsbaeLlA",
+      "videoId": "wqVUsbaeLlA",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/student_technical_talk/huber_pattern_matching.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Loop transformations",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2025-04-056",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "How to Write a Scalable Compiler for an Error-Prone Quantum Computer",
+      "speakers": [
+        {
+          "name": "Kim Worrall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Quantum computers have a problem - they are susceptible to errors which can destroy the entire computation. Error correction will make quantum computers feasible, but the architecture and software needed is multi-level, distributed, data intensive, time critical, and crucially not yet integrated into a compilation pipeline. This talk presents our effort to bring together the disparate parts of the quantum ecosystem into an error-correction aware, MLIR compatible framework. In particular, we emphasise how lessons from the MLIR and LLVM community are crucial to the frameworks development, and invite the audience to get involved with quantum computing.",
+      "videoUrl": "https://youtu.be/e2WhckknJIQ",
+      "videoId": "e2WhckknJIQ",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building",
+        "MLIR",
+        "Quantum Computing"
+      ]
+    },
+    {
+      "id": "2025-04-057",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "technical-talk",
+      "title": "Optimizing FDTD Solvers for Electromagnetics Using MLIR Across Multiple Hardware Platforms",
+      "speakers": [
+        {
+          "name": "Yifei He",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Time-Domain (FDTD) method is essential for computational electromagnetics but is computationally intensive. This talk explores how MLIR optimizations—loop tiling, fusion, and vectorization— significantly accelerate FDTD simulations. We showcase MLIR's potential for efficient, portable FDTD solvers across Intel, AMD, ARM CPUs, and GPUs.",
+      "videoUrl": "https://youtu.be/Htr7n5eYQ-E",
+      "videoId": "Htr7n5eYQ-E",
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/student_technical_talk/he_optimizing_fdtd.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "GPU",
+        "IR",
+        "Loop transformations",
+        "MLIR",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2025-04-058",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "poster",
+      "title": "LLVM Support for Sub-FP8 Quantization with RISC-V Extensions for Machine Learning Models",
+      "speakers": [
+        {
+          "name": "Kathryn Chapman",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Fu-Jian Shen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Deep learning computations require substantial computational power, storage, and data transfer bandwidth. To enhance efficiency, model quantization has become essential, driving the evolution of data formats from 32-bit and 16-bit to 8-bit, 6-bit, and 4-bit in both integer and floating-point representations. Previously, at the RISC-V Summit, North America, 2024, we proposed the Sub-FP8 extension for RISC-V, a novel approach to low-precision floating-point computation. In this work, we further provide Sub-FP8 support in the LLVM backend, along with C/C++ intrinsics to facilitate its integration into machine learning workloads. In addition, a reference design of Sub-FP8 is in the on-going work to integrate with CVA6 and FPnew core from open hardware. In our reference design, we also look at the issues to integrate Sub-FP8 with risc-v vector and matrix extensions, respectively. Experiments and simulations with Toolkits such as Spike and Gem5 will be also presented.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/poster/chapman_sub_fp8.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "Backend",
+        "ML"
+      ]
+    },
+    {
+      "id": "2025-04-059",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "poster",
+      "title": "Towards Multi-Level Arithmetic Optimizations",
+      "speakers": [
+        {
+          "name": "Louis Ledoux",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Florent de Dinechin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Luc Forget",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Numerical code is usually conceived using real numbers. However, programming languages only provide constructs operating at the lower abstraction level of machine encoding arithmetic. This work introduces an MLIR dialect for representing computations on real numbers at a high abstraction level. This enables more opportunities of arithmetic optimizations than those supported by current compilers. Such optimisations are particularly relevant when compiling a high-level mathematical description to application-specific hardware, for instance in signal processing and AI acceleration.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/poster/ledoux_optimizations.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "MLIR",
+        "Optimizations",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2025-04-060",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "poster",
+      "title": "CuSan: a data race detector for CUDA based on ThreadSanitizer",
+      "speakers": [
+        {
+          "name": "Alexander Hück",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "CuSan is a tool for detecting data races between (asynchronous) CUDA calls and the host. To achieve this, we analyze and instrument CUDA API usage in the target code during compilation with Clang/LLVM to track CUDA-specific concurrency, memory accesses and synchronization semantics. Our runtime then exposes this information to ThreadSanitizer for final data race analysis.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/poster/hueck_cusan.pdf",
+      "projectGithub": "",
+      "tags": [
+        "CUDA",
+        "Clang",
+        "Dynamic Analysis"
+      ]
+    },
+    {
+      "id": "2025-04-061",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "poster",
+      "title": "SonicMachine: Scalable Architecture Description using MLIR",
+      "speakers": [
+        {
+          "name": "Daniyal Khan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "SonicMachine is a novel MLIR dialect designed to efficiently represent complex, large-scale machine learning architectures, addressing the challenges of modeling hierarchical structures and data movement in modern accelerators. By leveraging MLIR's shape system, SonicMachine enables explicit representation of interconnections and performance attributes through operations like slice, concat, and broadcast, along with builder functions and templates for scalable descriptions. This work demonstrates how compiler infrastructure can facilitate expressive, hierarchical hardware modeling, providing a foundation for analysis, optimization, and efficient system design.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/poster/khan_sonicmachine.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "ML",
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-062",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "poster",
+      "title": "Coroutines, reinforcement learning environments, typechecking, MLIR: tying them together.",
+      "speakers": [
+        {
+          "name": "Massimo Fiorovanti",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "While machine learning tools become simpler by the day, developing robust environments for those tools to operate in remains an open challenge. Rulebook is an MLIR and coroutine-based DSL aimed at building environments and simplifying their interoperability. This talk describes the issues found at the boundaries between machine learning agents and machine learning environments from a programming language perspective, how Rulebook solves them, what challenges prevent other languages from adopting the same constructs, how the language leverages LLVM and MLIR to achieve its purpose, and various tips and tricks learned from implementing co-routines on top of MLIR.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/poster/fioravanti_coroutines.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "ML",
+        "MLIR",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2025-04-063",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "poster",
+      "title": "Code-generation of highly efficient finite element operations using the MLIR compiler infrastructure",
+      "speakers": [
+        {
+          "name": "Edward Erasmie-Jones",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this poster, we present NektarIR, a work-in-progress high-level intermediate representation of high-order finite element operations, built using the MLIR compiler infrastructure. Our goal is to address the software fragmentation that arises in developing highly efficient finite element kernels for heterogeneous hardware by enabling the generation of hardware-specific JIT-compiled kernels through both MLIR and LLVM. We demonstrate the initial stages in the development of our MLIR dialect and the performance of JIT-compiled finite kernels, tested as a back-end for the Nektar++ spectral/hp element framework.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-04/slides/poster/erasmie-jones_ecode.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "IR",
+        "JIT",
+        "MLIR",
+        "Performance"
+      ]
+    }
+  ]
+}

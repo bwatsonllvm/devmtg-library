@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2021-07-02",
+    "name": "2021 LLVM @ ISC",
+    "date": "July 2-3, 2021",
+    "location": "LLVM Compiler and Tools for HPC @ ISC - Virtual",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

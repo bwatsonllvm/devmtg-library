@@ -1,0 +1,168 @@
+{
+  "meeting": {
+    "slug": "2022-08-29",
+    "name": "2022 Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+    "date": "August 29, 2022",
+    "location": "Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP - Bordeaux, France",
+    "canceled": false,
+    "talkCount": 6
+  },
+  "talks": [
+    {
+      "id": "2022-08-29-001",
+      "meeting": "2022-08-29",
+      "meetingName": "2022 Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP - Bordeaux, France",
+      "meetingDate": "August 29, 2022",
+      "category": "technical-talk",
+      "title": "A Pipeline Pattern Detection Technique in Polly",
+      "speakers": [
+        {
+          "name": "Delaram Talaashrafi",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Polly"
+      ]
+    },
+    {
+      "id": "2022-08-29-002",
+      "meeting": "2022-08-29",
+      "meetingName": "2022 Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP - Bordeaux, France",
+      "meetingDate": "August 29, 2022",
+      "category": "technical-talk",
+      "title": "Enzyme: Automatic Differentiation for Parallel Programs",
+      "speakers": [
+        {
+          "name": "William Moses",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2022-08-29-003",
+      "meeting": "2022-08-29",
+      "meetingName": "2022 Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP - Bordeaux, France",
+      "meetingDate": "August 29, 2022",
+      "category": "technical-talk",
+      "title": "The OpenMP Cluster Programming Model",
+      "speakers": [
+        {
+          "name": "Guilherme Valarini",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2022-08-29-004",
+      "meeting": "2022-08-29",
+      "meetingName": "2022 Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP - Bordeaux, France",
+      "meetingDate": "August 29, 2022",
+      "category": "technical-talk",
+      "title": "Automatic Asynchronous Execution of Synchronously Offloaded OpenMP Target Regions",
+      "speakers": [
+        {
+          "name": "Rafael Herrera",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2022-08-29-005",
+      "meeting": "2022-08-29",
+      "meetingName": "2022 Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP - Bordeaux, France",
+      "meetingDate": "August 29, 2022",
+      "category": "technical-talk",
+      "title": "ORAQL: Optimistic Responses to Alias Queries in LLVM",
+      "speakers": [
+        {
+          "name": "Jan Hueckelheim",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2022-08-29-006",
+      "meeting": "2022-08-29",
+      "meetingName": "2022 Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Second Workshop on LLVM in Parallel Processing (LLPP) @ ICPP - Bordeaux, France",
+      "meetingDate": "August 29, 2022",
+      "category": "technical-talk",
+      "title": "MARTINI: The Little Match and Replace Tool for Automatic Code Rewriting",
+      "speakers": [
+        {
+          "name": "Alister Johnson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

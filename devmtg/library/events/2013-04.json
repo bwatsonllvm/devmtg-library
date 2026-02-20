@@ -1,0 +1,813 @@
+{
+  "meeting": {
+    "slug": "2013-04",
+    "name": "2013 European LLVM Developers' Meeting",
+    "date": "April 29-30, 2013",
+    "location": "Paris, France",
+    "canceled": false,
+    "talkCount": 30
+  },
+  "talks": [
+    {
+      "id": "2013-04-001",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "keynote",
+      "title": "Optimization in LLVM - Numbers, A Case Study, and Looking Forward",
+      "speakers": [
+        {
+          "name": "Chandler Carruth",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/hmTi_FDe9pY",
+      "videoId": "hmTi_FDe9pY",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2013-04-002",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "keynote",
+      "title": "How Computers Work",
+      "speakers": [
+        {
+          "name": "Jakob Olesen",
+          "affiliation": "Apple",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/olesen-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-003",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "Towards OpenMP Support in LLVM",
+      "speakers": [
+        {
+          "name": "Andrey Bokhanko & Alexey Bataev",
+          "affiliation": "Intel",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9SkYb8YWRA8",
+      "videoId": "9SkYb8YWRA8",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/bokhanko-bataev-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-004",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "Dagger: decompilation to LLVM IR",
+      "speakers": [
+        {
+          "name": "Ahmed Bougacha",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/JoOC3vqnh-s",
+      "videoId": "JoOC3vqnh-s",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/bougacha-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2013-04-005",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "Debug Info - Status and Directions",
+      "speakers": [
+        {
+          "name": "Eric Christopher",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/EpFel-1mpK0",
+      "videoId": "EpFel-1mpK0",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/christopher-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Debug Information"
+      ]
+    },
+    {
+      "id": "2013-04-006",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "clang-format - Automatic formatting for C++",
+      "speakers": [
+        {
+          "name": "Daniel Jasper",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/5eplO4qpxCY",
+      "videoId": "5eplO4qpxCY",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/jasper-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2013-04-007",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "Performing Source-to-Source Transformations with Clang",
+      "speakers": [
+        {
+          "name": "Olaf Krzikalla",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "TU Dresden",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/IKDROD29Sz4",
+      "videoId": "IKDROD29Sz4",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/krzikalla-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2013-04-008",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "LLVM Interpreter, a key component in validation of OpenCL compilers",
+      "speakers": [
+        {
+          "name": "Oleg Maslov",
+          "affiliation": "Intel",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/XPi-74rHo9U",
+      "videoId": "XPi-74rHo9U",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/maslov-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2013-04-009",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "An experimental framework for Pragma Handling in Clang",
+      "speakers": [
+        {
+          "name": "Simone Pellegrini",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "U Innsbruck",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/wH4bP0p9qdc",
+      "videoId": "wH4bP0p9qdc",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/pellegrini-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2013-04-010",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "lld - Solving the Linking Performance Problem",
+      "speakers": [
+        {
+          "name": "Michael Spencer",
+          "affiliation": "Sony",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ONGVraXbJOo",
+      "videoId": "ONGVraXbJOo",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/spencer-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLD",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2013-04-011",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "Run-time tracking of uninitialized data with MemorySanitizer",
+      "speakers": [
+        {
+          "name": "Evgeniy Stepanov",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/2Y0T-1AB-gY",
+      "videoId": "2Y0T-1AB-gY",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/stepanov-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Dynamic Analysis"
+      ]
+    },
+    {
+      "id": "2013-04-012",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "technical-talk",
+      "title": "LLVM on IBM POWER processors: a progress report",
+      "speakers": [
+        {
+          "name": "Ulrich Weigand",
+          "affiliation": "IBM",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/eSIk4FPH7O0",
+      "videoId": "eSIk4FPH7O0",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/weigand-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-013",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "tutorial",
+      "title": "How to implement an LLVM Assembler - a tutorial",
+      "speakers": [
+        {
+          "name": "Simon Cook",
+          "affiliation": "Embecosm",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/caKpPIzqWig",
+      "videoId": "caKpPIzqWig",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/cook-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-014",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "tutorial",
+      "title": "The Clang AST - a tutorial",
+      "speakers": [
+        {
+          "name": "Manuel Klimek",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/b8JTwPz5dSw",
+      "videoId": "b8JTwPz5dSw",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/klimek-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2013-04-015",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "lightning-talk",
+      "title": "MCLinker: Design and Implementation of a Fragments-based Target-independent Linker",
+      "speakers": [
+        {
+          "name": "Diana Chen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/gISMoK3fGFg",
+      "videoId": "gISMoK3fGFg",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/chen-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLD"
+      ]
+    },
+    {
+      "id": "2013-04-016",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "lightning-talk",
+      "title": "Sambamba: A Runtime System for Online Adaptive Parallelization",
+      "speakers": [
+        {
+          "name": "Clemens Hammacher",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/GclQAaP8J-0",
+      "videoId": "GclQAaP8J-0",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/hammacher-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-017",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "lightning-talk",
+      "title": "Noise: A Clang Extension for User-Defined Optimization Strategies",
+      "speakers": [
+        {
+          "name": "Ralf Karrenberg",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/zAUxHBs3iVs",
+      "videoId": "zAUxHBs3iVs",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/karrenberg-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2013-04-018",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "lightning-talk",
+      "title": "Integrating fine-grained timing constraints into LLVM",
+      "speakers": [
+        {
+          "name": "David Lacey",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/eA-tpkYpZR8",
+      "videoId": "eA-tpkYpZR8",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/lacey-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-019",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "lightning-talk",
+      "title": "Rebuild of all Debian packages using Clang instead of gcc",
+      "speakers": [
+        {
+          "name": "Sylvestre Ledru",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/ledru-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2013-04-020",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "lightning-talk",
+      "title": "FDO-based whole program optimization in LLVM",
+      "speakers": [
+        {
+          "name": "Diego Novillo",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/vnL4rqE0XtQ",
+      "videoId": "vnL4rqE0XtQ",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/novillo-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LTO",
+        "Optimizations",
+        "PGO"
+      ]
+    },
+    {
+      "id": "2013-04-021",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "lightning-talk",
+      "title": "Efficient audio signal processing using LLVM and Haskell",
+      "speakers": [
+        {
+          "name": "Henning Thielemann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/0KPuzXoAwfQ",
+      "videoId": "0KPuzXoAwfQ",
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/thielemann-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-022",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "Improving Machine Code Generation Quality by Interfacing VPO with LLVM",
+      "speakers": [
+        {
+          "name": "Ryan Baird",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/baird-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2013-04-023",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "MCLinker: Design and Implementation of a Fragments-based Target-independent Linker",
+      "speakers": [
+        {
+          "name": "Diana Chen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/chen-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLD"
+      ]
+    },
+    {
+      "id": "2013-04-024",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "Code Editing in Local Style",
+      "speakers": [
+        {
+          "name": "Peter Conn",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/conn-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-025",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "ENHANCE - Enabling heterogeneous hardware acceleration using novel programming and scheduling models",
+      "speakers": [
+        {
+          "name": "Dustin Feld",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/feld-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-026",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "Sambamba: A Runtime System for Online Adaptive Parallelization",
+      "speakers": [
+        {
+          "name": "Clemens Hammacher",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/hammacher-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2013-04-027",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "OJIT: A novel secure remote execution technology by obfuscated Just-In-Time compilation",
+      "speakers": [
+        {
+          "name": "Muhammad Hataba",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/hataba-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2013-04-028",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "LLVM backend for TILE64",
+      "speakers": [
+        {
+          "name": "Dávid Juhász",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/juhasz-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2013-04-029",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "Noise: A Clang Extension for User-Defined Optimization Strategies",
+      "speakers": [
+        {
+          "name": "Ralf Karrenberg",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/karrenberg-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2013-04-030",
+      "meeting": "2013-04",
+      "meetingName": "2013 European LLVM Developers' Meeting",
+      "meetingLocation": "Paris, France",
+      "meetingDate": "April 29-30, 2013",
+      "category": "poster",
+      "title": "LLVM IR editor plugin for Eclipse",
+      "speakers": [
+        {
+          "name": "Ayal Zaks",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2013-04/zaks-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    }
+  ]
+}

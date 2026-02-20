@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2016-02",
+    "name": "2016 Clang/LLVM Sprint",
+    "date": "February 6-7, 2016",
+    "location": "Clang/LLVM Sprint Weekend hosted by Bloomberg, New York, NY, USA and London, UK",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

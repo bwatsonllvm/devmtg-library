@@ -1,0 +1,357 @@
+{
+  "meeting": {
+    "slug": "2016-09",
+    "name": "2016 LLVM Cauldron",
+    "date": "September 8, 2016",
+    "location": "LLVM Cauldron, Hebden Bridge, UK",
+    "canceled": false,
+    "talkCount": 13
+  },
+  "talks": [
+    {
+      "id": "2016-09-001",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "keynote",
+      "title": "Optimizing with persistent data structures",
+      "speakers": [
+        {
+          "name": "Andy Wingo",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/KYoDyM6l_5s",
+      "videoId": "KYoDyM6l_5s",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Wingo-PersistentDataStructures.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-002",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "technical-talk",
+      "title": "LLV8: Adding LLVM as an extra JIT tier to V8 JavaScript engine",
+      "speakers": [
+        {
+          "name": "Dmitry Melnik",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/0YobtXN6oQI",
+      "videoId": "0YobtXN6oQI",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Melnik-LLV8.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2016-09-003",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "technical-talk",
+      "title": "Using LLVM and Sulong for Language C Extensions",
+      "speakers": [
+        {
+          "name": "Chris Seaton",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/bJzMfYX6n9A",
+      "videoId": "bJzMfYX6n9A",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Seaton-Sulong.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-004",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "technical-talk",
+      "title": "Scheduler for in-order processors - what's present and what's missing in LLVM?",
+      "speakers": [
+        {
+          "name": "Javed Absar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/J0AtVzvPp_Y",
+      "videoId": "J0AtVzvPp_Y",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Absar-SchedulingInOrder.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-005",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "technical-talk",
+      "title": "An Altruistic Processor - AAP",
+      "speakers": [
+        {
+          "name": "Simon Cook",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ed Jones",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Ad-zuxedEZQ",
+      "videoId": "Ad-zuxedEZQ",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Jones-AAP.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-006",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "technical-talk",
+      "title": "Syntax macros - a case study in extending Clang",
+      "speakers": [
+        {
+          "name": "Norman Rink",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/kG6kpQ-Deak",
+      "videoId": "kG6kpQ-Deak",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Rink-SyntaxMacros.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2016-09-007",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "technical-talk",
+      "title": "Accelerating Python code with Numba and LLVM",
+      "speakers": [
+        {
+          "name": "Graham Markall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/d8LnP4vU2CA",
+      "videoId": "d8LnP4vU2CA",
+      "slidesUrl": "http://gmarkall.github.io/tutorials/llvm-cauldron-2016/",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-008",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "technical-talk",
+      "title": "How to add a new target to LLD",
+      "speakers": [
+        {
+          "name": "Peter Smith",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/FIXaeRU31Ww",
+      "videoId": "FIXaeRU31Ww",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Smith-NewLLDTarget.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLD"
+      ]
+    },
+    {
+      "id": "2016-09-009",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "lightning-talk",
+      "title": "Speeding up query execution in PostgreSQL using LLVM JIT",
+      "speakers": [
+        {
+          "name": "Dmitry Melnik",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/NzOpNh_msng",
+      "videoId": "NzOpNh_msng",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Melnik-PostgreSQLLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2016-09-010",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "lightning-talk",
+      "title": "MyStorm",
+      "speakers": [
+        {
+          "name": "Ken Boak",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/J1saqOhbRmA",
+      "videoId": "J1saqOhbRmA",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Boak-MyStorm.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-011",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "lightning-talk",
+      "title": "Can we improve the experience of first-time LLVM contributors?",
+      "speakers": [
+        {
+          "name": "Alex Bradbury",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/32fmbEI9WrM",
+      "videoId": "32fmbEI9WrM",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Bradbury-ContributorExperience.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-012",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "lightning-talk",
+      "title": "AAPSim - Building a simulator using LLVM MC",
+      "speakers": [
+        {
+          "name": "Simon Cook",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/YdyZDZYBd-s",
+      "videoId": "YdyZDZYBd-s",
+      "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Cook-AAPSim.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-09-013",
+      "meeting": "2016-09",
+      "meetingName": "2016 LLVM Cauldron",
+      "meetingLocation": "LLVM Cauldron, Hebden Bridge, UK",
+      "meetingDate": "September 8, 2016",
+      "category": "lightning-talk",
+      "title": "Generating Python & Ruby bindings from C++",
+      "speakers": [
+        {
+          "name": "Jonathan B Coe",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://github.com/jbcoe/C_API_generation/blob/master/demos/LLVM-Cauldron.ipynb",
+      "projectGithub": "",
+      "tags": [
+        "Programming Languages"
+      ]
+    }
+  ]
+}

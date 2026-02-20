@@ -1,0 +1,153 @@
+{
+  "meeting": {
+    "slug": "2015-02-07",
+    "name": "2015 LLVM Tutorial @ CGO",
+    "date": "February 7, 2015",
+    "location": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+    "canceled": false,
+    "talkCount": 7
+  },
+  "talks": [
+    {
+      "id": "2015-02-07-001",
+      "meeting": "2015-02-07",
+      "meetingName": "2015 LLVM Tutorial @ CGO",
+      "meetingLocation": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+      "meetingDate": "February 7, 2015",
+      "category": "tutorial",
+      "title": "Introduction to the LLVM Project",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Beginner"
+      ]
+    },
+    {
+      "id": "2015-02-07-002",
+      "meeting": "2015-02-07",
+      "meetingName": "2015 LLVM Tutorial @ CGO",
+      "meetingLocation": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+      "meetingDate": "February 7, 2015",
+      "category": "tutorial",
+      "title": "Getting started hacking on LLVM and Clang",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "Clang"
+      ]
+    },
+    {
+      "id": "2015-02-07-003",
+      "meeting": "2015-02-07",
+      "meetingName": "2015 LLVM Tutorial @ CGO",
+      "meetingLocation": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+      "meetingDate": "February 7, 2015",
+      "category": "tutorial",
+      "title": "The middle end optimizer",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2015-02-07-004",
+      "meeting": "2015-02-07",
+      "meetingName": "2015 LLVM Tutorial @ CGO",
+      "meetingLocation": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+      "meetingDate": "February 7, 2015",
+      "category": "tutorial",
+      "title": "Diagnosing and fixing bugs in the middle end optimizer",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2015-02-07-005",
+      "meeting": "2015-02-07",
+      "meetingName": "2015 LLVM Tutorial @ CGO",
+      "meetingLocation": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+      "meetingDate": "February 7, 2015",
+      "category": "tutorial",
+      "title": "Adding optimization passes to the middle end",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2015-02-07-006",
+      "meeting": "2015-02-07",
+      "meetingName": "2015 LLVM Tutorial @ CGO",
+      "meetingLocation": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+      "meetingDate": "February 7, 2015",
+      "category": "tutorial",
+      "title": "Overview of the LLVM Code Generator",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-02-07-007",
+      "meeting": "2015-02-07",
+      "meetingName": "2015 LLVM Tutorial @ CGO",
+      "meetingLocation": "LLVM Tutorial at CGO, San Francisco, CA, USA",
+      "meetingDate": "February 7, 2015",
+      "category": "tutorial",
+      "title": "Extended Q&A",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

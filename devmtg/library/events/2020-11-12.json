@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2020-11-12",
+    "name": "2020 LLVM-HPC @ SC20",
+    "date": "November 12, 2020",
+    "location": "LLVM-HPC @ SC20, virtual",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

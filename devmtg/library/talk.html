@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      try {
+        var storedTheme = localStorage.getItem('llvm-hub-theme-preference');
+        var themePreference = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+          ? storedTheme
+          : 'system';
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var resolvedTheme = themePreference === 'system' ? (prefersDark ? 'dark' : 'light') : themePreference;
+        var storedTextSize = localStorage.getItem('llvm-hub-text-size');
+        var textSize = (storedTextSize === 'small' || storedTextSize === 'large') ? storedTextSize : 'default';
+
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
+        document.documentElement.setAttribute('data-theme-preference', themePreference);
+        if (textSize === 'default') {
+          document.documentElement.removeAttribute('data-text-size');
+        } else {
+          document.documentElement.setAttribute('data-text-size', textSize);
+        }
+        document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f6f8fa';
+      } catch (_) {
+        var fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var fallbackTheme = fallbackDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', fallbackTheme);
+        document.documentElement.setAttribute('data-theme-preference', 'system');
+        document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#000000' : '#f6f8fa';
+      }
+    })();
+  </script>
+  <style>
+    html { background: #f6f8fa; }
+    html[data-theme="dark"] { background: #000000; }
+    body { background: transparent; }
+  </style>
+  <title>Talk — LLVM Developers' Meeting Library</title>
+  <meta name="description" content="Talk details from the LLVM Developers' Meeting.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Skip link for keyboard/screen reader users -->
+  <a href="#talk-detail-root" class="skip-link">Skip to main content</a>
+
+  <!-- ======================================================
+       Site Header
+  ====================================================== -->
+  <header class="site-header">
+    <a href="index.html" class="site-logo" aria-label="LLVM Developers' Meeting Library home">
+      <img src="images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
+      <span>LLVM Developers' Meeting Library</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html" class="nav-link" aria-label="Talks">
+        <span aria-hidden="true">Talks</span>
+      </a>
+      <a href="meetings.html" class="nav-link" aria-label="Meetings">
+        <span aria-hidden="true">Meetings</span>
+      </a>
+      <button class="nav-link nav-btn-about" id="about-btn" aria-label="About this site" aria-expanded="false" aria-controls="about-modal">
+        <span aria-hidden="true">About</span>
+      </button>
+    </nav>
+
+    <div class="header-right">
+      <button class="header-action-btn copy-link-btn" id="copy-link-btn" aria-label="Copy link to this page" title="Copy link">
+        Copy Link
+      </button>
+      <div class="customization-menu" id="customization-menu">
+        <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+          <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
+          </svg>
+        </button>
+        <div class="customization-panel" id="customization-panel" hidden>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-theme-select">Theme</label>
+            <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-text-size-select">Text Size</label>
+            <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+              <option value="small">Small</option>
+              <option value="default">Default</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================
+       Talk Detail (populated by JS)
+  ====================================================== -->
+  <main id="talk-detail-root" tabindex="-1">
+    <div class="loading-state">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading talk…</p>
+    </div>
+  </main>
+
+  <!-- ======================================================
+       About Modal
+  ====================================================== -->
+  <div class="about-modal-overlay" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="modal-about-heading" hidden>
+    <div class="about-modal-panel">
+      <button class="about-modal-close" id="about-modal-close" aria-label="Close about panel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="about-modal-inner">
+
+        <section class="info-section" aria-labelledby="modal-about-heading">
+          <div class="info-section-icon" aria-hidden="true">
+            <img src="images/llvm-logo.png" alt="">
+          </div>
+          <div class="info-section-body">
+            <h2 id="modal-about-heading">About This Website</h2>
+            <p>
+              This website is a searchable index of <strong>LLVM Developers' Meeting</strong> talks and meeting
+              metadata from 2007 to present. It brings titles, speakers, abstracts, tags, and links to videos
+              or slides into one place so you can quickly find sessions by topic, person, or year.
+            </p>
+            <p>
+              Use the search bar, filters, and meetings view to explore the archive. URLs capture active
+              filters, so specific views can be bookmarked or shared. Talk detail pages include full abstracts
+              and direct links to available resources.
+            </p>
+            <p>
+              Data is compiled from the public meeting archive and packaged for fast browsing in this static
+              interface. For canonical listings and announcements, see the
+              <a href="https://llvm.org/devmtg/" target="_blank" rel="noopener">official meeting archive</a>.
+            </p>
+          </div>
+        </section>
+
+        <section class="info-section" aria-labelledby="modal-howto-heading">
+          <div class="info-section-icon info-section-icon--howto" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </div>
+          <div class="info-section-body">
+            <h2 id="modal-howto-heading">How to Use This Site</h2>
+            <ul class="howto-list">
+              <li>
+                <strong>Search</strong> — Type any keyword in the search box to find talks by title, speaker,
+                or topic. Quoted phrases (e.g. <code>"register allocation"</code>) are treated as exact matches.
+                Results are ranked by relevance and recency.
+              </li>
+              <li>
+                <strong>Filter by category</strong> — Use the chip strip below the search box to narrow results
+                to Keynotes, Technical Talks, Tutorials, Lightning Talks, and more.
+              </li>
+              <li>
+                <strong>Filter by year</strong> — Click a year chip to show only talks from that meeting year.
+              </li>
+              <li>
+                <strong>Has Video / Has Slides</strong> — Toggle these to surface only talks with a recording
+                or slide deck available.
+              </li>
+              <li>
+                <strong>Browse meetings</strong> — Visit the <a href="meetings.html">Meetings</a> page for a
+                full grid of every LLVM Developers' Meeting since 2007, with talk counts. Click any meeting
+                to browse all of its talks.
+              </li>
+              <li>
+                <strong>Talk detail page</strong> — Click any talk card to open a detail view with the full
+                abstract, embedded video (when available), slides link, and related talks from the same
+                meeting or category.
+              </li>
+              <li>
+                <strong>Shareable links</strong> — Active search queries and filters are reflected in the URL,
+                so you can bookmark or share any filtered view directly.
+              </li>
+              <li>
+                <strong>Display settings</strong> — Use the sliders menu in the top-right corner to set
+                theme (System, Light, or Dark) and text size (Small, Default, or Large). Preferences are
+                saved across visits.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('about-btn');
+      var modal = document.getElementById('about-modal');
+      var closeBtn = document.getElementById('about-modal-close');
+
+      function openModal() {
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        btn.setAttribute('aria-expanded', 'true');
+        closeBtn.focus();
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.focus();
+      }
+
+      btn.addEventListener('click', function () {
+        if (modal.hidden) { openModal(); } else { closeModal(); }
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) { closeModal(); }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.hidden) { closeModal(); }
+      });
+    })();
+  </script>
+
+  <!-- Event data loader -->
+  <script src="js/events-data.js?v=20260220-11"></script>
+  <script src="js/shared/library-utils.js?v=20260220-11"></script>
+  <script src="js/talk.js?v=20260220-11"></script>
+</body>
+</html>

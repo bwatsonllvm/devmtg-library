@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2014-11-17",
+    "name": "2014 LLVM-HPC @ SC14",
+    "date": "November 17, 2014",
+    "location": "LLVM-HPC @ SC14, New Orleans, LA, USA",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

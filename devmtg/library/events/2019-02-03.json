@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2019-02-03",
+    "name": "2019 LLVM @ FOSDEM",
+    "date": "February 3, 2019",
+    "location": "FOSDEM, Brussels, Belgium",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

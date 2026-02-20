@@ -1,0 +1,907 @@
+{
+  "meeting": {
+    "slug": "2014-04",
+    "name": "2014 European LLVM Developers' Meeting",
+    "date": "April 7-8, 2014",
+    "location": "Edinburgh, Scotland",
+    "canceled": false,
+    "talkCount": 31
+  },
+  "talks": [
+    {
+      "id": "2014-04-001",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "Conference Opening & Welcome",
+      "speakers": [
+        {
+          "name": "Tobias Edler von Koch",
+          "affiliation": "University of Edinburgh",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Kp6uVAcjRFw",
+      "videoId": "Kp6uVAcjRFw",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/WelcomeTalk.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-002",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "keynote",
+      "title": "Passes in LLVM, Part 1",
+      "speakers": [
+        {
+          "name": "Chandler Carruth",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/rY02LT08-J8",
+      "videoId": "rY02LT08-J8",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Passes.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-003",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "keynote",
+      "title": "What's new in C++14, and how you can take advantage of it",
+      "speakers": [
+        {
+          "name": "Marshall Clow",
+          "affiliation": "Qualcomm",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/hsinAb_R6lo",
+      "videoId": "hsinAb_R6lo",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Slides%20-%20Marshall.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C++"
+      ]
+    },
+    {
+      "id": "2014-04-004",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "LTO: History and work to be done",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9XUQ-1pI5_c",
+      "videoId": "9XUQ-1pI5_c",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/LTO-slides.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LTO"
+      ]
+    },
+    {
+      "id": "2014-04-005",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "Efficient code generation for weakly ordered architectures",
+      "speakers": [
+        {
+          "name": "Reinoud Elhorst",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Mark Batty",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "David Chisnall",
+          "affiliation": "University of Cambridge",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Reinoud-EuroLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2014-04-006",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "How to build LLVM in under ten seconds",
+      "speakers": [
+        {
+          "name": "Andy Thomason",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Goldsmiths",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Tenseconds.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner"
+      ]
+    },
+    {
+      "id": "2014-04-007",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "A new ABI for little-endian PowerPC64: design and implementation",
+      "speakers": [
+        {
+          "name": "Ulrich Weigand",
+          "affiliation": "IBM Linux Technology Center",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/zikDZ1Fi-qw",
+      "videoId": "zikDZ1Fi-qw",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Euro-LLVM-2014-Weigand.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-008",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "Portable Native Client. Fast, Secure, Simple: Pick Three.",
+      "speakers": [
+        {
+          "name": "JF Bastien",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/iYBSgdvv0BY",
+      "videoId": "iYBSgdvv0BY",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/PortableNativeClient.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-009",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "Branching in Data-Parallel Languages using Predication with LLVM",
+      "speakers": [
+        {
+          "name": "Marcello Maggioni",
+          "affiliation": "Codeplay Software",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/xh6RWegAza0",
+      "videoId": "xh6RWegAza0",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/pred_presentation.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-010",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "clang-tidy - Lint-like checks and beyond",
+      "speakers": [
+        {
+          "name": "Daniel Jasper",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/clang-tidy%20LLVM%20Euro%202014.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2014-04-011",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "PlayStation(R)4 CPU Toolchain: Launch Post-mortem",
+      "speakers": [
+        {
+          "name": "Greg Bedwell",
+          "affiliation": "SN Systems Ltd/Sony Computer Entertainment",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/zNqueISGrd8",
+      "videoId": "zNqueISGrd8",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/GBedwell_PS4CPUToolchain_EuroLLVM2014_distribution.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-012",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "Fabric Engine and KL: LLVM for 3D Digital Content Creation",
+      "speakers": [
+        {
+          "name": "Andrew MacPherson",
+          "affiliation": "Fabric Software Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/7zuuE0BuhYw",
+      "videoId": "7zuuE0BuhYw",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/FabricEngine-LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-013",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "BEAMJIT: An LLVM based just-in-time compiler for Erlang",
+      "speakers": [
+        {
+          "name": "Frej Drejhammar",
+          "affiliation": "Swedish Institute of Computer Science",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/oF3qYFh_xuI",
+      "videoId": "oF3qYFh_xuI",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/drejhammar.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2014-04-014",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "Custom Alias-analysis in an LLVM-backed region-based Dynamic Binary Translator",
+      "speakers": [
+        {
+          "name": "Tom Spink",
+          "affiliation": "University of Edinburgh",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/D8O-pVgyX_8",
+      "videoId": "D8O-pVgyX_8",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Spink.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-015",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "technical-talk",
+      "title": "clang-cl: what it is, how it works, and how to use it",
+      "speakers": [
+        {
+          "name": "Hans Wennborg",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/PX3UOXAlk0A",
+      "videoId": "PX3UOXAlk0A",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/clang-cl.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2014-04-016",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "tutorial",
+      "title": "Refactoring a large C++ codebase using clang",
+      "speakers": [
+        {
+          "name": "Nick Lewycky",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/NickRefactoring.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2014-04-017",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "tutorial",
+      "title": "Building an LLVM Backend",
+      "speakers": [
+        {
+          "name": "Fraser Cormack",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Pierre-André Saulais",
+          "affiliation": "Codeplay Software",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Building%20an%20LLVM%20backend.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2014-04-018",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Detecting \"container overflow\" bugs",
+      "speakers": [
+        {
+          "name": "Kostya Serebryany",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/EuroLLVM%202014%20--%20container%20overflow.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-019",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "3-bit Waymarking",
+      "speakers": [
+        {
+          "name": "Gabor Greif",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/waymark.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-020",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Targeting HHVM's JIT compiler to LLVM",
+      "speakers": [
+        {
+          "name": "Jason Evans",
+          "affiliation": "Facebook",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/HHVM_2014.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2014-04-021",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Async Magic - std::async in C++ and its consequences for optimizations",
+      "speakers": [
+        {
+          "name": "Tobias Rieger",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "HU Berlin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/async%20magic%20presentation.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2014-04-022",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "\"AsanCoverage\" -- coverage combined with AddressSanitizer",
+      "speakers": [
+        {
+          "name": "Kostya Serebryany",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/EuroLLVM'14%20--%20ASan%20%2B%20Coverage.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Dynamic Analysis"
+      ]
+    },
+    {
+      "id": "2014-04-023",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "LLVM AArch64 buildbot",
+      "speakers": [
+        {
+          "name": "Gabor Ballabas",
+          "affiliation": "University of Szeged",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hungary",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/aarch64_buildbot.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-024",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Fast JIT code generation",
+      "speakers": [
+        {
+          "name": "Tilmann Scheller",
+          "affiliation": "Samsung Electronics",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/fast-jit-code-generation.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "JIT"
+      ]
+    },
+    {
+      "id": "2014-04-025",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "OCLAcc - OpenCL for FPGA-Accelerators",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/poster_oclacc.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2014-04-026",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "LLVM Data Structures",
+      "speakers": [
+        {
+          "name": "Marcello Maggioni",
+          "affiliation": "Codeplay Software",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/data_structure_llvm.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2014-04-027",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Which targets does clang support?",
+      "speakers": [
+        {
+          "name": "Jonathan Roelofs",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "CodeSourcery / Mentor Graphics",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/2014-3-31_ClangTargetSupport_LighteningTalk.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2014-04-028",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Intel Clang-Based C++ Compiler",
+      "speakers": [
+        {
+          "name": "Andrey Bokhanko",
+          "affiliation": "Intel",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/ClangIntel.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2014-04-029",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Clang as a C++ front-end for Frama-C and VeriFast",
+      "speakers": [
+        {
+          "name": "Virgile Prevosto",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Franck Védrine",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "CEA LIST",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Bart Jacobs",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Gijs van Spauwen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "KU Leuven",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/FramaC.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2014-04-030",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "DBILL: An Efficient and Retargetable Dynamic Binary Instrumentation Framework using LLVM Backend",
+      "speakers": [
+        {
+          "name": "Yi-Hong Lyu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Institute of Information Science",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Academia Sinica",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/DBILL_poster.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2014-04-031",
+      "meeting": "2014-04",
+      "meetingName": "2014 European LLVM Developers' Meeting",
+      "meetingLocation": "Edinburgh, Scotland",
+      "meetingDate": "April 7-8, 2014",
+      "category": "lightning-talk",
+      "title": "Machine Guided Energy Efficient Compilation (MAGEEC) and LLVM",
+      "speakers": [
+        {
+          "name": "Simon Cook",
+          "affiliation": "Embecosm",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/mageec-poster.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

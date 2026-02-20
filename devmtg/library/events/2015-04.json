@@ -1,0 +1,989 @@
+{
+  "meeting": {
+    "slug": "2015-04",
+    "name": "2015 European LLVM Developers' Meeting",
+    "date": "April 13-14, 2015",
+    "location": "London, UK",
+    "canceled": false,
+    "talkCount": 30
+  },
+  "talks": [
+    {
+      "id": "2015-04-001",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "LLVM-based AOT JS Compiler",
+      "speakers": [
+        {
+          "name": "Dmitry Borisenkov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-04-002",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "Building Clang/LLVM efficiently",
+      "speakers": [
+        {
+          "name": "Tilmann Scheller",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2015-04-003",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "SPIR: Standard Portable Intermediate Representation",
+      "speakers": [
+        {
+          "name": "Tilmann Scheller",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2015-04-004",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "Libclang Integration in the KDevelop IDE",
+      "speakers": [
+        {
+          "name": "Kevin Funk",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "Clang"
+      ]
+    },
+    {
+      "id": "2015-04-005",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "LLVM Inliner Enhancement",
+      "speakers": [
+        {
+          "name": "Jiangning Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Pablo Barrio",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Kevin Qin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2015-04-006",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "Proposing LLVM Extensions for Generating Native Code Fragments",
+      "speakers": [
+        {
+          "name": "Frej Drejhammar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Lars Rasmusson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-04-007",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "Flexible Runtime Testing of LLVM on Embedded Systems",
+      "speakers": [
+        {
+          "name": "Edward Jones",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Embedded",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2015-04-008",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "SymEngine Symbolic Execution of OpenCL Kernels",
+      "speakers": [
+        {
+          "name": "Alberto Magni",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2015-04-009",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "How to vectorize interleaved memory access",
+      "speakers": [
+        {
+          "name": "Hao Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "James Molloy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jiangning Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2015-04-010",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "Recursion inlining in LLVM",
+      "speakers": [
+        {
+          "name": "Pablo Barrio",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Chandler Carruth",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "James Molloy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2015-04-011",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "Verifying Code Generation is unaffected by -g/-S",
+      "speakers": [
+        {
+          "name": "Russell Gallop",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2015-04-012",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "Compiler aided optimization of the pimpl-idiom.",
+      "speakers": [
+        {
+          "name": "Alexander Richardson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "David Chisnall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2015-04-013",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "lightning-talk",
+      "title": "How fast goes the light?",
+      "speakers": [
+        {
+          "name": "Arnaud de Grandmaison",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-04-014",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "bof",
+      "title": "Debug Info BoF",
+      "speakers": [
+        {
+          "name": "Eric Christopher",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Debug Information"
+      ]
+    },
+    {
+      "id": "2015-04-016",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "Loop Vectorization: How to vectorize interleaved memory access?",
+      "speakers": [
+        {
+          "name": "Hao Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "James Molloy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jiangning Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2015-04-017",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "LLVM Inliner Enhancements",
+      "speakers": [
+        {
+          "name": "Jiangning Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Pablo Barrio",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Kevin Qin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2015-04-018",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "Supporting New Binary Formats in LLVM",
+      "speakers": [
+        {
+          "name": "Javed Absar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-04-019",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "Verifying Code Generation Is Unaffected By -g / -S",
+      "speakers": [
+        {
+          "name": "Russell Gallop",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2015-04-020",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "Hoisting Julia Array Bounds Checks out of Loop Nests using Polly",
+      "speakers": [
+        {
+          "name": "Jan Soendermann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Tobias Grosser",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "David Chisnall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Loop transformations",
+        "Polly",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2015-04-021",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "LLVM for Deeply Embedded Systems",
+      "speakers": [
+        {
+          "name": "Simon Cook",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jeremy Bennett",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Edward Jones",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Embedded"
+      ]
+    },
+    {
+      "id": "2015-04-022",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "AArch64 support for the LLVM ecosystem",
+      "speakers": [
+        {
+          "name": "Gabor Ballabas",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Akos Kiss",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Gabor Loki",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-04-023",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "Unison: Constraint-Based Register Allocation and Instruction Scheduling",
+      "speakers": [
+        {
+          "name": "Roberto Castaneda Lozano",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Gabriel Hjort Blindell",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Mats Carlsson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Christian Schulte",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2015-04-024",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "Scalable LLVM-based System for Cross-Module Optimizations and Static Analysis",
+      "speakers": [
+        {
+          "name": "Ksenia Dolgorukova",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2015-04-025",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "LLVM-TURBO: Rapid development of efficient code generators in LLVM",
+      "speakers": [
+        {
+          "name": "Thomas Bernard",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Marco Roodzant",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-04-026",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "Flexible runtime testing of LLVM for embedded systems",
+      "speakers": [
+        {
+          "name": "Edward Jones",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Embedded",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2015-04-027",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "poster",
+      "title": "OO-Lint for Operator Overloading in C++",
+      "speakers": [
+        {
+          "name": "Alexander Hück",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-04-028",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "tutorial",
+      "title": "Fortran Front-End for LLVM",
+      "speakers": [
+        {
+          "name": "Carlo Bertolli",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hal Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "John Leidel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Kevin O'Brien",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Flang",
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2015-04-029",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "tutorial",
+      "title": "An LLDB Developer Tutorial",
+      "speakers": [
+        {
+          "name": "Siva Chandra Reddy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2015-04-030",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "tutorial",
+      "title": "Debug Info Tutorial",
+      "speakers": [
+        {
+          "name": "Eric Christopher",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "David Blaikie",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Debug Information"
+      ]
+    },
+    {
+      "id": "2015-04-031",
+      "meeting": "2015-04",
+      "meetingName": "2015 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 13-14, 2015",
+      "category": "tutorial",
+      "title": "Your Code Generator Adventure: a journey through code generator generation and optimizations in LLVM-TURBO",
+      "speakers": [
+        {
+          "name": "Liam Fitzpatrick",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Marco Roodzant",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    }
+  ]
+}

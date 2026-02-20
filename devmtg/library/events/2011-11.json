@@ -1,0 +1,644 @@
+{
+  "meeting": {
+    "slug": "2011-11",
+    "name": "2011 US LLVM Developers' Meeting",
+    "date": "November 18, 2011",
+    "location": "San Jose, CA, USA",
+    "canceled": false,
+    "talkCount": 20
+  },
+  "talks": [
+    {
+      "id": "2011-11-001",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Developer Meeting Kickoff",
+      "speakers": [
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Lattner_Kickoff.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2011-11-002",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Intel OpenCL SDK Vectorizer",
+      "speakers": [
+        {
+          "name": "Nadav Rotem",
+          "affiliation": "Intel",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this talk, we will present our OpenCL SDK and its core technology – the vectorizer compiler. We plan to present an overview of our vectorizer and discuss our experience with the LLVM compiler toolkit over the last few years. We will discuss some of our design decisions and our and plans for future features (future instruction sets, vector select, predicated instructions, etc).",
+      "videoUrl": "https://youtu.be/1KeTFJLMIYw",
+      "videoId": "1KeTFJLMIYw",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Rotem_IntelOpenCLSDKVectorizer.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2011-11-003",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Clang MapReduce -- Automatic C++ Refactoring at Google Scale",
+      "speakers": [
+        {
+          "name": "Chandler Carruth",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Google has over 100 million lines of code, and our biggest programming language is C++. We have a single, shared codebase developed primarily on mainline. We build every binary and all of its libraries from scratch every time, allowing us to incrementally evolve APIs and libraries over time. The entire development process is extremely incremental in nature, and even API-breaking changes are a regular occurrence. However, for core libraries used throughout the codebase, this development model is a huge challenge: how do we incrementally evolve an API in use by tens of thousands of other libraries? The answer is to use Clang to automatically refactor APIs and their users across the codebase. How do we scale Clang up to possibly the single largest unified codebase in the world? The same way Google scales anything else: MapReduce. By coupling Clang’s library design and architecture to existing Google infrastructure we can automatically compile, analyze, and refactor the entire Google codebase in minutes. In this talk, I will dive into the challenges of refactoring C++ code, how we’re using Clang and making it even better at solving them, and how we scale these solutions to the size of our codebase.",
+      "videoUrl": "https://youtu.be/HK0fZWQRDV0",
+      "videoId": "HK0fZWQRDV0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2011-11-004",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "PTX Back-End: GPU Programming With LLVM",
+      "speakers": [
+        {
+          "name": "Just in Holewinski",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ohio State",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "PTX Back-End: GPU Programming With LLVM In this talk, the PTX back-end for LLVM will be discussed, including its' past, present, and future. The current status of the back-end will be explored, with an emphasis on the portions of the LLVM IR instruction set and PTX intrinsics that are currently supported during code generation. This talk will also highlight the difficulties and issues that have been discovered while writing an LLVM back-end for a virtual ISA such as PTX, such as infinite register files. Through-out the talk, examples will be provided to highlight key features of the back-end and show preliminary performance data. In addition to back-end details, this talk will also highlight the use of Clang as a front-end for generating PTX code for NVIDIA GPUs. Through the use of Clang and the CUDA Driver API, GPGPU programs can be developed that harness the optimization power of the LLVM compiler infrastructure. Finally, the talk will conclude with an exploration of the open issues that remain in the backend, and a discussion on how the back-end can be used within larger GPGPU compiler projects.",
+      "videoUrl": "https://youtu.be/7AUdgoSsY1s",
+      "videoId": "7AUdgoSsY1s",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Holewinski_PTXBackend.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "CUDA",
+        "Clang",
+        "Frontend",
+        "GPU",
+        "IR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2011-11-005",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Integrating LLVM into FreeBSD",
+      "speakers": [
+        {
+          "name": "Brooks Davis",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "The FreeBSD Project",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Integrating LLVM into FreeBSD The FreeBSD Project has been actively working to incorporate tools from the LLVM project into our base system including clang, libc++, and possibly lldb. This talk will cover our efforts so far including our plans to ship FreeBSD 9.0 with clang in the base system. I will cover both our current work to replace GPL licensed components with BSD(ish) licensed components and future or experimental work to incorporate new technologies made possible by LLVM.",
+      "videoUrl": "https://youtu.be/it0Jh8609vE",
+      "videoId": "it0Jh8609vE",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Davis_LLVMinFreeBSD.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs",
+        "Clang",
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2011-11-006",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Porting LLVM to a Next Generation DSP",
+      "speakers": [
+        {
+          "name": "Taylor Simpson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "QuIC",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Porting LLVM to a Next Generation DSP This talk will describe our experiences in porting LLVM to Qualcomm's latest generation DSP, Hexagon. The overall experience of porting to a new architecture will be discussed. The challenges of achieving high quality code generation for a VLIW with LLVM with also be outlined.",
+      "videoUrl": "https://youtu.be/MefebRh34cI",
+      "videoId": "MefebRh34cI",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Simpson_PortingLLVMToADSP.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2011-11-007",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "DXR: Semantic Code Browsing with Clang",
+      "speakers": [
+        {
+          "name": "Joshua Cranmer",
+          "affiliation": "Mozilla",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "DXR: Semantic Code Browsing with Clang DXR is a source code browser which uses a clang plugin to determine information about all types, variables, and functions in a program to make reading, searching, and understanding source code easier.",
+      "videoUrl": "https://youtu.be/lV8Djpmx4VA",
+      "videoId": "lV8Djpmx4VA",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Cranmer_DXRSemanticCodeBrowsingwithClang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2011-11-008",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "LLVM MC In Practice",
+      "speakers": [
+        {
+          "name": "Jim Grosbach",
+          "affiliation": "Owen Anderson Apple",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Overview of projects and new developments in the LLVM MC layer, with emphasis on the MCJIT, binary analysis, ARM integrated assembler and ARM disassembler.",
+      "videoUrl": "http://devimages.apple.com/llvm/videos/LLVMMCinPractice.m4v",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Grosbach_Anderson_LLVMMC.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2011-11-009",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Polly - First successful optimizations - How to proceed?",
+      "speakers": [
+        {
+          "name": "Tobias Grosser",
+          "affiliation": "ENS/INRIA",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The poster will describe our research on the subject of verification of OpenCL kernels using symbolic execution. We present an effective technique for crosschecking a C program against an accelerated OpenCL version, as well as a technique for detecting data races in OpenCL programs. Our techniques are implemented in KLEE-CL, a symbolic execution engine based on KLEE and KLEE-FP that supports symbolic reasoning on the equivalence between symbolic values. Our approach is to symbolically model the OpenCL environment using an OpenCL runtime library targeted to symbolic execution. Using this model we are able to run OpenCL programs symbolically, keeping track of memory accesses for the purpose of race detection. We then compare the symbolic result against the plain C program in order to detect mismatches between the two versions. We applied KLEE-CL to the Parboil benchmark suite, the Bullet physics library and the OP2 library, in which we were able to find a total of seven errors: three mismatches between the OpenCL and C implementations, two memory errors, one OpenCL compiler bug and one race condition.",
+      "videoUrl": "https://youtu.be/2NGYOTteN3A",
+      "videoId": "2NGYOTteN3A",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Grosser_PollyOptimizations.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "JIT",
+        "OpenCL",
+        "Optimizations",
+        "Performance",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2011-11-010",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Android Renderscript",
+      "speakers": [
+        {
+          "name": "Stephen Hines",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Renderscript is Android's advanced 3D graphics rendering and compute API. It provides a portable C99-based language with extensions to facilitate common use cases for enhancing graphics and thread level parallelism. The Renderscript compiler frontend is based on Clang/LLVM. It emits a portable bitcode format for the actual compiled script code, as well as reflects a Java interface for developers to control the execution of the compiled bitcode. Executable machine code is then generated from this bitcode by an LLVM backend on the device. Renderscript is thus able to provide a mechanism by which Android developers can improve performance of their applications while retaining portability. This talk focuses on the design and implementation of Renderscript using Clang/LLVM. Renderscript leverages Clang's AST to provide a Java reflection of globally visible symbols in the compilation unit. This includes both global variables as well as invocable parameterized functions. We also transform the Clang-based AST before emitting bitcode to provide support for reference-counted types that span the Renderscript/Java memory domains. Renderscript uses bitcode as a portable code format so that we can leverage other hardware architectures in addition to the CPU in the future (GPU, DSP). Interesting facts: Difference in Clang source: 6 lines (all upstreamable with a bit of configuration logic) Difference in LLVM source: ~300 lines (possibly worth upstreaming, but some fixes for legacy JIT mode are no longer relevant to TOT) The frontend compiler is layered completely on top of Clang, so everything we use is sub-classed and/or recombined for our purposes in the llvm-rs-cc compiler driver. The backend compiler is stripped down to fit on a tablet/smartphone stack.",
+      "videoUrl": "https://youtu.be/dJwKXOLjEPA",
+      "videoId": "dJwKXOLjEPA",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Hines_AndroidRenderscript.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Clang",
+        "Frontend",
+        "GPU",
+        "IR",
+        "JIT",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2011-11-011",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "SKIR: Just-in-Time Compilation for Parallelism with LLVM",
+      "speakers": [
+        {
+          "name": "Jeff Fifield",
+          "affiliation": "University of Colorado",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Representation (SKIR) is a small set of LLVM intrinsics for expressing parallel computation as a graph of sequential processes (kernels) communicating over abstract data channels (streams). At runtime, programs use the SKIR intrinsics to identify functions to use as kernels, to connect kernels together using streams, and to execute resulting program graphs. Formally, the stream parallelism expressed by SKIR programs can be viewed as a generalization of Kahn process networks. More practically, we can use SKIR as a compilation target for high level languages and frameworks containing this style of program decomposition and communication. We have used SKIR to implement a compiler for the StreamIt language, to create a C++ user library for stream/data/pipeline parallel programming, and to enable parallel programming for JavaScript applications. SKIR is implemented on top of the LLVM JIT compiler and a work stealing task scheduler. We use runtime compilation because of the runtime construction of program graphs, so that we can support dynamic optimization, and so that we can perform dynamic recompilation for heterogeneous targets. In this talk I will describe the SKIR intrinsics and programming model, and briefly describe high level language support that has been implemented for SKIR. I will present the compilation and optimization techniques used to transform the sequential LLVM+SKIR input code into concurrent code which can be executed in parallel using dynamic scheduling techniques. I will also describe how we can use LLVM JIT compilation to dynamically increase or decrease the amount of parallelism in a SKIR program depending on runtime hardware and application characteristics. Finally, I will describe how we can further accelerate SKIR program kernels using JIT compilation, our OpenCL backend, and GPUs.",
+      "videoUrl": "https://youtu.be/HWZMd2XsQ_4",
+      "videoId": "HWZMd2XsQ_4",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Fifield_SKIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "GPU",
+        "JIT",
+        "OpenCL",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2011-11-012",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Register Allocation in LLVM 3.0",
+      "speakers": [
+        {
+          "name": "Jakob Olesen",
+          "affiliation": "Apple",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Register Allocation in LLVM 3.0 An overview of the features in LLVM's new register allocator",
+      "videoUrl": "http://devimages.apple.com/llvm/videos/RegisterAllocationinLLVM30.m4v",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Olesen_RegisterAllocation.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2011-11-013",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Exporting 3D scenes from Maya to WebGL using clang and LLVM",
+      "speakers": [
+        {
+          "name": "Jochen Wilhelmy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Modern content creation tools such as Autodesk Maya can be seen as graphical programming language. Features like animation of attributes, embedded scripts, shading networks and vertex deformations can be translated to c++, then compiled to LLVM IR and distributed to CPU and GPU. An award winning WebGL demo is shown which was produced using this approach.",
+      "videoUrl": "https://youtu.be/ZIWTTstRvEY",
+      "videoId": "ZIWTTstRvEY",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Wilhelmy_Exporting3DScenes.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Embedded",
+        "GPU",
+        "IR",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2011-11-014",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Super-optimizing LLVM IR",
+      "speakers": [
+        {
+          "name": "Duncan Sands",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "DeepBlueCapital",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "I will describe a tool to harvest expression sequences from LLVM IR and automatically discover equivalent simplified expressions. The original version of this tool only looked for sub-expressions that were equivalent to the whole, but nonetheless discovered many simplifications missed by the LLVM optimizers (most of these have now been implemented in LLVM). The tool has since been extended to a general super optimizer by Rafael Auler.",
+      "videoUrl": "https://youtu.be/8TLbP_XTJWQ",
+      "videoId": "8TLbP_XTJWQ",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Sands_Super-optimizingLLVMIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2011-11-015",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Finding races and memory errors with LLVM instrumentation",
+      "speakers": [
+        {
+          "name": "Konstantin Serebryany",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We will present two dynamic testing tools based on compile-time instrumentation, both tools use the LLVM compiler. AddressSanitizer (ASan) finds memory bugs, such as use-after-free and out-of-bound accesses to heap and stack. This tool could be seen as a partial replacement for Valgrind and similar tools. The major advantages over Valgrind are the speed (less than 2x slowdown on average) and the ability to handle bugs related to stack and globals. ThreadSanitizer (TSan) finds data races. It uses the same race detection algorithm as the Valgrind-based TSan, but compile-time instrumentation allows it to be much faster (2x-4x slowdown). We will also share our experience in deploying theses testing tools in large software projects.",
+      "videoUrl": "https://youtu.be/sJqQTUtV6GY",
+      "videoId": "sJqQTUtV6GY",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Serebryany_FindingRacesMemoryErrors.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Dynamic Analysis",
+        "Performance",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2011-11-016",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "technical-talk",
+      "title": "Thread Safety Annotations in Clang",
+      "speakers": [
+        {
+          "name": "DeLesley Hutchins",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Annotations in Clang This talk introduces the new thread safety annotations for Clang and describes the static analysis used to check them. These annotations can be used to specify properties such as whether a variable is guarded by a particular mutex, or a desired lock acquisition order. These annotations were originally introduced in gcc, and have recently been reimplemented in Clang.",
+      "videoUrl": "https://youtu.be/1em66mRozm0",
+      "videoId": "1em66mRozm0",
+      "slidesUrl": "https://llvm.org/devmtg/2011-11/Hutchins_ThreadSafety.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2011-11-017",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "poster",
+      "title": "Parfait - A Scalable Static Bug-Checking Tool Built on LLVM",
+      "speakers": [
+        {
+          "name": "Cristina Cifuentes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Nathan Keynes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Andrew Craik",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Lian Li",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Nathan Hawes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Andrew Browne",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Manuel Valdiviezo",
+          "affiliation": "Oracle Labs",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Parfait is a static bug-checking tool for C/C++ applications built on the LLVM framework. Parfait achieves precision and scalability at the same time by employing a layered program analysis framework. In Parfait, different analyses varying in precision and runtime expense are invoked on demand to detect defects of a specific type, effectively achieving higher precision with smaller runtime overheads. Parfait has been deployed into several development organizations within Oracle. It is being run over millions of lines of C and C++ code on a daily basis. Parfait is currently processing code written for a variety of different platforms including: Oracle Solaris Studio on Solaris Microsoft Visual C/C++ on Windows (excluding MFC headers) GCC on Linux Intel C/C++ Compiler on Linux Despite the size and complexity of the code bases being analyzed, the Parfait false-positive rate has remained below 10%. This poster will present the design of the Parfait tool, summarize our experience with the LLVM infrastructure, and present more comprehensive results than the preliminary results we first presented to the LLVM community at the LLVM Developers Conference in 2009.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2011-11-018",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "poster",
+      "title": "Code verification based on attributes annotation - Implementing custom attributes check using Clang",
+      "speakers": [
+        {
+          "name": "Michael Han",
+          "affiliation": "Autodesk",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Introduce a tool named \"Hippocrates\" we developed at Autodesk based on Clang's attribute system to help engineers verify functions being behaved as designed. The talk will focus on the motivation and goal of the tool, how we hacked Clang (would be a very high level 1000 feet overview due to time limits), and some results of using the tool on our large code base like Autodesk Maya with millions of lines C++ code.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2011-11-019",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "poster",
+      "title": "LunarGLASS: A LLVM-based shader compiler stack",
+      "speakers": [
+        {
+          "name": "Michael Ilseman",
+          "affiliation": "LunarG",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LunarGLASS is an LLVM-based shader compiler stack. It brings a new approach to shader compilation by splitting the common shared intermediate representation (IR) into two levels; the top level is completely platform independent while the bottom level is dynamically tailorable to different families of architecture. http://www.lunarglass.org/documentation",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "IR"
+      ]
+    },
+    {
+      "id": "2011-11-020",
+      "meeting": "2011-11",
+      "meetingName": "2011 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 18, 2011",
+      "category": "poster",
+      "title": "Symbolic Testing of OpenCL Code",
+      "speakers": [
+        {
+          "name": "Peter Collingbourne",
+          "affiliation": "Imperial College London",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The poster will describe our research on the subject of verification of OpenCL kernels using symbolic execution. We present an effective technique for crosschecking a C program against an accelerated OpenCL version, as well as a technique for detecting data races in OpenCL programs. Our techniques are implemented in KLEE-CL, a symbolic execution engine based on KLEE and KLEE-FP that supports symbolic reasoning on the equivalence between symbolic values. Our approach is to symbolically model the OpenCL environment using an OpenCL runtime library targeted to symbolic execution. Using this model we are able to run OpenCL programs symbolically, keeping track of memory accesses for the purpose of race detection. We then compare the symbolic result against the plain C program in order to detect mismatches between the two versions. We applied KLEE-CL to the Parboil benchmark suite, the Bullet physics library and the OP2 library, in which we were able to find a total of seven errors: three mismatches between the OpenCL and C implementations, two memory errors, one OpenCL compiler bug and one race condition.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "JIT",
+        "OpenCL",
+        "Performance",
+        "Testing"
+      ]
+    }
+  ]
+}

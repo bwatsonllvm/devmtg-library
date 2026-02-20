@@ -1,0 +1,143 @@
+{
+  "meeting": {
+    "slug": "2023-08-07",
+    "name": "2023 Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+    "date": "August 7, 2023",
+    "location": "Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP; Salt Lake City, Utah, USA",
+    "canceled": false,
+    "talkCount": 5
+  },
+  "talks": [
+    {
+      "id": "2023-08-07-001",
+      "meeting": "2023-08-07",
+      "meetingName": "2023 Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP; Salt Lake City, Utah, USA",
+      "meetingDate": "August 7, 2023",
+      "category": "technical-talk",
+      "title": "Minotaur: A SIMD-Oriented Synthesizing Superoptimizer",
+      "speakers": [
+        {
+          "name": "John Regehr",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2023-08-07-002",
+      "meeting": "2023-08-07",
+      "meetingName": "2023 Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP; Salt Lake City, Utah, USA",
+      "meetingDate": "August 7, 2023",
+      "category": "technical-talk",
+      "title": "Optimizing Data Layout Transformations for MLIR-Based Compilers",
+      "speakers": [
+        {
+          "name": "Mahesh Lakshminarasimhan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2023-08-07-003",
+      "meeting": "2023-08-07",
+      "meetingName": "2023 Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP; Salt Lake City, Utah, USA",
+      "meetingDate": "August 7, 2023",
+      "category": "technical-talk",
+      "title": "Scalable Tuning of OpenMP GPU Applications via Kernel Record and Replay",
+      "speakers": [
+        {
+          "name": "Konstantinos Parasyris",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "GPU"
+      ]
+    },
+    {
+      "id": "2023-08-07-004",
+      "meeting": "2023-08-07",
+      "meetingName": "2023 Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP; Salt Lake City, Utah, USA",
+      "meetingDate": "August 7, 2023",
+      "category": "technical-talk",
+      "title": "PEAK: High-performance Transform Dialect",
+      "speakers": [
+        {
+          "name": "Amir Mohammad Tavakkoli",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2023-08-07-005",
+      "meeting": "2023-08-07",
+      "meetingName": "2023 Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP",
+      "meetingLocation": "Third Workshop on LLVM in Parallel Processing (LLPP) @ ICPP; Salt Lake City, Utah, USA",
+      "meetingDate": "August 7, 2023",
+      "category": "technical-talk",
+      "title": "Maximizing Parallelism and GPU Utilization For Direct GPU Compilation Through Ensemble Execution",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "GPU"
+      ]
+    }
+  ]
+}

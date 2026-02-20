@@ -1,0 +1,2273 @@
+{
+  "meeting": {
+    "slug": "2018-10",
+    "name": "2018 US LLVM Developers' Meeting",
+    "date": "October 17-18, 2018",
+    "location": "San Jose, CA, USA",
+    "canceled": false,
+    "talkCount": 66
+  },
+  "talks": [
+    {
+      "id": "2018-10-001",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "keynote",
+      "title": "Glow: LLVM-based machine learning compiler",
+      "speakers": [
+        {
+          "name": "Nadav Rotem",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Roman Levenstein",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Glow is an LLVM-based machine learning compiler for heterogeneous hardware that's developed as part of the PyTorch project. It is a pragmatic approach to compilation that enables the generation of highly optimized code for CPUs, GPUs and accelerators. Glow lowers the traditional neural network data-flow graph into a two-phase strongly-typed intermediate representation (inspired by SIL). Finally Glow emits LLVM-IR and uses the LLVM code generator to generate highly-optimized code. In this talk we'll describe the structure of machine learning programs and how Glow is designed to compile these graphs into multiple targets. We'll explain how we use the LLVM infrastructure and go over some of the techniques that we use to generate high-performance code using LLVM.",
+      "videoUrl": "https://youtu.be/cTz7c5dn5Gc",
+      "videoId": "cTz7c5dn5Gc",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "GPU",
+        "IR",
+        "ML",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-002",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "keynote",
+      "title": "The Future Direction of C++ and the Four Horsemen of Heterogeneous Computing",
+      "speakers": [
+        {
+          "name": "Michael Wong",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The C++ Direction Group has set a future direction for C++ and includes recommendation for C++ in the short and medium term. It will have immediate impact on what will enter C++20, and beyond. First half of this talk will devote to the Directions Groups description of where future C++ is heading as a member of the DG. It also includes a guidance towards Heterogeneous C++.\n\nThe introduction of the executors TS means for the first time in C++ there will be a standard platform for writing applications which can execute across a wide range of architectures including multi-core and many-core CPUs, GPUs, DSPs, and FPGAs. The SYCL standard from the Khronos Group is a strong candidate to implement this upcoming C++ standard as are many other C++ frameworks from DOE, and HPX for the distributed case. One of the core ideas of this standard is that everything must be standard C++, the only exception being that some feature of C++ cannot be used in places that can be executed on an OpenCL device, often due to hardware limitation.\n\nImplementing Heterogeneous C++ is like battling the four Horsemen of the Apocalypse. These are: Data movement; Data Locality; Data Layout; Data Affinity.\n\nThe rest of this talk presents some of the challenges and solutions to implement a Heterogeneous C++ standard in Clang based on our implementation of Khronos' SYCL language with Codeplay's ComputeCpp compiler, with the fast growth of C++ and Clang being a platform of choice to prototype many of the new C++ features.\n\nWe describe the major issues with ABI for separate compilation tool chain that comes from non-standard layout type of lambdas, as well as the issues of data addressing that comes from non-flat and possibly non-coherent address spaces.\n\nWe also describe various papers which are being proposed to ISO C++ to move towards standardizing heterogeneous and distributed computing in C++. The introduction of a unified interface for execution across a wide range of different hardware, extensions to this to support concurrent exception handling and affinity queries, and an approach to improve the capability of the parallel algorithms through composability. All of this adds up to a future C++ which is much more aware of heterogeneity and capable of taking advantage of it to improve parallelism and performance.",
+      "videoUrl": "https://youtu.be/7Y3-pV_b-1U",
+      "videoId": "7Y3-pV_b-1U",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "Clang",
+        "GPU",
+        "OpenCL",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-003",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Lessons Learned Implementing Common Lisp with LLVM over Six Years",
+      "speakers": [
+        {
+          "name": "Christian Schafmeister",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "I will present the lessons learned while using LLVM to efficiently implement a complex memory managed, dynamic programming language within which everything can be redefined on the fly. I will present Clasp, a new Common Lisp compiler and programming environment that uses LLVM as its back-end and that interoperates smoothly with C++/C. Clasp is written in both C++ and Common Lisp. The Clasp compiler is written in Common Lisp and makes extensive use of the LLVM C++ API and the ORC JIT to generate native code both ahead of time and just in time. Among its unique features, Clasp uses a compacting garbage collector to manage memory, incorporates multithreading, uses C++ compatible exception handling to achieve stack unwinding and an incorporates an advanced compiler written in Common Lisp to achieve performance that approaches that of C++. Clasp is being developed as a high-performance scientific and general purpose programming language that makes use of available C++ libraries.",
+      "videoUrl": "https://youtu.be/mbdXeRBbgDM",
+      "videoId": "mbdXeRBbgDM",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "JIT",
+        "Performance",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2018-10-004",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Porting Function merging pass to thinlto",
+      "speakers": [
+        {
+          "name": "Aditya Kumar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this talk I'll discuss the process of porting the Merge function pass to thinlto infrastructure. Funcion merging (FM) is an interprocedural pass useful for code-size optimization. It deduplicates common parts of similar functions and outlines them to a separate function thus reducing the code size. This is particularly useful for code bases making heavy use of templates which gets instantiated in multiple translation units. Porting FM to thinlto offers leveraging its functionality to dedupe functions across entire program. I'll discuss the engineering effort required to port FM to thinlto. Specifically, functionality to uniquely identify similar functions, augmenting function summary with a hash code, populating module summary index, modifying bitcode reader+writer, and codesize numbers on open source benchmarks.",
+      "videoUrl": "https://youtu.be/GxQmcvYpKYU",
+      "videoId": "GxQmcvYpKYU",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Kumar-FunctionMergingPortThinLTO.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "LTO",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-005",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Build Impact of Explicit and C++ Standard Modules",
+      "speakers": [
+        {
+          "name": "David Blaikie",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Somewhat a continuation of my 2017 LLVM Developers' Meeting talk: The Further Benefits of Explicit Modularization. Examine and discuss the build infrastructure impact of explicit modules working from the easiest places and rolling in the further complications to see where we can end up.\n\nThere's a lot of unknowns in this space - the goal of this talk is to at the very least discuss those uncertainties and why they are there, and/or discuss any conclusions from myself and the C++ standardization work (Richard Smith, Nathan Sidwell, and others) that is ongoing.",
+      "videoUrl": "https://youtu.be/b-iiA18BRCQ",
+      "videoId": "b-iiA18BRCQ",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C++"
+      ]
+    },
+    {
+      "id": "2018-10-006",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Profile Guided Function Layout in LLVM and LLD",
+      "speakers": [
+        {
+          "name": "Michael Spencer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The layout of code in memory can have a large impact on the performance of an application. This talk will cover the reasons for this along with the design, implementation, and performance results of LLVM and LLD's new profile guided function layout pipeline. This pipeline leverages LLVM's profile guided optimization infrastructure and is based on the Call-Chain Clustering heuristic.",
+      "videoUrl": "https://youtu.be/F-lbgspxv1c",
+      "videoId": "F-lbgspxv1c",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Spencer-Profile%20Guided%20Function%20Layout%20in%20LLVM%20and%20LLD.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLD",
+        "Optimizations",
+        "PGO",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-007",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Developer Toolchain for the Nintendo Switch",
+      "speakers": [
+        {
+          "name": "Bob Campbell",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jeff Sirois",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Nintendo Switch was developed using Clang/LLVM for the developer tools and C++ libraries. We describe how we converted from using almost exclusively proprietary tools and libraries to open tools and libraries. We’ll also describe our process for maintaining our out-of-tree toolchain and what we’d like to improve.\n\nWe started with Clang, binutils, and LLVM C++ libraries (libc++, libc++abi) and other open libraries. We will also describe our progress in transitioning to LLD and other LLVM binutils equivalents. Additionally, we will share some of our performance results using LLD and LTO.\n\nFinally, we’ll discuss some of the areas that are important to our developers moving forward.",
+      "videoUrl": "https://youtu.be/9_7exO60EA8",
+      "videoId": "9_7exO60EA8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs",
+        "Clang",
+        "LLD",
+        "LTO",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-008",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Methods for Maintaining OpenMP Semantics without Being Overly Conservative",
+      "speakers": [
+        {
+          "name": "Jin Lin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ernesto Su",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Xinmin Tian",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The SSA-based LLVM IR provides elegant representation for compiler analyses and transformations. However, it presents challenges to the OpenMP code generation in the LLVM backend, especially when the input program is compiled under different optimization levels. This paper presents a practical and effective framework on how to perform the OpenMP code generation based on the LLVM IR. In this presentation, we propose a canonical OpenMP loop representation under different optimization levels to preserve the OpenMP loop structure without being affected by compiler optimizations. A code-motion guard intrinsic is proposed to prevent code motion across OpenMP regions. In addition, a utility based on the LLVM SSA updater is presented to perform the SSA update during the transformation. Lastly, the scope alias information is used to preserve the alias relationship for backend-outlined functions. This framework has been implemented in Intel’s LLVM compiler.",
+      "videoUrl": "https://youtu.be/9BxDNv4YmVw",
+      "videoId": "9BxDNv4YmVw",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Jin-OpenMPSemantics.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "IR",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-10-009",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Understanding the performance of code using LLVM's Machine Code Analyzer (llvm-mca)",
+      "speakers": [
+        {
+          "name": "Andrea Di Biagio",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Matt Davis",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "llvm-mca is a LLVM based tool that uses information available in LLVM’s scheduling models to statically measure the performance of machine code in a specific CPU. The goal of this tool is not just to predict the performance of the code when run on the target, but also to help with diagnosing potential performance issues. In this talk we, will discuss how llvm-mca works and walk the audience through example uses of this tool.",
+      "videoUrl": "https://youtu.be/Ku2D8bjEGXk",
+      "videoId": "Ku2D8bjEGXk",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-010",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Art Class for Dragons: Supporting GPU compilation without metadata hacks!",
+      "speakers": [
+        {
+          "name": "Neil Hickey",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Modern programming languages targeting GPUs include features that are not commonly found in conventional programming languages, such as C and C++, and are, therefore, not natively representable in LLVM IR.\n\nThis limits the applicability of LLVM to target GPU hardware for both graphics and massively parallel compute applications. Moreover, the lack of a unified way to represent GPU-related features has led to different and mutually incompatible solutions across different vendors, thereby limiting interoperability of LLVM-based GPU transformation passes and tools.\n\nMany features within the Vulkan graphics API and language [1] highlight the diversity of GPU hardware. For example, Vulkan allows different attributes on structures that specify different memory padding rules. Such semantic information is currently not natively representable in LLVM IR. Graphics programming models also make extensive use of special memory regions that are mapped as address spaces in LLVM. However, no semantic information is attributed to address spaces at the LLVM IR level and the correct behaviour and transformation rules have to be inferred from the address space within the compilation passes.\n\nAs some of these features have no direct representation in LLVM, various translators, e.g SPIR-V->LLVM translator [2], Microsoft DXIL compiler [3], AMD's OpenSource compiler for Vulkan [4], make use of side features of LLVM IR, such as metadata and intrinsics, to represent the semantic information that cannot be easily captured. This creates an extra burden on compilation passes targeting GPU hardware as the semantic information has to be recreated from the metadata. Additionally, some translators such as the Microsoft DXIL compiler have forked the Clang and LLVM repositories and made proprietary changes to the IR in order to more easily support the required features natively. A more general approach would be to look at how upstream LLVM can be augmented to represent some, if not all, of the semantic information required for massively parallel SIMD, SPMD, and in general, graphics applications.\n\nThis talk will look at the proprietary LLVM IR modifications made in translators such as the Khronos SPIRV-LLVM translator, AMDs open source driver for Vulkan SPIRV, the original Khronos SPIR specification [5], Microsoft's DXIL compiler and Nvidia's NVVM specification [6]. The aim is to extract a common set of features present in modern graphics and compute languages for GPUs, describe how translators are currently representing these features in LLVM and suggest ways of augmenting the LLVM IR to natively represent these features. The intention with this talk is to open up a dialogue among IR developers to look at how we can, if there is agreement, extend LLVM in a way that supports a more diverse set of hardware types.\n\n[1] - https://www.khronos.org/registry/vulkan/ [2] - https://github.com/KhronosGroup/SPIRV-LLVM-Translator [3] - https://github.com/Microsoft/DirectXShaderCompiler/blob/master/docs/DXIL.rst [4] - https://github.com/GPUOpen-Drivers/AMDVLK [5] - https://www.khronos.org/registry/SPIR/specs/spir_spec-2.0.pdf [6] - https://docs.nvidia.com/cuda/pdf/NVVM_IR_Specification.pdf",
+      "videoUrl": "https://youtu.be/BQNf5rEuFEU",
+      "videoId": "BQNf5rEuFEU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "CUDA",
+        "Clang",
+        "Community Building",
+        "GPU",
+        "IR",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2018-10-011",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Implementing an OpenCL compiler for CPU in LLVM",
+      "speakers": [
+        {
+          "name": "Evgeniy Tyurin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Compiling a heterogeneous language for a CPU in an optimal way is a challenge, OpenCL C/SPIR-V specifics require additions and modifications of the old-fashioned driver approach and compilation flow. Coupled together with aggressive just-in-time code optimizations, interfacing with OpenCL runtime, standard OpenCL C functions library, etc. implementation of OpenCL for CPU comprises a complex structure. We’ll cover Intel’s approach in hope of revealing common patterns and design solutions, discover possible opportunities to share and collaborate with other OpenCL CPU vendors under LLVM umbrella! This talk will describe the compilation of OpenCL C source code down to machine instructions and interacting with OpenCL runtime, illustrate different paths that compilation may take for different modes (classic online/OpenCL 2.1 SPIR-V path vs. OpenCL 1.2/2.0 with device-side enqueue and generic address space), put particular emphasis on the resolution of CPU-unfriendly OpenCL aspects (barrier, address spaces, images) in the optimization flow, explain why OpenCL compiler frontend can easily handle various target devices (GPU/CPU/FGPA/DSP etc.) and how it all neatly revolves around LLVM/clang & tools.",
+      "videoUrl": "https://youtu.be/Mm5ATyqm7Rw",
+      "videoId": "Mm5ATyqm7Rw",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Tyurin-ImplementingOpenCLCompiler.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend",
+        "GPU",
+        "JIT",
+        "OpenCL",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-10-012",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Working with Standalone Builds of LLVM sub-projects",
+      "speakers": [
+        {
+          "name": "Tom Stellard",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "There are two ways to build LLVM sub-projects, the first is to place the sub-project source code in the tools or project directory of the LLVM tree and build everything together. The second way is to build the sub-projects standalone against a pre-compiled build of LLVM.\n\nThis talk will focus on how to make standalone builds of sub-projects like clang, lld, compiler-rt, lldb, and libcxx work and how this method can be used to help reduce build times for both developers and CI systems. In addition, we will look at the cmake helpers provided by LLVM and how they are used during the standalone builds and also how you can use them to build your own LLVM-based project in a standalone fashion.",
+      "videoUrl": "https://youtu.be/2BS7kyHhvUU",
+      "videoId": "2BS7kyHhvUU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++ Libs",
+        "Clang",
+        "Infrastructure",
+        "LLD",
+        "LLDB",
+        "Libraries"
+      ]
+    },
+    {
+      "id": "2018-10-013",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Loop Transformations in LLVM: The Good, the Bad, and the Ugly",
+      "speakers": [
+        {
+          "name": "Michael Kruse",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hal Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Should loop transformations be done by the compiler, a library (such as Kokkos, RAJA, Halide) or be subject of (domain specific) programming languages such as CUDA, LIFT, etc? Such optimizations can take place on more than one level and the decision for the compiler-level has already been made in LLVM: We already support a small zoo of transformations: Loop unrolling, unroll-and-jam, distribution, vectorization, interchange, unswitching, idiom recognition and polyhedral optimization using Polly. When clear that we want loop optimizations in the compiler, why not making them as good as possible?\n\nToday, with the exception of some shared code and analyses related to vectorization , LLVM loop passes don't know about each other. This makes cooperation between them difficult, and that includes difficulty in heuristically determining whether some combination of transformations is likely to be profitable. With user-directed transformations such as #pragma omp parallel for, #pragma clang loop vectorize(enable), the only order these transformations can be applied is the order of the passes in the pipeline.\n\nIn this talk, we will explore what already works well (e.g. vectorization of inner loops), things that do not work as well (e.g. loop passes destroying each other's structures), things that becomes ugly with the current design if we want to support more loop passes (e.g. exponential code blowup due to each pass doing its own loop versioning) and possible solutions.",
+      "videoUrl": "https://youtu.be/QpvZt9w-Jik",
+      "videoId": "QpvZt9w-Jik",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Kruse-LoopTransforms.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "CUDA",
+        "Clang",
+        "Loop transformations",
+        "Optimizations",
+        "Polly",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2018-10-014",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Efficiently Implementing Runtime Metadata with LLVM",
+      "speakers": [
+        {
+          "name": "Joe Groff",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Doug Gregor",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Rich runtime metadata can enable powerful language features and tooling support, but also comes with code size, memory usage, and startup time costs. To mitigate these costs, the Swift programming language compiler uses some clever techniques and under-explored corners of LLVM to optimize metadata to minimize size, startup time, and memory costs while making it usable both in-process and offline, avoiding some of the costs traditionally associated with vtables, RTTI, and other data structures in languages like C++. This talk goes into detail of some of these techniques, including using relative references to make metadata position-independent, using mangled type names as a compact and offline-interpretable representation of language concepts, and organizing optional reflection metadata into its own segment of binaries so it can be discovered at load time and optionally stripped from binaries in cases where it is not desired. These techniques could also be applied to other languages, including C++, to reduce the costs of these data structures.",
+      "videoUrl": "https://youtu.be/G3bpj-4tWVU",
+      "videoId": "G3bpj-4tWVU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2018-10-015",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Coroutine Representations and ABIs in LLVM",
+      "speakers": [
+        {
+          "name": "John McCall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Coroutines can serve as the basis for implementing many powerful language features. In this talk, we will discuss coroutines holistically and explore requirements and trade-offs at different stages in their translation. For this purpose, we will introduce several prospective language features in the Swift programming language and discuss how the differences between them affect how they should best be represented and optimized in both Swift's high-level SIL intermediate representation and in LLVM's lower-level IR. We will also contrast Swift's requirements with those imposed by the draft C++ coroutines TS and explain how the differences between languages lead to differences in the LLVM representation. Finally, we will discuss various final ABIs for lowering coroutines and talk about their capabilities and trade-offs.",
+      "videoUrl": "https://youtu.be/wyAbV8AM9PM",
+      "videoId": "wyAbV8AM9PM",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "IR",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2018-10-016",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Graph Program Extraction and Device Partitioning in Swift for TensorFlow",
+      "speakers": [
+        {
+          "name": "Mingsheng Hong",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Swift for Tensorflow (https://github.com/tensorflow/swift) is an Open Source project that provides a new way to develop machine learning models. It combines the usability/debuggability of imperative “define by run” programming models (like TensorFlow Eager and PyTorch) with the performance of TensorFlow session/XLA (graph compilation).\n\nIn this talk, we describe the design and implementation of deabstraction, Graph Program Extraction (GPE) and device partitioning used by Swift for TensorFlow. These algorithms rely on aggressive mid-level transformations that incorporate techniques including inlining, program slicing, interpretation, and advanced control flow analysis. While the initial application of these algorithms is to TensorFlow and machine learning, these algorithms may be applied to any domain that would benefit from an imperative definition of a computation graph, e.g. for high performance accelerators in other domains.",
+      "videoUrl": "https://youtu.be/HSneJdPkaKk",
+      "videoId": "HSneJdPkaKk",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Hong-Lattner-SwiftForTensorFlowGraphProgramExtraction.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "ML",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-017",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Memory Tagging, how it improves C++ memory safety, and what does it mean for compiler optimizations",
+      "speakers": [
+        {
+          "name": "Kostya Serebryany",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Evgenii Stepanov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Vlad Tsyrklevich",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Memory safety in C++ remains largely unresolved. A technique usually called \"memory tagging\" may dramatically improve the situation if implemented in hardware with reasonable overhead. In this talk we will describe three existing implementations of memory tagging. One is SPARC ADI, a full hardware implementation. Another is HWASAN, a partially hardware-assisted LLVM-based tool for AArch64. Last but not least, ARM MTE, a recently announced hardware extension for AArch64. We describe the basic idea, evaluate the three implementations, and explain how they improve memory safety. We'll pay extra attention to compiler optimizations required to support memory tagging efficiently.\n\nIf you know what AddressSanitizer (ASAN) is, think of Memory Tagging as of \"Low-overhead ASAN on steroids in hardware\". This talk is partially based on the paper “Memory Tagging and how it improves C/C++ memory safety” (https://arxiv.org/pdf/1802.09517.pdf)",
+      "videoUrl": "https://youtu.be/iP_iHroclgM",
+      "videoId": "iP_iHroclgM",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Serebryany-Stepanov-Tsyrklevich-Memory-Tagging-Slides-LLVM-2018.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Dynamic Analysis",
+        "Optimizations",
+        "Security"
+      ]
+    },
+    {
+      "id": "2018-10-018",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Improving code reuse in clang tools with clangmetatool",
+      "speakers": [
+        {
+          "name": "Daniel Ruoso",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk will cover the lessons we learned from the process of writing tools with Clang's LibTooling. We will also introduce clangmetatool, the open source framework we use (and developed) to reuse code when writing Clang tools.\n\nWhen we first started writing Clang tools, we realized that there is a lot of lifecycle management that we had to repeat. In some cases, people advocate for the usage of global variables to manage the lifecycle of that data, but this actually makes code reuse across tools even harder.\n\nWe also learned that, when writing a tool, it is beneficial if the code is split into two phases -- a data collection phase and, later, a post-processing phase which actually performs the bulk of the logic of the tool.\n\nMore details at https://bloomberg.github.io/clangmetatool/",
+      "videoUrl": "https://youtu.be/SjjURI5xP-g",
+      "videoId": "SjjURI5xP-g",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Ruoso-clangmetatool.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2018-10-019",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Sound Devirtualization in LLVM",
+      "speakers": [
+        {
+          "name": "Piotr Padlewski",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Krzysztof Pszeniczny",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Devirtualization is an optimization transforming virtual calls into direct calls.\n\nThe first proposed model for handling devirtualization for C++ in LLVM, that was enabled by -fstrict-vtable-pointers flag, had an issue that could potentially cause miscompilation. We took a step back and built the model in more structured way, thinking about semantics of the dynamic pointers, not what kind of barriers we need to use and what kind of transformations we can do on them to make it work. Our new model fixes this issue and enables more optimizations. In this talk we are going to explain how it works and what are the next steps to turn it on by default.",
+      "videoUrl": "https://youtu.be/Dt4UehzzcsE",
+      "videoId": "Dt4UehzzcsE",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Padlewski-Pszeniczny-Sound%20Devirtualization.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-10-020",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Extending the SLP vectorizer to support variable vector widths",
+      "speakers": [
+        {
+          "name": "Vasileios Porpodas",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Rodrigo C. O. Rocha",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Luís F. W. Góes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The SLP Vectorizer performs auto-vectorization of straight-line code. It works by scanning the code looking for scalar instructions that can be grouped together, and then replacing each group with its vectorized form. In this work we show that the current design of the SLP pass in LLVM cannot efficiently handle code patterns that require switching from one vector width to another. We provide detailed examples of when this happens and we show in detail why the current design is failing. We present a non-intrusive design based on the existing SLP Vectorization pass, that addresses this issue and improves performance.",
+      "videoUrl": "https://youtu.be/d5LgjCDkkB0",
+      "videoId": "d5LgjCDkkB0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-021",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Revisiting Loop Fusion, and its place in the loop transformation framework.",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Kit Barton",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hal Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Michael Kruse",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Despite several efforts [1-3], loop fusion is one of the classical loop optimizations still missing in LLVM. As we are currently working to remedy this situation, we want to share our experience in designing, implementing, and tuning a new loop transformation pass. While we want to explain how loop fusion can be implemented using the set of existing analyses, we also plan to talk about the current loop transformation framework and extensions thereof. We currently plan to include:\n\n- The interplay between different existing loop transformations. - A comparison to the IBM/XL loop optimization pipeline. - Source level guidance of loop transformations. - Shortcomings of the current infrastructure, especially loop centric dependence analyses. - Interaction with polyhedral-model-backed dependence information.\n\nThe (default) loop optimizations performed by LLVM are currently lacking transformations and tuning. One reason is the absence of a dedicated framework that provides the necessary analyses information and heuristics. With the introduction of loop fusion we want to explore how different transformations could be used together and what a uniform dependence analysis for multiple loops could look like. The latter is explored with regards to a Scalar Evolution (or SCEV) based dependence analysis, like the current intra-loop access analysis, and a polyhedral-model-based alternative, e.g., via LLVM/Polly or the Polyhedral Value/Memory Analysis [4].\n\nAs our work is still ongoing, we cannot provide evaluation results at this point. However, earlier efforts [3], that did not make it into LLVM, already showed significant improvements which we expect to replicate. We anticipate having preliminary performance results available to present at the conference.\n\nNote that the goal of this talk is not necessarily to provide final answers to the above described problems, but instead we want to start a discussion and bring interested parties together.\n\n[1] https://reviews.llvm.org/D7008 [2] https://reviews.llvm.org/D17386 [3] https://llvm.org/devmtg/2015-04/slides/LLVMEuro2015LoopFusionAmidComplexControlFlow.pdf [4] https://www.youtube.com/watch?v=xSA0XLYJ-G0",
+      "videoUrl": "https://youtu.be/UVZPtBGV8kQ",
+      "videoId": "UVZPtBGV8kQ",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Barton-LoopFusion.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Loop transformations",
+        "Optimizations",
+        "Performance",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2018-10-022",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Optimizing Indirections, using abstractions without remorse.",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hal Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Indirections, either through memory, library interfaces, or function pointers, can easily induce major performance penalties as the current optimization pipeline is not able to look through them. The available inter-procedural-optimizations (IPO) are generally not well suited to deal with these issues as they require all code to be available and analyzable through techniques based on tracking value dependencies. Importantly, the use of class/struct objects and (parallel) runtime libraries commonly introduce indirections that prohibit basically all optimizations. In this talk, we introduce these problems with real-world examples and show how new analyses can mitigate them. We especially focus on:\n\n- A field-sensitive, inter-procedural memory analysis that models simple communication through memory. - The integration of indirect, potentially hidden, call sites, e.g., in libraries like the OpenMP runtime library, into existing analysis and optimizations (function attribute detection, argument promotion, …). - Automatic and portable (non-LLVM specific) information transfer from library implementations through their interfaces to the user sites.\n\nWhile our work originates in the optimization of parallel code, we want to show how the problems we encountered there are similar to existing ones in sequential programs. To this end, we try to augment the available analyses and optimizations rather than introducing new ones that are specific to parallel programs. As a consequence, we not only expect positive results for parallel code regions [1], but also hope to improve generic code that employs indirections or simply exhibit optimization opportunities similar to the ones that commonly arise for parallel programs.\n\nThe goal of this talk is to introduce possible solutions to several problems that commonly prevent optimization of code featuring indirections. As we want to introduce these solutions into the LLVM codebase, we hope to start a discussion on these issues as well as the caveats that we encountered while resolving them.\n\n[1] https://www.youtube.com/watch?v=u2Soj49R-i4",
+      "videoUrl": "https://youtu.be/zfiHaPaoQPc",
+      "videoId": "zfiHaPaoQPc",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Doerfert-Johannes-Optimizing-Indirections-Slides-LLVM-2018.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-023",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Outer Loop Vectorization in LLVM: Current Status and Future Plans",
+      "speakers": [
+        {
+          "name": "Florian Hahn",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Satish Guggilla",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Diego Caballero",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We recently proposed adding an alternative VPlan native path in Loop Vectorizer (LV) to implement support for outer loop vectorization. In this presentation, we first give a status update and discuss progress made since our initial proposal. We briefly talk about the addition of a VPlan-native code path in LV, initial explicit outer loop vectorization support, cost modelling and vector code generation in the VPlan-native path. We also summarize the current limitations.\n\nNext, we introduce VPlan-to-VPlan transformations, which highlight a major strength of VPlan infrastructure. Different vectorization strategies can be modelled using the VPlan representation which allows reuse of VPlan-based cost modelling and code generation infrastructure. Starting from an initial VPlan, a set of VPlan-to-VPlan transformations can be applied, resulting in a set of plans representing different optimization strategies (e.g. interleaving of memory accesses, using SLP opportunities, predication). These plans can then be evaluated against each other and code generated for the most profitable one. We present VPlan-based SLP and predication as concrete examples of VPlan-to-VPlan transformation.\n\nWe end this talk with a discussion of the next steps in the VPlan roadmap. In particular, we discuss plans to achieve convergence of the inner loop and VPlan-native vectorization paths. We present opportunities to get involved with VPlan development and possibilities for collaboration. Furthermore, we discuss how vectorization for scalable vector architectures could fit into VPlan. We also plan to organize a VPlan focused hacker’s table after the talk, to provide a space for more in-depth discussions relating to VPlan.",
+      "videoUrl": "https://youtu.be/jlezxjJLQIg",
+      "videoId": "jlezxjJLQIg",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Backend",
+        "Optimizations",
+        "VPlan"
+      ]
+    },
+    {
+      "id": "2018-10-024",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Stories from RV: The LLVM vectorization ecosystem",
+      "speakers": [
+        {
+          "name": "Simon Moll",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Matthias Kurtenacker",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Sebastian Hack",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Vectorization in LLVM has long been restricted to explicit vector instructions, SLP vectorization or the automatic vectorization of inner-most loops. As the VPlan infrastructure is maturing it becomes apparent that the support API provided by the LLVM ecosystem needs to evolve with it. Apart from short SIMD, new ISAs such as ARM SVE, the RISC-V V extension and NEC SX-Aurora pose new requirements and challenges to vectorization in LLVM. To this end, the Region Vectorzer is a great experimentation ground for dealing with issues that sooner or later will need to be resolved for the LLVM vectorization infrastructure. These include the design of a flexible replacment for the VECLIB mechanism in TLI, inter-procecural vectorization and the development of a LLVM-SVE backend for NEC SX-Aurora. The idea of the talk is to provide data points to inform vectorization-related design decisions in LLVM based on our experience with the Region Vectorizer.",
+      "videoUrl": "https://youtu.be/BAZClv6nMxY",
+      "videoId": "BAZClv6nMxY",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Backend",
+        "VPlan"
+      ]
+    },
+    {
+      "id": "2018-10-025",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "technical-talk",
+      "title": "Faster, Stronger C++ Analysis with the Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "George Karpenkov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Artem Dergachev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Over the last year we’ve made the Clang Static Analyzer faster and improved its C++ support. In this talk, we will describe how we have sped up the analyzer by changing the order in which it explores programs to bias it towards covering code that hasn’t been explored yet. In contrast with the previous exploration strategy, which was based on depth-first search, this coverage-guided approach gives shorter, more understandable bug reports and can find up to 20% more bugs on typical code bases. We will also explain how we’ve reduced C++ false positives by providing infrastructure in Clang’s control-flow graph to help the analyzer understand the myriad of ways in which C++ objects can be constructed, destructed, and have their lifetime extended. This infrastructure will also make it easier for the analyzer to support C++ as the language continues to evolve.",
+      "videoUrl": "https://youtu.be/4n3l-ZcDJNY",
+      "videoId": "4n3l-ZcDJNY",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Karpenkov-Dergachev-StaticAnalyzer.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-10-026",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "tutorial",
+      "title": "Updating ORC JIT for Concurrency",
+      "speakers": [
+        {
+          "name": "Lang Hames",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Breckin Loggins",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM’s ORC JIT APIs have undergone a major redesign over the last year to support compilation of multithreaded code and concurrent compilation within the JIT itself. Internally, ORC’s symbol resolution scheme has been replaced with a system that provides transactional, batch symbol queries. This new scheme both exposes opportunities for parallel compilation within the JIT, and provides a basis for synchronizing interdependent JIT tasks when they reach the JIT linker stage. Alongside this query system, a new “Responsibility” API is introduced to track compilation tasks and enforce graceful termination of the JIT (and JIT’d code) in the event of unrecoverable IPC/RPC failures or other errors. In this talk we will describe the new design, how the API has changed, and the implementation details of the new symbol resolution and responsibility schemes. We will also talk about new developments in the ORC C APIs, and discuss future directions for LLVM’s JIT APIs.",
+      "videoUrl": "https://youtu.be/MOQG5vkh9J8",
+      "videoId": "MOQG5vkh9J8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "JIT",
+        "LLD"
+      ]
+    },
+    {
+      "id": "2018-10-027",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "tutorial",
+      "title": "Register Allocation: More than Coloring",
+      "speakers": [
+        {
+          "name": "Matthias Braun",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This tutorial explains the design and implementation of LLVMs register allocation passes. The focus is on the greedy register allocator and the supporting passes like two address handling, copy coalescing and live range splitting.\n\nThe tutorial will give tips for debugging register allocator problems and understanding the allocator debugging output. It will also explain how to implement the various callbacks to tune for target specifics.",
+      "videoUrl": "https://youtu.be/IK8TMJf3G6U",
+      "videoId": "IK8TMJf3G6U",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2018-10-028",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "tutorial",
+      "title": "How to use LLVM to optimize your parallel programs",
+      "speakers": [
+        {
+          "name": "William S. Moses",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "As Moore's law comes to an end, chipmakers are increasingly relying on both heterogeneous and parallel architectures for performance gains. This has led to a diverse set of software tools and paradigms such as CUDA, OpenMP, Cilk, and many others to best exploit a program’s parallelism for performance gain. Yet, while such tools provide us ways to express parallelism, they come at a large cost to the programmer, requiring in depth knowledge of what to parallelize, how to best map the parallelism to the hardware, and having to rework the code to match the programming model chosen by the software tool.\n\nIn this talk, we discuss how to use Tapir, a parallel extension to LLVM, to optimize parallel programs. We will show how one can use Tapir/LLVM to represent programs in attendees’ favorite parallel framework by extending clang, how to perform various optimizations on parallel code, and how to to connect attendees’ parallel language to a variety of parallel backends for execution (PTX, OpenMP Runtime, Cilk Runtime).",
+      "videoUrl": "https://youtu.be/tmBThobaDBw",
+      "videoId": "tmBThobaDBw",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Moses-OptimizeYourParallelPrograms.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "CUDA",
+        "Clang",
+        "Optimizations",
+        "Performance",
+        "Security"
+      ]
+    },
+    {
+      "id": "2018-10-029",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "tutorial",
+      "title": "LLVM backend development by example (RISC-V)",
+      "speakers": [
+        {
+          "name": "Alex Bradbury",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This tutorial steps through how to develop an LLVM backend for a modern RISC target (RISC-V). It will be of interest to anyone who hopes to implement a new backend, modify an existing backend, or simply better understand this part of the LLVM infrastructure. It provides a high level introduction to the MC layer, instruction selection, as well as small selection of represenative implementation challenges. No experience with LLVM backends is required, but a basic level of familiarity with LLVM IR would be useful.",
+      "videoUrl": "https://youtu.be/AFaIP-dF-RA",
+      "videoId": "AFaIP-dF-RA",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Beginner",
+        "IR"
+      ]
+    },
+    {
+      "id": "2018-10-030",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "Debug Info BoF",
+      "speakers": [
+        {
+          "name": "Vedant Kumar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Adrian Prantl",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "There have been significant improvements to LLVM's handling of debug info in optimized code over the past year. We will highlight recent improvements (many of which came from new contributors!) and outline some important challenges ahead. To get the conversation going, we will present data showing improvements in source variable availability and identify passes that need more work. Potential topics for discussion include eliminating codegen differences in the presence of debug info, improving line table fidelity, features missing in LLVM's current debug info representation, and higher quality backtraces in the presence of tail calls and outlining.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Debug Information"
+      ]
+    },
+    {
+      "id": "2018-10-031",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "Lifecycle of LLVM bug reports",
+      "speakers": [
+        {
+          "name": "Kristof Beyls",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Paul Robinson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The goal of the BoF is to improve the (currently non-existing) definition and documentation of the lifecycle of LLVM bug tickets. Not having a documented lifecycle results in a number of issues, of which few have come up recently on the mailing list, including: -- When bugs get closed, what is the right amount of info that should be required so that the bug report is as meaningful as possible without putting unreasonable demands on the person closing the bug? -- When bugs get reported, what level of triaging, and to what timeline, should we aim for to keep bug reporters engaged? -- What should we aim to achieve during triaging?",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-10-032",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "GlobalISel Design and Development",
+      "speakers": [
+        {
+          "name": "Amara Emerson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "GlobalISel is the planned successor to the SelectionDAG instruction selection framework, currently used by the AArch64 target by default at the -O0 optimization level, and with partial implementations in several other backends. It also has downstream users in the Apple GPU compiler. The long term goals for the project are to replace the block-based selection strategy of SelectionDAG with a more efficient framework that can also do function-wide analysis and optimization. The design of GlobalISel has evolved over its lifetime and continues to do so. The aim of this BoF is to bring together developers and other parties interested in the state and future progress of GlobalISel, and to discuss some issues that would benefit from community feedback. We will first give a short update on progress within the past year. Possible discussion topics include:\n\n• The current design of GISel’s pipeline, with particular focus on how well the architecture will scale as the focus on optimisation increases. • For new backends, how is the experience in bringing up a GlobalISel based code generator? For existing backends, are there any impediments to continuing development? • Does using GlobalISel mean that double the work is necessary with more maintenance costs? How can this be mitigated? • Are there additional features that developers would like to see in the framework? What SelectionDAG annoyances should we take particular care to avoid or improve upon?",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "GPU",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-10-033",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "Migrating to C++14, and beyond!",
+      "speakers": [
+        {
+          "name": "JF Bastien",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "C++11 was a huge step forward for C++. C++14 is a much smaller step, yet still brings plenty of great features. C++17 will be equally small but nice. The LLVM community should discuss how we want to handle migration to newer versions of C++: how do we handle compiler requirements, notify developers early enough, manage ABI changes in toolchains, and do the actual migration itself. Let’s get together and hash this out!",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2018-10-034",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "Ideal versus Reality: Optimal Parallelism and Offloading Support in LLVM",
+      "speakers": [
+        {
+          "name": "Xinmin Tian",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hal Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "TB Schardl",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Vikram Adve",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Explicit parallelism and offloading support is an important and growing part of LLVM’s eco-system for CPUs, GPUs, FPGAs and accelerators. LLVM's optimizer has not traditionally been involved in explicit parallelism and offloading support, and specifically, the outlining logic and lowering translation into runtime-library calls resides in Clang. While there are several reasons why the optimizer must be involved in parallelization in order to suitably handle a wide set of applications, the design an appropriate parallel IR for LLVM remains unsettled. Several groups (ANL, Intel, MIT, UIUC) have been experimenting with implementation techniques that push this transformation process into LLVM's IR-level optimization passes [1, 2, 3, 4, 5]. These efforts all aim to allow the optimizer to leverage language properties and optimize parallel constructs before they're transformed into runtime calls and outlined functions. Over the past couple of years, these groups have implemented out-of-tree extensions to LLVM IR to represent and optimize parallelism, and these designs have been influenced by community RFCs [6] and discussions on this topic. In this BoF, we will discuss the use cases we'd like to address and several of the open design questions, including:\n\n* Is a canonical loop form necessary for parallelization and vectorization? * What is the SSA update requirements for extensive loop parallelization and transformation? * What are the required changes to, and impact on, existing LLVM optimization passes and analyses? E.g. inlining and aliasing-information propagation * How to represent and leverage language properties of parallel constructs in LLVM IR? * Where is the proper place in the pipeline to lower these constructs?\n\nThe purpose of this BoF is to bring together all parties interested in optimizing parallelism and offloading support in LLVM, as well as the experts in parts of the compiler that will need to be modified. Our goal is to discuss the gap between ideal and reality and identify the pieces that are still missing. In the best case we expect interested parties to agree on the next steps towards better parallelism support Clang and LLVM.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Clang",
+        "GPU",
+        "IR",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-10-035",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "Implementing the parallel STL in libc++",
+      "speakers": [
+        {
+          "name": "Louis Dionne",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM 7.0 almost has complete support for C++17, but libc++ is missing a major component: the parallel algorithms. Let's meet to discuss the options for how to implement support.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs"
+      ]
+    },
+    {
+      "id": "2018-10-036",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "Clang Static Analyzer BoF",
+      "speakers": [
+        {
+          "name": "Devin Coughlin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This BoF will provide an opportunity for developers and users of the Clang Static Analyzer to discuss the present and future of the analyzer. We will start with a brief overview of analyzer features added by the community over the last year, including our Google Summer of Code projects on theorem prover integration and detection of deallocated inner C++ pointers. We will discuss possible focus areas for the next year, including laying the foundations for analysis that crosses the boundaries of translation units. We would also like to brainstorm and gather community feedback on potential dataflow-based checks, ask for community help to improve analyzer C++17 support, and discuss the challenges and opportunities of C++20 support, including contracts.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "Clang",
+        "Community Building",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-10-037",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "bof",
+      "title": "LLVM Foundation BoF",
+      "speakers": [
+        {
+          "name": "LLVM Foundation Board of Directors",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Ask the LLVM Foundation Board of Directors anything, get program updates, and meet the new board members",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2018-10-038",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Automatic Differentiation in C/C++ Using Clang Plugin Infrastructure",
+      "speakers": [
+        {
+          "name": "Vassil Vassilev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Aleksandr Efremov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In mathematics and computer algebra, automatic differentiation (AD) is a set of techniques to evaluate the derivative of a function specified by a computer program. AD exploits the fact that every computer program, no matter how complicated, executes a sequence of elementary arithmetic operations (addition, subtraction, multiplication, division, etc.) and elementary functions (exp, log, sin, cos, etc.) including control flow statements. AD takes source code of a function as input and produces source code of the derived function. By applying the chain rule repeatedly to these operations, derivatives of arbitrary order can be computed automatically, accurately to working precision, and using at most a small constant factor more arithmetic operations than the original program.\n\nAD is an alternative technique to symbolic and numerical differentiation. These classical methods run into problems: symbolic differentiation leads to inefficient code (unless done carefully) and faces the difficulty of converting a computer program into a single expression, while numerical differentiation can introduce round-off errors in the discretization process and cancellation. Both classical methods have problems with calculating higher derivatives, where the complexity and errors increase. Finally, both classical methods are slow at computing the partial derivatives of a function with respect to many inputs, as is needed for gradient-based optimization algorithms. AD solves all of these problems, at the expense of introducing more software dependencies.\n\nOur talk presents our AD tool, clad -- a clang plugin that can produce derivatives of arbitrary C/C++ functions through implementing source code transformation and employing the chain rule of differential calculus in both forward mode and reverse mode. That is, clad decomposes the original functions into elementary statements and generates their derivatives with respect to the user-defined independent variables. The combination of these intermediate expressions forms additional source code, built through modifying clang’s abstract syntax tree (AST) along the control flow. Compared to other tools, clad has the advantage of relying on clang and llvm modules for parsing the original program. It uses clang's plugin mechanism for constructing the derivative's AST representation, for generating executable code, and for performing global analysis. Thus it results in low maintenance, high compatibility and excellent performance.\n\nThis work was presented as a poster at the LLVM Dev Meeting 2013 (https://llvm.org/devmtg/2013-11/slides/Vassilev-Poster.pdf). Recent advancements in minimization and machine learning frameworks such as TensorFlow have made the topic increasingly interesting to a broader audience. We would like to present the current state of the clad, explain the major concept and discuss the implementation strategies. We will briefly explain how clad is used in CERN’s data analysis framework ROOT. Last but not least, we intend to outline common problems when developing clang plugins such as API stability, missing testing tools from the regular LLVM binary installations and writing compatible across versions plugin infrastructure.",
+      "videoUrl": "https://youtu.be/QciQW1bTMe4",
+      "videoId": "QciQW1bTMe4",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "ML",
+        "Optimizations",
+        "Performance",
+        "Security",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2018-10-039",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "More efficient LLVM devs: 1000x faster build file generation, -j1000 builds, and O(1) test execution",
+      "speakers": [
+        {
+          "name": "Nico Weber",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The Chromium project has developed several tools to make working on large C++ codebases a better experience. I've hooked up the LLVM build to these tools and use them for my personal work on llvm, clang, and lld. With this, I can generate build files for llvm in 30ms instead of 4m on my laptop, do full builds of LLVM in less than 4 minutes on my laptop, and upload all llvm binaries to a data center and run check-llvm, check-clang, and check-lld in parallel in about 2 minutes. This talk describes the setup. Several parts are generally usable and could help other interested llvm developers.",
+      "videoUrl": "https://youtu.be/gZwu8aBmqtc",
+      "videoId": "gZwu8aBmqtc",
+      "slidesUrl": "https://llvm.org/devmtg/2018-10/slides/Weber-FunnerLLVMDevelopment.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "LLD"
+      ]
+    },
+    {
+      "id": "2018-10-040",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Heap-to-Stack Conversion",
+      "speakers": [
+        {
+          "name": "Hal Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk provides a brief update on work to enable heap-to-stack conversion within LLVM's optimizer. This optimization eliminates unnecessary calls to memory allocation routines (e.g., malloc), where suitable, by converting allocations to use stack memory instead of heap memory. For applications where hot code creates and destroys many short-lived objects, significant performance improvements can be observed.",
+      "videoUrl": "https://youtu.be/lTgERgPNTF8",
+      "videoId": "lTgERgPNTF8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-041",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "TWINS - This Workflow is Not Scrum: Adapting Agile for Open Source Interaction",
+      "speakers": [
+        {
+          "name": "Joshua Magee",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We began the PlayStation(R) 4 life cycle as a small, single site, team working privately on LLVM with an ad-hoc process. As the team and project grew to encompass multiple sites, we adopted the Scrum methodology with success. However, as we began to engage more with the LLVM community directly our process became strained. This talk describes our process, entitled \"TWINS - This Workflow is Not Scrum\", to better accommodate the requirements of developing our products while engaging with the LLVM community.",
+      "videoUrl": "https://youtu.be/JZ2ZXYCBUWU",
+      "videoId": "JZ2ZXYCBUWU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2018-10-042",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Mutating the clang AST from Plugins",
+      "speakers": [
+        {
+          "name": "Andrei Homescu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Per Larsen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The clang AST is generally considered immutable, and clang plugins in particular are expected to consume the AST without modifying it. In the C2Rust project, we are building tools to transpile C code to Rust and cross-check the result using compiler plugins for clang and rustc. The clang cross-checking plugin inserts instrumentation code into C code at compile-time by modifying the clang AST in place. In this talk, we show how the C2Rust clang plugin breaks the \"immutable AST\" rule by mutating the AST in two significant ways: * Adding new statements to existing C functions, and * Creating new C functions that are passed back to clang for compilation. Additionally, the plugin adds a C language extension in the form of a new \"cross_check\" attribute for functions, structures and structure fields. This new attribute helps users configure and customize the inserted instrumentation code. We discuss how the plugin implements this attribute, and the alternative implementation approaches we considered.",
+      "videoUrl": "https://youtu.be/_rUwW8Awc5s",
+      "videoId": "_rUwW8Awc5s",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend",
+        "Performance",
+        "Rust"
+      ]
+    },
+    {
+      "id": "2018-10-043",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "atJIT: an online, feedback-directed optimizer for C++",
+      "speakers": [
+        {
+          "name": "Kavon Farvardin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hal Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Michael Kruse",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "John Reppy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "atJIT is an LLVM-powered system that provides the ability to automatically performance-tune annotated C++ programs via machine learning and other techniques. We are trying to improve on lackluster results in related work by taking advantage of the precise control over optimization that is available in LLVM and Polly. For example, our online tuner is able to control and observe the effects of transformations applied to individual loops. So far, we have tried tuning one real computational kernel, matrix multiplication, and saw a 1.48x speedup (without Polly) over the baseline of ordinary JIT compilation. Additional speedup is expected as the integration with Polly continues.\n\nAt the core of atJIT is a careful cooperation between Clang and LLVM that brings us another step closer toward enabling lifelong program optimization (an idea central to motivating LLVM's development [1]). The \"fat binary\" approach used in atJIT can be improved and generalized into a new feature that supports front-ends other than Clang.",
+      "videoUrl": "https://youtu.be/r1i1HQzf6l0",
+      "videoId": "r1i1HQzf6l0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend",
+        "JIT",
+        "ML",
+        "Optimizations",
+        "Performance",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2018-10-044",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Repurposing GCC Regression for LLVM Based Tool Chains",
+      "speakers": [
+        {
+          "name": "Jeremy Bennett",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Simon Cook",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ed Jones",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Takeaways: 1. how to test a Clang/LLVM tool chain using the latest GCC test suite; 2. examples of production tool chains where this has been used; and 3. a demonstration of the tests in action.\n\nWhen starting a new port of a compiler, it is important to have a set of good tests in order to ensure correct backend functionality. The size of each test case is important, especially in the case of deeply embedded targets where memory may be extremely scarce. Early in a port, there are the additional challenges that only minimal libraries may be implemented and no I/O may be available, adding additional constraints on a test.\n\nAs such, a high quality test suite needs to meet these requirements:\n\n- Freestanding C environment - Reasonable coverage of compiler features, both standard and extensions - Small (for embedded) - Tests the full tool chain - compile -> link -> execute - Quick to port\n\nOne good candidate is the GCC test suite, which has been used for over 30 years. As a generic C/C++ test suite, it is highly portable between architectures and is used in the testing of countless GCC backends, typically running around 90,000 C tests and around 60,000 C++ tests. The use of GCC tests with LLVM is already well known - a fork of the test suite from GCC 4.2 exists in the clang-tests repository, but has remained based on that version for a number of years and is now 11 years old. As such this version is now dated - it lacks for example tests of newer C/C++ standards.\n\nThere are challenges with using the current GCC regression suite for Clang. This test suite is a mix of C compliance tests, GNU C extension compliance tests, GCC internal tests, C torture tests, as well as regression tests. Some groups of tests can be excluded when they are not appropriate, but many individual tests need to be manually evaluated. Clearly tests of the GCC internals are irrelevant to LLVM.\n\nOver the past several years we have been working on solving these limitations by making the GCC test suite more generic, allowing the latest version to be used with a wider selection of tool chains. It can now be used to test compilers that support a similar flag structure to GCC. We initially set this up for a small number of projects as an in-house project at Embecosm. This has since been made generic and publicly available, so can be used with a wider range of targets. Our goal is to merge this upstream with the GCC test suite. It will then be possible for future GCC tests to be picked up for all LLVM targets without significant modification.\n\nIn this talk we will review the approaches that have previously been used for this type of testing. We will then explain how to use our port of the GCC test suite for testing Clang based tool chains for a deeply embedded target. We will consider the challenges in having this adopted upstream in GCC. We will illustrate this with existing production processors and with a demonstration using our public testing of embedded RISC-V.",
+      "videoUrl": "https://youtu.be/GV4PoWu0UZ0",
+      "videoId": "GV4PoWu0UZ0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "C++",
+        "Clang",
+        "Embedded",
+        "Performance",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2018-10-045",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "ThinLTO Summaries in JIT Compilation",
+      "speakers": [
+        {
+          "name": "Stefan Gränitz",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The LLVM ORC library offers great components for putting together specialized JIT compilers. Clang's ThinLTO object files contain the module's bitcode along with ThinLTO module summaries, which provide cross-module call-graph information. We can use this information in a ORC JIT to get both, minimal front-loading and minimal compiler interception overhead.",
+      "videoUrl": "https://youtu.be/ZCnHxRhQmvs",
+      "videoId": "ZCnHxRhQmvs",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "Clang",
+        "IR",
+        "JIT",
+        "LTO"
+      ]
+    },
+    {
+      "id": "2018-10-046",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Refuting False Bugs in the Clang Static Analyzer using SMT Solvers",
+      "speakers": [
+        {
+          "name": "Mikhail R. Gadelha",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this talk, I will present a new option --crosscheck-with-z3 added to the static analyzer to validate (or refute) bugs, using an SMT solver.\n\nThe clang static analyzer works by symbolically executing a program, collecting the symbols and constraints for every path in the program, and reasoning about bug feasibility using a built-in solver called RangedConstraintManager. It was designed to be fast, so that it can provide results for common mistakes (e.g., division by zero or use of uninitialized variables) even in complex programs. However, the speed comes at the expense of precision; it cannot handle some arithmetic operations (e.g, remainders) or bitwise expressions. In these cases the analyzer discards the constraints and might report false bugs.\n\nThe new option works by adding an extra step in the program analysis after the bug is found by the built-in solver but before reporting it to the user; the path and the constraints that trigger the bug are encoded in SMT and checked for satisfiability.\n\nI will also present an evaluation of the crosscheck when analyzing eleven C/C++ open-source projects of various size (tmux, redis, openssl, twin, git, postgresql, sqlite3, curl, libWebM, memcached, xerces-c, and XNU). When analyzing these projects with bug validation enabled, the slowdown is negligible in cases where no bug is refuted (average 2.5% slowdown) and, when it finds false bugs, the bug validation gives a small speed up (average 5.1% speed up). On average, 12.2 bugs per program were refuted by the SMT solver, ranging from 1 bug refuted in redis to 51 being refuted in XNU.",
+      "videoUrl": "https://youtu.be/SO84AmbWiLA",
+      "videoId": "SO84AmbWiLA",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-10-047",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "What’s New In Outlining",
+      "speakers": [
+        {
+          "name": "Jessica Paquette",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The MachineOutliner has come a long way since its introduction. In particular, it now supports AArch64, and offers some significant code size savings there— around a 5% improvement on average under -Oz. This talk will dive into the work that made AArch64 support for the MachineOutliner a reality. In particular, we’ll talk about\n\n- What it takes to port the MachineOutliner to a new target - Improvements in the outlining algorithm - The current outlining results, and how we can push the technology further",
+      "videoUrl": "https://youtu.be/naF9r8O_3aY",
+      "videoId": "naF9r8O_3aY",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-10-048",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "DWARF v5 Highlights - Why You Care",
+      "speakers": [
+        {
+          "name": "Paul Robinson",
+          "affiliation": "Pavel Labath",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Wolfgang Pieb",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "RF is the primary debugging-information format for non-Windows platforms. Version 5 of the standard was released in February 2017, and work is actively ongoing to support it in LLVM. But what makes it better than previous DWARF versions? This lightning talk covers how DWARF v5 reduces the number of linker relocations and improves string sharing in the debug info, which should speed up link times for builds with debug info. It will also describe the new lookup tables, which improve debugger performance on startup and potentially save memory (no need to build an index on the fly).",
+      "videoUrl": "https://youtu.be/2Pb00xz8uH8",
+      "videoId": "2Pb00xz8uH8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Debug Information",
+        "LLD",
+        "LLDB",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-049",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Using TAPI to Understand APIs and Speed Up Builds",
+      "speakers": [
+        {
+          "name": "Steven Wu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Juergen Ributzka",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "TAPI (Text-based API) is a LLVM-based tool that is capable of extracting text-based linking interfaces directly from project headers. This will explain how TAPI uses Clang to understand the binary interfaces promised by headers, how it generates dynamic library stubs, and how we leverage TAPI at Apple to validate SDKs and speed up builds. We'll also talk about challenges of understanding C++ APIs and work left to do.",
+      "videoUrl": "https://youtu.be/B9li6EkD5zA",
+      "videoId": "B9li6EkD5zA",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "Clang"
+      ]
+    },
+    {
+      "id": "2018-10-050",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Hardware Interference Size",
+      "speakers": [
+        {
+          "name": "JF Bastien",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "C++17 adds support for hardware destructive / constructive interference size constexpr values. We’ll discuss how we expect developers to use this new feature, and how we should therefore implement it. Of particular interest to the LLVM community are the ABI issues inherent in a maximally useful implementation. We’ll dive into ABI details and discuss what the C++ Standards Committee’s stance is.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2018-10-051",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Dex: efficient symbol index for Clangd",
+      "speakers": [
+        {
+          "name": "Kirill Bobyrev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Eric Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Sam McCall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ilya Biryukov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Dex is the new Clangd symbol index design and implementation which is the backbone for such features as the global code completion. The proposed index design allows efficient symbol retrieval based on a wide range of metrics such as fuzzy matching. Dex is designed to serve small to medium size projects including LLVM and Chromium with high code completion quality and without noticeable latency. We would like to share the experience building the new index and outline the vast range of potential improvements for performance and quality optimization. The initial design proposal was sent to clangd-dev and can be found here: http://lists.llvm.org/pipermail/clangd-dev/2018-July/000023.html",
+      "videoUrl": "https://youtu.be/VhxrFor3VyQ",
+      "videoId": "VhxrFor3VyQ",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-052",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Flang Update",
+      "speakers": [
+        {
+          "name": "Steve Scalpone",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "An update about the current state of Flang, including a report on Fortran performance and the new f18 front end.",
+      "videoUrl": "https://youtu.be/Mkccs4EIiac",
+      "videoId": "Mkccs4EIiac",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Flang",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-053",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "clang-doc: an elegant generator for more civilized documentation",
+      "speakers": [
+        {
+          "name": "Julie Hockett",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "clang-doc is a new Clang tool for generating C/C++ documentation, designed to be modular and extensible while maintaining backwards-compatibility with existing Doxygen-style markup. The tool aims to simplify the overhead of generating and maintaining documentation, particularly in larger projects. This talk will discuss the motivations for creating clang-doc, briefly outline its framework, describe a simple use case, and examine the resulting output. It will touch on how the tool's map-and-reduce approach allows for producing documentation for large projects. Finally, we'll explore possible future additions and extensions to the tool.",
+      "videoUrl": "https://youtu.be/bTzvPhKN0YI",
+      "videoId": "bTzvPhKN0YI",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2018-10-054",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Code Coverage with CPU Performance Monitoring Unit",
+      "speakers": [
+        {
+          "name": "Ivan Baev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Bharathi Seshadri",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Stefan Pejic",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Code coverage (CC) is important part of any software development and verification. The CC tools used in most software organizations rely on source code instrumentation. This study investigates an alternative approach based on hardware performance monitoring unit (PMU) in modern CPUs. PMU-based methods have been used in profilers to measure and report various hardware events: instruction executed, branches taken, or cache misses. The PMU-based code coverage does not include an instrumentation step and reuses the existing binaries, so the workflow is simple and there is no memory use overhead. For this work we extended SampleProfileLoader pass to compute provably executed source lines from perf samples. The initial results are encouraging: PMU coverage reaches 90% of instrumentation-based coverage for h264ref and mcf benchmarks.",
+      "videoUrl": "https://youtu.be/g8ONPzDigYw",
+      "videoId": "g8ONPzDigYw",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-055",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "VecClone Pass: Function Vectorization via LoopVectorizer",
+      "speakers": [
+        {
+          "name": "Matt Masten",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Evgeniy Tyurin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Konstantina Mitropoulou",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We currently have three vectorizers in the LLVM trunk: LoopVectorizer, SLPVectorizer, and LoadStoreVectorizer. In this talk, we present how we are avoiding to add a fourth vectorizer for function vectorization. Vectorizing a function is necessary when a programmer writes a function that operates on a single element (or work item) and wants to execute it on multiple elements (or work items), through SIMD execution units. Compilation of OpenMP declare simd functions and OpenCL kernels, for SIMD targets, fits in this profile. A naïve approach is to write a purpose built vectorizer that is tuned to vectorize functions. However, since vectorizer is a complicated optimization pass which consists of many components including optimization, cost model and code generation, both the development and the maintenance are big headaches. Therefore, since there are great similarities between vectorizing a loop and vectorizing a function, we decided to use the LoopVectorizer to vectorize functions. In this talk, we present how OpenMP and OpenCL kernel functions are transformed in such a way that they can be vectorized through the standard LoopVectorizer. We call this optimization pass VecClone.",
+      "videoUrl": "https://youtu.be/BIptGq6DssE",
+      "videoId": "BIptGq6DssE",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Backend",
+        "GPU",
+        "OpenCL",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-056",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "ISL Memory Management Using Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "Malhar Thakkar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ramakrishna Upadrasta",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Maintaining consistency while manual reference counting is very difficult. Languages like Java, C#, Go and other scripting languages employ garbage collection which automatically performs memory management. On the other hand, there are certain libraries like ISL (Integer Set Library) which use memory annotations in function declarations to declare what happens to an objects ownership, thereby specifying the responsibility of releasing it as well. However, improper memory management in ISL leads to invocations of runtime errors. Hence, we have added support to Clang Static Analyzer for performing reference counting of ISL objects (although with the current implementation, it can be used for any type of C/C++ object) thereby enabling the static analyzer to raise warnings in case there is a possibility of a memory leak, bad release, etc.",
+      "videoUrl": "https://youtu.be/AgHy_4cQzMU",
+      "videoId": "AgHy_4cQzMU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-10-057",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Eliminating always_inline in libc++: a journey of visibility and linkage",
+      "speakers": [
+        {
+          "name": "Louis Dionne",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Libc++ has long abused the always_inline attribute to avoid leaking unstable ABIs through object and library boundaries. This will explain why we stopped using this attribute, what we do instead, and why it matters.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs"
+      ]
+    },
+    {
+      "id": "2018-10-058",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "Error Handling in Libraries: A Case Study",
+      "speakers": [
+        {
+          "name": "James Henderson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM includes many libraries that are highly useful for a wide range of programs. Even ignoring out-of-tree consumers, there are a huge variety of clients, with different requirements and needs. One concrete example is the LLVMDebugInfoDWARF library, which provides interfaces to extract information about DWARF debug sections from a file. Some clients, such as llvm-dwarfdump, don't want to fail immediately when there is a parsing issue, but may still want to emit an error. On the other hand, LLD uses this library to provide additional information in error messages and may not even want to warn in the event of an issue.\n\nSo, what should LLVM libraries do if they encounter a problem when executing a function? Libraries need to provide a rich enough interface that allows getting useful information in the event of an error, without making those errors terminal to the program as a whole. There are already existing mechanisms to do this in LLVM, but using them appropriately requires careful thought.\n\nUsing work performed on the DWARF debug line parser earlier this year as an example, this talk will show some of the pitfalls and problems a library developer has to be aware of when handling errors in their code, and will present some good rules of thumb that should be followed.",
+      "videoUrl": "https://youtu.be/YSEY4pg1YB0",
+      "videoId": "YSEY4pg1YB0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Debug Information",
+        "Frontend",
+        "LLD",
+        "Libraries"
+      ]
+    },
+    {
+      "id": "2018-10-059",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "lightning-talk",
+      "title": "NEC SX-Aurora - A Scalable Vector Architecture",
+      "speakers": [
+        {
+          "name": "Erich Focht",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The NEC SX-Aurora Vector Engine is a vector-length parametric wide-SIMD architecture. This makes it a candidate for the Scalable Vector Extension that is currently being developed for LLVM. SX-Aurora hardware is available today and work is underway to develop an open source LLVM backend for it. The development of LLVM SVE so far has centered around the ARM SVE ISA and RVV, the RISC-V V extension. This is a proposal to introduce NEC SX-Aurora to the LLVM community and to coordinate on the development of the Scalable Vector Extension for LLVM.",
+      "videoUrl": "https://youtu.be/Ujixa4WI8ek",
+      "videoId": "Ujixa4WI8ek",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Backend",
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2018-10-060",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "poster",
+      "title": "Gaining fine-grain control over pass management",
+      "speakers": [
+
+      ],
+      "abstract": "Gaining fine-grain control over pass management\n\n``opt`` is a great tool to schedule passes, test new combinations and prototype new interactions. However one quickly finds limitations: it is impossible to apply a function pass to a single function, to change the pass options on a per case usage, etc. There is nothing in the pass manager infrastructure preventing these enhancements, so we implemented a first interactive shell, ``optsh``, to provide these features.\n\nStill, the abstraction provided by the pass manager is not enough. In the context of code obfuscation, we reached limitations with this mechanism to perform fine grain transformations combinations when the choice of security vs. performance tradeoff must be delegated to the end-user.\n\nConsidering the Control Flow Graph Flattening transformation [0] which basically encodes the control flow of a function into a dispatcher, no extra obfuscation layer is performed on the newly generated Flow Dispatcher, as the user can't target this code with a pragma, function name etc (because it wasn't there at first).\n\nTo answer these needs, we abstracted the passes with a set of inputs and outputs, to describe their effects more precisely, and gain control over their interdependencies in order to chain them. For instance:\n\nDispatcher, Others = ControlFlowGraphFlattening(F) DuplicateBasicBlock(F) OpaqueConstants(Dispatcher)\n\nHowever, it raises issues about the component validity as the Flow Dispatcher returned by the Control Flow Graph Flattening transformation may not exist anymore after another transformation that could for instance split it.\n\nThis talk is about the new abstractions we are developping, some based on the new LLVM pass manager. Although we use code obfuscation as an illustration, we believe the ideas can be applied to a larger set of problems and appeal to a wider audience.\n\n[0] https://www.inf.u-szeged.hu/~akiss/pub/pdf/laszlo_obfuscating.pdf",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Performance",
+        "Security"
+      ]
+    },
+    {
+      "id": "2018-10-061",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "poster",
+      "title": "Integration of OpenMP, libcxx and libcxxabi packages into LLVM toolchain",
+      "speakers": [
+        {
+          "name": "Reshabh Sharma",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "At apt.llvm.org llvm-toolchain is the package repository for every maintained version of Debian and Ubuntu. It generates LLVM, Clang, clang extra tools, compiler-rt, polly, LLDB and LLD packages for the stable, stabilization and development branches. This project aimed to integrate libc++ and OpenMP packages into the llvm-toolchain, focusing on factors like co-installability and taking care about the impact of existing usage of these libraries. Changes have been branched and is available in llvm-toolchain-7.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs",
+        "Clang",
+        "LLD",
+        "LLDB",
+        "Libraries",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2018-10-062",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "poster",
+      "title": "Improving Debug Information in LLVM to Recover Optimized-out Function Parameters",
+      "speakers": [
+        {
+          "name": "Ananthakrishna Sowda",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Djordje Todorovic",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Nikola Prica",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ivan Baev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Software product releases are usually built with compiler optimization at level -O2 or –O3. Investigating customer reported issues often involves loading the core-file in a debugger and analyzing cause of crash or assert. Unfortunately, most of the parameters in call trace are reported as optimized-out, because parameter passing registers are reused and most parameters are not live in the current frame past the function call, hence optimized-out in debug jargon. An attempt to ease this problem comes from a key technique used by expert software developers: go one level up into caller frame and look at the source or disassembly to see if caller has the values of the same arguments. This additional manual step in debugger is time consuming and error prone for experienced developers. But it is impossible for novice users and developers unfamiliar with ISA and ABI calling conventions. With the additional call-site and callee DWARF debug information specified in DWARF 5, this process can be automated in debugger. We have a prototype working in LLVM compiler which is recovering and reporting some optimized-out parameters. Our approach is improving availability of location information for parameters significantly. We will share our results and our insights about implementing it in LLVM, in this poster submission.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Debug Information",
+        "LLDB",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-10-063",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "poster",
+      "title": "Automatic Compression for LLVM RISC-V",
+      "speakers": [
+        {
+          "name": "Sameer AbuAsal",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ana Pazos",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Abstract RISCV backend in LLVM has gained more support from contributors over the last year and its stability has improved. In this poster we discuss the design and implementation of the RISC-V compression feature in LLVM. RISC-V compression was designed in a modular way where compression patterns could be added incrementally; this included writing a new table gen backend that can parse compression patterns and generate necessary code to check for compression legality of an MC instruction and generated the compressed MC instruction. The generated code is called late in the compilation during the emit stage of the, this allowed us to have a centralized location for compression logic for the compiler and the assembler. Automatic compression backend in LLVM provided ~20% improvement in code size for the SPEC benchmark. Similar to the results we observed in GCC.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-10-064",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "poster",
+      "title": "Guaranteeing the Correctness of LLVM RISC-V Machine Code with Fuzzing",
+      "speakers": [
+        {
+          "name": "Jocelyn Wei",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ana Pazos",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Mandeep Singh Grang",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In this poster session, we will present the tools we have been developing to guarantee the correctness of LLVM RISC-V Machine Code using structured fuzzing technology. The Machine Code (MC) Layer contains target-specific information to represent machine instructions, and it is the core of the LLVM backend. Our tool aims to expose any bugs in the MC by testing it thoroughly. This maximizes the test coverage of the many architecture variants that result from combining the RISC-V base ISA with its standard and custom extensions. Guaranteeing correctness is important because the MC Layer is used to build several tools, including assemblers and disassemblers. Using the same structured fuzzing technology as the clang-proto-fuzzer tool, we implement the llvm-mc-assemble-proto-fuzzer tool for the RISC-V assembler. We describe the grammar of the RISC-V assembly language using Google’s Protocol Buffer language, which provides the fuzzer’s mutator a structured way to permute input. We also implement an assembler/disassembler driver that tests the full assembler–disassembler loop, using a reference “golden” disassembler. These tools are being developed during my summer internship in the San Diego LLVM team at the Qualcomm Innovation Center.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Clang",
+        "Dynamic Analysis",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2018-10-065",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "poster",
+      "title": "NEC SX-Aurora - A Scalable Vector Architecture",
+      "speakers": [
+        {
+          "name": "Kazuhisa Ishizaka",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Kazushi Marukawa",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Erich Focht",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Simon Moll",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Matthias Kurtenacker",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Sebastian Hack",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The NEC SX-Aurora Vector Engine is a vector-length parametric wide-SIMD architecture. This makes it a candidate for the Scalable Vector Extension that is currently being developed for LLVM. SX-Aurora hardware is available today and work is underway to develop an open source LLVM backend for it. The development of LLVM SVE so far has centered around the ARM SVE ISA and RVV, the RISC-V V extension. This is a proposal to introduce NEC SX-Aurora to the LLVM community and to coordinate on the development of the Scalable Vector Extension for LLVM.",
+      "videoUrl": "https://youtu.be/Ujixa4WI8ek",
+      "videoId": "Ujixa4WI8ek",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Backend",
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2018-10-066",
+      "meeting": "2018-10",
+      "meetingName": "2018 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 17-18, 2018",
+      "category": "poster",
+      "title": "Extending Clang Static Analyzer to enable Cross Translation Unit Analysis",
+      "speakers": [
+        {
+          "name": "Varun Subramanian",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Extending Clang Static Analyzer to enable Cross Translation Unit Analysis",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    }
+  ]
+}

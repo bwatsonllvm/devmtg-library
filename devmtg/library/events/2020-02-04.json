@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2020-02-04",
+    "name": "2020 Meetup in Paris",
+    "date": "February 4, 2020",
+    "location": "Meetup in Paris",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

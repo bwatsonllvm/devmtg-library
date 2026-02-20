@@ -1,0 +1,462 @@
+{
+  "meeting": {
+    "slug": "2016-03",
+    "name": "2016 European LLVM Developers' Meeting",
+    "date": "March 17-18, 2016",
+    "location": "Barcelona, Spain",
+    "canceled": false,
+    "talkCount": 17
+  },
+  "talks": [
+    {
+      "id": "2016-03-001",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Clang, libc++ and the C++ standard",
+      "speakers": [
+        {
+          "name": "Marshall Clow",
+          "affiliation": "Qualcomm; Richard Smith - Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/zQ9tT8fbtSo",
+      "videoId": "zQ9tT8fbtSo",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs",
+        "Clang"
+      ]
+    },
+    {
+      "id": "2016-03-002",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Codelet Extractor and REplayer",
+      "speakers": [
+        {
+          "name": "Chadi Akel",
+          "affiliation": "Exascale Computing Research",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/7sVnjJlZTW4",
+      "videoId": "7sVnjJlZTW4",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-03-003",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "New LLD linker for ELF",
+      "speakers": [
+        {
+          "name": "Rui Ueyama",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/CYCRqjVa6l4",
+      "videoId": "CYCRqjVa6l4",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "LLD"
+      ]
+    },
+    {
+      "id": "2016-03-004",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Improving LLVM Generated Code Size for X86 Processors",
+      "speakers": [
+        {
+          "name": "David Kreitzer",
+          "affiliation": "Intel; Zia Ansari - Intel",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/yHexQSFud3w",
+      "videoId": "yHexQSFud3w",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-03-005",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Towards ameliorating measurement bias in evaluating performance of generated code",
+      "speakers": [
+        {
+          "name": "Kristof Beyls",
+          "affiliation": "ARM",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/COmfRpnujF8",
+      "videoId": "COmfRpnujF8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2016-03-006",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "A journey of OpenCL 2.0 development in Clang",
+      "speakers": [
+        {
+          "name": "Anastasia Stulova",
+          "affiliation": "ARM",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/3yzL2loPtgM",
+      "videoId": "3yzL2loPtgM",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2016-03-007",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Building a binary optimizer with LLVM",
+      "speakers": [
+        {
+          "name": "Maksim Panchenko",
+          "affiliation": "Facebook",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/gw3iDO3By5Y",
+      "videoId": "gw3iDO3By5Y",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2016-03-008",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "SVF: Static Value-Flow Analysis in LLVM",
+      "speakers": [
+        {
+          "name": "Yulei Sui",
+          "affiliation": "University of New South Wales",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/nD-i-enA8rc",
+      "videoId": "nD-i-enA8rc",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-03-009",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Run-time type checking with clang, using libcrunch",
+      "speakers": [
+        {
+          "name": "Chris Diamand",
+          "affiliation": "University of Cambridge",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/duoA1eWwE0E",
+      "videoId": "duoA1eWwE0E",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "Clang"
+      ]
+    },
+    {
+      "id": "2016-03-010",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Molly: Parallelizing for Distributed Memory using LLVM",
+      "speakers": [
+        {
+          "name": "Michael Kruse",
+          "affiliation": "INRIA/ENS",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/fKW3yjhcrh0",
+      "videoId": "fKW3yjhcrh0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-03-011",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "How Polyhedral Modeling enables compilation to Heterogeneous Hardware",
+      "speakers": [
+        {
+          "name": "Tobias Grosser",
+          "affiliation": "ETH",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/MOX4TxRIijg",
+      "videoId": "MOX4TxRIijg",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Loop transformations",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2016-03-012",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Bringing RenderScript to LLDB",
+      "speakers": [
+        {
+          "name": "Luke Drummond",
+          "affiliation": "Codeplay; Ewan Crawford - Codeplay",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/BBC61L0QKCM",
+      "videoId": "BBC61L0QKCM",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2016-03-013",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "C++ on Accelerators: Supporting Single-Source SYCL and HSA Programming Models Using Clang",
+      "speakers": [
+        {
+          "name": "Victor Lomuller",
+          "affiliation": "Codeplay",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/YKX6EMEib4g",
+      "videoId": "YKX6EMEib4g",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2016-03-014",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "A closer look at ARM code size",
+      "speakers": [
+        {
+          "name": "Tilmann Scheller",
+          "affiliation": "Samsung Electronics",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/cFgwEEBw7U0",
+      "videoId": "cFgwEEBw7U0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-03-015",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Scalarization across threads",
+      "speakers": [
+        {
+          "name": "Alexander Timofeev",
+          "affiliation": "Luxoft",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/2YSzLyBO4yM",
+      "videoId": "2YSzLyBO4yM",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-03-016",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "LLDB Tutorial: Adding debugger support for your target",
+      "speakers": [
+        {
+          "name": "Deepak Panickal",
+          "affiliation": "Codeplay; Andrzej Warzynski - Codeplay",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9hhDZeV0fYU",
+      "videoId": "9hhDZeV0fYU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2016-03-018",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "technical-talk",
+      "title": "Building, Testing and Debugging a Simple out-of-tree LLVM Pass",
+      "speakers": [
+        {
+          "name": "Serge Guelton",
+          "affiliation": "Quarkslab; Adrien Guinet - Quarkslab",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Z5KcwVaak3s",
+      "videoId": "Z5KcwVaak3s",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Testing"
+      ]
+    }
+  ]
+}

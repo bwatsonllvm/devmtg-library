@@ -1,0 +1,208 @@
+{
+  "meeting": {
+    "slug": "2011-09-16",
+    "name": "2011 European LLVM Developers' Meeting",
+    "date": "September 16, 2011",
+    "location": "London, UK",
+    "canceled": false,
+    "talkCount": 7
+  },
+  "talks": [
+    {
+      "id": "2011-09-16-001",
+      "meeting": "2011-09-16",
+      "meetingName": "2011 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "September 16, 2011",
+      "category": "technical-talk",
+      "title": "Handling Multi-Versioning in LLVM: Code Tracking and Cloning",
+      "speakers": [
+        {
+          "name": "A. Jimborean",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "V. Loechner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "P. Clauss",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/y9oBUlqMzvw",
+      "videoId": "y9oBUlqMzvw",
+      "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-MultiVersioningInLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2011-09-16-002",
+      "meeting": "2011-09-16",
+      "meetingName": "2011 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "September 16, 2011",
+      "category": "technical-talk",
+      "title": "More Target Independent LLVM Bitcode",
+      "speakers": [
+        {
+          "name": "Jin-Gu Kang",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/O_fSf43StyY",
+      "videoId": "O_fSf43StyY",
+      "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-MoreTargetIndependentLLVMBitcode.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2011-09-16-003",
+      "meeting": "2011-09-16",
+      "meetingName": "2011 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "September 16, 2011",
+      "category": "technical-talk",
+      "title": "Jet: A Language and Heterogeneous Compiler for Fluid Simulations",
+      "speakers": [
+        {
+          "name": "Dan Bailey",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ASXx_iYBBqM",
+      "videoId": "ASXx_iYBBqM",
+      "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-JET.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2011-09-16-004",
+      "meeting": "2011-09-16",
+      "meetingName": "2011 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "September 16, 2011",
+      "category": "technical-talk",
+      "title": "LLVM+ARM: Status of ARM platform support in LLVM and more",
+      "speakers": [
+        {
+          "name": "Anton Korobeynikov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/8zeYlsw_H3E",
+      "videoId": "8zeYlsw_H3E",
+      "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-LLVMplusARM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2011-09-16-005",
+      "meeting": "2011-09-16",
+      "meetingName": "2011 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "September 16, 2011",
+      "category": "technical-talk",
+      "title": "Implementing Dynamic Scopes In Cling",
+      "speakers": [
+        {
+          "name": "Vassil Vassilev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-ImplementingDynamicScopesInCling.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2011-09-16-006",
+      "meeting": "2011-09-16",
+      "meetingName": "2011 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "September 16, 2011",
+      "category": "lightning-talk",
+      "title": "The new LLVM exception handling scheme",
+      "speakers": [
+        {
+          "name": "Duncan Sands",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-ExceptionHandling.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2011-09-16-007",
+      "meeting": "2011-09-16",
+      "meetingName": "2011 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "September 16, 2011",
+      "category": "lightning-talk",
+      "title": "Indigo Shader Language and Winter",
+      "speakers": [
+        {
+          "name": "Nicholas Chapman",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-Winter.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU"
+      ]
+    }
+  ]
+}

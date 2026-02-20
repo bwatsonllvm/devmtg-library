@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2016-11-14",
+    "name": "2016 LLVM-HPC @ SC16",
+    "date": "November 14, 2016",
+    "location": "LLVM-HPC @ SC16, Salt Lake City, UT, USA",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

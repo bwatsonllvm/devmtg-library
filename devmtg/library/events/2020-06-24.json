@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2020-06-24",
+    "name": "2020 First Workshop on LLVM Compilers and Tools in HPC @ ISC",
+    "date": "June 24-25, 2020",
+    "location": "First Workshop on LLVM Compilers and Tools in HPC, ISC High Performance, virtual",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

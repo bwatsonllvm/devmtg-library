@@ -1,0 +1,373 @@
+{
+  "meeting": {
+    "slug": "2012-04-12",
+    "name": "2012 European LLVM Developers' Meeting",
+    "date": "April 12, 2012",
+    "location": "London, UK",
+    "canceled": false,
+    "talkCount": 13
+  },
+  "talks": [
+    {
+      "id": "2012-04-12-001",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Introduction",
+      "speakers": [
+        {
+          "name": "Lee Smith",
+          "affiliation": "ARM",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/BEgJbodref0",
+      "videoId": "BEgJbodref0",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Lee_Smith.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2012-04-12-002",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Autovectorization with LLVM",
+      "speakers": [
+        {
+          "name": "Hal Finkel",
+          "affiliation": "Argonne National Laboratory",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/s_xAWh_vBs8",
+      "videoId": "s_xAWh_vBs8",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Hal_Finkel.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2012-04-12-003",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Refactoring C++ with Clang",
+      "speakers": [
+        {
+          "name": "Manuel Klimek",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/8iVxwgWltbw",
+      "videoId": "8iVxwgWltbw",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Manuel_Klimek.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2012-04-12-005",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Generating Serialisation Code with Clang",
+      "speakers": [
+        {
+          "name": "Wayne Palmer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Barclays Capital",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/3A-QM8hWmAc",
+      "videoId": "3A-QM8hWmAc",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Wayne_Palmer.ppt",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2012-04-12-006",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Guaranteeing the correctness of MC for ARM",
+      "speakers": [
+        {
+          "name": "Richard Barton",
+          "affiliation": "ARM",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/3A-QM8hWmAc",
+      "videoId": "3A-QM8hWmAc",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Richard_Barton.ppt",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2012-04-12-007",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "lld - the LLVM Linker",
+      "speakers": [
+        {
+          "name": "Michael Spencer",
+          "affiliation": "Sony Computer Entertainment America",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/zCaFF3aOabg",
+      "videoId": "zCaFF3aOabg",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Michael_Spencer.pptx",
+      "projectGithub": "",
+      "tags": [
+        "LLD"
+      ]
+    },
+    {
+      "id": "2012-04-12-008",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Reducing dynamic compilation latency - concurrent and parallel dynamic compilation",
+      "speakers": [
+        {
+          "name": "Igor Bohm",
+          "affiliation": "University of Edinburgh",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/mh0sUqciwPM",
+      "videoId": "mh0sUqciwPM",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Igor_Bohm.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2012-04-12-009",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Building Linux with LLVM",
+      "speakers": [
+        {
+          "name": "Mark Charlebois",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "QuIC",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/agO40kLhPbw",
+      "videoId": "agO40kLhPbw",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Mark_Charlebois.pptx",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2012-04-12-010",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Turning control flow graphs into function call graphs: transformation of partitioned codes for execution in heterogeneous architectures",
+      "speakers": [
+        {
+          "name": "Pablo Barrio",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Univ. Politécnica de Madrid",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/IuYknIy4ADg",
+      "videoId": "IuYknIy4ADg",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Pablo_Barrio.pptx",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2012-04-12-011",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Tablegen Deep Dive",
+      "speakers": [
+        {
+          "name": "Reed Kotler",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/yZpASqb-zOU",
+      "videoId": "yZpASqb-zOU",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Reed_Kotler.ppt",
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2012-04-12-012",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Improving Performance of OpenCL on CPUs",
+      "speakers": [
+        {
+          "name": "Ralf Karrenberg & Sebastian Hack",
+          "affiliation": "Saarland University",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/FKUgW7_xaiA",
+      "videoId": "FKUgW7_xaiA",
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Ralf_Karrenberg.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "OpenCL",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2012-04-12-013",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "What LLVM can do for you",
+      "speakers": [
+        {
+          "name": "David Chisnall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Workshops/David_Chisnall.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2012-04-12-014",
+      "meeting": "2012-04-12",
+      "meetingName": "2012 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "April 12, 2012",
+      "category": "technical-talk",
+      "title": "Building a backend in 24 hours",
+      "speakers": [
+        {
+          "name": "Anton Korobeynikov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Workshops/Anton_Korobeynikov.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    }
+  ]
+}

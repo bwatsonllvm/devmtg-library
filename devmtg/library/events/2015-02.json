@@ -1,0 +1,104 @@
+{
+  "meeting": {
+    "slug": "2015-02",
+    "name": "2015 LLVM @ FOSDEM",
+    "date": "February 1, 2015",
+    "location": "FOSDEM, Brussels, Belgium",
+    "canceled": false,
+    "talkCount": 4
+  },
+  "talks": [
+    {
+      "id": "2015-02-001",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "Hafiz Abid Qadeer",
+      "speakers": [
+        {
+          "name": "Porting LLDB to a new Target",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/abid-lldb.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-02-002",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "Kristof Beyls",
+      "speakers": [
+        {
+          "name": "LLVM's AArch64 support",
+          "affiliation": "history & status",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/beyls-aarch64.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-02-003",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "Erkan Diken",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/diken-movicompile.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2015-02-004",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "David Chisnall",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/chisnall-pointers-not-int.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

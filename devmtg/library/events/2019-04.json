@@ -1,0 +1,2248 @@
+{
+  "meeting": {
+    "slug": "2019-04",
+    "name": "2019 European LLVM Developers' Meeting",
+    "date": "April 8-9, 2019",
+    "location": "Brussels, Belgium",
+    "canceled": false,
+    "talkCount": 75
+  },
+  "talks": [
+    {
+      "id": "2019-04-001",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "keynote",
+      "title": "MLIR: Multi-Level Intermediate Representation for Compiler Infrastructure",
+      "speakers": [
+        {
+          "name": "Tatiana Shpeisman (Google)",
+          "affiliation": "Chris Lattner (Google)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/qzljG6DKgic",
+      "videoId": "qzljG6DKgic",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Keynote-ShpeismanLattner-MLIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2019-04-002",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Switching a Linux distribution's main toolchains to LLVM/Clang",
+      "speakers": [
+        {
+          "name": "Bernhard Rosenkränzer (Linaro",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "OpenMandriva",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "LinDev)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/QinoajSKQ1k",
+      "videoId": "QinoajSKQ1k",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Rosenkranzer-Switching_a_Linux_distro.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-003",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Just compile it: High-level programming on the GPU with Julia",
+      "speakers": [
+        {
+          "name": "Tim Besard (Ghent University)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Fz-ogmASMAE",
+      "videoId": "Fz-ogmASMAE",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Besard-Just_compile_it_high_level_programming_on_the_GPU_with_Julia.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2019-04-004",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "The Future of AST Matcher-based Refactoring",
+      "speakers": [
+        {
+          "name": "Stephen Kelly",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/yqi8U8Q0h2g",
+      "videoId": "yqi8U8Q0h2g",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Kelly-The_future_of_AST_matcherbased_refactoring.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-005",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "A compiler approach to Cyber-Security",
+      "speakers": [
+        {
+          "name": "François de Ferrière (STMicroelectronics)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/LPj4phdJABw",
+      "videoId": "LPj4phdJABw",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Ferriere-A_compiler_approach_to_cybersecurity.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Security"
+      ]
+    },
+    {
+      "id": "2019-04-006",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Compiler Optimizations for (OpenMP) Target Offloading to GPUs",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert (Argonne National Laboratory)",
+          "affiliation": "Hal Finkel (Argonne National Laboratory)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/3AbS82C3X30",
+      "videoId": "3AbS82C3X30",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Doerfert-Compiler_optimization_for_OpenMP_accelerator_offloading.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2019-04-007",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Handling massive concurrency: Development of a programming model for GPU and CPU",
+      "speakers": [
+        {
+          "name": "Matthias Liedtke (SAP)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/cyK-WIwnlUk",
+      "videoId": "cyK-WIwnlUk",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Liedtke-Handling_massive_concurrency.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU"
+      ]
+    },
+    {
+      "id": "2019-04-008",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Automated GPU Kernel Fusion with XLA",
+      "speakers": [
+        {
+          "name": "Thomas Joerg (Google)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/u3cWOd99xX0",
+      "videoId": "u3cWOd99xX0",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Joerg-Automated_GPU_Kernel_Fusion_with_XLA.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU"
+      ]
+    },
+    {
+      "id": "2019-04-009",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "The Helium Haskell compiler and its new LLVM backend",
+      "speakers": [
+        {
+          "name": "Ivo Gabe de Wolff (University of Utrecht)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/x6CBks1paF8",
+      "videoId": "x6CBks1paF8",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-de-Wolff-Helium_Haskell_compiler.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2019-04-010",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Testing and Qualification of Optimizing Compilers for Functional Safety",
+      "speakers": [
+        {
+          "name": "José Luis March Cabrelles (Solid Sands)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/nSfT4oND9dU",
+      "videoId": "nSfT4oND9dU",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Cabrelles-Testing_and_qualification_of_optimizing_compilers_for_functional_safety.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Testing"
+      ]
+    },
+    {
+      "id": "2019-04-011",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Improving Debug Information in LLVM to Recover Optimized-out Function Parameters",
+      "speakers": [
+        {
+          "name": "Nikola Prica (RT-RK)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Djordje Todorovic (RT-RK)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ananthakrishna Sowda (CISCO)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ivan Baev (CISCO)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ih5v65K10M8",
+      "videoId": "ih5v65K10M8",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Prica-Improving_LLVM_DebugInfo.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Debug Information"
+      ]
+    },
+    {
+      "id": "2019-04-012",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "LLVM IR in GraalVM: Multi-Level, Polyglot Debugging with Sulong",
+      "speakers": [
+        {
+          "name": "Jacob Kreindl (Johannes Kepler University Linz)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Kreindl-LLVM_IR_in_GraalVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2019-04-013",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "LLDB Reproducers",
+      "speakers": [
+        {
+          "name": "Jonas Devlieghere (Apple)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ygdzXnfyvbg",
+      "videoId": "ygdzXnfyvbg",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Devlieghere-LLDB_reproducers.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2019-04-014",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Sulong: An experience report of using the \"other end\" of LLVM in GraalVM.",
+      "speakers": [
+        {
+          "name": "Roland Schatz (Oracle Labs)",
+          "affiliation": "Josef Eisl (Oracle Labs)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/zvsR90T_4ME",
+      "videoId": "zvsR90T_4ME",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Schatz-Sulong_an_experience_report.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-015",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "SYCL compiler: zero-cost abstraction and type safety for heterogeneous computing",
+      "speakers": [
+        {
+          "name": "Andrew Savonichev (Intel)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/rfg19iODkhI",
+      "videoId": "rfg19iODkhI",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Savonichev-SYCL_compiler.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-016",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Handling all Facebook requests with JITed C++ code",
+      "speakers": [
+        {
+          "name": "Huapeng Zhou (Facebook)",
+          "affiliation": "Yuhan Guo (Facebook)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/01WoFnyw6zE",
+      "videoId": "01WoFnyw6zE",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Guo-Zhou-Handling_all_Facebook_requests_with_JITed_C++_code.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-017",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "clang-scan-deps: Fast dependency scanning for explicit modules",
+      "speakers": [
+        {
+          "name": "Alex Lorenz (Apple)",
+          "affiliation": "Michael Spencer (Apple)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Ptr6e4CVTd4",
+      "videoId": "Ptr6e4CVTd4",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Lorenz-clang-scan-deps_Fast_dependency_scanning_for_explicit_modules.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-018",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Clang tools for implementing cryptographic protocols like OTRv4",
+      "speakers": [
+        {
+          "name": "Sofia Celi (Centro de Autonomia Digital)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/TthVG_GdzHU",
+      "videoId": "TthVG_GdzHU",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Celi-Clang_tools_for_implementing_cryptographic_protocols_like_OTRv4.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-019",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Implementing the C++ Core Guidelines'; Lifetime Safety Profile in Clang",
+      "speakers": [
+        {
+          "name": "Gabor Horvath (Eotvos Lorand University)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Matthias Gehre (Silexica GmbH)",
+          "affiliation": "Herb Sutter (Microsoft)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/VynWyOIb6Bk",
+      "videoId": "VynWyOIb6Bk",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Horvath-Implementing_the_C++_Core_Guidelines_Lifetime.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2019-04-020",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Changes to the C++ standard library for C++20",
+      "speakers": [
+        {
+          "name": "Marshall Clow (CppAlliance)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/coXGSfUak-Q",
+      "videoId": "coXGSfUak-Q",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Clow-Changes_to_the_C++_standard_library_for_C++20.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "C++ Libs"
+      ]
+    },
+    {
+      "id": "2019-04-021",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Adventures with RISC-V Vectors and LLVM",
+      "speakers": [
+        {
+          "name": "Robin Kruppe (TU Darmstadt)",
+          "affiliation": "Roger Espasa (Esperanto Technologies)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/dyrh2ZZX8EY",
+      "videoId": "dyrh2ZZX8EY",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Kruppe-Espasa-RISC-V_Vectors_and_LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-022",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "A Tale of Two ABIs: ILP32 on AArch64",
+      "speakers": [
+        {
+          "name": "Tim Northover (Apple)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/8RVRQrf15yY",
+      "videoId": "8RVRQrf15yY",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Northover-A_tale_of_two_ABIs_ILP32_on_AArch64.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-023",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "LLVM Numerics Improvements",
+      "speakers": [
+        {
+          "name": "Michael Berg (Apple)",
+          "affiliation": "Steve Canon (Apple)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9pqobu3zQ7E",
+      "videoId": "9pqobu3zQ7E",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Berg-LLVM_numerics_improvements.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-024",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "DOE Proxy Apps: Compiler Performance Analysis and Optimistic Annotation Exploration",
+      "speakers": [
+        {
+          "name": "Brian Homerding (Argonne National Laboratory)",
+          "affiliation": "Johannes Doerfert (Argonne National Laboratory)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/slrU-mz8if4",
+      "videoId": "slrU-mz8if4",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Homerding-DOE_proxy_apps_compiler_performance_analysis_and_optimistic_annotation_exploration.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2019-04-025",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "technical-talk",
+      "title": "Loop Fusion, Loop Distribution and their Place in the Loop Optimization Pipeline",
+      "speakers": [
+        {
+          "name": "Kit Barton (IBM)",
+          "affiliation": "Johannes Doerfert (Argonne National Lab)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hal Finkel (Argonne National Lab)",
+          "affiliation": "Michael Kruse (Argonne National Lab)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/-JQr9aNagQo",
+      "videoId": "-JQr9aNagQo",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Barton-Loop_fusion_loop_distribution_and_their_place_in_the_loop_optimization_pipeline.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Loop transformations",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2019-04-026",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "tutorial",
+      "title": "Tutorial: Building a Compiler with MLIR",
+      "speakers": [
+        {
+          "name": "Amini Mehdi (Google)",
+          "affiliation": "Nicolas Vasilache (Google)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Alex Zinenko (Google)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/cyICUIZ56wQ",
+      "videoId": "cyICUIZ56wQ",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Tutorial-AminiVasilacheZinenko-MLIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2019-04-027",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "tutorial",
+      "title": "Building an LLVM-based tool: lessons learned",
+      "speakers": [
+        {
+          "name": "Alex Denisov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Yvj4G9B6pcU",
+      "videoId": "Yvj4G9B6pcU",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Tutorial-Denisov-Building_an_LLVM_based_tool.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-028",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "tutorial",
+      "title": "LLVM IR Tutorial - Phis, GEPs and other things, oh my!",
+      "speakers": [
+        {
+          "name": "Vince Bridgers (Intel Corporation)",
+          "affiliation": "Felipe de Azevedo Piovezan (Intel Corporation)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/m8G_S5LwlTo",
+      "videoId": "m8G_S5LwlTo",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Tutorial-Bridgers-LLVM_IR_tutorial.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2019-04-029",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "student-talk",
+      "title": "Safely Optimizing Casts between Pointers and Integers",
+      "speakers": [
+        {
+          "name": "Juneyoung Lee (Seoul National University",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Korea)",
+          "affiliation": "Chung-Kil Hur (Seoul National University",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ralf Jung (MPI-SWS",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Germany)",
+          "affiliation": "Zhengyang Liu (University of Utah",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "USA)",
+          "affiliation": "John Regehr (University of Utah",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "UK)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/CPokKMqAVdY",
+      "videoId": "CPokKMqAVdY",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Lee-Safely_optimizing_casts_between_pointers_and_integers.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-030",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "student-talk",
+      "title": "An alternative OpenMP Backend for Polly",
+      "speakers": [
+        {
+          "name": "Michael Halkenhäuser (TU Darmstadt)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/-j9qjfTwt3k",
+      "videoId": "-j9qjfTwt3k",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Halkenhauser-An_alternative_OpenMP_backend_for_Polly.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2019-04-031",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "student-talk",
+      "title": "Implementing SPMD control flow in LLVM using reconverging CFGs",
+      "speakers": [
+        {
+          "name": "Fabian Wahlster (Technische Universität München)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Nicolai Hähnle (Advanced Micro Devices)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/8K8ClHoZzHw",
+      "videoId": "8K8ClHoZzHw",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Wahlster-Implementing_SPMD_control_flow_in_LLVM_using_reconverging_CFGs.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-032",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "student-talk",
+      "title": "Function Merging by Sequence Alignment",
+      "speakers": [
+        {
+          "name": "Rodrigo Rocha (University of Edinburgh)",
+          "affiliation": "Pavlos Petoumenos (University of Edinburgh)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Zheng Wang (Lancaster University)",
+          "affiliation": "Murray Cole (University of Edinburgh)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hugh Leather (University of Edinburgh)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/sOCFYfF3iwE",
+      "videoId": "sOCFYfF3iwE",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Rocha-Function_merging_by_sequence_alignment.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-033",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "student-talk",
+      "title": "Compilation and optimization with security annotations",
+      "speakers": [
+        {
+          "name": "Son Tuan Vu (LIP6)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Karine Heydemann (LIP6)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Arnaud de Grandmaison (ARM)",
+          "affiliation": "Albert Cohen (Google)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/rMOfcvMYev8",
+      "videoId": "rMOfcvMYev8",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-TuanVu-Compilation_and_optimization_with_security_annotations.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Security"
+      ]
+    },
+    {
+      "id": "2019-04-034",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "student-talk",
+      "title": "Adding support for C++ contracts to Clang",
+      "speakers": [
+        {
+          "name": "Javier López-Gómez (University Carlos III of Madrid)",
+          "affiliation": "J. Daniel García (University Carlos III of Madrid)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/FpCFl-JHcrs",
+      "videoId": "FpCFl-JHcrs",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Lopez-Gomez-Adding_support_for_C++_contracts_to_clang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-035",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "LLVM IR Timing Predictions: Fast Explorations via lli",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9pqobu3zQ7E",
+      "videoId": "9pqobu3zQ7E",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2019-04-036",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Simple Outer-Loop-Vectorization == LoopUnroll-And-Jam + SLP",
+      "speakers": [
+        {
+          "name": "Dibyendu Das (AMD)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Das-AMD_OLV.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2019-04-037",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Clacc 2019: An Update on OpenACC Support for Clang and LLVM",
+      "speakers": [
+        {
+          "name": "Joel E. Denny (Oak Ridge National Laboratory)",
+          "affiliation": "Seyong Lee (Oak Ridge National Laboratory)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jeffrey S. Vetter (Oak Ridge National Laboratory)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Denny-clacc.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-038",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Targeting a statically compiled program repository with LLVM",
+      "speakers": [
+        {
+          "name": "Phil Camp (SN Systems (Sony Interactive Entertainment))",
+          "affiliation": "Russell Gallop (SN Systems (Sony Interactive Entertainment))",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Camp-Program_Repo.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-039",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Does the win32 clang compiler executable really need to be over 21MB in size?",
+      "speakers": [
+        {
+          "name": "Russell Gallop (SN Systems)",
+          "affiliation": "Greg Bedwell (SN Systems)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Gallop-Does_win32_clang_compiler.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-040",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Resolving the almost decade old checker dependency issue in the Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "Kristóf Umann (Ericsson Hungary",
+          "affiliation": "Eötvös Loránd University)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Umann-Resolving_the_almost.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2019-04-041",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Adopting LLVM Binary Utilities in Toolchains",
+      "speakers": [
+        {
+          "name": "Jordan Rupprecht (Google)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Rupprecht-Adopting_LLVM_binary_utilities.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-042",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Multiplication and Division in the Range-Based Constraint Manager",
+      "speakers": [
+        {
+          "name": "Ádám Balogh (Ericsson Hungary Ltd.)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Balogh-Multiplication_and_Division_in_the_Range-Based_Constraint_Manager.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-043",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Statistics Based Checkers in the Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "Ádám Balogh (Ericsson Hungary Ltd.)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Balogh-Statistics_based_checkers_in_the_Clang_Static_Analyzer.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2019-04-044",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Flang Update",
+      "speakers": [
+        {
+          "name": "Steve Scalpone (NVIDA / PGI / Flang)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Scalpone-Flang_update.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Flang"
+      ]
+    },
+    {
+      "id": "2019-04-045",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Swinging Modulo Scheduling together with Register Allocation",
+      "speakers": [
+        {
+          "name": "Lama Saba (Intel)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/o4R3SqyNbqU",
+      "videoId": "o4R3SqyNbqU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2019-04-046",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "LLVM for the Apollo Guidance Computer",
+      "speakers": [
+        {
+          "name": "Lewis Revill (University of Bath)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/k9D2yanT6Oo",
+      "videoId": "k9D2yanT6Oo",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-047",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Catch dangling inner pointers with the Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "Réka Kovács (Eötvös Loränd University)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Kovacs-Dangling_pointer_checker.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2019-04-048",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "lightning-talk",
+      "title": "Cross translation unit test case reduction",
+      "speakers": [
+        {
+          "name": "Réka Kovács (Eötvös Loränd University)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Kovacs-Cross_TU_reduction.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Testing"
+      ]
+    },
+    {
+      "id": "2019-04-049",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "RFC: Towards Vector Predication in LLVM IR",
+      "speakers": [
+        {
+          "name": "Simon Moll (Saarland University)",
+          "affiliation": "Sebastian Hack (Saarland University)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2019-04-050",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "IPO --- Where are we, where do we want to go?",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert (Argonne National Laboratory)",
+          "affiliation": "Kit Barton (IBM Toronto Lab)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-051",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "LLVM binutils",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/BoF-HendersonRupprecht-LLVM_binutils.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-052",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "RFC: Reference OpenCL Runtime library for LLVM",
+      "speakers": [
+        {
+          "name": "Andrew Savonichev (Intel)",
+          "affiliation": "Alexey Sachkov (Intel)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2019-04-053",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "LLVM Interface Stability Guarantees BoF",
+      "speakers": [
+        {
+          "name": "Stephen Kelly",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-054",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "Clang Static Analyzer BoF",
+      "speakers": [
+        {
+          "name": "Artem Dergachev (Apple)",
+          "affiliation": "Devin Coughlin (Apple)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Gabor Horvath (Eotvos Lorand University)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2019-04-055",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "LLVM Numerics Improvements",
+      "speakers": [
+        {
+          "name": "Michael Berg (Apple)",
+          "affiliation": "Steve Canon (Apple)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9pqobu3zQ7E",
+      "videoId": "9pqobu3zQ7E",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-056",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "bof",
+      "title": "LLVM Foundation BoF",
+      "speakers": [
+        {
+          "name": "LLVM Foundation Board of Directors",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2019-04-057",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Clava: C/C++ source-to-source from CMake using LARA",
+      "speakers": [
+        {
+          "name": "João Bispo (FEUP/INESCTEC)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Bispo-Clava_CC++_source_to_source_from_CMake_using_LARA.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Infrastructure"
+      ]
+    },
+    {
+      "id": "2019-04-058",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Safely Optimizing Casts between Pointers and Integers",
+      "speakers": [
+        {
+          "name": "Juneyoung Lee (Seoul National University",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Korea)",
+          "affiliation": "Chung-Kil Hur (Seoul National University",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ralf Jung (MPI-SWS",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Germany)",
+          "affiliation": "Zhengyang Liu (University of Utah",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "USA)",
+          "affiliation": "John Regehr (University of Utah",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "UK)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/CPokKMqAVdY",
+      "videoId": "CPokKMqAVdY",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Lee-Safely_optimizing_casts_between_pointers_and_integers.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-059",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Scalar Evolution Canon: Click! Canonicalize SCEV and validate it by Z3 SMT solver!",
+      "speakers": [
+        {
+          "name": "Lin-Ya Yu (Xilinx)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Alexandre Isoard (Xilinx)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2019-04-060",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Splendid GVN: Partial Redundancy Elimination for Algebraic Simplification",
+      "speakers": [
+        {
+          "name": "Li-An Her (National Tsing Hua University)",
+          "affiliation": "Jenq-Kuen Lee (National Tsing Hua University)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Her-SplendidGVN_Partial_redundancy_elimination.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2019-04-061",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "An alternative OpenMP Backend for Polly",
+      "speakers": [
+        {
+          "name": "Michael Halkenhäuser (TU Darmstadt)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/-j9qjfTwt3k",
+      "videoId": "-j9qjfTwt3k",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Halkenhauser-An_alternative_OpenMP_backend_for_Polly.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2019-04-062",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Does the win32 clang compiler executable really need to be over 21MB in size?",
+      "speakers": [
+        {
+          "name": "Russell Gallop (SN Systems)",
+          "affiliation": "G Bedwell (SN Systems)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Gallop-Does_the_win32_clang_compiler_reaaly_nee_to_be_over_21MB_in_size.png",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-063",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Enabling Multi- and Cross-Language Verification with LLVM",
+      "speakers": [
+        {
+          "name": "Jack J. Garzella (University of Utah)",
+          "affiliation": "Marek Baranowski (University of Utah)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Shaobo He (University of Utah)",
+          "affiliation": "Zvonimir Rakamaric (University of Utah)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Garzella-Enabling_multi_and_cross_language_verification_with_LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-064",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Instruction Tracing and dynamic codegen analysis to identify unique llvm performance issues.",
+      "speakers": [
+        {
+          "name": "Biplob (IBM)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Biplop-Tracing.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2019-04-065",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Handling all Facebook requests with JITed C++ code",
+      "speakers": [
+        {
+          "name": "Huapeng Zhou (Facebook)",
+          "affiliation": "Yuhan Guo (Facebook)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/01WoFnyw6zE",
+      "videoId": "01WoFnyw6zE",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Zhou-Handling_all_Facebook_requests_with_JITed_C++_code.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-066",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Implementing SPMD control flow in LLVM using reconverging CFGs",
+      "speakers": [
+        {
+          "name": "Fabian Wahlster (Technische Universität München)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Nicolai Hähnle (Advanced Micro Devices)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/8K8ClHoZzHw",
+      "videoId": "8K8ClHoZzHw",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Wahlster-Implementing_SPMD_control_flow_in_LLVM_using_reconverging_CFG.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-067",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "LLVM for the Apollo Guidance Computer",
+      "speakers": [
+        {
+          "name": "Lewis Revill (University of Bath)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/k9D2yanT6Oo",
+      "videoId": "k9D2yanT6Oo",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-068",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "LLVM Miner: Text Analytics based Static Knowledge Extractor",
+      "speakers": [
+        {
+          "name": "Hameeza Ahmed (NED University of Engineering",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Technology)",
+          "affiliation": "Muhammad Ali Ismail (NED University of Engineering",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Hameeza-LLVM_Miner_Text_Analytics_based_Static_Knowledge_Extractor.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-069",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Function Merging by Sequence Alignment",
+      "speakers": [
+        {
+          "name": "Rodrigo Rocha (University of Edinburgh)",
+          "affiliation": "Pavlos Petoumenos (University of Edinburgh)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Zheng Wang (Lancaster University)",
+          "affiliation": "Murray Cole (University of Edinburgh)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hugh Leather (University of Edinburgh)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/sOCFYfF3iwE",
+      "videoId": "sOCFYfF3iwE",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Rocha-Function_merging_by_sequence_alignment.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2019-04-070",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Compilation and optimization with security annotations",
+      "speakers": [
+        {
+          "name": "Son Tuan Vu (LIP6)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Karine Heydemann (LIP6)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Arnaud de Grandmaison (ARM)",
+          "affiliation": "Albert Cohen (Google)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/rMOfcvMYev8",
+      "videoId": "rMOfcvMYev8",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-TuanVu-Compilation_and_optimization_with_security_annotations.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Security"
+      ]
+    },
+    {
+      "id": "2019-04-071",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Leveraging Polyhedral Compilation in Chapel Compiler",
+      "speakers": [
+        {
+          "name": "Sahil Yerawar (IIT Hyderabad)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Siddharth Bhat (IIIT Hyderabad)",
+          "affiliation": "Michael Ferguson (Cray Inc.)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Philip Pfaffe (Karlsruhe Institute of Technology)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ramakrishna Upadrasta (IIT Hyderabad)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Yerawar-ChapelPolly.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Loop transformations",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2019-04-072",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "LLVM on AVR - textual IR as a powerful tool for making \"impossible\" compilers",
+      "speakers": [
+        {
+          "name": "Carl Peto (Swift for Arduino/Petosoft)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Embedded"
+      ]
+    },
+    {
+      "id": "2019-04-073",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Vectorizing Add/Sub Expressions with SLP",
+      "speakers": [
+        {
+          "name": "Vasileios Porpodas (Intel Corporation",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "USA)",
+          "affiliation": "Rodrigo C. O. Rocha (University of Edinburgh",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "UK)",
+          "affiliation": "Evgueni Brevnov (Intel Corporation",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Luís F. W. Góes (PUC Minas",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Brazil)",
+          "affiliation": "Timothy Mattson (Intel Corporation",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Porpodas-Supernode_SLP.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2019-04-074",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Adding support for C++ contracts to Clang",
+      "speakers": [
+        {
+          "name": "Javier López-Gómez (University Carlos III of Madrid)",
+          "affiliation": "J. Daniel García (University Carlos III of Madrid)",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/FpCFl-JHcrs",
+      "videoId": "FpCFl-JHcrs",
+      "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Lopez-Gomez-Adding_support_for_C++_contracts_to_Clang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2019-04-075",
+      "meeting": "2019-04",
+      "meetingName": "2019 European LLVM Developers' Meeting",
+      "meetingLocation": "Brussels, Belgium",
+      "meetingDate": "April 8-9, 2019",
+      "category": "poster",
+      "title": "Optimizing Nondeterminacy: Exploiting Race Conditions in Parallel Programs",
+      "speakers": [
+        {
+          "name": "William S. Moses (MIT CSAIL)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Security"
+      ]
+    }
+  ]
+}

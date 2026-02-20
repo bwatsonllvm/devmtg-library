@@ -1,0 +1,358 @@
+{
+  "meeting": {
+    "slug": "2008-08",
+    "name": "2008 US LLVM Developers' Meeting",
+    "date": "August 1, 2008",
+    "location": "Cupertino, CA, USA",
+    "canceled": false,
+    "talkCount": 13
+  },
+  "talks": [
+    {
+      "id": "2008-08-001",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Welcome and Thanks",
+      "speakers": [
+        {
+          "name": "Chris Lattner",
+          "affiliation": "Apple, Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "A brief welcome, thanks and some logistics for the day.",
+      "videoUrl": "https://youtu.be/13iB2FiFCdo",
+      "videoId": "13iB2FiFCdo",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2008-08-002",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Clang Internals",
+      "speakers": [
+        {
+          "name": "Steve Naroff",
+          "affiliation": "Apple, Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Clang is is a new C/ObjC/C++ front-end in development as part of the LLVM project. This talk describes its current status, high level architecture, and how its Abstract Syntax Trees (ASTs) work.",
+      "videoUrl": "https://youtu.be/qYe_w2wt54U",
+      "videoId": "qYe_w2wt54U",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Naroff_Clang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2008-08-003",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "CodeGen Overview and Focus on SelectionDAGs",
+      "speakers": [
+        {
+          "name": "Dan Gohman",
+          "affiliation": "Apple, Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "A high-level overview of the LLVM Code Generator, with specific depth and overview in the area of the SelectionDAG phases.",
+      "videoUrl": "https://youtu.be/Y5kbSDi7qb8",
+      "videoId": "Y5kbSDi7qb8",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Gohman_CodeGenAndSelectionDAGs.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2008-08-004",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "LLVM Register Allocation",
+      "speakers": [
+        {
+          "name": "Evan Cheng",
+          "affiliation": "Apple, Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Description of the current design and architecture of the LLVM register allocator. The talk discusses some optimizations that are currently performed as well as describing future directions and where we'd like to go.",
+      "videoUrl": "https://youtu.be/ktXFOlyEOtY",
+      "videoId": "ktXFOlyEOtY",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Cheng_RegisterAllocation.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2008-08-005",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Building an Efficient JIT",
+      "speakers": [
+        {
+          "name": "Nate Begeman",
+          "affiliation": "Apple, Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM provides many of the facilities that you need to assemble a JIT for various purposes. This talk walks you through construction of a simple JIT for C code (based on Clang) and talks about some of the important APIs for doing this. After getting it working, Nate describes the efficiency implications of various choices and describes how to dramatically improve the efficiency of the first implementation.",
+      "videoUrl": "https://youtu.be/ZPw6JYIQfMo",
+      "videoId": "ZPw6JYIQfMo",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Begeman_EfficientJIT.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "JIT"
+      ]
+    },
+    {
+      "id": "2008-08-006",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Adobe Image Foundation and Adobe PixelBender",
+      "speakers": [
+        {
+          "name": "Chuck Rose III",
+          "affiliation": "Adobe Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Foundation is a system for JIT compiling code written in the Adobe PixelBender language to run on the CPU and GPU. This talk describes how AIF and PixelBender work and how it uses LLVM to evaluate dependencies, reason about dirty regions of images, and do pixel processing when a GPU cannot handle a program.",
+      "videoUrl": "https://youtu.be/bzhXXfUbJv8",
+      "videoId": "bzhXXfUbJv8",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Rose_AdobePixelBender.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "JIT"
+      ]
+    },
+    {
+      "id": "2008-08-007",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Finding Bugs with the Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "Ted Kremenek",
+          "affiliation": "Apple, Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Analyzer is a standalone tool that find bugs in C and Objective-C programs. The analyzer is 100% open source and part of the Clang project (a new C/Objective-C/C++ frontend for LLVM). Although still very early in its development, the tool has been effective at finding thousands of bugs in real-world C and Objective-C programs. This talk presents a high-level overview of the goals, implementation, and current status of the tool.",
+      "videoUrl": "https://youtu.be/_HTcWKqRXXs",
+      "videoId": "_HTcWKqRXXs",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Kremenek_StaticAnalyzer.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2008-08-008",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Building a JIT compiler for PHP in 2 days",
+      "speakers": [
+        {
+          "name": "Nuno Lopes",
+          "affiliation": "Instituto Superior Tecnico",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk describes the implementation of the PHP interpreter and how it was easily changed into an LLVM JIT. This discusses why the facilities that LLVM provides make this easy, and gives some (very early) results.",
+      "videoUrl": "https://youtu.be/NDm5cBpYIqw",
+      "videoId": "NDm5cBpYIqw",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Lopes_PHP-JIT-InTwoDays.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2008-08-009",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "llvmc2 Compiler Driver",
+      "speakers": [
+        {
+          "name": "Anton Korobeynikov",
+          "affiliation": "Saint Petersburg State University",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "'llvmc2' is the LLVM Compiler Driver, which is useful to people building new languages and tools from the LLVM toolchain. This talk describes the constraints and purpose of a compiler driver and discusses how llvmc2 fills the needs and works with those constraints. Finally, the talk describes some of the low-level architecture and future directions of llvmc2.",
+      "videoUrl": "https://youtu.be/f9MQI9IUy_M",
+      "videoId": "f9MQI9IUy_M",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Korobeynikov_LLVMC2-CompilerDriver.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2008-08-010",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "SVA: Using LLVM to Provide Memory Safety",
+      "speakers": [
+        {
+          "name": "John Criswell",
+          "affiliation": "University of Illinois",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "SVA is an aggressive approach to provide an efficient compiler-based system with memory safety on top of the LLVM IR. Unfortunately, is not available due to camera problems.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Criswell_SVA.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "Security"
+      ]
+    },
+    {
+      "id": "2008-08-011",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "The VMKit Project",
+      "speakers": [
+        {
+          "name": "Nicolas Geoffray",
+          "affiliation": "Universite Pierre et Marie Curie",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "VMKit is an implementation of the Java and .NET Virtual Machines that use LLVM to optimize and JIT compile the code. This talk describes how VMKit integrates components from various systems, how bytecode translation works, describes the current performance status of the system, and discusses areas for future extension.",
+      "videoUrl": "https://youtu.be/XHRd6Qhwbyw",
+      "videoId": "XHRd6Qhwbyw",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Geoffray_VMKitProject.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2008-08-012",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Designflow: using LLVM to compile to Hardware",
+      "speakers": [
+        {
+          "name": "Tim Sander",
+          "affiliation": "Technischen Universitat Darmstadt",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This project uses LLVM to compile code to a mixed hardware and software implementation. This detects pieces of programs that may be efficiently compiled to VHDL and synthesized them onto an FPGA. The rest of the program is compiled to PowerPC code and uses to drive the FPGA. The system automatically handles data migration and other handshaking between the two systems.",
+      "videoUrl": "https://youtu.be/6-Cp6MlLu-I",
+      "videoId": "6-Cp6MlLu-I",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Sander_HW-SW-CoDesignflowWithLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2008-08-013",
+      "meeting": "2008-08",
+      "meetingName": "2008 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "August 1, 2008",
+      "category": "technical-talk",
+      "title": "Flash C Compiler: Compiling C code to the Adobe Flash Virtual Machine",
+      "speakers": [
+        {
+          "name": "Scott Petersen",
+          "affiliation": "Adobe Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "FlaCC is a research project that compiles C code to ActionScript using llvm-gcc with a custom flash code generator. This enables almost arbitrary C and C++ code to be executed safely and efficiently within a Flash container on web pages. This talk describes the implementation of the system and shows several compelling examples that use it to run other language and CPU interpreters within Flash as well as run existing large programs within C. The demos are also extremely impressive :).",
+      "videoUrl": "https://youtu.be/f7xniMC4J5U",
+      "videoId": "f7xniMC4J5U",
+      "slidesUrl": "https://llvm.org/devmtg/2008-08/Petersen_FlashCCompiler.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2018-11-12",
+    "name": "2018 LLVM-HPC @ SC18",
+    "date": "November 12, 2018",
+    "location": "LLVM-HPC @ SC18, Dallas, TX, USA",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

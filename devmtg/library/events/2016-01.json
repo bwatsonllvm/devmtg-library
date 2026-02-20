@@ -1,0 +1,242 @@
+{
+  "meeting": {
+    "slug": "2016-01",
+    "name": "2016 LLVM @ FOSDEM",
+    "date": "January 30, 2016",
+    "location": "FOSDEM, Brussels, Belgium",
+    "canceled": false,
+    "talkCount": 10
+  },
+  "talks": [
+    {
+      "id": "2016-01-001",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Tilmann Scheller",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/fosdem-2016-llvm.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-002",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "JF Bastien / Dan Gohman",
+      "speakers": [
+        {
+          "name": "WebAssembly: Here Be Dragons",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/WebAssembly.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-003",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Arnaud A. de Grandmaison",
+      "speakers": [
+        {
+          "name": "Modern C++ development tools",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/ModernCplusplusDevelopment.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-004",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Kai Nacke",
+      "speakers": [
+        {
+          "name": "Porting LLVM to a new OS",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Porting_LLVM_to_a_new_OS.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-006",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Simon Cook",
+      "speakers": [
+        {
+          "name": "AAPSIM: Implementing a LLVM based simulator",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/fosdem16-aapsim.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-007",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Alex Denisov",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/LLVM_Swift.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-008",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Greg Stark",
+      "speakers": [
+        {
+          "name": "Using LLVM's LibFuzzer to Fuzz PostgreSQL",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/FOSDEM_PG_Fuzzer,pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-009",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Sebastien Monot",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/LLVM-dataflow.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-010",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Kristof Beyls",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Beyls_FOSDEM2016.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2016-01-011",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Manuel Rigger",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Sulong.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

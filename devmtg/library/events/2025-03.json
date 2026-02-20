@@ -1,0 +1,483 @@
+{
+  "meeting": {
+    "slug": "2025-03",
+    "name": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+    "date": "March 1-5, 2025",
+    "location": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+    "canceled": false,
+    "talkCount": 11
+  },
+  "talks": [
+    {
+      "id": "2025-03-001",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "keynote",
+      "title": "Compiler improvements in RISC-V",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/llvm-cgo-keynote-riscv.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2025-03-002",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "The Proton Dialect: An MLIR Dialect For AI Compiler GPU Kernel Profiling",
+      "speakers": [
+        {
+          "name": "Corbin Robeck",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Yuanwei Fang",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Keren Zhou",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Modern machine learning compilers make heavy use of MLIR to generate code optimally for complex AI operators (sophisticated matrix multiplications, flash attention, etc.). To target the latest generation of GPU accelerators with minimal user intervention and make full use of the available hardware and software features (matrix/tensor cores, warp specialization, wave priority and scheduling, loop pipelining), requires specialized compiler passes to make performance critical decisions to map the domain specific algorithms to the underlying hardware resources. This makes performance analysis and profiling tools that integrate directly into the domain-specific language's (DSL) operations critical to achieving performance comparable to handwritten kernels. In this talk we present the Proton Dialect: A compiler-integrated, intra-kernel, MLIR operation set for performance analysis and optimization. The dialect approach integrates profiling and performance analysis features directly into both the upper-level ML compiler language (e.g. Python) operations and the various MLIR ops and lowerings allowing operation aware passes, like loop pipelining, to handle the dialect like any other registered dialect's operations (e.g. loads, stores, control flow, etc.). The dialect has been upstreamed into the popular machine learning compiler Triton with implementation details described. A walkthrough is given of cross platform (Nvidia and AMD) examples of instruction scheduling optimizations made in production grade AI kernels using the dialect interleaved directly with standard (e.g. llvm, arith) and Triton DSL dialects (e.g. Triton IR, Triton AMDGPU IR, Triton Nvidia GPU IR).",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/the_proton_dialect.pdf",
+      "projectGithub": "",
+      "tags": [
+        "CUDA",
+        "GPU",
+        "IR",
+        "ML",
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-03-003",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "CARTS: Enabling Event-Driven Task and Data Block Compilation for Distributed HPC",
+      "speakers": [
+        {
+          "name": "Rafael Andres Herrera Guaitero",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Joseph B. Manzano Franco",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Joshua D. Suetterlein",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Xiaoming Li",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Andres Marquez",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The increasing complexity and heterogeneity of high-performance computing (HPC) systems demand innovative compiler workflows. CARTS, a Compiler framework for an scalable asynchronous many task system called ARTS, addresses this need by integrating the extensibility of MLIR with the robustness of LLVM, enabling the development of task-centric compiler pipelines optimized for distributed-memory HPC environments. ARTS is a runtime developed at the Pacific Northwest National Laboratory, provides a scalable and efficient execution environment tailored for fine-grained, event-driven tasks across distributed systems. This paper introduces the ARTS dialect, designed to represent Event-Driven Tasks (EDTs) and several scalable communication/synchronization abstract primitives between them. By bridging high-level programming models like OpenMP with low-level LLVM IR, CARTS enhances both developer productivity and execution efficiency, making it a critical advancement in the field of HPC. Additionally, CARTS's ability to integrate seamlessly with existing MLIR and LLVM ecosystems demonstrates its potential for widespread adoption across HPC domains, addressing current and future challenges in system optimization.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/carts.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-03-004",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "Fuzzlang: Leveraging Transformers and LLM Agents for Enhanced Compilation Error Repair",
+      "speakers": [
+        {
+          "name": "Baodi Shan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Barbara Chapman",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Compilers play a pivotal role in software development, evolving alongside the increasing complexity and diversity of programming languages. However, systematic research on the generation, classification, and reproduction of compilation errors remains sparse. Compiler developers often modify error diagnostics on a best-effort basis to meet user needs and adapt to language evolution, leaving gaps in error handling. To address these challenges, we introduce Fuzzlang, a novel framework for generating extensive datasets of compiler errors, both in isolation and within real-world code contexts. Fuzzlang comprises the Fuzzlang Transformer, which systematically generates diverse compilation errors from existing code, and Fuzzlang Agent, which employs large language models (LLMs) to analyze and isolate complex errors from internal compiler tests. Together, Fuzzlang generates five times more independent error types than the DeepFix database and achieves 83.1% coverage of error conditions triggered by LLVM/Clang's internal testing. Our evaluation demonstrates that fine-tuning LLMs with the Fuzzlang dataset substantially enhances their code repair capabilities. The precision of Llama3-8B improved from 37.22% to 93.97%, and GPT-4o-mini rose from 72.29% to 96.70%. These results highlight Fuzzlang's potential as an effective tool for advancing intelligent code repair and compiler diagnostics research through comprehensive dataset generation.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/fuzzlang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "Clang",
+        "Community Building",
+        "Programming Languages",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2025-03-005",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "Effective Tuning of Automatically Parallelized OpenMP Applications Using Two Classical Optimizing Compilers",
+      "speakers": [
+        {
+          "name": "Miguel Romero Rosas",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Rudolf Eigenmann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Automatic parallelization, still cannot achieve the required performance to be considered a true alternative to hand parallelization. However, when combined with effective tuning techniques, it provides a promising alternative to manual parallelization of sequential programs by leveraging the computational potential of modern multi-core architectures. While automatic parallelization focuses on identifying potential parallelism in code, tuning systems refine performance by optimizing efficient parallel code segments and serializing inefficient ones based on runtime metrics. This study investigates the performance gap between automatically and manually parallelized OpenMP applications, addressing whether this gap can be closed through compile-time solutions or if it necessitates user-interactive or dynamic approaches. We propose a novel tuning system that employs an efficient algorithm, Combined Elimination (CE), to partition and optimize program sections individually. CE demonstrates a significant advancement over existing methods by achieving equivalent performance while reducing tuning time to 57% of the closest alternative. Our experimental evaluation, conducted on a 16-core system, utilizes the NAS Parallel Benchmark Suite and the Polybench Suite with both the GCC and Clang compilers. Results reveal that the tuned applications consistently outperform their original serial versions and, in several cases, exceed the performance of manually parallelized implementations. This work stands out as one of the few approaches delivering an auto-parallelization system with guaranteed performance improvements across diverse programs, effectively eliminating the need for extensive user experimentation to achieve optimal runtimes.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/tuning.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-03-006",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "Comparative Analysis of Compiler Performance for RISC-V on SPEC CPU 2017",
+      "speakers": [
+        {
+          "name": "Yongtai Li",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Chunyu Liao",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ji Qiu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This study presents a comparative analysis of LLVM and GCC compiler performance on RISC-V using SPEC CPU2017, focusing on code size and dynamic instruction count. Results show LLVM generates smaller binaries for most C/C++ workloads but lags significantly in Fortran code. GCC demonstrates superior dynamic instruction efficiency in integer workloads, while LLVM excels in floating-point auto-vectorization using RISC-V’s V-extension. A case study on 548.exchange2_r reveals LLVM’s optimization gaps, mitigated via PASS tuning.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/riscv_on_spec_cpu.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Flang",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-03-007",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "Instrumentor: Easily Customizable Code Instrumentation based on LLVM",
+      "speakers": [
+        {
+          "name": "Kevin Sala",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Code instrumentation is a widely used technique for tracking applications' behavior. Common uses of code instrumentation include debugging and error diagnosis, logging of certain events, monitoring resource usage, and analyzing performance for code optimization. Typically, instrumenting a program involves modifying its original code by inserting extra code to retrieve data regarding its runtime behavior. During the execution of the instrumented program, all this data is usually collected by a runtime component (e.g., a library) for online or offline processing. However, although being a common technique, compilers lack a generic mechanism for instrumenting code. For instance, in the LLVM compiler infrastructure, numerous LLVM passes manually instrument LLVM IR code with different purposes. Each of these implements an ad hoc instrumentation, missing the opportunities to improve code maintainability, reduce code replication, or simplifying the effort of developing new instrumentation-based tools. In this talk, we will introduce the Instrumentor, an LLVM pass that allows instrumenting code in a simple and customizable way. The Instrumentor accepts a JSON file with predefined options describing which IR instructions and patterns need recording and what details are required. The Instrumentor pass then inserts function calls that a runtime component can implement to collect the forwarded information. For instance, a tool may instrument loads, stores, function calls, memory allocations, and decide which set of information expects the runtime component. The Instrumentor aims to provide a unified and simple method for instrumenting code, reducing maintainability costs and code replication, as well as paving the path for future instrumentation-based tools. Furthermore, the Instrumentor implements several elective optimizations to reduce instrumentation's overhead and may be built as a plugin to be used in other LLVM-based compilers. This technical presentation will cover the functionalities of the Instrumentor, which will be useful for compiler, runtime and tool developers. We will also show its versatility through several use cases, including a novel address sanitizer implemented using the new Instrumentor.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/instrumentor.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Dynamic Analysis",
+        "IR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-03-008",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "Container Class Annotations in C++ Improve the Capability of Static Analysis in MLIR",
+      "speakers": [
+        {
+          "name": "Ehsan Amiri",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Rouzbeh Paktinatkeleshteri",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Hao Jin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Eric Wang",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jose Nelson Amaral",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "An important case that motivates using the higher-level MLIR in LLVM compilers for C++ is the recognition of standard-library containers and their functions (such as push_back(), etc.) by the compilers. Recognizing such functions enables optimizations that are difficult to implement in a lower-level representation [1,2]. This talk argues that this observation can be generalized. Instead of using standard-library containers, some programs implement their own container classes. However, currently, C++ does not have a mechanism for the programmer to declare that a class is a container or to provide high-level semantic information about member functions and member variables of the container class. We will present examples to argue that such a mechanism would help an MLIR C++ compiler to perform more aggressive optimizations. One example extracted from an actual workload demonstrates the hoisting of a member function of a container. Currently, this hoisting is blocked because of imprecision in the alias analysis. However, we will show that having extra information helps an analysis performed at a higher representation of the code, such as MLIR, to discover that the hoisting is a safe transformation. More complex optimizations can also use container information to create more robust code-transformation legality analysis. One example of such an optimization was presented in the 2023 LLVM Dev meeting [3]. Since then we have discovered more general forms for this optimization. We use some examples to argue that information about container classes is required for the legality analysis of these optimizations. Introducing a way to declare container classes in the language would make the implementation of a robust legality analysis easier. C++ has a “Container” named requirement, which is very similar to what is proposed here. It might be useful to have an attribute with a similar definition and an extra attribute that can specify common functions and variables in a container class (inserting an element, removing an element, allocating memory, etc.). In this talk we will discuss how such extensions to the language could help compiler optimizaitons. [1] [2] [3]",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/container-class-annotations.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR",
+        "Optimizations",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2025-03-009",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "IREE: Compiling ML Programs Using MLIR",
+      "speakers": [
+        {
+          "name": "Mahesh Ravishankar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "IREE is an open-source compiler stack that is designed to compile programs from ML (and similar) domains. It is built from the ground up to target multiple architectures. Built in-conjunction with developments in MLIR, it is also a driver or primary user of many dialects/transformations that have been developed in MLIR. In this talk we will discuss the design of the IREE compiler, and the reasons for it. We will also highlight how dialects and transformations built in MLIR are used in IREE, what is the current state of support for ML compilation using IREE, and the challenges faced by a compiler stack like IREE in todays ML landscape.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "IR",
+        "ML",
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2025-03-010",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "Polyhedral Rescheduling of GPU Kernels To Exploit Async Memory Movement",
+      "speakers": [
+        {
+          "name": "Ivan R. Ivanov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "William Moses",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Emil Vatai",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Toshio Endo",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jens Domke",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Oleksandr Zinenko",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Recent trends in high performance computing show an increase in compute power, while memory movement capabilities stagnate. A way to compensate for the growing difference between the two has been to introduce new features that enable better efficiency of moving data. An example of such a feature in NVIDIA GPUs is the capability of asynchronous copies from global to shared memory (available from the Ampere architecture onward). However, even though high-performance libraries such as cutlass make use of these instructions, their usage in general purpose hand written kernels is limited due to various reasons such as portability concerns or programming difficulty. In addition, program analysis and optimization have not kept up with this introduction. We present a compilation flow which allows analysis and optimization of existing parallel GPU kernels in the polyhedral framework. In addition, we introduce a notion of optimizing with asynchronous execution in polyhedral scheduling and show that it allows us to reschedule GPU kernels to make use of async features. We focus specifically on the global memory to shared memory asynchronous copy capabilities of NVIDIA GPUs.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2025-03/slides/polyhedral_gpu_rescheduling.pdf",
+      "projectGithub": "",
+      "tags": [
+        "CUDA",
+        "GPU",
+        "Loop transformations",
+        "Optimizations",
+        "Performance",
+        "Polly",
+        "Security"
+      ]
+    },
+    {
+      "id": "2025-03-011",
+      "meeting": "2025-03",
+      "meetingName": "2025 Ninth LLVM Performance Workshop @ CGO2025",
+      "meetingLocation": "Ninth LLVM Performance Workshop @ CGO2025, Las Vegas, USA",
+      "meetingDate": "March 1-5, 2025",
+      "category": "technical-talk",
+      "title": "Optimizing Accelerator Memory Transfers within libomptarget",
+      "speakers": [
+        {
+          "name": "Pawel Radtke",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Offloading host computations to accelerators frequently incurs a substantial penalty in the form of memory transfer overhead. Although the traditional LLVM optimization pipeline offers robust static analyses, it remains unable to address optimising offload transfers directly due to architectural decisions that relocate transfer logic and metadata management to the runtime. This presentation examines both the potential and the constraints of optimizing offload memory transfers within LLVM's offloading runtime library - libomptarget, and runtime metadata produced by OpenMP offloading directives. We evaluate the scope for eliminating redundant data transfers, removing unused data segments, and thereby reducing transfer overhead based on currently available runtime information, while also considering what additional gains might be realized through enhanced metadata availability.\n\nWe invite speakers from academia and industry to present their work on the following list of topics (including and not limited to:):\n\nWhile the primary focus of the workshop is on these topics, we welcome any submission related to the LLVM project, its sub-projects (clang, mlir, lldb, Polly, lld, openmp, pstl, compiler-rt, etc.), as well as their use in industry and academia.\n\nProposals should provide sufficient information for the review committee to be able to judge the quality of the submission. Proposals can be submitted under the form of an extended abstract, full paper, or slides. Accepted presentations will be presented online. The presentations will be publicly available on https://llvm.org/devmtg/\n\nIn case of any queries please reach out to the workshop organizers: Aditya (hiraditya at msn.com), Jose M Monsalve Diaz (jmonsalvediaz at anl.gov), Shilei Tian (i at tianshilei.me), Rafael (rafaelhg at udel.edu), or Kevin Sala (kevin.sala at bsc.es).\n\nThe LLVM Foundation is dedicated to providing an inclusive and safe experience for everyone. We do not tolerate harassment of participants in any form. By registering for this event, we expect you to have read and agree to the LLVM Code of Conduct. We also adhere to the CGO Code of Conduct.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Community Building",
+        "LLD",
+        "LLDB",
+        "Libraries",
+        "MLIR",
+        "Optimizations",
+        "Polly"
+      ]
+    }
+  ]
+}

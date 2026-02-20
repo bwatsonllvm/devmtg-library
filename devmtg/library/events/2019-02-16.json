@@ -1,0 +1,198 @@
+{
+  "meeting": {
+    "slug": "2019-02-16",
+    "name": "2019 Third LLVM Performance Workshop @ CGO19",
+    "date": "February 17, 2019",
+    "location": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+    "canceled": false,
+    "talkCount": 7
+  },
+  "talks": [
+    {
+      "id": "2019-02-16-001",
+      "meeting": "2019-02-16",
+      "meetingName": "2019 Third LLVM Performance Workshop @ CGO19",
+      "meetingLocation": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+      "meetingDate": "February 17, 2019",
+      "category": "technical-talk",
+      "title": "Clacc: Translating OpenACC to OpenMP in Clang",
+      "speakers": [
+        {
+          "name": "Joel E. Denny",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "OpenACC was launched in 2010 as a portable programming model for heterogeneous accelerators. Although various implementations already exist, no extensible, open-source, production-quality compiler support is available to the community. This deficiency poses a serious risk for HPC application developers targeting GPUs and other accelerators, and it limits experimentation and progress for the OpenACC specification. To address this deficiency, Clacc is a recent effort funded by the US Exascale Computing Project to develop production OpenACC compiler support for Clang and LLVM. A key feature of the Clacc design is to translate OpenACC to OpenMP to build on Clang's existing OpenMP compiler and runtime support. In this talk, we describe the Clacc goals and design. We also describe the challenges that we have encountered so far in our prototyping efforts, and we present some early performance results.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "GPU",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2019-02-16-002",
+      "meeting": "2019-02-16",
+      "meetingName": "2019 Third LLVM Performance Workshop @ CGO19",
+      "meetingLocation": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+      "meetingDate": "February 17, 2019",
+      "category": "technical-talk",
+      "title": "Tiling Loops for Scratch-Pad Memories",
+      "speakers": [
+        {
+          "name": "Ayal Zaks",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Tiling a loop is a well-known code transformation that helps optimize temporal locality. Tiling is important for systems that have caches in order to achieve high performance. For systems that are based on scratch-pad memories or software-managed caches, tiling is vital in order for code to be functional. Furthermore, due to the high overhead of transferring data between main memory and scratch-pad memory, it is desirable to tile several loops together. Lastly, if such data transfers can be executed asynchronously and in parallel to processing the data in the scratch-pad memories, careful scheduling of the transfers and double-buffering of the data are desired in order to hide data transfer overheads. In this work we show how multiple loops can be tiled together in order to execute them efficiently on systems with scratch-pad memories.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2019-02-16-003",
+      "meeting": "2019-02-16",
+      "meetingName": "2019 Third LLVM Performance Workshop @ CGO19",
+      "meetingLocation": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+      "meetingDate": "February 17, 2019",
+      "category": "technical-talk",
+      "title": "Enabling math function call optimization for DOE proxy applications",
+      "speakers": [
+        {
+          "name": "Brian Homerding",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The US Department of Energy proxy applications are simplified applications that are representative of the important code for various scientific computing workloads. Our performance analysis work on these proxy applications have revealed some areas where Clang can improve when compared to GCC and vendor compilers. Among these is the limited ability to apply optimizations to math function calls when we care about errno. This talk will discuss modeling the memory behavior of math functions using function attributes in order to enable these optimizations. Along with a discussion of our subsequent work to extend the attributes’ coverage and use.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2019-02-16-004",
+      "meeting": "2019-02-16",
+      "meetingName": "2019 Third LLVM Performance Workshop @ CGO19",
+      "meetingLocation": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+      "meetingDate": "February 17, 2019",
+      "category": "technical-talk",
+      "title": "Emulating Arithmetic Operations with LLVM's Instruction Selection Pass",
+      "speakers": [
+        {
+          "name": "Alexandru Susu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The Connex-S wide research vector processor has a simple design with 16-bit integer lanes since many embedded applications can make good use of narrow integer types. For completeness, however, our back end for Connex-S needs to lower code to emulate efficiently arithmetic operations for non-native types such as 32-bit integer and 16-bit floating point. To simplify the work of the compiler writer we conceive a method to code generate how we lower these operations inside LLVM's instruction selection pass. We also implement in the Connex-S processor simple lane gating techniques to minimize energy consumption for vector code with a high degree of control divergence, as it is the case for routines emulating floating point operations.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Embedded"
+      ]
+    },
+    {
+      "id": "2019-02-16-005",
+      "meeting": "2019-02-16",
+      "meetingName": "2019 Third LLVM Performance Workshop @ CGO19",
+      "meetingLocation": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+      "meetingDate": "February 17, 2019",
+      "category": "technical-talk",
+      "title": "Multi-dimensional Vectorization in LLVM",
+      "speakers": [
+        {
+          "name": "Simon Moll",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Loop vectorization is a classic technique to exploit SIMD instructions in a productive way. In multi-dimensional vectorization, multiple loops of a loop nest are vectorized at once. This exposes opportunities for data reuse, register tiling and more efficient memory accesses. In this work, we present TensorRV, a multi-dimensional vectorization framework for LLVM IR. TensorRV is a generalization of the Region Vectorizer, a general purpose outer-loop and whole-function vectorizer, to the multi-dimensional setting. We evaluate TensorRV on a set of stencil codes and matrix transpose. We find that stencil codes benefit from the reduction of load instructions with a speedup of x1.45 on NEC SX-Aurora TSUBASA. Multi-loop vectorized matrix transpose leverages efficient SIMD shuffle instructions on AVX512, for which we report a speedup of x3.27.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "IR",
+        "Loop transformations",
+        "Security"
+      ]
+    },
+    {
+      "id": "2019-02-16-006",
+      "meeting": "2019-02-16",
+      "meetingName": "2019 Third LLVM Performance Workshop @ CGO19",
+      "meetingLocation": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+      "meetingDate": "February 17, 2019",
+      "category": "technical-talk",
+      "title": "Performance Gap Exploration with LLVM",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Compilers are limited by the static information directly or indirectly encoded in the program. Especially low-level languages, such as C and C++, are therefore considered problematic as their weak type system and relaxed memory semantic allows for various, sometimes non-obvious, behaviors. Since compilers have to preserve the program semantic for all program executions, the existence of exceptional behavior can prevent optimizations that the developer would consider valid and might even expect. Analyses to guarantee the absence of such disruptive and unlikely situations are consequently an indispensable part of an optimizing compiler. However, these analyses have to be approximative and limited in scope. Global and exact static analysis, under consideration of all potential inputs to the program, is simply an infeasible task for any non-trivial program. Even if a user knows the structure of all inputs ever passed to the program, it is not easy to encode such information. The conservatively correct compiler can consequently not match the expectations a developer with superior knowledge has. In this talk, we present a method to automatically measure the effect missing static information has on the optimizations applied to a given program. As a result, we generate an optimistically optimized program version which, compared to the original, defines a performance gap that can be closed by better analyses and programmer annotations. Our evaluation of six, already optimized, proxy kernels for high-performance applications exposed a compiler flaw that caused a ≈6x fold slowdown, as well as opportunities to achieve speedups of up to 20.6%. This clearly indicates that static uncertainty can result in poor performance, but also that compilers need to more effectively utilize available information.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Performance",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2019-02-16-007",
+      "meeting": "2019-02-16",
+      "meetingName": "2019 Third LLVM Performance Workshop @ CGO19",
+      "meetingLocation": "Third LLVM Performance Workshop at CGO19, Washington DC, USA",
+      "meetingDate": "February 17, 2019",
+      "category": "panel",
+      "title": "LLVM Q&A Panel: Questions Welcome",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

@@ -1,0 +1,461 @@
+{
+  "meeting": {
+    "slug": "2010-11",
+    "name": "2010 US LLVM Developers' Meeting",
+    "date": "November 4, 2010",
+    "location": "San Jose, CA, USA",
+    "canceled": false,
+    "talkCount": 17
+  },
+  "talks": [
+    {
+      "id": "2010-11-001",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Portable Native Client",
+      "speakers": [
+        {
+          "name": "David Sehr",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/o54AJUVP3pc",
+      "videoId": "o54AJUVP3pc",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Sehr-NativeClient.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2010-11-002",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "AMD OpenCL Compiler - Using LLVM to produce a cross-platform heterogeneous compiler tool chain",
+      "speakers": [
+        {
+          "name": "Micah Villmow",
+          "affiliation": "AMD Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/uc8cAB009Ok",
+      "videoId": "uc8cAB009Ok",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Villmow-OpenCL.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2010-11-003",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Implementing Include-What-You-Use using clang",
+      "speakers": [
+        {
+          "name": "Craig Silverstein",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/jPw2sVAhbsQ",
+      "videoId": "jPw2sVAhbsQ",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Silverstein-IncludeWhatYouUse.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2010-11-004",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "libclang: Thinking Beyond the Compiler",
+      "speakers": [
+        {
+          "name": "Doug Gregor",
+          "affiliation": "Apple Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "http://devimages.apple.com/llvm/videos/Libclang.mov",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Gregor-libclang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "Clang"
+      ]
+    },
+    {
+      "id": "2010-11-005",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Polly - Polyhedral optimizations in LLVM",
+      "speakers": [
+        {
+          "name": "Tobias Grosser",
+          "affiliation": "University of Passau",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/WwfZkQEuwEE",
+      "videoId": "WwfZkQEuwEE",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Grosser-Polly.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Loop transformations",
+        "Optimizations",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2010-11-006",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "libc++: A Standard Library for C++0x",
+      "speakers": [
+        {
+          "name": "Howard Hinnant",
+          "affiliation": "Apple Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "http://devimages.apple.com/llvm/videos/LibC++.mov",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Hinnant-libcxx.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs"
+      ]
+    },
+    {
+      "id": "2010-11-007",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Symbolic Crosschecking of Floating-Point and SIMD Code",
+      "speakers": [
+        {
+          "name": "Peter Collingbourne",
+          "affiliation": "Imperial College London",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ZBXy6NSKwjs",
+      "videoId": "ZBXy6NSKwjs",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Collingbourne-SymbolicCrossChecking.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2010-11-008",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "The LLVM Assembler & Machine Code Infrastructure",
+      "speakers": [
+        {
+          "name": "Daniel Dunbar",
+          "affiliation": "Apple Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "http://devimages.apple.com/llvm/videos/LLVM_Assembler_Infrastructure.mov",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Dunbar-MC.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2010-11-009",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Creating cling, an interactive interpreter interface for clang",
+      "speakers": [
+        {
+          "name": "Axel Naumann",
+          "affiliation": "CERN",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/BjmGOMJWeAo",
+      "videoId": "BjmGOMJWeAo",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Naumann-Cling.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2010-11-010",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "LLDB: Modular Debugging Infrastructure",
+      "speakers": [
+        {
+          "name": "Greg Clayton",
+          "affiliation": "Apple Inc.",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "http://devimages.apple.com/llvm/videos/LLDB_Debugging_Infrastructure.mov",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Clayton-LLDB.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2010-11-011",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "The Crack Scripting Language",
+      "speakers": [
+        {
+          "name": "Michael Muller",
+          "affiliation": "Google",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/5nOiSCr7JPs",
+      "videoId": "5nOiSCr7JPs",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Muller-Crack.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2010-11-012",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Hardening LLVM With Random Testing",
+      "speakers": [
+        {
+          "name": "Xuejun Yang",
+          "affiliation": "University of Utah",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/WEwEPAF53n4",
+      "videoId": "WEwEPAF53n4",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Yang-HardenLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Security",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2010-11-013",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "C-to-Verilog.com : High-level synthesis using LLVM",
+      "speakers": [
+        {
+          "name": "Nadav Rotem",
+          "affiliation": "Haifa University",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/tOJv1ua1pLg",
+      "videoId": "tOJv1ua1pLg",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Rotem-CToVerilog.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2010-11-014",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Object Files in LLVM",
+      "speakers": [
+        {
+          "name": "Michael Spencer",
+          "affiliation": "Gainsville University",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/xGE3U_iE1-k",
+      "videoId": "xGE3U_iE1-k",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Spencer-ObjectFiles.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2010-11-015",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Connecting the EDG front-end to LLVM",
+      "speakers": [
+        {
+          "name": "Renato Golin",
+          "affiliation": "ARM",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/gdqpZJypYx4",
+      "videoId": "gdqpZJypYx4",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Golin-EDGToLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2010-11-016",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "LLVM for Open Shading Language",
+      "speakers": [
+        {
+          "name": "Larry Gritz",
+          "affiliation": "Sony Pictures Imageworks",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/iq-kZG1nuyY",
+      "videoId": "iq-kZG1nuyY",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Gritz-OpenShadingLang.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2010-11-017",
+      "meeting": "2010-11",
+      "meetingName": "2010 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "November 4, 2010",
+      "category": "technical-talk",
+      "title": "Experiences on using LLVM to compile Click packet processing code to Stanford NetFPGA hardware",
+      "speakers": [
+        {
+          "name": "Erik Rubow",
+          "affiliation": "Ericsson Research Silicon Valley",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/W4OGYeNLC1w",
+      "videoId": "W4OGYeNLC1w",
+      "slidesUrl": "https://llvm.org/devmtg/2010-11/Rubow-Click.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

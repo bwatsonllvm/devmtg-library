@@ -1,0 +1,653 @@
+{
+  "meeting": {
+    "slug": "2025-06",
+    "name": "2025 AsiaLLVM Developers' Meeting",
+    "date": "June 10, 2025",
+    "location": "Tokyo, Japan",
+    "canceled": false,
+    "talkCount": 23
+  },
+  "talks": [
+    {
+      "id": "2025-06-001",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "keynote",
+      "title": "LLVM's First 25 Years and the Road Ahead",
+      "speakers": [
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/crmqvh4Z7YI",
+      "videoId": "crmqvh4Z7YI",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/keynote/lattner-keynote.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2025-06-002",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "ONNX-MLIR: An MLIR-based Compiler for ONNX AI models",
+      "speakers": [
+        {
+          "name": "Tung D. Le",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Exchange (ONNX) is an open standard for representing deep neural networks, and MLIR is emerging as a flexible compiler infrastructure. In this talk, we present a technical report on our open-source compiler, namely ONNX-MLIR, which uses MLIR to compile ONNX models into native code on different architectures e.g., x86, IBM Power, IBM Z. We will discuss the core design of ONNX-MLIR, the optimizations it deploys, and how it supports custom AI accelerators. ONNX-MLIR has been developed since 2019, shortly after MLIR was introduced. Thus, we would also like to discuss some lessons learned when building ONNX-MLIR in parallel with the growth of MLIR compiler infrastructure.",
+      "videoUrl": "https://youtu.be/cXHTu2wI5Ps",
+      "videoId": "cXHTu2wI5Ps",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/le-onnx.pdf",
+      "projectGithub": "",
+      "tags": [
+        "AI",
+        "ML",
+        "MLIR",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2025-06-003",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "Sanitizing MLIR Programs with Runtime Operation Verification",
+      "speakers": [
+        {
+          "name": "Matthias Springer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Operation verification is a core MLIR feature and a powerful tool for building robust compilers. MLIR verifies all operations between pass boundaries, but only static invariants based on compile-time information can be verified. This talk shows how to additionally verify operations at runtime, ranging from low-level properties such as out-of-bounds accesses into tensors/memrefs to high-level properties such as mismatching tensor shapes on linalg structured operations. This talk will also show how to build a memory leak sanitizer based on runtime operation verification.",
+      "videoUrl": "https://youtu.be/O1nGbW6hKBU",
+      "videoId": "O1nGbW6hKBU",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/springer-sanitizing.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "Dynamic Analysis",
+        "MLIR",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-004",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "Data-Tiling in IREE: Achieving High Performance Through Compiler Design",
+      "speakers": [
+        {
+          "name": "Han-Chung Wang",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk explores how IREE, a retargetable MLIR-based compiler for tensor programs, achieves high performance through data-tiling. By rearranging input data into target-specific layouts and utilizing tensor encodings, IREE bridges the gap between host and device. These encodings enable efficient data handling and unlock optimizations like folding, fusion, and propagation, which reduce the cost of relayouting operations. Learn how IREE integrates data-tiling to optimize performance in a compiler context.",
+      "videoUrl": "https://youtu.be/iANJWUL_SOo",
+      "videoId": "iANJWUL_SOo",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/wang-data-tilling.pdf",
+      "projectGithub": "",
+      "tags": [
+        "ML",
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-005",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "Safety at Scale: Advancing Safety with hundreds of millions of lines of C++",
+      "speakers": [
+        {
+          "name": "Kinuko Yasuda",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Memory safety is increasingly recognized as a top priority in the industry, and the adoption of memory-safe languages for new code has become a key common methodology. However, significantly improving the safety of large existing C++ codebases remains a major challenge. In this talk, I will share our recent experience deploying several safety improvements across our C++ codebase at Google. Specifically, I will talk about the deployment of hardened libc++, and explain a series of improvements and extensions we made to Clang’s compile-time pointer lifetime analysis around lifetimebound annotations. By enabling hardened libc++ in all of our products, and adopting the annotations in our key core libraries, we have been able to reduce a significant number of safety violations, and improve the reliability and correctness of our code. I will also touch on ongoing efforts and future work in this area.",
+      "videoUrl": "https://youtu.be/BUhYJtAq1n8",
+      "videoId": "BUhYJtAq1n8",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/yasuda-safety.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs",
+        "Clang",
+        "Performance",
+        "Security"
+      ]
+    },
+    {
+      "id": "2025-06-006",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "LLVM vs. GCC on RISC-V Using SPEC CPU Benchmarks: Methods, Gaps, and Optimizations",
+      "speakers": [
+        {
+          "name": "Yongtai Li",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This work details a systematic approach for comparing LLVM and GCC compilers on RISC-V using SPEC CPU 2006 and 2017 benchmarks, with full results disclosed for the 2017 suite. We expose critical performance gaps through code size, dynamic instruction counts (DIC), and vectorization efficiency, while proposing actionable fixes for compiler-specific inefficiencies.",
+      "videoUrl": "https://youtu.be/T30hxDUqfVY",
+      "videoId": "T30hxDUqfVY",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/li-risc.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-007",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "Breaking std::vector's ABI for performance gains: A Horror Story",
+      "speakers": [
+        {
+          "name": "Christopher Di Bella",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk chronicles the story of modifying std::vector to directly track its size instead of its allocated buffer, and the associated performance improvements we gained as a result. We’ll also tell the story of applying these changes to libc++ so that it can be upstreamed, and the far more terrifying story of addressing any and all downstream reliance on the previous implementation quirks of vector to see this optimisation deployed internally.",
+      "videoUrl": "https://youtu.be/RKdkHwbgXfY",
+      "videoId": "RKdkHwbgXfY",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/di-bella-vector.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-008",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "Understanding Tablegen generated files in LLVM Backend",
+      "speakers": [
+        {
+          "name": "Prerona Chaudhuri",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "While working with LLVM, one needs to deal with tablegen generated files which are quite tricky to understand, especially for beginners. And its important to understand these files so that one can debug failures for eg: while building a new backend or adding a new feature in the backend. In this short technical talk, I would like to summarize the common and important tablegen generated files that we can encounter in the llvm backend, what is the semantics of the C++ generated code etc.",
+      "videoUrl": "https://youtu.be/vkVjIAlzdMw",
+      "videoId": "vkVjIAlzdMw",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/chaudhuri-tablegen.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Beginner",
+        "IR"
+      ]
+    },
+    {
+      "id": "2025-06-009",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "Reducing Code Size with Speculative Inlining",
+      "speakers": [
+        {
+          "name": "Vincent Lee",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Inlining has generally been seen as a critical optimization for performance at the cost of size. But, it can also be used for size optimizations in the mobile space. In this talk, we discuss a new inlining technique that explores the full set of inlining candidates to uncover cases where inlining will generate size improvements due to downstream simplifications. It uncovers beneficial inlining that the traditional cost modeling overlooks resulting in non-trivial app size and performance improvements.",
+      "videoUrl": "https://youtu.be/lmpBcKu7teo",
+      "videoId": "lmpBcKu7teo",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/lee-inlining.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-010",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "technical-talk",
+      "title": "LLVM in the Automotive Industry: Bringing Functional Safety to Open Source",
+      "speakers": [
+        {
+          "name": "Wendi Urribarri",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/wAQ1XBjXfog",
+      "videoId": "wAQ1XBjXfog",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/technical-talk/urribarri-automotive.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2025-06-011",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "quick-talk",
+      "title": "ClangIR’s Footprint: Compile Time Impact",
+      "speakers": [
+        {
+          "name": "Bruno Cardoso Lopes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This presentation explores recent measurements of ClangIR’s impact on compile time. It addresses community concerns from the upstreaming RFC about compilation performance while providing updates on ClangIR’s status.",
+      "videoUrl": "https://youtu.be/Dh_RObp5SUE",
+      "videoId": "Dh_RObp5SUE",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/quick-talk/lopes-compile-time.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "ClangIR",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-012",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "quick-talk",
+      "title": "The Data Inspection Language: Fast & Simple Expression Evaluation in LLDB",
+      "speakers": [
+        {
+          "name": "Andrei Lebedev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLDB often spends a substantial amount of time evaluating expressions needed for displaying certain debug information in an IDE. Currently, this work must be done by LLDB’s full expression evaluator, a very powerful but somewhat slow and heavyweight mechanism. However, these expressions tend to be small and simple, so most of them could be evaluated much faster. The approach of a fast limited expression evaluator was leveraged in lldb-eval for a limited C++ subset proving that the approach is viable. In this talk we introduce the Data Inspection Language (DIL) – a new LLVM mainline effort based partly on lldb-eval that aims to expand its capabilities, make it more robust and language-agnostic. The goal of DIL is to eventually replace the existing frame variable mechanism in LLDB, permitting it to be used for simple expression evaluation. This new implementation will greatly increase the capabilities of ‘frame variable’, allowing it to quickly and directly evaluate simple expressions, in turn allowing to bypass the full expression evaluator in many common cases.",
+      "videoUrl": "https://youtu.be/tgsDbrQga_w",
+      "videoId": "tgsDbrQga_w",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/quick-talk/lebedev-lldb.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Debug Information",
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2025-06-013",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "quick-talk",
+      "title": "A technology for lifting machine code to high-performance LLVM IR",
+      "speakers": [
+        {
+          "name": "Masashi Yoshimura",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Introducing a technology for lifting machine code to high-performance LLVM IR. This approach transforms Linux/ELF binaries into executables for various target platforms through ahead-of-time compilation. It converts code sections into LLVM IR using a tool that translates machine instructions into equivalent IR, then applies a sophisticated optimization that leverages virtual registers to enhance performance. In this session, we’ll explore the underlying architecture, key optimization strategies, and discuss future challenges and opportunities for advancing cross-platform binary translation.",
+      "videoUrl": "https://youtu.be/oXQ6b2wZWpU",
+      "videoId": "oXQ6b2wZWpU",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/quick-talk/yoshimura-ir.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "IR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-014",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "quick-talk",
+      "title": "Improving LLVM Backend Development with a New TableGen Language Server",
+      "speakers": [
+        {
+          "name": "Shin Ando",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "TableGen is essential for LLVM backend development, but the current development experience leaves much to be desired. This talk presents a new language server tailored for TableGen, with improved performance, stability, and dedicated support for backend development. Through robust parsing, advanced analysis, and a rich set of LSP features, we show how the development experience can be significantly improved.",
+      "videoUrl": "https://youtu.be/XrF9HWCBkBE",
+      "videoId": "XrF9HWCBkBE",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/quick-talk/ando-backend.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "IR",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-015",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "quick-talk",
+      "title": "Improvements to LoopInterchange to accelerate vectorization",
+      "speakers": [
+        {
+          "name": "Ryotaro Kasuga",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/VV5nFm1ByY0",
+      "videoId": "VV5nFm1ByY0",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/quick-talk/kasuga-loopinterchange.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2025-06-016",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Fujitsu Compiler Test Suite: New Test Suite for Fortran/C/C++",
+      "speakers": [
+        {
+          "name": "Takahiro Kawashima",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Fujitsu released Fujitsu Compiler Test Suite https://github.com/fujitsu/compiler-test-suite, a test suite for Fortran/C/C++ compilers, at the end of 2023. It is used in the Flang CI https://linaro.atlassian.net/wiki/spaces/FLANGCI/overview, one of unofficial CI (continuous integration) systems in the LLVM community, to detect regressions of LLVM. This talk explains what the Fujitsu Compiler Test Suite and the Flang CI are and how the LLVM community can leverage them.",
+      "videoUrl": "https://youtu.be/_k2zKR5xVoQ",
+      "videoId": "_k2zKR5xVoQ",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/kawashima-fujitsu.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Community Building",
+        "Flang",
+        "Infrastructure",
+        "Performance",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2025-06-017",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Complex Number Division Calculation Methods and Our Work in MLIR",
+      "speakers": [
+        {
+          "name": "Shunsuke Watanabe",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Our investigation revealed that the optimization of loops involving complex number division in Flang performs worse than Gfortran. This performance difference was confirmed in SPEC CPU 2017’s cam4 benchmark. The reason for this is that the current Flang can only lower complex number division to scalar runtime functions (such as “__divdc3”), preventing vectorization and inlining. Therefore, we considered using the MLIR’s complex dialect to compute complex number division. This talk will explain the calculation methods for complex number division and our work in MLIR.",
+      "videoUrl": "https://youtu.be/0QR-EtoYIlI",
+      "videoId": "0QR-EtoYIlI",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/watanabe-division.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Flang",
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-018",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Wanco: WebAssembly AOT Compiler That Supports Live Migration",
+      "speakers": [
+        {
+          "name": "Raiki Tamura",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "We introduce Wanco, an AOT compiler for WebAssembly that enables migration across platforms, making it ideal for edge computing and IoT devices. Leveraging LLVM, Wanco introduces up to 50% overhead while storing snapshots in a CPU- and OS-independent format, enhancing the portability of WebAssembly programs.",
+      "videoUrl": "https://youtu.be/gVvgSn7dyts",
+      "videoId": "gVvgSn7dyts",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/tamura-webassembly.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2025-06-019",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Toward a Practical Double-Fetch Checker for Clang Static Analyzer: Early Results and Future Directions for OS Security",
+      "speakers": [
+        {
+          "name": "Fumiya Shigemitsu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Double-fetch vulnerabilities - a form of TOCTOU (Time-of-Check to Time-of-Use) bugs - pose a significant risk in kernels and embedded systems when user-space memory is accessed multiple times without proper copy semantics. In this talk, we present our newly developed double-fetch checker for the Clang Static Analyzer, which builds on research prototypes (e.g., DFTracker) and uses memory-access provenance, alias relationships, and control-flow analysis to detect repeated reads from user memory. We’ll share how we reduce false positives through tailored heuristics, explore extensions for RTOS-specific environments, and outline future directions aimed at improving kernel and embedded security.",
+      "videoUrl": "https://youtu.be/LcYdysH5CQs",
+      "videoId": "LcYdysH5CQs",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/shigemitsu-tiling.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Embedded",
+        "Security",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2025-06-020",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Nanpanjiang Project: Helping Female Engineers Succeed in Compilers and Tools",
+      "speakers": [
+        {
+          "name": "Ji Qiu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Project, established in 2023 by technology enthusiasts in the HelloLLVM community in mainland China, aims to support female engineers in achieving career goals in compilers and virtual machines. Originating from the first “Women in Compilers and Tools Workshop” (WiCT) by the LLVM Foundation, it offers lectures, tutorials, and mentorship. So far, over 20 seminars have been held, with projections indicating outreach will grow from 200 to 20,000 by 2036, mentorship participants from 20 to 5,000, and active maintainers from 2 to 200. The project will continue to promote gender diversity and contribute to the technology community’s prosperity.",
+      "videoUrl": "https://youtu.be/faRR-Y8e00g",
+      "videoId": "faRR-Y8e00g",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/qiu-nanpangjiang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2025-06-021",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Leverage AArch64 SME/SVE instructions to support clang matrix_type",
+      "speakers": [
+        {
+          "name": "Zheng Chen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "AArch64 has SME instructions to operate on the ZA register which works great for Clang matrix_type operations. I would like to share what we did in Huawei to leverage AArch64 SME instructions to support fast Clang matrix_type operations.",
+      "videoUrl": "https://youtu.be/EC0oPWoXDnY",
+      "videoId": "EC0oPWoXDnY",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/zheng-matrix.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2025-06-022",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Bolting the Linux kernel with profile instrumentation",
+      "speakers": [
+        {
+          "name": "Wei Wei",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This presentation focuses on several enhancements to BOLT for Linux kernel, including support for AArch64, relocation mode and instrumentation. We will talk about the motivations, the challenges, and what we have achieved including early performance results, and further work, with an emphasis on instrumentation.",
+      "videoUrl": "https://youtu.be/5ympgoV_Uqo",
+      "videoId": "5ympgoV_Uqo",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/wei-instrumentation.pdf",
+      "projectGithub": "",
+      "tags": [
+        "PGO",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2025-06-023",
+      "meeting": "2025-06",
+      "meetingName": "2025 AsiaLLVM Developers' Meeting",
+      "meetingLocation": "Tokyo, Japan",
+      "meetingDate": "June 10, 2025",
+      "category": "lightning-talk",
+      "title": "Reflection of standard attributes in Clang",
+      "speakers": [
+        {
+          "name": "Aurelien Cassagnes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Foundation is dedicated to providing an inclusive and safe experience for everyone. We do not tolerate harassment of participants in any form. By registering for this event, we expect you to have read and agree to the LLVM Code of Conduct.",
+      "videoUrl": "https://youtu.be/VyaV5sCcbyk",
+      "videoId": "VyaV5sCcbyk",
+      "slidesUrl": "https://llvm.org/devmtg/2025-06/slides/lightning-talk/cassagnes-clang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Community Building"
+      ]
+    }
+  ]
+}

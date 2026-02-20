@@ -1,0 +1,361 @@
+{
+  "meeting": {
+    "slug": "2020-02-23",
+    "name": "2020 Fourth LLVM Performance Workshop @ CGO20",
+    "date": "February 23, 2020",
+    "location": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+    "canceled": false,
+    "talkCount": 10
+  },
+  "talks": [
+    {
+      "id": "2020-02-23-001",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "An Overview of the Region Vectorizer",
+      "speakers": [
+        {
+          "name": "Simon Moll",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The Region Vectorizer (RV) is a data-parallel vecorizer for LLVM IR. This talk gives an overview of the RV vectorization system, its main features and future directions.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "IR"
+      ]
+    },
+    {
+      "id": "2020-02-23-002",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "Optimized Memory Movement for OpenMp target offloading",
+      "speakers": [
+        {
+          "name": "Prithayan Barua",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "OpenMP offers directives for offloading computations from CPU hosts to accelerator devices such as GPUs. A key underlying challenge is in efficiently managing the movement of data across the host and the accelerator. Since the cost of data movement is high due to data volume and the delay of interconnection, how to efficiently manage the data movement operations to avoid redundancy is the challenge faced by the compilers. In this talk, we introduce an optimization framework that runs analysis and transformation on a novel intermediate representation: location-aware heap SSA (LASSA) that models the memory accesses and data movement across tasks running on different devices that have private storage. This framework casts the problem of removal of redundant data movements into a partial redundancy elimination (PRE) problem and applies the lazy code motion technique to optimize it. This is a work in progress, and we have a prototype LLVM implementation. We evaluated it with 10 benchmarks and got a Geo-mean speedup of 2.3X, and saved a Geo-mean 3480 MB of redundant data transfers.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "IR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2020-02-23-003",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "LLOV: A Fast Static Data-Race Checker for OpenMP Programs",
+      "speakers": [
+        {
+          "name": "Utpal Bora",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Santanu Das",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Pankaj Kureja",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Saurabh Joshi",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ramakrishna Upadrasta",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Sanjay Rajopadhye",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In the era of Exascale computing, writing efficient parallel programs is indispensable and at the same time, writing sound parallel programs is highly difficult. While parallel programming is easier with frameworks such as OpenMP, the possibility of data races in these programs still persists. In this paper, we propose a fast, lightweight, language agnostic, and static data race checker for OpenMP programs based on the LLVM compiler framework. We compare our tool with other state-of-the-art data race checkers on a variety of well-established benchmarks. We show that the precision, accuracy, and the F1 score of our tool is comparable to other checkers while being orders of magnitude faster. To the best of our knowledge, this work is the only tool among the state-of-the-art data race checkers that can verify a FORTRAN program to be data race free.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Flang",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2020-02-23-004",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "OpenMP in LLVM --- A Design and Implementation Overview",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "OpenMP support in LLVM is changing, fast and in many places. This talk will provide an overview of the changes, their status and goals, the rational behind them, as well as ways to contribute. A summary of the content is given below. Please note that the talk presents the work done by many people across the entire community. Due to relative frequent releases of new features, OpenMP was always a moving target when it comes to implementation. In addition, we currently working on increasing the hardware and language support: The second offloading target, namely AMDGPU, is advancing rapidly and with it the need to redesign/generalize the offloading code path in Clang and in the OpenMP device runtime library. On the language side, Flang, the Fortran compiler front-end, will require full support for OpenMP similar to the current implementation in Clang. To provide this support in a maintainable way, the code generation is transitioning out of Clang into LLVM-Core. In tandem with these changes, optimizations for OpenMP programs are developed. Utilizing abstract call sites, the Attributor performs scalar optimizations, e.g., constant propagation, across the boundaries of outlined OpenMP regions. Finally, explicit OpenMP aware optimizations are developed as part of the OpenMPOpt pass.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Clang",
+        "Flang",
+        "Frontend",
+        "GPU",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2020-02-23-005",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "panel",
+      "title": "Discussion Round --- Participating in LLVM - GSoC and other opportunities",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2020-02-23-006",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "keynote",
+      "title": "Keynote: \"Header Time Optimization\": Cross-Translation Unit Optimization via Annotated Headers",
+      "speakers": [
+        {
+          "name": "William Moses",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM automatically derives facts that are only used while the respective translation unit, or LLVM module, is processed (i.e. constant function, error-throwing, etc). This is true both in standard compilation but also link-time-optimization (LTO) in which the module is (partially) merged with others in the same project at link time. LTO is able to take advantage of this to optimize functions calls to outside the translation unit. However, LTO doesn't solve the problem for two reasons of practicality: LTO comes with a nontrivial compile-time investment; and many libraries upon which a program could depend, do not ship with LTO information, simply headers and binaries. In this extended abstract, we solve the problem by generating annotated versions of the source code that also include this derived information. Such an approach has the benefits of both worlds: allowing optimizations previously limited to LTO without running LTO and only requiring C/C++-compatible headers. Our modified Clang understands three custom attributes that encode arbitrary LLVM-IR attributes and it can emit C/C++-compatible headers with the aforementioned attribute embedded based on the information available in the LLVM-IR. We test the approach experimentally on the LLVM multisource application test suite and find that annotated headers find up to a 30\\% speedup, and represent half of the speedups found by full LTO.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Embedded",
+        "LLD",
+        "LTO",
+        "Optimizations",
+        "Performance",
+        "Testing"
+      ]
+    },
+    {
+      "id": "2020-02-23-007",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "Asynchronous OpenMP Offloading on NVIDIA GPUs",
+      "speakers": [
+        {
+          "name": "Shilei Tian",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Barbara Chapman",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "In the current implementation of LLVM OpenMP offloading, the runtime submits all kernels to the default stream and blocks the issuing thread until device execution is done. Since the default stream serializes all submitted kernel and lunches them sequentially, even in parallel issued kernels are not executed on a device concurrently. This is problematic especially if single kernels do not utilize the entire device consistently, a situation not uncommon on modern GPUs. In this work, we present a design and prototype to use multiple streams to offload OpenMP target regions in order for concurrent execution on the device. Our prototype infrastructure shows speedups of up to 1.33x on micro benchmarks and we expect further improvements from hardware-based dependence resolution.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2020-02-23/slides/Shilei-multistreams.pdf",
+      "projectGithub": "",
+      "tags": [
+        "CUDA",
+        "GPU",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2020-02-23-008",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "Global Machine Outliner for ThinLTO",
+      "speakers": [
+        {
+          "name": "Kyungwoo Lee",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Nikolai Tillmann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "LTO"
+      ]
+    },
+    {
+      "id": "2020-02-23-009",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "Cheap function entry instrumentation to collect runtime metrics",
+      "speakers": [
+        {
+          "name": "Aditya Kumar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ian Levesque",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Sam Todd",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2020-02-23-010",
+      "meeting": "2020-02-23",
+      "meetingName": "2020 Fourth LLVM Performance Workshop @ CGO20",
+      "meetingLocation": "Fourth LLVM Performance Workshop at CGO20, San Diego, CA, USA",
+      "meetingDate": "February 23, 2020",
+      "category": "technical-talk",
+      "title": "Interactive introduction: The Attributor: A Versatile Inter-procedural Fixpoint Iteration Framework",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "meeting": {
+    "slug": "2023-02-25",
+    "name": "2023 Seventh LLVM Performance Workshop @ CGO",
+    "date": "February 25, 2023",
+    "location": "Seventh LLVM Performance Workshop @ CGO, In person - Hybrid",
+    "canceled": false,
+    "talkCount": 5
+  },
+  "talks": [
+    {
+      "id": "2023-02-25-001",
+      "meeting": "2023-02-25",
+      "meetingName": "2023 Seventh LLVM Performance Workshop @ CGO",
+      "meetingLocation": "Seventh LLVM Performance Workshop @ CGO, In person - Hybrid",
+      "meetingDate": "February 25, 2023",
+      "category": "technical-talk",
+      "title": "RL4ReAl: Reinforcement Learning for Register Allocation",
+      "speakers": [
+
+      ],
+      "abstract": "We aim to automate decades of research and experience in register allocation, leveraging machine learning. We tackle this problem by embedding a multi-agent reinforcement learning algorithm within LLVM, training it with state of the art techniques. We formalize the constraints that precisely define the problem for a given instruction-set architecture, while ensuring that the generated code preserves semantic correctness. We also develop a gRPC based framework providing a modular and efficient compiler interface for training and inference. Our approach is architecture independent: we show experimental results targeting Intel x86 and ARM AArch64. Our results match or out-perform the heavily tuned, production-grade register allocators of LLVM.\n\nWe invite speakers from academia and industry to present their work on the following list of topics (including and not limited to:)\n\nWhile the primary focus of the workshop is on these topics, we welcome any submission related to the LLVM-project, its sub-projects (clang, mlir, lldb, Polly, lld, openmp, pstl, compiler-rt, etc.), as well as their use in industry and academia.\n\nProposals should provide sufficient information for the review committee to be able to judge the quality of the submission. Proposals can be submitted under the form of an extended abstract, full paper, or slides. Accepted presentations will be presented online. The presentations will be publicly available on https://llvm.org/devmtg/, and recordings will be available on LLVM's youtube channel\n\nIn case of any queries please reach out to the workshop organizers: Johannes Doerfert (jdoerfert at llnl.gov), Aditya (hiraditya at msn.com), Jose M Monsalve Diaz (jmonsalvediaz at anl.gov), Shilei Tian (i at tianshilei.me),\n\nThe LLVM Foundation is dedicated to providing an inclusive and safe experience for everyone. We do not tolerate harassment of participants in any form. By registering for this event, we expect you to have read and agree to the LLVM Code of Conduct.\n\nWe also adhere to the Code of Conduct use by CGO",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2023-02-25/slides/RL4ReAl.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Clang",
+        "Community Building",
+        "LLD",
+        "LLDB",
+        "Libraries",
+        "ML",
+        "MLIR",
+        "Polly"
+      ]
+    },
+    {
+      "id": "2023-02-25-002",
+      "meeting": "2023-02-25",
+      "meetingName": "2023 Seventh LLVM Performance Workshop @ CGO",
+      "meetingLocation": "Seventh LLVM Performance Workshop @ CGO, In person - Hybrid",
+      "meetingDate": "February 25, 2023",
+      "category": "technical-talk",
+      "title": "Automatic Code Generation for High-performance Graph Algorithms",
+      "speakers": [
+        {
+          "name": "Rizwan A. Ashraf Zhen Peng Luanzheng Guo Gokcen Kestor",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Graph algorithms have broad applicability in many domains, such as scientific computing, social sciences, and many more. A well-performing implementation of these algorithms on computing systems however requires significant programmer effort, and portability across various heterogeneous computing devices does not come for free. In this paper, we describe the support of optimizations in the MLIR-based COMET compiler of graph algorithms for portable and faster implementation as compared to a library-based approach. We discuss the needed extensions to our compiler front-end, intermediate representation, and the workspace and masking optimizations. Our experimental results demonstrate speedup of up to 3.7X for the sparse matrix - sparse matrix operation over various semirings, as compared to a library-based implementation of the GraphBLAS standard.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2023-02-25/slides/codegen-graph-algo.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "Frontend",
+        "IR",
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2023-02-25-003",
+      "meeting": "2023-02-25",
+      "meetingName": "2023 Seventh LLVM Performance Workshop @ CGO",
+      "meetingLocation": "Seventh LLVM Performance Workshop @ CGO, In person - Hybrid",
+      "meetingDate": "February 25, 2023",
+      "category": "technical-talk",
+      "title": "A New Implementation for std::sort",
+      "speakers": [
+
+      ],
+      "abstract": "std::sort is one of the most used algorithms from the C++ Standard Library. In this writeup, we talk about our recent changes to the libc++ implementation of the algorithm for improving its performance. Before our changes, the core of the implementation was the Quicksort algorithm. The implementation handled a few particular cases specially. Collections of length 5 or less are sorted using sorting networks. Depending on the data type being sorted, collections of lengths up to 30 are sorted using insertion sort. There was special handling for collections where most items are equal and for collections that are almost sorted.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2023-02-25/slides/A-New-Implementation-for-std-sort.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2023-02-25-004",
+      "meeting": "2023-02-25",
+      "meetingName": "2023 Seventh LLVM Performance Workshop @ CGO",
+      "meetingLocation": "Seventh LLVM Performance Workshop @ CGO, In person - Hybrid",
+      "meetingDate": "February 25, 2023",
+      "category": "technical-talk",
+      "title": "Optimizing the Compiler's Memory Usage? Let Us Implement a BasicProfiler First!",
+      "speakers": [
+        {
+          "name": "Gunnar Kudrjavets Aditya Kumar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The number of files and source lines of code in popular industrial code bases is significant. As of 2017, the Microsoft Windows code base contained 3.5 million files. The Linux kernel contained 27.8 million lines of code in 2020. Compiling code fast is essential to developer productivity for thousands of engineers. Compiler performance requirements, such as CPU and I/O usage, are high. One of the application's standard performance criteria is memory usage and memory allocator churn. Lower memory usage implies a higher capacity to run more compiler instances in parallel. Deceptively easy solutions to reduce memory usage, such as custom memory allocators (e.g., jemalloc), are available. However, in our industry experience, nothing replaces context-dependent targeted optimizations. To optimize memory usage, we need to be able to conduct reliable and valid measurements. This talk describes the challenges associated with designing and implementing a performant and scalable mechanism to intercept calls to a memory allocator. We can use that intercept mechanism as an essential profiling tool. A critical requirement for this type of profiler is low-performance overhead, enabling us to run the profiling functionality in a production environment. Attributing and quantifying memory usage in production is a complex problem. The inspiration for this presentation is our experience at Meta (Facebook), where we worked on the performance engineering of various applications. We discuss the problems related to (a) different methods of intercepting allocator calls, such as malloc and free, (b) enabling and disabling the allocator intercept mechanism, (c) keeping track of the count and size of allocations that multiple threads request, (d) the concept of \"safe\" APIs that are available during the execution of the intercept mechanism, and (e) avoiding reentrancy. We finish our talk by discussing various problems and solutions related to extending the profiling mechanism. If the in-memory data structures are insufficient to keep track of performance-related data, it must be stored somewhere. Interacting with a storage mechanism, such as a hard disk, will add complexity in the case of multiple readers and writers. As a concrete example for our discussion, we use publicly accessible information about Mac OS X and reference the source code from Apple.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2023-02-25/slides/basic-memory-profiler.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2023-02-25-005",
+      "meeting": "2023-02-25",
+      "meetingName": "2023 Seventh LLVM Performance Workshop @ CGO",
+      "meetingLocation": "Seventh LLVM Performance Workshop @ CGO, In person - Hybrid",
+      "meetingDate": "February 25, 2023",
+      "category": "technical-talk",
+      "title": "Solid Work-Group Synchronization on CPUs",
+      "speakers": [
+
+      ],
+      "abstract": "More and more frameworks and simulations are developed using heterogeneous programming models such as CUDA, HIP, SYCL, or OpenCL. Their hierarchical kernel models are easily mapped to the GPU's resource hierarchy, their massive number of threads, and lightweight synchronization. For compatibility with CPU-only high-performance computing facilities (e.g. Fugaku) or for splitting work across GPUs and CPUs, it is beneficial if the kernels written for those programming models can also be executed on CPUs. A significant hurdle to achieving this in a performance-portable manner is that implementing barriers for such kernels on CPUs requires providing forward-progress guarantees. These guarantees can only be provided by using sufficient concurrency (by means of threads or fibers) or compiler transformations that split the kernels at the barriers. While new variants and improvements are still being proposed, the compiler transformations are similar in spirit. This means that the base transformations are regularly re-implemented in research and production runtimes of the heterogeneous programming models. We propose to have one of these implementations upstream in LLVM, to allow for reusing a mature and optimized implementation.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2023-02-25/slides/work-group-sync-on-cpu-LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "CUDA",
+        "GPU",
+        "OpenCL",
+        "Performance"
+      ]
+    }
+  ]
+}

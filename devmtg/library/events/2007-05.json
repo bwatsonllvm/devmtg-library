@@ -1,0 +1,385 @@
+{
+  "meeting": {
+    "slug": "2007-05",
+    "name": "2007 US LLVM Developers' Meeting",
+    "date": "May 25, 2007",
+    "location": "Cupertino, CA, USA",
+    "canceled": false,
+    "talkCount": 14
+  },
+  "talks": [
+    {
+      "id": "2007-05-001",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "A brief history of LLVM",
+      "speakers": [
+        {
+          "name": "Vikram Adve",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "During this brief session, Vikram and Chris (the originators of LLVM) presented a brief history of the early history of LLVM.",
+      "videoUrl": "https://youtu.be/FNtmemyeEHY",
+      "videoId": "FNtmemyeEHY",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-002",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "Introductions",
+      "speakers": [
+        {
+          "name": "Everyone",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Everyone introduced themselves to the group.",
+      "videoUrl": "https://youtu.be/nl5SXEDkMEc",
+      "videoId": "nl5SXEDkMEc",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-003",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "Demystifying The LLVM Pass Manager",
+      "speakers": [
+        {
+          "name": "Devang Patel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The PassManager, which manages the execution of all LLVM passes, was recently revised to be simpler and more useful. This talk will help you understand what the new pass manager does and how to use it.",
+      "videoUrl": "https://youtu.be/4yzjAXiMbvk",
+      "videoId": "4yzjAXiMbvk",
+      "slidesUrl": "https://llvm.org/devmtg/2007-05/03-Patel-Passmanager.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-004",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "The LLVM Code Generator",
+      "speakers": [
+        {
+          "name": "Evan Cheng",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "An overview of the LLVM generic code generator design and changes to it that are coming in the future.",
+      "videoUrl": "https://youtu.be/ZWmHZD_-fZ0",
+      "videoId": "ZWmHZD_-fZ0",
+      "slidesUrl": "https://llvm.org/devmtg/2007-05/04-Cheng-Codegen.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-005",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "Introduction To Predicate Simplifier",
+      "speakers": [
+        {
+          "name": "Nick Lewycky",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "A review of the design and implementation of LLVM's Predicate Simplifier Pass, otherwise known as VRP (Value Range Propagation).",
+      "videoUrl": "https://youtu.be/y4xRGfFZT-0",
+      "videoId": "y4xRGfFZT-0",
+      "slidesUrl": "https://llvm.org/devmtg/2007-05/05-Lewycky-Predsimplify.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner"
+      ]
+    },
+    {
+      "id": "2007-05-006",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "The Cell BE Symbiotic Processor Element Backend",
+      "speakers": [
+        {
+          "name": "Scott Michel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "A presentation of the practice and experience that resulted from Aerospace's implementation of an LLVM back-end Target for the Cell BE Symbiotic Processor Element.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2007-05/07-Michel-Cell.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2007-05-007",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "Secure Virtual Architecture",
+      "speakers": [
+
+      ],
+      "abstract": "A presentation on our research to create a virtual machine that operates below the operating system and a brief introduction to some of the novel security capabilities that our architecture can enable.",
+      "videoUrl": "https://youtu.be/sRvetnQhXPQ",
+      "videoId": "sRvetnQhXPQ",
+      "slidesUrl": "https://llvm.org/devmtg/2007-05/08-Criswell-SVA.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "Security"
+      ]
+    },
+    {
+      "id": "2007-05-008",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "New LLVM C Front-end",
+      "speakers": [
+        {
+          "name": "Steve Naroff",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This talk describes a new from-scratch C frontend (which is aiming to support Objective C and C++ someday) for LLVM, built as a native part of the LLVM system and in the LLVM design style.",
+      "videoUrl": "https://youtu.be/Xx7zFn31PLQ",
+      "videoId": "Xx7zFn31PLQ",
+      "slidesUrl": "https://llvm.org/devmtg/2007-05/09-Naroff-CFE.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2007-05-009",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "technical-talk",
+      "title": "LLVM in OpenGL and for Dynamic Languages",
+      "speakers": [
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "A presentation put together in 10 minutes, talking about LLVM being used for OpenGL and some speculative talk about dynamic languages.",
+      "videoUrl": "https://youtu.be/TPyo6NYNYis",
+      "videoId": "TPyo6NYNYis",
+      "slidesUrl": "https://llvm.org/devmtg/2007-05/10-Lattner-OpenGL.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-010",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "panel",
+      "title": "Concurrency Primitives",
+      "speakers": [
+        {
+          "name": "Christopher Lamb",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "For multi-threaded shared memory models.",
+      "videoUrl": "https://youtu.be/T5GgX8tE3R8",
+      "videoId": "T5GgX8tE3R8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-011",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "panel",
+      "title": "LLVM Roadmap",
+      "speakers": [
+        {
+          "name": "Reid Spencer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Does the development community care to disclose and maintain advance information about what is being worked on?",
+      "videoUrl": "https://youtu.be/npCXLaGdArY",
+      "videoId": "npCXLaGdArY",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-012",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "panel",
+      "title": "Adoption Goals",
+      "speakers": [
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "While our adoption has increased greatly recently, we're still tiny compared to other compiler and virtual machine systems.",
+      "videoUrl": "https://youtu.be/CIp103RdKic",
+      "videoId": "CIp103RdKic",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-013",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "panel",
+      "title": "Project Management, License, Naming",
+      "speakers": [
+        {
+          "name": "Reid Spencer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/uTVcG0qVS0I",
+      "videoId": "uTVcG0qVS0I",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2007-05-014",
+      "meeting": "2007-05",
+      "meetingName": "2007 US LLVM Developers' Meeting",
+      "meetingLocation": "Cupertino, CA, USA",
+      "meetingDate": "May 25, 2007",
+      "category": "panel",
+      "title": "Feedback on the Meeting",
+      "speakers": [
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/iINSIqwaQX0",
+      "videoId": "iINSIqwaQX0",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

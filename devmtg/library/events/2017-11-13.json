@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2017-11-13",
+    "name": "2017 LLVM-HPC @ SC17",
+    "date": "November 13, 2017",
+    "location": "LLVM-HPC @ SC17, Denver, CO, USA",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

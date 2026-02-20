@@ -1,0 +1,1581 @@
+{
+  "meeting": {
+    "slug": "2018-04",
+    "name": "2018 European LLVM Developers' Meeting",
+    "date": "April 16-17, 2018",
+    "location": "Bristol, UK",
+    "canceled": false,
+    "talkCount": 47
+  },
+  "talks": [
+    {
+      "id": "2018-04-001",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "keynote",
+      "title": "The Cerberus Memory Object Semantics for ISO and De Facto C",
+      "speakers": [
+        {
+          "name": "P. Sewell",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2018-04/slides/Sewell-The_Cerberus_Memory_Object_Semantics.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-002",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "keynote",
+      "title": "LLVM x Blockchains = A new Ecosystem of Decentralized Applications",
+      "speakers": [
+        {
+          "name": "R. Zhong",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/PmKWJ_1TBpc",
+      "videoId": "PmKWJ_1TBpc",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Zhong-LLVM%20x%20Blockchain.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-003",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "tutorial",
+      "title": "Pointers, Alias & ModRef Analyses",
+      "speakers": [
+        {
+          "name": "A. Sbirlea",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "N. Lopes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/r0XVS4Atl3U",
+      "videoId": "r0XVS4Atl3U",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Lopes-Sbirlea-Pointers,%20Alias%20and%20ModRef%20Analyses.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-004",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "tutorial",
+      "title": "Scalar Evolution - Demystified",
+      "speakers": [
+        {
+          "name": "J. Absar",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/AmjliNp0_00",
+      "videoId": "AmjliNp0_00",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Absar-ScalarEvolution.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-04-005",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "bof",
+      "title": "Towards implementing #pragma STDC FENV_ACCESS",
+      "speakers": [
+        {
+          "name": "U. Weigand",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-006",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "bof",
+      "title": "Build system integration for interactive tools",
+      "speakers": [
+        {
+          "name": "I. Biryukov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "H. Wu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "E. Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "S. McCall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Infrastructure"
+      ]
+    },
+    {
+      "id": "2018-04-007",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "bof",
+      "title": "Clang Static Analyzer BoF",
+      "speakers": [
+        {
+          "name": "Devin Coughlin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-04-008",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "bof",
+      "title": "LLVM Foundation BoF",
+      "speakers": [
+        {
+          "name": "LLVM Foundation Board of Directors",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2018-04-009",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "A Parallel IR in Real Life: Optimizing OpenMP",
+      "speakers": [
+        {
+          "name": "H. Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "X. Tian",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "G. Stelle",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/u2Soj49R-i4",
+      "videoId": "u2Soj49R-i4",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Finkel-Representing Parallelism Within LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-010",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "An Introduction to AMD Optimizing C/C++ Compiler",
+      "speakers": [
+        {
+          "name": "D. Das",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Fd3afoM3UOE",
+      "videoId": "Fd3afoM3UOE",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Das-An%20Introduction%20to%20AMD%20Optimizing%20Compiler.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner"
+      ]
+    },
+    {
+      "id": "2018-04-011",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Developing Kotlin/Native infrastructure with LLVM/Clang, travel notes.",
+      "speakers": [
+        {
+          "name": "N. Igotti",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/DqsYo_4QWSg",
+      "videoId": "DqsYo_4QWSg",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Igotti-Developing%20Kotlin.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Programming Languages"
+      ]
+    },
+    {
+      "id": "2018-04-012",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Extending LoopVectorize to Support Outer Loop Vectorization Using VPlan",
+      "speakers": [
+        {
+          "name": "D. Caballero",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "S. Guggilla",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/z6NeHLRNVok",
+      "videoId": "z6NeHLRNVok",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Caballero-Extending%20LoopVectorize%20to%20Support%20Outer%20Loop%20Vectorization%20Using%20VPlan.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "VPlan"
+      ]
+    },
+    {
+      "id": "2018-04-013",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Finding Iterator-related Errors with Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "Á. Balogh",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/t2u8n0dcUAA",
+      "videoId": "t2u8n0dcUAA",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Balogh-Finding%20Iterator-related%20Errors%20with%20Clang%20Static%20Analyzer.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-04-014",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Finding Missed Optimizations in LLVM (and other compilers)",
+      "speakers": [
+        {
+          "name": "G. Barany",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/V6ug3e3jC54",
+      "videoId": "V6ug3e3jC54",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Barany-Finding%20Missed%20Optimizations%20in%20LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2018-04-015",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Global code completion and architecture of clangd",
+      "speakers": [
+        {
+          "name": "E. Liu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "H. Wu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "I. Biryukov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "S. McCall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/BvjrZ3QioBI",
+      "videoId": "BvjrZ3QioBI",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Biryukov-Global%20code%20completion%20and%20architecture%20of%20clangd.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2018-04-016",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Hardening the Standard Library",
+      "speakers": [
+        {
+          "name": "M. Clow",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/jxLKR1_oucc",
+      "videoId": "jxLKR1_oucc",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Clow-Hardening%20the%20Standard%20Library.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Security"
+      ]
+    },
+    {
+      "id": "2018-04-017",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Implementing an LLVM based Dynamic Binary Instrumentation framework",
+      "speakers": [
+        {
+          "name": "C. Hubain",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "C. Tessier",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/_CjpRKKyQN8",
+      "videoId": "_CjpRKKyQN8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-018",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "MIR-Canon: Improving Code Diff Through Canonical Transformation.",
+      "speakers": [
+        {
+          "name": "P. Lotfi",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/RHT-bh_xo6U",
+      "videoId": "RHT-bh_xo6U",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Lotfi-MIR-Canon%20Improving%20Code%20Diff%20Through%20Canonical%20Transformation.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-019",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "New PM: taming a custom pipeline of Falcon JIT",
+      "speakers": [
+        {
+          "name": "F. Sergeev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/6X12D46sRFw",
+      "videoId": "6X12D46sRFw",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2018-04-020",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Organising benchmarking LLVM-based compiler: Arm experience",
+      "speakers": [
+        {
+          "name": "E. Astigeevich",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/W8MMTpEkaJQ",
+      "videoId": "W8MMTpEkaJQ",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-04-021",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Performance Analysis of Clang on DOE Proxy Apps",
+      "speakers": [
+        {
+          "name": "H. Finkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "B. Homerding",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/xtE-f5Bxs2U",
+      "videoId": "xtE-f5Bxs2U",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Finkel-DOE Proxy Apps.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-04-022",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Point-Free Templates",
+      "speakers": [
+        {
+          "name": "A. Gozillon",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "P. Keir",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9QkWgDe9VPE",
+      "videoId": "9QkWgDe9VPE",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Gozillon-Point-Free%20Templates.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-023",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "technical-talk",
+      "title": "Protecting the code: Control Flow Enforcement Technology",
+      "speakers": [
+        {
+          "name": "O. Simhon",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Y9Q-GdRZTXM",
+      "videoId": "Y9Q-GdRZTXM",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Simhon-Control%20Flow%20Enforcement%20Technology.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-024",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "C++ Parallel Standard Template LIbrary support in LLVM",
+      "speakers": [
+        {
+          "name": "M. Dvorskiy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Cownie",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "A. Kukanov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/umlqw1QTf7g",
+      "videoId": "umlqw1QTf7g",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Cownie-Parallel%20STL%20LLVM%20in%205min.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-025",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Can reviews become less of a bottleneck?",
+      "speakers": [
+        {
+          "name": "K. Beyls",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/jqAUxr-vDe0",
+      "videoId": "jqAUxr-vDe0",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Beyls-Reviews%20less%20of%20a%20bottleneck.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-026",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Clacc: OpenACC Support for Clang and LLVM",
+      "speakers": [
+        {
+          "name": "J. Denny",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "S. Lee",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Vetter",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ez8suNAu7D0",
+      "videoId": "ez8suNAu7D0",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Vetter-Clacc.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2018-04-027",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Easy::Jit: Compiler-assisted library to enable Just-In-Time compilation for C++ codes",
+      "speakers": [
+        {
+          "name": "Juan Manuel Martinez Caamaño",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Fernandez",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "S. Guelton",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/sFxqI6Z_bhE",
+      "videoId": "sFxqI6Z_bhE",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Caamano-Easy_Jit.pdf",
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2018-04-028",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Flang -- Project Update",
+      "speakers": [
+        {
+          "name": "S. Scalpone",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/sFVRQDgKihY",
+      "videoId": "sFVRQDgKihY",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Scalpone-FlangUpdate.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Flang"
+      ]
+    },
+    {
+      "id": "2018-04-029",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Look-Ahead SLP: Auto-vectorization in the Presence of Commutative Operations",
+      "speakers": [
+        {
+          "name": "V. Porpodas",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "R. Rocha",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "L. Góes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/gIEn34LvyNo",
+      "videoId": "gIEn34LvyNo",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Rocha-Look-Ahead%20SLP.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2018-04-030",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Low Cost Commercial Deployment of LLVM",
+      "speakers": [
+        {
+          "name": "J. Bennett",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/IwvUMFKmgPs",
+      "videoId": "IwvUMFKmgPs",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Bennett-Low%20Cost%20Commercial%20Deployment.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-031",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Measuring the User Debugging Experience",
+      "speakers": [
+        {
+          "name": "G. Bedwell",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Bedwell-Measuring_the_User_Debugging_Experience.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2018-04-032",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Measuring x86 instruction latencies with LLVM",
+      "speakers": [
+        {
+          "name": "G. Chatelet",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "C. Courbet",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "B. De Backer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "O. Sykora",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ex_C27OoApI",
+      "videoId": "ex_C27OoApI",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Chatelet-Measuring%20x86%20instruction%20latencies%20with%20LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-033",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "OpenMP Accelerator Offloading with OpenCL using SPIR-V",
+      "speakers": [
+        {
+          "name": "D. Schürmann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Lucas",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "B. Juurlink",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/qtLdi1IKhd8",
+      "videoId": "qtLdi1IKhd8",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Schuermann-OpenMP%20Accelerator%20Offloading.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2018-04-034",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Parallware, LLVM and supercomputing",
+      "speakers": [
+        {
+          "name": "M. Arenaz",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/KkJqZimMXd8",
+      "videoId": "KkJqZimMXd8",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Arenaz-Parallware%20LLVM%20and%20Supercomputing.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-035",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Returning data-flow to asynchronous programming through static analysis",
+      "speakers": [
+        {
+          "name": "M. Gilbert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/6P9UaheAelY",
+      "videoId": "6P9UaheAelY",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Gilbert-Returning%20data-now%20to%20asynchronous%20programming.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-04-036",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "RFC: A new divergence analysis for LLVM",
+      "speakers": [
+        {
+          "name": "S. Moll",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "T. Klössner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "S. Hack",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/jMnx_kS2Q30",
+      "videoId": "jMnx_kS2Q30",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Moll-A%20new%20divergence%20analysis%20for%20LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-037",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Static Performance Analysis with LLVM",
+      "speakers": [
+        {
+          "name": "C. Courbet",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "O. Sykora",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "G. Chatelet",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "B. De Backer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/XinMk-t8N-w",
+      "videoId": "XinMk-t8N-w",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Courbet-Static%20Performance%20Analysis%20with%20LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-04-038",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Supporting the RISC-V Vector Extensions in LLVM",
+      "speakers": [
+        {
+          "name": "R. Kruppe",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Oppermann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "A. Koch",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/iSMLYHRlNVc",
+      "videoId": "iSMLYHRlNVc",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Kruppe-Supporting%20the%20Risc-V%20vector%20ext.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-039",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "lightning-talk",
+      "title": "Using Clang Static Analyzer to detect Critical Control Flow",
+      "speakers": [
+        {
+          "name": "S. Cook",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-04-040",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "poster",
+      "title": "Automatic Profiling for Climate Modeling",
+      "speakers": [
+        {
+          "name": "A. Gerbes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "N. Jumah",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Kunkel",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Gerbes-Automatic%20Profiling%20for%20Climate%20Modeling.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-04-041",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "poster",
+      "title": "Cross Translation Unit Analysis in Clang Static Analyzer: Qualitative Evaluation on C/C++ projects",
+      "speakers": [
+        {
+          "name": "G. Horvath",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "P. Szecsi",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Z. Gera",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "D. Krupp",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-04-042",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "poster",
+      "title": "Effortless Differential Analysis of Clang Static Analyzer Changes",
+      "speakers": [
+        {
+          "name": "G. Horváth",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "R. Kovács",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "P. Szécsi",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-04-043",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "poster",
+      "title": "Offloading OpenMP Target Regions to FPGA Accelerators Using LLVM",
+      "speakers": [
+        {
+          "name": "L. Sommer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Oppermann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Korinth",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "A. Koch",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2018-04-044",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "poster",
+      "title": "Using clang as a Frontend on a Formal Verification Tool",
+      "speakers": [
+        {
+          "name": "M. Gadelha",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "J. Morse",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "L. Cordeiro",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "D. Nicole",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2018-04-045",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "student-talk",
+      "title": "Compile-Time Function Call Interception to Mock Functions in C/C++",
+      "speakers": [
+        {
+          "name": "G. Márton",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Z. Porkoláb",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/mv60fYkKNHc",
+      "videoId": "mv60fYkKNHc",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Marton-Compile-Time%20Function%20Call%20Interception%20to%20Mock%20Fuctions.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Performance"
+      ]
+    },
+    {
+      "id": "2018-04-046",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "student-talk",
+      "title": "Improved Loop Execution Modeling in the Clang Static Analyzer",
+      "speakers": [
+        {
+          "name": "P. Szécsi",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2018-04-047",
+      "meeting": "2018-04",
+      "meetingName": "2018 European LLVM Developers' Meeting",
+      "meetingLocation": "Bristol, UK",
+      "meetingDate": "April 16-17, 2018",
+      "category": "student-talk",
+      "title": "Using LLVM in a Model Checking Workflow",
+      "speakers": [
+        {
+          "name": "G. Sallai",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/VUJvKS68EfM",
+      "videoId": "VUJvKS68EfM",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Sallai-Using%20LLVM%20in%20a%20Model%20Checking%20Workflow.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    }
+  ]
+}

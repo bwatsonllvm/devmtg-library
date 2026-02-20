@@ -1,0 +1,1801 @@
+{
+  "meeting": {
+    "slug": "2021-11",
+    "name": "2021 LLVM Developers' Meeting (Virtual)",
+    "date": "November 16-19, 2021",
+    "location": "virtual",
+    "canceled": false,
+    "talkCount": 67
+  },
+  "talks": [
+    {
+      "id": "2021-11-002",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "keynote",
+      "title": "Supporting Diversity and Inclusion in our Community: What *Not* To Do!",
+      "speakers": [
+        {
+          "name": "Kim Hazelwood",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/_D1EbgHcY7Y",
+      "videoId": "_D1EbgHcY7Y",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Hazelwood-Supporting Diversity and Inclusion in our Community - What NotTo Do.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2021-11-003",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "keynote",
+      "title": "CIRCT: Lifting hardware development out of the 20th century",
+      "speakers": [
+        {
+          "name": "Andrew Lenharth",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Chris Lattner",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ee01_yHjs9k",
+      "videoId": "ee01_yHjs9k",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-CIRCT-LiftingHardwareDevOutOfThe20thCentury.pdf",
+      "projectGithub": "",
+      "tags": [
+        "CIRCT"
+      ]
+    },
+    {
+      "id": "2021-11-004",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "keynote",
+      "title": "Building an Operating System from Scratch with LLVM",
+      "speakers": [
+        {
+          "name": "Petr Hosek",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/DYaqzEbU0Vk",
+      "videoId": "DYaqzEbU0Vk",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-BuildinganOperatingSystemfromScratchwithLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-005",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Asynchronous Functions in Swift",
+      "speakers": [
+        {
+          "name": "John McCall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Arnold Schwaighofer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/H_K-us4-K7s",
+      "videoId": "H_K-us4-K7s",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-AsyncFunctionsInSwift.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-006",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Automatic and Customizable Code Rewriting and Refactoring with Clang",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/I0W2xb7041k",
+      "videoId": "I0W2xb7041k",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Automatic_and_Customizable_Code_Rewriting_and_Refactoring_with_Clang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2021-11-007",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Bringing up GlobalISel for optimized AArch64 codegen",
+      "speakers": [
+        {
+          "name": "Amara Emerson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Jessica Paquette",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/S6SNs2ttdoA",
+      "videoId": "S6SNs2ttdoA",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-BringingupGlobalISelForOptimizedaarch64codegen.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend"
+      ]
+    },
+    {
+      "id": "2021-11-008",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Building a faster expression evaluator for LLDB",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9aThSRGjYdA",
+      "videoId": "9aThSRGjYdA",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Buildingafaster-expression-evaluatorforLLDB.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2021-11-009",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Byte types, or how to get rid of i8 abuse for chars in LLVM IR",
+      "speakers": [
+        {
+          "name": "Juneyoung Lee",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Nuno Lopes",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "George Mitenkov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/j9QJ56x4lRY",
+      "videoId": "j9QJ56x4lRY",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ByteTypesOrHowToGetRidOfI8AbuseForCharsInLLVMIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "IR"
+      ]
+    },
+    {
+      "id": "2021-11-010",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Charting CIRCT: the present and near future landscape",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/K-Aqyce5ra0",
+      "videoId": "K-Aqyce5ra0",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ChartingCIRC-TThePresentAndFutureLandscape.pdf",
+      "projectGithub": "",
+      "tags": [
+        "CIRCT"
+      ]
+    },
+    {
+      "id": "2021-11-011",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Clang Static Analyzer - A Tryst with Smart Pointers",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/vLgLFAywUvA",
+      "videoId": "vLgLFAywUvA",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ClangStaticAnalyzer-ATrystwithSmartPointers.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2021-11-012",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Clang vs. GCC for SPEC on AArch64",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Xn2FC36fBHw",
+      "videoId": "Xn2FC36fBHw",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ClangvsGCCForSPECOnAArch64.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2021-11-013",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Compilation databases: how to help a clang-based tool to understand your project",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/2cGWSnWiZdU",
+      "videoId": "2cGWSnWiZdU",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Compilation-Databases.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2021-11-014",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Compiler Support for Sparse Tensor Computations in MLIR",
+      "speakers": [
+        {
+          "name": "Aart Bik",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/x-nHc3hBxHM",
+      "videoId": "x-nHc3hBxHM",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-CompilerSupportforSparseTensorComputationsinMLIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2021-11-015",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Enabling Interactive C++ with Clang",
+      "speakers": [
+        {
+          "name": "Vassil Vassilev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/33ncbIQoa4c",
+      "videoId": "33ncbIQoa4c",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-EnablingInteractiveCppWithClang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2021-11-016",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Examining and mitigating the performance impact of C++ exceptions on the non-exceptional path in LLVM",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/7iIlqkLMKqE",
+      "videoId": "7iIlqkLMKqE",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ExaminingandMitigatingthePerformanceImpactof-C-exceptionsonthe-non-exceptionalpathinLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "C++",
+        "Performance"
+      ]
+    },
+    {
+      "id": "2021-11-017",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Extending LLVM's optimization repertoire to build a highly optimizing compiler",
+      "speakers": [
+        {
+          "name": "Ehsan Amiri",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Bryan Chan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/_jaav92US5w",
+      "videoId": "_jaav92US5w",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ExtendingLLVMOptimizationRepertoire-toBuildA-HighlyOptimizingCompiler.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2021-11-018",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "FPL: A Presburger Library in MLIR",
+      "speakers": [
+        {
+          "name": "Kunwar Shaanjeet Singh Grover",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Arjun Pitchanathan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/1RGb6LGV2Hg",
+      "videoId": "1RGb6LGV2Hg",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2021-11-019",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Handling inline assembly in Clang and LLVM",
+      "speakers": [
+        {
+          "name": "Min-Yih Hsu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/MeB7Dp3G2UE",
+      "videoId": "MeB7Dp3G2UE",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-handling-inline-assembly-in-clang-and-llvm.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2021-11-020",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Improving debug variable location coverage by using even more SSA",
+      "speakers": [
+        {
+          "name": "Jeremy Morse",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/yxuwfNnp064",
+      "videoId": "yxuwfNnp064",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ImprovingDebugVariableLocations.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-021",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Integrated Distributed ThinLTO with Icecream",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/5kLPkUTnqQc",
+      "videoId": "5kLPkUTnqQc",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Distributed-ThinLTO-With-Icecream.pdf",
+      "projectGithub": "",
+      "tags": [
+        "LTO"
+      ]
+    },
+    {
+      "id": "2021-11-022",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Introducing function specialisation, and can we enable it by default?",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/zJiCjeXgV5Q",
+      "videoId": "zJiCjeXgV5Q",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-IntroducingFunctionSpecialisationAndCanWeEnableItByDefault.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-023",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Introduction to LLVM-IFS and its usages in Fuchsia build system",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/_pIorUFavc8",
+      "videoId": "_pIorUFavc8",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Introduction-to-LLVM-IFS-and-its-usages-in-Fuchsia-build-system.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "Infrastructure"
+      ]
+    },
+    {
+      "id": "2021-11-024",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Late Divergence Analysis",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Kj3C5BoNkyE",
+      "videoId": "Kj3C5BoNkyE",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LateDivergenceAnalysis.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-025",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Last Year in DFSan",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/32mA4lgzEYQ",
+      "videoId": "32mA4lgzEYQ",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LastYearinDFSan.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-026",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "lldb-eval fuzzer: Finding bugs in an LLDB-based expression evaluator",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/dJ9k7-pmwvM",
+      "videoId": "dJ9k7-pmwvM",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LLDB-eval-fuzzer-Finding-Bugs-In-LLDB-based-expression-evaluator.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Dynamic Analysis",
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2021-11-027",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Machine Learning Guided Optimizations in LLVM",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Rhonda McMahon",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Mircea Trofin",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ondrej Sykora",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Alok Mishra",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Konstantin Sidorov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Tarindu Jayatilaka",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/PLgbczJJC_I",
+      "videoId": "PLgbczJJC_I",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "ML",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2021-11-028",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Manyclangs: Fast bisection with a small storage cost",
+      "speakers": [
+        {
+          "name": "Veselin Karaganev",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/l2KWOqEGRwg",
+      "videoId": "l2KWOqEGRwg",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ManyclangsFastbisectionwithasmallstorageCost.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Infrastructure"
+      ]
+    },
+    {
+      "id": "2021-11-029",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Navigating Exotic SIMD Lands with an LLVM Guide",
+      "speakers": [
+        {
+          "name": "Leonidas Kosmidis",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Marc Sole Bonet",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/0zAkGCyMshc",
+      "videoId": "0zAkGCyMshc",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-NavigatingExoticSIMDLandswithanLLVMGuide.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization"
+      ]
+    },
+    {
+      "id": "2021-11-030",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "A New Approach to Removing Redundant Conditions in LLVM",
+      "speakers": [
+        {
+          "name": "Florian Hahn",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/1hm5ZVmBEvo",
+      "videoId": "1hm5ZVmBEvo",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-031",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "OpenCL support in clang status: OpenCL C 3.0, improvements and future directions",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/rdegu64RPuk",
+      "videoId": "rdegu64RPuk",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OpenCL-support-in-clang-status.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2021-11-032",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Optimizing code for scalable vector architectures",
+      "speakers": [
+        {
+          "name": "Sander de Smalen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/daWLCyhwrZ8",
+      "videoId": "daWLCyhwrZ8",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OptimizingCodeForScalableVectorArchitectures.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-033",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Optimizing OpenMP GPU Execution in LLVM",
+      "speakers": [
+        {
+          "name": "Johannes Doerfert",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Giorgis Georgakoudis",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Joseph Huber",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/4EPl7De3cKg",
+      "videoId": "4EPl7De3cKg",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OptimizingOpenMPGPUexecutioninLLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "GPU"
+      ]
+    },
+    {
+      "id": "2021-11-034",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "ORAQL: Optimistic Responses to Alias Queries in LLVM",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/7UVB5AFJM1w",
+      "videoId": "7UVB5AFJM1w",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-035",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "ORCv2 -- LLVM JIT APIs Deep Dive",
+      "speakers": [
+        {
+          "name": "Lang Hames",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/i-inxFudrgI",
+      "videoId": "i-inxFudrgI",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "JIT"
+      ]
+    },
+    {
+      "id": "2021-11-036",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Otter: Tracing & Visualizing OpenMP Programs as DAGs Through LLVM's OMPT Interface",
+      "speakers": [
+        {
+          "name": "Adam Tuft",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/RcnoDhA2AUg",
+      "videoId": "RcnoDhA2AUg",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OtterTracingAndVisualisingOpenMPProgramsAsDAGsThroughLLVMsOMPTInterface.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-037",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Overflowing with Strings: A newish dimension in DWARF size concerns",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/oUgl6uT3Jq8",
+      "videoId": "oUgl6uT3Jq8",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OverflowingWithStrings.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Debug Information"
+      ]
+    },
+    {
+      "id": "2021-11-038",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Please Stop Adding Attributes",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/6bmlqtjSPFw",
+      "videoId": "6bmlqtjSPFw",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-039",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Pre-Commit CI in LLVM: A Case Study of Libc++",
+      "speakers": [
+        {
+          "name": "Louis Dionne",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/B7gB6van7Bw",
+      "videoId": "B7gB6van7Bw",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "C++",
+        "C++ Libs"
+      ]
+    },
+    {
+      "id": "2021-11-040",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "ptr_provenance and @llvm.noalias: The Tale of Full Restrict",
+      "speakers": [
+        {
+          "name": "Jeroen Dobbelaere",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/08XwXB3GHck",
+      "videoId": "08XwXB3GHck",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ptr_provenanceAndLlvmNoaliasTheTaleOfFullRestrict.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-041",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "QEMU-Hexagon: A story of Emus, Bisons, and now Dragons",
+      "speakers": [
+        {
+          "name": "Alessandro Di Federico",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Anton Johansson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ltKGd1iwDJc",
+      "videoId": "ltKGd1iwDJc",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-QEMU-Hexagon.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-042",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Relative VTables in C++",
+      "speakers": [
+        {
+          "name": "Leonard Chan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/9HGKlDiJy8E",
+      "videoId": "9HGKlDiJy8E",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RelativeVTablesinC.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-043",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Representing Concurrency with Graph Regions in MLIR",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Vfk9n3ir_5s",
+      "videoId": "Vfk9n3ir_5s",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RepresentingConcurrencywithGraphRegionsinMLIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR"
+      ]
+    },
+    {
+      "id": "2021-11-044",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Retrospective on Debugger Support for Bare Metal",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/UY-IuQB8XYw",
+      "videoId": "UY-IuQB8XYw",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RetrospectiveonDebuggerSupportforBareMetal.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Embedded",
+        "LLDB"
+      ]
+    },
+    {
+      "id": "2021-11-045",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Rotten Green Unit Tests",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/shBJwHiyirc",
+      "videoId": "shBJwHiyirc",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RottenGreenUnitTests.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Testing"
+      ]
+    },
+    {
+      "id": "2021-11-046",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "SPIR-V support in LLVM and Clang",
+      "speakers": [
+        {
+          "name": "Konrad Trifunovic",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Anastasia Stulova",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Victor Lomuller",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Alexey Bader",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Michal Paszkowski",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ravi Narayanaswamy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/KTPPVYMfAQE",
+      "videoId": "KTPPVYMfAQE",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-SPIR-V-SupportinLLVMandClang.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "GPU"
+      ]
+    },
+    {
+      "id": "2021-11-047",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "Sparse Tensor Algebra Optimizations in MLIR",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/Tysy19M-4kw",
+      "videoId": "Tysy19M-4kw",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-PureSparseTensorOptimizationsInMLIR.pdf",
+      "projectGithub": "",
+      "tags": [
+        "MLIR",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2021-11-048",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "A walk on the weird side: Opaque WebAssembly values and LLVM",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/UxnUht3uWzc",
+      "videoId": "UxnUht3uWzc",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-UnaddressableAndOpaqueValuesWebAssembly.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-049",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "technical-talk",
+      "title": "What's New in IR Similarity Identification and Outlining",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/rBZz7dzbiBw",
+      "videoId": "rBZz7dzbiBw",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-WhatsNewInIRSimilarityIdentificationandOutlining.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-050",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "tutorial",
+      "title": "Introduction to the Flang Frontend",
+      "speakers": [
+        {
+          "name": "Kiran Chandramohan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/0eAOKA_GnS0",
+      "videoId": "0eAOKA_GnS0",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Flang-Tutorial.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "Flang",
+        "Frontend"
+      ]
+    },
+    {
+      "id": "2021-11-051",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "tutorial",
+      "title": "How to Use Enzyme to Automatically Differentiate Any LLVM-based Language",
+      "speakers": [
+        {
+          "name": "Valentin Churavy",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "William Moses",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Ludger Paehler",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/rux1-oje9u8",
+      "videoId": "rux1-oje9u8",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-052",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "tutorial",
+      "title": "How to write a TableGen backend",
+      "speakers": [
+        {
+          "name": "Min-Yih Hsu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/UP-LBRbvI_U",
+      "videoId": "UP-LBRbvI_U",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-how-to-write-a-tablegen-backend.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Backend",
+        "IR"
+      ]
+    },
+    {
+      "id": "2021-11-053",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "tutorial",
+      "title": "Architecting out-of-tree LLVM projects using cmake",
+      "speakers": [
+        {
+          "name": "Stephen Neuendorffer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/7wOU7csj1ME",
+      "videoId": "7wOU7csj1ME",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Infrastructure"
+      ]
+    },
+    {
+      "id": "2021-11-054",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "tutorial",
+      "title": "How to utilize LoopNest pass",
+      "speakers": [
+        {
+          "name": "Ettore Tiotto",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Whitney Tsang",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Yueh-Ting Chen",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/G6Fmeyv068w",
+      "videoId": "G6Fmeyv068w",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-055",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "Automated LLVM flag mining, theory and practice",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/utsPSe8bvRk",
+      "videoId": "utsPSe8bvRk",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-056",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "Clacc 2021: An Update on OpenACC Support for Clang and LLVM",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/yhdY-x1K2Ks",
+      "videoId": "yhdY-x1K2Ks",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-clacc-2021-An-Update-on-Openacc-Support-For-Clang-and-LLVM.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang"
+      ]
+    },
+    {
+      "id": "2021-11-057",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "Fixing False Assumptions: Inter-Function vs Intra-Function Machine Outlining",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/nt_vBdfdH-U",
+      "videoId": "nt_vBdfdH-U",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-058",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "Flang Update",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/5xuWFYvuOFA",
+      "videoId": "5xuWFYvuOFA",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Flang"
+      ]
+    },
+    {
+      "id": "2021-11-059",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "libclcxx: C++ libraries for OpenCL",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/DBknc1pRB9E",
+      "videoId": "DBknc1pRB9E",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "C Libs",
+        "GPU",
+        "OpenCL"
+      ]
+    },
+    {
+      "id": "2021-11-060",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "LTO and JIT Support in LLVM OpenMP Target Offloading",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/T43nhJNSGHg",
+      "videoId": "T43nhJNSGHg",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "JIT",
+        "LTO"
+      ]
+    },
+    {
+      "id": "2021-11-061",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "Packaging LLVM Snapshots",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/ZpusqyOb6jQ",
+      "videoId": "ZpusqyOb6jQ",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-PackagingLLVMSnapshots.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-062",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "VPlan like vectorizer for MLIR",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/DgoX7ZFIjYg",
+      "videoId": "DgoX7ZFIjYg",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "MLIR",
+        "VPlan"
+      ]
+    },
+    {
+      "id": "2021-11-063",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "quick-talk",
+      "title": "Win on Thumb-1 code size with Machine Outlining",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/_FgSUKwD4lI",
+      "videoId": "_FgSUKwD4lI",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-064",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "lightning-talk",
+      "title": "fp-model: single option floating point configuration",
+      "speakers": [
+
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/GPB_o_wXPcY",
+      "videoId": "GPB_o_wXPcY",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-QuickTalks-fp-model-single-option-floating-point-configuration.pdf",
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-065",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "lightning-talk",
+      "title": "Lightning Talks on GSOC/Outreachy Projects and Experience",
+      "speakers": [
+        {
+          "name": "Soham Dixit",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Riccardo Mori",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Pratyush Das",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "George Mitenkov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Tarindu Jayatilaka",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Konstantin Sidorov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/mxI9fYbpndI",
+      "videoId": "mxI9fYbpndI",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2021-11-066",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "lightning-talk",
+      "title": "Growing your Career in Tech through Mentorship",
+      "speakers": [
+        {
+          "name": "Monica Sarbu",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Madalina Tepelmann",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/52a1bbHmFhs",
+      "videoId": "52a1bbHmFhs",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    },
+    {
+      "id": "2021-11-067",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "lightning-talk",
+      "title": "Deconstructing the Myth: Only real coders contribute to LLVM!? - Takeaways",
+      "speakers": [
+        {
+          "name": "Adelina Chalmers",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://youtu.be/uORjOwuSG_M",
+      "videoId": "uORjOwuSG_M",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+
+      ]
+    },
+    {
+      "id": "2021-11-068",
+      "meeting": "2021-11",
+      "meetingName": "2021 LLVM Developers' Meeting (Virtual)",
+      "meetingLocation": "virtual",
+      "meetingDate": "November 16-19, 2021",
+      "category": "panel",
+      "title": "Update on Relicensing",
+      "speakers": [
+        {
+          "name": "Kristof Beyls",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "Foundation is dedicated to providing an inclusive and safe experience for everyone. We do not tolerate harassment of participants in any form. By registering for this event, we expect you to have read and agree to the LLVM Code of Conduct.",
+      "videoUrl": "https://youtu.be/aAFDfhD-jDs",
+      "videoId": "aAFDfhD-jDs",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LLVM-Relicensing-November2021-Update.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
+      ]
+    }
+  ]
+}

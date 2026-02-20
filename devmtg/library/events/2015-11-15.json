@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2015-11-15",
+    "name": "2015 LLVM-HPC @ SC15",
+    "date": "November 15, 2015",
+    "location": "LLVM-HPC @ SC15, Austin, TX, USA",
+    "canceled": false,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "meeting": {
+    "slug": "2017-06",
+    "name": "2017 LLVM Summer School",
+    "date": "June 12-16, 2017",
+    "location": "Summer school 2017 : analysis and transformations of HPC codes using Clang/LLVM",
+    "canceled": false,
+    "talkCount": 3
+  },
+  "talks": [
+    {
+      "id": "2017-06-001",
+      "meeting": "2017-06",
+      "meetingName": "2017 LLVM Summer School",
+      "meetingLocation": "Summer school 2017 : analysis and transformations of HPC codes using Clang/LLVM",
+      "meetingDate": "June 12-16, 2017",
+      "category": "tutorial",
+      "title": "Introduction to LLVM",
+      "speakers": [
+        {
+          "name": "David Chisnall (Cambridge University)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This course will cover the design decisions involved in designing a modern compiler intermediate representation, with a specific focus on the design decisions made by LLVM IR and the affects that these have on the design of a compiler. We will explore the structure of the LLVM optimization pipeline, the relationship between analysis and transformation to produce optimization.\n\nThe course will investigate the tradeoffs between ahead-of-time (AoT) and just-in-time (JIT) compilation, in particular with regard to feedback-driven optimization. We will use a simple language incorporating an interpreter and LLVM-based compiler as a case study, with exercises to extend this language and explore the different execution modes.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Beginner",
+        "IR",
+        "JIT",
+        "Optimizations"
+      ]
+    },
+    {
+      "id": "2017-06-002",
+      "meeting": "2017-06",
+      "meetingName": "2017 LLVM Summer School",
+      "meetingLocation": "Summer school 2017 : analysis and transformations of HPC codes using Clang/LLVM",
+      "meetingDate": "June 12-16, 2017",
+      "category": "tutorial",
+      "title": "Code Transformation and Analysis Using Clang and LLVM",
+      "speakers": [
+        {
+          "name": "Hal Finkel (Argonne National Laboratory)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "This series of lectures will cover code transformation and analysis using components of the LLVM compiler infrastructure. LLVM's C/C++ frontend, Clang, supports not only compiling source code for execution (i.e. transforming it into LLVM's intermediate representation (IR)), but also features a powerful source-level static analysis framework. This can be coupled with Clang's rewriting and tooling functionalities to create sophisticated source -to-source transformation tools.\n\nFor some use cases, runtime checking must supplement static reasoning. In some cases, for example, Clang's undefined-behavior sanitizer, these checks much be inserted very early in the code-generation process. In other cases, such as the address and thread sanitizers, the checks can be inserted after the code undergoes optimizing transformations. Runtime checks are associated with corresponding runtime-library functionality in LLVM's compiler-rt project.\n\nAt the conclusion of the lecture series, students will understand Clang's static-analysis, rewriting, and tooling infrastructures well enough to create novel analyses for the stand-alone analyzer, analysis-based warnings for regular compilation, and source-to-source rewriting tools. Students will understand how Clang's undefined-behavior sanitizer works and how Clang's code-generation can be extended to create runtime checks. Finally, students will understand how the address and thread sanitizers work, both the IR-level transformations and the runtime-library components. Students will be able to create their own tools based on this model.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2017-06/2-Hal-Finkel-LLVM-2017.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Clang",
+        "Dynamic Analysis",
+        "Frontend",
+        "IR",
+        "Libraries",
+        "Static Analysis"
+      ]
+    },
+    {
+      "id": "2017-06-003",
+      "meeting": "2017-06",
+      "meetingName": "2017 LLVM Summer School",
+      "meetingLocation": "Summer school 2017 : analysis and transformations of HPC codes using Clang/LLVM",
+      "meetingDate": "June 12-16, 2017",
+      "category": "tutorial",
+      "title": "Generation of Optimization of Parallel Code in LLVM",
+      "speakers": [
+        {
+          "name": "Tobias Gosser (ETH Zurich)",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "The generation of parallel code is important for the fast execution of classical high-performance applications such as weather prediction, but also modern applications such as image processing, machine learning, and biology simulations. The LLVM compiler infrastructure enables the automatic introduction and generation of parallel code through SIMDization, automatic parallelization, as well as automatic GPU code, generation. In this course, we learn about the fundamental building blocks that enable the generation and optimization of parallel program code. Starting off from learning about the SIMD instruction set extensions of LLVM we learn how to write our own SIMD accelerated vector code generator that can generate fast vector code for all LLVM supported architectures. We then look into different approaches to model parallelism at the source language level, at the compiler IR level, and -- using Polly -- how to model parallelism with an abstract geometric representation based on integer polyhedra. Using these representations we discuss how parallelism information can be derived, how transformations to expose parallelism can be applied, and finally how fast parallel code can be generated. In the last part of this course, we discuss GPU code generation and learn how LLVM can be used to generate GPU accelerated code for AMD and NVIDIA systems, discuss the available CUDA and OpenCL extensions, and learn how Polly ACC can fully automatically perform GPU offloading. We conclude with an overview how these techniques allow for the automatic optimization of high-level languages such as Julia.",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2017-06/3-Tobias-Grosser-2017-day1.pdf",
+      "projectGithub": "",
+      "tags": [
+        "Autovectorization",
+        "Backend",
+        "CUDA",
+        "GPU",
+        "ML",
+        "OpenCL",
+        "Optimizations",
+        "Performance",
+        "Polly",
+        "Programming Languages"
+      ]
+    }
+  ]
+}

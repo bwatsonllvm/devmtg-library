@@ -1,0 +1,13 @@
+{
+  "meeting": {
+    "slug": "2020-04",
+    "name": "2020 European LLVM Developers' Meeting",
+    "date": "April 6-7, 2020",
+    "location": "Paris, France - Canceled",
+    "canceled": true,
+    "talkCount": 0
+  },
+  "talks": [
+
+  ]
+}
