@@ -148,6 +148,7 @@ function initShareMenu() {
   const toggle = document.getElementById('share-btn');
   const panel = document.getElementById('share-panel');
   const copyBtn = document.getElementById('share-copy-link');
+  const nativeShareBtn = document.getElementById('share-native-share');
   const emailLink = document.getElementById('share-email-link');
   const xLink = document.getElementById('share-x-link');
   const linkedInLink = document.getElementById('share-linkedin-link');
@@ -185,36 +186,37 @@ function initShareMenu() {
   };
 
   const isInsideMenu = (target) => menu.contains(target);
+  const supportsNativeShare = typeof navigator.share === 'function';
 
-  const shouldUseNativeShare = () => {
-    if (typeof navigator.share !== 'function') return false;
-    if (typeof window.matchMedia !== 'function') return true;
-    return window.matchMedia('(max-width: 900px)').matches;
-  };
+  if (nativeShareBtn) {
+    nativeShareBtn.hidden = !supportsNativeShare;
+  }
 
   closeMenu();
 
-  toggle.addEventListener('click', async (event) => {
+  toggle.addEventListener('click', (event) => {
     event.preventDefault();
     event.stopPropagation();
-
-    if (shouldUseNativeShare()) {
-      try {
-        await navigator.share({ title: shareTitle, url: shareUrl });
-        setButtonState('Shared', true);
-        closeMenu();
-        return;
-      } catch (error) {
-        if (error && error.name === 'AbortError') return;
-      }
-    }
-
     if (menu.classList.contains('open')) {
       closeMenu();
     } else {
       openMenu();
     }
   });
+
+  if (nativeShareBtn && supportsNativeShare) {
+    nativeShareBtn.addEventListener('click', async (event) => {
+      event.preventDefault();
+      try {
+        await navigator.share({ title: shareTitle, url: shareUrl });
+        setButtonState('Shared', true);
+      } catch (error) {
+        if (error && error.name === 'AbortError') return;
+        setButtonState('Share failed', false);
+      }
+      closeMenu();
+    });
+  }
 
   copyBtn.addEventListener('click', async (event) => {
     event.preventDefault();
