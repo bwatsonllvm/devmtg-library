@@ -38,20 +38,16 @@
     html[data-theme="dark"] { background: #000000; }
     body { background: transparent; }
   </style>
-  <title>Talk — LLVM Developers' Meeting Library</title>
-  <meta name="description" content="Talk details from the LLVM Developers' Meeting.">
+  <title>Academic Papers - LLVM Developers' Meeting Library</title>
+  <meta name="description" content="Browse academic LLVM papers hosted on llvm.org and available in llvm-www.">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Skip link for keyboard/screen reader users -->
   <nav class="skip-links" aria-label="Skip links">
-    <a href="#talk-detail-root" class="skip-link">Skip to main content</a>
+    <a href="#papers-root" class="skip-link">Skip to main content</a>
   </nav>
 
-  <!-- ======================================================
-       Site Header
-  ====================================================== -->
   <header class="site-header">
     <a href="index.html" class="site-logo" aria-label="LLVM Developers' Meeting Library home">
       <img src="images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
@@ -65,7 +61,7 @@
   <a href="meetings.html" class="nav-link" aria-label="Meetings">
     <span aria-hidden="true">Meetings</span>
   </a>
-  <a href="papers.html" class="nav-link" aria-label="Papers">
+  <a href="papers.html" class="nav-link active" aria-current="page" aria-label="Papers">
     <span aria-hidden="true">Papers</span>
   </a>
   <button class="nav-link nav-btn-about" id="about-btn" data-open-about="true" aria-label="About this site" aria-expanded="false" aria-controls="about-modal">
@@ -83,7 +79,7 @@
   <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
     <a href="index.html" class="mobile-nav-link">Talks</a>
     <a href="meetings.html" class="mobile-nav-link">Meetings</a>
-    <a href="papers.html" class="mobile-nav-link">Papers</a>
+    <a href="papers.html" class="mobile-nav-link active" aria-current="page">Papers</a>
     <button class="mobile-nav-link mobile-nav-link--button" id="about-btn-mobile" type="button" data-open-about="true" aria-label="About this site" aria-expanded="false" aria-controls="about-modal">About</button>
   </div>
 </div>
@@ -133,19 +129,43 @@
 </div>
   </header>
 
-  <!-- ======================================================
-       Talk Detail (populated by JS)
-  ====================================================== -->
-  <main id="talk-detail-root" tabindex="-1">
+  <div class="page-hero">
+    <h1>Academic Papers on llvm.org</h1>
+    <p id="papers-subtitle">Loading papers...</p>
+  </div>
+
+  <section class="search-hero search-hero--compact" aria-label="Search papers">
+    <div class="search-hero-shell">
+      <div class="search-box" role="search">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="search"
+          class="search-input"
+          id="papers-search-input"
+          placeholder="Search papers, authors, topics..."
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search papers"
+        >
+        <button class="search-clear" id="papers-search-clear" aria-label="Clear search" title="Clear" hidden>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="filter-group filter-group--wrap" id="paper-tag-filters" aria-label="Filter papers by tag"></div>
+    </div>
+  </section>
+
+  <main class="talks-grid" id="papers-root" tabindex="-1">
     <div class="loading-state">
       <div class="spinner" aria-hidden="true"></div>
-      <p>Loading talk…</p>
+      <p>Loading papers...</p>
     </div>
   </main>
 
-  <!-- ======================================================
-       About Modal
-  ====================================================== -->
   <div class="about-modal-overlay" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="modal-about-heading" hidden>
     <div class="about-modal-panel">
       <button class="about-modal-close" id="about-modal-close" aria-label="Close about panel">
@@ -163,72 +183,14 @@
           <div class="info-section-body">
             <h2 id="modal-about-heading">About This Website</h2>
             <p>
-              This website is a searchable index of <strong>LLVM Developers' Meeting</strong> talks and meeting
-              metadata from 2007 to present. It brings titles, speakers, abstracts, tags, and links to videos
-              or slides into one place so you can quickly find sessions by topic, person, or year.
+              This website is a searchable index of LLVM Developers' Meeting talks and related LLVM resources.
+              The papers section tracks academic papers and report-style publications that are hosted on
+              llvm.org and present in llvm-www.
             </p>
             <p>
-              Use the search bar, filters, and meetings view to explore the archive. URLs capture active
-              filters, so specific views can be bookmarked or shared. Talk detail pages include full abstracts
-              and direct links to available resources.
+              For each paper, you can browse title, authors, key tags, and a readable abstract summary,
+              with direct links to the hosted PDF and source listing.
             </p>
-            <p>
-              Data is compiled from the public meeting archive and packaged for fast browsing in this static
-              interface. For canonical listings and announcements, see the
-              <a href="https://llvm.org/devmtg/" target="_blank" rel="noopener">official meeting archive</a>.
-            </p>
-          </div>
-        </section>
-
-        <section class="info-section" aria-labelledby="modal-howto-heading">
-          <div class="info-section-icon info-section-icon--howto" aria-hidden="true">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-          </div>
-          <div class="info-section-body">
-            <h2 id="modal-howto-heading">How to Use This Site</h2>
-            <ul class="howto-list">
-              <li>
-                <strong>Search</strong> — Type any keyword in the search box to find talks by title, speaker,
-                or topic. Quoted phrases (e.g. <code>"register allocation"</code>) are treated as exact matches.
-                Results are ranked by relevance and recency.
-              </li>
-              <li>
-                <strong>Filter by category</strong> — Use the chip strip below the search box to narrow results
-                to Keynotes, Technical Talks, Tutorials, Lightning Talks, and more.
-              </li>
-              <li>
-                <strong>Filter by year</strong> — Click a year chip to show only talks from that meeting year.
-              </li>
-              <li>
-                <strong>Has Video / Has Slides</strong> — Toggle these to surface only talks with a recording
-                or slide deck available.
-              </li>
-              <li>
-                <strong>Browse meetings</strong> — Visit the <a href="meetings.html">Meetings</a> page for a
-                full grid of every LLVM Developers' Meeting since 2007, with talk counts. Click any meeting
-                to browse all of its talks.
-              </li>
-              <li>
-                <strong>Browse papers</strong> — Visit the <a href="papers.html">Papers</a> page to explore
-                academic papers hosted on llvm.org, including authors, tags, and abstracts.
-              </li>
-              <li>
-                <strong>Talk detail page</strong> — Click any talk card to open a detail view with the full
-                abstract, embedded video (when available), slides link, and related talks from the same
-                meeting or category.
-              </li>
-              <li>
-                <strong>Shareable links</strong> — Active search queries and filters are reflected in the URL,
-                so you can bookmark or share any filtered view directly.
-              </li>
-              <li>
-                <strong>Display settings</strong> — Use the sliders menu in the top-right corner to set
-                theme (System, Light, or Dark) and text size (Small, Default, or Large). Preferences are
-                saved across visits.
-              </li>
-            </ul>
           </div>
         </section>
 
@@ -294,9 +256,7 @@
   })();
 </script>
 
-  <!-- Event data loader -->
-  <script src="js/events-data.js?v=20260220-12"></script>
-  <script src="js/shared/library-utils.js?v=20260220-12"></script>
-  <script src="js/talk.js?v=20260220-12"></script>
+  <script src="js/papers-data.js?v=20260220-13"></script>
+  <script src="js/papers.js?v=20260220-13"></script>
 </body>
 </html>

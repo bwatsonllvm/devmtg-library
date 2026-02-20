@@ -7,7 +7,7 @@ LIBRARY="$ROOT/devmtg"
 fail() { echo "ERROR: $*" >&2; exit 1; }
 
 [ -d "$LIBRARY" ] || fail "Missing devmtg directory"
-for f in index.html meetings.html talk.html css/style.css js/app.js js/events-data.js js/meetings.js js/talk.js js/shared/library-utils.js images/llvm-logo.png events/index.json; do
+for f in index.html meetings.html talk.html papers.html css/style.css js/app.js js/events-data.js js/meetings.js js/talk.js js/papers-data.js js/papers.js js/shared/library-utils.js images/llvm-logo.png events/index.json papers/index.json; do
   [ -f "$LIBRARY/$f" ] || fail "Missing required file: devmtg/$f"
 done
 
@@ -41,10 +41,35 @@ ruby -rjson -e '
   end
 ' "$LIBRARY"
 
+# Validate papers manifest points to existing json files
+ruby -rjson -e '
+  hub = ARGV.fetch(0)
+  idx_path = File.join(hub, "papers", "index.json")
+  idx = JSON.parse(File.read(idx_path))
+  files = Array(idx["paperFiles"])
+  abort("papers/index.json has empty paperFiles") if files.empty?
+  missing = []
+  files.each do |f|
+    missing << f unless File.exist?(File.join(hub, "papers", f))
+    abort("papers/index.json contains non-json entry: #{f}") unless f.end_with?(".json")
+  end
+  unless missing.empty?
+    abort("Missing paper files: #{missing.join(", ")}")
+  end
+' "$LIBRARY"
+
+# Validate every papers/*.json parses
+ruby -rjson -e '
+  hub = ARGV.fetch(0)
+  Dir[File.join(hub, "papers", "*.json")].each do |f|
+    JSON.parse(File.read(f))
+  end
+' "$LIBRARY"
+
 # Validate local asset references in html files
 ruby -e '
   hub = ARGV.fetch(0)
-  html_files = %w[index.html meetings.html talk.html].map { |f| File.join(hub, f) }
+  html_files = %w[index.html meetings.html talk.html papers.html].map { |f| File.join(hub, f) }
   bad = []
   html_files.each do |html|
     text = File.read(html)

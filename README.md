@@ -12,6 +12,8 @@ Current primary component:
 - `devmtg/`: static site bundle (HTML/CSS/JS/data)
 - `devmtg/events/*.json`: event/talk content source
 - `devmtg/events/index.json`: event manifest + cache version (`dataVersion`)
+- `devmtg/papers/*.json`: paper metadata source (LLVM publications from `llvm/llvm-www-pubs`, PDF-only)
+- `devmtg/papers/index.json`: paper manifest + cache version (`dataVersion`)
 - `scripts/validate-library-bundle.sh`: validation script
 
 ## Target Path in llvm-www
@@ -52,6 +54,7 @@ Open:
 - `http://localhost:8090/devmtg/`
 - `http://localhost:8090/devmtg/meetings.html`
 - `http://localhost:8090/devmtg/talk.html?id=2019-10-001`
+- `http://localhost:8090/devmtg/papers.html`
 
 ### 4. Commit in `llvm-www`
 
@@ -155,3 +158,50 @@ Optional check for malformed/blank speaker names:
 ```bash
 jq -r '.talks[] | select((.speakers // []) | map(.name // "") | any(. == "")) | [.id,.title] | @tsv' devmtg/events/*.json
 ```
+
+## Adding or Editing Papers
+
+Paper data is stored in:
+
+- `devmtg/papers/<bundle>.json`
+
+Current bundle:
+
+- `devmtg/papers/llvm-www-pubs.json`
+
+### Paper Record Format
+
+Each paper entry is an object in the `papers` array, for example:
+
+```json
+{
+  "id": "pubs-2004-01-30-cgo-llvm",
+  "source": "llvm-www-pubs",
+  "title": "LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation",
+  "authors": [
+    {
+      "name": "Chris Lattner",
+      "affiliation": ""
+    },
+    {
+      "name": "Vikram Adve",
+      "affiliation": ""
+    }
+  ],
+  "year": "2004",
+  "venue": "CGO",
+  "type": "research-paper",
+  "abstract": "Paper summary text.",
+  "paperUrl": "https://llvm.org/pubs/2004-01-30-CGO-LLVM.pdf",
+  "sourceUrl": "https://llvm.org/pubs/2004-01-30-CGO-LLVM.html",
+  "tags": ["LLVM", "Optimizations", "Academic Paper"]
+}
+```
+
+### Cache Refresh Requirement
+
+After any edit under `devmtg/papers/*.json`, update:
+
+- `devmtg/papers/index.json` -> `dataVersion`
+
+This ensures browsers pull fresh paper data instead of cached data.

@@ -43,6 +43,8 @@
   --badge-poster-text:     #57606a;
   --badge-workshop-bg:     #ddf4ff;
   --badge-workshop-text:   #0969da;
+  --badge-paper-bg:        #fff8c5;
+  --badge-paper-text:      #9a6700;
   --badge-other-bg:        #eaeef2;
   --badge-other-text:      #57606a;
 
@@ -185,6 +187,8 @@
   --badge-poster-text:     #8b949e;
   --badge-workshop-bg:     rgba(56, 139, 253, 0.2);
   --badge-workshop-text:   #58a6ff;
+  --badge-paper-bg:        rgba(187, 128, 9, 0.25);
+  --badge-paper-text:      #e3b341;
   --badge-other-bg:        #30363d;
   --badge-other-text:      #8b949e;
 
@@ -612,6 +616,11 @@ ul, ol {
   padding-left: calc(var(--sidebar-width) + (var(--layout-edge) * 2));
 }
 
+.search-hero--compact {
+  padding: var(--space-2) var(--layout-edge) var(--space-2);
+  padding-left: var(--layout-edge);
+}
+
 body.filter-collapsed .search-hero {
   padding-left: calc(var(--sidebar-collapsed-width) + (var(--layout-edge) * 2));
 }
@@ -630,6 +639,11 @@ body.filter-collapsed .search-hero {
 
 body.filter-collapsed .search-hero-shell {
   max-width: min(var(--max-width), calc(100vw - var(--sidebar-collapsed-width) - (var(--layout-edge) * 3)));
+}
+
+.search-hero--compact .search-hero-shell,
+body.filter-collapsed .search-hero--compact .search-hero-shell {
+  max-width: min(var(--max-width), calc(100vw - (var(--layout-edge) * 2)));
 }
 
 .search-hero h1 {
@@ -1432,6 +1446,24 @@ body.filter-collapsed .filter-collapse-btn svg {
   flex: 1;
 }
 
+.paper-card .card-title,
+.paper-card .card-abstract,
+.paper-card .card-speakers {
+  overflow: visible;
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: initial;
+}
+
+.paper-card .card-speakers {
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.paper-card .card-abstract {
+  flex: 0 0 auto;
+}
+
 .card-footer {
   display: flex;
   align-items: center;
@@ -1516,6 +1548,11 @@ body.filter-collapsed .filter-collapse-btn svg {
   background: transparent;
   border-color: transparent;
   font-style: italic;
+}
+
+.card-tag--paper {
+  cursor: default;
+  pointer-events: none;
 }
 
 /* Tag filter row — always visible, wraps across multiple lines */
@@ -1671,6 +1708,7 @@ body.filter-collapsed .filter-collapse-btn svg {
 .badge-student-talk  { background: var(--badge-student-bg);    color: var(--badge-student-text); }
 .badge-poster        { background: var(--badge-poster-bg);     color: var(--badge-poster-text); }
 .badge-workshop      { background: var(--badge-workshop-bg);   color: var(--badge-workshop-text); }
+.badge-paper         { background: var(--badge-paper-bg);      color: var(--badge-paper-text); }
 .badge-other         { background: var(--badge-other-bg);      color: var(--badge-other-text); }
 
 .meeting-label {
