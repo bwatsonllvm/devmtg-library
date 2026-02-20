@@ -2,18 +2,18 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-LIBRARY="$ROOT/devmtg/library"
+LIBRARY="$ROOT/devmtg"
 
 fail() { echo "ERROR: $*" >&2; exit 1; }
 
-[ -d "$LIBRARY" ] || fail "Missing devmtg/library directory"
+[ -d "$LIBRARY" ] || fail "Missing devmtg directory"
 for f in index.html meetings.html talk.html css/style.css js/app.js js/events-data.js js/meetings.js js/talk.js js/shared/library-utils.js images/llvm-logo.png events/index.json; do
-  [ -f "$LIBRARY/$f" ] || fail "Missing required file: devmtg/library/$f"
+  [ -f "$LIBRARY/$f" ] || fail "Missing required file: devmtg/$f"
 done
 
 # Ensure events are JSON-native
 if find "$LIBRARY/events" -maxdepth 1 -name '*.md' | grep -q .; then
-  fail "Found markdown event files in devmtg/library/events; expected JSON-only"
+  fail "Found markdown event files in devmtg/events; expected JSON-only"
 fi
 
 # Validate index manifest points to existing json files
@@ -64,4 +64,4 @@ ruby -e '
   end
 ' "$LIBRARY"
 
-echo "OK: llvm-www-ready bundle validation passed"
+echo "OK: library bundle validation passed"

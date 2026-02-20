@@ -2,27 +2,27 @@
 
 Repository name: `library`
 
-This repository is intended to host web bundles that can be copied into `llvm-www`.
+This repository hosts web bundles intended for `llvm-www`.
 
 Current primary component:
-- `devmtg/library/`
+- `devmtg/`
 
 ## Repository Layout
 
-- `devmtg/library/`: static site bundle (HTML/CSS/JS/data)
-- `devmtg/library/events/*.json`: event/talk content source
-- `devmtg/library/events/index.json`: event manifest + cache version (`dataVersion`)
+- `devmtg/`: static site bundle (HTML/CSS/JS/data)
+- `devmtg/events/*.json`: event/talk content source
+- `devmtg/events/index.json`: event manifest + cache version (`dataVersion`)
 - `scripts/validate-library-bundle.sh`: validation script
 
 ## Target Path in llvm-www
 
-Copy this bundle into the official `llvm-www` repository at:
+Copy this bundle into:
 
-- `devmtg/library/`
+- `devmtg/`
 
 Expected public URL:
 
-- `https://llvm.org/devmtg/library/`
+- `https://llvm.org/devmtg/`
 
 ## Deploy Steps
 
@@ -36,17 +36,11 @@ Expected public URL:
 
 ```bash
 cd /path/to/llvm-www
-rm -rf devmtg/library
-cp -R /Users/britton/Desktop/library/devmtg/library devmtg/
+mkdir -p devmtg
+rsync -a /Users/britton/Desktop/library/devmtg/ devmtg/
 ```
 
-### 3. Optional: add a link from `devmtg/index.html`
-
-```html
-<p><a href="library/">Browse talks and meetings in the LLVM Developers' Meeting Library</a></p>
-```
-
-### 4. Local smoke test
+### 3. Local smoke test
 
 ```bash
 cd /path/to/llvm-www
@@ -55,27 +49,27 @@ python3 -m http.server 8090
 
 Open:
 
-- `http://localhost:8090/devmtg/library/`
-- `http://localhost:8090/devmtg/library/meetings.html`
-- `http://localhost:8090/devmtg/library/talk.html?id=2019-10-001`
+- `http://localhost:8090/devmtg/`
+- `http://localhost:8090/devmtg/meetings.html`
+- `http://localhost:8090/devmtg/talk.html?id=2019-10-001`
 
-### 5. Commit in `llvm-www`
+### 4. Commit in `llvm-www`
 
 ```bash
-git add devmtg/library devmtg/index.html
-git commit -m "Update LLVM Developers' Meeting Library under devmtg/library"
+git add devmtg
+git commit -m "Update LLVM Developers' Meeting Library under devmtg"
 ```
 
 ## Adding or Editing Talks
 
 Talk data is stored in:
 
-- `devmtg/library/events/<meeting>.json`
+- `devmtg/events/<meeting>.json`
 
 Examples:
 
-- `devmtg/library/events/2019-10.json`
-- `devmtg/library/events/2023-10.json`
+- `devmtg/events/2019-10.json`
+- `devmtg/events/2023-10.json`
 
 ### Talk Record Format
 
@@ -123,9 +117,9 @@ Multiple speakers example:
 
 Rules:
 
-- Do not combine people into one `name` value.
+- Do not combine multiple people into one `name` value.
 - Do not store company/affiliation text as a speaker `name`.
-- If unknown, use `"speakers": []`.
+- If speaker information is unknown, use `"speakers": []`.
 
 ### Abstracts and Links
 
@@ -140,15 +134,15 @@ Common categories include:
 
 - `technical-talk`, `tutorial`, `panel`, `quick-talk`, `lightning-talk`, `student-talk`, `bof`, `poster`, `keynote`
 
-Use tags from the canonical set used by the UI (for example `Clang`, `MLIR`, `LLVM`, `Optimizations`, `Performance`, `Security`).
+Use tags from the canonical UI tag set when possible.
 
 ### Cache Refresh Requirement
 
-After any edit under `devmtg/library/events/*.json`, update:
+After any edit under `devmtg/events/*.json`, update:
 
-- `devmtg/library/events/index.json` -> `dataVersion`
+- `devmtg/events/index.json` -> `dataVersion`
 
-This is required so browsers pull fresh event data instead of cached data.
+This ensures browsers pull fresh event data instead of cached data.
 
 ### Validation Before Commit
 
@@ -159,5 +153,5 @@ This is required so browsers pull fresh event data instead of cached data.
 Optional check for malformed/blank speaker names:
 
 ```bash
-jq -r '.talks[] | select((.speakers // []) | map(.name // "") | any(. == "")) | [.id,.title] | @tsv' devmtg/library/events/*.json
+jq -r '.talks[] | select((.speakers // []) | map(.name // "") | any(. == "")) | [.id,.title] | @tsv' devmtg/events/*.json
 ```
