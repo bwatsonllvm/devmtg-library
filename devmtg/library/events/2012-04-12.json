@@ -81,7 +81,7 @@
       "slidesUrl": "https://llvm.org/devmtg/2012-04-12/Slides/Manuel_Klimek.pdf",
       "projectGithub": "",
       "tags": [
-        "Clang"
+        "Clang, C++"
       ]
     },
     {
@@ -291,7 +291,14 @@
       "title": "Improving Performance of OpenCL on CPUs",
       "speakers": [
         {
-          "name": "Ralf Karrenberg & Sebastian Hack",
+          "name": "Ralf Karrenberg",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        },
+        {
+          "name": "Sebastian Hack",
           "affiliation": "",
           "github": "",
           "linkedin": "",
