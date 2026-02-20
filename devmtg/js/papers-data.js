@@ -1,11 +1,11 @@
 /**
- * papers-data.js - Load canonical paper data from papers/*.json files.
+ * papers-data.js - Load canonical paper data from ../papers/*.json files.
  */
 
 (function () {
   let inMemoryCache = null;
 
-  const MANIFEST_JSON_PATH = 'papers/index.json';
+  const MANIFEST_JSON_PATH = '../papers/index.json';
   const CACHE_PREFIX = 'llvm-hub-paper-data:v1:';
 
   function normalizeManifestJson(payload) {
@@ -29,7 +29,11 @@
     const paperRefs = files
       .map((file) => String(file || '').trim())
       .filter(Boolean)
-      .map((file) => file.startsWith('papers/') ? file : `papers/${file}`);
+      .map((file) => {
+        if (file.startsWith('../papers/')) return file;
+        if (file.startsWith('papers/')) return `../${file}`;
+        return `../papers/${file}`;
+      });
 
     for (const ref of paperRefs) {
       if (!ref.toLowerCase().endsWith('.json')) {

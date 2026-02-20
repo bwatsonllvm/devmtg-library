@@ -4,16 +4,17 @@ Repository name: `library`
 
 This repository hosts web bundles intended for `llvm-www`.
 
-Current primary component:
+Current components:
 - `devmtg/`
+- `papers/`
 
 ## Repository Layout
 
 - `devmtg/`: static site bundle (HTML/CSS/JS/data)
 - `devmtg/events/*.json`: event/talk content source
 - `devmtg/events/index.json`: event manifest + cache version (`dataVersion`)
-- `devmtg/papers/*.json`: paper metadata source (LLVM publications from `llvm/llvm-www-pubs`, PDF-only)
-- `devmtg/papers/index.json`: paper manifest + cache version (`dataVersion`)
+- `papers/*.json`: paper metadata source (LLVM publications listed at `https://llvm.org/pubs/`)
+- `papers/index.json`: paper manifest + cache version (`dataVersion`)
 - `scripts/validate-library-bundle.sh`: validation script
 
 ## Target Path in llvm-www
@@ -21,6 +22,7 @@ Current primary component:
 Copy this bundle into:
 
 - `devmtg/`
+- `papers/`
 
 Expected public URL:
 
@@ -38,8 +40,9 @@ Expected public URL:
 
 ```bash
 cd /path/to/llvm-www
-mkdir -p devmtg
+mkdir -p devmtg papers
 rsync -a /Users/britton/Desktop/library/devmtg/ devmtg/
+rsync -a /Users/britton/Desktop/library/papers/ papers/
 ```
 
 ### 3. Local smoke test
@@ -59,8 +62,8 @@ Open:
 ### 4. Commit in `llvm-www`
 
 ```bash
-git add devmtg
-git commit -m "Update LLVM Developers' Meeting Library under devmtg"
+git add devmtg papers
+git commit -m "Update LLVM Developers' Meeting Library talks and papers"
 ```
 
 ## Adding or Editing Talks
@@ -163,11 +166,23 @@ jq -r '.talks[] | select((.speakers // []) | map(.name // "") | any(. == "")) | 
 
 Paper data is stored in:
 
-- `devmtg/papers/<bundle>.json`
+- `papers/<bundle>.json`
 
 Current bundle:
 
-- `devmtg/papers/llvm-www-pubs.json`
+- `papers/llvm-org-pubs.json`
+
+### Rebuild Papers Dataset
+
+The papers catalog is generated from `llvm-www-pubs/pubs.js` and local publication HTML files:
+
+```bash
+python3 /Users/britton/Desktop/library/scripts/build-papers-catalog.py \
+  --src-repo /tmp/llvm-www-pubs \
+  --out-dir /Users/britton/Desktop/library/papers
+```
+
+Tag assignment is derived from the canonical Dev Meeting talk tag list (`devmtg/js/app.js`), matching tag phrases against each paper title/abstract.
 
 ### Paper Record Format
 
@@ -176,7 +191,7 @@ Each paper entry is an object in the `papers` array, for example:
 ```json
 {
   "id": "pubs-2004-01-30-cgo-llvm",
-  "source": "llvm-www-pubs",
+  "source": "llvm-org-pubs",
   "title": "LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation",
   "authors": [
     {
@@ -194,14 +209,14 @@ Each paper entry is an object in the `papers` array, for example:
   "abstract": "Paper summary text.",
   "paperUrl": "https://llvm.org/pubs/2004-01-30-CGO-LLVM.pdf",
   "sourceUrl": "https://llvm.org/pubs/2004-01-30-CGO-LLVM.html",
-  "tags": ["LLVM", "Optimizations", "Academic Paper"]
+  "tags": ["Optimizations"]
 }
 ```
 
 ### Cache Refresh Requirement
 
-After any edit under `devmtg/papers/*.json`, update:
+After any edit under `papers/*.json`, update:
 
-- `devmtg/papers/index.json` -> `dataVersion`
+- `papers/index.json` -> `dataVersion`
 
 This ensures browsers pull fresh paper data instead of cached data.

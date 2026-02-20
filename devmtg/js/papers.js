@@ -378,12 +378,15 @@ function renderPaperCard(paper, tokens) {
   const venueLabel = escapeHtml(paper.venue || (paper.type ? paper.type.replace(/-/g, ' ') : 'Academic paper'));
   const abstractText = paper.abstract || 'No abstract available.';
 
-  const sourceLink = paper.sourceUrl
-    ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="View source listing for ${titleEsc} (opens in new tab)"><span aria-hidden="true">Source</span></a>`
+  const sourceIsPdf = /\.pdf(?:$|[?#])/i.test(paper.sourceUrl || '');
+  const sourceLink = sourceIsPdf && paper.sourceUrl !== paper.paperUrl
+    ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open alternate PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">Source</span></a>`
     : '';
 
+  const isPdf = /\.pdf(?:$|[?#])/i.test(paper.paperUrl || '');
+  const paperActionLabel = isPdf ? 'PDF' : 'Paper';
   const paperLink = paper.paperUrl
-    ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">PDF</span></a>`
+    ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
 
   const tagsHtml = (paper.tags || []).length
