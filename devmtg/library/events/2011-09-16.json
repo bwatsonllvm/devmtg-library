@@ -44,9 +44,7 @@
       "videoId": "y9oBUlqMzvw",
       "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-MultiVersioningInLLVM.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2011-09-16-002",
@@ -70,9 +68,7 @@
       "videoId": "O_fSf43StyY",
       "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-MoreTargetIndependentLLVMBitcode.pdf",
       "projectGithub": "",
-      "tags": [
-        "IR"
-      ]
+      "tags": []
     },
     {
       "id": "2011-09-16-003",
@@ -96,9 +92,7 @@
       "videoId": "ASXx_iYBBqM",
       "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-JET.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2011-09-16-004",
@@ -122,9 +116,7 @@
       "videoId": "8zeYlsw_H3E",
       "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-LLVMplusARM.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2011-09-16-005",
@@ -148,9 +140,7 @@
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-ImplementingDynamicScopesInCling.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2011-09-16-006",
@@ -174,9 +164,7 @@
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-ExceptionHandling.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2011-09-16-007",
@@ -200,9 +188,7 @@
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2011-09-16/EuroLLVM2011-Winter.pdf",
       "projectGithub": "",
-      "tags": [
-        "GPU"
-      ]
+      "tags": []
     }
   ]
 }
