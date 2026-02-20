@@ -707,11 +707,6 @@ function syncMeetingFilterForState() {
   }
 
   state.meetingName = state.meetingName || option.name;
-  if (!state.years.has(option.year) || state.years.size !== 1) {
-    state.years.clear();
-    state.years.add(option.year);
-    syncYearChipsFromState();
-  }
   renderMeetingFilterOptions();
 }
 
@@ -775,11 +770,6 @@ function initFilters() {
       const option = meetingOptions.find((item) => item.slug === slug);
       state.meeting = slug;
       state.meetingName = option ? option.name : slug;
-      if (option) {
-        state.years.clear();
-        state.years.add(option.year);
-        syncYearChipsFromState();
-      }
       renderMeetingFilterOptions();
       updateClearBtn();
       syncUrl();
@@ -1129,8 +1119,6 @@ function loadStateFromUrl() {
       state.meetingName = '';
     } else {
       state.meetingName = selectedMeeting.name;
-      state.years.clear();
-      state.years.add(selectedMeeting.year);
     }
   } else {
     state.meetingName = '';
