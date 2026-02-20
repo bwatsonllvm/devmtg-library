@@ -37,9 +37,7 @@
       "videoId": "FNtmemyeEHY",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-002",
@@ -49,23 +47,13 @@
       "meetingDate": "May 25, 2007",
       "category": "technical-talk",
       "title": "Introductions",
-      "speakers": [
-        {
-          "name": "Everyone",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
-        }
-      ],
+      "speakers": [],
       "abstract": "Everyone introduced themselves to the group.",
       "videoUrl": "https://youtu.be/nl5SXEDkMEc",
       "videoId": "nl5SXEDkMEc",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-003",
@@ -89,9 +77,7 @@
       "videoId": "4yzjAXiMbvk",
       "slidesUrl": "https://llvm.org/devmtg/2007-05/03-Patel-Passmanager.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-004",
@@ -115,9 +101,7 @@
       "videoId": "ZWmHZD_-fZ0",
       "slidesUrl": "https://llvm.org/devmtg/2007-05/04-Cheng-Codegen.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-005",
@@ -180,7 +164,13 @@
       "category": "technical-talk",
       "title": "Secure Virtual Architecture",
       "speakers": [
-
+        {
+          "name": "John Criswell",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
       ],
       "abstract": "A presentation on our research to create a virtual machine that operates below the operating system and a brief introduction to some of the novel security capabilities that our architecture can enable.",
       "videoUrl": "https://youtu.be/sRvetnQhXPQ",
@@ -240,9 +230,7 @@
       "videoId": "TPyo6NYNYis",
       "slidesUrl": "https://llvm.org/devmtg/2007-05/10-Lattner-OpenGL.pdf",
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-010",
@@ -266,9 +254,7 @@
       "videoId": "T5GgX8tE3R8",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-011",
@@ -292,9 +278,7 @@
       "videoId": "npCXLaGdArY",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-012",
@@ -318,9 +302,7 @@
       "videoId": "CIp103RdKic",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-013",
@@ -351,9 +333,7 @@
       "videoId": "uTVcG0qVS0I",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2007-05-014",
@@ -377,9 +357,7 @@
       "videoId": "iINSIqwaQX0",
       "slidesUrl": null,
       "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     }
   ]
 }
