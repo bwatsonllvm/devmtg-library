@@ -45,7 +45,9 @@
 <body>
 
   <!-- Skip link for keyboard/screen reader users -->
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav class="skip-links" aria-label="Skip links">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+  </nav>
 
   <!-- ======================================================
        Site Header
@@ -287,7 +289,7 @@
 
     <div class="mobile-filter-scrim hidden" id="mobile-filter-scrim" aria-hidden="true"></div>
 
-    <section class="feed-column">
+    <main class="feed-column" id="main-content" tabindex="-1">
       <!-- ======================================================
            Results Bar
       ====================================================== -->
@@ -319,15 +321,15 @@
       <!-- ======================================================
            Talk Cards
       ====================================================== -->
-      <main class="talks-container" id="main-content" tabindex="-1">
+      <div class="talks-container" id="talks-container">
         <div id="talks-grid" class="talks-grid" role="feed" aria-label="Talk results" aria-busy="true">
           <div class="loading-state">
             <div class="spinner" aria-hidden="true"></div>
             <p>Loading talks…</p>
           </div>
         </div>
-      </main>
-    </section>
+      </div>
+    </main>
   </div>
 
   <!-- ======================================================

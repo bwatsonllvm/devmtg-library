@@ -442,7 +442,7 @@ function renderRelatedCard(talk) {
             ? `<img src="${escapeHtml(thumbnailUrl)}" alt="" loading="lazy" onerror="thumbnailError(this,'${escapeHtml(talk.category || '')}')">`
             : `<div class="card-thumbnail-placeholder">${placeholderSvgForCategory(talk.category)}</div>`}
         </div>
-        <div class="card-body" aria-hidden="true">
+        <div class="card-body">
           <div class="card-meta">
             <span class="${badgeCls}">${escapeHtml(categoryLabel(talk.category || 'other'))}</span>
             <span class="meeting-label">${escapeHtml(talk.meeting || '')}</span>

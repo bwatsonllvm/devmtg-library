@@ -2533,9 +2533,6 @@ mark {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
   }
 
   .site-nav {

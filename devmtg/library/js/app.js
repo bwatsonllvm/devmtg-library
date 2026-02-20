@@ -475,7 +475,7 @@ function renderCard(talk, tokens) {
           ${talk.videoId ? `<div class="play-overlay" aria-hidden="true"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>` : ''}
         </div>
 
-        <div class="card-body" aria-hidden="true">
+        <div class="card-body">
           <div class="card-meta">
             <span class="${badgeCls}">${escapeHtml(categoryLabel(talk.category || 'other'))}</span>
             <span class="meeting-label">${escapeHtml(meetingLabel)}</span>
@@ -898,7 +898,6 @@ function setFilterSidebarCollapsed(collapsed, persist = true) {
   collapseBtn.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
   collapseBtn.setAttribute('aria-label', collapsed ? 'Expand filters' : 'Collapse filters');
   collapseBtn.setAttribute('title', collapsed ? 'Expand filters' : 'Collapse filters');
-  sidebarBody.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
 
   if (persist) {
     sessionStorage.setItem('llvm-hub-filter-sidebar-collapsed', collapsed ? '1' : '0');
@@ -922,8 +921,24 @@ function initFilterSidebarCollapse() {
     const active = isMobile && open;
     document.body.classList.toggle('mobile-filters-open', active);
     if (mobileOpenBtn) mobileOpenBtn.setAttribute('aria-expanded', active ? 'true' : 'false');
-    if (mobileScrim) mobileScrim.classList.toggle('hidden', !active);
-    if (filterSection && isMobile) filterSection.setAttribute('aria-hidden', active ? 'false' : 'true');
+    if (mobileScrim) {
+      mobileScrim.classList.toggle('hidden', !active);
+      mobileScrim.setAttribute('aria-hidden', active ? 'false' : 'true');
+    }
+
+    if (filterSection) {
+      if (isMobile) {
+        filterSection.hidden = !active;
+        if (active) {
+          filterSection.removeAttribute('inert');
+        } else {
+          filterSection.setAttribute('inert', '');
+        }
+      } else {
+        filterSection.hidden = false;
+        filterSection.removeAttribute('inert');
+      }
+    }
   };
 
   const syncSidebarMode = () => {
@@ -932,7 +947,6 @@ function initFilterSidebarCollapse() {
       collapseBtn.setAttribute('aria-pressed', 'false');
       collapseBtn.setAttribute('aria-label', 'Collapse filters');
       collapseBtn.setAttribute('title', 'Collapse filters');
-      if (sidebarBody) sidebarBody.setAttribute('aria-hidden', 'false');
       setMobileDrawerOpen(false);
       return;
     }
@@ -940,7 +954,6 @@ function initFilterSidebarCollapse() {
     // Always start expanded so filters remain discoverable and fully scrollable.
     sessionStorage.removeItem('llvm-hub-filter-sidebar-collapsed');
     setFilterSidebarCollapsed(false, false);
-    if (filterSection) filterSection.setAttribute('aria-hidden', 'false');
     setMobileDrawerOpen(false);
   };
 
