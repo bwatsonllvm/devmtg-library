@@ -2107,18 +2107,7 @@ function initCardNavigation() {
 // ============================================================
 
 function filterBySpeaker(name) {
-  state.speaker = name;
-  // Clear any free-text query that might conflict
-  state.query = '';
-  state.activeSpeaker = '';
-  state.activeTag = '';
-  syncTopicChipState();
-  const input = document.getElementById('search-input');
-  if (input) input.value = '';
-  closeDropdown();
-  updateClearBtn();
-  syncUrl();
-  render();
+  applyAutocompleteSelection('speaker', name, 'search');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

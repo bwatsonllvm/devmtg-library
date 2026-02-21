@@ -346,19 +346,14 @@ function highlightText(text, tokens) {
   return result;
 }
 
-function formatAuthorName(author) {
-  if (!author) return '';
-  if (author.affiliation) return `${author.name} (${author.affiliation})`;
-  return author.name;
-}
-
 function renderAuthorButtons(authors, tokens) {
   if (!authors || authors.length === 0) return 'Authors unknown';
 
   const activeLower = normalizeFilterValue(state.activeSpeaker || state.speaker || '');
 
   return authors.map((author) => {
-    const label = formatAuthorName(author);
+    const label = String(author.name || '').trim();
+    if (!label) return '';
     const nameLower = normalizeFilterValue(author.name);
     let labelHtml;
 
@@ -368,8 +363,8 @@ function renderAuthorButtons(authors, tokens) {
       labelHtml = highlightText(label, tokens);
     }
 
-    return `<button class="speaker-btn" onclick="event.stopPropagation();filterBySpeaker(${JSON.stringify(author.name)})" aria-label="View all papers by ${escapeHtml(author.name)}">${labelHtml}</button>`;
-  }).join('<span class="speaker-btn-sep">, </span>');
+    return `<button class="speaker-btn" onclick="event.stopPropagation();filterBySpeaker(${JSON.stringify(author.name)})" aria-label="Filter papers by author: ${escapeHtml(author.name)}">${labelHtml}</button>`;
+  }).filter(Boolean).join('<span class="speaker-btn-sep">, </span>');
 }
 
 function renderPaperCard(paper, tokens) {
@@ -377,6 +372,7 @@ function renderPaperCard(paper, tokens) {
   const yearLabel = escapeHtml(paper._year || 'Unknown year');
   const venueLabel = escapeHtml(paper.venue || (paper.type ? paper.type.replace(/-/g, ' ') : 'Academic paper'));
   const abstractText = paper.abstract || 'No abstract available.';
+  const paperThumbSvg = `<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><polyline points="14 2 14 7 19 7"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="14" y2="17"/></svg>`;
 
   const sourceIsPdf = /\.pdf(?:$|[?#])/i.test(paper.sourceUrl || '');
   const sourceLink = sourceIsPdf && paper.sourceUrl !== paper.paperUrl
@@ -389,15 +385,22 @@ function renderPaperCard(paper, tokens) {
     ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
 
+  const tags = paper.tags || [];
   const tagsHtml = (paper.tags || []).length
-    ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Paper topics">${paper.tags.map((tag) =>
+    ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Paper topics">${tags.slice(0, 4).map((tag) =>
         `<button class="card-tag" data-tag="${escapeHtml(tag)}" onclick="event.stopPropagation();filterByTag(${JSON.stringify(tag)})" aria-label="Filter by topic: ${escapeHtml(tag)}">${escapeHtml(tag)}</button>`
-      ).join('')}</div></div>`
+      ).join('')}${tags.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${tags.length - 4}</span>` : ''}</div></div>`
     : '';
 
   return `
     <article class="talk-card paper-card">
       <div class="card-link-wrap">
+        <div class="card-thumbnail paper-thumbnail" aria-hidden="true">
+          <div class="card-thumbnail-placeholder paper-thumbnail-placeholder">
+            ${paperThumbSvg}
+            <span class="paper-thumbnail-label">Paper</span>
+          </div>
+        </div>
         <div class="card-body">
           <div class="card-meta">
             <span class="badge badge-paper">Paper</span>
@@ -405,10 +408,10 @@ function renderPaperCard(paper, tokens) {
             <span class="meeting-label">${venueLabel}</span>
           </div>
           <p class="card-title">${highlightText(paper.title, tokens)}</p>
-          <p class="card-speakers paper-authors">${renderAuthorButtons(paper.authors || [], tokens)}</p>
           <p class="card-abstract">${highlightText(abstractText, tokens)}</p>
         </div>
       </div>
+      <p class="card-speakers paper-authors">${renderAuthorButtons(paper.authors || [], tokens)}</p>
       ${tagsHtml}
       ${(paperLink || sourceLink) ? `<div class="card-footer">${paperLink}${sourceLink}</div>` : ''}
     </article>`;
@@ -1310,21 +1313,7 @@ function render() {
 // ============================================================
 
 function filterBySpeaker(name) {
-  state.speaker = name;
-  state.query = '';
-  state.activeSpeaker = '';
-  state.activeTag = '';
-
-  syncTopicChipState();
-
-  const input = document.getElementById('search-input');
-  if (input) input.value = '';
-
-  closeDropdown();
-  updateClearBtn();
-  syncUrl();
-  render();
-
+  applyAutocompleteSelection('speaker', name, 'search');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
