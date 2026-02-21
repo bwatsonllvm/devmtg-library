@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build/update website update log entries for newly added talks/resources/papers.
 
-Detection model:
+Default mode:
   - compares current working tree JSON bundles against HEAD versions in git
   - records only newly added items:
       * talks
@@ -9,6 +9,9 @@ Detection model:
       * videos added to an existing talk
       * papers newly added to any papers/*.json bundle
   - collates talk + slides + video into one entry when they appear together
+
+Retroactive mode:
+  - replays commit history and backfills the same entry model from older commits
 """
 
 from __future__ import annotations
@@ -20,6 +23,13 @@ import re
 import subprocess
 import urllib.parse
 from pathlib import Path
+
+PART_ORDER = {
+    "talk": 0,
+    "slides": 1,
+    "video": 2,
+    "paper": 3,
+}
 
 
 def collapse_ws(value: str) -> str:
@@ -38,6 +48,18 @@ def parse_json_text(raw: str) -> dict:
     return json.loads(raw)
 
 
+def normalize_parts(parts: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for part in sorted(parts, key=lambda value: PART_ORDER.get(collapse_ws(value).lower(), 999)):
+        key = collapse_ws(part).lower()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(key)
+    return out
+
+
 def run_git(repo_root: Path, args: list[str]) -> str:
     proc = subprocess.run(
         ["git", *args],
@@ -52,9 +74,9 @@ def run_git(repo_root: Path, args: list[str]) -> str:
     return proc.stdout
 
 
-def git_show_head_file(repo_root: Path, rel_path: str) -> str | None:
+def git_show_file_at_revision(repo_root: Path, revision: str, rel_path: str) -> str | None:
     proc = subprocess.run(
-        ["git", "show", f"HEAD:{rel_path}"],
+        ["git", "show", f"{revision}:{rel_path}"],
         cwd=str(repo_root),
         check=False,
         capture_output=True,
@@ -63,9 +85,14 @@ def git_show_head_file(repo_root: Path, rel_path: str) -> str | None:
     if proc.returncode == 0:
         return proc.stdout
     stderr = collapse_ws(proc.stderr).lower()
-    if "does not exist in 'head'" in stderr or "exists on disk, but not in 'head'" in stderr:
+    if (
+        "does not exist in 'head'" in stderr
+        or "exists on disk, but not in 'head'" in stderr
+        or "does not exist in" in stderr
+        or "exists on disk, but not in" in stderr
+    ):
         return None
-    raise RuntimeError(f"git show HEAD:{rel_path} failed: {collapse_ws(proc.stderr)}")
+    raise RuntimeError(f"git show {revision}:{rel_path} failed: {collapse_ws(proc.stderr)}")
 
 
 def list_changed_json_paths(repo_root: Path) -> set[str]:
@@ -87,6 +114,14 @@ def list_changed_json_paths(repo_root: Path) -> set[str]:
             changed.add(rel)
 
     return {path for path in changed if path.endswith(".json")}
+
+
+def is_event_json_path(rel_path: str) -> bool:
+    return rel_path.startswith("devmtg/events/") and rel_path.endswith(".json") and not rel_path.endswith("index.json")
+
+
+def is_paper_json_path(rel_path: str) -> bool:
+    return rel_path.startswith("papers/") and rel_path.endswith(".json") and rel_path != "papers/index.json"
 
 
 def talk_has_slides(talk: dict) -> bool:
@@ -169,13 +204,14 @@ def talk_entry(
     video_url = talk_video_url(talk)
     detail_url = f"{site_base}/talk.html?id={urllib.parse.quote(talk_id, safe='')}"
 
-    fingerprint = f"talk:{talk_id}:{','.join(parts)}"
+    normalized_parts = normalize_parts(parts)
+    fingerprint = f"talk:{talk_id}:{','.join(normalized_parts)}"
     entry = {
         "kind": "talk",
         "loggedAt": logged_at_iso,
         "sortHint": meeting_sort_hint(meeting_slug),
         "fingerprint": fingerprint,
-        "parts": parts,
+        "parts": normalized_parts,
         "title": title,
         "url": detail_url,
         "talkId": talk_id,
@@ -219,6 +255,39 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
     return entry
 
 
+def diff_talk_entries(current_payload: dict | None, prev_payload: dict | None, logged_at_iso: str, site_base: str) -> list[dict]:
+    entries: list[dict] = []
+    current_talks = talks_by_id(current_payload)
+    prev_talks = talks_by_id(prev_payload)
+
+    for talk_id, current_talk in current_talks.items():
+        prev_talk = prev_talks.get(talk_id)
+        parts: list[str] = []
+
+        if prev_talk is None:
+            parts.append("talk")
+        if talk_has_slides(current_talk) and not talk_has_slides(prev_talk or {}):
+            parts.append("slides")
+        if talk_has_video(current_talk) and not talk_has_video(prev_talk or {}):
+            parts.append("video")
+
+        if parts:
+            entries.append(talk_entry(current_talk, parts, logged_at_iso, site_base))
+    return entries
+
+
+def diff_paper_entries(current_payload: dict | None, prev_payload: dict | None, logged_at_iso: str, site_base: str) -> list[dict]:
+    entries: list[dict] = []
+    current_papers = papers_by_id(current_payload)
+    prev_papers = papers_by_id(prev_payload)
+
+    for paper_id, current_paper in current_papers.items():
+        if paper_id in prev_papers:
+            continue
+        entries.append(paper_entry(current_paper, logged_at_iso, site_base))
+    return entries
+
+
 def sort_entries(entries: list[dict]) -> list[dict]:
     return sorted(
         entries,
@@ -243,11 +312,120 @@ def load_existing_log(log_path: Path) -> dict:
     return payload
 
 
+def resolve_git_revision(repo_root: Path, revision: str) -> str:
+    return collapse_ws(run_git(repo_root, ["rev-parse", revision]))
+
+
+def list_history_commits(repo_root: Path, history_to: str, history_from: str = "") -> list[str]:
+    resolved_to = resolve_git_revision(repo_root, history_to or "HEAD")
+    commits = [collapse_ws(line) for line in run_git(repo_root, ["rev-list", "--reverse", resolved_to]).splitlines()]
+    commits = [commit for commit in commits if commit]
+    if not history_from:
+        return commits
+
+    resolved_from = resolve_git_revision(repo_root, history_from)
+    if resolved_from not in commits:
+        raise RuntimeError(f"history-from revision not reachable from history-to: {history_from}")
+    start_index = commits.index(resolved_from)
+    return commits[start_index:]
+
+
+def first_parent_of_commit(repo_root: Path, commit: str) -> str:
+    line = collapse_ws(run_git(repo_root, ["rev-list", "--parents", "-n", "1", commit]))
+    parts = line.split()
+    if len(parts) >= 2:
+        return parts[1]
+    return ""
+
+
+def changed_json_paths_for_commit(repo_root: Path, commit: str, parent: str) -> set[str]:
+    if parent:
+        diff_text = run_git(repo_root, ["diff", "--name-only", parent, commit, "--", "devmtg/events", "papers"])
+    else:
+        diff_text = run_git(repo_root, ["show", "--pretty=format:", "--name-only", commit, "--", "devmtg/events", "papers"])
+
+    changed: set[str] = set()
+    for line in diff_text.splitlines():
+        rel = collapse_ws(line)
+        if rel and rel.endswith(".json"):
+            changed.add(rel)
+    return changed
+
+
+def build_entries_from_working_tree_delta(repo_root: Path, site_base: str, logged_at_iso: str) -> tuple[list[dict], int, int]:
+    changed_json_paths = list_changed_json_paths(repo_root)
+    changed_event_paths = sorted(path for path in changed_json_paths if is_event_json_path(path))
+    changed_paper_paths = sorted(path for path in changed_json_paths if is_paper_json_path(path))
+
+    entries: list[dict] = []
+
+    for rel_path in changed_event_paths:
+        abs_path = repo_root / rel_path
+        if not abs_path.exists():
+            continue
+        current_payload = load_json_file(abs_path)
+        prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
+        prev_payload = parse_json_text(prev_raw) if prev_raw else None
+        entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base))
+
+    for rel_path in changed_paper_paths:
+        abs_path = repo_root / rel_path
+        if not abs_path.exists():
+            continue
+        current_payload = load_json_file(abs_path)
+        prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
+        prev_payload = parse_json_text(prev_raw) if prev_raw else None
+        entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base))
+
+    return entries, len(changed_event_paths), len(changed_paper_paths)
+
+
+def build_entries_from_history(
+    repo_root: Path,
+    commits: list[str],
+    site_base: str,
+) -> tuple[list[dict], int, int]:
+    entries: list[dict] = []
+    changed_event_count = 0
+    changed_paper_count = 0
+
+    for commit in commits:
+        logged_at_iso = collapse_ws(run_git(repo_root, ["show", "-s", "--format=%cI", commit]))
+        parent = first_parent_of_commit(repo_root, commit)
+        changed_paths = changed_json_paths_for_commit(repo_root, commit, parent)
+
+        for rel_path in sorted(path for path in changed_paths if is_event_json_path(path)):
+            current_raw = git_show_file_at_revision(repo_root, commit, rel_path)
+            if not current_raw:
+                continue
+            prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
+            current_payload = parse_json_text(current_raw)
+            prev_payload = parse_json_text(prev_raw) if prev_raw else None
+            entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base))
+            changed_event_count += 1
+
+        for rel_path in sorted(path for path in changed_paths if is_paper_json_path(path)):
+            current_raw = git_show_file_at_revision(repo_root, commit, rel_path)
+            if not current_raw:
+                continue
+            prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
+            current_payload = parse_json_text(current_raw)
+            prev_payload = parse_json_text(prev_raw) if prev_raw else None
+            entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base))
+            changed_paper_count += 1
+
+    return entries, changed_event_count, changed_paper_count
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", default="/Users/britton/Desktop/library")
     parser.add_argument("--log-json", default="/Users/britton/Desktop/library/devmtg/updates/index.json")
     parser.add_argument("--site-base", default="/devmtg")
+    parser.add_argument("--retroactive-history", action="store_true")
+    parser.add_argument("--history-from", default="")
+    parser.add_argument("--history-to", default="HEAD")
+    parser.add_argument("--append-retroactive", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -255,66 +433,26 @@ def main() -> int:
     log_json = Path(args.log_json).resolve()
     site_base = "/" + collapse_ws(str(args.site_base)).strip("/")
 
-    changed_json_paths = list_changed_json_paths(repo_root)
-    changed_event_paths = sorted(
-        path
-        for path in changed_json_paths
-        if path.startswith("devmtg/events/") and path.endswith(".json") and not path.endswith("index.json")
-    )
-    changed_paper_paths = sorted(
-        path
-        for path in changed_json_paths
-        if path.startswith("papers/") and path.endswith(".json") and path != "papers/index.json"
-    )
-
     logged_at_iso = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    new_entries: list[dict] = []
-
-    for rel_path in changed_event_paths:
-        abs_path = repo_root / rel_path
-        if not abs_path.exists():
-            continue
-
-        current_payload = load_json_file(abs_path)
-        current_talks = talks_by_id(current_payload)
-
-        prev_raw = git_show_head_file(repo_root, rel_path)
-        prev_payload = parse_json_text(prev_raw) if prev_raw else None
-        prev_talks = talks_by_id(prev_payload)
-
-        for talk_id, current_talk in current_talks.items():
-            prev_talk = prev_talks.get(talk_id)
-            parts: list[str] = []
-
-            if prev_talk is None:
-                parts.append("talk")
-            if talk_has_slides(current_talk) and not talk_has_slides(prev_talk or {}):
-                parts.append("slides")
-            if talk_has_video(current_talk) and not talk_has_video(prev_talk or {}):
-                parts.append("video")
-
-            if parts:
-                new_entries.append(talk_entry(current_talk, parts, logged_at_iso, site_base))
-
-    for rel_path in changed_paper_paths:
-        abs_path = repo_root / rel_path
-        if not abs_path.exists():
-            continue
-
-        current_payload = load_json_file(abs_path)
-        current_papers = papers_by_id(current_payload)
-
-        prev_raw = git_show_head_file(repo_root, rel_path)
-        prev_payload = parse_json_text(prev_raw) if prev_raw else None
-        prev_papers = papers_by_id(prev_payload)
-
-        for paper_id, current_paper in current_papers.items():
-            if paper_id in prev_papers:
-                continue
-            new_entries.append(paper_entry(current_paper, logged_at_iso, site_base))
+    if args.retroactive_history:
+        commits = list_history_commits(repo_root, history_to=args.history_to, history_from=args.history_from)
+        new_entries, changed_event_count, changed_paper_count = build_entries_from_history(
+            repo_root=repo_root,
+            commits=commits,
+            site_base=site_base,
+        )
+    else:
+        new_entries, changed_event_count, changed_paper_count = build_entries_from_working_tree_delta(
+            repo_root=repo_root,
+            site_base=site_base,
+            logged_at_iso=logged_at_iso,
+        )
 
     log_payload = load_existing_log(log_json)
-    existing_entries = [entry for entry in (log_payload.get("entries") or []) if isinstance(entry, dict)]
+    if args.retroactive_history and not args.append_retroactive:
+        existing_entries: list[dict] = []
+    else:
+        existing_entries = [entry for entry in (log_payload.get("entries") or []) if isinstance(entry, dict)]
     existing_fingerprints = {
         collapse_ws(str(entry.get("fingerprint", ""))) for entry in existing_entries if collapse_ws(str(entry.get("fingerprint", "")))
     }
@@ -331,7 +469,7 @@ def main() -> int:
     merged_entries = sort_entries(existing_entries)
     existing_data_version = collapse_ws(str(log_payload.get("dataVersion", "")))
     existing_generated_at = collapse_ws(str(log_payload.get("generatedAt", "")))
-    should_refresh_metadata = appended > 0 or not log_json.exists()
+    should_refresh_metadata = appended > 0 or not log_json.exists() or (args.retroactive_history and not args.append_retroactive)
 
     next_payload = {
         "dataVersion": (
@@ -352,8 +490,13 @@ def main() -> int:
         log_json.write_text(next_text, encoding="utf-8")
 
     if args.verbose:
-        print(f"Changed event bundles considered: {len(changed_event_paths)}")
-        print(f"Changed paper bundles considered: {len(changed_paper_paths)}")
+        if args.retroactive_history:
+            print("Mode: retroactive-history")
+            print(f"History commit range: {args.history_from or '(root)'} -> {args.history_to}")
+        else:
+            print("Mode: working-tree-delta")
+        print(f"Changed event bundles considered: {changed_event_count}")
+        print(f"Changed paper bundles considered: {changed_paper_count}")
         print(f"Raw newly detected entries: {len(new_entries)}")
     print(f"Update log entries appended: {appended}")
     print(f"Update log total entries: {len(merged_entries)}")

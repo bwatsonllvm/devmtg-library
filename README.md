@@ -232,6 +232,20 @@ Update log output:
 - `devmtg/updates/index.json`
 - website page: `devmtg/updates.html`
 
+To backfill update history retroactively from git commits (oldest -> newest):
+
+```bash
+python3 /Users/britton/Desktop/library/scripts/build-update-log.py \
+  --repo-root /Users/britton/Desktop/library \
+  --log-json /Users/britton/Desktop/library/devmtg/updates/index.json \
+  --retroactive-history
+```
+
+Optional retroactive controls:
+
+- `--history-from <commit>` and `--history-to <commit-or-ref>` to constrain the replay range.
+- `--append-retroactive` to append replayed entries instead of rebuilding from history.
+
 ## Adding or Editing Papers
 
 Paper data is stored in:
