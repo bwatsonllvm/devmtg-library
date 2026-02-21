@@ -40,6 +40,24 @@
     html { background: #f5f5f5; }
     html[data-theme="dark"] { background: #000000; }
     body { background: transparent; }
+
+    .work-hero-search.global-search-form {
+      display: block !important;
+      width: min(760px, 100%) !important;
+      min-width: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      border-radius: 0 !important;
+      margin-top: 0.6rem;
+    }
+
+    .work-hero-search .global-search-input {
+      border-right: 0 !important;
+    }
+
+    .work-hero-search .search-input {
+      padding-right: 42px;
+    }
   </style>
   <title>All Work — LLVM Developers' Meeting Library</title>
   <meta name="description" content="View talks and papers for a speaker or key topic in one place.">
@@ -92,24 +110,6 @@
     </div>
 
     <div class="header-right">
-      <form class="global-search-form" action="work.html" method="get" role="search" aria-label="Search talks and papers">
-        <input type="hidden" name="mode" value="search">
-        <input
-          type="search"
-          class="global-search-input"
-          name="q"
-          placeholder="Search talks + papers"
-          autocomplete="off"
-          spellcheck="false"
-          aria-label="Search talks and papers"
-        >
-        <button class="global-search-submit" type="submit" aria-label="Run global search">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="11" cy="11" r="7"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-      </form>
       <a class="header-action-btn" id="work-back-link" href="index.html">Back</a>
     </div>
   </header>
@@ -118,7 +118,29 @@
     <div class="search-hero-shell">
       <h1 id="work-title">All Work</h1>
       <p class="subtitle" id="work-subtitle">Loading talks and papers...</p>
-      <a class="work-entity-back" id="work-secondary-back-link" href="index.html">Back to talks</a>
+      <form class="search-box global-search-form work-hero-search" action="work.html" method="get" role="search" aria-label="Search talks, papers, and people">
+        <input type="hidden" name="mode" value="search">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          class="search-input global-search-input"
+          id="work-search-input"
+          name="q"
+          placeholder="Search talks, papers, people, key topics…"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search talks, papers, and people"
+        >
+        <button class="search-clear" id="work-search-clear" aria-label="Clear search" title="Clear">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </form>
     </div>
   </section>
 
@@ -164,6 +186,6 @@
   <script src="js/papers-data.js?v=20260221-02"></script>
   <script src="js/shared/library-utils.js?v=20260221-24"></script>
   <script src="js/shared/global-search.js?v=20260221-22"></script>
-  <script src="js/work.js?v=20260221-21"></script>
+  <script src="js/work.js?v=20260221-22"></script>
 </body>
 </html>
