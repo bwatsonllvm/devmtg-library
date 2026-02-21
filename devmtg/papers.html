@@ -23,24 +23,24 @@
         } else {
           document.documentElement.setAttribute('data-text-size', textSize);
         }
-        document.documentElement.style.backgroundColor = '#fafafa';
+        document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#fafafa' : '#0b0d10';
       } catch (_) {
         var fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         var fallbackTheme = fallbackDark ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', fallbackTheme);
         document.documentElement.setAttribute('data-theme-preference', 'system');
-        document.documentElement.style.backgroundColor = '#fafafa';
+        document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#fafafa' : '#0b0d10';
       }
     })();
   </script>
   <style>
-    html { background: #fafafa; }
+    html { background: #0b0d10; }
     html[data-theme="dark"] { background: #fafafa; }
     body { background: transparent; }
   </style>
   <title>Academic Papers - LLVM Developers' Meeting Library</title>
   <meta name="description" content="Browse academic LLVM papers hosted on llvm.org and available in llvm-www.">
-  <link rel="stylesheet" href="css/style.css?v=20260221-04">
+  <link rel="stylesheet" href="css/style.css?v=20260221-03">
 </head>
 <body>
 
@@ -333,6 +333,6 @@
 
   <script src="js/shared/library-utils.js?v=20260221-02"></script>
   <script src="js/papers-data.js?v=20260221-02"></script>
-  <script src="js/papers.js?v=20260221-05"></script>
+  <script src="js/papers.js?v=20260221-04"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 /* ============================================================
    LLVM Dev Meeting Knowledge Base — Design System
-   OpenAlex visual system
+   OpenAlex-inspired visual system, with inverted light mode
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -9,51 +9,51 @@
    CSS Custom Properties — Light Mode (default)
    ============================================================ */
 :root {
-  /* Color — Base (OpenAlex-like light palette) */
-  --color-bg:            #fafafa;
-  --color-surface:       #ffffff;
-  --color-surface-hover: #f5f5f5;
-  --color-border:        #e0e0e0;
-  --color-border-focus:  #1a1a1a;
-  --color-text:          #1a1a1a;
-  --color-text-muted:    #6b7280;
-  --color-text-inverse:  #ffffff;
-  --color-accent:        #1976d2;
-  --color-accent-hover:  #1565c0;
-  --color-accent-bg:     #e3f2fd;
-  --color-accent-subtle: #f7fbff;
-  --color-divider:       #ececec;
+  /* Color — Base (OpenAlex-inspired, inverted for light mode) */
+  --color-bg:            #0b0d10;
+  --color-surface:       #12161d;
+  --color-surface-hover: #181e27;
+  --color-border:        #2a3340;
+  --color-border-focus:  #8db7ff;
+  --color-text:          #f5f7fb;
+  --color-text-muted:    #a8b3c2;
+  --color-text-inverse:  #0b0d10;
+  --color-accent:        #8db7ff;
+  --color-accent-hover:  #b6d0ff;
+  --color-accent-bg:     rgba(141, 183, 255, 0.2);
+  --color-accent-subtle: #111a28;
+  --color-divider:       #242d39;
 
   /* Color — Category Badges */
-  --badge-keynote-bg:      #e3f2fd;
-  --badge-keynote-text:    #1976d2;
-  --badge-technical-bg:    #f5f5f5;
-  --badge-technical-text:  #374151;
-  --badge-tutorial-bg:     #f5f5f5;
-  --badge-tutorial-text:   #374151;
-  --badge-lightning-bg:    #f5f5f5;
-  --badge-lightning-text:  #374151;
-  --badge-quick-bg:        #fef2f2;
-  --badge-quick-text:      #b91c1c;
-  --badge-panel-bg:        #e3f2fd;
-  --badge-panel-text:      #1976d2;
-  --badge-bof-bg:          #f5f5f5;
-  --badge-bof-text:        #374151;
-  --badge-student-bg:      #f5f5f5;
-  --badge-student-text:    #374151;
-  --badge-poster-bg:       #f5f5f5;
-  --badge-poster-text:     #374151;
-  --badge-workshop-bg:     #f5f5f5;
-  --badge-workshop-text:   #374151;
-  --badge-paper-bg:        #e3f2fd;
-  --badge-paper-text:      #1976d2;
-  --badge-other-bg:        #f5f5f5;
-  --badge-other-text:      #374151;
+  --badge-keynote-bg:      rgba(141, 183, 255, 0.18);
+  --badge-keynote-text:    #c8dcff;
+  --badge-technical-bg:    #1a212b;
+  --badge-technical-text:  #c2cedf;
+  --badge-tutorial-bg:     #1a212b;
+  --badge-tutorial-text:   #c2cedf;
+  --badge-lightning-bg:    #1a212b;
+  --badge-lightning-text:  #c2cedf;
+  --badge-quick-bg:        #2b1a1f;
+  --badge-quick-text:      #ffadbb;
+  --badge-panel-bg:        rgba(141, 183, 255, 0.18);
+  --badge-panel-text:      #c8dcff;
+  --badge-bof-bg:          #1a212b;
+  --badge-bof-text:        #c2cedf;
+  --badge-student-bg:      #1a212b;
+  --badge-student-text:    #c2cedf;
+  --badge-poster-bg:       #1a212b;
+  --badge-poster-text:     #c2cedf;
+  --badge-workshop-bg:     #1a212b;
+  --badge-workshop-text:   #c2cedf;
+  --badge-paper-bg:        rgba(141, 183, 255, 0.18);
+  --badge-paper-text:      #c8dcff;
+  --badge-other-bg:        #1a212b;
+  --badge-other-text:      #c2cedf;
 
   /* Color — Misc */
-  --color-error:       #dc2626;
-  --color-success:     #16a34a;
-  --color-overlay:     rgba(15, 23, 42, 0.35);
+  --color-error:       #ff7a7a;
+  --color-success:     #6ad18a;
+  --color-overlay:     rgba(5, 7, 10, 0.72);
 
   /* Spacing (4px base) */
   --space-1:   4px;
@@ -99,11 +99,11 @@
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-xs:    0 1px 0 rgba(0, 0, 0, 0.04);
-  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md:    0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg:    0 12px 28px rgba(0, 0, 0, 0.12);
-  --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.08);
+  --shadow-xs:    0 1px 0 rgba(0, 0, 0, 0.4);
+  --shadow-sm:    0 2px 6px rgba(0, 0, 0, 0.34);
+  --shadow-md:    0 6px 16px rgba(0, 0, 0, 0.42);
+  --shadow-lg:    0 18px 36px rgba(0, 0, 0, 0.46);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.38);
 
   /* Transitions */
   --transition-fast: 100ms ease;
@@ -120,7 +120,7 @@
   /* Layout */
   --max-width:        1280px;
   --max-width-narrow: 760px;
-  --header-height:    70px;
+  --header-height:    56px;
   --sidebar-width:    clamp(236px, 21vw, 308px);
   --sidebar-collapsed-width: clamp(48px, 4.2vw, 56px);
   --layout-edge:      clamp(12px, 1.8vw, 26px);
@@ -155,7 +155,7 @@
    CSS Custom Properties — Dark Mode
    ============================================================ */
 [data-theme="dark"] {
-  /* Keep dark-mode visually aligned to OpenAlex light styling */
+  /* OpenAlex-like light palette in dark mode (inverted behavior) */
   --color-bg:            #fafafa;
   --color-surface:       #ffffff;
   --color-surface-hover: #f5f5f5;
@@ -268,14 +268,14 @@ ul, ol {
   top: 0;
   z-index: var(--z-sticky);
   height: var(--header-height);
-  background: var(--color-surface);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   padding: 0 var(--space-6);
   gap: var(--space-4);
   transition: border-color var(--transition-base), background var(--transition-base);
-  backdrop-filter: none;
+  backdrop-filter: blur(8px);
 }
 
 .site-logo {
@@ -316,24 +316,18 @@ ul, ol {
 }
 
 .nav-link {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-muted);
-  padding: 6px 10px;
+  padding: 6px var(--space-3);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
 }
 
-.nav-link:hover {
+.nav-link:hover, .nav-link.active {
   color: var(--color-text);
   background: var(--color-surface-hover);
-  border-color: transparent;
-}
-
-.nav-link.active {
-  color: var(--color-text);
-  background: var(--color-surface);
   border-color: var(--color-border);
 }
 
@@ -345,16 +339,16 @@ ul, ol {
 }
 
 .header-action-btn {
-  height: 32px;
+  height: 34px;
   border-radius: var(--radius-md);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;
-  color: var(--color-text);
+  padding: 0 var(--space-3);
+  color: var(--color-text-muted);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  font-size: 13px;
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
   white-space: nowrap;
@@ -363,7 +357,7 @@ ul, ol {
 .header-action-btn:hover {
   color: var(--color-text);
   background: var(--color-surface-hover);
-  border-color: #d0d0d0;
+  border-color: var(--color-border-focus);
 }
 
 .header-action-btn.is-success {
@@ -405,12 +399,12 @@ ul, ol {
 }
 
 .share-option {
-  height: 32px;
+  height: 34px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: var(--color-surface-hover);
   color: var(--color-text);
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   padding: 0 var(--space-3);
   text-align: left;
@@ -422,8 +416,8 @@ ul, ol {
 
 .share-option:hover {
   color: var(--color-text);
-  background: var(--color-surface-hover);
-  border-color: #d0d0d0;
+  background: var(--color-surface);
+  border-color: var(--color-border-focus);
 }
 
 /* Mobile Navigation Menu */
@@ -434,17 +428,17 @@ ul, ol {
 }
 
 .mobile-nav-toggle {
-  height: 32px;
+  height: 34px;
   border-radius: var(--radius-md);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   padding: 0 var(--space-3);
-  color: var(--color-text);
+  color: var(--color-text-muted);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  font-size: 13px;
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
   white-space: nowrap;
@@ -458,7 +452,7 @@ ul, ol {
 .mobile-nav-toggle:hover {
   color: var(--color-text);
   background: var(--color-surface-hover);
-  border-color: #d0d0d0;
+  border-color: var(--color-border-focus);
 }
 
 .mobile-nav-menu.open .mobile-nav-toggle svg {
@@ -521,8 +515,8 @@ ul, ol {
 }
 
 .customization-toggle {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -539,7 +533,7 @@ ul, ol {
 .customization-menu.open .customization-toggle {
   color: var(--color-text);
   background: var(--color-surface-hover);
-  border-color: #d0d0d0;
+  border-color: var(--color-border-focus);
 }
 
 .customization-panel {
@@ -642,7 +636,7 @@ body.filter-collapsed .search-hero {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  box-shadow: none;
+  box-shadow: var(--shadow-sm);
   text-align: left;
   transition: max-width var(--transition-base);
 }
@@ -685,13 +679,13 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 
 .search-input {
   width: 100%;
-  height: 52px;
+  height: 44px;
   padding: 0 var(--space-4) 0 42px;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   color: var(--color-text);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-md);
   outline: none;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
   -webkit-appearance: none;
@@ -703,8 +697,8 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 
 .search-input:focus {
   background: var(--color-surface);
-  border-color: #000000;
-  box-shadow: none;
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-accent-bg);
 }
 
 .search-input::-webkit-search-cancel-button {
@@ -759,8 +753,8 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
   right: 0;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   z-index: var(--z-overlay);
   overflow: hidden;
   max-height: 360px;
@@ -1325,8 +1319,8 @@ body.filter-collapsed .filter-collapse-btn svg {
 }
 
 .talk-card:hover {
-  box-shadow: none;
-  border-color: #d0d0d0;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border);
   background: var(--color-surface-hover);
 }
 
@@ -1503,31 +1497,31 @@ body.filter-collapsed .filter-collapse-btn svg {
   gap: 5px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text);
+  color: var(--color-text-muted);
   padding: 4px var(--space-2);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: transparent;
   transition: all var(--transition-fast);
   text-decoration: none;
   line-height: 1;
 }
 
 .card-link-btn:hover {
-  color: var(--color-text);
-  border-color: #d0d0d0;
-  background: var(--color-surface-hover);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-accent-bg);
 }
 
 .card-link-btn--video {
-  color: #ffffff;
-  border-color: #000000;
-  background: #000000;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-accent-bg);
   font-weight: var(--font-weight-semi);
 }
 
 .card-link-btn--video:hover {
-  background: #333333;
+  background: var(--color-accent);
   color: #fff;
 }
 
@@ -1721,7 +1715,6 @@ body.filter-collapsed .filter-collapse-btn svg {
   white-space: nowrap;
   line-height: 1.4;
   letter-spacing: 0.01em;
-  border: 1px solid var(--color-border);
 }
 
 .badge-keynote       { background: var(--badge-keynote-bg);    color: var(--badge-keynote-text); }

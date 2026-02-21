@@ -1426,7 +1426,7 @@ function applyTheme(preference, persist = false) {
   const resolved = resolveTheme(pref);
   document.documentElement.setAttribute('data-theme', resolved);
   document.documentElement.setAttribute('data-theme-preference', pref);
-  document.documentElement.style.backgroundColor = '#fafafa';
+  document.documentElement.style.backgroundColor = resolved === 'dark' ? '#fafafa' : '#0b0d10';
   if (persist) localStorage.setItem(THEME_PREF_KEY, pref);
 }
 
