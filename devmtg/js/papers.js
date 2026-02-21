@@ -14,6 +14,14 @@ let debounceTimer = null;
 let searchMode = 'browse'; // 'browse' | 'exact' | 'fuzzy'
 let autocompleteIndex = { tags: [], speakers: [] };
 let dropdownActiveIdx = -1;
+const INITIAL_RENDER_BATCH_SIZE = 60;
+const RENDER_BATCH_SIZE = 40;
+const LOAD_MORE_ROOT_MARGIN = '900px 0px';
+let activeRenderResults = [];
+let activeRenderTokens = [];
+let renderedCount = 0;
+let loadMoreObserver = null;
+let loadMoreScrollHandler = null;
 
 const state = {
   query: '',
@@ -483,6 +491,99 @@ function renderPaperCard(paper, tokens) {
     </article>`;
 }
 
+function teardownInfiniteLoader() {
+  if (loadMoreObserver) {
+    loadMoreObserver.disconnect();
+    loadMoreObserver = null;
+  }
+
+  if (loadMoreScrollHandler) {
+    window.removeEventListener('scroll', loadMoreScrollHandler);
+    window.removeEventListener('resize', loadMoreScrollHandler);
+    loadMoreScrollHandler = null;
+  }
+
+  const sentinel = document.getElementById('papers-load-sentinel');
+  if (sentinel) sentinel.remove();
+}
+
+function ensureLoadMoreSentinel(grid) {
+  let sentinel = document.getElementById('papers-load-sentinel');
+  if (!sentinel) {
+    sentinel = document.createElement('div');
+    sentinel.id = 'papers-load-sentinel';
+    sentinel.setAttribute('aria-hidden', 'true');
+    sentinel.style.width = '100%';
+    sentinel.style.height = '1px';
+    sentinel.style.gridColumn = '1 / -1';
+  }
+  grid.appendChild(sentinel);
+  return sentinel;
+}
+
+function appendNextResultsBatch(forceBatchSize = RENDER_BATCH_SIZE) {
+  const grid = document.getElementById('papers-grid');
+  if (!grid) return;
+
+  if (!activeRenderResults.length || renderedCount >= activeRenderResults.length) {
+    teardownInfiniteLoader();
+    return;
+  }
+
+  const nextCount = Math.min(renderedCount + forceBatchSize, activeRenderResults.length);
+  const nextHtml = activeRenderResults
+    .slice(renderedCount, nextCount)
+    .map((paper) => renderPaperCard(paper, activeRenderTokens))
+    .join('');
+
+  grid.insertAdjacentHTML('beforeend', nextHtml);
+  renderedCount = nextCount;
+
+  if (renderedCount >= activeRenderResults.length) {
+    teardownInfiniteLoader();
+    return;
+  }
+
+  ensureLoadMoreSentinel(grid);
+}
+
+function setupInfiniteLoader() {
+  const grid = document.getElementById('papers-grid');
+  if (!grid) return;
+
+  teardownInfiniteLoader();
+  if (renderedCount >= activeRenderResults.length) return;
+
+  const sentinel = ensureLoadMoreSentinel(grid);
+
+  if ('IntersectionObserver' in window) {
+    loadMoreObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          appendNextResultsBatch();
+          break;
+        }
+      }
+    }, { root: null, rootMargin: LOAD_MORE_ROOT_MARGIN, threshold: 0 });
+
+    loadMoreObserver.observe(sentinel);
+    return;
+  }
+
+  loadMoreScrollHandler = () => {
+    const activeSentinel = document.getElementById('papers-load-sentinel');
+    if (!activeSentinel) return;
+    const rect = activeSentinel.getBoundingClientRect();
+    if (rect.top <= window.innerHeight + 900) {
+      appendNextResultsBatch();
+    }
+  };
+
+  window.addEventListener('scroll', loadMoreScrollHandler, { passive: true });
+  window.addEventListener('resize', loadMoreScrollHandler);
+  loadMoreScrollHandler();
+}
+
 function renderCards(results) {
   const grid = document.getElementById('papers-grid');
   if (!grid) return;
@@ -490,6 +591,11 @@ function renderCards(results) {
   grid.setAttribute('aria-busy', 'false');
 
   if (results.length === 0) {
+    teardownInfiniteLoader();
+    activeRenderResults = [];
+    activeRenderTokens = [];
+    renderedCount = 0;
+
     const query = state.query;
     const suggestions = autocompleteIndex.tags.slice(0, 6).map((tag) => tag.label);
     const recoveryActions = [];
@@ -551,7 +657,13 @@ function renderCards(results) {
   }
 
   const tokens = state.query.length >= 2 ? tokenize(state.query) : [];
-  grid.innerHTML = results.map((paper) => renderPaperCard(paper, tokens)).join('');
+  activeRenderResults = results;
+  activeRenderTokens = tokens;
+  renderedCount = 0;
+
+  grid.innerHTML = '';
+  appendNextResultsBatch(INITIAL_RENDER_BATCH_SIZE);
+  setupInfiniteLoader();
 }
 
 function renderResultCount(count) {
@@ -612,6 +724,11 @@ function updateHeroSubtitle(resultsCount) {
 function showError(html) {
   const grid = document.getElementById('papers-grid');
   if (!grid) return;
+
+  teardownInfiniteLoader();
+  activeRenderResults = [];
+  activeRenderTokens = [];
+  renderedCount = 0;
 
   grid.setAttribute('aria-busy', 'false');
   grid.innerHTML = `
