@@ -20,7 +20,9 @@ import datetime as _dt
 import hashlib
 import html
 import json
+import os
 import re
+import ssl
 import time
 import urllib.error
 import urllib.parse
@@ -68,6 +70,8 @@ ALLOWED_OPENALEX_TYPES = {
     "report",
 }
 
+URLLIB_SSL_CONTEXT: ssl.SSLContext | None = None
+
 
 def collapse_ws(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
@@ -97,6 +101,48 @@ def normalize_name(value: str) -> str:
 
 def normalize_title_key(title: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", title.lower()).strip()
+
+
+def configure_ssl_context(ca_bundle: str = "", no_verify_ssl: bool = False) -> None:
+    global URLLIB_SSL_CONTEXT
+    if no_verify_ssl:
+        URLLIB_SSL_CONTEXT = ssl._create_unverified_context()
+        return
+
+    bundle = collapse_ws(ca_bundle)
+    if not bundle:
+        try:
+            import certifi  # type: ignore
+
+            bundle = collapse_ws(str(certifi.where()))
+        except Exception:
+            bundle = ""
+
+    if not bundle:
+        URLLIB_SSL_CONTEXT = None
+        return
+
+    bundle_path = Path(bundle).expanduser().resolve()
+    if not bundle_path.exists():
+        raise SystemExit(f"CA bundle does not exist: {bundle_path}")
+    URLLIB_SSL_CONTEXT = ssl.create_default_context(cafile=str(bundle_path))
+
+
+def is_certificate_verify_error(exc: BaseException) -> bool:
+    reason = getattr(exc, "reason", exc)
+    text = str(reason or exc).lower()
+    return "certificate verify failed" in text
+
+
+def ssl_help_hint() -> str:
+    return (
+        "SSL certificate verification failed. "
+        "Try one of: "
+        "1) python3 -m pip install --user certifi, then rerun with "
+        "--ca-bundle \"$(python3 -c 'import certifi; print(certifi.where())')\" "
+        "2) pass a local trust store path via --ca-bundle "
+        "3) as last resort only, use --no-verify-ssl."
+    )
 
 
 def parse_all_tags(app_js_path: Path) -> list[str]:
@@ -224,7 +270,10 @@ def _http_get_json(url: str, timeout_s: int = 40, retries: int = 4):
 
     for attempt in range(1, retries + 1):
         try:
-            with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            open_kwargs = {"timeout": timeout_s}
+            if URLLIB_SSL_CONTEXT is not None:
+                open_kwargs["context"] = URLLIB_SSL_CONTEXT
+            with urllib.request.urlopen(req, **open_kwargs) as resp:
                 body = resp.read()
             return json.loads(body)
         except urllib.error.HTTPError as err:
@@ -232,6 +281,13 @@ def _http_get_json(url: str, timeout_s: int = 40, retries: int = 4):
                 retry_after = err.headers.get("Retry-After")
                 delay = float(retry_after) if retry_after and retry_after.isdigit() else 1.5 * attempt
                 time.sleep(delay)
+                continue
+            raise
+        except urllib.error.URLError as err:
+            if is_certificate_verify_error(err):
+                raise RuntimeError(ssl_help_hint()) from err
+            if attempt < retries:
+                time.sleep(1.2 * attempt)
                 continue
             raise
         except Exception:
@@ -531,20 +587,36 @@ def match_focus_terms(text: str) -> bool:
     return False
 
 
-def update_manifest(index_path: Path, output_bundle_name: str, data_version: str):
+def update_manifest(
+    index_path: Path,
+    output_bundle_name: str,
+    data_version: str,
+    force_bump_data_version: bool = False,
+) -> tuple[bool, str]:
     payload = {}
     if index_path.exists():
         payload = json.loads(index_path.read_text(encoding="utf-8"))
 
+    changed = False
     files = payload.get("paperFiles") or payload.get("files") or []
     files = [collapse_ws(str(f)) for f in files if collapse_ws(str(f))]
+    files_before = list(files)
     if output_bundle_name not in files:
         files.append(output_bundle_name)
+    if files != files_before:
+        changed = True
 
     payload["paperFiles"] = files
     payload.pop("files", None)
-    payload["dataVersion"] = data_version
-    index_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    should_bump = force_bump_data_version or (files != files_before)
+    if should_bump and payload.get("dataVersion") != data_version:
+        payload["dataVersion"] = data_version
+        changed = True
+
+    if changed:
+        index_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return changed, collapse_ws(str(payload.get("dataVersion", "")))
 
 
 def main() -> int:
@@ -565,6 +637,8 @@ def main() -> int:
     parser.add_argument("--extra-authors-file", default="")
     parser.add_argument("--extra-author", action="append", default=[])
     parser.add_argument("--skip-author-queries", action="store_true")
+    parser.add_argument("--ca-bundle", default="")
+    parser.add_argument("--no-verify-ssl", action="store_true", help="Disable TLS certificate verification")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--no-cache", action="store_true")
     args = parser.parse_args()
@@ -577,6 +651,8 @@ def main() -> int:
     output_bundle_path = papers_dir / output_bundle_name
     cache_dir = Path(args.cache_dir).resolve()
     extra_authors_file = Path(args.extra_authors_file).resolve() if args.extra_authors_file else None
+    ca_bundle = args.ca_bundle or os.environ.get("SSL_CERT_FILE", "")
+    configure_ssl_context(ca_bundle=ca_bundle, no_verify_ssl=args.no_verify_ssl)
 
     manifest_files = parse_manifest_paper_files(index_json)
     tags = parse_all_tags(app_js)
@@ -777,10 +853,19 @@ def main() -> int:
         },
         "papers": out_papers,
     }
-    output_bundle_path.write_text(json.dumps(bundle, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    new_bundle_text = json.dumps(bundle, indent=2, ensure_ascii=False) + "\n"
+    existing_bundle_text = output_bundle_path.read_text(encoding="utf-8") if output_bundle_path.exists() else ""
+    bundle_changed = existing_bundle_text != new_bundle_text
+    if bundle_changed:
+        output_bundle_path.write_text(new_bundle_text, encoding="utf-8")
 
     data_version = _dt.date.today().isoformat() + "-llvm-org-pubs-plus-openalex"
-    update_manifest(index_json, output_bundle_name, data_version)
+    manifest_changed, effective_data_version = update_manifest(
+        index_json,
+        output_bundle_name,
+        data_version,
+        force_bump_data_version=bundle_changed,
+    )
 
     print(f"Seed authors: {len(seed_authors)}")
     print(f"Extra author seeds loaded: {len(extra_authors)} (new seed authors: {added_seed_authors})")
@@ -788,7 +873,9 @@ def main() -> int:
     print(f"OpenAlex requests: {total_requests}")
     print(f"Unique works fetched: {len(all_works)}")
     print(f"Discovered papers written: {len(out_papers)} -> {output_bundle_path}")
-    print(f"Updated manifest: {index_json} (dataVersion={data_version})")
+    print(f"Bundle changed: {'yes' if bundle_changed else 'no'}")
+    print(f"Manifest changed: {'yes' if manifest_changed else 'no'}")
+    print(f"Manifest dataVersion: {effective_data_version or '(unchanged)'}")
     return 0
 
 

@@ -40,16 +40,15 @@
       "paperUrl": "https://arxiv.org/pdf/2601.09583",
       "sourceUrl": "http://arxiv.org/abs/2601.09583",
       "tags": [
-        "Optimizations",
+        "MLIR",
         "IR",
-        "Testing",
-        "MLIR"
+        "Optimizations",
+        "Testing"
       ],
       "keywords": [
-        "Optimizations",
-        "IR",
-        "Testing",
         "MLIR",
+        "Optimizations",
+        "Testing",
         "Intermediate Representation",
         "Fuzzing",
         "Differential Testing",
@@ -95,12 +94,12 @@
       "paperUrl": "https://doi.org/10.48550/arxiv.2601.18445",
       "sourceUrl": "",
       "tags": [
-        "Static Analysis",
-        "MLIR"
+        "MLIR",
+        "Static Analysis"
       ],
       "keywords": [
-        "Static Analysis",
         "MLIR",
+        "Static Analysis",
         "Dataflow Analysis",
         "Memory Reduction",
         "Keymemrt Compiler",
@@ -139,15 +138,15 @@
       "paperUrl": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/spe.70056",
       "sourceUrl": "https://doi.org/10.1002/spe.70056",
       "tags": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "Swift"
       ],
       "keywords": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "Swift",
         "Binary Floating Point",
         "Floating Point Numbers",
@@ -236,21 +235,21 @@
       "paperUrl": "https://doi.org/10.1145/3736729",
       "sourceUrl": "",
       "tags": [
+        "Optimizations",
+        "Testing",
         "Security",
         "Performance",
-        "Optimizations",
         "Embedded",
         "Programming Languages",
-        "Testing",
         "Rust"
       ],
       "keywords": [
+        "Optimizations",
+        "Testing",
         "Security",
         "Performance",
-        "Optimizations",
         "Embedded",
         "Programming Languages",
-        "Testing",
         "Rust",
         "Sanitizers",
         "Memory Safety",
@@ -308,15 +307,16 @@
       "paperUrl": "https://doi.org/10.1145/3755881.3755918",
       "sourceUrl": "",
       "tags": [
-        "Security",
+        "LLVM",
         "Testing",
+        "Security",
         "Infrastructure"
       ],
       "keywords": [
-        "Security",
-        "Testing",
-        "Infrastructure",
         "LLVM",
+        "Testing",
+        "Security",
+        "Infrastructure",
         "Sanitizers",
         "Memory Safety",
         "Tech Asan Two",
@@ -383,21 +383,22 @@
       "paperUrl": "https://arxiv.org/pdf/2512.22168",
       "sourceUrl": "http://arxiv.org/abs/2512.22168",
       "tags": [
+        "MLIR",
         "Backend",
-        "Performance",
+        "Code Generation",
         "Optimizations",
-        "GPU",
+        "Performance",
         "Libraries",
-        "MLIR"
+        "GPU"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "GPU",
-        "Libraries",
         "MLIR",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Performance",
+        "Libraries",
+        "GPU",
         "Spatial Dataflow Architectures",
         "Memory",
         "Spatial Dataflow Accelerators",
@@ -440,13 +441,14 @@
       "paperUrl": "https://arxiv.org/pdf/2510.13184",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2510.13184",
       "tags": [
-        "Performance",
-        "Optimizations"
+        "LLVM",
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "LLVM",
+        "Optimizations",
+        "Performance",
         "Pass Pipelines",
         "Compiler Auto Tuning",
         "LLVM Pass Pipelines",
@@ -485,16 +487,16 @@
       "paperUrl": "https://arxiv.org/pdf/2502.10254",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2502.10254",
       "tags": [
-        "Performance",
-        "AI",
+        "MLIR",
         "Flang",
-        "MLIR"
+        "Performance",
+        "AI"
       ],
       "keywords": [
+        "MLIR",
+        "Flang",
         "Performance",
         "AI",
-        "Flang",
-        "MLIR",
         "Fortran Intrinsics",
         "Provide Significant",
         "Major Challenge",
@@ -524,14 +526,15 @@
       "paperUrl": "https://hdl.handle.net/2117/454306",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
+        "OpenMP",
         "Optimizations",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Optimizations",
-        "ML",
         "MLIR",
+        "OpenMP",
+        "Optimizations",
         "Synthesis",
         "HLS",
         "Automated Fpga Asic",
@@ -581,18 +584,17 @@
       "paperUrl": "https://link.springer.com/content/pdf/10.1007/s11227-024-06892-2.pdf",
       "sourceUrl": "https://doi.org/10.1007/s11227-024-06892-2",
       "tags": [
-        "Optimizations",
+        "MLIR",
         "IR",
+        "Optimizations",
         "Programming Languages",
-        "Quantum Computing",
-        "MLIR"
+        "Quantum Computing"
       ],
       "keywords": [
+        "MLIR",
         "Optimizations",
-        "IR",
         "Programming Languages",
         "Quantum Computing",
-        "MLIR",
         "Intermediate Representation",
         "Quantum Compilation",
         "Distributed Quantum Computing",
@@ -665,16 +667,18 @@
       "paperUrl": "https://arxiv.org/pdf/2511.01183",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2511.01183",
       "tags": [
-        "Performance",
         "Clang",
+        "IR",
         "Optimizations",
-        "IR"
+        "Performance",
+        "AArch64"
       ],
       "keywords": [
-        "Performance",
         "Clang",
-        "Optimizations",
         "IR",
+        "Optimizations",
+        "Performance",
+        "AArch64",
         "Neural Compilation",
         "Llm Generated Assembly",
         "Neucomback Self Evolving",
@@ -720,17 +724,18 @@
       "paperUrl": "https://arxiv.org/pdf/2512.00487",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2512.00487",
       "tags": [
-        "Performance",
+        "LLVM",
         "Optimizations",
-        "GPU",
-        "Libraries"
+        "Performance",
+        "Libraries",
+        "GPU"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "GPU",
-        "Libraries",
         "LLVM",
+        "Optimizations",
+        "Performance",
+        "Libraries",
+        "GPU",
         "Offloading",
         "Binary Translation",
         "Partial Cross Compilation",
@@ -766,13 +771,15 @@
       "paperUrl": "https://doi.org/10.1145/3774949.3774956",
       "sourceUrl": "",
       "tags": [
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Performance",
         "GPU"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Performance",
         "GPU",
         "Offloading",
         "OpenMP Offloading",
@@ -815,18 +822,18 @@
       "paperUrl": "https://arxiv.org/pdf/2512.17616",
       "sourceUrl": "http://arxiv.org/abs/2512.17616",
       "tags": [
-        "Performance",
         "Clang",
         "Optimizations",
-        "Programming Languages",
-        "Testing"
+        "Testing",
+        "Performance",
+        "Programming Languages"
       ],
       "keywords": [
-        "Performance",
         "Clang",
         "Optimizations",
-        "Programming Languages",
         "Testing",
+        "Performance",
+        "Programming Languages",
         "Fuzzing",
         "GCC",
         "Studies",
@@ -866,7 +873,9 @@
       "abstract": "Compilers are essential to software systems, and their bugs can propagate to dependent software. Ensuring compiler correctness is critical. However, isolating compiler bugs remains challenging due to the internal complexity of compiler execution. Existing techniques primarily mutate compilation inputs to generate passing and failing tests, but often lack causal analysis of internal steps, limiting their effectiveness. To address this limitation, we propose CompSCAN, a novel compiler bug isolation technique that applies analysis over the sequence of compilation steps. CompSCAN follows a three-stage process: (1) extracting the array of compilation steps that leads to the original failure, (2) identifying bug-causing steps and collecting corresponding compiler code elements, and (3) calculating suspicious scores for each code element and outputting a suspicious ranking list as the bug isolation result. We evaluate CompSCAN on 185 real-world LLVM and GCC bugs. Results show that CompSCAN outperforms state-of-the-art techniques in both effectiveness and efficiency. CompSCAN successfully isolates 50, 85, 100, and 123 bugs within the Top-1/3/5/10 ranks, respectively. Compared with ETEM and ODFL, two state-of-the-art compiler bug isolation techniques, CompSCAN achieves relative improvements of 44.51% / 50.18% / 36.24% / 24.49% over ETEM, and 31.58% / 49.12% / 44.93% / 21.78% over ODFL on those metrics. Moreover, CompSCAN runs faster on average per bug than both baselines.",
       "paperUrl": "https://arxiv.org/pdf/2510.13128",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2510.13128",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Compscan",
@@ -918,16 +927,14 @@
       "paperUrl": "https://doi.org/10.1109/ase63991.2025.00196",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "IR",
         "Testing",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "IR",
-        "Testing",
-        "ML",
         "MLIR",
+        "Testing",
         "Intermediate Representation",
         "Fuzzing",
         "Self Adaptive Fuzz",
@@ -1027,18 +1034,18 @@
       "paperUrl": "https://arxiv.org/pdf/2506.02290",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2506.02290",
       "tags": [
+        "MLIR",
         "Frontend",
-        "Performance",
         "Optimizations",
         "Loop transformations",
-        "MLIR"
+        "Performance"
       ],
       "keywords": [
+        "MLIR",
         "Frontend",
-        "Performance",
         "Optimizations",
         "Loop transformations",
-        "MLIR",
+        "Performance",
         "Loop Optimization",
         "Formal Verification",
         "Hec Equivalence Verification",
@@ -1079,14 +1086,13 @@
       "paperUrl": "https://doi.org/10.1145/3658617.3697563",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "Performance",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "ML",
         "MLIR",
+        "Performance",
         "Complex Loop Structures",
         "Dataflow Oriented CGRA",
         "Hierarchical Dataflow Oriented",
@@ -1186,17 +1192,18 @@
       "paperUrl": "https://arxiv.org/pdf/2510.13176",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2510.13176",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "LLVM",
         "IR",
+        "Optimizations",
+        "Performance",
         "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "ML",
         "LLVM",
+        "IR",
+        "Optimizations",
+        "Performance",
+        "ML",
         "Intermediate Representation",
         "LLVM IR Instruction",
         "Compiler Auto Tuning",
@@ -1260,13 +1267,13 @@
       "sourceUrl": "",
       "tags": [
         "Clang",
-        "Programming Languages",
-        "Testing"
+        "Testing",
+        "Programming Languages"
       ],
       "keywords": [
         "Clang",
-        "Programming Languages",
         "Testing",
+        "Programming Languages",
         "Type Inference",
         "Fuzzing",
         "Differential Testing",
@@ -1312,12 +1319,12 @@
       "paperUrl": "https://doi.org/10.1109/ase63991.2025.00059",
       "sourceUrl": "",
       "tags": [
-        "Infrastructure",
-        "MLIR"
+        "MLIR",
+        "Infrastructure"
       ],
       "keywords": [
-        "Infrastructure",
         "MLIR",
+        "Infrastructure",
         "MLIR Infrastructure",
         "MLIR Compiler Infrastructure",
         "Valid Lowering Paths",
@@ -1352,18 +1359,18 @@
       "paperUrl": "https://doi.org/10.1145/3720422",
       "sourceUrl": "",
       "tags": [
-        "Frontend",
         "Clang",
+        "Frontend",
         "Static Analysis",
-        "Programming Languages",
-        "Libraries"
+        "Libraries",
+        "Programming Languages"
       ],
       "keywords": [
-        "Frontend",
         "Clang",
+        "Frontend",
         "Static Analysis",
-        "Programming Languages",
         "Libraries",
+        "Programming Languages",
         "Fast Constraint Synthesis",
         "Templates",
         "Library",
@@ -1401,14 +1408,16 @@
       "paperUrl": "https://doi.org/10.1007/978-3-031-90203-1_36",
       "sourceUrl": "",
       "tags": [
-        "GPU",
+        "MLIR",
+        "OpenMP",
         "Autovectorization",
-        "MLIR"
+        "GPU"
       ],
       "keywords": [
-        "GPU",
-        "Autovectorization",
         "MLIR",
+        "OpenMP",
+        "Autovectorization",
+        "GPU",
         "SIMD",
         "Generate OpenMP Simd",
         "Extending Polygeist"
@@ -1436,30 +1445,30 @@
       "paperUrl": "https://doi.org/10.30574/ijsra.2025.16.2.2463",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Optimizations",
-        "GPU",
+        "MLIR",
         "IR",
-        "AI",
+        "Optimizations",
+        "Performance",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "GPU",
+        "AI",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "GPU",
-        "IR",
-        "AI",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
+        "GPU",
+        "AI",
         "Intermediate Representation",
         "Heterogeneous Computing",
         "Hardware",
         "Hardware Specific",
         "Machine Learning Workflows",
-        "Compiler Infrastructures"
+        "Compiler Infrastructures",
+        "ML Frameworks",
+        "ML Workloads"
       ],
       "matchedAuthors": [
         "A.K. Tyagi"
@@ -1492,13 +1501,14 @@
       "paperUrl": "https://arxiv.org/pdf/2501.11207",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2501.11207",
       "tags": [
+        "LLVM",
         "Performance",
         "Embedded"
       ],
       "keywords": [
+        "LLVM",
         "Performance",
         "Embedded",
-        "LLVM",
         "Control Flow Attestation",
         "Measurement",
         "Hardware"
@@ -1542,16 +1552,16 @@
       "paperUrl": "https://doi.org/10.1109/iccad66269.2025.11240863",
       "sourceUrl": "",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
         "Autovectorization",
-        "MLIR"
+        "Performance"
       ],
       "keywords": [
-        "Performance",
+        "MLIR",
         "Optimizations",
         "Autovectorization",
-        "MLIR",
+        "Performance",
         "Vector Dataflow Execution",
         "Dynvec",
         "Control Flow",
@@ -1595,12 +1605,12 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3735654.3735943",
       "sourceUrl": "https://doi.org/10.1145/3735654.3735943",
       "tags": [
-        "Optimizations",
-        "MLIR"
+        "MLIR",
+        "Optimizations"
       ],
       "keywords": [
-        "Optimizations",
         "MLIR",
+        "Optimizations",
         "Database Automatic Differentiation",
         "Forward",
         "Reverse Mode",
@@ -1658,11 +1668,10 @@
       "paperUrl": "https://doi.org/10.1145/3731599.3767484",
       "sourceUrl": "",
       "tags": [
-        "IR",
-        "MLIR"
+        "MLIR",
+        "IR"
       ],
       "keywords": [
-        "IR",
         "MLIR",
         "Intermediate Representation",
         "Distributed Sparse Tensor",
@@ -1697,14 +1706,14 @@
       "paperUrl": "https://doi.org/10.1145/3696443.3708957",
       "sourceUrl": "",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "MLIR"
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "MLIR Constructs",
         "Equality Saturation",
         "Egglog",
@@ -1810,15 +1819,16 @@
       "paperUrl": "https://arxiv.org/pdf/2501.04183",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2501.04183",
       "tags": [
-        "Performance",
+        "LLVM",
         "IR",
+        "Performance",
         "Libraries"
       ],
       "keywords": [
-        "Performance",
-        "IR",
-        "Libraries",
         "LLVM",
+        "IR",
+        "Performance",
+        "Libraries",
         "Constant",
         "Retdec",
         "Binary",
@@ -1864,18 +1874,18 @@
       "paperUrl": "https://doi.org/10.1145/3669940.3707271",
       "sourceUrl": "",
       "tags": [
-        "Optimizations",
         "LLDB",
+        "Optimizations",
+        "Debug Information",
         "Testing",
-        "Infrastructure",
-        "Debug Information"
+        "Infrastructure"
       ],
       "keywords": [
-        "Optimizations",
         "LLDB",
+        "Optimizations",
+        "Debug Information",
         "Testing",
         "Infrastructure",
-        "Debug Information",
         "Debugger Toolchains",
         "Debugging Unoptimized Executables",
         "Traces Obtained",
@@ -1931,18 +1941,17 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3735452.3735527",
       "sourceUrl": "https://doi.org/10.1145/3735452.3735527",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "Infrastructure",
-        "MLIR"
+        "Optimizations",
+        "Performance",
+        "Infrastructure"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "Infrastructure",
         "MLIR",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
         "Intermediate Representation",
         "Domain Specific Language",
         "Digital Signal Processing",
@@ -1991,29 +2000,29 @@
       "paperUrl": "https://doi.org/10.1145/3763161",
       "sourceUrl": "",
       "tags": [
-        "Optimizations",
+        "MLIR",
         "IR",
-        "Programming Languages",
+        "Optimizations",
         "Testing",
         "Infrastructure",
         "ML",
-        "MLIR"
+        "Programming Languages"
       ],
       "keywords": [
+        "MLIR",
         "Optimizations",
-        "IR",
-        "Programming Languages",
         "Testing",
         "Infrastructure",
-        "ML",
-        "MLIR",
+        "Programming Languages",
         "Intermediate Representation",
         "Fuzzing",
         "Differential Testing",
         "MLIR Compiler",
         "Detecting Silent Bugs",
         "MLIR Compiler Infrastructure",
-        "Executable Form"
+        "Executable Form",
+        "Given MLIR Program",
+        "Silent Bug Detection"
       ],
       "matchedAuthors": [
         "Chenyao Suo",
@@ -2052,13 +2061,13 @@
       "paperUrl": "https://doi.org/10.1109/icaace65325.2025.11020079",
       "sourceUrl": "",
       "tags": [
-        "Security",
         "Clang",
+        "Security",
         "ML"
       ],
       "keywords": [
-        "Security",
         "Clang",
+        "Security",
         "ML",
         "Binary",
         "Similarity Detection",
@@ -2144,18 +2153,17 @@
       "paperUrl": "https://doi.org/10.1145/3696443.3708916",
       "sourceUrl": "",
       "tags": [
-        "Optimizations",
-        "GPU",
+        "MLIR",
         "IR",
+        "Optimizations",
         "Infrastructure",
-        "MLIR"
+        "GPU"
       ],
       "keywords": [
-        "Optimizations",
-        "GPU",
-        "IR",
-        "Infrastructure",
         "MLIR",
+        "Optimizations",
+        "Infrastructure",
+        "GPU",
         "Intermediate Representation",
         "Domain Specific Architecture",
         "Efficiency",
@@ -2199,20 +2207,19 @@
       "paperUrl": "https://doi.org/10.23919/date64628.2025.10993207",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "AI",
+        "Optimizations",
+        "Performance",
         "Infrastructure",
-        "MLIR"
+        "AI"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "AI",
-        "Infrastructure",
         "MLIR",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
+        "AI",
         "Intermediate Representation",
         "Biochemical Computing",
         "Chemical Reaction Networks",
@@ -2250,14 +2257,15 @@
       "paperUrl": "https://doi.org/10.1145/3731599.3767369",
       "sourceUrl": "",
       "tags": [
-        "Performance",
         "Clang",
+        "Performance",
         "GPU",
-        "CUDA"
+        "CUDA",
+        "HIP"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "Performance",
         "GPU",
         "CUDA",
         "HIP",
@@ -2294,14 +2302,14 @@
       "paperUrl": "https://arxiv.org/pdf/2512.05887",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2512.05887",
       "tags": [
+        "MLIR",
         "Testing",
-        "Infrastructure",
-        "MLIR"
+        "Infrastructure"
       ],
       "keywords": [
+        "MLIR",
         "Testing",
         "Infrastructure",
-        "MLIR",
         "Fuzzing",
         "Resource Language Dialects",
         "Coverage Guided",
@@ -2338,14 +2346,14 @@
       "paperUrl": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/cpe.70199",
       "sourceUrl": "https://doi.org/10.1002/cpe.70199",
       "tags": [
-        "Performance",
         "Clang",
+        "Performance",
         "GPU",
         "Programming Languages"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "Performance",
         "GPU",
         "Programming Languages",
         "Offloading",
@@ -2387,18 +2395,19 @@
       "paperUrl": "https://doi.org/10.1145/3731599.3767485",
       "sourceUrl": "",
       "tags": [
-        "GPU",
+        "MLIR",
         "Flang",
-        "MLIR"
+        "OpenMP",
+        "GPU"
       ],
       "keywords": [
-        "GPU",
-        "Flang",
         "MLIR",
+        "Flang",
+        "OpenMP",
+        "GPU",
         "Offloading",
         "Heterogeneous Computing",
         "MLIR Ecosystem",
-        "OpenMP",
         "Offloading Fortran",
         "MLIR Pipeline"
       ],
@@ -2438,12 +2447,12 @@
       "paperUrl": "https://arxiv.org/pdf/2505.07208",
       "sourceUrl": "https://doi.org/10.18154/rwth-2025-05736",
       "tags": [
-        "Performance",
-        "Clang"
+        "Clang",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "Performance",
         "Performance Metric",
         "Execution Paths",
         "Performance Estimation"
@@ -2489,11 +2498,12 @@
       "paperUrl": "https://arxiv.org/pdf/2508.15386",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2508.15386",
       "tags": [
+        "LLVM",
         "Security"
       ],
       "keywords": [
-        "Security",
         "LLVM",
+        "Security",
         "CFI",
         "Control Flow Integrity",
         "Memory Corruption"
@@ -2529,16 +2539,16 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3746709.3746950",
       "sourceUrl": "https://doi.org/10.1145/3746709.3746950",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "Quantum Computing",
-        "MLIR"
+        "Performance",
+        "Quantum Computing"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "Quantum Computing",
         "MLIR",
+        "Optimizations",
+        "Performance",
+        "Quantum Computing",
         "Quantum Compilation",
         "Quantum Compilation Optimization",
         "D3qn",
@@ -2588,14 +2598,14 @@
       "paperUrl": "https://doi.org/10.1145/3777905",
       "sourceUrl": "",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "MLIR"
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Patterns",
         "Pattern Generation Language",
         "Pattern Matching",
@@ -2640,16 +2650,15 @@
       "paperUrl": "https://doi.org/10.1109/cscwd64889.2025.11033468",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "MLIR"
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Intermediate Representation",
         "Scale HPC",
         "Performance Computing HPC",
@@ -2693,16 +2702,16 @@
       "paperUrl": "https://doi.org/10.1145/3731599.3767411",
       "sourceUrl": "",
       "tags": [
-        "Performance",
         "Clang",
-        "AI",
-        "Infrastructure"
+        "Performance",
+        "Infrastructure",
+        "AI"
       ],
       "keywords": [
-        "Performance",
         "Clang",
-        "AI",
+        "Performance",
         "Infrastructure",
+        "AI",
         "Compute Graph Simulation",
         "Targeting Amd Versal"
       ],
@@ -2749,13 +2758,14 @@
       "paperUrl": "https://arxiv.org/pdf/2407.02818",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2407.02818",
       "tags": [
+        "LLVM",
         "IR",
         "Testing"
       ],
       "keywords": [
+        "LLVM",
         "IR",
         "Testing",
-        "LLVM",
         "Wizardmerge Save",
         "Conflicts",
         "Version",
@@ -2801,16 +2811,16 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3658644.3670372",
       "sourceUrl": "https://doi.org/10.1145/3658644.3670372",
       "tags": [
-        "Performance",
-        "Clang",
-        "Optimizations",
-        "Dynamic Analysis"
-      ],
-      "keywords": [
-        "Performance",
         "Clang",
         "Optimizations",
         "Dynamic Analysis",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Optimizations",
+        "Dynamic Analysis",
+        "Performance",
         "Symbolic Execution",
         "Compiler Optimizations Meet",
         "Meet Symbolic Execution",
@@ -2844,13 +2854,14 @@
       "paperUrl": "https://arxiv.org/pdf/2401.09474",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2401.09474",
       "tags": [
+        "LLVM",
         "Testing",
         "Infrastructure"
       ],
       "keywords": [
+        "LLVM",
         "Testing",
         "Infrastructure",
-        "LLVM",
         "Weak Memory Demands",
         "Compiler Testing",
         "Behaviour",
@@ -2887,16 +2898,15 @@
       "paperUrl": "https://doi.org/10.1109/hpcc64274.2024.00024",
       "sourceUrl": "",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "ML",
-        "MLIR"
+        "Performance",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Parallel Computing",
         "Core Vector Accelerators",
         "Multi Core Vector",
@@ -2940,7 +2950,9 @@
       "abstract": "Open-World Compositional Zero-Shot Learning (OW-CZSL) addresses the challenge of recognizing novel compositions of known primitives and entities. Even though prior works utilize language knowledge for recognition, such approaches exhibit limited interactions between language-image modalities. Our approach primarily focuses on enhancing the inter-modality interactions through fostering richer interactions between image and textual data. Additionally, we introduce a novel module aimed at alleviating the computational burden associated with exhaustive exploration of all possible compositions during the inference stage. While previous methods exclusively learn compositions jointly or independently, we introduce an advanced hybrid procedure that leverages both learning mechanisms to generate final predictions. Our proposed model, achieves state-of-the-art in OW-CZSL in three datasets, while surpassing Large Vision Language Models (LLVM) in two datasets.",
       "paperUrl": "https://arxiv.org/pdf/2412.04083",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2412.04083",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Compositional Zero Shot",
@@ -2992,28 +3004,29 @@
       "paperUrl": "https://doi.org/10.1145/3691620.3695002",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
+        "IR",
         "Backend",
         "Frontend",
+        "Code Generation",
         "Optimizations",
-        "IR",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
         "Frontend",
-        "Optimizations",
-        "IR",
-        "ML",
-        "MLIR",
-        "Intermediate Representation",
         "Code Generation",
+        "Optimizations",
+        "Intermediate Representation",
         "Unified MLIR Frontend",
         "Ufront",
         "Compatibility",
         "Compilation",
         "Frameworks",
-        "MLIR Frontends"
+        "MLIR Frontends",
+        "Operator",
+        "Written"
       ],
       "matchedAuthors": [
         "Heng Shi",
@@ -3051,15 +3064,16 @@
       "paperUrl": "https://arxiv.org/pdf/2407.07166",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2407.07166",
       "tags": [
-        "Security",
-        "Static Analysis",
-        "Dynamic Analysis"
-      ],
-      "keywords": [
-        "Security",
+        "LLVM",
         "Static Analysis",
         "Dynamic Analysis",
+        "Security"
+      ],
+      "keywords": [
         "LLVM",
+        "Static Analysis",
+        "Dynamic Analysis",
+        "Security",
         "Symbolic Execution",
         "Uefi Vulnerability Signature",
         "Vulnerabilities",
@@ -3095,13 +3109,15 @@
       "paperUrl": "https://arxiv.org/pdf/2401.04538",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2401.04538",
       "tags": [
-        "Optimizations",
-        "Testing"
-      ],
-      "keywords": [
+        "LLVM",
         "Optimizations",
         "Testing",
+        "Sanitizers"
+      ],
+      "keywords": [
         "LLVM",
+        "Optimizations",
+        "Testing",
         "Sanitizers",
         "Differential Testing",
         "Ubfuzz Finding Bugs",
@@ -3147,7 +3163,9 @@
       "abstract": "Large language and vision models (LLVMs) have been driven by the generalization power of large language models (LLMs) and the advent of visual instruction tuning. Along with scaling them up directly, these models enable LLVMs to showcase powerful vision language (VL) performances by covering diverse tasks via natural language instructions. However, existing open-source LLVMs that perform comparably to closed-source LLVMs such as GPT-4V are often considered too large (e.g., 26B, 34B, and 110B parameters), having a larger number of layers. These large models demand costly, high-end resources for both training and inference. To address this issue, we present a new efficient LLVM family with 1.8B, 3.8B, and 7B LLM model sizes, Traversal of Layers (TroL), which enables the reuse of layers in a token-wise manner. This layer traversing technique simulates the effect of looking back and retracing the answering stream while increasing the number of forward propagation layers without physically adding more layers. We demonstrate that TroL employs a simple layer traversing approach yet efficiently outperforms the open-source LLVMs with larger model sizes and rivals the performances of the closed-source LLVMs with substantial sizes.",
       "paperUrl": "https://arxiv.org/pdf/2406.12246",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2406.12246",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Layers",
@@ -3193,17 +3211,18 @@
       "paperUrl": "https://www.osti.gov/biblio/2430019",
       "sourceUrl": "https://doi.org/10.2172/2430019",
       "tags": [
+        "LLVM",
         "Optimizations",
-        "GPU",
         "Infrastructure",
+        "GPU",
         "ML"
       ],
       "keywords": [
-        "Optimizations",
-        "GPU",
-        "Infrastructure",
-        "ML",
         "LLVM",
+        "Optimizations",
+        "Infrastructure",
+        "GPU",
+        "ML",
         "Mode Automatic Differentiation",
         "Kokkos",
         "Scientific Simulations",
@@ -3244,17 +3263,18 @@
       "paperUrl": "https://arxiv.org/pdf/2411.18682",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2411.18682",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "LLVM",
         "IR",
+        "Optimizations",
+        "Performance",
         "Infrastructure"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "Infrastructure",
         "LLVM",
+        "IR",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
         "Intermediate Representation",
         "Quantum Intermediate Representation",
         "Classical",
@@ -3326,22 +3346,20 @@
       "paperUrl": "https://doi.org/10.1109/asp-dac58780.2024.10473980",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
+        "IR",
         "Backend",
         "Frontend",
         "Optimizations",
-        "IR",
         "AI",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
         "Frontend",
         "Optimizations",
-        "IR",
         "AI",
-        "ML",
-        "MLIR",
         "Intermediate Representation",
         "Accelerators",
         "Soda Synthesizer",
@@ -3388,19 +3406,19 @@
       "paperUrl": "https://ieeexplore.ieee.org/ielx7/6287639/6514899/10401926.pdf",
       "sourceUrl": "https://doi.org/10.1109/access.2024.3355098",
       "tags": [
+        "Clang",
         "Backend",
         "Security",
-        "Clang",
-        "Programming Languages",
         "Infrastructure",
+        "Programming Languages",
         "Rust"
       ],
       "keywords": [
+        "Clang",
         "Backend",
         "Security",
-        "Clang",
-        "Programming Languages",
         "Infrastructure",
+        "Programming Languages",
         "Rust",
         "Emerging Compilation Toolchains",
         "Inference",
@@ -3512,17 +3530,18 @@
       "paperUrl": "https://arxiv.org/pdf/2410.14025",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2410.14025",
       "tags": [
-        "Performance",
         "Clang",
-        "Programming Languages",
-        "Libraries"
+        "Instruction Selection",
+        "Performance",
+        "Libraries",
+        "Programming Languages"
       ],
       "keywords": [
-        "Performance",
         "Clang",
-        "Programming Languages",
-        "Libraries",
         "Instruction Selection",
+        "Performance",
+        "Libraries",
+        "Programming Languages",
         "Accuracy",
         "Target Aware",
         "Chassis",
@@ -3567,13 +3586,14 @@
       "paperUrl": "https://arxiv.org/pdf/2411.13854",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2411.13854",
       "tags": [
-        "Static Analysis",
-        "IR"
+        "LLVM",
+        "IR",
+        "Static Analysis"
       ],
       "keywords": [
-        "Static Analysis",
-        "IR",
         "LLVM",
+        "IR",
+        "Static Analysis",
         "Intermediate Representation",
         "Control Flow Graph",
         "Reuse Profile Estimation",
@@ -3616,13 +3636,14 @@
       "paperUrl": "https://arxiv.org/pdf/2406.02023",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2406.02023",
       "tags": [
-        "Security",
-        "Optimizations"
+        "LLVM",
+        "Optimizations",
+        "Security"
       ],
       "keywords": [
-        "Security",
-        "Optimizations",
         "LLVM",
+        "Optimizations",
+        "Security",
         "Memory Safety",
         "Heap Memory Protection",
         "Shadowbound",
@@ -3677,20 +3698,20 @@
       "paperUrl": "https://doi.org/10.1109/hpca57654.2024.00016",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "Backend",
+        "Autovectorization",
         "Performance",
         "GPU",
-        "Autovectorization",
-        "Programming Languages",
-        "MLIR"
+        "Programming Languages"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
+        "Autovectorization",
         "Performance",
         "GPU",
-        "Autovectorization",
         "Programming Languages",
-        "MLIR",
         "Reconfigurable Dataflow Accelerators",
         "Dataflow Threads",
         "Dataflow Architectures"
@@ -3738,14 +3759,14 @@
       "paperUrl": "https://doi.org/10.1109/swc62898.2024.00163",
       "sourceUrl": "",
       "tags": [
-        "Security",
-        "Clang",
-        "Optimizations"
-      ],
-      "keywords": [
-        "Security",
         "Clang",
         "Optimizations",
+        "Security"
+      ],
+      "keywords": [
+        "Clang",
+        "Optimizations",
+        "Security",
         "Leakage",
         "Analyzing Speculative Execution",
         "Mitigation",
@@ -3795,13 +3816,14 @@
       "paperUrl": "https://arxiv.org/pdf/2409.14713",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2409.14713",
       "tags": [
-        "Performance",
-        "Optimizations"
+        "LLVM",
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "LLVM",
+        "Optimizations",
+        "Performance",
         "Phantom",
         "Latent",
         "Vision"
@@ -3840,12 +3862,13 @@
       "paperUrl": "https://www.osti.gov/servlets/purl/2540327",
       "sourceUrl": "https://doi.org/10.2172/2540327",
       "tags": [
+        "MLIR",
         "Backend",
-        "MLIR"
+        "Code Generation"
       ],
       "keywords": [
-        "Backend",
         "MLIR",
+        "Backend",
         "Code Generation",
         "Parallel Portable Sparse"
       ],
@@ -3877,13 +3900,14 @@
       "paperUrl": "https://arxiv.org/pdf/2408.04043",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2408.04043",
       "tags": [
+        "LLVM",
         "IR",
         "Rust"
       ],
       "keywords": [
+        "LLVM",
         "IR",
         "Rust",
-        "LLVM",
         "Intermediate Representation",
         "Ownership",
         "Address Map",
@@ -3924,18 +3948,17 @@
       "paperUrl": "https://ispranproceedings.elpub.ru/jour/article/download/1861/1704",
       "sourceUrl": "https://doi.org/10.15514/ispras-2024-36(5)-3",
       "tags": [
-        "Performance",
-        "IR",
-        "Infrastructure",
-        "MLIR",
-        "CIRCT"
-      ],
-      "keywords": [
-        "Performance",
-        "IR",
-        "Infrastructure",
         "MLIR",
         "CIRCT",
+        "IR",
+        "Performance",
+        "Infrastructure"
+      ],
+      "keywords": [
+        "MLIR",
+        "CIRCT",
+        "Performance",
+        "Infrastructure",
         "Intermediate Representation",
         "Accelerators",
         "Hardware Accelerators",
@@ -3966,30 +3989,29 @@
       "paperUrl": "https://link.springer.com/content/pdf/10.1007/978-3-031-51500-2_2.pdf",
       "sourceUrl": "https://doi.org/10.1007/978-3-031-51500-2_2",
       "tags": [
-        "Backend",
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "Programming Languages",
+        "Backend",
+        "Optimizations",
+        "Performance",
         "Infrastructure",
         "ML",
-        "MLIR"
+        "Programming Languages"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "IR",
-        "Programming Languages",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Backend",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
+        "Programming Languages",
         "Intermediate Representation",
         "HLS",
         "Hardware",
         "Specific",
         "Accelerators",
-        "Domain Specific"
+        "Domain Specific",
+        "Synthesis"
       ],
       "matchedAuthors": [
         "Serena Curzel"
@@ -4026,11 +4048,12 @@
       "paperUrl": "https://arxiv.org/pdf/2405.15574",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2405.15574",
       "tags": [
+        "LLVM",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
+        "Performance",
         "Additional Vision Encoders",
         "Rationale",
         "Visual Instruction Tuning",
@@ -4077,14 +4100,14 @@
       "paperUrl": "http://dx.doi.org/10.1109/asap61560.2024.00045",
       "sourceUrl": "https://doi.org/10.1109/asap61560.2024.00045",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "MLIR"
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "CGRAs",
         "Versatile MLIR",
         "Coarse Grained",
@@ -4125,12 +4148,12 @@
       "paperUrl": "https://doi.org/10.1145/3665283.3665343",
       "sourceUrl": "",
       "tags": [
-        "GPU",
-        "MLIR"
+        "MLIR",
+        "GPU"
       ],
       "keywords": [
-        "GPU",
         "MLIR",
+        "GPU",
         "Homomorphic Encryption Compiler",
         "Hardware"
       ],
@@ -4185,11 +4208,12 @@
       "paperUrl": "https://arxiv.org/pdf/2406.09390",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2406.09390",
       "tags": [
+        "LLVM",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
+        "Performance",
         "Llavidal",
         "Language Vision",
         "Instruction Tuning",
@@ -4231,15 +4255,18 @@
       "paperUrl": "https://doi.org/10.1145/3677333.3678273",
       "sourceUrl": "",
       "tags": [
+        "LLVM",
+        "OpenMP",
         "Security",
         "Performance",
         "Programming Languages"
       ],
       "keywords": [
+        "LLVM",
+        "OpenMP",
         "Security",
         "Performance",
         "Programming Languages",
-        "LLVM",
         "Memory Safety",
         "HPC",
         "Implementing OpenMP",
@@ -4269,18 +4296,16 @@
       "paperUrl": "https://repository.library.northeastern.edu/files/neu:ms36wj24q/fulltext.pdf",
       "sourceUrl": "https://doi.org/10.17760/d20699019",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "ML",
-        "MLIR"
+        "Optimizations",
+        "Performance",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Intermediate Representation",
         "Custom Accelerators",
         "Hardware Acceleration",
@@ -4333,13 +4358,14 @@
       "paperUrl": "https://arxiv.org/pdf/2402.13513",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2402.13513",
       "tags": [
-        "Optimizations",
-        "IR"
+        "LLVM",
+        "IR",
+        "Optimizations"
       ],
       "keywords": [
-        "Optimizations",
-        "IR",
         "LLVM",
+        "IR",
+        "Optimizations",
         "Intermediate Representation",
         "Static Single Assignment",
         "Guac Energy Aware",
@@ -4387,13 +4413,14 @@
       "paperUrl": "https://arxiv.org/pdf/2401.12643",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2401.12643",
       "tags": [
-        "Testing",
-        "Dynamic Analysis"
+        "LLVM",
+        "Dynamic Analysis",
+        "Testing"
       ],
       "keywords": [
-        "Testing",
-        "Dynamic Analysis",
         "LLVM",
+        "Dynamic Analysis",
+        "Testing",
         "Symbolic Execution",
         "Model Checking",
         "Fuzzing",
@@ -4500,16 +4527,15 @@
       "paperUrl": "https://doi.org/10.1145/3650212.3680360",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "IR",
         "Testing",
-        "Infrastructure",
-        "MLIR"
+        "Infrastructure"
       ],
       "keywords": [
-        "IR",
+        "MLIR",
         "Testing",
         "Infrastructure",
-        "MLIR",
         "Intermediate Representation",
         "Fuzzing",
         "Fuzzing MLIR Compiler",
@@ -4561,14 +4587,14 @@
       "tags": [
         "Clang",
         "Testing",
-        "Quantum Computing",
-        "Libraries"
+        "Libraries",
+        "Quantum Computing"
       ],
       "keywords": [
         "Clang",
         "Testing",
-        "Quantum Computing",
         "Libraries",
+        "Quantum Computing",
         "Fuzzing",
         "Quantum Compilation",
         "Fuzz4all",
@@ -4612,14 +4638,14 @@
       "paperUrl": "https://doi.org/10.14722/ndss.2024.23116",
       "sourceUrl": "",
       "tags": [
-        "Embedded",
-        "Testing",
-        "Libraries"
-      ],
-      "keywords": [
-        "Embedded",
         "Testing",
         "Libraries",
+        "Embedded"
+      ],
+      "keywords": [
+        "Testing",
+        "Libraries",
+        "Embedded",
         "Fuzzing",
         "Sanitizers",
         "Vivo Firmware Testing",
@@ -4677,16 +4703,15 @@
       "paperUrl": "https://doi.org/10.1145/3649329.3656536",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "Performance",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Performance",
         "Infrastructure",
-        "ML",
-        "MLIR",
         "Fhe CGRA",
         "Fully Homomorphic Encryption",
         "Fhe Cnn",
@@ -4731,12 +4756,12 @@
       "paperUrl": "https://www.mdpi.com/2079-9292/13/8/1498/pdf?version=1713169799",
       "sourceUrl": "https://doi.org/10.3390/electronics13081498",
       "tags": [
-        "Security",
-        "Testing"
+        "Testing",
+        "Security"
       ],
       "keywords": [
-        "Security",
         "Testing",
+        "Security",
         "Fuzzing",
         "Esfuzzer",
         "Web Browser",
@@ -4886,13 +4911,14 @@
       "paperUrl": "https://arxiv.org/pdf/2406.19592",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2406.19592",
       "tags": [
-        "Optimizations",
-        "IR"
+        "LLVM",
+        "IR",
+        "Optimizations"
       ],
       "keywords": [
-        "Optimizations",
-        "IR",
         "LLVM",
+        "IR",
+        "Optimizations",
         "Intermediate Representation",
         "LLVM Optimizer",
         "Intermediate Representation Programs",
@@ -4955,13 +4981,14 @@
       "paperUrl": "https://arxiv.org/pdf/2410.18280",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2410.18280",
       "tags": [
+        "LLVM",
         "Infrastructure",
         "Rust"
       ],
       "keywords": [
+        "LLVM",
         "Infrastructure",
         "Rust",
-        "LLVM",
         "Crux Mir",
         "Verification",
         "Precise Verifier"
@@ -5006,13 +5033,14 @@
       "paperUrl": "https://arxiv.org/pdf/2401.10834",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2401.10834",
       "tags": [
+        "LLVM",
         "Performance",
         "GPU"
       ],
       "keywords": [
+        "LLVM",
         "Performance",
         "GPU",
-        "LLVM",
         "Offloading",
         "Performance Serverless Programming",
         "Cppless Single"
@@ -5047,15 +5075,16 @@
       "paperUrl": "https://arxiv.org/pdf/2405.06832",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2405.06832",
       "tags": [
+        "LLVM",
         "IR",
         "Testing",
         "Libraries"
       ],
       "keywords": [
+        "LLVM",
         "IR",
         "Testing",
         "Libraries",
-        "LLVM",
         "Intermediate Representation",
         "Concolic Testing"
       ],
@@ -5142,12 +5171,12 @@
       "paperUrl": "https://doi.org/10.1145/3689721",
       "sourceUrl": "",
       "tags": [
-        "Programming Languages",
-        "MLIR"
+        "MLIR",
+        "Programming Languages"
       ],
       "keywords": [
-        "Programming Languages",
         "MLIR",
+        "Programming Languages",
         "Sparse Tensor Convolutions",
         "Subscript Expressions",
         "Sparsity",
@@ -5192,13 +5221,14 @@
       "paperUrl": "https://arxiv.org/pdf/2409.17513",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2409.17513",
       "tags": [
+        "LLVM",
         "Performance",
         "ML"
       ],
       "keywords": [
+        "LLVM",
         "Performance",
         "ML",
-        "LLVM",
         "Lstm Neural Networks",
         "Unidirectional Transformer",
         "Discovering Vulnerabilities",
@@ -5244,11 +5274,12 @@
       "paperUrl": "https://arxiv.org/pdf/2402.14567",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2402.14567",
       "tags": [
+        "LLVM",
         "Static Analysis"
       ],
       "keywords": [
-        "Static Analysis",
         "LLVM",
+        "Static Analysis",
         "Memory Carried",
         "Analyzers",
         "Cesasme",
@@ -5306,13 +5337,14 @@
       "paperUrl": "https://arxiv.org/pdf/2410.18561",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2410.18561",
       "tags": [
+        "LLVM",
         "IR",
         "ML"
       ],
       "keywords": [
+        "LLVM",
         "IR",
         "ML",
-        "LLVM",
         "Intermediate Representation",
         "Similarity Detection",
         "Contrastive Learning",
@@ -5355,13 +5387,14 @@
       "paperUrl": "https://arxiv.org/pdf/2410.03120",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2410.03120",
       "tags": [
-        "Performance",
-        "Optimizations"
+        "LLVM",
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "LLVM",
+        "Optimizations",
+        "Performance",
         "Wrt Optimization Phases",
         "Phase Ordering",
         "Globally Optimal",
@@ -5397,7 +5430,9 @@
       "abstract": "Memory corruption is an important class of vulnerability that can be leveraged to craft control flow hijacking attacks. Control Flow Integrity (CFI) provides protection against such attacks. Application of type-based CFI policies requires information regarding the number and type of function arguments. Binary-level type recovery is inherently speculative, which motivates the need for an evaluation framework to assess the effectiveness of binary-level CFI techniques compared with their source-level counterparts, where such type information is fully and accurately accessible. In this work, we develop a novel, generalized and extensible framework to assess how the program analysis information we get from state-of-the-art binary analysis tools affects the efficacy of type-based CFI techniques. We introduce new and insightful metrics to quantitatively compare source independent CFI policies with their ground truth source aware counterparts. We leverage our framework to evaluate binary-level CFI policies implemented using program analysis information extracted from the IDA Pro binary analyzer and compared with the ground truth information obtained from the LLVM compiler, and present our observations.",
       "paperUrl": "https://arxiv.org/pdf/2401.07148",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2401.07148",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "CFI Policies",
@@ -5453,14 +5488,14 @@
       "paperUrl": "https://ieeexplore.ieee.org/ielx7/10206/4358835/10458672.pdf",
       "sourceUrl": "https://doi.org/10.1109/tifs.2024.3372816",
       "tags": [
+        "Testing",
         "Security",
-        "Embedded",
-        "Testing"
+        "Embedded"
       ],
       "keywords": [
+        "Testing",
         "Security",
         "Embedded",
-        "Testing",
         "Fuzzing",
         "Anti Hardware Tracing",
         "Trace Buffer",
@@ -5504,13 +5539,14 @@
       "paperUrl": "https://arxiv.org/pdf/2406.06095",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2406.06095",
       "tags": [
+        "LLVM",
         "Performance",
         "Libraries"
       ],
       "keywords": [
+        "LLVM",
         "Performance",
         "Libraries",
-        "LLVM",
         "Memory Centric Specifications",
         "Floating Point",
         "Extension",
@@ -5554,11 +5590,10 @@
       "paperUrl": "https://doi.org/10.1109/icfpt64416.2024.11113451",
       "sourceUrl": "",
       "tags": [
-        "IR",
-        "MLIR"
+        "MLIR",
+        "IR"
       ],
       "keywords": [
-        "IR",
         "MLIR",
         "Intermediate Representation",
         "Recursion",
@@ -5616,16 +5651,15 @@
       "paperUrl": "https://doi.org/10.23919/date58400.2024.10546646",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "MLIR"
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Intermediate Representation",
         "Scale Workloads",
         "Cgrv Opt",
@@ -5677,16 +5711,15 @@
       "paperUrl": "http://dx.doi.org/10.1142/s021819402450030x",
       "sourceUrl": "https://doi.org/10.1142/s021819402450030x",
       "tags": [
-        "Performance",
+        "MLIR",
         "Testing",
-        "ML",
-        "MLIR"
+        "Performance",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Testing",
-        "ML",
         "MLIR",
+        "Testing",
+        "Performance",
         "Validation",
         "Undefined Behaviors"
       ],
@@ -5723,17 +5756,18 @@
       "paperUrl": "https://arxiv.org/pdf/2404.11671",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2404.11671",
       "tags": [
-        "Programming Languages",
+        "LLVM",
         "Dynamic Analysis",
         "Libraries",
+        "Programming Languages",
         "Rust"
       ],
       "keywords": [
-        "Programming Languages",
+        "LLVM",
         "Dynamic Analysis",
         "Libraries",
+        "Programming Languages",
         "Rust",
-        "LLVM",
         "Call Foreign",
         "Rust Libraries",
         "Undefined Behavior"
@@ -5775,14 +5809,14 @@
       "paperUrl": "https://doi.org/10.1109/swc62898.2024.00084",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "Performance",
-        "OpenCL",
-        "MLIR"
+        "OpenCL"
       ],
       "keywords": [
+        "MLIR",
         "Performance",
         "OpenCL",
-        "MLIR",
         "Heterogeneous Computing",
         "Hyper Dialect",
         "Heterogeneous Parallel Compilation"
@@ -5843,13 +5877,14 @@
       "paperUrl": "https://arxiv.org/pdf/2404.14299",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2404.14299",
       "tags": [
+        "LLVM",
         "IR",
         "Quantum Computing"
       ],
       "keywords": [
+        "LLVM",
         "IR",
         "Quantum Computing",
-        "LLVM",
         "Intermediate Representation",
         "Quantum Compilation",
         "Quantum Intermediate Representation",
@@ -5909,13 +5944,14 @@
       "paperUrl": "https://arxiv.org/pdf/2407.04917",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2407.04917",
       "tags": [
+        "LLVM",
         "IR",
         "Rust"
       ],
       "keywords": [
+        "LLVM",
         "IR",
         "Rust",
-        "LLVM",
         "Intermediate Representation",
         "Unreachable",
         "Transformations Due",
@@ -5960,18 +5996,17 @@
       "paperUrl": "https://arxiv.org/pdf/2307.16080",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2307.16080",
       "tags": [
-        "Frontend",
+        "MLIR",
         "IR",
-        "Embedded",
+        "Frontend",
         "Infrastructure",
-        "MLIR"
+        "Embedded"
       ],
       "keywords": [
-        "Frontend",
-        "IR",
-        "Embedded",
-        "Infrastructure",
         "MLIR",
+        "Frontend",
+        "Infrastructure",
+        "Embedded",
         "Intermediate Representation",
         "Texttt Nelli",
         "Domain Specific",
@@ -6022,14 +6057,14 @@
       "paperUrl": "https://arxiv.org/pdf/2312.16300",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2312.16300",
       "tags": [
+        "MLIR",
         "Frontend",
-        "Optimizations",
-        "MLIR"
+        "Optimizations"
       ],
       "keywords": [
+        "MLIR",
         "Frontend",
         "Optimizations",
-        "MLIR",
         "Control",
         "Hardware",
         "Adl Compiler",
@@ -6095,20 +6130,18 @@
       "paperUrl": "https://re.public.polimi.it/bitstream/11311/1229391/1/ASPDAC23.pdf",
       "sourceUrl": "https://doi.org/10.1145/3566097.3568360",
       "tags": [
+        "MLIR",
+        "IR",
         "Backend",
         "Frontend",
         "Optimizations",
-        "IR",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
         "Frontend",
         "Optimizations",
-        "IR",
-        "ML",
-        "MLIR",
         "Intermediate Representation",
         "Accelerators",
         "Synthesis",
@@ -6154,15 +6187,15 @@
       "sourceUrl": "https://doi.org/10.1002/stvr.1871",
       "tags": [
         "Clang",
-        "Optimizations",
         "IR",
+        "Optimizations",
         "Testing",
         "Libraries"
       ],
       "keywords": [
         "Clang",
-        "Optimizations",
         "IR",
+        "Optimizations",
         "Testing",
         "Libraries",
         "Mutation Testing",
@@ -6214,14 +6247,14 @@
       "tags": [
         "Clang",
         "Optimizations",
-        "Programming Languages",
-        "Testing"
+        "Testing",
+        "Programming Languages"
       ],
       "keywords": [
         "Clang",
         "Optimizations",
-        "Programming Languages",
         "Testing",
+        "Programming Languages",
         "Differential Testing",
         "Scopegen",
         "Traditional Grammar",
@@ -6283,18 +6316,17 @@
       "paperUrl": "https://doi.org/10.1145/3577193.3593719",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
+        "IR",
         "Performance",
         "GPU",
-        "IR",
-        "AI",
-        "MLIR"
+        "AI"
       ],
       "keywords": [
+        "MLIR",
         "Performance",
         "GPU",
-        "IR",
         "AI",
-        "MLIR",
         "Intermediate Representation",
         "Weather Stencil Computation",
         "Spatial",
@@ -6303,7 +6335,8 @@
         "Sparta",
         "Access",
         "Climate",
-        "Compound"
+        "Compound",
+        "Stencils"
       ],
       "matchedAuthors": [
         "Andra Bisca",
@@ -6345,15 +6378,16 @@
       "paperUrl": "https://arxiv.org/pdf/2301.02915",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2301.02915",
       "tags": [
+        "LLVM",
         "Security",
         "Performance",
         "Infrastructure"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Performance",
         "Infrastructure",
-        "LLVM",
         "User Kernel Transitions",
         "Fault Attacks",
         "Control Flow",
@@ -6393,13 +6427,14 @@
       "paperUrl": "https://arxiv.org/pdf/2303.03711",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2303.03711",
       "tags": [
+        "LLVM",
         "Security",
         "Infrastructure"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Infrastructure",
-        "LLVM",
         "Induced Control Flow",
         "Scramble CFI Mitigating",
         "Fault Induced Control",
@@ -6458,20 +6493,20 @@
       "paperUrl": "https://arxiv.org/pdf/2302.06124",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2302.06124",
       "tags": [
+        "MLIR",
         "Backend",
+        "Autovectorization",
         "Performance",
         "GPU",
-        "Autovectorization",
-        "Programming Languages",
-        "MLIR"
+        "Programming Languages"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
+        "Autovectorization",
         "Performance",
         "GPU",
-        "Autovectorization",
         "Programming Languages",
-        "MLIR",
         "Reconfigurable Dataflow Accelerators",
         "Dataflow Threads",
         "Spatial",
@@ -6500,12 +6535,12 @@
       "paperUrl": "http://dx.doi.org/10.52843/cassyni.2qx69k",
       "sourceUrl": "https://doi.org/10.52843/cassyni.2qx69k",
       "tags": [
-        "Infrastructure",
-        "MLIR"
+        "MLIR",
+        "Infrastructure"
       ],
       "keywords": [
-        "Infrastructure",
         "MLIR",
+        "Infrastructure",
         "Program Synthesis",
         "Neural Machine",
         "Build Compilers Synthesis"
@@ -6533,11 +6568,12 @@
       "paperUrl": "https://www.researchsquare.com/article/rs-2733052/latest.pdf",
       "sourceUrl": "https://doi.org/10.21203/rs.3.rs-2733052/v1",
       "tags": [
+        "LLVM",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
+        "Performance",
         "Refinement",
         "LLVM Applied",
         "Parallel Sorting"
@@ -6573,13 +6609,14 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3597926.3598038",
       "sourceUrl": "https://doi.org/10.1145/3597926.3598038",
       "tags": [
-        "JIT",
-        "Optimizations"
+        "LLVM",
+        "Optimizations",
+        "JIT"
       ],
       "keywords": [
-        "JIT",
-        "Optimizations",
         "LLVM",
+        "Optimizations",
+        "JIT",
         "JIT Compilation",
         "JIT Optimizations",
         "JIT Tests",
@@ -6745,14 +6782,16 @@
       "paperUrl": "https://www.osti.gov/servlets/purl/1968587",
       "sourceUrl": "https://doi.org/10.2172/1968587",
       "tags": [
-        "Performance",
+        "LLDB",
+        "OpenMP",
         "Optimizations",
-        "LLDB"
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "LLDB",
+        "OpenMP",
+        "Optimizations",
+        "Performance",
         "MPI Processes",
         "Petsc Tao Users",
         "Linear Solver",
@@ -6762,8 +6801,7 @@
         "Routines",
         "Computers Petsc",
         "Parallel Linear",
-        "Tao Users Manual",
-        "Users Manual Rev"
+        "Tao Users Manual"
       ],
       "matchedAuthors": [
         "Lawrence Mitchell"
@@ -6828,27 +6866,29 @@
       "paperUrl": "https://link.springer.com/content/pdf/10.1007/s11227-023-05422-w.pdf",
       "sourceUrl": "https://doi.org/10.1007/s11227-023-05422-w",
       "tags": [
-        "Backend",
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Backend",
+        "Code Generation",
         "Optimizations",
+        "Performance",
         "GPU"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
         "Clang",
-        "Optimizations",
-        "GPU",
+        "OpenMP",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Performance",
+        "GPU",
         "Offloading",
         "Unused Array Transfer",
         "Target Offloading",
         "Transfer Optimization",
         "Arrays",
         "Segments",
-        "Transmission",
-        "Core Computation"
+        "Transmission"
       ],
       "matchedAuthors": [
         "Jianan Li",
@@ -6898,18 +6938,16 @@
       "paperUrl": "https://doi.org/10.1109/ase56229.2023.00120",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "IR",
         "Testing",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "IR",
+        "MLIR",
         "Testing",
         "Infrastructure",
-        "ML",
-        "MLIR",
         "Intermediate Representation",
         "Fuzzing",
         "MLIR Compiler Infrastructure",
@@ -6946,7 +6984,9 @@
       "abstract": "While instruction cache analysis is essentially a solved problem, data cache analysis is more challenging. In contrast to instruction fetches, the data accesses generated by a memory instruction may vary with the program's inputs and across dynamic occurrences of the same instruction in loops. We observe that the plain control-flow graph (CFG) abstraction employed in classical cache analyses is inadequate to capture the dynamic behavior of memory instructions. On top of plain CFGs, accurate analysis of the underlying program's cache behavior is impossible. Thus, our first contribution is the definition of a more expressive program abstraction coined symbolic control-flow graphs, which can be obtained from LLVM's ScalarEvolution analysis. To exploit this richer abstraction, our main contribution is the development of symbolic data cache analysis, a smooth generalization of classical LRU must analysis from plain to symbolic control-flow graphs. The experimental evaluation demonstrates that symbolic data cache analysis consistently outperforms classical LRU must analysis both in terms of accuracy and analysis runtime.",
       "paperUrl": "https://arxiv.org/pdf/2310.04809",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2310.04809",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Control Flow Graph",
@@ -7101,13 +7141,14 @@
       "paperUrl": "https://arxiv.org/pdf/2301.11586",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2301.11586",
       "tags": [
+        "LLVM",
         "Optimizations",
         "Embedded"
       ],
       "keywords": [
+        "LLVM",
         "Optimizations",
         "Embedded",
-        "LLVM",
         "Obfuscation",
         "Binary Diffing",
         "Inter Procedural"
@@ -7155,11 +7196,13 @@
       "paperUrl": "https://arxiv.org/pdf/2307.00593",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2307.00593",
       "tags": [
-        "Backend"
+        "LLVM",
+        "Backend",
+        "Code Generation"
       ],
       "keywords": [
-        "Backend",
         "LLVM",
+        "Backend",
         "Code Generation",
         "Llm4cbi",
         "Compiler Bug Isolation",
@@ -7202,16 +7245,14 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3623278.3624767",
       "sourceUrl": "https://doi.org/10.1145/3623278.3624767",
       "tags": [
+        "MLIR",
         "IR",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "IR",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Infrastructure",
         "Intermediate Representation",
         "Hardware Accelerator Description"
       ],
@@ -7246,17 +7287,17 @@
       "paperUrl": "https://iopscience.iop.org/article/10.1088/1742-6596/2438/1/012043/pdf",
       "sourceUrl": "https://doi.org/10.1088/1742-6596/2438/1/012043",
       "tags": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "GPU",
         "CUDA",
         "ML"
       ],
       "keywords": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "GPU",
         "CUDA",
         "ML",
@@ -7306,14 +7347,14 @@
       "tags": [
         "Clang",
         "Testing",
-        "Quantum Computing",
-        "Libraries"
+        "Libraries",
+        "Quantum Computing"
       ],
       "keywords": [
         "Clang",
         "Testing",
-        "Quantum Computing",
         "Libraries",
+        "Quantum Computing",
         "Fuzzing",
         "Quantum Compilation",
         "Fuzz4all",
@@ -7349,13 +7390,14 @@
       "paperUrl": "https://arxiv.org/pdf/2303.14500",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2303.14500",
       "tags": [
-        "Security",
-        "IR"
+        "LLVM",
+        "IR",
+        "Security"
       ],
       "keywords": [
-        "Security",
-        "IR",
         "LLVM",
+        "IR",
+        "Security",
         "Intermediate Representation",
         "Quantum Program Compilers",
         "Intermediate Representations",
@@ -7454,17 +7496,18 @@
       "paperUrl": "https://arxiv.org/pdf/2312.12667",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2312.12667",
       "tags": [
+        "LLVM",
+        "Dynamic Analysis",
         "Security",
         "Performance",
-        "Dynamic Analysis",
         "ML"
       ],
       "keywords": [
+        "LLVM",
+        "Dynamic Analysis",
         "Security",
         "Performance",
-        "Dynamic Analysis",
         "ML",
-        "LLVM",
         "Malware Detection",
         "Network",
         "Art Malware",
@@ -7587,17 +7630,17 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3591272",
       "sourceUrl": "https://doi.org/10.1145/3591272",
       "tags": [
-        "Performance",
         "Clang",
-        "Optimizations",
         "IR",
+        "Optimizations",
+        "Performance",
         "Programming Languages"
       ],
       "keywords": [
-        "Performance",
         "Clang",
-        "Optimizations",
         "IR",
+        "Optimizations",
+        "Performance",
         "Programming Languages",
         "Formal Verification",
         "Functional Programs",
@@ -7652,17 +7695,17 @@
       "paperUrl": "https://figshare.com/articles/conference_contribution/CrabSandwich_Fuzzing_Rust_with_Rust_Registered_Report_/25534195",
       "sourceUrl": "https://doi.org/10.1145/3605157.3605176",
       "tags": [
+        "Testing",
         "Security",
         "Performance",
         "Programming Languages",
-        "Testing",
         "Rust"
       ],
       "keywords": [
+        "Testing",
         "Security",
         "Performance",
         "Programming Languages",
-        "Testing",
         "Rust",
         "Fuzzing",
         "Memory Safety",
@@ -7701,13 +7744,14 @@
       "paperUrl": "https://arxiv.org/pdf/2304.14908",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2304.14908",
       "tags": [
-        "Performance",
-        "Optimizations"
+        "LLVM",
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "LLVM",
+        "Optimizations",
+        "Performance",
         "Compiler Optimization Flags",
         "Runtime Performance",
         "Actual Runtime Performance",
@@ -7743,7 +7787,9 @@
       "abstract": "This paper describes the author’s exploratory experience of porting the build systems of two large software distributions, the LLVM and GCC programming-language translation systems, to the Amake build tool. Amake is an enhanced derivative of the very popular GNU Make. Amake adds automatic language-independent dependency analysis and site-wide heterogeneous target caching. Amake also supports GNU Make’s parallel-build capabilities. This experience included (mostly) expected changes to both of these build systems, but somewhat surprising changes to Amake’s design and implementation. A description of the former changes is hoped to encourage developers to migrate their build systems to Amake. The latter changes showcase Amake’s most recently added features.",
       "paperUrl": "https://www.authorea.com/doi/pdf/10.22541/au.167458200.08021106",
       "sourceUrl": "https://doi.org/10.22541/au.167458200.08021106/v1",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Changes",
@@ -7793,14 +7839,13 @@
       "paperUrl": "https://arxiv.org/pdf/2401.10249",
       "sourceUrl": "https://doi.org/10.1109/fpl60245.2023.00062",
       "tags": [
+        "MLIR",
         "IR",
-        "Infrastructure",
-        "MLIR"
+        "Infrastructure"
       ],
       "keywords": [
-        "IR",
-        "Infrastructure",
         "MLIR",
+        "Infrastructure",
         "Intermediate Representation",
         "Hardware",
         "Compilation",
@@ -7843,15 +7888,15 @@
       "paperUrl": "https://arxiv.org/pdf/2309.09100",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2309.09100",
       "tags": [
+        "LLVM",
+        "MLIR",
         "IR",
-        "Infrastructure",
-        "MLIR"
+        "Infrastructure"
       ],
       "keywords": [
-        "IR",
-        "Infrastructure",
-        "MLIR",
         "LLVM",
+        "MLIR",
+        "Infrastructure",
         "Intermediate Representation",
         "Model Checking",
         "Format",
@@ -7896,16 +7941,15 @@
       "paperUrl": "https://arxiv.org/pdf/2306.00366",
       "sourceUrl": "https://doi.org/10.1145/3579990.3580018",
       "tags": [
-        "Optimizations",
+        "MLIR",
         "IR",
-        "Programming Languages",
-        "MLIR"
+        "Optimizations",
+        "Programming Languages"
       ],
       "keywords": [
-        "Optimizations",
-        "IR",
-        "Programming Languages",
         "MLIR",
+        "Optimizations",
+        "Programming Languages",
         "Intermediate Representation",
         "Control",
         "Bridging Control Centric",
@@ -7954,17 +7998,18 @@
       "paperUrl": "https://arxiv.org/pdf/2312.09770",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2312.09770",
       "tags": [
-        "Performance",
+        "LLVM",
         "Optimizations",
         "Static Analysis",
+        "Performance",
         "Libraries"
       ],
       "keywords": [
-        "Performance",
+        "LLVM",
         "Optimizations",
         "Static Analysis",
+        "Performance",
         "Libraries",
-        "LLVM",
         "Spectre Mitigation",
         "Protection",
         "Attacks",
@@ -8006,10 +8051,12 @@
       "sourceUrl": "https://doi.org/10.22541/au.168898868.83064146/v1",
       "tags": [
         "Clang",
+        "BOLT",
         "Optimizations"
       ],
       "keywords": [
         "Clang",
+        "BOLT",
         "Optimizations",
         "Profile",
         "Yields Speedups",
@@ -8047,16 +8094,15 @@
       "paperUrl": "https://arxiv.org/pdf/2309.03203",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2309.03203",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "ML",
-        "MLIR"
+        "Performance",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Vitis HLS",
         "Dataflow Optimizations",
         "Average Performance Improvement",
@@ -8066,7 +8112,8 @@
         "Aggressive Pipelining",
         "Loop Pipelining",
         "Producer Consumer",
-        "Memory"
+        "Memory",
+        "Dataflow Accelerators"
       ],
       "matchedAuthors": [
         "Uday Bondhugula"
@@ -8103,14 +8150,14 @@
       "paperUrl": "https://doi.org/10.1145/3572959",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "Optimizations",
-        "Infrastructure",
-        "MLIR"
+        "Infrastructure"
       ],
       "keywords": [
+        "MLIR",
         "Optimizations",
         "Infrastructure",
-        "MLIR",
         "Dse Engine Capable",
         "Space Exploration Engine",
         "Designs",
@@ -8183,15 +8230,16 @@
       "paperUrl": "https://arxiv.org/pdf/2310.12106",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2310.12106",
       "tags": [
-        "Performance",
+        "LLVM",
         "IR",
+        "Performance",
         "Infrastructure"
       ],
       "keywords": [
-        "Performance",
-        "IR",
-        "Infrastructure",
         "LLVM",
+        "IR",
+        "Performance",
+        "Infrastructure",
         "Intermediate Representation",
         "Quantum Hardware",
         "Fault Tolerant",
@@ -8234,16 +8282,16 @@
       "paperUrl": "https://www.researchsquare.com/article/rs-3274775/latest.pdf",
       "sourceUrl": "https://doi.org/10.21203/rs.3.rs-3274775/v1",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "Infrastructure",
-        "MLIR"
+        "Performance",
+        "Infrastructure"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "Infrastructure",
         "MLIR",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
         "Accelerating Halide",
         "Affine Scheduling",
         "Optimization Capabilities",
@@ -8280,14 +8328,14 @@
       "tags": [
         "Clang",
         "Static Analysis",
-        "Programming Languages",
-        "Infrastructure"
+        "Infrastructure",
+        "Programming Languages"
       ],
       "keywords": [
         "Clang",
         "Static Analysis",
-        "Programming Languages",
         "Infrastructure",
+        "Programming Languages",
         "Iterator Classes",
         "Standard",
         "Iterator Class Template",
@@ -8396,11 +8444,12 @@
       "paperUrl": "https://arxiv.org/pdf/2311.12320",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2311.12320",
       "tags": [
+        "LLVM",
         "AI"
       ],
       "keywords": [
-        "AI",
         "LLVM",
+        "AI",
         "Autonomous Driving",
         "Multimodal"
       ],
@@ -8447,15 +8496,16 @@
       "paperUrl": "https://arxiv.org/pdf/2306.06884",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2306.06884",
       "tags": [
+        "LLVM",
         "Testing",
         "Infrastructure",
         "ML"
       ],
       "keywords": [
+        "LLVM",
         "Testing",
         "Infrastructure",
         "ML",
-        "LLVM",
         "Fuzzing",
         "Compiler Fuzzing",
         "Survey",
@@ -8499,12 +8549,12 @@
       "paperUrl": "https://doi.org/10.1109/aihcir61661.2023.00096",
       "sourceUrl": "",
       "tags": [
-        "Security",
-        "Testing"
+        "Testing",
+        "Security"
       ],
       "keywords": [
-        "Security",
         "Testing",
+        "Security",
         "Sanitizers",
         "Memory Object Sensitive",
         "Double Free Bugs",
@@ -8540,21 +8590,22 @@
       "paperUrl": "https://www.preprints.org/manuscript/202306.1834/v1/download",
       "sourceUrl": "https://doi.org/10.20944/preprints202306.1834.v1",
       "tags": [
+        "LLVM",
+        "Clang",
+        "IR",
+        "Optimizations",
         "JIT",
         "Performance",
-        "Clang",
-        "Optimizations",
-        "IR",
         "Infrastructure"
       ],
       "keywords": [
+        "LLVM",
+        "Clang",
+        "IR",
+        "Optimizations",
         "JIT",
         "Performance",
-        "Clang",
-        "Optimizations",
-        "IR",
         "Infrastructure",
-        "LLVM",
         "JIT Compilation",
         "Intermediate Representation",
         "JIT Compiler",
@@ -8591,11 +8642,12 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3524059.3532396",
       "sourceUrl": "https://doi.org/10.1145/3524059.3532396",
       "tags": [
+        "LLVM",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
+        "Performance",
         "Throughput"
       ],
       "matchedAuthors": [
@@ -8634,17 +8686,18 @@
       "paperUrl": "https://arxiv.org/pdf/2211.09568",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2211.09568",
       "tags": [
+        "LLVM",
         "Clang",
-        "Optimizations",
         "LLDB",
+        "Optimizations",
         "Debug Information"
       ],
       "keywords": [
-        "Clang",
-        "Optimizations",
-        "LLDB",
-        "Debug Information",
         "LLVM",
+        "Clang",
+        "LLDB",
+        "Optimizations",
+        "Debug Information",
         "Program State",
         "GCC",
         "Incomplete Debug",
@@ -8680,22 +8733,20 @@
       "paperUrl": "https://www.osti.gov/servlets/purl/1888879",
       "sourceUrl": "https://doi.org/10.2172/1888879",
       "tags": [
-        "Frontend",
-        "GPU",
+        "MLIR",
         "IR",
-        "AI",
-        "ML",
+        "Frontend",
         "Libraries",
-        "MLIR"
+        "GPU",
+        "AI",
+        "ML"
       ],
       "keywords": [
-        "Frontend",
-        "GPU",
-        "IR",
-        "AI",
-        "ML",
-        "Libraries",
         "MLIR",
+        "Frontend",
+        "Libraries",
+        "GPU",
+        "AI",
         "Intermediate Representation",
         "ML Frameworks",
         "HPC",
@@ -8734,23 +8785,24 @@
       "paperUrl": "https://arxiv.org/pdf/2209.10643",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2209.10643",
       "tags": [
+        "LLVM",
+        "MLIR",
+        "OpenMP",
         "IR",
-        "Infrastructure",
-        "MLIR"
+        "Infrastructure"
       ],
       "keywords": [
-        "IR",
-        "Infrastructure",
-        "MLIR",
         "LLVM",
+        "MLIR",
+        "OpenMP",
+        "Infrastructure",
         "Intermediate Representation",
         "Parallel Computing",
         "Heterogeneous Computing",
         "Parallel Programming",
         "Parallel Intermediate Representation",
         "Unified Parallel Intermediate",
-        "Parallelism",
-        "OpenMP"
+        "Parallelism"
       ],
       "matchedAuthors": [
         "Anjia Wang",
@@ -8793,29 +8845,29 @@
       "paperUrl": "https://doi.org/10.1109/micro56248.2022.00043",
       "sourceUrl": "",
       "tags": [
-        "Performance",
+        "MLIR",
         "Optimizations",
         "Autovectorization",
+        "Performance",
         "Infrastructure",
-        "ML",
         "Libraries",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Performance",
+        "MLIR",
         "Optimizations",
         "Autovectorization",
+        "Performance",
         "Infrastructure",
-        "ML",
         "Libraries",
-        "MLIR",
         "SIMD",
         "Treebeard",
         "Specific Optimizations",
         "ML Inference",
         "Decision Tree",
         "Optimizing Compiler",
-        "CPU"
+        "CPU",
+        "Hardware"
       ],
       "matchedAuthors": [
         "Uday Bondhugula"
@@ -8847,7 +8899,9 @@
       "abstract": "Phabricator is a modern code collaboration tool used by popular projects like FreeBSD and Mozilla. However, unlike the other well-known code review environments, such as Gerrit or GitHub, there is no readily accessible public code review dataset for Phabricator. This paper describes our experience mining code reviews from five different projects that use Phabricator (Blender, FreeBSD, KDE, LLVM, and Mozilla). We discuss the challenges associated with the data retrieval process and our solutions, resulting in a dataset with details regarding 317,476 Phabricator code reviews. Our dataset is available in both JSON and MySQL database dump formats. The dataset enables analyses of the history of code reviews at a more granular level than other platforms. In addition, given that the projects we mined are publicly accessible via the Conduit API, our dataset can be used as a foundation to fetch additional details and insights.",
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3524842.3528005",
       "sourceUrl": "https://doi.org/10.1145/3524842.3528005",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Phabricator",
@@ -8888,7 +8942,9 @@
       "abstract": "Phabricator is a modern code collaboration tool used by popular projects like FreeBSD and Mozilla. However, unlike the other well-known code review environments, such as Gerrit or GitHub, there is no readily accessible public code review dataset for Phabricator. This paper describes our experience mining code reviews from five different projects that use Phabricator (Blender, FreeBSD, KDE, LLVM, and Mozilla). We discuss the challenges associated with the data retrieval process and our solutions, resulting in a dataset with details regarding 317,476 Phabricator code reviews. Our dataset is available in both JSON and MySQL database dump formats. The dataset enables analyses of the history of code reviews at a more granular level than other platforms. In addition, given that the projects we mined are publicly accessible via the Conduit API, our dataset can be used as a foundation to fetch additional details and insights.",
       "paperUrl": "https://doi.org/10.48550/arxiv.2203.07473",
       "sourceUrl": "",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Phabricator",
@@ -8954,16 +9010,15 @@
       "paperUrl": "http://hdl.handle.net/11311/1220191",
       "sourceUrl": "https://doi.org/10.1145/3489517.3530628",
       "tags": [
+        "MLIR",
         "Frontend",
         "Optimizations",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Frontend",
         "Optimizations",
-        "ML",
-        "MLIR",
         "Specialized Accelerators"
       ],
       "matchedAuthors": [
@@ -9005,13 +9060,16 @@
       "paperUrl": "https://arxiv.org/pdf/2212.04771",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2212.04771",
       "tags": [
-        "Performance",
-        "Optimizations"
+        "LLVM",
+        "OpenMP",
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "LLVM",
+        "OpenMP",
+        "Optimizations",
+        "Performance",
         "OpenMP Tasks",
         "Taskgraph",
         "Fine Grained",
@@ -9057,18 +9115,16 @@
       "paperUrl": "https://arxiv.org/pdf/2210.15016",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2210.15016",
       "tags": [
-        "Optimizations",
+        "MLIR",
         "IR",
+        "Optimizations",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Optimizations",
-        "IR",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Infrastructure",
         "Intermediate Representation",
         "Tpu MLIR",
         "Top Dialect",
@@ -9118,15 +9174,16 @@
       "paperUrl": "https://arxiv.org/pdf/2204.05586",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2204.05586",
       "tags": [
+        "LLVM",
         "Optimizations",
         "GPU",
         "CUDA"
       ],
       "keywords": [
+        "LLVM",
         "Optimizations",
         "GPU",
         "CUDA",
-        "LLVM",
         "Spin One Quantum",
         "Simulating Spin Half",
         "Spinsim",
@@ -9174,16 +9231,15 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3571283",
       "sourceUrl": "https://doi.org/10.1145/3571283",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "MLIR"
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Matched Against",
         "Hardware"
       ],
@@ -9223,16 +9279,15 @@
       "paperUrl": "https://arxiv.org/pdf/2202.04153",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2202.04153",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "MLIR"
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
         "MLIR",
+        "Optimizations",
+        "Performance",
         "Matched Against"
       ],
       "matchedAuthors": [
@@ -9263,11 +9318,12 @@
       "paperUrl": "https://arxiv.org/pdf/2206.04507",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2206.04507",
       "tags": [
+        "LLVM",
         "Infrastructure"
       ],
       "keywords": [
-        "Infrastructure",
         "LLVM",
+        "Infrastructure",
         "Spectre",
         "Spectre Attacks",
         "Mitigations",
@@ -9313,13 +9369,13 @@
       "paperUrl": "https://doi.org/10.1109/icecs202256217.2022.9970958",
       "sourceUrl": "",
       "tags": [
-        "Performance",
         "Clang",
+        "Performance",
         "ML"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "Performance",
         "ML",
         "Cnn Inference",
         "Soft Error Assessment",
@@ -9350,13 +9406,14 @@
       "paperUrl": "http://www.theses.fr/2022SORUS417/document",
       "sourceUrl": "",
       "tags": [
+        "LLVM",
         "Security",
         "Embedded"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Embedded",
-        "LLVM",
         "Execution Integrity",
         "Fault Injection Attacks",
         "Pipeline State",
@@ -9400,20 +9457,19 @@
       "paperUrl": "https://doi.org/10.1109/cgo53902.2022.9741277",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "GPU",
+        "MLIR",
         "Autovectorization",
-        "ML",
+        "Performance",
         "Libraries",
-        "MLIR"
+        "GPU",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "GPU",
-        "Autovectorization",
-        "ML",
-        "Libraries",
         "MLIR",
+        "Autovectorization",
+        "Performance",
+        "Libraries",
+        "GPU",
         "SIMD",
         "Product Network Inference",
         "Fast Sum Product",
@@ -9443,20 +9499,19 @@
       "paperUrl": "https://repository.library.northeastern.edu/files/neu:4f18p609d/fulltext.pdf",
       "sourceUrl": "https://doi.org/10.17760/d20476846",
       "tags": [
+        "MLIR",
         "Backend",
-        "Performance",
         "Optimizations",
-        "Programming Languages",
+        "Performance",
         "ML",
-        "MLIR"
+        "Programming Languages"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "Programming Languages",
-        "ML",
         "MLIR",
+        "Backend",
+        "Optimizations",
+        "Performance",
+        "Programming Languages",
         "Soda Opt",
         "HLS",
         "Accelerators",
@@ -9515,16 +9570,16 @@
       "paperUrl": "https://hdl.handle.net/11311/1229392",
       "sourceUrl": "https://doi.org/10.1145/3508352.3561101",
       "tags": [
+        "MLIR",
         "Backend",
         "Frontend",
-        "Optimizations",
-        "MLIR"
+        "Optimizations"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
         "Frontend",
         "Optimizations",
-        "MLIR",
         "Hardware",
         "Logic Synthesis",
         "Soda Synthesizer"
@@ -9567,19 +9622,20 @@
       "paperUrl": "https://arxiv.org/pdf/2201.08461",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2201.08461",
       "tags": [
-        "Security",
-        "Performance",
+        "LLVM",
         "Clang",
         "IR",
+        "Security",
+        "Performance",
         "Embedded"
       ],
       "keywords": [
-        "Security",
-        "Performance",
+        "LLVM",
         "Clang",
         "IR",
+        "Security",
+        "Performance",
         "Embedded",
-        "LLVM",
         "Intermediate Representation",
         "Polytope Practical Memory",
         "Policy",
@@ -9631,11 +9687,12 @@
       "paperUrl": "https://arxiv.org/pdf/2201.13305",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2201.13305",
       "tags": [
+        "LLVM",
         "Optimizations"
       ],
       "keywords": [
-        "Optimizations",
         "LLVM",
+        "Optimizations",
         "LLVM Pass Sequences",
         "Shackleton",
         "Linear Genetic Programming",
@@ -9677,28 +9734,27 @@
       "paperUrl": "https://doi.org/10.1145/3497776.3517770",
       "sourceUrl": "",
       "tags": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "GPU",
+        "MLIR",
         "IR",
+        "Backend",
+        "Code Generation",
+        "Optimizations",
+        "Performance",
         "Infrastructure",
-        "ML",
         "Libraries",
-        "MLIR"
+        "GPU",
+        "ML"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "GPU",
-        "IR",
-        "Infrastructure",
-        "ML",
-        "Libraries",
         "MLIR",
-        "Intermediate Representation",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
+        "Libraries",
+        "GPU",
+        "Intermediate Representation",
         "GPU Tensor Cores"
       ],
       "matchedAuthors": [
@@ -9740,14 +9796,14 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3559009.3569688",
       "sourceUrl": "https://doi.org/10.1145/3559009.3569688",
       "tags": [
+        "MLIR",
         "Optimizations",
-        "Programming Languages",
-        "MLIR"
+        "Programming Languages"
       ],
       "keywords": [
+        "MLIR",
         "Optimizations",
         "Programming Languages",
-        "MLIR",
         "Hardware",
         "HLS",
         "Purpose Programming",
@@ -9788,16 +9844,16 @@
       "paperUrl": "https://ispranproceedings.elpub.ru/jour/article/download/1590/1407",
       "sourceUrl": "https://doi.org/10.15514/ispras-2022-34(6)-4",
       "tags": [
-        "Security",
-        "Performance",
-        "Clang",
-        "Static Analysis"
-      ],
-      "keywords": [
-        "Security",
-        "Performance",
         "Clang",
         "Static Analysis",
+        "Security",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Static Analysis",
+        "Security",
+        "Performance",
         "Taint Analyzer",
         "Vulnerabilities Detection",
         "Dataflow Paths",
@@ -9836,14 +9892,16 @@
       "paperUrl": "https://arxiv.org/pdf/2209.04317",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2209.04317",
       "tags": [
-        "Performance",
         "Clang",
-        "Loop transformations"
+        "OpenMP",
+        "Loop transformations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "OpenMP",
         "Loop transformations",
+        "Performance",
         "Loop Optimization",
         "Parallel Computing",
         "Energy Consumption",
@@ -9918,30 +9976,29 @@
       "paperUrl": "https://ieeexplore.ieee.org/ielx7/12/4358213/09907051.pdf",
       "sourceUrl": "https://doi.org/10.1109/tc.2022.3211430",
       "tags": [
+        "MLIR",
+        "IR",
         "Backend",
         "Frontend",
-        "Performance",
         "Optimizations",
-        "IR",
+        "Performance",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
         "Frontend",
-        "Performance",
         "Optimizations",
-        "IR",
+        "Performance",
         "Infrastructure",
-        "ML",
-        "MLIR",
         "Intermediate Representation",
         "Machine Learning Accelerators",
         "Controlled Machine Learning",
         "Soda Synthesizer",
         "Hardware",
-        "Synthesis"
+        "Synthesis",
+        "Dynamically Controlled Machine"
       ],
       "matchedAuthors": [
         "Ankur Limaye",
@@ -10000,13 +10057,13 @@
       "sourceUrl": "",
       "tags": [
         "Clang",
-        "Programming Languages",
-        "Testing"
+        "Testing",
+        "Programming Languages"
       ],
       "keywords": [
         "Clang",
-        "Programming Languages",
         "Testing",
+        "Programming Languages",
         "Differential Testing",
         "Compiler Front Ends",
         "Grammar Mutation",
@@ -10050,22 +10107,22 @@
       "paperUrl": "https://doi.org/10.14778/3551793.3551801",
       "sourceUrl": "",
       "tags": [
-        "Backend",
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "Infrastructure",
-        "MLIR"
+        "Backend",
+        "Code Generation",
+        "Optimizations",
+        "Performance",
+        "Infrastructure"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "IR",
-        "Infrastructure",
         "MLIR",
-        "Intermediate Representation",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
+        "Intermediate Representation",
         "Query Compilation",
         "Query Optimization",
         "Domain Specific"
@@ -10097,15 +10154,16 @@
       "paperUrl": "https://arxiv.org/pdf/2212.01254",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2212.01254",
       "tags": [
-        "Security",
+        "LLVM",
         "IR",
+        "Security",
         "ML"
       ],
       "keywords": [
-        "Security",
-        "IR",
-        "ML",
         "LLVM",
+        "IR",
+        "Security",
+        "ML",
         "Intermediate Representation",
         "Identification",
         "Vulnerabilities",
@@ -10147,15 +10205,16 @@
       "paperUrl": "https://arxiv.org/pdf/2202.08669",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2202.08669",
       "tags": [
+        "LLVM",
         "Security",
         "Performance",
         "Libraries"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Performance",
         "Libraries",
-        "LLVM",
         "Memory Safety",
         "ARM Pointer Authentication",
         "Cryptsan Leveraging ARM",
@@ -10232,16 +10291,16 @@
       "paperUrl": "https://arxiv.org/pdf/2211.10665",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2211.10665",
       "tags": [
-        "Performance",
         "Clang",
+        "IR",
         "Optimizations",
-        "IR"
+        "Performance"
       ],
       "keywords": [
-        "Performance",
         "Clang",
-        "Optimizations",
         "IR",
+        "Optimizations",
+        "Performance",
         "Formal Verification",
         "Functional Programs",
         "Cryptopt Verified Compilation",
@@ -10284,17 +10343,17 @@
       "paperUrl": "https://arxiv.org/pdf/2202.03293",
       "sourceUrl": "https://doi.org/10.4230/lipics.itp.2024.9",
       "tags": [
+        "MLIR",
         "Backend",
+        "Code Generation",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Backend",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Backend",
         "Code Generation",
+        "Infrastructure",
         "Static Single Assignment",
         "Compiler Construction",
         "Tensor Compiler Construction"
@@ -10341,15 +10400,16 @@
       "paperUrl": "https://arxiv.org/pdf/2204.03781",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2204.03781",
       "tags": [
-        "Security",
-        "Clang",
-        "Static Analysis"
-      ],
-      "keywords": [
-        "Security",
+        "LLVM",
         "Clang",
         "Static Analysis",
+        "Security"
+      ],
+      "keywords": [
         "LLVM",
+        "Clang",
+        "Static Analysis",
+        "Security",
         "Memory Safety",
         "Memory Protection",
         "Standard Adversary",
@@ -10393,13 +10453,14 @@
       "paperUrl": "https://doi.org/10.1109/sips55645.2022.9919213",
       "sourceUrl": "",
       "tags": [
-        "Optimizations",
-        "MLIR"
+        "LLVM",
+        "MLIR",
+        "Optimizations"
       ],
       "keywords": [
-        "Optimizations",
-        "MLIR",
         "LLVM",
+        "MLIR",
+        "Optimizations",
         "Optimizing Dataflow Graphs"
       ],
       "matchedAuthors": [
@@ -10445,12 +10506,12 @@
       "paperUrl": "https://arxiv.org/pdf/2203.10850",
       "sourceUrl": "https://doi.org/10.1145/3563553",
       "tags": [
-        "Optimizations",
-        "MLIR"
+        "MLIR",
+        "Optimizations"
       ],
       "keywords": [
-        "Optimizations",
         "MLIR",
+        "Optimizations",
         "Memory Architectures",
         "Domain Specific Languages",
         "Computational Fluid Dynamics",
@@ -10498,12 +10559,14 @@
       "paperUrl": "https://ieeexplore.ieee.org/ielx7/71/9790018/09825675.pdf",
       "sourceUrl": "https://doi.org/10.1109/tpds.2022.3189270",
       "tags": [
+        "LLVM",
+        "OpenMP",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
         "OpenMP",
+        "Performance",
         "Chunk Parameter Calculation",
         "Auto4omp Improves",
         "Selection",
@@ -10569,15 +10632,16 @@
       "paperUrl": "https://arxiv.org/pdf/2202.11142",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2202.11142",
       "tags": [
+        "LLVM",
         "Performance",
         "Infrastructure",
         "Quantum Computing"
       ],
       "keywords": [
+        "LLVM",
         "Performance",
         "Infrastructure",
         "Quantum Computing",
-        "LLVM",
         "Quantum Compilation",
         "Quantum Circuit",
         "Hybrid Quantum Classical",
@@ -10619,16 +10683,18 @@
       "paperUrl": "https://www.researchsquare.com/article/rs-2223228/latest.pdf",
       "sourceUrl": "https://doi.org/10.21203/rs.3.rs-2223228/v1",
       "tags": [
+        "LLVM",
         "Backend",
-        "Performance",
-        "Optimizations"
+        "Code Generation",
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
         "LLVM",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Performance",
         "Adaptive Query Compilation",
         "Database Queries",
         "Graph Databases"
@@ -10662,18 +10728,20 @@
       "paperUrl": "https://arxiv.org/pdf/2208.06332",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2208.06332",
       "tags": [
+        "LLVM",
+        "OpenMP",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
+        "OpenMP",
+        "Performance",
         "Iterative",
         "Cyclic Graph",
         "Dependency Management",
         "Immediate Successor",
         "Task Creation",
         "Graphs",
-        "OpenMP",
         "Parallelism",
         "Accelerating Task"
       ],
@@ -10721,16 +10789,14 @@
       "paperUrl": "https://doi.org/10.1109/aicas54282.2022.9869913",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
         "IR",
         "AI",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "IR",
-        "AI",
-        "ML",
         "MLIR",
+        "AI",
         "Aiwarek Compiling Pytorch",
         "Graph",
         "Hardware"
@@ -10788,10 +10854,12 @@
       "paperUrl": "https://zenodo.org/record/5242839",
       "sourceUrl": "https://doi.org/10.5281/zenodo.5242839",
       "tags": [
-        "Clang"
+        "Clang",
+        "AArch64"
       ],
       "keywords": [
         "Clang",
+        "AArch64",
         "Gnss Sdr",
         "Gnu Radio",
         "Galileo",
@@ -10803,8 +10871,7 @@
         "Denable",
         "Ephemeris",
         "Improvements",
-        "Parameter",
-        "Version"
+        "Parameter"
       ],
       "matchedAuthors": [
         "Carles Fernández–Prades",
@@ -11024,14 +11091,14 @@
       "paperUrl": "https://arxiv.org/pdf/2109.10660",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2109.10660",
       "tags": [
-        "Performance",
-        "Clang",
-        "Testing"
-      ],
-      "keywords": [
-        "Performance",
         "Clang",
         "Testing",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Testing",
+        "Performance",
         "Fuzzing",
         "Analyzing Device Interfaces",
         "Virtual Device Interface",
@@ -11073,11 +11140,13 @@
       "sourceUrl": "https://doi.org/10.1145/3485521",
       "tags": [
         "Clang",
+        "BOLT",
         "Optimizations",
         "Programming Languages"
       ],
       "keywords": [
         "Clang",
+        "BOLT",
         "Optimizations",
         "Programming Languages",
         "Binary",
@@ -11119,21 +11188,20 @@
       "paperUrl": "https://www.osti.gov/biblio/1764336",
       "sourceUrl": "https://doi.org/10.2172/1764336",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "LLVM",
+        "MLIR",
         "IR",
+        "Optimizations",
+        "Performance",
         "AI",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "AI",
-        "ML",
-        "MLIR",
         "LLVM",
+        "MLIR",
+        "Optimizations",
+        "Performance",
+        "AI",
         "Intermediate Representation",
         "ML Architectures"
       ],
@@ -11173,12 +11241,13 @@
       "paperUrl": "https://doi.org/10.1109/tdsc.2021.3079857",
       "sourceUrl": "",
       "tags": [
-        "Testing"
+        "Testing",
+        "Sanitizers"
       ],
       "keywords": [
         "Testing",
-        "Fuzzing",
         "Sanitizers",
+        "Fuzzing",
         "Dual Execution",
         "Exposing Bugs",
         "Exploitable Bug Exposing",
@@ -11240,18 +11309,17 @@
       "paperUrl": "https://arxiv.org/pdf/2109.07419",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2109.07419",
       "tags": [
+        "MLIR",
         "Optimizations",
-        "GPU",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "GPU",
+        "ML"
       ],
       "keywords": [
-        "Optimizations",
-        "GPU",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Infrastructure",
+        "GPU",
         "Offloading",
         "Spatial Accelerators",
         "Accelerator Cost",
@@ -11326,22 +11394,20 @@
       "paperUrl": "https://doi.org/10.1109/asap52443.2021.00040",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "AI",
+        "Optimizations",
+        "Performance",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "AI",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "AI",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
+        "AI",
         "Intermediate Representation",
         "ML Accelerator",
         "Domain Specific",
@@ -11396,16 +11462,16 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3460120.3484787",
       "sourceUrl": "https://doi.org/10.1145/3460120.3484787",
       "tags": [
-        "Security",
-        "Performance",
-        "Clang",
-        "Testing"
-      ],
-      "keywords": [
-        "Security",
-        "Performance",
         "Clang",
         "Testing",
+        "Security",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Testing",
+        "Security",
+        "Performance",
         "Fuzzing",
         "Coverage Guided Tracing",
         "Fuzzing Nperformance",
@@ -11460,16 +11526,15 @@
       "paperUrl": "https://arxiv.org/pdf/2112.10677",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2112.10677",
       "tags": [
-        "Performance",
+        "MLIR",
         "IR",
-        "Quantum Computing",
-        "MLIR"
+        "Performance",
+        "Quantum Computing"
       ],
       "keywords": [
-        "Performance",
-        "IR",
-        "Quantum Computing",
         "MLIR",
+        "Performance",
+        "Quantum Computing",
         "Intermediate Representation",
         "Quantum Compilation",
         "Quantum Circuit",
@@ -11502,18 +11567,19 @@
       "paperUrl": "https://doi.org/10.26083/tuprints-00019772",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
+        "OpenMP",
         "Performance",
-        "GPU",
-        "ML",
         "Libraries",
-        "MLIR"
+        "GPU",
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "GPU",
-        "ML",
-        "Libraries",
         "MLIR",
+        "OpenMP",
+        "Performance",
+        "Libraries",
+        "GPU",
         "Offloading",
         "Heterogeneous Computing",
         "Programming Frameworks",
@@ -11567,24 +11633,22 @@
       "paperUrl": "https://doi.org/10.1145/3460945.3464955",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
-        "Loop transformations",
+        "Optimizations",
         "Autovectorization",
-        "ML",
+        "Loop transformations",
+        "Performance",
         "Libraries",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "Loop transformations",
-        "Autovectorization",
-        "ML",
-        "Libraries",
         "MLIR",
+        "Optimizations",
+        "Autovectorization",
+        "Loop transformations",
+        "Performance",
+        "Libraries",
         "Intermediate Representation",
         "Loop Optimization",
         "Locality Optimization",
@@ -11636,11 +11700,12 @@
       "paperUrl": "https://arxiv.org/pdf/2111.15286",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2111.15286",
       "tags": [
+        "LLVM",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
+        "Performance",
         "Posit Instructions",
         "Single Precision Floats",
         "Posits",
@@ -11899,31 +11964,33 @@
       "paperUrl": "https://arxiv.org/pdf/2108.13191",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2108.13191",
       "tags": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "GPU",
+        "LLVM",
+        "MLIR",
         "IR",
+        "Backend",
+        "Code Generation",
+        "Optimizations",
+        "Performance",
         "Infrastructure",
-        "ML",
         "Libraries",
-        "MLIR"
+        "GPU",
+        "ML"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "GPU",
-        "IR",
-        "Infrastructure",
-        "ML",
-        "Libraries",
-        "MLIR",
         "LLVM",
-        "Intermediate Representation",
+        "MLIR",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Performance",
+        "Infrastructure",
+        "Libraries",
+        "GPU",
+        "Intermediate Representation",
         "Performance GPU",
-        "Compiler Infrastructure"
+        "Compiler Infrastructure",
+        "Matrix Multiplication",
+        "Intermediate Representation IR"
       ],
       "matchedAuthors": [
         "Uday Bondhugula"
@@ -11952,23 +12019,23 @@
       "paperUrl": "https://arxiv.org/pdf/2103.00194",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2103.00194",
       "tags": [
-        "Backend",
-        "Optimizations",
+        "LLVM",
+        "MLIR",
         "IR",
+        "Backend",
+        "Code Generation",
+        "Optimizations",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
-        "Backend",
-        "Optimizations",
-        "IR",
-        "Infrastructure",
-        "ML",
-        "MLIR",
         "LLVM",
-        "Intermediate Representation",
+        "MLIR",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Infrastructure",
+        "Intermediate Representation",
         "Hardware",
         "Hardware Accelerator Description",
         "Custom Hardware",
@@ -12101,11 +12168,12 @@
       "paperUrl": "https://doi.org/10.26226/morressier.604907f41a80aac83ca25d21",
       "sourceUrl": "",
       "tags": [
+        "LLVM",
         "IR"
       ],
       "keywords": [
-        "IR",
         "LLVM",
+        "IR",
         "Intermediate Representation",
         "Verified Fine Grained"
       ],
@@ -12141,13 +12209,14 @@
       "paperUrl": "https://arxiv.org/pdf/2104.14993",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2104.14993",
       "tags": [
+        "LLVM",
         "Security",
         "Infrastructure"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Infrastructure",
-        "LLVM",
         "Control Flow Attacks",
         "Fault Attacks",
         "ARM Pointer Authentication",
@@ -12189,19 +12258,19 @@
       "paperUrl": "https://arxiv.org/pdf/2109.00506",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2109.00506",
       "tags": [
-        "Optimizations",
+        "LLVM",
+        "MLIR",
         "IR",
+        "Optimizations",
         "Programming Languages",
-        "Quantum Computing",
-        "MLIR"
+        "Quantum Computing"
       ],
       "keywords": [
+        "LLVM",
+        "MLIR",
         "Optimizations",
-        "IR",
         "Programming Languages",
         "Quantum Computing",
-        "MLIR",
-        "LLVM",
         "Intermediate Representation",
         "Quantum Compilation",
         "Nquantum Language",
@@ -12238,19 +12307,19 @@
       "paperUrl": "https://arxiv.org/pdf/2109.00506.pdf",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2109.00506",
       "tags": [
-        "Optimizations",
+        "LLVM",
+        "MLIR",
         "IR",
+        "Optimizations",
         "Programming Languages",
-        "Quantum Computing",
-        "MLIR"
+        "Quantum Computing"
       ],
       "keywords": [
+        "LLVM",
+        "MLIR",
         "Optimizations",
-        "IR",
         "Programming Languages",
         "Quantum Computing",
-        "MLIR",
-        "LLVM",
         "Intermediate Representation",
         "Quantum Compilation",
         "Quantum Language",
@@ -12258,7 +12327,8 @@
         "Classical",
         "Programming Patterns",
         "Quantum Programming",
-        "Retargetable Optimizing Compilers"
+        "Retargetable Optimizing Compilers",
+        "Quantum Accelerators"
       ],
       "matchedAuthors": [
         "Alexander McCaskey",
@@ -12304,17 +12374,18 @@
       "paperUrl": "https://arxiv.org/pdf/2110.15425",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2110.15425",
       "tags": [
-        "Performance",
-        "Static Analysis",
+        "LLVM",
         "IR",
+        "Static Analysis",
+        "Performance",
         "AI"
       ],
       "keywords": [
-        "Performance",
-        "Static Analysis",
-        "IR",
-        "AI",
         "LLVM",
+        "IR",
+        "Static Analysis",
+        "Performance",
+        "AI",
         "Intermediate Representation",
         "Dataflow Analysis",
         "Cognitive",
@@ -12456,20 +12527,18 @@
       "paperUrl": "https://arxiv.org/pdf/2103.05288",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2103.05288",
       "tags": [
-        "Optimizations",
+        "MLIR",
         "IR",
-        "AI",
+        "Optimizations",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "AI",
+        "ML"
       ],
       "keywords": [
-        "Optimizations",
-        "IR",
-        "AI",
-        "Infrastructure",
-        "ML",
         "MLIR",
+        "Optimizations",
+        "Infrastructure",
+        "AI",
         "Machine Learning Workloads",
         "Shape Compiler"
       ],
@@ -12533,20 +12602,18 @@
       "paperUrl": "https://doi.org/10.1145/3437984.3458838",
       "sourceUrl": "",
       "tags": [
-        "Optimizations",
+        "MLIR",
         "IR",
-        "AI",
+        "Optimizations",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "AI",
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Optimizations",
-        "IR",
-        "AI",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "AI"
       ],
       "matchedAuthors": [
         "Jun Yang",
@@ -12578,14 +12645,14 @@
       "tags": [
         "Clang",
         "Static Analysis",
-        "Programming Languages",
-        "Infrastructure"
+        "Infrastructure",
+        "Programming Languages"
       ],
       "keywords": [
         "Clang",
         "Static Analysis",
-        "Programming Languages",
         "Infrastructure",
+        "Programming Languages",
         "Thread Scheduling"
       ],
       "matchedAuthors": [
@@ -12611,20 +12678,22 @@
       "paperUrl": "http://www.theses.fr/2021GRALM020/document",
       "sourceUrl": "",
       "tags": [
-        "Backend",
-        "Performance",
-        "Optimizations",
+        "LLVM",
         "Polly",
+        "Backend",
+        "Code Generation",
+        "Optimizations",
+        "Performance",
         "Libraries"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
-        "Optimizations",
-        "Polly",
-        "Libraries",
         "LLVM",
+        "Polly",
+        "Backend",
         "Code Generation",
+        "Optimizations",
+        "Performance",
+        "Libraries",
         "Variable Precision Computing",
         "Arithmetic",
         "Formats",
@@ -12676,17 +12745,18 @@
       "paperUrl": "http://arxiv.org/pdf/2110.15425.pdf",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Static Analysis",
+        "LLVM",
         "IR",
+        "Static Analysis",
+        "Performance",
         "AI"
       ],
       "keywords": [
-        "Performance",
-        "Static Analysis",
-        "IR",
-        "AI",
         "LLVM",
+        "IR",
+        "Static Analysis",
+        "Performance",
+        "AI",
         "Intermediate Representation",
         "Dataflow Analysis",
         "Cognitive",
@@ -12776,16 +12846,16 @@
       "paperUrl": "https://hal.science/hal-03447628",
       "sourceUrl": "https://doi.org/10.1109/saner50967.2021.00021",
       "tags": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "Infrastructure",
         "ML"
       ],
       "keywords": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "Infrastructure",
         "ML",
         "Control Flow Graph",
@@ -12866,20 +12936,19 @@
       "paperUrl": "https://ieeexplore.ieee.org/document/9643474",
       "sourceUrl": "https://doi.org/10.1109/iccad51958.2021.9643474",
       "tags": [
+        "MLIR",
         "Backend",
         "Frontend",
-        "AI",
         "Infrastructure",
-        "ML",
-        "MLIR"
+        "AI",
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
         "Frontend",
-        "AI",
         "Infrastructure",
-        "ML",
-        "MLIR",
+        "AI",
         "Neuromorphic Machine Learning",
         "Machine Learning Accelerators",
         "Artificial Intelligence",
@@ -12887,7 +12956,8 @@
         "Spiking Neural",
         "Hardware",
         "Discuss",
-        "Neural Network"
+        "Neural Network",
+        "Spiking Neuromorphic Machine"
       ],
       "matchedAuthors": [
         "Ankur Limaye",
@@ -12934,14 +13004,14 @@
       "paperUrl": "https://doi.org/10.1109/zinc52049.2021.9499304",
       "sourceUrl": "",
       "tags": [
-        "Security",
-        "Clang",
-        "Static Analysis"
-      ],
-      "keywords": [
-        "Security",
         "Clang",
         "Static Analysis",
+        "Security"
+      ],
+      "keywords": [
+        "Clang",
+        "Static Analysis",
+        "Security",
         "Autocheck",
         "Automotive",
         "Checking Compliance",
@@ -12975,15 +13045,15 @@
       "paperUrl": "https://arxiv.org/pdf/2101.11365",
       "sourceUrl": "https://doi.org/10.1109/qce52317.2021.00043",
       "tags": [
+        "LLVM",
+        "MLIR",
         "IR",
-        "Quantum Computing",
-        "MLIR"
+        "Quantum Computing"
       ],
       "keywords": [
-        "IR",
-        "Quantum Computing",
-        "MLIR",
         "LLVM",
+        "MLIR",
+        "Quantum Computing",
         "Intermediate Representation",
         "Quantum Compilation",
         "Quantum Assembly Languages",
@@ -13034,13 +13104,14 @@
       "paperUrl": "https://arxiv.org/pdf/2111.14072",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2111.14072",
       "tags": [
-        "Security",
-        "Testing"
+        "LLVM",
+        "Testing",
+        "Security"
       ],
       "keywords": [
-        "Security",
-        "Testing",
         "LLVM",
+        "Testing",
+        "Security",
         "Memory Safety",
         "Processor Security",
         "Security Extensions",
@@ -13167,17 +13238,17 @@
       "paperUrl": "https://doi.org/10.5281/zenodo.3709089",
       "sourceUrl": "",
       "tags": [
-        "Security",
-        "Performance",
         "Clang",
         "Autovectorization",
+        "Security",
+        "Performance",
         "Infrastructure"
       ],
       "keywords": [
-        "Security",
-        "Performance",
         "Clang",
         "Autovectorization",
+        "Security",
+        "Performance",
         "Infrastructure",
         "SIMD",
         "Improvements",
@@ -13245,13 +13316,14 @@
       "paperUrl": "https://arxiv.org/pdf/2012.00556",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2012.00556",
       "tags": [
-        "Testing",
-        "Dynamic Analysis"
+        "LLVM",
+        "Dynamic Analysis",
+        "Testing"
       ],
       "keywords": [
-        "Testing",
-        "Dynamic Analysis",
         "LLVM",
+        "Dynamic Analysis",
+        "Testing",
         "Symbolic Execution",
         "Experiment Shows",
         "Path Explosion"
@@ -13318,13 +13390,14 @@
       "paperUrl": "https://arxiv.org/pdf/2004.07415",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2004.07415",
       "tags": [
+        "LLVM",
         "Performance",
         "Infrastructure"
       ],
       "keywords": [
+        "LLVM",
         "Performance",
         "Infrastructure",
-        "LLVM",
         "Mosaicsim Simulator Full",
         "Hardware",
         "Heterogeneous",
@@ -13367,16 +13440,16 @@
       "paperUrl": "http://hdl.handle.net/11311/1148653",
       "sourceUrl": "https://doi.org/10.1109/tcad.2020.3012318",
       "tags": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "GPU",
         "ML"
       ],
       "keywords": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "GPU",
         "ML",
         "Speedup",
@@ -13423,13 +13496,16 @@
       "paperUrl": "https://arxiv.org/pdf/2011.03196",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2011.03196",
       "tags": [
+        "LLVM",
+        "OpenMP",
         "Performance",
         "Libraries"
       ],
       "keywords": [
+        "LLVM",
+        "OpenMP",
         "Performance",
         "Libraries",
-        "LLVM",
         "Task Graph Scheduling",
         "Synchronization",
         "Graph Scheduling Extensions"
@@ -13469,15 +13545,16 @@
       "paperUrl": "https://arxiv.org/pdf/2008.08951",
       "sourceUrl": "https://doi.org/10.1109/llvmhpchipar51896.2020.00006",
       "tags": [
-        "Performance",
+        "LLVM",
+        "IR",
         "Optimizations",
-        "IR"
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
         "LLVM",
+        "IR",
+        "Optimizations",
+        "Performance",
         "Intermediate Representation",
         "Neural Compiler Optimization",
         "Optimization Sequences",
@@ -13532,15 +13609,16 @@
       "paperUrl": "https://arxiv.org/abs/2002.02831",
       "sourceUrl": "",
       "tags": [
+        "LLVM",
         "Security",
         "Performance",
         "Embedded"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Performance",
         "Embedded",
-        "LLVM",
         "Memory Spatial Errors",
         "Saturation Memory Access",
         "Pointer",
@@ -13593,17 +13671,16 @@
       "paperUrl": "https://arxiv.org/pdf/2004.09062",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2004.09062",
       "tags": [
+        "LLVM",
         "Security",
         "Performance",
-        "C Libs",
         "Libraries"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Performance",
-        "C Libs",
         "Libraries",
-        "LLVM",
         "Saturation Memory Access",
         "S3library Automatically Eliminating",
         "Buffer Overflows",
@@ -13641,13 +13718,14 @@
       "paperUrl": "https://arxiv.org/pdf/2006.05875",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2006.05875",
       "tags": [
+        "LLVM",
         "IR",
         "Programming Languages"
       ],
       "keywords": [
+        "LLVM",
         "IR",
         "Programming Languages",
-        "LLVM",
         "Intermediate Representation",
         "Retrofitting Symbolic Holes",
         "LLVM IR"
@@ -13687,20 +13765,19 @@
       "paperUrl": "https://arxiv.org/pdf/1912.05036",
       "sourceUrl": "https://doi.org/10.1145/3391902",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "MLIR",
         "IR",
+        "Optimizations",
+        "Performance",
         "Embedded",
-        "Programming Languages",
-        "MLIR"
+        "Programming Languages"
       ],
       "keywords": [
-        "Performance",
+        "MLIR",
         "Optimizations",
-        "IR",
+        "Performance",
         "Embedded",
         "Programming Languages",
-        "MLIR",
         "Intermediate Representation",
         "Flow Centric",
         "Optimizing Compilers",
@@ -13738,14 +13815,14 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3411502.3418429",
       "sourceUrl": "https://doi.org/10.1145/3411502.3418429",
       "tags": [
-        "Security",
-        "Clang",
-        "Optimizations"
-      ],
-      "keywords": [
-        "Security",
         "Clang",
         "Optimizations",
+        "Security"
+      ],
+      "keywords": [
+        "Clang",
+        "Optimizations",
+        "Security",
         "Disassembly Ground Truth",
         "Binaries",
         "Disassemblers"
@@ -13793,15 +13870,16 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3368826.3377928",
       "sourceUrl": "https://doi.org/10.1145/3368826.3377928",
       "tags": [
-        "Performance",
-        "Optimizations",
-        "Autovectorization"
-      ],
-      "keywords": [
-        "Performance",
+        "LLVM",
         "Optimizations",
         "Autovectorization",
+        "Performance"
+      ],
+      "keywords": [
         "LLVM",
+        "Optimizations",
+        "Autovectorization",
+        "Performance",
         "SIMD",
         "Vectorization Factors",
         "Deep Reinforcement Learning",
@@ -13837,15 +13915,17 @@
       "paperUrl": "https://arxiv.org/pdf/1809.04676",
       "sourceUrl": "https://doi.org/10.1109/tc.2020.2982888",
       "tags": [
-        "Performance",
         "Clang",
+        "BOLT",
         "Optimizations",
+        "Performance",
         "ML"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "BOLT",
         "Optimizations",
+        "Performance",
         "ML",
         "Basic Block Reordering",
         "Binary Optimization"
@@ -13873,22 +13953,22 @@
       "paperUrl": "https://arxiv.org/pdf/2003.00532",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2003.00532",
       "tags": [
-        "Backend",
-        "Performance",
+        "MLIR",
         "IR",
+        "Backend",
+        "Code Generation",
+        "Performance",
         "Infrastructure",
-        "Libraries",
-        "MLIR"
+        "Libraries"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
+        "Code Generation",
         "Performance",
-        "IR",
         "Infrastructure",
         "Libraries",
-        "MLIR",
-        "Intermediate Representation",
-        "Code Generation"
+        "Intermediate Representation"
       ],
       "matchedAuthors": [
         "Uday Bondhugula"
@@ -13925,19 +14005,20 @@
       "paperUrl": "https://arxiv.org/pdf/2004.08140",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2004.08140",
       "tags": [
-        "Performance",
-        "Optimizations",
-        "GPU",
+        "LLVM",
         "IR",
+        "Optimizations",
+        "Performance",
+        "GPU",
         "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "GPU",
-        "IR",
-        "ML",
         "LLVM",
+        "IR",
+        "Optimizations",
+        "Performance",
+        "GPU",
+        "ML",
         "Gevo GPU",
         "Kernel Performance Improvement",
         "Evolutionary Computation",
@@ -14035,17 +14116,17 @@
       "paperUrl": "https://escholarship.org/uc/item/8pz574mn",
       "sourceUrl": "",
       "tags": [
-        "Security",
-        "Optimizations",
         "IR",
+        "Optimizations",
         "Testing",
+        "Security",
         "Infrastructure"
       ],
       "keywords": [
-        "Security",
-        "Optimizations",
         "IR",
+        "Optimizations",
         "Testing",
+        "Security",
         "Infrastructure",
         "Intermediate Representation",
         "Sanitizers",
@@ -14138,15 +14219,15 @@
       "paperUrl": "https://ieeexplore.ieee.org/ielx7/6287639/8948470/09167239.pdf",
       "sourceUrl": "https://doi.org/10.1109/access.2020.3016758",
       "tags": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "ML"
       ],
       "keywords": [
-        "Performance",
         "Clang",
         "Optimizations",
+        "Performance",
         "ML",
         "Compilation Optimization Pass",
         "Optimization Pass Selection",
@@ -14210,15 +14291,15 @@
       "sourceUrl": "",
       "tags": [
         "Clang",
+        "Testing",
         "GPU",
-        "CUDA",
-        "Testing"
+        "CUDA"
       ],
       "keywords": [
         "Clang",
+        "Testing",
         "GPU",
         "CUDA",
-        "Testing",
         "Fuzzing",
         "Differential Testing",
         "Parallel Computing",
@@ -14257,7 +14338,9 @@
       "abstract": "In this work we present our work in developing a software verification tool for llvm-code - Lodin - that incorporates both explicit-state model checking, statistical model checking and symbolic state model checking algorithms.",
       "paperUrl": "https://arxiv.org/pdf/2006.02670",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2006.02670",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Model Checking",
@@ -14308,17 +14391,18 @@
       "paperUrl": "https://arxiv.org/pdf/2010.04414",
       "sourceUrl": "https://doi.org/10.48550/arxiv.2010.04414",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "LLVM",
         "IR",
+        "Optimizations",
+        "Performance",
         "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "ML",
         "LLVM",
+        "IR",
+        "Optimizations",
+        "Performance",
+        "ML",
         "Intermediate Representation",
         "Multi Core Platform",
         "Vertex Cut",
@@ -14363,15 +14447,15 @@
       "tags": [
         "Clang",
         "Static Analysis",
-        "Testing",
         "Dynamic Analysis",
+        "Testing",
         "Infrastructure"
       ],
       "keywords": [
         "Clang",
         "Static Analysis",
-        "Testing",
         "Dynamic Analysis",
+        "Testing",
         "Infrastructure",
         "Symbolic Execution",
         "Symbolic Execution Engine",
@@ -14498,14 +14582,14 @@
       "paperUrl": "https://zenodo.org/record/3359989",
       "sourceUrl": "https://doi.org/10.5281/zenodo.3359989",
       "tags": [
-        "Performance",
         "Clang",
+        "Performance",
         "GPU",
         "Embedded"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "Performance",
         "GPU",
         "Embedded",
         "Offloading",
@@ -14573,19 +14657,20 @@
       "paperUrl": "https://doi.org/10.1145/3300189.3300190",
       "sourceUrl": "",
       "tags": [
-        "Backend",
-        "Embedded",
         "LLDB",
+        "Backend",
+        "Code Generation",
+        "Debug Information",
         "Testing",
-        "Debug Information"
+        "Embedded"
       ],
       "keywords": [
-        "Backend",
-        "Embedded",
         "LLDB",
-        "Testing",
-        "Debug Information",
+        "Backend",
         "Code Generation",
+        "Debug Information",
+        "Testing",
+        "Embedded",
         "Stateflow",
         "Traceability",
         "Automatically Generated",
@@ -14626,15 +14711,16 @@
       "paperUrl": "https://arxiv.org/pdf/1905.08325",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1905.08325",
       "tags": [
-        "Security",
+        "LLVM",
         "IR",
+        "Security",
         "Programming Languages"
       ],
       "keywords": [
-        "Security",
-        "IR",
-        "Programming Languages",
         "LLVM",
+        "IR",
+        "Security",
+        "Programming Languages",
         "Intermediate Representation",
         "Neural Decompilation",
         "Decompilers"
@@ -14674,14 +14760,14 @@
       "paperUrl": "https://ieeexplore.ieee.org/ielx7/8826229/8835208/08835248.pdf",
       "sourceUrl": "https://doi.org/10.1109/sp.2019.00047",
       "tags": [
-        "Security",
-        "Clang",
-        "Optimizations"
-      ],
-      "keywords": [
-        "Security",
         "Clang",
         "Optimizations",
+        "Security"
+      ],
+      "keywords": [
+        "Clang",
+        "Optimizations",
+        "Security",
         "Flow Attacks",
         "Speculative",
         "Spectre",
@@ -14715,17 +14801,18 @@
       "paperUrl": "https://arxiv.org/pdf/1908.11338",
       "sourceUrl": "https://doi.org/10.1109/hpec.2019.8916312",
       "tags": [
-        "Performance",
-        "Optimizations",
+        "LLVM",
         "IR",
+        "Optimizations",
+        "Performance",
         "ML"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
-        "IR",
-        "ML",
         "LLVM",
+        "IR",
+        "Optimizations",
+        "Performance",
+        "ML",
         "Intermediate Representation",
         "Tapirxla Embedding Fork",
         "Fork Join Parallelism",
@@ -14867,7 +14954,9 @@
       "abstract": "Data exfiltration attacks have led to huge data breaches. Recently, the Equifax attack affected 147M users and a third-party library - Apache Struts - was alleged to be responsible for it. These attacks often exploit the fact that sensitive data are stored unencrypted in process memory and can be accessed by any function executing within the same process, including untrusted third-party library functions. This paper presents StackVault, a kernel-based system to prevent sensitive stack-based data from being accessed in an unauthorized manner by intra-process functions. Stack-based data includes data on stack as well as data pointed to by pointer variables on stack. StackVault consists of three components: (1) a set of programming APIs to allow users to specify which data needs to be protected, (2) a kernel module which uses unforgeable function identities to reliably carry out the sensitive data protection, and (3) an LLVM compiler extension that enables transparent placement of stack protection operations. The StackVault system automatically enforces stack protection through spatial and temporal access monitoring and control over both sensitive stack data and untrusted functions. We implemented StackVault and evaluated it using a number of popular real-world applications, including gRPC. The results show that StackVault is effective and efficient, incurring only up to 2.4% runtime overhead.",
       "paperUrl": "https://arxiv.org/pdf/1907.03710",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1907.03710",
-      "tags": [],
+      "tags": [
+        "LLVM"
+      ],
       "keywords": [
         "LLVM",
         "Stackvault Protection",
@@ -14944,13 +15033,14 @@
       "paperUrl": "https://arxiv.org/pdf/1905.08178",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1905.08178",
       "tags": [
-        "Performance",
-        "Optimizations"
+        "LLVM",
+        "Optimizations",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Optimizations",
         "LLVM",
+        "Optimizations",
+        "Performance",
         "Partial Redundancy Elimination"
       ],
       "matchedAuthors": [
@@ -14988,18 +15078,16 @@
       "paperUrl": "https://doi.org/10.1109/bigdata47090.2019.9006180",
       "sourceUrl": "",
       "tags": [
+        "MLIR",
+        "IR",
         "Backend",
         "Frontend",
-        "IR",
-        "ML",
-        "MLIR"
+        "ML"
       ],
       "keywords": [
+        "MLIR",
         "Backend",
         "Frontend",
-        "IR",
-        "ML",
-        "MLIR",
         "Machine Learning Frameworks",
         "Parallel Training Schemes",
         "Computation Graph Transformations",
@@ -15048,15 +15136,16 @@
       "paperUrl": "https://arxiv.org/pdf/1909.13639",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1909.13639",
       "tags": [
-        "Performance",
-        "Optimizations",
-        "Autovectorization"
-      ],
-      "keywords": [
-        "Performance",
+        "LLVM",
         "Optimizations",
         "Autovectorization",
+        "Performance"
+      ],
+      "keywords": [
         "LLVM",
+        "Optimizations",
+        "Autovectorization",
+        "Performance",
         "Nvectorization",
         "Deep Reinforcement",
         "Nvectorization Factors"
@@ -15103,15 +15192,16 @@
       "paperUrl": "https://arxiv.org/pdf/1911.02373",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1911.02373",
       "tags": [
+        "LLVM",
         "Performance",
         "GPU",
         "CUDA"
       ],
       "keywords": [
+        "LLVM",
         "Performance",
         "GPU",
         "CUDA",
-        "LLVM",
         "Kernel Launch Parameters",
         "Performance Prediction",
         "Parameters Targeting CUDA",
@@ -15151,14 +15241,14 @@
       "paperUrl": "https://ieeexplore.ieee.org/ielx7/8826229/8835208/08835316.pdf",
       "sourceUrl": "https://doi.org/10.1109/sp.2019.00069",
       "tags": [
-        "Performance",
-        "Clang",
-        "Testing"
-      ],
-      "keywords": [
-        "Performance",
         "Clang",
         "Testing",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Testing",
+        "Performance",
         "Fuzzing",
         "Coverage Guided Tracing",
         "Testcases",
@@ -15206,14 +15296,15 @@
       "paperUrl": "https://doi.org/10.1109/isvlsi.2019.00055",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Clang"
+        "Clang",
+        "OpenMP",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
         "Clang",
-        "Parallel Computing",
         "OpenMP",
+        "Performance",
+        "Parallel Computing",
         "OpenMP Soft Error",
         "Reliability",
         "GCC",
@@ -15256,19 +15347,20 @@
       "paperUrl": "http://hdl.handle.net/10902/23133",
       "sourceUrl": "https://doi.org/10.1109/dcis201949030.2019.8959934",
       "tags": [
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Performance",
         "GPU",
         "Embedded"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Performance",
         "GPU",
         "Embedded",
         "Offloading",
         "Heterogeneous Platforms",
-        "OpenMP",
         "Space Exploration"
       ],
       "matchedAuthors": [
@@ -15310,13 +15402,14 @@
       "paperUrl": "https://arxiv.org/pdf/1909.11238",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1909.11238",
       "tags": [
-        "Performance",
-        "IR"
+        "LLVM",
+        "IR",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "IR",
         "LLVM",
+        "IR",
+        "Performance",
         "Intermediate Representation",
         "Energy",
         "Parallel Execution",
@@ -15362,13 +15455,14 @@
       "paperUrl": "https://arxiv.org/pdf/1905.01833",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1905.01833",
       "tags": [
+        "LLVM",
         "GPU",
         "CUDA"
       ],
       "keywords": [
+        "LLVM",
         "GPU",
         "CUDA",
-        "LLVM",
         "Parallel Computing",
         "CUDA Program",
         "Synchronization Bugs",
@@ -15420,11 +15514,12 @@
       "paperUrl": "https://arxiv.org/pdf/1907.06828",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1907.06828",
       "tags": [
+        "LLVM",
         "Security"
       ],
       "keywords": [
-        "Security",
         "LLVM",
+        "Security",
         "Control Flow Graph",
         "Reverse Engineering",
         "Native Binary",
@@ -15491,14 +15586,14 @@
       "paperUrl": "https://arxiv.org/pdf/1901.02819",
       "sourceUrl": "https://doi.org/10.1109/scam.2019.00020",
       "tags": [
-        "Performance",
-        "Clang",
-        "Static Analysis"
-      ],
-      "keywords": [
-        "Performance",
         "Clang",
         "Static Analysis",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Static Analysis",
+        "Performance",
         "Bug Injector",
         "Host Program",
         "Automated Customized Bug"
@@ -15546,15 +15641,16 @@
       "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3318170.3318191",
       "sourceUrl": "https://doi.org/10.1145/3318170.3318191",
       "tags": [
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Performance",
         "Libraries"
       ],
       "keywords": [
-        "Performance",
         "Clang",
-        "Libraries",
         "OpenMP",
+        "Performance",
+        "Libraries",
         "Standardization Efforts",
         "Own Codes",
         "Smooth Migration"
@@ -15602,13 +15698,14 @@
       "paperUrl": "https://arxiv.org/pdf/1912.10666",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1912.10666",
       "tags": [
+        "LLVM",
         "Security",
         "Performance"
       ],
       "keywords": [
+        "LLVM",
         "Security",
         "Performance",
-        "LLVM",
         "Control Flow Graph",
         "ARM Pointer Authentication",
         "Pointers",
@@ -15656,13 +15753,13 @@
       "paperUrl": "https://arxiv.org/pdf/1805.04775",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1805.04775",
       "tags": [
-        "Performance",
         "Clang",
+        "Performance",
         "Libraries"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "Performance",
         "Libraries",
         "Slingen",
         "Scale Linear Algebra",
@@ -15714,13 +15811,15 @@
       "sourceUrl": "",
       "tags": [
         "Clang",
-        "GPU",
-        "Flang"
+        "Flang",
+        "OpenMP",
+        "GPU"
       ],
       "keywords": [
         "Clang",
-        "GPU",
         "Flang",
+        "OpenMP",
+        "GPU",
         "Offloading",
         "OpenMP Offload",
         "Summit",
@@ -15768,12 +15867,12 @@
       "paperUrl": "https://doi.org/10.14722/ndss.2018.23312",
       "sourceUrl": "",
       "tags": [
-        "Performance",
-        "Testing"
+        "Testing",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
         "Testing",
+        "Performance",
         "Fuzzing",
         "Sanitizers",
         "Memory Errors",
@@ -15862,13 +15961,14 @@
       "paperUrl": "http://arxiv.org/abs/1806.09026",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1806.09026",
       "tags": [
-        "Performance",
-        "Testing"
+        "LLVM",
+        "Testing",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
-        "Testing",
         "LLVM",
+        "Testing",
+        "Performance",
         "Sanitizers",
         "Preventing Buffer Overflows",
         "Introspection",
@@ -15912,12 +16012,12 @@
       "paperUrl": "https://www.osti.gov/biblio/1471491",
       "sourceUrl": "https://doi.org/10.11578/dc.20180919.2",
       "tags": [
-        "Performance",
-        "Clang"
+        "Clang",
+        "Performance"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "Performance",
         "Library",
         "Meta Programming Library",
         "Compile",
@@ -15946,28 +16046,29 @@
       "paperUrl": "http://hdl.handle.net/10803/664285",
       "sourceUrl": "https://doi.org/10.5821/dissertation-2117-125844",
       "tags": [
-        "Performance",
         "Clang",
+        "OpenMP",
         "Optimizations",
-        "GPU",
         "Autovectorization",
+        "Performance",
+        "Infrastructure",
+        "GPU",
         "CUDA",
-        "OpenCL",
-        "Infrastructure"
+        "OpenCL"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "OpenMP",
         "Optimizations",
-        "GPU",
         "Autovectorization",
+        "Performance",
+        "Infrastructure",
+        "GPU",
         "CUDA",
         "OpenCL",
-        "Infrastructure",
         "SIMD",
         "Thesis",
         "GPU Programming",
-        "OpenMP",
         "Targets",
         "Transformation"
       ],
@@ -16002,17 +16103,18 @@
       "paperUrl": "https://arxiv.org/pdf/1807.00638",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1807.00638",
       "tags": [
-        "Performance",
+        "LLVM",
         "Clang",
         "Optimizations",
+        "Performance",
         "Embedded"
       ],
       "keywords": [
-        "Performance",
+        "LLVM",
         "Clang",
         "Optimizations",
+        "Performance",
         "Embedded",
-        "LLVM",
         "Energy Consumed",
         "Compiler Phase Ordering",
         "Reduce Energy",
@@ -16051,17 +16153,18 @@
       "paperUrl": "https://arxiv.org/pdf/1807.00638",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1807.00638",
       "tags": [
-        "Performance",
+        "LLVM",
         "Clang",
         "Optimizations",
+        "Performance",
         "Embedded"
       ],
       "keywords": [
-        "Performance",
+        "LLVM",
         "Clang",
         "Optimizations",
+        "Performance",
         "Embedded",
-        "LLVM",
         "Reducing Energy Consumption",
         "Compiler Phase Ordering",
         "Reduce Energy",
@@ -16139,16 +16242,16 @@
       "paperUrl": "http://www.cs.ubbcluj.ro/~studia-i/journal/journal/article/download/30/30",
       "sourceUrl": "https://doi.org/10.24193/subbi.2018.2.06",
       "tags": [
-        "Performance",
-        "Clang",
-        "Static Analysis",
-        "Dynamic Analysis"
-      ],
-      "keywords": [
-        "Performance",
         "Clang",
         "Static Analysis",
         "Dynamic Analysis",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Static Analysis",
+        "Dynamic Analysis",
+        "Performance",
         "Symbolic Execution",
         "Analyzer",
         "Reports",
@@ -16234,20 +16337,21 @@
       "paperUrl": "https://arxiv.org/pdf/1711.01845",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1711.01845",
       "tags": [
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Performance",
         "GPU",
         "CUDA",
         "Programming Languages"
       ],
       "keywords": [
-        "Performance",
         "Clang",
+        "OpenMP",
+        "Performance",
         "GPU",
         "CUDA",
         "Programming Languages",
         "Unstructured Mesh",
-        "OpenMP",
         "Parallelisation"
       ],
       "matchedAuthors": [
@@ -16275,15 +16379,16 @@
       "paperUrl": "https://arxiv.org/pdf/1712.03320",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1712.03320",
       "tags": [
+        "Clang",
         "Backend",
-        "Performance",
-        "Clang"
+        "Code Generation",
+        "Performance"
       ],
       "keywords": [
-        "Backend",
-        "Performance",
         "Clang",
+        "Backend",
         "Code Generation",
+        "Performance",
         "Query Processing",
         "Specific",
         "Given Query",
@@ -16316,13 +16421,14 @@
       "paperUrl": "https://arxiv.org/pdf/1705.11000.pdf",
       "sourceUrl": "https://doi.org/10.48550/arxiv.1705.11000",
       "tags": [
+        "LLVM",
         "Clang",
         "Libraries"
       ],
       "keywords": [
+        "LLVM",
         "Clang",
         "Libraries",
-        "LLVM",
         "Compiled Libraries",
         "Python Bindings",
         "Autowig Automatic Generation"
@@ -16359,30 +16465,31 @@
       "paperUrl": "https://doi.org/10.1016/j.procs.2017.05.276",
       "sourceUrl": "",
       "tags": [
+        "Clang",
+        "OpenMP",
         "Backend",
+        "Optimizations",
+        "Autovectorization",
         "Security",
         "Performance",
-        "Clang",
-        "Optimizations",
         "GPU",
-        "Autovectorization",
         "Embedded"
       ],
       "keywords": [
+        "Clang",
+        "OpenMP",
         "Backend",
+        "Optimizations",
+        "Autovectorization",
         "Security",
         "Performance",
-        "Clang",
-        "Optimizations",
         "GPU",
-        "Autovectorization",
         "Embedded",
         "Parallel Computing",
         "Manycore",
         "Distributed Shared Memory",
         "Addresses",
-        "Challenge",
-        "Epiphany"
+        "Challenge"
       ],
       "matchedAuthors": [
         "Jerónimo Castrillón"
@@ -16469,15 +16576,16 @@
       "paperUrl": "https://arxiv.org/pdf/1712.01718",
       "sourceUrl": "https://doi.org/10.1145/3148173.3148187",
       "tags": [
-        "Performance",
+        "LLVM",
         "Clang",
+        "Performance",
         "Infrastructure"
       ],
       "keywords": [
-        "Performance",
-        "Clang",
-        "Infrastructure",
         "LLVM",
+        "Clang",
+        "Performance",
+        "Infrastructure",
         "Instrumentation",
         "LLVM Instrumentation Plug",
         "Monitoring Infrastructures"
@@ -16529,11 +16637,12 @@
       "paperUrl": "http://hdl.handle.net/21.11116/0000-0000-AC98-3",
       "sourceUrl": "",
       "tags": [
+        "LLVM",
         "Performance"
       ],
       "keywords": [
-        "Performance",
         "LLVM",
+        "Performance",
         "Instrumenting Compiler",
         "Programmer",
         "Instrumentation",
@@ -16674,13 +16783,13 @@
       "sourceUrl": "",
       "tags": [
         "Clang",
-        "OpenCL",
-        "Libraries"
+        "Libraries",
+        "OpenCL"
       ],
       "keywords": [
         "Clang",
-        "OpenCL",
         "Libraries",
+        "OpenCL",
         "OpenCL Kernels",
         "Classes"
       ],
@@ -16709,15 +16818,16 @@
       "paperUrl": "http://dblp.uni-trier.de/db/journals/iacr/iacr2015.html#Keller15",
       "sourceUrl": "",
       "tags": [
-        "Security",
+        "LLVM",
         "Clang",
+        "Security",
         "Infrastructure"
       ],
       "keywords": [
-        "Security",
-        "Clang",
-        "Infrastructure",
         "LLVM",
+        "Clang",
+        "Security",
+        "Infrastructure",
         "Oblivious Machine",
         "Computation",
         "Integers",
@@ -16913,14 +17023,14 @@
       "tags": [
         "Clang",
         "Optimizations",
-        "Embedded",
-        "Libraries"
+        "Libraries",
+        "Embedded"
       ],
       "keywords": [
         "Clang",
         "Optimizations",
-        "Embedded",
         "Libraries",
+        "Embedded",
         "Basic Linear Algebra",
         "Linear Algebra Computations",
         "ARM Cortex",
@@ -16970,12 +17080,12 @@
       "paperUrl": "https://doi.org/10.1145/2714064.2660205",
       "sourceUrl": "",
       "tags": [
-        "Programming Languages",
-        "Testing"
+        "Testing",
+        "Programming Languages"
       ],
       "keywords": [
-        "Programming Languages",
         "Testing",
+        "Programming Languages",
         "Sanitizers",
         "Memory Accesses",
         "Symbolic Analyses"
@@ -17090,12 +17200,10 @@
       "paperUrl": "https://doi.org/10.1109/msr.2013.6624046",
       "sourceUrl": "",
       "tags": [
-        "Clang",
-        "C Libs"
+        "Clang"
       ],
       "keywords": [
         "Clang",
-        "C Libs",
         "Rendezvous",
         "Binary",
         "Search Engine",
@@ -17144,12 +17252,12 @@
       "paperUrl": "https://doi.org/10.1097/00029330-200804010-00016",
       "sourceUrl": "",
       "tags": [
-        "Embedded",
-        "CIRCT"
+        "CIRCT",
+        "Embedded"
       ],
       "keywords": [
-        "Embedded",
         "CIRCT",
+        "Embedded",
         "Tumor Cells",
         "Cell Tumors",
         "Circts",

@@ -16,6 +16,7 @@ import html
 import json
 import os
 import re
+import ssl
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -25,6 +26,8 @@ from pathlib import Path
 GITHUB_API_BASE = "https://api.github.com"
 LLVM_WWW_REPO = "llvm/llvm-www"
 LLVM_WWW_REF = "main"
+
+URLLIB_SSL_CONTEXT: ssl.SSLContext | None = None
 
 CATEGORY_MAP: dict[str, str] = {
     "keynote": "keynote",
@@ -60,6 +63,59 @@ def normalize_key(value: str) -> str:
 
 def normalize_meta_value(value: str) -> str:
     return normalize_key(value)
+
+
+META_PLACEHOLDER_KEYS = {
+    "tbd",
+    "tba",
+    "tbc",
+    "na",
+    "n/a",
+    "none",
+    "unknown",
+    "null",
+    "todo",
+    "comingsoon",
+    "tobeannounced",
+    "tobedetermined",
+}
+
+
+ABSTRACT_PLACEHOLDER_KEYS = {
+    "tbd",
+    "tba",
+    "none",
+    "unknown",
+    "noabstract",
+    "noabstractavailable",
+    "abstracttbd",
+}
+
+
+def has_meaningful_meta_value(value: str) -> bool:
+    key = normalize_meta_value(value)
+    if not key:
+        return False
+    return key not in META_PLACEHOLDER_KEYS
+
+
+def has_meaningful_abstract(value: str) -> bool:
+    key = normalize_meta_value(value)
+    if not key:
+        return False
+    return key not in ABSTRACT_PLACEHOLDER_KEYS
+
+
+def pick_preferred_meta_value(*values: str) -> str:
+    for value in values:
+        text = collapse_ws(str(value or ""))
+        if has_meaningful_meta_value(text):
+            return text
+    for value in values:
+        text = collapse_ws(str(value or ""))
+        if text:
+            return text
+    return ""
 
 
 def strip_html(value: str) -> str:
@@ -142,6 +198,48 @@ def abs_devmtg_url(slug: str, href: str) -> str:
     return urllib.parse.urljoin(base, href)
 
 
+def configure_ssl_context(ca_bundle: str = "", no_verify_ssl: bool = False) -> None:
+    global URLLIB_SSL_CONTEXT
+    if no_verify_ssl:
+        URLLIB_SSL_CONTEXT = ssl._create_unverified_context()
+        return
+
+    bundle = collapse_ws(ca_bundle)
+    if not bundle:
+        try:
+            import certifi  # type: ignore
+
+            bundle = collapse_ws(str(certifi.where()))
+        except Exception:
+            bundle = ""
+
+    if not bundle:
+        URLLIB_SSL_CONTEXT = None
+        return
+
+    bundle_path = Path(bundle).expanduser().resolve()
+    if not bundle_path.exists():
+        raise SystemExit(f"CA bundle does not exist: {bundle_path}")
+    URLLIB_SSL_CONTEXT = ssl.create_default_context(cafile=str(bundle_path))
+
+
+def is_certificate_verify_error(exc: urllib.error.URLError) -> bool:
+    reason = getattr(exc, "reason", exc)
+    text = str(reason or exc).lower()
+    return "certificate verify failed" in text
+
+
+def ssl_help_hint() -> str:
+    return (
+        "SSL certificate verification failed. "
+        "Try one of: "
+        "1) python3 -m pip install --user certifi, then rerun with "
+        "--ca-bundle \"$(python3 -c 'import certifi; print(certifi.where())')\" "
+        "2) pass a local trust store path via --ca-bundle "
+        "3) as last resort only, use --no-verify-ssl."
+    )
+
+
 def _http_get(url: str, github_token: str = "") -> str:
     headers = {
         "User-Agent": "llvm-library-devmtg-sync/1.0",
@@ -152,7 +250,10 @@ def _http_get(url: str, github_token: str = "") -> str:
         headers["Authorization"] = f"Bearer {token}"
 
     req = urllib.request.Request(url, headers=headers, method="GET")
-    with urllib.request.urlopen(req, timeout=40) as resp:
+    open_kwargs = {"timeout": 40}
+    if URLLIB_SSL_CONTEXT is not None:
+        open_kwargs["context"] = URLLIB_SSL_CONTEXT
+    with urllib.request.urlopen(req, **open_kwargs) as resp:
         return resp.read().decode("utf-8", errors="replace")
 
 
@@ -406,12 +507,13 @@ def dedupe_parsed_talks(talks: list[dict]) -> list[dict]:
 
 
 def parse_meeting_page(page_html: str, slug: str) -> tuple[dict, list[dict]]:
+    canceled = bool(re.search(r"\bcance(?:lled|led|llation|lation)\b", page_html, flags=re.IGNORECASE))
     meeting = {
         "slug": slug,
         "name": extract_meeting_name(page_html, slug),
         "date": extract_labeled_value(page_html, ["Conference Date", "When", "Date"]),
         "location": extract_labeled_value(page_html, ["Location", "Where"]),
-        "canceled": False,
+        "canceled": canceled,
         "talkCount": 0,
     }
 
@@ -465,25 +567,23 @@ def merge_meeting_talks(
     existing_meeting = dict((existing_payload or {}).get("meeting") or {})
     exemplar_talk = existing_talks[0] if existing_talks else {}
 
-    preferred_meeting_name = (
-        collapse_ws(str(existing_meeting.get("name", "")))
-        or collapse_ws(str(exemplar_talk.get("meetingName", "")))
-        or collapse_ws(str(meeting_meta.get("name", "")))
-        or slug
+    preferred_meeting_name = pick_preferred_meta_value(
+        existing_meeting.get("name", ""),
+        exemplar_talk.get("meetingName", ""),
+        meeting_meta.get("name", ""),
+        slug,
     )
-    preferred_meeting_location = (
-        collapse_ws(str(existing_meeting.get("location", "")))
-        or collapse_ws(str(exemplar_talk.get("meetingLocation", "")))
-        or collapse_ws(str((index_hint or {}).get("location", "")))
-        or collapse_ws(str(meeting_meta.get("location", "")))
-        or ""
+    preferred_meeting_location = pick_preferred_meta_value(
+        existing_meeting.get("location", ""),
+        exemplar_talk.get("meetingLocation", ""),
+        (index_hint or {}).get("location", ""),
+        meeting_meta.get("location", ""),
     )
-    preferred_meeting_date = (
-        collapse_ws(str(existing_meeting.get("date", "")))
-        or collapse_ws(str(exemplar_talk.get("meetingDate", "")))
-        or collapse_ws(str((index_hint or {}).get("date", "")))
-        or collapse_ws(str(meeting_meta.get("date", "")))
-        or ""
+    preferred_meeting_date = pick_preferred_meta_value(
+        existing_meeting.get("date", ""),
+        exemplar_talk.get("meetingDate", ""),
+        (index_hint or {}).get("date", ""),
+        meeting_meta.get("date", ""),
     )
 
     def _promote_index_hint_if_raw_overwrite(current_value: str, upstream_value: str, hint_value: str) -> str:
@@ -537,35 +637,58 @@ def merge_meeting_talks(
         if target.get("meeting") != slug:
             target["meeting"] = slug
             changed = True
-        if not collapse_ws(str(target.get("meetingName", ""))) and preferred_meeting_name:
+        if not has_meaningful_meta_value(str(target.get("meetingName", ""))) and preferred_meeting_name:
             target["meetingName"] = preferred_meeting_name
             changed = True
-        if (
-            not collapse_ws(str(target.get("meetingLocation", "")))
-            or normalize_meta_value(str(target.get("meetingLocation", "")))
-            == normalize_meta_value(str(meeting_meta.get("location", "")))
-            and normalize_meta_value(str(target.get("meetingLocation", "")))
-            != normalize_meta_value(preferred_meeting_location)
-        ) and preferred_meeting_location:
+        target_location = str(target.get("meetingLocation", ""))
+        target_location_norm = normalize_meta_value(target_location)
+        raw_location_norm = normalize_meta_value(str(meeting_meta.get("location", "")))
+        preferred_location_norm = normalize_meta_value(preferred_meeting_location)
+        should_update_location = (
+            not has_meaningful_meta_value(target_location)
+            or (
+                target_location_norm
+                and raw_location_norm
+                and preferred_location_norm
+                and target_location_norm == raw_location_norm
+                and target_location_norm != preferred_location_norm
+            )
+        )
+        if should_update_location and has_meaningful_meta_value(preferred_meeting_location):
             target["meetingLocation"] = preferred_meeting_location
             changed = True
-        if (
-            not collapse_ws(str(target.get("meetingDate", "")))
-            or normalize_meta_value(str(target.get("meetingDate", "")))
-            == normalize_meta_value(str(meeting_meta.get("date", "")))
-            and normalize_meta_value(str(target.get("meetingDate", "")))
-            != normalize_meta_value(preferred_meeting_date)
-        ) and preferred_meeting_date:
+        target_date = str(target.get("meetingDate", ""))
+        target_date_norm = normalize_meta_value(target_date)
+        raw_date_norm = normalize_meta_value(str(meeting_meta.get("date", "")))
+        preferred_date_norm = normalize_meta_value(preferred_meeting_date)
+        should_update_date = (
+            not has_meaningful_meta_value(target_date)
+            or (
+                target_date_norm
+                and raw_date_norm
+                and preferred_date_norm
+                and target_date_norm == raw_date_norm
+                and target_date_norm != preferred_date_norm
+            )
+        )
+        if should_update_date and has_meaningful_meta_value(preferred_meeting_date):
             target["meetingDate"] = preferred_meeting_date
             changed = True
 
         # Preserve curated talk metadata; only backfill missing fields.
         for field in ["title", "category", "abstract"]:
             src_value = source.get(field)
-            if not collapse_ws(str(src_value or "")):
-                continue
-            if collapse_ws(str(target.get(field, ""))):
-                continue
+            src_text = collapse_ws(str(src_value or ""))
+            if field == "abstract":
+                if not has_meaningful_abstract(src_text):
+                    continue
+                if has_meaningful_abstract(str(target.get(field, ""))):
+                    continue
+            else:
+                if not src_text:
+                    continue
+                if collapse_ws(str(target.get(field, ""))):
+                    continue
             target[field] = src_value
             changed = True
 
@@ -632,25 +755,41 @@ def merge_meeting_talks(
         meeting_payload["slug"] = slug
         changed = True
 
-    if not collapse_ws(str(meeting_payload.get("name", ""))) and preferred_meeting_name:
+    if not has_meaningful_meta_value(str(meeting_payload.get("name", ""))) and preferred_meeting_name:
         meeting_payload["name"] = preferred_meeting_name
         changed = True
-    if (
-        not collapse_ws(str(meeting_payload.get("date", "")))
-        or normalize_meta_value(str(meeting_payload.get("date", "")))
-        == normalize_meta_value(str(meeting_meta.get("date", "")))
-        and normalize_meta_value(str(meeting_payload.get("date", "")))
-        != normalize_meta_value(preferred_meeting_date)
-    ) and preferred_meeting_date:
+    meeting_date = str(meeting_payload.get("date", ""))
+    meeting_date_norm = normalize_meta_value(meeting_date)
+    raw_date_norm = normalize_meta_value(str(meeting_meta.get("date", "")))
+    preferred_date_norm = normalize_meta_value(preferred_meeting_date)
+    should_update_meeting_date = (
+        not has_meaningful_meta_value(meeting_date)
+        or (
+            meeting_date_norm
+            and raw_date_norm
+            and preferred_date_norm
+            and meeting_date_norm == raw_date_norm
+            and meeting_date_norm != preferred_date_norm
+        )
+    )
+    if should_update_meeting_date and has_meaningful_meta_value(preferred_meeting_date):
         meeting_payload["date"] = preferred_meeting_date
         changed = True
-    if (
-        not collapse_ws(str(meeting_payload.get("location", "")))
-        or normalize_meta_value(str(meeting_payload.get("location", "")))
-        == normalize_meta_value(str(meeting_meta.get("location", "")))
-        and normalize_meta_value(str(meeting_payload.get("location", "")))
-        != normalize_meta_value(preferred_meeting_location)
-    ) and preferred_meeting_location:
+    meeting_location = str(meeting_payload.get("location", ""))
+    meeting_location_norm = normalize_meta_value(meeting_location)
+    raw_location_norm = normalize_meta_value(str(meeting_meta.get("location", "")))
+    preferred_location_norm = normalize_meta_value(preferred_meeting_location)
+    should_update_meeting_location = (
+        not has_meaningful_meta_value(meeting_location)
+        or (
+            meeting_location_norm
+            and raw_location_norm
+            and preferred_location_norm
+            and meeting_location_norm == raw_location_norm
+            and meeting_location_norm != preferred_location_norm
+        )
+    )
+    if should_update_meeting_location and has_meaningful_meta_value(preferred_meeting_location):
         meeting_payload["location"] = preferred_meeting_location
         changed = True
     if "canceled" not in meeting_payload:
@@ -676,10 +815,14 @@ def main() -> int:
     parser.add_argument("--ref", default=LLVM_WWW_REF, help="Git ref for llvm-www")
     parser.add_argument("--github-api-base", default=GITHUB_API_BASE)
     parser.add_argument("--github-token", default=os.environ.get("GITHUB_TOKEN", ""))
+    parser.add_argument("--ca-bundle", default=os.environ.get("SSL_CERT_FILE", ""))
+    parser.add_argument("--no-verify-ssl", action="store_true", help="Disable TLS certificate verification")
     parser.add_argument("--only-slug", action="append", help="Optional meeting slug filter (repeatable)")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
+
+    configure_ssl_context(ca_bundle=args.ca_bundle, no_verify_ssl=args.no_verify_ssl)
 
     events_dir = Path(args.events_dir).resolve()
     manifest_path = Path(args.manifest).resolve()
@@ -717,6 +860,8 @@ def main() -> int:
     except urllib.error.HTTPError as exc:
         raise SystemExit(f"Failed to list llvm-www/devmtg directories: HTTP {exc.code}") from exc
     except urllib.error.URLError as exc:
+        if is_certificate_verify_error(exc):
+            raise SystemExit(ssl_help_hint()) from exc
         raise SystemExit(f"Failed to list llvm-www/devmtg directories: {exc}") from exc
 
     if args.only_slug:
@@ -736,14 +881,10 @@ def main() -> int:
                 print(f"[skip] {slug}: HTTP {exc.code} while fetching {raw_url}", flush=True)
             continue
         except urllib.error.URLError as exc:
+            if args.verbose and is_certificate_verify_error(exc):
+                print(f"[warn] {ssl_help_hint()}", flush=True)
             if args.verbose:
                 print(f"[skip] {slug}: network error while fetching {raw_url}: {exc}", flush=True)
-            continue
-
-        meeting_meta, remote_talks = parse_meeting_page(page_html, slug)
-        if not remote_talks:
-            if args.verbose:
-                print(f"[skip] {slug}: no parseable talks found", flush=True)
             continue
 
         event_filename = f"{slug}.json"
@@ -751,6 +892,12 @@ def main() -> int:
         existing_payload = None
         if event_path.exists():
             existing_payload = json.loads(event_path.read_text(encoding="utf-8"))
+
+        meeting_meta, remote_talks = parse_meeting_page(page_html, slug)
+        if not remote_talks and not existing_payload:
+            if args.verbose:
+                print(f"[skip] {slug}: no parseable talks found", flush=True)
+            continue
 
         merged_payload, changed, new_count = merge_meeting_talks(
             slug=slug,
@@ -772,6 +919,8 @@ def main() -> int:
 
         manifest_set.add(event_filename)
         if args.verbose:
+            if not remote_talks:
+                print(f"[update-meta] {slug}: metadata refreshed using index hints", flush=True)
             print(
                 f"[update] {slug}: talks={len(merged_payload.get('talks', []))} new={new_count}",
                 flush=True,

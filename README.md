@@ -184,6 +184,17 @@ python3 /Users/britton/Desktop/library/scripts/sync-devmtg-from-llvm-www.py \
   --manifest /Users/britton/Desktop/library/devmtg/events/index.json
 ```
 
+If Python TLS certs are missing on your machine, pass a CA bundle explicitly:
+
+```bash
+python3 -m pip install --user certifi
+CERT_BUNDLE="$(python3 -c 'import certifi; print(certifi.where())')"
+python3 /Users/britton/Desktop/library/scripts/sync-devmtg-from-llvm-www.py \
+  --events-dir /Users/britton/Desktop/library/devmtg/events \
+  --manifest /Users/britton/Desktop/library/devmtg/events/index.json \
+  --ca-bundle "$CERT_BUNDLE"
+```
+
 To run OpenAlex discovery locally:
 
 ```bash
@@ -193,6 +204,21 @@ python3 /Users/britton/Desktop/library/scripts/build-openalex-discovery.py \
   --index-json /Users/britton/Desktop/library/papers/index.json \
   --app-js /Users/britton/Desktop/library/devmtg/js/app.js \
   --extra-authors-file /Users/britton/Desktop/library/papers/extra-author-seeds.txt
+```
+
+You can run the full local auto-update pipeline (sync + discovery + validation) with:
+
+```bash
+python3 /Users/britton/Desktop/library/scripts/sync-devmtg-from-llvm-www.py \
+  --events-dir /Users/britton/Desktop/library/devmtg/events \
+  --manifest /Users/britton/Desktop/library/devmtg/events/index.json && \
+python3 /Users/britton/Desktop/library/scripts/build-openalex-discovery.py \
+  --events-dir /Users/britton/Desktop/library/devmtg/events \
+  --papers-dir /Users/britton/Desktop/library/papers \
+  --index-json /Users/britton/Desktop/library/papers/index.json \
+  --app-js /Users/britton/Desktop/library/devmtg/js/app.js \
+  --extra-authors-file /Users/britton/Desktop/library/papers/extra-author-seeds.txt && \
+/Users/britton/Desktop/library/scripts/validate-library-bundle.sh
 ```
 
 ## Adding or Editing Papers
