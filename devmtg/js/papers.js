@@ -1645,6 +1645,15 @@ function updateClearBtn() {
   if (searchClear) searchClear.classList.toggle('visible', state.query.length > 0);
 }
 
+function syncHeaderGlobalSearchInput() {
+  const input = document.querySelector('.global-search-input');
+  if (!input) return;
+  if (document.activeElement === input) return;
+
+  const desired = String(state.query || '').trim();
+  if (input.value !== desired) input.value = desired;
+}
+
 function render() {
   const results = filterAndSort();
   renderCards(results);
@@ -1653,6 +1662,7 @@ function render() {
   updateHeroSubtitle(results.length);
   renderCrossWorkPromptFromState();
   updateClearBtn();
+  syncHeaderGlobalSearchInput();
 }
 
 // ============================================================
