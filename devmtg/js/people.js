@@ -398,7 +398,6 @@ function buildGlobalSearchUrl(query) {
   const params = new URLSearchParams();
   params.set('mode', 'search');
   params.set('q', String(query || '').trim());
-  params.set('from', 'people');
   return `work.html?${params.toString()}`;
 }
 
@@ -425,17 +424,6 @@ function shouldRouteToGlobalSearch(query) {
 }
 
 function applyAutocompleteSelection(type, value) {
-  const input = document.getElementById('people-search');
-  const effectiveType = String(type || '').trim();
-
-  if (effectiveType === 'person') {
-    state.query = String(value || '').trim();
-    if (input) input.value = state.query;
-    closeDropdown();
-    render();
-    return 'local';
-  }
-
   closeDropdown();
   routeToGlobalSearch(value);
   return 'global';
@@ -451,7 +439,7 @@ function selectAutocompleteItem(item) {
 
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
-  if (allowGlobalRouting && shouldRouteToGlobalSearch(committed)) {
+  if (allowGlobalRouting && committed) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';

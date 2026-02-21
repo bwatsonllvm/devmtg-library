@@ -1994,11 +1994,8 @@ function renderDropdown(query) {
 
 function selectAutocompleteItem(item) {
   const value = item.dataset.autocompleteValue;
-  const type = item.dataset.autocompleteType;
-  const input = document.getElementById('search-input');
-
-  const mode = applyAutocompleteSelection(type, value, 'search');
-  if (mode !== 'global' && input) input.focus();
+  closeDropdown();
+  routeToGlobalSearch(value);
 }
 
 function closeDropdown() {
@@ -2067,7 +2064,6 @@ function buildGlobalSearchUrl(query) {
   const params = new URLSearchParams();
   params.set('mode', 'search');
   params.set('q', String(query || '').trim());
-  params.set('from', 'papers');
   return `${ALL_WORK_PAGE_PATH}?${params.toString()}`;
 }
 
@@ -2107,7 +2103,7 @@ function shouldRouteToGlobalSearch(query) {
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
 
-  if (allowGlobalRouting && shouldRouteToGlobalSearch(committed)) {
+  if (allowGlobalRouting && committed) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';

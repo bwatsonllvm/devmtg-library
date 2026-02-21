@@ -2654,7 +2654,6 @@ function buildGlobalSearchUrl(query) {
   const params = new URLSearchParams();
   params.set('mode', 'search');
   params.set('q', String(query || '').trim());
-  params.set('from', 'talks');
   return `${ALL_WORK_PAGE_PATH}?${params.toString()}`;
 }
 
@@ -2694,7 +2693,7 @@ function shouldRouteToGlobalSearch(query) {
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
 
-  if (allowGlobalRouting && shouldRouteToGlobalSearch(committed)) {
+  if (allowGlobalRouting && committed) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';
@@ -2717,10 +2716,8 @@ function commitSearchValue(rawValue, allowGlobalRouting = true) {
 
 function selectAutocompleteItem(item) {
   const value = item.dataset.autocompleteValue;
-  const type  = item.dataset.autocompleteType;
-  const input = document.getElementById('search-input');
-  applyAutocompleteSelection(type, value, 'search');
-  input.focus();
+  closeDropdown();
+  routeToGlobalSearch(value);
 }
 
 function closeDropdown() {
