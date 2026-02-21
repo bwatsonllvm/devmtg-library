@@ -419,6 +419,28 @@ def merge_meeting_talks(
     changed = False
     new_count = 0
 
+    existing_meeting = dict((existing_payload or {}).get("meeting") or {})
+    exemplar_talk = existing_talks[0] if existing_talks else {}
+
+    preferred_meeting_name = (
+        collapse_ws(str(existing_meeting.get("name", "")))
+        or collapse_ws(str(exemplar_talk.get("meetingName", "")))
+        or collapse_ws(str(meeting_meta.get("name", "")))
+        or slug
+    )
+    preferred_meeting_location = (
+        collapse_ws(str(existing_meeting.get("location", "")))
+        or collapse_ws(str(exemplar_talk.get("meetingLocation", "")))
+        or collapse_ws(str(meeting_meta.get("location", "")))
+        or ""
+    )
+    preferred_meeting_date = (
+        collapse_ws(str(existing_meeting.get("date", "")))
+        or collapse_ws(str(exemplar_talk.get("meetingDate", "")))
+        or collapse_ws(str(meeting_meta.get("date", "")))
+        or ""
+    )
+
     by_composite: dict[tuple[str, str], list[dict]] = {}
     by_title: dict[str, list[dict]] = {}
     used_ids: set[str] = set()
@@ -436,9 +458,9 @@ def merge_meeting_talks(
 
         for key, default in [
             ("meeting", slug),
-            ("meetingName", meeting_meta.get("name") or slug),
-            ("meetingLocation", meeting_meta.get("location") or ""),
-            ("meetingDate", meeting_meta.get("date") or ""),
+            ("meetingName", preferred_meeting_name),
+            ("meetingLocation", preferred_meeting_location),
+            ("meetingDate", preferred_meeting_date),
             ("projectGithub", ""),
             ("tags", []),
         ]:
@@ -449,26 +471,38 @@ def merge_meeting_talks(
         if target.get("meeting") != slug:
             target["meeting"] = slug
             changed = True
-        if meeting_meta.get("name") and target.get("meetingName") != meeting_meta["name"]:
-            target["meetingName"] = meeting_meta["name"]
+        if not collapse_ws(str(target.get("meetingName", ""))) and preferred_meeting_name:
+            target["meetingName"] = preferred_meeting_name
             changed = True
-        if meeting_meta.get("location") and target.get("meetingLocation") != meeting_meta["location"]:
-            target["meetingLocation"] = meeting_meta["location"]
+        if not collapse_ws(str(target.get("meetingLocation", ""))) and preferred_meeting_location:
+            target["meetingLocation"] = preferred_meeting_location
             changed = True
-        if meeting_meta.get("date") and target.get("meetingDate") != meeting_meta["date"]:
-            target["meetingDate"] = meeting_meta["date"]
+        if not collapse_ws(str(target.get("meetingDate", ""))) and preferred_meeting_date:
+            target["meetingDate"] = preferred_meeting_date
             changed = True
 
-        for field in ["title", "category", "abstract", "videoUrl", "videoId", "slidesUrl", "speakers"]:
+        # Preserve curated talk metadata; only backfill missing fields.
+        for field in ["title", "category", "abstract"]:
             src_value = source.get(field)
-            if field in {"videoUrl", "videoId", "slidesUrl"}:
-                if src_value in ("", None):
-                    continue
-            if field in {"title", "category", "abstract"} and not collapse_ws(str(src_value or "")):
+            if not collapse_ws(str(src_value or "")):
                 continue
-            if field == "speakers" and (not isinstance(src_value, list) or len(src_value) == 0):
+            if collapse_ws(str(target.get(field, ""))):
                 continue
+            target[field] = src_value
+            changed = True
 
+        src_speakers = source.get("speakers")
+        if isinstance(src_speakers, list) and src_speakers:
+            existing_speakers = target.get("speakers")
+            if not (isinstance(existing_speakers, list) and existing_speakers):
+                target["speakers"] = src_speakers
+                changed = True
+
+        # Resource links are safe to refresh from upstream when present.
+        for field in ["videoUrl", "videoId", "slidesUrl"]:
+            src_value = source.get(field)
+            if src_value in ("", None):
+                continue
             if target.get(field) != src_value:
                 target[field] = src_value
                 changed = True
@@ -493,9 +527,9 @@ def merge_meeting_talks(
             match = {
                 "id": talk_id,
                 "meeting": slug,
-                "meetingName": meeting_meta.get("name") or slug,
-                "meetingLocation": meeting_meta.get("location") or "",
-                "meetingDate": meeting_meta.get("date") or "",
+                "meetingName": preferred_meeting_name,
+                "meetingLocation": preferred_meeting_location,
+                "meetingDate": preferred_meeting_date,
                 "category": remote.get("category") or "technical-talk",
                 "title": remote.get("title") or "",
                 "speakers": remote.get("speakers") or [],
@@ -515,18 +549,27 @@ def merge_meeting_talks(
 
         apply_common_fields(match, remote)
 
-    meeting_payload = dict((existing_payload or {}).get("meeting") or {})
-    for field, value in [
-        ("slug", slug),
-        ("name", meeting_meta.get("name") or slug),
-        ("date", meeting_meta.get("date") or ""),
-        ("location", meeting_meta.get("location") or ""),
-        ("canceled", bool(meeting_meta.get("canceled", False))),
-        ("talkCount", len(existing_talks)),
-    ]:
-        if meeting_payload.get(field) != value:
-            meeting_payload[field] = value
-            changed = True
+    meeting_payload = existing_meeting
+    if meeting_payload.get("slug") != slug:
+        meeting_payload["slug"] = slug
+        changed = True
+
+    if not collapse_ws(str(meeting_payload.get("name", ""))) and preferred_meeting_name:
+        meeting_payload["name"] = preferred_meeting_name
+        changed = True
+    if not collapse_ws(str(meeting_payload.get("date", ""))) and preferred_meeting_date:
+        meeting_payload["date"] = preferred_meeting_date
+        changed = True
+    if not collapse_ws(str(meeting_payload.get("location", ""))) and preferred_meeting_location:
+        meeting_payload["location"] = preferred_meeting_location
+        changed = True
+    if "canceled" not in meeting_payload:
+        meeting_payload["canceled"] = bool(meeting_meta.get("canceled", False))
+        changed = True
+
+    if meeting_payload.get("talkCount") != len(existing_talks):
+        meeting_payload["talkCount"] = len(existing_talks)
+        changed = True
 
     payload = {
         "meeting": meeting_payload,
@@ -634,9 +677,13 @@ def main() -> int:
         return 0
 
     next_event_files = sorted(manifest_set, reverse=True)
-    manifest_changed = manifest.get("eventFiles", []) != next_event_files
+    next_data_version = _dt.date.today().isoformat() + "-auto-sync-devmtg"
+    manifest_changed = (
+        manifest.get("eventFiles", []) != next_event_files
+        or collapse_ws(str(manifest.get("dataVersion", ""))) != next_data_version
+    )
     manifest["eventFiles"] = next_event_files
-    manifest["dataVersion"] = _dt.date.today().isoformat() + "-auto-sync-devmtg"
+    manifest["dataVersion"] = next_data_version
 
     if manifest_changed and not args.dry_run:
         manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
