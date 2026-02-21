@@ -58,6 +58,10 @@ def normalize_key(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", collapse_ws(value).lower())
 
 
+def normalize_meta_value(value: str) -> str:
+    return normalize_key(value)
+
+
 def strip_html(value: str) -> str:
     if not value:
         return ""
@@ -196,7 +200,7 @@ def extract_meeting_name(page_html: str, slug: str) -> str:
 def extract_labeled_value(page_html: str, labels: list[str]) -> str:
     for label in labels:
         pattern = re.compile(
-            rf"<li[^>]*>\s*<b[^>]*>\s*{re.escape(label)}\s*</b>\s*:?\s*(.*?)</li>",
+            rf"<li[^>]*>\s*<b[^>]*>\s*{re.escape(label)}\s*:?\s*</b>\s*:?\s*(.*?)</li>",
             flags=re.IGNORECASE | re.DOTALL,
         )
         match = pattern.search(page_html)
@@ -206,6 +210,44 @@ def extract_labeled_value(page_html: str, labels: list[str]) -> str:
         if value:
             return value
     return ""
+
+
+def load_index_meeting_hints(repo: str, ref: str, github_token: str = "") -> dict[str, dict[str, str]]:
+    """Parse canonical date/location hints from llvm-www/devmtg/index.html."""
+    raw_url = f"https://raw.githubusercontent.com/{repo}/{ref}/devmtg/index.html"
+    page_html = _http_get(raw_url, github_token=github_token)
+
+    hints: dict[str, dict[str, str]] = {}
+    li_pattern = re.compile(r"<li[^>]*>(.*?)</li>", flags=re.IGNORECASE | re.DOTALL)
+    link_pattern = re.compile(
+        r"<a[^>]+href=['\"](?P<href>\d{4}-\d{2}(?:-\d{2})?/?)['\"][^>]*>(?P<date>.*?)</a>(?P<rest>.*)",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    for li_html in li_pattern.findall(page_html):
+        match = link_pattern.search(li_html)
+        if not match:
+            continue
+
+        slug = collapse_ws(match.group("href")).rstrip("/")
+        date_text = collapse_ws(strip_html(match.group("date")))
+        rest_text = collapse_ws(strip_html(match.group("rest")))
+        if not slug:
+            continue
+
+        location = ""
+        if "-" in rest_text:
+            location = collapse_ws(rest_text.split("-", 1)[1])
+        elif rest_text:
+            location = rest_text
+        location = re.sub(r"\s*-\s*Canceled\s*$", "", location, flags=re.IGNORECASE).strip()
+
+        hints[slug] = {
+            "date": date_text,
+            "location": location,
+        }
+
+    return hints
 
 
 def parse_links_from_html(fragment: str, meeting_slug: str) -> tuple[str | None, str | None]:
@@ -414,6 +456,7 @@ def merge_meeting_talks(
     meeting_meta: dict,
     remote_talks: list[dict],
     existing_payload: dict | None,
+    index_hint: dict[str, str] | None = None,
 ) -> tuple[dict, bool, int]:
     existing_talks = list((existing_payload or {}).get("talks") or [])
     changed = False
@@ -431,15 +474,38 @@ def merge_meeting_talks(
     preferred_meeting_location = (
         collapse_ws(str(existing_meeting.get("location", "")))
         or collapse_ws(str(exemplar_talk.get("meetingLocation", "")))
+        or collapse_ws(str((index_hint or {}).get("location", "")))
         or collapse_ws(str(meeting_meta.get("location", "")))
         or ""
     )
     preferred_meeting_date = (
         collapse_ws(str(existing_meeting.get("date", "")))
         or collapse_ws(str(exemplar_talk.get("meetingDate", "")))
+        or collapse_ws(str((index_hint or {}).get("date", "")))
         or collapse_ws(str(meeting_meta.get("date", "")))
         or ""
     )
+
+    def _promote_index_hint_if_raw_overwrite(current_value: str, upstream_value: str, hint_value: str) -> str:
+        current_norm = normalize_meta_value(current_value)
+        upstream_norm = normalize_meta_value(upstream_value)
+        hint_norm = normalize_meta_value(hint_value)
+        if current_norm and upstream_norm and hint_norm:
+            if current_norm == upstream_norm and current_norm != hint_norm:
+                return hint_value
+        return current_value
+
+    if index_hint:
+        preferred_meeting_date = _promote_index_hint_if_raw_overwrite(
+            preferred_meeting_date,
+            collapse_ws(str(meeting_meta.get("date", ""))),
+            collapse_ws(str(index_hint.get("date", ""))),
+        ) or preferred_meeting_date
+        preferred_meeting_location = _promote_index_hint_if_raw_overwrite(
+            preferred_meeting_location,
+            collapse_ws(str(meeting_meta.get("location", ""))),
+            collapse_ws(str(index_hint.get("location", ""))),
+        ) or preferred_meeting_location
 
     by_composite: dict[tuple[str, str], list[dict]] = {}
     by_title: dict[str, list[dict]] = {}
@@ -474,10 +540,22 @@ def merge_meeting_talks(
         if not collapse_ws(str(target.get("meetingName", ""))) and preferred_meeting_name:
             target["meetingName"] = preferred_meeting_name
             changed = True
-        if not collapse_ws(str(target.get("meetingLocation", ""))) and preferred_meeting_location:
+        if (
+            not collapse_ws(str(target.get("meetingLocation", "")))
+            or normalize_meta_value(str(target.get("meetingLocation", "")))
+            == normalize_meta_value(str(meeting_meta.get("location", "")))
+            and normalize_meta_value(str(target.get("meetingLocation", "")))
+            != normalize_meta_value(preferred_meeting_location)
+        ) and preferred_meeting_location:
             target["meetingLocation"] = preferred_meeting_location
             changed = True
-        if not collapse_ws(str(target.get("meetingDate", ""))) and preferred_meeting_date:
+        if (
+            not collapse_ws(str(target.get("meetingDate", "")))
+            or normalize_meta_value(str(target.get("meetingDate", "")))
+            == normalize_meta_value(str(meeting_meta.get("date", "")))
+            and normalize_meta_value(str(target.get("meetingDate", "")))
+            != normalize_meta_value(preferred_meeting_date)
+        ) and preferred_meeting_date:
             target["meetingDate"] = preferred_meeting_date
             changed = True
 
@@ -557,10 +635,22 @@ def merge_meeting_talks(
     if not collapse_ws(str(meeting_payload.get("name", ""))) and preferred_meeting_name:
         meeting_payload["name"] = preferred_meeting_name
         changed = True
-    if not collapse_ws(str(meeting_payload.get("date", ""))) and preferred_meeting_date:
+    if (
+        not collapse_ws(str(meeting_payload.get("date", "")))
+        or normalize_meta_value(str(meeting_payload.get("date", "")))
+        == normalize_meta_value(str(meeting_meta.get("date", "")))
+        and normalize_meta_value(str(meeting_payload.get("date", "")))
+        != normalize_meta_value(preferred_meeting_date)
+    ) and preferred_meeting_date:
         meeting_payload["date"] = preferred_meeting_date
         changed = True
-    if not collapse_ws(str(meeting_payload.get("location", ""))) and preferred_meeting_location:
+    if (
+        not collapse_ws(str(meeting_payload.get("location", "")))
+        or normalize_meta_value(str(meeting_payload.get("location", "")))
+        == normalize_meta_value(str(meeting_meta.get("location", "")))
+        and normalize_meta_value(str(meeting_payload.get("location", "")))
+        != normalize_meta_value(preferred_meeting_location)
+    ) and preferred_meeting_location:
         meeting_payload["location"] = preferred_meeting_location
         changed = True
     if "canceled" not in meeting_payload:
@@ -602,6 +692,20 @@ def main() -> int:
 
     manifest_files = [collapse_ws(str(item)) for item in manifest.get("eventFiles", []) if collapse_ws(str(item))]
     manifest_set = set(manifest_files)
+
+    index_hints: dict[str, dict[str, str]] = {}
+    try:
+        index_hints = load_index_meeting_hints(
+            repo=args.repo,
+            ref=args.ref,
+            github_token=args.github_token,
+        )
+    except urllib.error.HTTPError as exc:
+        if args.verbose:
+            print(f"[warn] Could not fetch devmtg index hints (HTTP {exc.code}); continuing.", flush=True)
+    except urllib.error.URLError as exc:
+        if args.verbose:
+            print(f"[warn] Could not fetch devmtg index hints ({exc}); continuing.", flush=True)
 
     try:
         remote_slugs = list_remote_slugs(
@@ -653,6 +757,7 @@ def main() -> int:
             meeting_meta=meeting_meta,
             remote_talks=remote_talks,
             existing_payload=existing_payload,
+            index_hint=index_hints.get(slug),
         )
         if not changed:
             continue
