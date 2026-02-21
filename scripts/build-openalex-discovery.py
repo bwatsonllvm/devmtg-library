@@ -7,7 +7,7 @@ This script:
      - existing papers authors
      - optional extra author lists
   2) Queries OpenAlex for LLVM-related keyword searches
-     and optionally direct per-author work searches
+     (including LLVM subprojects) and optionally direct per-author work searches
   3) Keeps works where at least one listed author matches a seed author exactly
      after normalization.
   4) Emits papers/openalex-discovered.json and updates papers/index.json.
@@ -47,19 +47,27 @@ DEFAULT_KEYWORDS = [
     "memorysanitizer",
     "undefinedbehaviorsanitizer",
 ]
-FOCUS_TERMS = [
-    "llvm",
-    "clang",
-    "mlir",
-    "lldb",
-    "lld",
-    "flang",
-    "circt",
-    "libfuzzer",
-    "addresssanitizer",
-    "memorysanitizer",
-    "undefinedbehaviorsanitizer",
-]
+DEFAULT_SUBPROJECT_ALIASES: dict[str, list[str]] = {
+    "clang": ["clang", "clangd", "libclang"],
+    "mlir": ["mlir"],
+    "lldb": ["lldb"],
+    "lld": ["lld", "lld-link"],
+    "flang": ["flang", "llvm flang"],
+    "compiler-rt": ["compiler-rt", "compiler rt"],
+    "libc": ["libc", "llvm libc", "llvm-libc", "llvmlibc", "llbclc"],
+    "libc++": ["libc++", "libcxx", "libc++abi", "libcxxabi"],
+    "libunwind": ["libunwind"],
+    "openmp": ["openmp", "libomp"],
+    "polly": ["polly"],
+    "bolt": ["bolt", "llvm bolt"],
+    "circt": ["circt"],
+    "libfuzzer": ["libfuzzer"],
+    "addresssanitizer": ["addresssanitizer", "asan"],
+    "memorysanitizer": ["memorysanitizer", "msan"],
+    "threadsanitizer": ["threadsanitizer", "tsan"],
+    "undefinedbehaviorsanitizer": ["undefinedbehaviorsanitizer", "ubsan"],
+}
+CORE_FOCUS_TERMS = ["llvm"]
 ALLOWED_OPENALEX_TYPES = {
     "article",
     "book",
@@ -101,6 +109,23 @@ def normalize_name(value: str) -> str:
 
 def normalize_title_key(title: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", title.lower()).strip()
+
+
+def normalize_text_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
+
+
+def dedupe_terms(values: list[str]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in values:
+        value = collapse_ws(raw)
+        key = normalize_text_key(value)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(value)
+    return out
 
 
 def configure_ssl_context(ca_bundle: str = "", no_verify_ssl: bool = False) -> None:
@@ -158,8 +183,42 @@ def parse_manifest_paper_files(index_path: Path) -> list[str]:
     return out
 
 
-def load_existing_title_keys(papers_dir: Path, manifest_files: list[str], output_bundle_name: str) -> set[tuple[str, str]]:
-    keys: set[tuple[str, str]] = set()
+def normalize_doi(value: str) -> str:
+    raw = collapse_ws(value).lower()
+    if not raw:
+        return ""
+    raw = re.sub(r"^https?://(?:dx\.)?doi\.org/", "", raw)
+    raw = re.sub(r"^doi:\s*", "", raw)
+    match = re.search(r"(10\.\d{4,9}/\S+)", raw)
+    if not match:
+        return ""
+    doi = match.group(1).rstrip(".,;)")
+    return doi
+
+
+def normalize_openalex_work_key(value: str) -> str:
+    raw = collapse_ws(value).lower()
+    if not raw:
+        return ""
+    raw = raw.rstrip("/")
+    match = re.search(r"openalex\.org/(w\d+)", raw)
+    if match:
+        return match.group(1)
+    if re.fullmatch(r"w\d+", raw):
+        return raw
+    match = re.search(r"\bopenalex[-_/](w\d+)\b", raw)
+    if match:
+        return match.group(1)
+    return ""
+
+
+def load_existing_identity_keys(
+    papers_dir: Path, manifest_files: list[str], output_bundle_name: str
+) -> tuple[set[tuple[str, str]], set[str], set[str]]:
+    title_keys: set[tuple[str, str]] = set()
+    openalex_keys: set[str] = set()
+    doi_keys: set[str] = set()
+
     for rel in manifest_files:
         if rel == output_bundle_name:
             continue
@@ -172,8 +231,27 @@ def load_existing_title_keys(papers_dir: Path, manifest_files: list[str], output
             title = strip_tags(str(paper.get("title", "")))
             if not title:
                 continue
-            keys.add((year, normalize_title_key(title)))
-    return keys
+            title_keys.add((year, normalize_title_key(title)))
+
+            for openalex_candidate in [
+                str(paper.get("openalexId", "")),
+                str(paper.get("sourceUrl", "")),
+                str(paper.get("id", "")),
+            ]:
+                key = normalize_openalex_work_key(openalex_candidate)
+                if key:
+                    openalex_keys.add(key)
+
+            for doi_candidate in [
+                str(paper.get("doi", "")),
+                str(paper.get("sourceUrl", "")),
+                str(paper.get("paperUrl", "")),
+            ]:
+                doi = normalize_doi(doi_candidate)
+                if doi:
+                    doi_keys.add(doi)
+
+    return title_keys, openalex_keys, doi_keys
 
 
 def load_seed_authors(
@@ -253,6 +331,75 @@ def merge_seed_authors(seed_authors: dict[str, str], extra_names: list[str]) -> 
             seed_authors[key] = name
             added += 1
     return added
+
+
+def load_subproject_aliases(subprojects_file: Path | None, extra_subprojects: list[str]) -> dict[str, list[str]]:
+    canonical_to_aliases: dict[str, set[str]] = {
+        canonical: set(aliases or [canonical]) for canonical, aliases in DEFAULT_SUBPROJECT_ALIASES.items()
+    }
+
+    def _merge_line(raw_line: str) -> None:
+        line = collapse_ws(raw_line)
+        if not line or line.startswith("#"):
+            return
+
+        canonical = line
+        aliases: list[str] = []
+        if ":" in line:
+            left, right = line.split(":", 1)
+            canonical = collapse_ws(left)
+            aliases = [collapse_ws(chunk) for chunk in right.split(",")]
+
+        canonical = collapse_ws(canonical)
+        if not canonical:
+            return
+
+        if canonical not in canonical_to_aliases:
+            canonical_to_aliases[canonical] = set()
+        canonical_to_aliases[canonical].add(canonical)
+
+        for alias in aliases:
+            if alias:
+                canonical_to_aliases[canonical].add(alias)
+
+    if subprojects_file:
+        if not subprojects_file.exists():
+            raise RuntimeError(f"Subprojects file does not exist: {subprojects_file}")
+        for line in subprojects_file.read_text(encoding="utf-8").splitlines():
+            _merge_line(line)
+
+    for raw in extra_subprojects:
+        _merge_line(raw)
+
+    out: dict[str, list[str]] = {}
+    for canonical, aliases in canonical_to_aliases.items():
+        merged = dedupe_terms([canonical, *sorted(aliases)])
+        if merged:
+            out[canonical] = merged
+    return out
+
+
+def build_discovery_keywords(
+    base_keywords: list[str],
+    subproject_aliases: dict[str, list[str]],
+    skip_subproject_keyword_expansion: bool,
+) -> list[str]:
+    expanded: list[str] = [collapse_ws(str(keyword)) for keyword in base_keywords if collapse_ws(str(keyword))]
+    if not skip_subproject_keyword_expansion:
+        for canonical in sorted(subproject_aliases):
+            canonical_term = collapse_ws(canonical)
+            if not canonical_term:
+                continue
+            query = canonical_term if canonical_term.lower().startswith("llvm ") else f"llvm {canonical_term}"
+            expanded.append(query)
+    return dedupe_terms(expanded)
+
+
+def build_focus_terms(subproject_aliases: dict[str, list[str]]) -> list[str]:
+    terms: list[str] = list(CORE_FOCUS_TERMS)
+    for aliases in subproject_aliases.values():
+        terms.extend(aliases)
+    return dedupe_terms(terms)
 
 
 def _slug_with_hash(value: str, fallback: str) -> str:
@@ -575,16 +722,37 @@ def classify_type(openalex_type: str) -> str:
     return "research-paper"
 
 
-def match_focus_terms(text: str) -> bool:
-    blob = text.lower()
-    for term in FOCUS_TERMS:
-        if len(term) <= 3:
-            if re.search(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", blob):
-                return True
-        else:
-            if term in blob:
-                return True
+def text_contains_term(text_key: str, term: str) -> bool:
+    term_key = normalize_text_key(term)
+    if not term_key:
+        return False
+
+    padded = f" {text_key} "
+    if " " not in term_key:
+        return f" {term_key} " in padded
+    return term_key in text_key
+
+
+def match_focus_terms(text: str, focus_terms: list[str]) -> bool:
+    blob_key = normalize_text_key(text)
+    if not blob_key:
+        return False
+    for term in focus_terms:
+        if text_contains_term(blob_key, term):
+            return True
     return False
+
+
+def match_subprojects(text: str, subproject_aliases: dict[str, list[str]]) -> list[str]:
+    blob_key = normalize_text_key(text)
+    if not blob_key:
+        return []
+
+    matched: list[str] = []
+    for canonical, aliases in subproject_aliases.items():
+        if any(text_contains_term(blob_key, alias) for alias in aliases):
+            matched.append(canonical)
+    return sorted(matched)
 
 
 def update_manifest(
@@ -634,6 +802,9 @@ def main() -> int:
     parser.add_argument("--author-per-page", type=int, default=200)
     parser.add_argument("--mailto", default="")
     parser.add_argument("--keywords", nargs="*", default=DEFAULT_KEYWORDS)
+    parser.add_argument("--subprojects-file", default="")
+    parser.add_argument("--subproject", action="append", default=[])
+    parser.add_argument("--skip-subproject-keyword-expansion", action="store_true")
     parser.add_argument("--extra-authors-file", default="")
     parser.add_argument("--extra-author", action="append", default=[])
     parser.add_argument("--skip-author-queries", action="store_true")
@@ -650,22 +821,30 @@ def main() -> int:
     output_bundle_name = args.output_bundle
     output_bundle_path = papers_dir / output_bundle_name
     cache_dir = Path(args.cache_dir).resolve()
+    subprojects_file = Path(args.subprojects_file).resolve() if args.subprojects_file else None
     extra_authors_file = Path(args.extra_authors_file).resolve() if args.extra_authors_file else None
     ca_bundle = args.ca_bundle or os.environ.get("SSL_CERT_FILE", "")
     configure_ssl_context(ca_bundle=ca_bundle, no_verify_ssl=args.no_verify_ssl)
 
     manifest_files = parse_manifest_paper_files(index_json)
+    subproject_aliases = load_subproject_aliases(subprojects_file, args.subproject)
+    discovery_keywords = build_discovery_keywords(
+        args.keywords, subproject_aliases, args.skip_subproject_keyword_expansion
+    )
+    focus_terms = build_focus_terms(subproject_aliases)
     tags = parse_all_tags(app_js)
     keyword_extractor = PaperKeywordExtractor(tags)
     seed_authors = load_seed_authors(events_dir, papers_dir, manifest_files, output_bundle_name)
     extra_authors = load_extra_authors(extra_authors_file, args.extra_author)
     added_seed_authors = merge_seed_authors(seed_authors, extra_authors)
-    existing_title_keys = load_existing_title_keys(papers_dir, manifest_files, output_bundle_name)
+    existing_title_keys, existing_openalex_keys, existing_doi_keys = load_existing_identity_keys(
+        papers_dir, manifest_files, output_bundle_name
+    )
 
     all_works: dict[str, dict] = {}
     total_requests = 0
 
-    for keyword in args.keywords:
+    for keyword in discovery_keywords:
         kw = collapse_ws(keyword)
         if not kw:
             continue
@@ -763,6 +942,8 @@ def main() -> int:
     used_ids: set[str] = set()
     out_papers: list[dict] = []
     kept_existing_keys: set[tuple[str, str]] = set()
+    kept_openalex_keys: set[str] = set()
+    kept_doi_keys: set[str] = set()
 
     for work in all_works.values():
         openalex_type = collapse_ws(str(work.get("type", ""))).lower()
@@ -776,7 +957,7 @@ def main() -> int:
         abstract = decode_abstract_inverted_index(work.get("abstract_inverted_index"))
         publication, venue = pick_publication_and_venue(work)
         focus_blob = f"{title} {abstract} {publication} {venue}"
-        if not match_focus_terms(focus_blob):
+        if not match_focus_terms(focus_blob, focus_terms):
             continue
 
         authors = extract_author_list(work)
@@ -794,12 +975,20 @@ def main() -> int:
 
         year_val = work.get("publication_year")
         year = str(year_val) if isinstance(year_val, int) and year_val > 0 else ""
+        openalex_id = collapse_ws(str(work.get("id", "")))
+        openalex_work_key = normalize_openalex_work_key(openalex_id)
+        doi_key = normalize_doi(str(work.get("doi", "")))
 
         title_key = (year, normalize_title_key(title))
         if title_key in existing_title_keys or title_key in kept_existing_keys:
             continue
+        if openalex_work_key and (openalex_work_key in existing_openalex_keys or openalex_work_key in kept_openalex_keys):
+            continue
+        if doi_key and (doi_key in existing_doi_keys or doi_key in kept_doi_keys):
+            continue
 
         paper_url, source_url = pick_urls(work)
+        matched_subprojects = match_subprojects(focus_blob, subproject_aliases)
         topics = keyword_extractor.extract(
             title=title,
             abstract=abstract,
@@ -809,7 +998,6 @@ def main() -> int:
         tags_for_paper = topics["tags"]
         keywords_for_paper = topics["keywords"]
 
-        openalex_id = collapse_ws(str(work.get("id", "")))
         suffix = openalex_id.rsplit("/", 1)[-1].lower() if openalex_id else slugify(title)[:32]
         base_id = slugify(f"openalex-{suffix}") or "openalex-paper"
         paper_id = base_id
@@ -833,12 +1021,19 @@ def main() -> int:
                 "abstract": abstract or "No abstract available in discovery metadata.",
                 "paperUrl": paper_url,
                 "sourceUrl": source_url,
+                "openalexId": openalex_id,
+                "doi": doi_key,
                 "tags": tags_for_paper,
                 "keywords": keywords_for_paper,
                 "matchedAuthors": matched,
+                "matchedSubprojects": matched_subprojects,
             }
         )
         kept_existing_keys.add(title_key)
+        if openalex_work_key:
+            kept_openalex_keys.add(openalex_work_key)
+        if doi_key:
+            kept_doi_keys.add(doi_key)
 
     out_papers.sort(
         key=lambda p: (p.get("year") or "0000", p.get("title") or "", p.get("id") or ""),
@@ -868,6 +1063,8 @@ def main() -> int:
     )
 
     print(f"Seed authors: {len(seed_authors)}")
+    print(f"LLVM subprojects configured: {len(subproject_aliases)}")
+    print(f"Effective keyword queries: {len(discovery_keywords)}")
     print(f"Extra author seeds loaded: {len(extra_authors)} (new seed authors: {added_seed_authors})")
     print(f"Resolved extra author ids: {len(matched_author_ids)}")
     print(f"OpenAlex requests: {total_requests}")

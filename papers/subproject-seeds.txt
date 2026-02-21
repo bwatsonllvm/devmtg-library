@@ -1,0 +1,23 @@
+# Optional subproject seed overrides for OpenAlex discovery.
+# Format:
+#   canonical-name
+#   canonical-name:alias one,alias two
+
+clang:clang,clangd,libclang
+mlir
+lldb
+lld
+flang
+compiler-rt
+libc:libc,llvm libc,llvm-libc,llvmlibc,llbclc
+libc++
+libunwind
+openmp
+polly
+bolt
+circt
+libfuzzer
+addresssanitizer
+memorysanitizer
+threadsanitizer
+undefinedbehaviorsanitizer

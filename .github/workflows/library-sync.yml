@@ -42,6 +42,7 @@ jobs:
             --papers-dir papers \
             --index-json papers/index.json \
             --app-js devmtg/js/app.js \
+            --subprojects-file papers/subproject-seeds.txt \
             --extra-authors-file papers/extra-author-seeds.txt \
             --max-pages-per-keyword 5 \
             --per-page 200 \

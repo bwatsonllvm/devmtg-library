@@ -203,6 +203,7 @@ python3 /Users/britton/Desktop/library/scripts/build-openalex-discovery.py \
   --papers-dir /Users/britton/Desktop/library/papers \
   --index-json /Users/britton/Desktop/library/papers/index.json \
   --app-js /Users/britton/Desktop/library/devmtg/js/app.js \
+  --subprojects-file /Users/britton/Desktop/library/papers/subproject-seeds.txt \
   --extra-authors-file /Users/britton/Desktop/library/papers/extra-author-seeds.txt
 ```
 
@@ -217,6 +218,7 @@ python3 /Users/britton/Desktop/library/scripts/build-openalex-discovery.py \
   --papers-dir /Users/britton/Desktop/library/papers \
   --index-json /Users/britton/Desktop/library/papers/index.json \
   --app-js /Users/britton/Desktop/library/devmtg/js/app.js \
+  --subprojects-file /Users/britton/Desktop/library/papers/subproject-seeds.txt \
   --extra-authors-file /Users/britton/Desktop/library/papers/extra-author-seeds.txt && \
 /Users/britton/Desktop/library/scripts/validate-library-bundle.sh
 ```
@@ -261,10 +263,26 @@ python3 /Users/britton/Desktop/library/scripts/build-openalex-discovery.py \
   --per-page 200
 ```
 
+By default, discovery now expands to key LLVM subprojects (e.g. Clang/MLIR/LLDB/LLD/Flang/OpenMP/Polly/BOLT/CIRCT/sanitizers) and treats them as LLVM-equivalent signals for matching.
+Use `--skip-subproject-keyword-expansion` if you want subproject-aware matching without issuing additional subproject search queries.
+
 This writes:
 
 - `papers/openalex-discovered.json`
 - updates `papers/index.json` (`paperFiles` + `dataVersion`)
+
+To provide custom subproject seeds:
+
+```bash
+python3 /Users/britton/Desktop/library/scripts/build-openalex-discovery.py \
+  --events-dir /Users/britton/Desktop/library/devmtg/events \
+  --papers-dir /Users/britton/Desktop/library/papers \
+  --index-json /Users/britton/Desktop/library/papers/index.json \
+  --app-js /Users/britton/Desktop/library/devmtg/js/app.js \
+  --subprojects-file /Users/britton/Desktop/library/papers/subproject-seeds.txt \
+  --subproject "llvm-libc" \
+  --subproject "mlgo"
+```
 
 To expand discovery with an explicit author list:
 
