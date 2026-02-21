@@ -23,24 +23,24 @@
         } else {
           document.documentElement.setAttribute('data-text-size', textSize);
         }
-        document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#fafafa' : '#0b0d10';
+        document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f6f8fa';
       } catch (_) {
         var fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         var fallbackTheme = fallbackDark ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', fallbackTheme);
         document.documentElement.setAttribute('data-theme-preference', 'system');
-        document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#fafafa' : '#0b0d10';
+        document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#000000' : '#f6f8fa';
       }
     })();
   </script>
   <style>
-    html { background: #0b0d10; }
-    html[data-theme="dark"] { background: #fafafa; }
+    html { background: #f6f8fa; }
+    html[data-theme="dark"] { background: #000000; }
     body { background: transparent; }
   </style>
   <title>Talk — LLVM Developers' Meeting Library</title>
   <meta name="description" content="Talk details from the LLVM Developers' Meeting.">
-  <link rel="stylesheet" href="css/style.css?v=20260221-03">
+  <link rel="stylesheet" href="css/style.css?v=20260220-18">
 </head>
 <body>
 
@@ -297,6 +297,6 @@
   <!-- Event data loader -->
   <script src="js/events-data.js?v=20260220-12"></script>
   <script src="js/shared/library-utils.js?v=20260220-18"></script>
-  <script src="js/talk.js?v=20260221-03"></script>
+  <script src="js/talk.js?v=20260220-12"></script>
 </body>
 </html>
