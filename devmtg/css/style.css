@@ -335,12 +335,13 @@ ul, ol {
 }
 
 .global-search-form {
+  position: relative;
   display: inline-flex;
   align-items: center;
   min-width: clamp(220px, 30vw, 360px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  overflow: hidden;
+  overflow: visible;
   background: var(--color-surface);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
