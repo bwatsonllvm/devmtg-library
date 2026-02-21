@@ -662,7 +662,7 @@ function renderCards(results) {
     const suggestions = ['MLIR', 'LLDB', 'vectorization', 'Clang', 'loop optimization', 'Rust'];
     const recoveryActions = [];
     if (state.years.size > 0) recoveryActions.push({ id: 'clear-year', label: 'Clear year' });
-    if (state.activeTag) recoveryActions.push({ id: 'clear-topic', label: 'Clear topic' });
+    if (state.activeTag) recoveryActions.push({ id: 'clear-topic', label: 'Clear key topic' });
     else if (state.query) recoveryActions.push({ id: 'clear-search', label: 'Clear search' });
     recoveryActions.push({ id: 'reset-all', label: 'Reset all' });
 

@@ -169,7 +169,7 @@
           type="search"
           class="search-input"
           id="search-input"
-          placeholder="Search talks, speakers, topics…"
+          placeholder="Search talks, speakers, key topics…"
           autocomplete="off"
           spellcheck="false"
           aria-label="Search talks"
@@ -211,17 +211,17 @@
       <div class="filter-sidebar-body" id="filter-sidebar-body">
         <section class="filter-accordion" data-accordion="topics">
           <button class="filter-accordion-toggle" id="toggle-topics" aria-expanded="true" aria-controls="panel-topics">
-            <span>Topics</span>
+            <span>Key Topics</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
           <div class="filter-accordion-panel" id="panel-topics">
-            <div class="filter-tags-row" id="filter-tags-row" aria-label="Filter by topic">
+            <div class="filter-tags-row" id="filter-tags-row" aria-label="Filter by key topic">
               <div class="filter-tags-header">
                 <span class="filter-group-hint">Select one or more subject tags</span>
               </div>
-              <div class="filter-group filter-group--wrap" id="filter-tags" aria-label="Topic filters"></div>
+              <div class="filter-group filter-group--wrap" id="filter-tags" aria-label="Key Topic filters"></div>
             </div>
           </div>
         </section>
@@ -379,7 +379,7 @@
             <p>
               This website is a searchable index of <strong>LLVM Developers' Meeting</strong> talks and meeting
               metadata from 2007 to present. It brings titles, speakers, abstracts, tags, and links to videos
-              or slides into one place so you can quickly find sessions by topic, person, or year.
+              or slides into one place so you can quickly find sessions by key topic, person, or year.
             </p>
             <p>
               Use the search bar, filters, and meetings view to explore the archive. URLs capture active
@@ -405,7 +405,7 @@
             <ul class="howto-list">
               <li>
                 <strong>Search</strong> — Type any keyword in the search box to find talks by title, speaker,
-                or topic. Quoted phrases (e.g. <code>"register allocation"</code>) are treated as exact matches.
+                or key topic. Quoted phrases (e.g. <code>"register allocation"</code>) are treated as exact matches.
                 Results are ranked by relevance and recency.
               </li>
               <li>

@@ -691,7 +691,7 @@ function renderCards(results) {
 
     if (state.speaker) recoveryActions.push({ id: 'clear-author', label: 'Clear author' });
     if (state.years.size > 0) recoveryActions.push({ id: 'clear-year', label: 'Clear year' });
-    if (state.activeTags.size > 0) recoveryActions.push({ id: 'clear-topic', label: 'Clear topic' });
+    if (state.activeTags.size > 0) recoveryActions.push({ id: 'clear-topic', label: 'Clear key topic' });
     else if (state.query) recoveryActions.push({ id: 'clear-search', label: 'Clear search' });
     recoveryActions.push({ id: 'reset-all', label: 'Reset all' });
 
