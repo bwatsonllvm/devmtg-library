@@ -1978,9 +1978,38 @@ function applyTopicSearchFilter(tag) {
 
 function applyAutocompleteSelection(type, value, source = 'search') {
   const input = document.getElementById('search-input');
+  let effectiveType = String(type || '').trim();
+
+  if (effectiveType === 'paper') {
+    closeDropdown();
+    routeToGlobalSearch(value);
+    return;
+  }
+
+  if (effectiveType === 'person') {
+    const personMatch = findPersonEntry(value);
+    const speakerMatch = findSpeakerEntry(value);
+    if (!speakerMatch || (personMatch && personMatch.talkCount === 0 && personMatch.paperCount > 0)) {
+      closeDropdown();
+      routeToGlobalSearch(value);
+      return;
+    }
+    effectiveType = 'speaker';
+  } else if (effectiveType === 'topic') {
+    const topicMatch = findTopicEntry(value);
+    if (topicMatch && topicMatch.talkCount === 0 && topicMatch.paperCount > 0) {
+      closeDropdown();
+      routeToGlobalSearch(value);
+      return;
+    }
+    effectiveType = 'tag';
+  } else if (effectiveType === 'talk') {
+    effectiveType = 'generic';
+  }
+
   const normalizedValue = normalizeFilterValue(value);
 
-  if (type === 'tag') {
+  if (effectiveType === 'tag') {
     const sameActiveTopic =
       normalizedValue &&
       normalizedValue === normalizeFilterValue(state.activeTag) &&
@@ -1997,7 +2026,7 @@ function applyAutocompleteSelection(type, value, source = 'search') {
   state.speaker = '';
   state.activeTag = '';
   syncTopicChipState();
-  if (type === 'speaker') {
+  if (effectiveType === 'speaker') {
     state.activeSpeaker = value;
     state.query = value;
   } else {
@@ -2127,39 +2156,289 @@ function updateClearBtn() {
 // Search Autocomplete
 // ============================================================
 
-let autocompleteIndex = { tags: [], speakers: [] };
+let autocompleteIndex = {
+  tags: [],      // Talk-only key topics (used for local topic filtering)
+  speakers: [],  // Talk-only speakers (used for local speaker filtering)
+  topics: [],    // Combined talks + papers topics
+  people: [],    // Combined speakers + authors
+  talks: [],     // Talk titles
+  papers: [],    // Paper titles
+};
+let paperSearchIndex = [];
 let dropdownActiveIdx = -1;
+let universalAutocompletePromise = null;
 
-function buildAutocompleteIndex() {
-  // Tags with counts (already computed in initFilters, but rebuild here independently)
-  const tagCounts = {};
-  for (const t of allTalks) {
-    for (const topic of getTalkKeyTopics(t, 12)) tagCounts[topic] = (tagCounts[topic] || 0) + 1;
+function addCountToMap(map, label) {
+  const value = String(label || '').trim();
+  if (!value) return;
+  map.set(value, (map.get(value) || 0) + 1);
+}
+
+function mapToSortedEntries(map) {
+  return [...map.entries()]
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function mapToAlphaEntries(map) {
+  return [...map.entries()]
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+function buildPeopleEntriesFromBuckets(buckets) {
+  return [...buckets.values()]
+    .map((bucket) => {
+      const label = [...bucket.labels.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || '';
+      const talkCount = bucket.talkCount || 0;
+      const paperCount = bucket.paperCount || 0;
+      return {
+        label,
+        talkCount,
+        paperCount,
+        count: talkCount + paperCount,
+      };
+    })
+    .filter((entry) => entry.label)
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function buildTopicEntries(talkCounts, paperCounts) {
+  const labels = new Set([...talkCounts.keys(), ...paperCounts.keys()]);
+  return [...labels]
+    .map((label) => {
+      const talkCount = talkCounts.get(label) || 0;
+      const paperCount = paperCounts.get(label) || 0;
+      return {
+        label,
+        talkCount,
+        paperCount,
+        count: talkCount + paperCount,
+      };
+    })
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function ensurePersonBucket(buckets, name) {
+  const label = String(name || '').trim();
+  const key = normalizePersonKey(label);
+  if (!label || !key) return null;
+  if (!buckets.has(key)) {
+    buckets.set(key, {
+      talkCount: 0,
+      paperCount: 0,
+      labels: new Map(),
+    });
   }
-  autocompleteIndex.tags = Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([tag, count]) => ({ label: tag, count }));
+  return buckets.get(key);
+}
 
-  // Unique speaker names with talk counts
-  const speakerBuckets = new Map();
-  for (const t of allTalks) {
-    for (const s of (t.speakers || [])) {
-      const label = String((s && s.name) || '').trim();
-      const key = normalizePersonKey(label);
-      if (!label || !key) continue;
-      if (!speakerBuckets.has(key)) speakerBuckets.set(key, { count: 0, labels: new Map() });
-      const bucket = speakerBuckets.get(key);
-      bucket.count += 1;
+function buildTalkAutocompleteBase() {
+  const talkTopicCounts = new Map();
+  const peopleBuckets = new Map();
+  const talkTitleCounts = new Map();
+
+  for (const talk of allTalks) {
+    for (const topic of getTalkKeyTopics(talk, 12)) addCountToMap(talkTopicCounts, topic);
+    addCountToMap(talkTitleCounts, talk.title);
+
+    for (const speaker of (talk.speakers || [])) {
+      const bucket = ensurePersonBucket(peopleBuckets, speaker && speaker.name);
+      if (!bucket) continue;
+      const label = String((speaker && speaker.name) || '').trim();
+      bucket.talkCount += 1;
       bucket.labels.set(label, (bucket.labels.get(label) || 0) + 1);
     }
   }
-  autocompleteIndex.speakers = [...speakerBuckets.values()]
-    .map((bucket) => {
-      const label = [...bucket.labels.entries()]
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0][0];
-      return { label, count: bucket.count };
-    })
+
+  const people = buildPeopleEntriesFromBuckets(peopleBuckets);
+
+  autocompleteIndex.tags = mapToSortedEntries(talkTopicCounts);
+  autocompleteIndex.speakers = people
+    .filter((entry) => entry.talkCount > 0)
+    .map((entry) => ({ label: entry.label, count: entry.talkCount }))
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  autocompleteIndex.topics = buildTopicEntries(talkTopicCounts, new Map());
+  autocompleteIndex.people = people;
+  autocompleteIndex.talks = mapToAlphaEntries(talkTitleCounts);
+  autocompleteIndex.papers = [];
+}
+
+function getPaperKeyTopics(paper, limit = Infinity) {
+  if (typeof HubUtils.getPaperKeyTopics === 'function') {
+    return HubUtils.getPaperKeyTopics(paper, limit);
+  }
+  const out = [];
+  const seen = new Set();
+  const add = (value) => {
+    const label = String(value || '').trim();
+    const key = label.toLowerCase();
+    if (!label || seen.has(key)) return;
+    seen.add(key);
+    out.push(label);
+  };
+  for (const tag of (paper && paper.tags) || []) add(tag);
+  for (const keyword of (paper && paper.keywords) || []) add(keyword);
+  if (!Number.isFinite(limit)) return out;
+  return out.slice(0, Math.max(0, Math.floor(limit)));
+}
+
+function normalizePaperAuthorName(rawAuthor) {
+  if (typeof HubUtils.normalizePersonRecord === 'function') {
+    const normalized = HubUtils.normalizePersonRecord(rawAuthor);
+    return String((normalized && normalized.name) || '').trim();
+  }
+  return String((rawAuthor && rawAuthor.name) || '').trim();
+}
+
+function buildPaperSearchEntry(rawPaper) {
+  const paper = rawPaper && typeof rawPaper === 'object' ? rawPaper : null;
+  if (!paper) return null;
+
+  const title = String(paper.title || '').trim();
+  if (!title) return null;
+
+  const authors = Array.isArray(paper.authors)
+    ? paper.authors.map(normalizePaperAuthorName).filter(Boolean)
+    : [];
+  const topics = getPaperKeyTopics(paper, 12);
+  const abstractText = String(paper.abstract || '').trim();
+  const publication = String(paper.publication || '').trim();
+  const venue = String(paper.venue || '').trim();
+  const year = String(paper.year || '').trim();
+
+  return {
+    title,
+    _titleLower: title.toLowerCase(),
+    _authorsLower: authors.join(' ').toLowerCase(),
+    _topicsLower: topics.join(' ').toLowerCase(),
+    _abstractLower: abstractText.toLowerCase(),
+    _publicationLower: publication.toLowerCase(),
+    _venueLower: venue.toLowerCase(),
+    _yearLower: year.toLowerCase(),
+  };
+}
+
+function ensureScript(src) {
+  return new Promise((resolve, reject) => {
+    const existing = [...document.querySelectorAll('script[src]')].find((script) => {
+      const scriptSrc = script.getAttribute('src') || '';
+      return scriptSrc === src || scriptSrc.startsWith(`${src}?`);
+    });
+
+    if (existing) {
+      if (existing.dataset.loaded === 'true') {
+        resolve();
+        return;
+      }
+      existing.addEventListener('load', () => {
+        existing.dataset.loaded = 'true';
+        resolve();
+      }, { once: true });
+      existing.addEventListener('error', () => reject(new Error(`Could not load ${src}`)), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.addEventListener('load', () => {
+      script.dataset.loaded = 'true';
+      resolve();
+    }, { once: true });
+    script.addEventListener('error', () => reject(new Error(`Could not load ${src}`)), { once: true });
+    document.body.appendChild(script);
+  });
+}
+
+async function ensurePaperDataLoader() {
+  if (typeof window.loadPaperData === 'function') return true;
+  try {
+    await ensureScript('js/papers-data.js');
+  } catch {
+    return false;
+  }
+  return typeof window.loadPaperData === 'function';
+}
+
+async function hydrateUniversalAutocomplete() {
+  if (universalAutocompletePromise) return universalAutocompletePromise;
+
+  universalAutocompletePromise = (async () => {
+    const hasLoader = await ensurePaperDataLoader();
+    if (!hasLoader || typeof window.loadPaperData !== 'function') return;
+
+    let papers = [];
+    try {
+      const payload = await window.loadPaperData();
+      papers = Array.isArray(payload && payload.papers) ? payload.papers : [];
+    } catch {
+      return;
+    }
+
+    const talkTopicCounts = new Map();
+    const paperTopicCounts = new Map();
+    const peopleBuckets = new Map();
+    const talkTitleCounts = new Map();
+    const paperTitleCounts = new Map();
+    const nextPaperSearchIndex = [];
+
+    for (const talk of allTalks) {
+      for (const topic of getTalkKeyTopics(talk, 12)) addCountToMap(talkTopicCounts, topic);
+      addCountToMap(talkTitleCounts, talk.title);
+
+      for (const speaker of (talk.speakers || [])) {
+        const label = String((speaker && speaker.name) || '').trim();
+        const bucket = ensurePersonBucket(peopleBuckets, label);
+        if (!bucket) continue;
+        bucket.talkCount += 1;
+        bucket.labels.set(label, (bucket.labels.get(label) || 0) + 1);
+      }
+    }
+
+    for (const paper of papers) {
+      for (const topic of getPaperKeyTopics(paper, 12)) addCountToMap(paperTopicCounts, topic);
+      addCountToMap(paperTitleCounts, paper && paper.title);
+
+      for (const author of (paper && paper.authors) || []) {
+        const label = normalizePaperAuthorName(author);
+        const bucket = ensurePersonBucket(peopleBuckets, label);
+        if (!bucket) continue;
+        bucket.paperCount += 1;
+        bucket.labels.set(label, (bucket.labels.get(label) || 0) + 1);
+      }
+
+      const indexedPaper = buildPaperSearchEntry(paper);
+      if (indexedPaper) nextPaperSearchIndex.push(indexedPaper);
+    }
+
+    const people = buildPeopleEntriesFromBuckets(peopleBuckets);
+
+    autocompleteIndex.tags = mapToSortedEntries(talkTopicCounts);
+    autocompleteIndex.speakers = people
+      .filter((entry) => entry.talkCount > 0)
+      .map((entry) => ({ label: entry.label, count: entry.talkCount }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+    autocompleteIndex.topics = buildTopicEntries(talkTopicCounts, paperTopicCounts);
+    autocompleteIndex.people = people;
+    autocompleteIndex.talks = mapToAlphaEntries(talkTitleCounts);
+    autocompleteIndex.papers = mapToAlphaEntries(paperTitleCounts);
+    paperSearchIndex = nextPaperSearchIndex;
+
+    const input = document.getElementById('search-input');
+    if (input) {
+      const query = String(input.value || '').trim();
+      if (query) renderDropdown(query);
+    }
+  })();
+
+  return universalAutocompletePromise;
+}
+
+function buildAutocompleteIndex() {
+  buildTalkAutocompleteBase();
+  hydrateUniversalAutocomplete();
 }
 
 function highlightMatch(text, query) {
@@ -2178,31 +2457,46 @@ function renderDropdown(query) {
 
   const q = query.toLowerCase();
 
-  const matchedTags = autocompleteIndex.tags
+  const matchedTopics = autocompleteIndex.topics
     .filter(t => t.label.toLowerCase().includes(q))
     .slice(0, 6);
 
-  const matchedSpeakers = autocompleteIndex.speakers
+  const matchedPeople = autocompleteIndex.people
     .filter(s => s.label.toLowerCase().includes(q))
-    .slice(0, 5);
+    .slice(0, 6);
 
-  if (matchedTags.length === 0 && matchedSpeakers.length === 0) {
+  const matchedTalkTitles = autocompleteIndex.talks
+    .filter((talk) => talk.label.toLowerCase().includes(q))
+    .slice(0, 4);
+
+  const matchedPaperTitles = autocompleteIndex.papers
+    .filter((paper) => paper.label.toLowerCase().includes(q))
+    .slice(0, 4);
+
+  if (
+    matchedTopics.length === 0 &&
+    matchedPeople.length === 0 &&
+    matchedTalkTitles.length === 0 &&
+    matchedPaperTitles.length === 0
+  ) {
     dropdown.classList.add('hidden');
     dropdownActiveIdx = -1;
     return;
   }
 
   const tagIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`;
-  const speakerIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  const personIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  const talkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+  const paperIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
 
   let html = '';
 
-  if (matchedTags.length > 0) {
+  if (matchedTopics.length > 0) {
     html += `<div class="search-dropdown-section">
       <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
-      ${matchedTags.map((t, i) => `
+      ${matchedTopics.map((t) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
-                data-autocomplete-type="tag" data-autocomplete-value="${escapeHtml(t.label)}">
+                data-autocomplete-type="topic" data-autocomplete-value="${escapeHtml(t.label)}">
           <span class="search-dropdown-item-icon">${tagIcon}</span>
           <span class="search-dropdown-item-label">${highlightMatch(t.label, query)}</span>
           <span class="search-dropdown-item-count">${t.count.toLocaleString()}</span>
@@ -2210,16 +2504,44 @@ function renderDropdown(query) {
     </div>`;
   }
 
-  if (matchedSpeakers.length > 0) {
-    if (matchedTags.length > 0) html += `<div class="search-dropdown-divider"></div>`;
+  if (matchedPeople.length > 0) {
+    if (html) html += `<div class="search-dropdown-divider"></div>`;
     html += `<div class="search-dropdown-section">
-      <div class="search-dropdown-label" aria-hidden="true">Speakers</div>
-      ${matchedSpeakers.map((s, i) => `
+      <div class="search-dropdown-label" aria-hidden="true">Speakers + Authors</div>
+      ${matchedPeople.map((s) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
-                data-autocomplete-type="speaker" data-autocomplete-value="${escapeHtml(s.label)}">
-          <span class="search-dropdown-item-icon">${speakerIcon}</span>
+                data-autocomplete-type="person" data-autocomplete-value="${escapeHtml(s.label)}">
+          <span class="search-dropdown-item-icon">${personIcon}</span>
           <span class="search-dropdown-item-label">${highlightMatch(s.label, query)}</span>
-          <span class="search-dropdown-item-count">${s.count.toLocaleString()} talk${s.count !== 1 ? 's' : ''}</span>
+          <span class="search-dropdown-item-count">${s.count.toLocaleString()} work${s.count === 1 ? '' : 's'}</span>
+        </button>`).join('')}
+    </div>`;
+  }
+
+  if (matchedTalkTitles.length > 0) {
+    if (html) html += `<div class="search-dropdown-divider"></div>`;
+    html += `<div class="search-dropdown-section">
+      <div class="search-dropdown-label" aria-hidden="true">Talk Titles</div>
+      ${matchedTalkTitles.map((talk) => `
+        <button class="search-dropdown-item" role="option" aria-selected="false"
+                data-autocomplete-type="talk" data-autocomplete-value="${escapeHtml(talk.label)}">
+          <span class="search-dropdown-item-icon">${talkIcon}</span>
+          <span class="search-dropdown-item-label">${highlightMatch(talk.label, query)}</span>
+          <span class="search-dropdown-item-count">Talk</span>
+        </button>`).join('')}
+    </div>`;
+  }
+
+  if (matchedPaperTitles.length > 0) {
+    if (html) html += `<div class="search-dropdown-divider"></div>`;
+    html += `<div class="search-dropdown-section">
+      <div class="search-dropdown-label" aria-hidden="true">Paper Titles</div>
+      ${matchedPaperTitles.map((paper) => `
+        <button class="search-dropdown-item" role="option" aria-selected="false"
+                data-autocomplete-type="paper" data-autocomplete-value="${escapeHtml(paper.label)}">
+          <span class="search-dropdown-item-icon">${paperIcon}</span>
+          <span class="search-dropdown-item-label">${highlightMatch(paper.label, query)}</span>
+          <span class="search-dropdown-item-count">Paper</span>
         </button>`).join('')}
     </div>`;
   }
@@ -2237,9 +2559,165 @@ function renderDropdown(query) {
   });
 }
 
+function findExactAutocompleteEntry(entries, value) {
+  const normalized = normalizeFilterValue(value);
+  if (!normalized) return null;
+  return entries.find((entry) => normalizeFilterValue(entry.label) === normalized) || null;
+}
+
+function findTopicEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.topics, value);
+}
+
+function findSpeakerEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.speakers, value);
+}
+
+function findPersonEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.people, value);
+}
+
+function findTalkTitleEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.talks, value);
+}
+
+function findPaperTitleEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.papers, value);
+}
+
+function scorePaperMatch(indexedPaper, tokens) {
+  if (!tokens.length) return 0;
+
+  let total = 0;
+  for (const token of tokens) {
+    let tokenScore = 0;
+    const titleIdx = indexedPaper._titleLower.indexOf(token);
+    if (titleIdx !== -1) tokenScore += titleIdx === 0 ? 100 : 50;
+    if (indexedPaper._authorsLower.includes(token)) tokenScore += 34;
+    if (indexedPaper._topicsLower.includes(token)) tokenScore += 20;
+    if (indexedPaper._abstractLower.includes(token)) tokenScore += 12;
+    if (indexedPaper._publicationLower.includes(token)) tokenScore += 10;
+    if (indexedPaper._venueLower.includes(token)) tokenScore += 8;
+    if (indexedPaper._yearLower.includes(token)) tokenScore += 6;
+    if (tokenScore === 0) return 0;
+    total += tokenScore;
+  }
+
+  return total;
+}
+
+function countTalkMatchesForQuery(query) {
+  const tokens = tokenize(query);
+  if (!tokens.length) return 0;
+
+  if (typeof HubUtils.rankTalksByQuery === 'function') {
+    return HubUtils.rankTalksByQuery(searchIndex, query).length;
+  }
+
+  let exactCount = 0;
+  for (const talk of searchIndex) {
+    if (scoreMatch(talk, tokens) > 0) exactCount += 1;
+  }
+  if (exactCount > 0) return exactCount;
+
+  let fuzzyCount = 0;
+  for (const talk of searchIndex) {
+    if (fuzzyScoreTalk(talk, tokens) > 0) fuzzyCount += 1;
+  }
+  return fuzzyCount;
+}
+
+function countPaperMatchesForQuery(query) {
+  if (!paperSearchIndex.length) return 0;
+  const tokens = tokenize(query);
+  if (!tokens.length) return 0;
+
+  let count = 0;
+  for (const paper of paperSearchIndex) {
+    if (scorePaperMatch(paper, tokens) > 0) count += 1;
+  }
+  return count;
+}
+
+function hasNonSearchFiltersApplied() {
+  return !!(
+    state.meeting ||
+    state.speaker ||
+    state.categories.size > 0 ||
+    state.years.size > 0 ||
+    state.hasVideo ||
+    state.hasSlides
+  );
+}
+
+function buildGlobalSearchUrl(query) {
+  const params = new URLSearchParams();
+  params.set('mode', 'search');
+  params.set('q', String(query || '').trim());
+  params.set('from', 'talks');
+  return `${ALL_WORK_PAGE_PATH}?${params.toString()}`;
+}
+
+function routeToGlobalSearch(query) {
+  const value = String(query || '').trim();
+  if (!value) return false;
+  window.location.href = buildGlobalSearchUrl(value);
+  return true;
+}
+
+function shouldRouteToGlobalSearch(query) {
+  const value = String(query || '').trim();
+  if (!value) return false;
+
+  const topic = findTopicEntry(value);
+  if (topic && topic.talkCount === 0 && topic.paperCount > 0) return true;
+
+  const talkTitle = findTalkTitleEntry(value);
+  const paperTitle = findPaperTitleEntry(value);
+  if (paperTitle && !talkTitle) return true;
+
+  const person = findPersonEntry(value);
+  const speaker = findSpeakerEntry(value);
+  if (person && !speaker) return true;
+
+  if (!hasNonSearchFiltersApplied()) {
+    const talkMatches = countTalkMatchesForQuery(value);
+    if (talkMatches === 0) {
+      const paperMatches = countPaperMatchesForQuery(value);
+      if (paperMatches > 0) return true;
+    }
+  }
+
+  return false;
+}
+
+function commitSearchValue(rawValue, allowGlobalRouting = true) {
+  const committed = String(rawValue || '').trim();
+
+  if (allowGlobalRouting && shouldRouteToGlobalSearch(committed)) {
+    closeDropdown();
+    routeToGlobalSearch(committed);
+    return 'global';
+  }
+
+  if (committed !== state.activeSpeaker) state.activeSpeaker = '';
+  if (committed !== state.activeTag) {
+    state.activeTag = '';
+    syncTopicChipState();
+  }
+  if (committed && state.speaker) state.speaker = '';
+
+  state.query = committed;
+  closeDropdown();
+  updateClearBtn();
+  syncUrl();
+  render();
+  return 'local';
+}
+
 function selectAutocompleteItem(item) {
   const value = item.dataset.autocompleteValue;
-  const type  = item.dataset.autocompleteType; // 'speaker' | 'tag'
+  const type  = item.dataset.autocompleteType;
   const input = document.getElementById('search-input');
   applyAutocompleteSelection(type, value, 'search');
   input.focus();
@@ -2312,21 +2790,8 @@ function initSearch() {
       } else {
         e.preventDefault();
         clearTimeout(debounceTimer);
-
-        const committed = input.value.trim();
-        if (committed !== state.activeSpeaker) state.activeSpeaker = '';
-        if (committed !== state.activeTag) {
-          state.activeTag = '';
-          syncTopicChipState();
-        }
-        if (committed && state.speaker) state.speaker = '';
-
-        state.query = committed;
-        closeDropdown();
-        updateClearBtn();
-        syncUrl();
-        render();
-        input.blur();
+        const mode = commitSearchValue(input.value, true);
+        if (mode !== 'global') input.blur();
       }
     } else if (e.key === 'Escape') {
       if (!document.getElementById('search-dropdown').classList.contains('hidden')) {

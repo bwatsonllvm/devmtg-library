@@ -13,8 +13,17 @@ let searchIndex = [];
 let viewMode = 'grid'; // 'grid' | 'list'
 let debounceTimer = null;
 let searchMode = 'browse'; // 'browse' | 'exact' | 'fuzzy'
-let autocompleteIndex = { tags: [], speakers: [] };
+let autocompleteIndex = {
+  tags: [],      // Paper-only key topics (used for local paper topic filters)
+  speakers: [],  // Paper-only authors (used for local author filters)
+  topics: [],    // Combined talks + papers topics
+  people: [],    // Combined speakers + authors
+  talks: [],     // Talk titles
+  papers: [],    // Paper titles
+};
 let dropdownActiveIdx = -1;
+let talkSearchIndex = [];
+let universalAutocompletePromise = null;
 const INITIAL_RENDER_BATCH_SIZE = 60;
 const RENDER_BATCH_SIZE = 40;
 const LOAD_MORE_ROOT_MARGIN = '900px 0px';
@@ -1070,15 +1079,43 @@ function applyTopicSearchFilter(tag, source = 'search') {
 
 function applyAutocompleteSelection(type, value, source = 'search') {
   const input = document.getElementById('search-input');
+  let effectiveType = String(type || '').trim();
 
-  if (type === 'tag') {
+  if (effectiveType === 'talk') {
+    closeDropdown();
+    routeToGlobalSearch(value);
+    return 'global';
+  }
+
+  if (effectiveType === 'person') {
+    const personMatch = findPersonEntry(value);
+    const authorMatch = findAuthorEntry(value);
+    if (!authorMatch || (personMatch && personMatch.paperCount === 0 && personMatch.talkCount > 0)) {
+      closeDropdown();
+      routeToGlobalSearch(value);
+      return 'global';
+    }
+    effectiveType = 'speaker';
+  } else if (effectiveType === 'topic') {
+    const topicMatch = findTopicEntry(value);
+    if (topicMatch && topicMatch.paperCount === 0 && topicMatch.talkCount > 0) {
+      closeDropdown();
+      routeToGlobalSearch(value);
+      return 'global';
+    }
+    effectiveType = 'tag';
+  } else if (effectiveType === 'paper') {
+    effectiveType = 'generic';
+  }
+
+  if (effectiveType === 'tag') {
     applyTopicSearchFilter(value, source);
-    return;
+    return 'local';
   }
 
   state.speaker = '';
 
-  if (type === 'speaker') {
+  if (effectiveType === 'speaker') {
     state.activeSpeaker = value;
     state.query = value;
   } else {
@@ -1091,6 +1128,7 @@ function applyAutocompleteSelection(type, value, source = 'search') {
   updateClearBtn();
   syncUrl();
   render();
+  return 'local';
 }
 
 function removeSpeakerFilter() {
@@ -1472,14 +1510,261 @@ function applyUrlFilters() {
 // Search Autocomplete
 // ============================================================
 
-function buildAutocompleteIndex() {
-  const tagCounts = {};
-  const speakerBuckets = new Map();
+function addCountToMap(map, label) {
+  const value = String(label || '').trim();
+  if (!value) return;
+  map.set(value, (map.get(value) || 0) + 1);
+}
+
+function mapToSortedEntries(map) {
+  return [...map.entries()]
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function mapToAlphaEntries(map) {
+  return [...map.entries()]
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+function ensurePersonBucket(buckets, name) {
+  const label = String(name || '').trim();
+  const key = normalizePersonKey(label);
+  if (!label || !key) return null;
+  if (!buckets.has(key)) {
+    buckets.set(key, {
+      talkCount: 0,
+      paperCount: 0,
+      labels: new Map(),
+    });
+  }
+  return buckets.get(key);
+}
+
+function buildPeopleEntriesFromBuckets(buckets) {
+  return [...buckets.values()]
+    .map((bucket) => {
+      const label = [...bucket.labels.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || '';
+      const talkCount = bucket.talkCount || 0;
+      const paperCount = bucket.paperCount || 0;
+      return {
+        label,
+        talkCount,
+        paperCount,
+        count: talkCount + paperCount,
+      };
+    })
+    .filter((entry) => entry.label)
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function buildTopicEntries(talkCounts, paperCounts) {
+  const labels = new Set([...talkCounts.keys(), ...paperCounts.keys()]);
+  return [...labels]
+    .map((label) => {
+      const talkCount = talkCounts.get(label) || 0;
+      const paperCount = paperCounts.get(label) || 0;
+      return {
+        label,
+        talkCount,
+        paperCount,
+        count: talkCount + paperCount,
+      };
+    })
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function normalizeTalks(rawTalks) {
+  if (typeof HubUtils.normalizeTalks === 'function') {
+    return HubUtils.normalizeTalks(rawTalks);
+  }
+  return Array.isArray(rawTalks) ? rawTalks : [];
+}
+
+function getTalkKeyTopics(talk, limit = Infinity) {
+  if (typeof HubUtils.getTalkKeyTopics === 'function') {
+    return HubUtils.getTalkKeyTopics(talk, limit);
+  }
+  const tags = Array.isArray(talk && talk.tags) ? talk.tags : [];
+  return Number.isFinite(limit) ? tags.slice(0, limit) : tags;
+}
+
+function buildTalkSearchEntry(talk) {
+  if (!talk || typeof talk !== 'object') return null;
+  const title = String(talk.title || '').trim();
+  if (!title) return null;
+
+  const keyTopics = getTalkKeyTopics(talk, 12);
+  const speakers = Array.isArray(talk.speakers)
+    ? talk.speakers.map((speaker) => String((speaker && speaker.name) || '').trim()).filter(Boolean)
+    : [];
+  const abstractText = String(talk.abstract || '').trim();
+  const meetingText = [
+    String(talk.meetingName || '').trim(),
+    String(talk.meetingLocation || '').trim(),
+    String(talk.meetingDate || '').trim(),
+    String(talk.meeting || '').trim(),
+  ].filter(Boolean).join(' ');
+
+  const uniqueTokens = (parts) => {
+    const seen = new Set();
+    const out = [];
+    for (const part of parts) {
+      const chunks = String(part || '')
+        .toLowerCase()
+        .split(/[^a-z0-9+#.]+/)
+        .map((chunk) => chunk.trim())
+        .filter((chunk) => chunk.length >= 2);
+      for (const chunk of chunks) {
+        if (!seen.has(chunk)) {
+          seen.add(chunk);
+          out.push(chunk);
+        }
+      }
+    }
+    return out;
+  };
+
+  return {
+    _titleLower: title.toLowerCase(),
+    _speakerLower: speakers.join(' ').toLowerCase(),
+    _abstractLower: abstractText.toLowerCase(),
+    _tagsLower: keyTopics.join(' ').toLowerCase(),
+    _meetingLower: meetingText.toLowerCase(),
+    _year: String(talk.meeting || '').slice(0, 4),
+    _fuzzyTitle: uniqueTokens([title]),
+    _fuzzySpeakers: uniqueTokens(speakers),
+    _fuzzyTags: uniqueTokens(keyTopics),
+    _fuzzyMeeting: uniqueTokens([meetingText]),
+  };
+}
+
+function scoreTalkSearchMatch(indexedTalk, tokens) {
+  if (typeof HubUtils.scoreMatch === 'function') {
+    return HubUtils.scoreMatch(indexedTalk, tokens);
+  }
+
+  let total = 0;
+  for (const token of tokens) {
+    let tokenScore = 0;
+    const titleIdx = indexedTalk._titleLower.indexOf(token);
+    if (titleIdx !== -1) tokenScore += titleIdx === 0 ? 100 : 50;
+    if (indexedTalk._speakerLower.includes(token)) tokenScore += 30;
+    if (indexedTalk._tagsLower.includes(token)) tokenScore += 15;
+    if (indexedTalk._abstractLower.includes(token)) tokenScore += 10;
+    if (indexedTalk._meetingLower.includes(token)) tokenScore += 5;
+    if (tokenScore === 0) return 0;
+    total += tokenScore;
+  }
+  return total;
+}
+
+function fuzzyScoreTalkMatch(indexedTalk, tokens) {
+  let total = 0;
+  for (const token of tokens) {
+    const titleScore = fuzzyTokenScore(token, indexedTalk._fuzzyTitle || []);
+    const speakerScore = fuzzyTokenScore(token, indexedTalk._fuzzySpeakers || []);
+    const tagScore = fuzzyTokenScore(token, indexedTalk._fuzzyTags || []);
+    const meetingScore = fuzzyTokenScore(token, indexedTalk._fuzzyMeeting || []);
+    const best = Math.max(
+      titleScore ? titleScore + 3 : 0,
+      speakerScore ? speakerScore + 2 : 0,
+      tagScore ? tagScore + 2 : 0,
+      meetingScore,
+    );
+    if (best <= 0) return 0;
+    total += best;
+  }
+  return total;
+}
+
+function countTalkMatchesForQuery(query) {
+  if (!talkSearchIndex.length) return 0;
+  const tokens = tokenize(query);
+  if (!tokens.length) return 0;
+
+  let exactCount = 0;
+  for (const talk of talkSearchIndex) {
+    if (scoreTalkSearchMatch(talk, tokens) > 0) exactCount += 1;
+  }
+  if (exactCount > 0) return exactCount;
+
+  let fuzzyCount = 0;
+  for (const talk of talkSearchIndex) {
+    if (fuzzyScoreTalkMatch(talk, tokens) > 0) fuzzyCount += 1;
+  }
+  return fuzzyCount;
+}
+
+function countPaperMatchesForQuery(query) {
+  const tokens = tokenize(query);
+  if (!tokens.length) return 0;
+
+  let exactCount = 0;
+  for (const paper of searchIndex) {
+    if (scorePaperMatch(paper, tokens) > 0) exactCount += 1;
+  }
+  if (exactCount > 0) return exactCount;
+
+  let fuzzyCount = 0;
+  for (const paper of searchIndex) {
+    if (fuzzyScorePaper(paper, tokens) > 0) fuzzyCount += 1;
+  }
+  return fuzzyCount;
+}
+
+function ensureScript(src) {
+  return new Promise((resolve, reject) => {
+    const existing = [...document.querySelectorAll('script[src]')].find((script) => {
+      const scriptSrc = script.getAttribute('src') || '';
+      return scriptSrc === src || scriptSrc.startsWith(`${src}?`);
+    });
+
+    if (existing) {
+      if (existing.dataset.loaded === 'true') {
+        resolve();
+        return;
+      }
+      existing.addEventListener('load', () => {
+        existing.dataset.loaded = 'true';
+        resolve();
+      }, { once: true });
+      existing.addEventListener('error', () => reject(new Error(`Could not load ${src}`)), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.addEventListener('load', () => {
+      script.dataset.loaded = 'true';
+      resolve();
+    }, { once: true });
+    script.addEventListener('error', () => reject(new Error(`Could not load ${src}`)), { once: true });
+    document.body.appendChild(script);
+  });
+}
+
+async function ensureEventDataLoader() {
+  if (typeof window.loadEventData === 'function') return true;
+  try {
+    await ensureScript('js/events-data.js');
+  } catch {
+    return false;
+  }
+  return typeof window.loadEventData === 'function';
+}
+
+function buildPaperAutocompleteBase() {
+  const paperTopicCounts = new Map();
+  const peopleBuckets = new Map();
+  const paperTitleCounts = new Map();
 
   for (const paper of allPapers) {
-    for (const topic of getPaperKeyTopics(paper, 8)) {
-      tagCounts[topic] = (tagCounts[topic] || 0) + 1;
-    }
+    for (const topic of getPaperKeyTopics(paper, 12)) addCountToMap(paperTopicCounts, topic);
+    addCountToMap(paperTitleCounts, paper.title);
 
     const seenAuthors = new Set();
     for (const author of (paper.authors || [])) {
@@ -1487,25 +1772,105 @@ function buildAutocompleteIndex() {
       const key = normalizePersonKey(name);
       if (!name || !key || seenAuthors.has(key)) continue;
       seenAuthors.add(key);
-      if (!speakerBuckets.has(key)) speakerBuckets.set(key, { count: 0, labels: new Map() });
-      const bucket = speakerBuckets.get(key);
-      bucket.count += 1;
+      const bucket = ensurePersonBucket(peopleBuckets, name);
+      if (!bucket) continue;
+      bucket.paperCount += 1;
       bucket.labels.set(name, (bucket.labels.get(name) || 0) + 1);
     }
-
   }
 
-  autocompleteIndex.tags = Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([label, count]) => ({ label, count }));
+  const people = buildPeopleEntriesFromBuckets(peopleBuckets);
 
-  autocompleteIndex.speakers = [...speakerBuckets.values()]
-    .map((bucket) => {
-      const label = [...bucket.labels.entries()]
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0][0];
-      return { label, count: bucket.count };
-    })
+  autocompleteIndex.tags = mapToSortedEntries(paperTopicCounts);
+  autocompleteIndex.speakers = people
+    .filter((entry) => entry.paperCount > 0)
+    .map((entry) => ({ label: entry.label, count: entry.paperCount }))
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  autocompleteIndex.topics = buildTopicEntries(new Map(), paperTopicCounts);
+  autocompleteIndex.people = people;
+  autocompleteIndex.talks = [];
+  autocompleteIndex.papers = mapToAlphaEntries(paperTitleCounts);
+  talkSearchIndex = [];
+}
+
+async function hydrateUniversalAutocomplete() {
+  if (universalAutocompletePromise) return universalAutocompletePromise;
+
+  universalAutocompletePromise = (async () => {
+    const hasLoader = await ensureEventDataLoader();
+    if (!hasLoader || typeof window.loadEventData !== 'function') return;
+
+    let talks = [];
+    try {
+      const payload = await window.loadEventData();
+      talks = normalizeTalks(payload && payload.talks);
+    } catch {
+      return;
+    }
+
+    const talkTopicCounts = new Map();
+    const paperTopicCounts = new Map();
+    const peopleBuckets = new Map();
+    const talkTitleCounts = new Map();
+    const paperTitleCounts = new Map();
+    const nextTalkSearchIndex = [];
+
+    for (const paper of allPapers) {
+      for (const topic of getPaperKeyTopics(paper, 12)) addCountToMap(paperTopicCounts, topic);
+      addCountToMap(paperTitleCounts, paper.title);
+      const seenAuthors = new Set();
+      for (const author of (paper.authors || [])) {
+        const name = String(author.name || '').trim();
+        const key = normalizePersonKey(name);
+        if (!name || !key || seenAuthors.has(key)) continue;
+        seenAuthors.add(key);
+        const bucket = ensurePersonBucket(peopleBuckets, name);
+        if (!bucket) continue;
+        bucket.paperCount += 1;
+        bucket.labels.set(name, (bucket.labels.get(name) || 0) + 1);
+      }
+    }
+
+    for (const talk of talks) {
+      for (const topic of getTalkKeyTopics(talk, 12)) addCountToMap(talkTopicCounts, topic);
+      addCountToMap(talkTitleCounts, talk.title);
+      for (const speaker of (talk.speakers || [])) {
+        const name = String((speaker && speaker.name) || '').trim();
+        const bucket = ensurePersonBucket(peopleBuckets, name);
+        if (!bucket) continue;
+        bucket.talkCount += 1;
+        bucket.labels.set(name, (bucket.labels.get(name) || 0) + 1);
+      }
+      const indexedTalk = buildTalkSearchEntry(talk);
+      if (indexedTalk) nextTalkSearchIndex.push(indexedTalk);
+    }
+
+    const people = buildPeopleEntriesFromBuckets(peopleBuckets);
+
+    autocompleteIndex.tags = mapToSortedEntries(paperTopicCounts);
+    autocompleteIndex.speakers = people
+      .filter((entry) => entry.paperCount > 0)
+      .map((entry) => ({ label: entry.label, count: entry.paperCount }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+    autocompleteIndex.topics = buildTopicEntries(talkTopicCounts, paperTopicCounts);
+    autocompleteIndex.people = people;
+    autocompleteIndex.talks = mapToAlphaEntries(talkTitleCounts);
+    autocompleteIndex.papers = mapToAlphaEntries(paperTitleCounts);
+    talkSearchIndex = nextTalkSearchIndex;
+
+    const input = document.getElementById('search-input');
+    if (input) {
+      const query = String(input.value || '').trim();
+      if (query) renderDropdown(query);
+    }
+  })();
+
+  return universalAutocompletePromise;
+}
+
+function buildAutocompleteIndex() {
+  buildPaperAutocompleteBase();
+  hydrateUniversalAutocomplete();
 }
 
 function highlightMatch(text, query) {
@@ -1526,31 +1891,46 @@ function renderDropdown(query) {
 
   const q = query.toLowerCase();
 
-  const matchedTags = autocompleteIndex.tags
+  const matchedTopics = autocompleteIndex.topics
     .filter((tag) => tag.label.toLowerCase().includes(q))
     .slice(0, 6);
 
-  const matchedSpeakers = autocompleteIndex.speakers
+  const matchedPeople = autocompleteIndex.people
     .filter((speaker) => speaker.label.toLowerCase().includes(q))
     .slice(0, 6);
 
-  if (matchedTags.length === 0 && matchedSpeakers.length === 0) {
+  const matchedTalkTitles = autocompleteIndex.talks
+    .filter((talk) => talk.label.toLowerCase().includes(q))
+    .slice(0, 4);
+
+  const matchedPaperTitles = autocompleteIndex.papers
+    .filter((paper) => paper.label.toLowerCase().includes(q))
+    .slice(0, 4);
+
+  if (
+    matchedTopics.length === 0 &&
+    matchedPeople.length === 0 &&
+    matchedTalkTitles.length === 0 &&
+    matchedPaperTitles.length === 0
+  ) {
     dropdown.classList.add('hidden');
     dropdownActiveIdx = -1;
     return;
   }
 
   const tagIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`;
-  const speakerIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  const personIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  const talkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+  const paperIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
 
   let html = '';
 
-  if (matchedTags.length > 0) {
+  if (matchedTopics.length > 0) {
     html += `<div class="search-dropdown-section">
       <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
-      ${matchedTags.map((tag) => `
+      ${matchedTopics.map((tag) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
-                data-autocomplete-type="tag" data-autocomplete-value="${escapeHtml(tag.label)}">
+                data-autocomplete-type="topic" data-autocomplete-value="${escapeHtml(tag.label)}">
           <span class="search-dropdown-item-icon">${tagIcon}</span>
           <span class="search-dropdown-item-label">${highlightMatch(tag.label, query)}</span>
           <span class="search-dropdown-item-count">${tag.count.toLocaleString()}</span>
@@ -1558,16 +1938,44 @@ function renderDropdown(query) {
     </div>`;
   }
 
-  if (matchedSpeakers.length > 0) {
-    if (matchedTags.length > 0) html += `<div class="search-dropdown-divider"></div>`;
+  if (matchedPeople.length > 0) {
+    if (html) html += `<div class="search-dropdown-divider"></div>`;
     html += `<div class="search-dropdown-section">
-      <div class="search-dropdown-label" aria-hidden="true">Authors</div>
-      ${matchedSpeakers.map((speaker) => `
+      <div class="search-dropdown-label" aria-hidden="true">Speakers + Authors</div>
+      ${matchedPeople.map((speaker) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
-                data-autocomplete-type="speaker" data-autocomplete-value="${escapeHtml(speaker.label)}">
-          <span class="search-dropdown-item-icon">${speakerIcon}</span>
+                data-autocomplete-type="person" data-autocomplete-value="${escapeHtml(speaker.label)}">
+          <span class="search-dropdown-item-icon">${personIcon}</span>
           <span class="search-dropdown-item-label">${highlightMatch(speaker.label, query)}</span>
-          <span class="search-dropdown-item-count">${speaker.count.toLocaleString()} paper${speaker.count === 1 ? '' : 's'}</span>
+          <span class="search-dropdown-item-count">${speaker.count.toLocaleString()} work${speaker.count === 1 ? '' : 's'}</span>
+        </button>`).join('')}
+    </div>`;
+  }
+
+  if (matchedTalkTitles.length > 0) {
+    if (html) html += `<div class="search-dropdown-divider"></div>`;
+    html += `<div class="search-dropdown-section">
+      <div class="search-dropdown-label" aria-hidden="true">Talk Titles</div>
+      ${matchedTalkTitles.map((talk) => `
+        <button class="search-dropdown-item" role="option" aria-selected="false"
+                data-autocomplete-type="talk" data-autocomplete-value="${escapeHtml(talk.label)}">
+          <span class="search-dropdown-item-icon">${talkIcon}</span>
+          <span class="search-dropdown-item-label">${highlightMatch(talk.label, query)}</span>
+          <span class="search-dropdown-item-count">Talk</span>
+        </button>`).join('')}
+    </div>`;
+  }
+
+  if (matchedPaperTitles.length > 0) {
+    if (html) html += `<div class="search-dropdown-divider"></div>`;
+    html += `<div class="search-dropdown-section">
+      <div class="search-dropdown-label" aria-hidden="true">Paper Titles</div>
+      ${matchedPaperTitles.map((paper) => `
+        <button class="search-dropdown-item" role="option" aria-selected="false"
+                data-autocomplete-type="paper" data-autocomplete-value="${escapeHtml(paper.label)}">
+          <span class="search-dropdown-item-icon">${paperIcon}</span>
+          <span class="search-dropdown-item-label">${highlightMatch(paper.label, query)}</span>
+          <span class="search-dropdown-item-count">Paper</span>
         </button>`).join('')}
     </div>`;
   }
@@ -1589,8 +1997,8 @@ function selectAutocompleteItem(item) {
   const type = item.dataset.autocompleteType;
   const input = document.getElementById('search-input');
 
-  applyAutocompleteSelection(type, value, 'search');
-  if (input) input.focus();
+  const mode = applyAutocompleteSelection(type, value, 'search');
+  if (mode !== 'global' && input) input.focus();
 }
 
 function closeDropdown() {
@@ -1619,6 +2027,101 @@ function navigateDropdown(direction) {
   items[dropdownActiveIdx].setAttribute('aria-selected', 'true');
   items[dropdownActiveIdx].scrollIntoView({ block: 'nearest' });
   return true;
+}
+
+function findExactAutocompleteEntry(entries, value) {
+  const normalized = normalizeFilterValue(value);
+  if (!normalized) return null;
+  return entries.find((entry) => normalizeFilterValue(entry.label) === normalized) || null;
+}
+
+function findTopicEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.topics, value);
+}
+
+function findAuthorEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.speakers, value);
+}
+
+function findPersonEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.people, value);
+}
+
+function findTalkTitleEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.talks, value);
+}
+
+function findPaperTitleEntry(value) {
+  return findExactAutocompleteEntry(autocompleteIndex.papers, value);
+}
+
+function hasNonSearchFiltersApplied() {
+  return !!(
+    state.speaker ||
+    state.activeTags.size > 0 ||
+    state.years.size > 0
+  );
+}
+
+function buildGlobalSearchUrl(query) {
+  const params = new URLSearchParams();
+  params.set('mode', 'search');
+  params.set('q', String(query || '').trim());
+  params.set('from', 'papers');
+  return `${ALL_WORK_PAGE_PATH}?${params.toString()}`;
+}
+
+function routeToGlobalSearch(query) {
+  const value = String(query || '').trim();
+  if (!value) return false;
+  window.location.href = buildGlobalSearchUrl(value);
+  return true;
+}
+
+function shouldRouteToGlobalSearch(query) {
+  const value = String(query || '').trim();
+  if (!value) return false;
+
+  const topic = findTopicEntry(value);
+  if (topic && topic.paperCount === 0 && topic.talkCount > 0) return true;
+
+  const talkTitle = findTalkTitleEntry(value);
+  const paperTitle = findPaperTitleEntry(value);
+  if (talkTitle && !paperTitle) return true;
+
+  const person = findPersonEntry(value);
+  const author = findAuthorEntry(value);
+  if (person && !author) return true;
+
+  if (!hasNonSearchFiltersApplied()) {
+    const paperMatches = countPaperMatchesForQuery(value);
+    if (paperMatches === 0) {
+      const talkMatches = countTalkMatchesForQuery(value);
+      if (talkMatches > 0) return true;
+    }
+  }
+
+  return false;
+}
+
+function commitSearchValue(rawValue, allowGlobalRouting = true) {
+  const committed = String(rawValue || '').trim();
+
+  if (allowGlobalRouting && shouldRouteToGlobalSearch(committed)) {
+    closeDropdown();
+    routeToGlobalSearch(committed);
+    return 'global';
+  }
+
+  if (committed !== state.activeSpeaker) state.activeSpeaker = '';
+  if (committed && state.speaker) state.speaker = '';
+
+  state.query = committed;
+  closeDropdown();
+  updateClearBtn();
+  syncUrl();
+  render();
+  return 'local';
 }
 
 function initSearch() {
@@ -1662,17 +2165,8 @@ function initSearch() {
       } else {
         event.preventDefault();
         clearTimeout(debounceTimer);
-
-        const committed = input.value.trim();
-        if (committed !== state.activeSpeaker) state.activeSpeaker = '';
-        if (committed && state.speaker) state.speaker = '';
-
-        state.query = committed;
-        closeDropdown();
-        updateClearBtn();
-        syncUrl();
-        render();
-        input.blur();
+        const mode = commitSearchValue(input.value, true);
+        if (mode !== 'global') input.blur();
       }
     } else if (event.key === 'Escape') {
       const dropdown = document.getElementById('search-dropdown');
