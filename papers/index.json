@@ -1,6 +1,6 @@
 {
-  "dataVersion": "2026-02-21-openalex-llvm-query-2518-v2",
+  "dataVersion": "2026-02-21-combined-all-papers-deduped-v1",
   "paperFiles": [
-    "openalex-llvm-query.json"
+    "combined-all-papers-deduped.json"
   ]
 }
