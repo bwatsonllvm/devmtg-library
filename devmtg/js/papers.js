@@ -392,6 +392,30 @@ function normalizeFilterValue(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function normalizeTopicKey(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '');
+}
+
+function getPaperKeyTopics(paper, limit = Infinity) {
+  const out = [];
+  const seen = new Set();
+
+  const add = (value) => {
+    const label = String(value || '').trim();
+    const key = normalizeTopicKey(label);
+    if (!label || !key || seen.has(key)) return;
+    seen.add(key);
+    out.push(label);
+  };
+
+  for (const tag of (paper.tags || [])) add(tag);
+  for (const keyword of (paper.keywords || [])) add(keyword);
+
+  return Number.isFinite(limit) ? out.slice(0, limit) : out;
+}
+
 function filterAndSort() {
   const tokens = state.query.length >= 2 ? tokenize(state.query) : [];
   searchMode = tokens.length > 0 ? 'exact' : 'browse';
@@ -435,8 +459,8 @@ function filterAndSort() {
   if (state.activeTags.size > 0) {
     const activeTags = new Set([...state.activeTags].map((tag) => normalizeFilterValue(tag)));
     entries = entries.filter(({ paper }) =>
-      [...(paper.tags || []), ...(paper.keywords || [])]
-        .some((tag) => activeTags.has(normalizeFilterValue(tag)))
+      getPaperKeyTopics(paper)
+        .some((topic) => activeTags.has(normalizeFilterValue(topic)))
     );
   }
 
@@ -530,11 +554,11 @@ function renderPaperCard(paper, tokens) {
     ? `<span class="paper-citation-count" aria-label="${citationCount.toLocaleString()} citations">${citationCount.toLocaleString()} citation${citationCount === 1 ? '' : 's'}</span>`
     : '';
 
-  const tags = (paper.tags && paper.tags.length) ? paper.tags : (paper.keywords || []);
-  const tagsHtml = tags.length
-    ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Paper topics">${tags.slice(0, 4).map((tag) =>
-        `<button class="card-tag" data-tag="${escapeHtml(tag)}" onclick="event.stopPropagation();filterByTag(${JSON.stringify(tag)})" aria-label="Filter by topic: ${escapeHtml(tag)}">${escapeHtml(tag)}</button>`
-      ).join('')}${tags.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${tags.length - 4}</span>` : ''}</div></div>`
+  const keyTopics = getPaperKeyTopics(paper, 8);
+  const tagsHtml = keyTopics.length
+    ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${keyTopics.slice(0, 4).map((topic) =>
+        `<button class="card-tag" data-tag="${escapeHtml(topic)}" onclick="event.stopPropagation();filterByTag(${JSON.stringify(topic)})" aria-label="Filter by key topic: ${escapeHtml(topic)}">${escapeHtml(topic)}</button>`
+      ).join('')}${keyTopics.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${keyTopics.length - 4}</span>` : ''}</div></div>`
     : '';
 
   return `
@@ -680,7 +704,7 @@ function renderCards(results) {
           ${recoveryActions.map((action) => `<button class="empty-action-btn" data-empty-action="${escapeHtml(action.id)}">${escapeHtml(action.label)}</button>`).join('')}
         </div>
         ${suggestions.length
-          ? `<div class="empty-state-suggestions" aria-label="Topic suggestions">${suggestions.map((topic) => `<button class="suggestion-chip" data-suggestion="${escapeHtml(topic)}">${escapeHtml(topic)}</button>`).join('')}</div>`
+          ? `<div class="empty-state-suggestions" aria-label="Key Topic suggestions">${suggestions.map((topic) => `<button class="suggestion-chip" data-suggestion="${escapeHtml(topic)}">${escapeHtml(topic)}</button>`).join('')}</div>`
           : ''}
       </div>`;
 
@@ -785,12 +809,12 @@ function updateHeroSubtitle(resultsCount) {
 
   if (state.activeTags.size === 1 && (!state.query || hasTagFilter(state.query))) {
     const onlyTag = [...state.activeTags][0];
-    el.innerHTML = `Showing papers tagged <strong>${escapeHtml(onlyTag)}</strong>`;
+    el.innerHTML = `Showing papers for key topic <strong>${escapeHtml(onlyTag)}</strong>`;
     return;
   }
 
   if (state.activeTags.size > 1 && !state.query) {
-    el.innerHTML = `Showing papers across <strong>${state.activeTags.size.toLocaleString()}</strong> topic filters`;
+    el.innerHTML = `Showing papers across <strong>${state.activeTags.size.toLocaleString()}</strong> key topic filters`;
     return;
   }
 
@@ -885,9 +909,9 @@ function renderActiveFilters() {
   const sortedTags = [...state.activeTags].sort((a, b) => a.localeCompare(b));
   for (const tag of sortedTags) {
     pills.push(createActiveFilterPill(
-      'Topic',
+      'Key Topic',
       tag,
-      `Remove topic filter: ${tag}`,
+      `Remove key topic filter: ${tag}`,
       () => removeTagFilter(tag)
     ));
   }
@@ -1130,19 +1154,9 @@ function initFilters() {
   const yearCounts = {};
 
   for (const paper of allPapers) {
-    const seenPaperTopics = new Set();
-    for (const tag of (paper.tags || [])) {
-      const normalized = normalizeFilterValue(tag);
-      if (!normalized || seenPaperTopics.has(normalized)) continue;
-      seenPaperTopics.add(normalized);
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    }
-    for (const keyword of (paper.keywords || []).slice(0, 8)) {
-      const normalized = normalizeFilterValue(keyword);
-      if (!normalized || seenPaperTopics.has(normalized)) continue;
-      seenPaperTopics.add(normalized);
-      if (String(keyword || '').length > 48) continue;
-      tagCounts[keyword] = (tagCounts[keyword] || 0) + 1;
+    for (const topic of getPaperKeyTopics(paper, 8)) {
+      if (String(topic || '').length > 48) continue;
+      tagCounts[topic] = (tagCounts[topic] || 0) + 1;
     }
 
     if (paper._year) {
@@ -1433,18 +1447,8 @@ function buildAutocompleteIndex() {
   const speakerCounts = {};
 
   for (const paper of allPapers) {
-    const seenPaperTopics = new Set();
-    for (const tag of (paper.tags || [])) {
-      const normalized = normalizeFilterValue(tag);
-      if (!normalized || seenPaperTopics.has(normalized)) continue;
-      seenPaperTopics.add(normalized);
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    }
-    for (const keyword of (paper.keywords || []).slice(0, 8)) {
-      const normalized = normalizeFilterValue(keyword);
-      if (!normalized || seenPaperTopics.has(normalized)) continue;
-      seenPaperTopics.add(normalized);
-      tagCounts[keyword] = (tagCounts[keyword] || 0) + 1;
+    for (const topic of getPaperKeyTopics(paper, 8)) {
+      tagCounts[topic] = (tagCounts[topic] || 0) + 1;
     }
 
     const seenAuthors = new Set();
@@ -1505,7 +1509,7 @@ function renderDropdown(query) {
 
   if (matchedTags.length > 0) {
     html += `<div class="search-dropdown-section">
-      <div class="search-dropdown-label" aria-hidden="true">Topics</div>
+      <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
       ${matchedTags.map((tag) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
                 data-autocomplete-type="tag" data-autocomplete-value="${escapeHtml(tag.label)}">
@@ -1783,7 +1787,7 @@ function renderCrossWorkPromptFromState() {
   const linkEl = prompt.querySelector('.cross-work-cta-link');
   if (!textEl || !linkEl) return;
 
-  textEl.textContent = `${selection.label === 'author' ? 'Author' : 'Topic'}: ${selection.value}`;
+  textEl.textContent = `${selection.label === 'author' ? 'Author' : 'Key Topic'}: ${selection.value}`;
   linkEl.href = buildAllWorkUrl(selection.kind, selection.value);
   prompt.classList.remove('hidden');
 }

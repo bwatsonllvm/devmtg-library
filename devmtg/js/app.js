@@ -479,8 +479,8 @@ function renderCard(talk, tokens) {
   // Tags (up to 4 shown on card)
   const tags = talk.tags || [];
   const tagsHtml = tags.length
-    ? `<div class="card-tags" aria-label="Topics">${tags.slice(0, 4).map(tag =>
-        `<button class="card-tag" data-tag="${escapeHtml(tag)}" onclick="event.stopPropagation();filterByTag(${JSON.stringify(tag)})" aria-label="Filter by topic: ${escapeHtml(tag)}">${escapeHtml(tag)}</button>`
+    ? `<div class="card-tags" aria-label="Key Topics">${tags.slice(0, 4).map(tag =>
+        `<button class="card-tag" data-tag="${escapeHtml(tag)}" onclick="event.stopPropagation();filterByTag(${JSON.stringify(tag)})" aria-label="Filter by key topic: ${escapeHtml(tag)}">${escapeHtml(tag)}</button>`
       ).join('')}${tags.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${tags.length - 4}</span>` : ''}</div>`
     : '';
 
@@ -1790,7 +1790,7 @@ function renderActiveFilters() {
     if (state.activeSpeaker && state.activeSpeaker.toLowerCase() === state.query.toLowerCase()) {
       typeLabel = 'Speaker';
     } else if (state.activeTag && state.activeTag.toLowerCase() === state.query.toLowerCase()) {
-      typeLabel = 'Topic';
+      typeLabel = 'Key Topic';
     }
     pills.push(createActiveFilterPill(
       typeLabel,
@@ -2098,7 +2098,7 @@ function renderDropdown(query) {
 
   if (matchedTags.length > 0) {
     html += `<div class="search-dropdown-section">
-      <div class="search-dropdown-label" aria-hidden="true">Topics</div>
+      <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
       ${matchedTags.map((t, i) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
                 data-autocomplete-type="tag" data-autocomplete-value="${escapeHtml(t.label)}">
@@ -2327,7 +2327,7 @@ function renderCrossWorkPromptFromState() {
   const linkEl = prompt.querySelector('.cross-work-cta-link');
   if (!textEl || !linkEl) return;
 
-  textEl.textContent = `${selection.label === 'speaker' ? 'Speaker' : 'Topic'}: ${selection.value}`;
+  textEl.textContent = `${selection.label === 'speaker' ? 'Speaker' : 'Key Topic'}: ${selection.value}`;
   linkEl.href = buildAllWorkUrl(selection.kind, selection.value);
   prompt.classList.remove('hidden');
 }

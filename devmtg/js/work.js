@@ -33,6 +33,30 @@ function normalizeValue(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function normalizeTopicKey(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '');
+}
+
+function getPaperKeyTopics(paper, limit = Infinity) {
+  const out = [];
+  const seen = new Set();
+
+  const add = (value) => {
+    const label = String(value || '').trim();
+    const key = normalizeTopicKey(label);
+    if (!label || !key || seen.has(key)) return;
+    seen.add(key);
+    out.push(label);
+  };
+
+  for (const tag of (paper.tags || [])) add(tag);
+  for (const keyword of (paper.keywords || [])) add(keyword);
+
+  return Number.isFinite(limit) ? out.slice(0, limit) : out;
+}
+
 function toTitleCaseSlug(slug) {
   return String(slug || '')
     .replace(/-/g, ' ')
@@ -259,7 +283,7 @@ function renderTagLinks(tags) {
   if (!tags || tags.length === 0) return '';
 
   const shown = tags.slice(0, 5);
-  return `<div class="card-tags-wrap"><div class="card-tags" aria-label="Topics">${shown
+  return `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${shown
     .map((tag) => `<a class="card-tag" href="${escapeHtml(buildWorkUrl('topic', tag))}">${escapeHtml(tag)}</a>`)
     .join('')}${tags.length > shown.length ? `<span class="card-tag card-tag--more" aria-hidden="true">+${tags.length - shown.length}</span>` : ''}</div></div>`;
 }
@@ -293,7 +317,7 @@ function renderPaperCard(paper) {
   const year = escapeHtml(paper._year || 'Unknown year');
   const authorNames = (paper.authors || []).map((author) => author.name).filter(Boolean);
   const authorsHtml = renderEntityLinks(authorNames, 'speaker');
-  const topics = (paper.tags && paper.tags.length) ? paper.tags : (paper.keywords || []);
+  const topics = getPaperKeyTopics(paper, 8);
 
   return `
     <article class="talk-card paper-card">
@@ -392,7 +416,7 @@ function applyHeaderState() {
   const backLink = document.getElementById('work-back-link');
   const secondaryBackLink = document.getElementById('work-secondary-back-link');
 
-  const entityLabel = state.kind === 'speaker' ? 'Speaker' : 'Topic';
+  const entityLabel = state.kind === 'speaker' ? 'Speaker' : 'Key Topic';
   const backHref = state.from === 'papers' ? 'papers.html' : 'index.html';
   const backText = state.from === 'papers' ? 'Back to papers' : 'Back to talks';
 
@@ -420,8 +444,8 @@ function applyHeaderState() {
   } else {
     if (!state.value) {
       if (titleEl) titleEl.textContent = 'All Work';
-      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or topic from Talks or Papers to view all related work.';
-      if (summaryEl) summaryEl.textContent = 'No speaker/topic selected';
+      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or key topic from Talks or Papers to view all related work.';
+      if (summaryEl) summaryEl.textContent = 'No speaker/key topic selected';
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
       return;

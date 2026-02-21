@@ -636,11 +636,11 @@ function renderTalkDetail(talk, allTalks) {
   // Tags
   const tags = talk.tags || [];
   const tagsHtml = tags.length
-    ? `<section class="tags-section" aria-label="Topics">
-        <div class="section-label" aria-hidden="true">Topics</div>
+    ? `<section class="tags-section" aria-label="Key Topics">
+        <div class="section-label" aria-hidden="true">Key Topics</div>
         <div class="detail-tags">
           ${tags.map(tag =>
-            `<a href="index.html?tag=${encodeURIComponent(tag)}" class="detail-tag" aria-label="Browse talks tagged ${escapeHtml(tag)}">${escapeHtml(tag)}</a>`
+            `<a href="index.html?tag=${encodeURIComponent(tag)}" class="detail-tag" aria-label="Browse talks for key topic ${escapeHtml(tag)}">${escapeHtml(tag)}</a>`
           ).join('')}
         </div>
       </section>`

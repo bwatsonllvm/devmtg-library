@@ -257,7 +257,7 @@
     if (matches.topics.length) {
       sections.push(`
         <div class="search-dropdown-section">
-          <div class="search-dropdown-label" aria-hidden="true">Topics</div>
+          <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
           ${matches.topics.map((item) => `
             <button class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-value="${escapeHtml(item.label)}">

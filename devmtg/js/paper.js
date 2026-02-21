@@ -223,6 +223,24 @@ function normalizeKeywordKey(value) {
     .replace(/[^a-z0-9]+/g, '');
 }
 
+function getPaperKeyTopics(paper, limit = Infinity) {
+  const out = [];
+  const seen = new Set();
+
+  const add = (value) => {
+    const label = String(value || '').trim();
+    const key = normalizeKeywordKey(label);
+    if (!label || !key || seen.has(key)) return;
+    seen.add(key);
+    out.push(label);
+  };
+
+  for (const tag of (paper.tags || [])) add(tag);
+  for (const keyword of (paper.keywords || [])) add(keyword);
+
+  return Number.isFinite(limit) ? out.slice(0, limit) : out;
+}
+
 function makeBibtexKey(paper) {
   const firstAuthor = (paper.authors && paper.authors[0] && paper.authors[0].name)
     ? paper.authors[0].name
@@ -355,7 +373,7 @@ function updatePaperSeoMetadata(paper) {
     author: authors.map((name) => ({ '@type': 'Person', name })),
     datePublished: paper._year ? `${paper._year}-01-01` : undefined,
     isPartOf: paper.publication ? { '@type': 'PublicationIssue', name: paper.publication } : undefined,
-    keywords: (paper.tags || []).join(', ') || undefined,
+    keywords: getPaperKeyTopics(paper).join(', ') || undefined,
     url: canonicalUrl,
     sameAs: paper.openalexId || undefined,
     identifier: paper.doi
@@ -672,26 +690,13 @@ function renderPaperDetail(paper, allPapers) {
       </a>`);
   }
 
-  const tagsHtml = (paper.tags || []).length
-    ? `<section class="tags-section" aria-label="Topics">
-        <div class="section-label" aria-hidden="true">Topics</div>
+  const keyTopics = getPaperKeyTopics(paper, 18);
+  const keyTopicsHtml = keyTopics.length
+    ? `<section class="tags-section" aria-label="Key Topics">
+        <div class="section-label" aria-hidden="true">Key Topics</div>
         <div class="detail-tags">
-          ${(paper.tags || []).map((tag) =>
-            `<a href="papers.html?tag=${encodeURIComponent(tag)}" class="detail-tag" aria-label="Browse papers tagged ${escapeHtml(tag)}">${escapeHtml(tag)}</a>`
-          ).join('')}
-        </div>
-      </section>`
-    : '';
-
-  const keywordOnly = (paper.keywords || []).filter((keyword) =>
-    !(paper.tags || []).some((tag) => normalizeKeywordKey(tag) === normalizeKeywordKey(keyword))
-  );
-  const keywordsHtml = keywordOnly.length
-    ? `<section class="tags-section" aria-label="Keywords">
-        <div class="section-label" aria-hidden="true">Keywords</div>
-        <div class="detail-tags">
-          ${keywordOnly.slice(0, 18).map((keyword) =>
-            `<a href="papers.html?tag=${encodeURIComponent(keyword)}" class="detail-tag" aria-label="Browse papers for keyword ${escapeHtml(keyword)}">${escapeHtml(keyword)}</a>`
+          ${keyTopics.map((topic) =>
+            `<a href="papers.html?tag=${encodeURIComponent(topic)}" class="detail-tag" aria-label="Browse papers for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
           ).join('')}
         </div>
       </section>`
@@ -758,8 +763,7 @@ function renderPaperDetail(paper, allPapers) {
 
       ${citationMetaHtml}
       ${publicationHtml}
-      ${tagsHtml}
-      ${keywordsHtml}
+      ${keyTopicsHtml}
     </div>
 
     ${related.length ? `
