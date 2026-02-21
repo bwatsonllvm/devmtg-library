@@ -50,7 +50,7 @@ const CATEGORY_META = {
   'panel':          { label: 'Panel',           order: 3 },
   'quick-talk':     { label: 'Quick Talk',      order: 4 },
   'lightning-talk': { label: 'Lightning Talk',  order: 5 },
-  'student-talk':   { label: 'Student Talk',    order: 6 },
+  'student-talk':   { label: 'Student Technical Talk', order: 6 },
   'bof':            { label: 'BoF',             order: 7 },
   'poster':         { label: 'Poster',          order: 8 },
   'workshop':       { label: 'Workshop',        order: 9 },

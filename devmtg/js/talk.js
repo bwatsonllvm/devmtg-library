@@ -47,7 +47,7 @@ const CATEGORY_META = {
   'panel':          'Panel',
   'quick-talk':     'Quick Talk',
   'lightning-talk': 'Lightning Talk',
-  'student-talk':   'Student Talk',
+  'student-talk':   'Student Technical Talk',
   'bof':            'BoF',
   'poster':         'Poster',
   'workshop':       'Workshop',

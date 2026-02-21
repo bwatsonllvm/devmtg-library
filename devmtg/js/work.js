@@ -22,7 +22,7 @@ const CATEGORY_META = {
   panel: { label: 'Panel' },
   'quick-talk': { label: 'Quick Talk' },
   'lightning-talk': { label: 'Lightning Talk' },
-  'student-talk': { label: 'Student Talk' },
+  'student-talk': { label: 'Student Technical Talk' },
   bof: { label: 'BoF' },
   poster: { label: 'Poster' },
   workshop: { label: 'Workshop' },
