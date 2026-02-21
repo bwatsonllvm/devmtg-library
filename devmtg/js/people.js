@@ -4,6 +4,9 @@
 
 const HubUtils = window.LLVMHubUtils || {};
 const PEOPLE_SORT_MODES = new Set(['works', 'citations', 'alpha', 'alpha-desc']);
+const INITIAL_RENDER_BATCH_SIZE = 60;
+const RENDER_BATCH_SIZE = 40;
+const LOAD_MORE_ROOT_MARGIN = '900px 0px';
 
 const state = {
   query: '',
@@ -21,6 +24,11 @@ let autocompleteIndex = {
   papers: [],
 };
 let dropdownActiveIdx = -1;
+let activeRenderResults = [];
+let activeRenderTokens = [];
+let renderedCount = 0;
+let loadMoreObserver = null;
+let loadMoreScrollHandler = null;
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -557,6 +565,99 @@ function renderPersonCard(person, tokens) {
     </article>`;
 }
 
+function teardownInfiniteLoader() {
+  if (loadMoreObserver) {
+    loadMoreObserver.disconnect();
+    loadMoreObserver = null;
+  }
+
+  if (loadMoreScrollHandler) {
+    window.removeEventListener('scroll', loadMoreScrollHandler);
+    window.removeEventListener('resize', loadMoreScrollHandler);
+    loadMoreScrollHandler = null;
+  }
+
+  const sentinel = document.getElementById('people-load-sentinel');
+  if (sentinel) sentinel.remove();
+}
+
+function ensureLoadMoreSentinel(grid) {
+  let sentinel = document.getElementById('people-load-sentinel');
+  if (!sentinel) {
+    sentinel = document.createElement('div');
+    sentinel.id = 'people-load-sentinel';
+    sentinel.setAttribute('aria-hidden', 'true');
+    sentinel.style.width = '100%';
+    sentinel.style.height = '1px';
+    sentinel.style.gridColumn = '1 / -1';
+  }
+  grid.appendChild(sentinel);
+  return sentinel;
+}
+
+function appendNextResultsBatch(forceBatchSize = RENDER_BATCH_SIZE) {
+  const grid = document.getElementById('people-grid');
+  if (!grid) return;
+
+  if (!activeRenderResults.length || renderedCount >= activeRenderResults.length) {
+    teardownInfiniteLoader();
+    return;
+  }
+
+  const nextCount = Math.min(renderedCount + forceBatchSize, activeRenderResults.length);
+  const nextHtml = activeRenderResults
+    .slice(renderedCount, nextCount)
+    .map((person) => renderPersonCard(person, activeRenderTokens))
+    .join('');
+
+  grid.insertAdjacentHTML('beforeend', nextHtml);
+  renderedCount = nextCount;
+
+  if (renderedCount >= activeRenderResults.length) {
+    teardownInfiniteLoader();
+    return;
+  }
+
+  ensureLoadMoreSentinel(grid);
+}
+
+function setupInfiniteLoader() {
+  const grid = document.getElementById('people-grid');
+  if (!grid) return;
+
+  teardownInfiniteLoader();
+  if (renderedCount >= activeRenderResults.length) return;
+
+  const sentinel = ensureLoadMoreSentinel(grid);
+
+  if ('IntersectionObserver' in window) {
+    loadMoreObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          appendNextResultsBatch();
+          break;
+        }
+      }
+    }, { root: null, rootMargin: LOAD_MORE_ROOT_MARGIN, threshold: 0 });
+
+    loadMoreObserver.observe(sentinel);
+    return;
+  }
+
+  loadMoreScrollHandler = () => {
+    const activeSentinel = document.getElementById('people-load-sentinel');
+    if (!activeSentinel) return;
+    const rect = activeSentinel.getBoundingClientRect();
+    if (rect.top <= window.innerHeight + 900) {
+      appendNextResultsBatch();
+    }
+  };
+
+  window.addEventListener('scroll', loadMoreScrollHandler, { passive: true });
+  window.addEventListener('resize', loadMoreScrollHandler);
+  loadMoreScrollHandler();
+}
+
 function render() {
   const people = sortPeople(filterPeople());
   const grid = document.getElementById('people-grid');
@@ -574,6 +675,10 @@ function render() {
   }
 
   if (!people.length) {
+    teardownInfiniteLoader();
+    activeRenderResults = [];
+    activeRenderTokens = [];
+    renderedCount = 0;
     grid.setAttribute('aria-busy', 'false');
     grid.innerHTML = `
       <div class="empty-state" role="status">
@@ -585,7 +690,12 @@ function render() {
   }
 
   grid.setAttribute('aria-busy', 'false');
-  grid.innerHTML = people.map((person) => renderPersonCard(person, tokens)).join('');
+  activeRenderResults = people;
+  activeRenderTokens = tokens;
+  renderedCount = 0;
+  grid.innerHTML = '';
+  appendNextResultsBatch(INITIAL_RENDER_BATCH_SIZE);
+  setupInfiniteLoader();
 }
 
 function syncSortControl() {
