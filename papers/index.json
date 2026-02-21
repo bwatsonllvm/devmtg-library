@@ -1,8 +1,6 @@
 {
-  "dataVersion": "2026-02-21-llvm-org-pubs-plus-openalex",
+  "dataVersion": "2026-02-21-openalex-llvm-query-2518-v2",
   "paperFiles": [
-    "llvm-org-pubs.json",
-    "openalex-discovered.json",
     "openalex-llvm-query.json"
   ]
 }
