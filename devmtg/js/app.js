@@ -2309,6 +2309,24 @@ function initSearch() {
         e.preventDefault();
         const items = dropdown.querySelectorAll('.search-dropdown-item');
         if (items[dropdownActiveIdx]) selectAutocompleteItem(items[dropdownActiveIdx]);
+      } else {
+        e.preventDefault();
+        clearTimeout(debounceTimer);
+
+        const committed = input.value.trim();
+        if (committed !== state.activeSpeaker) state.activeSpeaker = '';
+        if (committed !== state.activeTag) {
+          state.activeTag = '';
+          syncTopicChipState();
+        }
+        if (committed && state.speaker) state.speaker = '';
+
+        state.query = committed;
+        closeDropdown();
+        updateClearBtn();
+        syncUrl();
+        render();
+        input.blur();
       }
     } else if (e.key === 'Escape') {
       if (!document.getElementById('search-dropdown').classList.contains('hidden')) {

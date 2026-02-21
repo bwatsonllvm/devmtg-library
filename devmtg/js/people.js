@@ -261,6 +261,18 @@ function initSearch() {
     render();
   });
 
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      state.query = input.value.trim();
+      clearBtn.classList.toggle('visible', state.query.length > 0);
+      render();
+      input.blur();
+    } else if (event.key === 'Escape') {
+      input.blur();
+    }
+  });
+
   clearBtn.addEventListener('click', () => {
     input.value = '';
     state.query = '';
