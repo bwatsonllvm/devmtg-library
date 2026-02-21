@@ -805,6 +805,10 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
   -webkit-appearance: none;
 }
 
+.search-box--with-global .search-input {
+  padding-right: 74px;
+}
+
 .search-input::placeholder {
   color: var(--color-text-subtle);
 }
@@ -857,6 +861,30 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 
 .search-clear.visible {
   display: flex;
+}
+
+.search-global-btn {
+  position: absolute;
+  right: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.search-global-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
 }
 
 /* Search Autocomplete Dropdown */

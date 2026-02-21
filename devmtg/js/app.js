@@ -1980,30 +1980,13 @@ function applyAutocompleteSelection(type, value, source = 'search') {
   const input = document.getElementById('search-input');
   let effectiveType = String(type || '').trim();
 
-  if (effectiveType === 'paper') {
-    closeDropdown();
-    routeToGlobalSearch(value);
-    return;
-  }
-
   if (effectiveType === 'person') {
-    const personMatch = findPersonEntry(value);
-    const speakerMatch = findSpeakerEntry(value);
-    if (!speakerMatch || (personMatch && personMatch.talkCount === 0 && personMatch.paperCount > 0)) {
-      closeDropdown();
-      routeToGlobalSearch(value);
-      return;
-    }
     effectiveType = 'speaker';
   } else if (effectiveType === 'topic') {
-    const topicMatch = findTopicEntry(value);
-    if (topicMatch && topicMatch.talkCount === 0 && topicMatch.paperCount > 0) {
-      closeDropdown();
-      routeToGlobalSearch(value);
-      return;
-    }
     effectiveType = 'tag';
   } else if (effectiveType === 'talk') {
+    effectiveType = 'generic';
+  } else if (effectiveType === 'paper') {
     effectiveType = 'generic';
   }
 
@@ -2716,8 +2699,8 @@ function commitSearchValue(rawValue, allowGlobalRouting = true) {
 
 function selectAutocompleteItem(item) {
   const value = item.dataset.autocompleteValue;
-  closeDropdown();
-  routeToGlobalSearch(value);
+  const type = item.dataset.autocompleteType;
+  applyAutocompleteSelection(type, value, 'search');
 }
 
 function closeDropdown() {
@@ -2748,6 +2731,7 @@ function navigateDropdown(direction) {
 function initSearch() {
   const input = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
+  const globalBtn = document.getElementById('search-global');
 
   buildAutocompleteIndex();
 
@@ -2787,7 +2771,7 @@ function initSearch() {
       } else {
         e.preventDefault();
         clearTimeout(debounceTimer);
-        const mode = commitSearchValue(input.value, true);
+        const mode = commitSearchValue(input.value, false);
         if (mode !== 'global') input.blur();
       }
     } else if (e.key === 'Escape') {
@@ -2808,6 +2792,18 @@ function initSearch() {
     clearQuery();
     input.focus();
   });
+
+  if (globalBtn) {
+    globalBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      const value = String(input.value || state.query || '').trim();
+      if (!value) {
+        input.focus();
+        return;
+      }
+      routeToGlobalSearch(value);
+    });
+  }
 
   // Keyboard shortcut: / to focus search
   document.addEventListener('keydown', e => {

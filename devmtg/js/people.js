@@ -424,9 +424,12 @@ function shouldRouteToGlobalSearch(query) {
 }
 
 function applyAutocompleteSelection(type, value) {
+  const input = document.getElementById('people-search');
+  state.query = String(value || '').trim();
+  if (input) input.value = state.query;
   closeDropdown();
-  routeToGlobalSearch(value);
-  return 'global';
+  render();
+  return 'local';
 }
 
 function selectAutocompleteItem(item) {
@@ -627,6 +630,7 @@ function initFilterChips() {
 function initSearch() {
   const input = document.getElementById('people-search');
   const clearBtn = document.getElementById('people-search-clear');
+  const globalBtn = document.getElementById('search-global');
   if (!input || !clearBtn) return;
 
   const syncClearButton = () => {
@@ -663,7 +667,7 @@ function initSearch() {
       }
 
       event.preventDefault();
-      const mode = commitSearchValue(input.value, true);
+      const mode = commitSearchValue(input.value, false);
       syncClearButton();
       if (mode !== 'global') input.blur();
       return;
@@ -691,6 +695,18 @@ function initSearch() {
     render();
     input.focus();
   });
+
+  if (globalBtn) {
+    globalBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      const value = String(input.value || state.query || '').trim();
+      if (!value) {
+        input.focus();
+        return;
+      }
+      routeToGlobalSearch(value);
+    });
+  }
 
   document.addEventListener('keydown', (event) => {
     if (event.key === '/' && document.activeElement !== input) {

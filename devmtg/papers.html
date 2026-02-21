@@ -43,7 +43,7 @@
   </style>
   <title>Academic Papers - LLVM Developers' Meeting Library</title>
   <meta name="description" content="Browse academic LLVM papers hosted on llvm.org and available in llvm-www.">
-  <link rel="stylesheet" href="css/style.css?v=20260221-21">
+  <link rel="stylesheet" href="css/style.css?v=20260221-22">
 </head>
 <body>
 
@@ -140,7 +140,7 @@
     <div class="search-hero-shell">
       <h1>Academic Papers on llvm.org</h1>
       <p class="subtitle" id="papers-subtitle">Loading papers...</p>
-      <div class="search-box" role="search">
+      <div class="search-box search-box--with-global" role="search">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
@@ -153,6 +153,13 @@
           spellcheck="false"
           aria-label="Search talks, papers, and people"
         >
+        <button class="search-global-btn" id="search-global" aria-label="Search everywhere" title="Search everywhere">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </button>
         <button class="search-clear" id="search-clear" aria-label="Clear search" title="Clear">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -272,6 +279,6 @@
   </div>
   <script src="js/shared/library-utils.js?v=20260221-24"></script>
   <script src="js/papers-data.js?v=20260221-02"></script>
-  <script src="js/papers.js?v=20260221-26"></script>
+  <script src="js/papers.js?v=20260221-27"></script>
 </body>
 </html>
