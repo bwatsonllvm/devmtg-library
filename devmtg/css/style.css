@@ -2993,6 +2993,13 @@ mark {
   }
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .global-search-input,
+  .search-input {
+    font-size: 16px !important;
+  }
+}
+
 /* ============================================================
    Animations
    ============================================================ */
