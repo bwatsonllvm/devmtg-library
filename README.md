@@ -25,15 +25,16 @@ The sync process preserves the current JSON schema and fills/updates structured 
 - slides URL and video URL/ID
 - normalized category and tags
 
-### 2) Papers dataset (`papers/*.json`)
+### 2) Papers dataset (`papers/combined-all-papers-deduped.json`)
 
-The papers index combines two public sources:
+The canonical papers database combines two public sources:
 - LLVM publications content from `llvm.org/pubs` (canonical LLVM papers)
 - OpenAlex discovery results for LLVM-related research
 
 OpenAlex discovery is constrained by LLVM-focused keyword and subproject matching, then filtered against known library contributors derived from existing talk/paper records.
 
 The automated pipeline does not rely on a repository-maintained direct-name seed list.
+During the final merge, OpenAlex metadata is refreshed for titles, abstracts, authors, affiliations, citation counts, and URLs. For non-English or missing text, the pipeline also probes deeper landing-page metadata layers to recover English title/abstract when available.
 
 ### 3) People index (runtime derived)
 
@@ -64,7 +65,7 @@ A scheduled GitHub Actions workflow (`.github/workflows/library-sync.yml`) runs 
 Automation stages:
 1. Sync talks/slides/videos from `llvm-www/devmtg`
 2. Refresh OpenAlex-discovered papers
-3. Backfill paper affiliations from OpenAlex
+3. Rebuild the single canonical papers database (OpenAlex + llvm.org/pubs)
 4. Rebuild the updates log
 5. Validate bundle integrity
 
@@ -74,6 +75,6 @@ Automation stages:
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version
 - `devmtg/updates/index.json`: update-log dataset
-- `papers/*.json`: paper bundles
+- `papers/*.json`: source and derived paper bundles (site serves the manifest-listed file)
 - `papers/index.json`: paper manifest + data version
 - `scripts/`: ingestion, normalization, and validation tooling
