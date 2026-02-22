@@ -3222,8 +3222,9 @@ mark {
   }
 
   .header-right {
-    flex: 1 0 100%;
-    min-width: 0;
+    flex: 0 0 auto;
+    min-width: auto;
+    margin-left: auto;
     gap: 6px;
   }
 
@@ -3248,6 +3249,32 @@ mark {
   .global-search-submit {
     width: 40px;
     height: 40px;
+  }
+
+  .share-toggle {
+    min-width: 40px;
+    width: 40px;
+    padding: 0;
+    font-size: 0;
+    gap: 0;
+  }
+
+  .share-toggle::before {
+    width: 14px;
+    height: 14px;
+  }
+
+  .customization-toggle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .search-icon {
+    display: none;
+  }
+
+  .search-input {
+    padding-left: 14px;
   }
 
   .search-hero {
@@ -3380,6 +3407,14 @@ mark {
   .header-action-btn {
     padding: 0 var(--space-2);
     font-size: 10px;
+  }
+
+  .share-toggle {
+    min-width: 40px;
+    width: 40px;
+    padding: 0;
+    font-size: 0;
+    gap: 0;
   }
 
   .search-hero h1 {
