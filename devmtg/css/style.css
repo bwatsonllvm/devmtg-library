@@ -1926,25 +1926,41 @@ body.filter-collapsed .filter-collapse-btn svg {
 
 .person-card-footer {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.person-card-footer::-webkit-scrollbar {
+  display: none;
+}
+
+.person-card-footer .card-link-btn {
+  white-space: nowrap;
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  font-size: 11px;
 }
 
 .person-work-links {
-  display: flex;
-  flex: 1 1 240px;
-  min-width: 0;
-  flex-wrap: wrap;
-  gap: var(--space-2);
+  display: inline-flex;
+  flex: 1 1 auto;
+  min-width: max-content;
+  flex-wrap: nowrap;
+  gap: 6px;
 }
 
 .person-card-tools {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
   justify-content: flex-end;
-  margin-left: auto;
+  margin-left: 6px;
 }
 
 .person-card-tools .report-issue-link {
@@ -1958,14 +1974,6 @@ body.filter-collapsed .filter-collapse-btn svg {
   color: var(--color-text);
   border-color: var(--color-border-focus);
   background: var(--color-surface-hover);
-}
-
-@media (max-width: 1360px) {
-  .person-card-tools {
-    width: 100%;
-    margin-left: 0;
-    justify-content: flex-end;
-  }
 }
 
 .card-link-btn:hover {
