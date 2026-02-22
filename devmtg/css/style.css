@@ -795,6 +795,25 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
   margin-bottom: var(--space-1);
 }
 
+.search-hero-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.search-hero-title-row h1 {
+  margin-bottom: 0;
+}
+
+.search-hero-title-aside {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.35;
+}
+
 .search-hero .subtitle {
   font-size: var(--font-size-md);
   color: var(--color-text-muted);
@@ -3524,6 +3543,16 @@ mark {
 
   .search-hero h1 {
     font-size: var(--font-size-lg);
+  }
+
+  .search-hero-title-row {
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .search-hero-title-aside {
+    width: 100%;
+    font-size: var(--font-size-sm);
   }
 
   .search-input {
