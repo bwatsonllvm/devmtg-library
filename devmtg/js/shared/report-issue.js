@@ -4,8 +4,9 @@
 
 (function () {
   const ISSUE_BASE_URL = 'https://github.com/bwatsonllvm/library/issues/new';
+  const ISSUE_TEMPLATE_FILE = 'record-update.yml';
   const PUBLIC_SITE_BASE_URL = 'https://bwatsonllvm.github.io/library/';
-  const DEFAULT_PROMPT = '<!-- Please describe what should be corrected or added. -->';
+  const DEFAULT_DETAILS_PROMPT = 'Describe what should be corrected or added.';
 
   const issueButton = document.getElementById('report-issue-btn');
   if (!issueButton) return;
@@ -79,14 +80,29 @@
     return truncateText(`[${itemType}] ${itemTitle}`, 120);
   }
 
-  function deriveBody(context, publicUrl) {
-    const lines = [
-      '## What should be updated?',
-      DEFAULT_PROMPT,
-      '',
-      '## Context',
-    ];
+  function resolveIssueItemType(context) {
+    const raw = normalizeText(context.itemType || context.pageType).toLowerCase();
+    if (!raw) return 'Other';
+    if (raw.includes('talk')) return 'Talk';
+    if (raw.includes('paper')) return 'Paper';
+    if (raw.includes('person') || raw.includes('people')) return 'Person';
+    if (raw.includes('event') || raw.includes('meeting')) return 'Event';
+    if (raw.includes('search') || raw.includes('listing') || raw.includes('work') || raw.includes('page')) {
+      return 'Search/Listing';
+    }
+    return 'Other';
+  }
 
+  function resolveRequestType(context, itemType) {
+    if (itemType === 'Paper' && !normalizeText(context.itemId)) return 'Add missing paper';
+    if (itemType === 'Talk' && !normalizeText(context.itemId)) return 'Add missing talk/slides/video';
+    if (itemType === 'Person') return 'Correct person attribution';
+    if (itemType === 'Search/Listing') return 'Other';
+    return 'Correct existing entry';
+  }
+
+  function deriveReferences(context, publicUrl) {
+    const lines = [];
     pushContextLine(lines, 'Page', context.pageTitle || document.title || 'LLVM Research Library');
     pushContextLine(lines, 'Public URL', publicUrl);
 
@@ -94,19 +110,6 @@
     if (currentUrl && currentUrl !== publicUrl) {
       pushContextLine(lines, 'Current URL', currentUrl);
     }
-
-    pushContextLine(lines, 'Item type', context.itemType || context.pageType);
-    pushContextLine(lines, 'Item ID', context.itemId);
-    pushContextLine(lines, 'Item title', context.itemTitle);
-    pushContextLine(lines, 'Year', context.year);
-    pushContextLine(lines, 'Meeting', context.meetingName || context.meeting);
-    pushContextLine(lines, 'Query', context.query);
-    pushContextLine(lines, 'Paper URL', context.paperUrl);
-    pushContextLine(lines, 'Source URL', context.sourceUrl);
-    pushContextLine(lines, 'Slides URL', context.slidesUrl);
-    pushContextLine(lines, 'Video URL', context.videoUrl);
-    pushContextLine(lines, 'DOI', context.doi);
-    pushContextLine(lines, 'OpenAlex', context.openalexId);
 
     if (Array.isArray(context.extraLinks) && context.extraLinks.length) {
       lines.push('- Related links:');
@@ -119,11 +122,28 @@
       }
     }
 
-    lines.push('');
-    lines.push('## Notes');
-    lines.push('<!-- Optional: include references, screenshots, or corrected links. -->');
-
     return lines.join('\n');
+  }
+
+  function deriveBody(context, publicUrl) {
+    const itemType = normalizeText(context.itemType || context.pageType || 'entry');
+    return [
+      `Requested change for ${itemType}.`,
+      '',
+      `Public URL: ${publicUrl}`,
+      '',
+      DEFAULT_DETAILS_PROMPT,
+    ].join('\n');
+  }
+
+  function setParamIfPresent(params, key, value, maxLength = null) {
+    const text = normalizeText(value);
+    if (!text) return;
+
+    const bounded = Number.isFinite(maxLength) && maxLength > 0
+      ? truncateText(text, maxLength)
+      : text;
+    params.set(key, bounded);
   }
 
   function applyIssueButtonHref() {
@@ -131,9 +151,31 @@
       ? window.LLVM_LIBRARY_ISSUE_CONTEXT
       : {};
     const publicUrl = normalizeText(context.pageUrl) || toPublicUrl(window.location.href);
+    const itemType = resolveIssueItemType(context);
+    const requestType = resolveRequestType(context, itemType);
+    const references = deriveReferences(context, publicUrl);
+    const details = normalizeText(context.details) || DEFAULT_DETAILS_PROMPT;
     const params = new URLSearchParams();
+    params.set('template', ISSUE_TEMPLATE_FILE);
     params.set('title', deriveIssueTitle(context));
     params.set('body', deriveBody(context, publicUrl));
+
+    setParamIfPresent(params, 'request_type', requestType);
+    setParamIfPresent(params, 'public_url', publicUrl);
+    setParamIfPresent(params, 'item_type', itemType);
+    setParamIfPresent(params, 'item_id', context.itemId, 140);
+    setParamIfPresent(params, 'item_title', context.itemTitle, 240);
+    setParamIfPresent(params, 'meeting', context.meetingName || context.meeting, 160);
+    setParamIfPresent(params, 'year', context.year, 8);
+    setParamIfPresent(params, 'query', context.query, 180);
+    setParamIfPresent(params, 'slides_url', context.slidesUrl);
+    setParamIfPresent(params, 'video_url', context.videoUrl);
+    setParamIfPresent(params, 'paper_url', context.paperUrl);
+    setParamIfPresent(params, 'source_url', context.sourceUrl);
+    setParamIfPresent(params, 'doi', context.doi, 160);
+    setParamIfPresent(params, 'openalex', context.openalexId, 200);
+    setParamIfPresent(params, 'details', details, 1000);
+    setParamIfPresent(params, 'references', references, 2000);
 
     issueButton.href = `${ISSUE_BASE_URL}?${params.toString()}`;
     issueButton.setAttribute('target', '_blank');

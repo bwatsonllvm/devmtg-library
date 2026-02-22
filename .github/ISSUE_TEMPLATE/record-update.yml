@@ -1,0 +1,156 @@
+name: Library Record Update
+description: Report a correction or missing item in the LLVM Research Library.
+title: "[Library] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to report a correction or a missing item.
+
+        If you opened this from the library UI, key context fields are prefilled.
+
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: Request Type
+      description: Choose the type that best matches this report.
+      options:
+        - Correct existing entry
+        - Add missing paper
+        - Add missing talk/slides/video
+        - Correct person attribution
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: public_url
+    attributes:
+      label: Public URL
+      description: URL of the affected page on the public site.
+      placeholder: https://bwatsonllvm.github.io/library/...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: item_type
+    attributes:
+      label: Item Type
+      description: What kind of item does this report affect?
+      options:
+        - Talk
+        - Paper
+        - Person
+        - Event
+        - Search/Listing
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: item_id
+    attributes:
+      label: Item ID
+      description: Internal ID if known (for example, talk or paper ID).
+      placeholder: e.g., 2025-10-example-talk-id
+    validations:
+      required: false
+
+  - type: input
+    id: item_title
+    attributes:
+      label: Item Title
+      description: Title of the affected talk, paper, or page section.
+    validations:
+      required: false
+
+  - type: input
+    id: meeting
+    attributes:
+      label: Meeting / Event
+      description: Meeting or event name if relevant.
+    validations:
+      required: false
+
+  - type: input
+    id: year
+    attributes:
+      label: Year
+      description: Year if relevant.
+      placeholder: "2025"
+    validations:
+      required: false
+
+  - type: input
+    id: query
+    attributes:
+      label: Search / Query Context
+      description: Search text or filter value if this came from a listing/search page.
+    validations:
+      required: false
+
+  - type: input
+    id: slides_url
+    attributes:
+      label: Slides URL
+      description: Expected or current slides URL, if applicable.
+    validations:
+      required: false
+
+  - type: input
+    id: video_url
+    attributes:
+      label: Video URL
+      description: Expected or current video URL, if applicable.
+    validations:
+      required: false
+
+  - type: input
+    id: paper_url
+    attributes:
+      label: Paper URL
+      description: Expected or current paper URL, if applicable.
+    validations:
+      required: false
+
+  - type: input
+    id: source_url
+    attributes:
+      label: Source URL
+      description: Canonical source listing URL, if applicable.
+    validations:
+      required: false
+
+  - type: input
+    id: doi
+    attributes:
+      label: DOI
+      description: DOI if applicable.
+    validations:
+      required: false
+
+  - type: input
+    id: openalex
+    attributes:
+      label: OpenAlex ID/URL
+      description: OpenAlex ID or URL if applicable.
+    validations:
+      required: false
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Requested Change
+      description: Describe exactly what should be corrected or added.
+      placeholder: "Example: The Santa Clara event date should be Oct 27-29, not Oct 28-29."
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Supporting Links / Notes
+      description: Add references that verify the correction.
+      placeholder: Add authoritative links or notes here.
+    validations:
+      required: false
