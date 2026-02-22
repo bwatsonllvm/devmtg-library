@@ -41,11 +41,9 @@ const CONTENT_TYPE_ORDER = [PAPER_FILTER_VALUE, BLOG_FILTER_VALUE];
 const CONTENT_TYPE_META = {
   [PAPER_FILTER_VALUE]: {
     label: 'Paper',
-    badgeClass: 'badge-paper',
   },
   [BLOG_FILTER_VALUE]: {
     label: 'Blog',
-    badgeClass: 'badge-blog',
   },
 };
 
@@ -664,8 +662,6 @@ function renderAuthorButtons(authors, tokens) {
 
 function renderPaperCard(paper, tokens) {
   const blogEntry = isBlogPaper(paper);
-  const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
-  const badgeLabel = blogEntry ? CONTENT_TYPE_META[BLOG_FILTER_VALUE].label : CONTENT_TYPE_META[PAPER_FILTER_VALUE].label;
   const titleEsc = escapeHtml(paper.title);
   const authorLabel = (paper.authors || []).map((author) => String(author.name || '').trim()).filter(Boolean).join(', ');
   const dateOrYearLabel = blogEntry
@@ -702,7 +698,6 @@ function renderPaperCard(paper, tokens) {
       <a href="paper.html?id=${escapeHtml(paper.id)}&from=${PAGE_SCOPE}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
         <div class="card-body">
           <div class="card-meta">
-            <span class="badge ${badgeClass}">${badgeLabel}</span>
             <span class="meeting-label">${dateOrYearLabel}</span>
             <span class="meeting-label">${venueLabel}</span>
           </div>
@@ -1444,7 +1439,7 @@ function initFilters() {
         return `
       <button class="filter-chip filter-chip--type" data-type="content-type" data-value="${escapeHtml(contentType)}"
               role="switch" aria-checked="false">
-        <span class="badge filter-chip-type-label ${escapeHtml(meta.badgeClass)}">${escapeHtml(meta.label)}</span>
+        <span class="filter-chip-type-label">${escapeHtml(meta.label)}</span>
         <span class="filter-chip-count filter-chip-type-count">${count.toLocaleString()}</span>
       </button>`;
       })

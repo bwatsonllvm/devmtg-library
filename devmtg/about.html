@@ -49,7 +49,6 @@
       --about-font-body: calc(var(--font-size-base) * 0.94);
       --about-font-title: calc(var(--font-size-base) * 1.1);
       --about-font-label: var(--font-size-xs);
-      --about-font-badge: calc(var(--font-size-xs) * 0.95);
     }
 
     .about-hero-shell {
@@ -174,11 +173,6 @@
       align-items: center;
     }
 
-    .about-talktype-card .badge {
-      font-size: var(--about-font-badge);
-      padding: 3px 10px;
-    }
-
     .about-talktype-card p {
       margin: 0;
       color: var(--color-text);
@@ -207,11 +201,6 @@
       gap: 0.45rem;
     }
 
-    .about-tag-card .badge {
-      font-size: var(--about-font-badge);
-      padding: 3px 10px;
-    }
-
     .about-tag-card p {
       margin: 0;
       color: var(--color-text);
@@ -231,7 +220,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260222-17">
+  <link rel="stylesheet" href="css/style.css?v=20260222-19">
 </head>
 <body>
 
@@ -393,46 +382,46 @@
     <section class="about-section" aria-labelledby="about-talk-types-heading">
       <h2 id="about-talk-types-heading">Talk Types Explained</h2>
       <p>
-        Talks are labeled with normalized type badges. These same colors and styles are used throughout the library:
+        Talks are labeled with normalized types:
       </p>
       <div class="about-talktype-grid" aria-label="Talk type definitions">
-        <article class="about-talktype-card"><h3><span class="badge badge-keynote">Keynote</span></h3><p>Highlighted speakers on topics with wide appeal for the LLVM and compiler community.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-technical-talk">Technical Talks</span></h3><p>These 20 minute talks cover all topics from core infrastructure, to projects using LLVM’s infrastructure. Attendees will have an opportunity to ask questions and take away technical information that could be pertinent to their project or general interest.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-tutorial">Tutorials</span></h3><p>Tutorials are 40-50 minute sessions that dive down deep into a technical topic. Expect in-depth examples and explanations.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-panel">Panels</span></h3><p>Discussions amongst a group of experts on a topic and guided by audience questions and interests.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-quick-talk">Quick Talks</span></h3><p>Slightly longer than a lightning talk, these 10 minute talks are a quick dive into a topic.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-lightning-talk">Lightning Talks</span></h3><p>These are fast 5 minute talks that give you a taste of a project or topic. Attendees will hear a wide range of topics and probably leave wanting to learn more.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-student-talk">Student Technical Talk</span></h3><p>Students present their research using LLVM or related subproject. These are usually 15 minute technical presentations with Q&amp;A.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-llvm-foundation">LLVM Foundation</span></h3><p>Foundation updates and board-level community sessions focused on project support, stewardship, and direction.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-bof">BoF (Birds of Feather)</span></h3><p>Informal gatherings where individuals with a common interest meet to discuss a specific topic.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-poster">Poster</span></h3><p>Poster-format research presentations, often exploratory or early-stage work.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-workshop">Workshop</span></h3><p>Hands-on or collaborative sessions with practical exercises and applied workflows.</p></article>
-        <article class="about-talktype-card"><h3><span class="badge badge-other">Other</span></h3><p>Sessions that do not map cleanly to the categories above.</p></article>
+        <article class="about-talktype-card"><h3>Keynote</h3><p>Highlighted speakers on topics with wide appeal for the LLVM and compiler community.</p></article>
+        <article class="about-talktype-card"><h3>Technical Talks</h3><p>These 20 minute talks cover all topics from core infrastructure, to projects using LLVM’s infrastructure. Attendees will have an opportunity to ask questions and take away technical information that could be pertinent to their project or general interest.</p></article>
+        <article class="about-talktype-card"><h3>Tutorials</h3><p>Tutorials are 40-50 minute sessions that dive down deep into a technical topic. Expect in-depth examples and explanations.</p></article>
+        <article class="about-talktype-card"><h3>Panels</h3><p>Discussions amongst a group of experts on a topic and guided by audience questions and interests.</p></article>
+        <article class="about-talktype-card"><h3>Quick Talks</h3><p>Slightly longer than a lightning talk, these 10 minute talks are a quick dive into a topic.</p></article>
+        <article class="about-talktype-card"><h3>Lightning Talks</h3><p>These are fast 5 minute talks that give you a taste of a project or topic. Attendees will hear a wide range of topics and probably leave wanting to learn more.</p></article>
+        <article class="about-talktype-card"><h3>Student Technical Talk</h3><p>Students present their research using LLVM or related subproject. These are usually 15 minute technical presentations with Q&amp;A.</p></article>
+        <article class="about-talktype-card"><h3>LLVM Foundation</h3><p>Foundation updates and board-level community sessions focused on project support, stewardship, and direction.</p></article>
+        <article class="about-talktype-card"><h3>BoF (Birds of Feather)</h3><p>Informal gatherings where individuals with a common interest meet to discuss a specific topic.</p></article>
+        <article class="about-talktype-card"><h3>Poster</h3><p>Poster-format research presentations, often exploratory or early-stage work.</p></article>
+        <article class="about-talktype-card"><h3>Workshop</h3><p>Hands-on or collaborative sessions with practical exercises and applied workflows.</p></article>
+        <article class="about-talktype-card"><h3>Other</h3><p>Sessions that do not map cleanly to the categories above.</p></article>
       </div>
     </section>
 
     <section class="about-section" aria-labelledby="about-tag-legend-heading">
       <h2 id="about-tag-legend-heading">Content Tags and Colors</h2>
       <p>
-        Beyond talk type badges, the library also uses content tags to distinguish cross-source material:
+        The library also uses content types to distinguish cross-source material:
       </p>
       <div class="about-tag-legend-grid" aria-label="Content type tag legend">
         <article class="about-tag-card">
           <h3>
             <span class="filter-chip-type-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
-            <span class="badge badge-paper">Paper</span>
+            <span>Paper</span>
           </h3>
           <p>Marks research publications and paper metadata indexed in the Papers section and global search.</p>
         </article>
         <article class="about-tag-card">
           <h3>
             <span class="filter-chip-type-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span>
-            <span class="badge badge-blog">Blog</span>
+            <span>Blog</span>
           </h3>
           <p>Marks LLVM Project Blog entries mirrored from <code>llvm-www-blog</code> with full post content and source links.</p>
         </article>
       </div>
-      <p class="about-tag-note">Talk entries use one of the talk-type badges above; papers and blogs use content-type badges.</p>
+      <p class="about-tag-note">Talk entries use the talk types above; papers and blogs use content-type metadata.</p>
     </section>
 
     <section class="about-section" aria-labelledby="about-search-heading">
