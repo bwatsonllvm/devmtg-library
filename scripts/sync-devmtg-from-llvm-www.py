@@ -133,6 +133,113 @@ def normalize_speaker_name(name: str) -> str:
     return re.sub(r"[^a-z0-9 ]+", "", collapse_ws(name).lower()).strip()
 
 
+def strip_leading_title_from_abstract(text: str, title: str) -> str:
+    abstract_text = collapse_ws(text)
+    title_text = collapse_ws(title)
+    if not abstract_text or not title_text:
+        return abstract_text
+
+    def _looks_like_metadata_prefix(value: str) -> bool:
+        return bool(
+            re.match(
+                r"^\s*(?:\[\s*(?:video|slides?)\s*\]|(?:speakers?|presenters?)\s*:)",
+                value,
+                flags=re.IGNORECASE,
+            )
+        )
+
+    literal_pattern = re.compile(
+        rf"^\s*{re.escape(title_text)}\s*(?:[:\-–—]\s*)?",
+        flags=re.IGNORECASE,
+    )
+    literal_match = literal_pattern.match(abstract_text)
+    if literal_match:
+        remainder = abstract_text[literal_match.end() :]
+        if not collapse_ws(remainder) or _looks_like_metadata_prefix(remainder):
+            return remainder
+        return abstract_text
+
+    abstract_key = normalize_key(abstract_text)
+    title_key = normalize_key(title_text)
+    if not title_key or not abstract_key.startswith(title_key):
+        return abstract_text
+
+    consumed: list[str] = []
+    end_index = -1
+    for idx, char in enumerate(abstract_text):
+        if char.isalnum():
+            consumed.append(char.lower())
+            if len(consumed) >= len(title_key):
+                end_index = idx + 1
+                break
+
+    if end_index <= 0:
+        return abstract_text
+    if "".join(consumed[: len(title_key)]) != title_key:
+        return abstract_text
+    remainder = abstract_text[end_index:]
+    if not collapse_ws(remainder) or _looks_like_metadata_prefix(remainder):
+        return remainder
+    return abstract_text
+
+
+def strip_leading_speaker_block(text: str, speakers: list[dict]) -> str:
+    value = collapse_ws(text)
+    if not value:
+        return value
+
+    prefix_match = re.match(
+        r"^\s*(?:speakers?|presenters?)\s*:\s*",
+        value,
+        flags=re.IGNORECASE,
+    )
+    if not prefix_match:
+        return value
+
+    remainder = value[prefix_match.end() :].lstrip()
+    speaker_names = [
+        collapse_ws(str(item.get("name", "")))
+        for item in (speakers or [])
+        if isinstance(item, dict) and collapse_ws(str(item.get("name", "")))
+    ]
+    speaker_names = sorted(set(speaker_names), key=len, reverse=True)
+
+    if speaker_names:
+        speaker_alt = "|".join(re.escape(name) for name in speaker_names)
+        list_pattern = re.compile(
+            rf"^(?:{speaker_alt})(?:\s*(?:,|and|&)\s*(?:{speaker_alt}))*\s*(?:[:;\-–—]\s*)?",
+            flags=re.IGNORECASE,
+        )
+        list_match = list_pattern.match(remainder)
+        if list_match:
+            return remainder[list_match.end() :]
+
+    return remainder
+
+
+def clean_abstract_text(raw: str, title: str = "", speakers: list[dict] | None = None) -> str:
+    text = collapse_ws(raw)
+    if not text:
+        return ""
+
+    for _ in range(6):
+        before = text
+        text = strip_leading_title_from_abstract(text, title)
+        text = re.sub(
+            r"^\s*(?:\[\s*(?:video|slides?)\s*\]\s*)+",
+            "",
+            text,
+            flags=re.IGNORECASE,
+        )
+        text = strip_leading_speaker_block(text, speakers or [])
+        text = re.sub(r"^\s*[-:;,.]+\s*", "", text)
+        text = collapse_ws(text)
+        if text == before:
+            break
+
+    return text
+
+
 def parse_speakers(raw: str) -> list[dict]:
     clean = collapse_ws(raw)
     if not clean or clean in {"-", "—"}:
@@ -419,7 +526,11 @@ def parse_session_entries(page_html: str, meeting_slug: str) -> list[dict]:
         abstract = ""
         paragraph_candidates = re.findall(r"<p[^>]*>(.*?)</p>", block, flags=re.IGNORECASE | re.DOTALL)
         for paragraph in paragraph_candidates:
-            text = collapse_ws(strip_html(paragraph))
+            text = clean_abstract_text(
+                collapse_ws(strip_html(paragraph)),
+                title=title,
+                speakers=speakers,
+            )
             if not text:
                 continue
             if re.match(r"^(?:Speakers?|Presenters?)\s*:", text, flags=re.IGNORECASE):
@@ -471,7 +582,11 @@ def parse_abstract_sections(page_html: str, meeting_slug: str) -> list[dict]:
         video_url, slides_url = parse_links_from_html(title_html, meeting_slug)
         video_id = parse_video_id(video_url)
         speakers = parse_speakers(strip_html(speaker_html))
-        abstract = collapse_ws(strip_html(abstract_html))
+        abstract = clean_abstract_text(
+            collapse_ws(strip_html(abstract_html)),
+            title=title_text,
+            speakers=speakers,
+        )
 
         talks.append(
             {
@@ -680,10 +795,26 @@ def merge_meeting_talks(
             src_value = source.get(field)
             src_text = collapse_ws(str(src_value or ""))
             if field == "abstract":
+                src_text = clean_abstract_text(
+                    src_text,
+                    title=str(source.get("title", "")),
+                    speakers=source.get("speakers") or [],
+                )
                 if not has_meaningful_abstract(src_text):
                     continue
-                if has_meaningful_abstract(str(target.get(field, ""))):
+                target_value = collapse_ws(str(target.get(field, "")))
+                target_clean = clean_abstract_text(
+                    target_value,
+                    title=pick_preferred_meta_value(
+                        str(target.get("title", "")),
+                        str(source.get("title", "")),
+                    ),
+                    speakers=(target.get("speakers") or source.get("speakers") or []),
+                )
+                target_has_noise = target_clean != target_value
+                if has_meaningful_abstract(target_value) and not target_has_noise:
                     continue
+                src_value = src_text
             else:
                 if not src_text:
                     continue
