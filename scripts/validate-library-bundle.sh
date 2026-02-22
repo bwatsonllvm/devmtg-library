@@ -8,7 +8,7 @@ PAPERS="$ROOT/papers"
 fail() { echo "ERROR: $*" >&2; exit 1; }
 
 [ -d "$LIBRARY" ] || fail "Missing devmtg directory"
-for f in index.html meetings.html talk.html paper.html papers.html updates.html css/style.css js/app.js js/events-data.js js/meetings.js js/talk.js js/paper.js js/papers-data.js js/papers.js js/updates.js js/shared/library-utils.js images/llvm-logo.png events/index.json updates/index.json; do
+for f in index.html events.html talk.html paper.html papers.html updates.html css/style.css js/app.js js/events-data.js js/meetings.js js/talk.js js/paper.js js/papers-data.js js/papers.js js/updates.js js/shared/library-utils.js images/llvm-logo.png events/index.json updates/index.json; do
   [ -f "$LIBRARY/$f" ] || fail "Missing required file: devmtg/$f"
 done
 [ -d "$PAPERS" ] || fail "Missing papers directory"
@@ -90,7 +90,7 @@ ruby -rjson -e '
 # Validate local asset references in html files
 ruby -e '
   hub = ARGV.fetch(0)
-  html_files = %w[index.html meetings.html talk.html paper.html papers.html updates.html].map { |f| File.join(hub, f) }
+  html_files = %w[index.html events.html talk.html paper.html papers.html updates.html].map { |f| File.join(hub, f) }
   bad = []
   html_files.each do |html|
     text = File.read(html)
