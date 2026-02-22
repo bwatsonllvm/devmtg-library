@@ -2483,6 +2483,11 @@ mark {
   flex-shrink: 0;
 }
 
+.links-bar .report-issue-link,
+.person-card-footer .report-issue-link {
+  margin-left: auto;
+}
+
 /* Related Talks */
 .related-section {
   border-top: 1px solid var(--color-border);

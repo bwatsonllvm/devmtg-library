@@ -581,7 +581,7 @@ function renderPersonCard(person, tokens) {
   const allWorkLink = `<a class="card-link-btn card-link-btn--video" href="work.html?mode=search&q=${encodeURIComponent(person.name)}" aria-label="Search all work for ${escapeHtml(person.name)}">
       <span aria-hidden="true">All Work</span>
     </a>`;
-  const reportIssueLink = `<a class="card-link-btn" href="${escapeHtml(buildPersonIssueUrl(person))}" target="_blank" rel="noopener noreferrer" aria-label="Report an issue for ${escapeHtml(person.name)} (opens in new tab)">
+  const reportIssueLink = `<a class="card-link-btn report-issue-link" href="${escapeHtml(buildPersonIssueUrl(person))}" target="_blank" rel="noopener noreferrer" aria-label="Report an issue for ${escapeHtml(person.name)} (opens in new tab)">
       <span aria-hidden="true">Report issue</span>
     </a>`;
 

@@ -154,7 +154,7 @@
   function createIssueButton(context) {
     const issueButton = document.createElement('a');
     issueButton.href = ISSUE_BASE_URL;
-    issueButton.className = 'link-btn';
+    issueButton.className = 'link-btn report-issue-link';
     issueButton.id = 'report-issue-btn';
     issueButton.setAttribute('data-report-issue-inline', 'true');
     issueButton.setAttribute('aria-label', `${buildIssueButtonLabel(context)} (opens in new tab)`);
