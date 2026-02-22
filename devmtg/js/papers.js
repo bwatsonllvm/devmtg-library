@@ -658,7 +658,7 @@ function renderAuthorButtons(authors, tokens) {
       labelHtml = highlightText(label, tokens);
     }
 
-    return `<button class="speaker-btn" onclick="event.stopPropagation();filterBySpeaker(${JSON.stringify(author.name)})" aria-label="View talks and papers by ${escapeHtml(author.name)}">${labelHtml}</button>`;
+    return `<button type="button" class="speaker-btn" data-speaker-filter="${escapeHtml(author.name)}" aria-label="View talks and papers by ${escapeHtml(author.name)}">${labelHtml}</button>`;
   }).filter(Boolean).join('<span class="speaker-btn-sep">, </span>');
 }
 
@@ -693,7 +693,7 @@ function renderPaperCard(paper, tokens) {
   const keyTopics = getPaperKeyTopics(paper, 8);
   const tagsHtml = keyTopics.length
     ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${keyTopics.slice(0, 4).map((topic) =>
-        `<button class="card-tag" data-tag="${escapeHtml(topic)}" onclick="event.stopPropagation();filterByTag(${JSON.stringify(topic)})" aria-label="Filter by key topic: ${escapeHtml(topic)}">${escapeHtml(topic)}</button>`
+        `<button type="button" class="card-tag" data-tag="${escapeHtml(topic)}" data-tag-filter="${escapeHtml(topic)}" aria-label="Filter by key topic: ${escapeHtml(topic)}">${escapeHtml(topic)}</button>`
       ).join('')}${keyTopics.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${keyTopics.length - 4}</span>` : ''}</div></div>`
     : '';
 
@@ -2406,6 +2406,28 @@ function initSearch() {
   });
 }
 
+function initCardFilterInteractions() {
+  const grid = document.getElementById('papers-grid');
+  if (!grid) return;
+
+  grid.addEventListener('click', (event) => {
+    const speakerButton = event.target.closest('button[data-speaker-filter]');
+    if (speakerButton && grid.contains(speakerButton)) {
+      event.preventDefault();
+      event.stopPropagation();
+      filterBySpeaker(speakerButton.getAttribute('data-speaker-filter'));
+      return;
+    }
+
+    const tagButton = event.target.closest('button[data-tag-filter]');
+    if (tagButton && grid.contains(tagButton)) {
+      event.preventDefault();
+      event.stopPropagation();
+      filterByTag(tagButton.getAttribute('data-tag-filter'));
+    }
+  });
+}
+
 // ============================================================
 // Render + Control Sync
 // ============================================================
@@ -2583,7 +2605,21 @@ function renderCrossWorkPromptFromState() {
 function filterBySpeaker(name) {
   const value = String(name || '').trim();
   if (!value) return;
-  window.location.href = buildAllWorkUrl('speaker', value);
+
+  const input = document.getElementById('search-input');
+  state.speaker = value;
+  state.activeSpeaker = '';
+  state.query = '';
+  state.activeTags.clear();
+  syncTopicChipState();
+
+  if (input) input.value = '';
+  closeDropdown();
+  updateClearBtn();
+  syncUrl();
+  render();
+  renderCrossWorkPromptFromState();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function filterByTag(tag) {
@@ -2952,6 +2988,7 @@ function initShareMenu() {
   initFilterSidebarCollapse();
   initSearch();
   initSortControl();
+  initCardFilterInteractions();
 
   loadStateFromUrl();
   applyUrlFilters();
