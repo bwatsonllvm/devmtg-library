@@ -282,18 +282,21 @@ function renderDropdown(query) {
   const matchedTalkTitles = autocompleteIndex.talks.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 4);
   const matchedPaperTitles = autocompleteIndex.papers.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 4);
 
-  if (!matchedTopics.length && !matchedPeople.length && !matchedTalkTitles.length && !matchedPaperTitles.length) {
-    dropdown.classList.add('hidden');
-    dropdownActiveIdx = -1;
-    return;
-  }
-
   const tagIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`;
   const personIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
   const talkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
   const paperIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+  const searchIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`;
 
-  const sections = [];
+  const sections = [`
+      <div class="search-dropdown-section search-dropdown-section--action">
+        <button class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
+                data-autocomplete-type="global" data-autocomplete-value="${escapeHtml(query)}">
+          <span class="search-dropdown-item-icon">${searchIcon}</span>
+          <span class="search-dropdown-item-label">Search entire library for "${escapeHtml(query)}"</span>
+          <span class="search-dropdown-item-count">All</span>
+        </button>
+      </div>`];
 
   if (matchedTopics.length) {
     sections.push(`
@@ -469,6 +472,12 @@ function shouldRouteToGlobalSearch(query) {
 }
 
 function applyAutocompleteSelection(type, value) {
+  if (String(type || '').trim() === 'global') {
+    closeDropdown();
+    routeToGlobalSearch(value);
+    return 'global';
+  }
+
   const input = document.getElementById('people-search');
   state.query = String(value || '').trim();
   if (input) input.value = state.query;
