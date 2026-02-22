@@ -41,34 +41,34 @@
   --color-field-focus-ring:    rgba(37, 99, 235, 0.18);
 
   /* Color — Category Badges */
-  --badge-keynote-bg:      #e3f2fd;
-  --badge-keynote-text:    #1976d2;
-  --badge-technical-bg:    #e8f5e9;
-  --badge-technical-text:  #2e7d32;
-  --badge-tutorial-bg:     #f3e5f5;
-  --badge-tutorial-text:   #7b1fa2;
-  --badge-lightning-bg:    #fff3e0;
-  --badge-lightning-text:  #ef6c00;
-  --badge-quick-bg:        #ffebee;
-  --badge-quick-text:      #c62828;
-  --badge-panel-bg:        #e3f2fd;
-  --badge-panel-text:      #1976d2;
-  --badge-bof-bg:          #fff3e0;
-  --badge-bof-text:        #ef6c00;
-  --badge-student-bg:      #f3e5f5;
-  --badge-student-text:    #7b1fa2;
-  --badge-foundation-bg:   #fff8e1;
-  --badge-foundation-text: #b45309;
-  --badge-poster-bg:       #f5f5f5;
-  --badge-poster-text:     #52525b;
-  --badge-workshop-bg:     #e3f2fd;
-  --badge-workshop-text:   #1976d2;
+  --badge-keynote-bg:      #fef3c7;
+  --badge-keynote-text:    #92400e;
+  --badge-technical-bg:    #dcfce7;
+  --badge-technical-text:  #166534;
+  --badge-tutorial-bg:     #ede9fe;
+  --badge-tutorial-text:   #6d28d9;
+  --badge-lightning-bg:    #ffedd5;
+  --badge-lightning-text:  #c2410c;
+  --badge-quick-bg:        #ffe4e6;
+  --badge-quick-text:      #be123c;
+  --badge-panel-bg:        #e0f2fe;
+  --badge-panel-text:      #0369a1;
+  --badge-bof-bg:          #fce7f3;
+  --badge-bof-text:        #be185d;
+  --badge-student-bg:      #ecfccb;
+  --badge-student-text:    #4d7c0f;
+  --badge-foundation-bg:   #dbeafe;
+  --badge-foundation-text: #1d4ed8;
+  --badge-poster-bg:       #f3f4f6;
+  --badge-poster-text:     #374151;
+  --badge-workshop-bg:     #ccfbf1;
+  --badge-workshop-text:   #0f766e;
   --badge-paper-bg:        #e3f2fd;
   --badge-paper-text:      #1976d2;
   --badge-blog-bg:         #e0f7f4;
   --badge-blog-text:       #0f766e;
-  --badge-other-bg:        #f5f5f5;
-  --badge-other-text:      #52525b;
+  --badge-other-bg:        #f1f5f9;
+  --badge-other-text:      #475569;
 
   /* Color — Misc */
   --color-error:       #dc2626;
@@ -207,34 +207,34 @@
   --color-chip-remove-hover:   #2f2f2f;
   --color-field-focus-ring:    rgba(147, 197, 253, 0.25);
 
-  --badge-keynote-bg:      rgba(56, 139, 253, 0.2);
-  --badge-keynote-text:    #58a6ff;
-  --badge-technical-bg:    rgba(46, 160, 67, 0.2);
-  --badge-technical-text:  #3fb950;
-  --badge-tutorial-bg:     rgba(161, 107, 255, 0.2);
-  --badge-tutorial-text:   #bc8cff;
-  --badge-lightning-bg:    rgba(187, 128, 9, 0.25);
-  --badge-lightning-text:  #e3b341;
-  --badge-quick-bg:        rgba(248, 81, 73, 0.22);
-  --badge-quick-text:      #ff7b72;
-  --badge-panel-bg:        rgba(56, 139, 253, 0.2);
-  --badge-panel-text:      #58a6ff;
-  --badge-bof-bg:          rgba(187, 128, 9, 0.25);
-  --badge-bof-text:        #e3b341;
-  --badge-student-bg:      rgba(161, 107, 255, 0.2);
-  --badge-student-text:    #bc8cff;
-  --badge-foundation-bg:   rgba(245, 158, 11, 0.22);
-  --badge-foundation-text: #fbbf24;
-  --badge-poster-bg:       #30363d;
-  --badge-poster-text:     #8b949e;
-  --badge-workshop-bg:     rgba(56, 139, 253, 0.2);
-  --badge-workshop-text:   #58a6ff;
+  --badge-keynote-bg:      rgba(217, 119, 6, 0.25);
+  --badge-keynote-text:    #fbbf24;
+  --badge-technical-bg:    rgba(34, 197, 94, 0.25);
+  --badge-technical-text:  #4ade80;
+  --badge-tutorial-bg:     rgba(139, 92, 246, 0.25);
+  --badge-tutorial-text:   #c4b5fd;
+  --badge-lightning-bg:    rgba(249, 115, 22, 0.25);
+  --badge-lightning-text:  #fdba74;
+  --badge-quick-bg:        rgba(244, 63, 94, 0.25);
+  --badge-quick-text:      #fda4af;
+  --badge-panel-bg:        rgba(14, 165, 233, 0.25);
+  --badge-panel-text:      #7dd3fc;
+  --badge-bof-bg:          rgba(217, 70, 239, 0.25);
+  --badge-bof-text:        #f0abfc;
+  --badge-student-bg:      rgba(132, 204, 22, 0.25);
+  --badge-student-text:    #bef264;
+  --badge-foundation-bg:   rgba(59, 130, 246, 0.28);
+  --badge-foundation-text: #93c5fd;
+  --badge-poster-bg:       rgba(148, 163, 184, 0.22);
+  --badge-poster-text:     #cbd5e1;
+  --badge-workshop-bg:     rgba(20, 184, 166, 0.24);
+  --badge-workshop-text:   #5eead4;
   --badge-paper-bg:        rgba(187, 128, 9, 0.25);
   --badge-paper-text:      #e3b341;
   --badge-blog-bg:         rgba(20, 184, 166, 0.22);
   --badge-blog-text:       #5eead4;
-  --badge-other-bg:        #30363d;
-  --badge-other-text:      #8b949e;
+  --badge-other-bg:        rgba(107, 114, 128, 0.24);
+  --badge-other-text:      #d1d5db;
 
   --shadow-xs:    0 1px 0 rgba(0, 0, 0, 0.45);
   --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.5);
@@ -1410,22 +1410,6 @@ body.filter-collapsed .filter-collapse-btn svg {
   padding: 4px 9px;
 }
 
-.filter-chip-type-icon {
-  width: 14px;
-  height: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-}
-
-.filter-chip-type-icon svg {
-  width: 12px;
-  height: 12px;
-  display: block;
-}
-
 .filter-chip--type .badge {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
@@ -1434,10 +1418,6 @@ body.filter-collapsed .filter-collapse-btn svg {
 
 .filter-chip--type .filter-chip-count {
   opacity: 0.78;
-}
-
-.filter-chip--type.active .filter-chip-type-icon {
-  color: var(--color-state-active-text);
 }
 
 .btn-clear-filters {
