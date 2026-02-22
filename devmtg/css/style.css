@@ -1394,18 +1394,11 @@ body.filter-collapsed .filter-collapse-btn svg {
 }
 
 .filter-chip--type .filter-chip-type-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semi);
   min-height: 30px;
   padding: 0 10px;
   border-radius: var(--radius-md) 0 0 var(--radius-md);
-  color: var(--color-text);
-  background: var(--color-surface-subtle);
-  border: 1px solid var(--color-border);
-  border-right: 0;
   line-height: 1;
 }
 
@@ -1438,10 +1431,6 @@ body.filter-collapsed .filter-collapse-btn svg {
 }
 
 .filter-chip--type.active .filter-chip-type-count {
-  border-color: var(--color-border-focus);
-}
-
-.filter-chip--type.active .filter-chip-type-label {
   border-color: var(--color-border-focus);
 }
 

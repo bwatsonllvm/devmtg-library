@@ -84,6 +84,7 @@ function formatParts(parts) {
 function renderEntry(entry) {
   const kindKey = collapseWs(entry.kind).toLowerCase();
   const kind = kindKey === 'blog' ? 'blog' : (kindKey === 'paper' ? 'paper' : 'talk');
+  const kindLabel = kind === 'talk' ? 'Talk' : (kind === 'blog' ? 'Blog' : 'Paper');
   const title = collapseWs(entry.title) || '(Untitled)';
   const url = normalizeLibraryUrl(entry.url);
   const loggedAtLabel = formatLoggedAt(entry.loggedAt);
@@ -131,6 +132,7 @@ function renderEntry(entry) {
   return `
     <article class="update-entry">
       <div class="update-meta">
+        <span class="update-kind ${kind}">${kindLabel}</span>
         <span>${escapeHtml(loggedAtLabel)}</span>
       </div>
       <h2 class="update-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>

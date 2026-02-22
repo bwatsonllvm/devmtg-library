@@ -67,6 +67,38 @@
       font-size: var(--font-size-xs);
     }
 
+    .update-kind {
+      display: inline-flex;
+      align-items: center;
+      border-radius: var(--radius-sm);
+      padding: 0.14rem 0.52rem;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      border: 1px solid var(--color-border);
+      background: var(--badge-other-bg);
+      color: var(--badge-other-text);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .update-kind.paper {
+      background: var(--badge-paper-bg);
+      color: var(--badge-paper-text);
+      border-color: transparent;
+    }
+
+    .update-kind.blog {
+      background: var(--badge-blog-bg);
+      color: var(--badge-blog-text);
+      border-color: transparent;
+    }
+
+    .update-kind.talk {
+      background: var(--color-accent-bg);
+      color: var(--color-accent);
+      border-color: transparent;
+    }
+
     .update-parts {
       display: flex;
       flex-wrap: wrap;
@@ -150,7 +182,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260222-19">
+  <link rel="stylesheet" href="css/style.css?v=20260222-20">
 </head>
 <body>
   <nav class="skip-links" aria-label="Skip links">
@@ -252,6 +284,6 @@
 
   <script src="js/shared/library-utils.js?v=20260222-26"></script>
 
-  <script src="js/updates.js?v=20260222-05"></script>
+  <script src="js/updates.js?v=20260222-06"></script>
 </body>
 </html>

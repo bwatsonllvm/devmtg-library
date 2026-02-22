@@ -608,6 +608,7 @@ function renderPaperCard(paper) {
       <a href="paper.html?id=${escapeHtml(paper.id || '')}&from=${listingFrom}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
         <div class="card-body">
           <div class="card-meta">
+            <span class="badge ${blogEntry ? 'badge-blog' : 'badge-paper'}">${blogEntry ? 'Blog' : 'Paper'}</span>
             <span class="meeting-label">${year}</span>
             <span class="meeting-label">${venue}</span>
           </div>

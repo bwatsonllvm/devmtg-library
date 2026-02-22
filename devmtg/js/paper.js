@@ -1445,6 +1445,7 @@ function getRelatedPapers(paper, allPapers) {
 
 function renderRelatedCard(paper) {
   const blogEntry = isBlogPaper(paper);
+  const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
   const badgeLabel = blogEntry ? 'Blog' : 'Paper';
   const speakerLinksHtml = (paper.authors || []).length
     ? paper.authors.map((author) =>
@@ -1468,6 +1469,7 @@ function renderRelatedCard(paper) {
         </div>
         <div class="card-body">
           <div class="card-meta">
+            <span class="badge ${badgeClass}">${escapeHtml(badgeLabel)}</span>
             <span class="meeting-label">${dateOrYear}</span>
           </div>
           <p class="card-title">${escapeHtml(paper.title)}</p>
@@ -1489,6 +1491,8 @@ function renderPaperDetail(paper, allPapers) {
   const authorsHtml = renderAuthors(paper.authors, paper);
   const citationCount = Number.isFinite(paper.citationCount) ? paper.citationCount : 0;
   const doiUrl = doiUrlFromValue(paper.doi);
+  const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
+  const badgeLabel = blogEntry ? 'Blog' : 'Paper';
 
   const infoParts = [];
   if (blogEntry && paper._publishedDateLabel) infoParts.push(paper._publishedDateLabel);
@@ -1585,6 +1589,7 @@ function renderPaperDetail(paper, allPapers) {
 
       <div class="talk-header">
         <div class="talk-header-meta">
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
           ${infoParts.length ? `<span class="meeting-info-badge">${escapeHtml(infoParts.join(' · '))}</span>` : ''}
         </div>
         <h1 class="talk-title">${escapeHtml(paper.title)}</h1>
