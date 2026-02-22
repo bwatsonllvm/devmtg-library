@@ -662,7 +662,7 @@ function renderTalkDetail(talk, allTalks) {
   linkItems.push(`
     <a href="https://github.com/bwatsonllvm/library/issues/new" class="link-btn report-issue-link" id="report-issue-btn" aria-label="Report an issue with this talk (opens in new tab)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      Report issue with this talk
+      Report issue
     </a>`);
   const linksBarHtml = linkItems.length ? `
     <div class="links-bar" aria-label="Resources">

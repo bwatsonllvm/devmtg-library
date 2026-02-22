@@ -144,10 +144,6 @@
   }
 
   function buildIssueButtonLabel(context) {
-    const itemType = resolveIssueItemType(context);
-    if (itemType === 'Talk') return 'Report issue with this talk';
-    if (itemType === 'Paper') return 'Report issue with this paper';
-    if (itemType === 'Person') return 'Report issue with this person';
     return 'Report issue';
   }
 
