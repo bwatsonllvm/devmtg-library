@@ -457,8 +457,17 @@ def _clean_meta_value(value: str) -> str:
     return clean
 
 
+def _canonicalize_publication_label(value: str) -> str:
+    clean = _clean_meta_value(value)
+    if not clean:
+        return ""
+    if re.fullmatch(r"arxiv(?:\.org)?(?:\s*\(cornell university\))?", clean, flags=re.IGNORECASE):
+        return "arXiv"
+    return clean
+
+
 def publication_from_venue_string(venue: str) -> str:
-    clean = _clean_meta_value(venue)
+    clean = _canonicalize_publication_label(venue)
     if not clean:
         return ""
     first = collapse_ws(clean.split("|", 1)[0])
@@ -469,12 +478,12 @@ def publication_from_venue_string(venue: str) -> str:
 
 def pick_publication(published: str, location: str, old: dict | None) -> str:
     for candidate in [published, location]:
-        normalized = _clean_meta_value(strip_tags(candidate))
+        normalized = _canonicalize_publication_label(strip_tags(candidate))
         if normalized:
             return normalized
 
     if old:
-        old_pub = _clean_meta_value(strip_tags(str(old.get("publication", ""))))
+        old_pub = _canonicalize_publication_label(strip_tags(str(old.get("publication", ""))))
         if old_pub:
             return old_pub
         old_venue = _clean_meta_value(strip_tags(str(old.get("venue", ""))))
@@ -486,13 +495,17 @@ def pick_publication(published: str, location: str, old: dict | None) -> str:
 
 def build_venue(publication: str, location: str, award: str) -> str:
     parts: list[str] = []
+    canonical_publication = _canonicalize_publication_label(publication).lower()
 
     if publication:
         parts.append(publication)
 
     for candidate in [location, award]:
-        normalized = _clean_meta_value(strip_tags(candidate))
+        normalized = _canonicalize_publication_label(strip_tags(candidate))
         if not normalized:
+            continue
+        normalized_canonical = _canonicalize_publication_label(normalized).lower()
+        if canonical_publication and normalized_canonical == canonical_publication:
             continue
         if any(normalized.lower() == existing.lower() for existing in parts):
             continue

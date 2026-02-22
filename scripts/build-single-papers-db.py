@@ -192,6 +192,15 @@ def _clean_meta_value(value: str) -> str:
     return clean
 
 
+def _canonicalize_publication_label(value: str) -> str:
+    clean = _clean_meta_value(value)
+    if not clean:
+        return ""
+    if re.fullmatch(r"arxiv(?:\.org)?(?:\s*\(cornell university\))?", clean, flags=re.IGNORECASE):
+        return "arXiv"
+    return clean
+
+
 def decode_abstract_inverted_index(index_obj) -> str:
     if not isinstance(index_obj, dict):
         return ""
@@ -222,11 +231,11 @@ def pick_publication_and_venue(work: dict) -> tuple[str, str]:
     primary = work.get("primary_location") or {}
     source = primary.get("source") or {}
 
-    publication = _clean_meta_value(str(source.get("display_name", "")))
+    publication = _canonicalize_publication_label(str(source.get("display_name", "")))
     if not publication:
         for loc in (work.get("locations") or []):
             src = (loc or {}).get("source") or {}
-            candidate = _clean_meta_value(str(src.get("display_name", "")))
+            candidate = _canonicalize_publication_label(str(src.get("display_name", "")))
             if candidate:
                 publication = candidate
                 break

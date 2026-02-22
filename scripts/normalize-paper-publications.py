@@ -29,6 +29,15 @@ def clean_token(value: str) -> str:
     return clean
 
 
+def canonicalize_publication_label(value: str) -> str:
+    clean = clean_token(value)
+    if not clean:
+        return ""
+    if re.fullmatch(r"arxiv(?:\.org)?(?:\s*\(cornell university\))?", clean, flags=re.IGNORECASE):
+        return "arXiv"
+    return clean
+
+
 def split_venue_parts(venue: str) -> list[str]:
     clean = collapse_ws(venue)
     if not clean:
@@ -55,7 +64,7 @@ def parse_volume_issue(parts: list[str]) -> tuple[str, str]:
 
 
 def derive_publication(existing_publication: str, venue: str) -> str:
-    publication = clean_token(existing_publication)
+    publication = canonicalize_publication_label(existing_publication)
     if publication:
         return publication
 
@@ -63,7 +72,7 @@ def derive_publication(existing_publication: str, venue: str) -> str:
     if not parts:
         return ""
 
-    first = clean_token(parts[0])
+    first = canonicalize_publication_label(parts[0])
     if not first:
         return ""
     if re.match(r"^(vol\.|issue\b)", first, flags=re.IGNORECASE):
@@ -77,10 +86,11 @@ def rebuild_venue(publication: str, venue: str) -> str:
 
     extras: list[str] = []
     for part in parts:
-        clean = clean_token(part)
+        clean = canonicalize_publication_label(part)
         if not clean:
             continue
-        if publication and clean.lower() == publication.lower():
+        canonical_publication = canonicalize_publication_label(publication)
+        if canonical_publication and canonicalize_publication_label(clean).lower() == canonical_publication.lower():
             continue
         if re.match(r"^(vol\.|issue\b)", clean, flags=re.IGNORECASE):
             continue
