@@ -34,6 +34,9 @@ let loadMoreObserver = null;
 let loadMoreScrollHandler = null;
 const MIN_TOPIC_FILTER_COUNT = 4;
 const MAX_TOPIC_FILTERS = 180;
+const BLOG_SOURCE_SLUG = 'llvm-blog-www';
+const BLOG_FILTER_VALUE = 'blog';
+const BLOG_FILTER_LABEL = 'LLVM Blog Posts';
 
 const ALL_WORK_PAGE_PATH = 'work.html';
 const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations']);
@@ -44,6 +47,7 @@ const state = {
   activeTags: new Set(),
   speaker: '', // exact author filter from author button click
   years: new Set(),
+  contentTypes: new Set(),
   sortBy: 'relevance',
 };
 
@@ -151,6 +155,7 @@ function normalizePaperRecord(rawPaper) {
   paper.publication = metadata.publication;
   paper.venue = metadata.venue;
   paper.type = String(paper.type || '').trim();
+  paper.source = String(paper.source || '').trim();
   paper.paperUrl = String(paper.paperUrl || '').trim();
   paper.sourceUrl = String(paper.sourceUrl || '').trim();
   paper.citationCount = parseCitationCount(rawPaper);
@@ -197,6 +202,8 @@ function normalizePaperRecord(rawPaper) {
   paper._publicationLower = paper.publication.toLowerCase();
   paper._venueLower = paper.venue.toLowerCase();
   paper._typeLower = paper.type.toLowerCase();
+  paper._sourceLower = paper.source.toLowerCase();
+  paper._isBlog = paper._sourceLower === BLOG_SOURCE_SLUG || paper._typeLower === 'blog-post' || paper._typeLower === 'blog';
 
   const uniqueTokens = (parts) => {
     const seen = new Set();
@@ -225,6 +232,10 @@ function normalizePaperRecord(rawPaper) {
   paper._fuzzyVenue = uniqueTokens([paper.venue, paper.publication, paper.type, paper.year]);
 
   return paper;
+}
+
+function isBlogPaper(paper) {
+  return !!(paper && paper._isBlog);
 }
 
 function parseCitationCount(rawPaper) {
@@ -508,6 +519,10 @@ function filterAndSort() {
     entries = entries.filter(({ paper }) => state.years.has(paper._year));
   }
 
+  if (state.contentTypes.has(BLOG_FILTER_VALUE)) {
+    entries = entries.filter(({ paper }) => isBlogPaper(paper));
+  }
+
   entries.sort((a, b) => {
     if (state.sortBy === 'year') {
       const yearDiff = comparePapersNewestFirst(a.paper, b.paper);
@@ -583,7 +598,7 @@ function renderPaperCard(paper, tokens) {
     : '';
 
   const isPdf = /\.pdf(?:$|[?#])/i.test(paper.paperUrl || '');
-  const paperActionLabel = isPdf ? 'PDF' : 'Paper';
+  const paperActionLabel = isBlogPaper(paper) ? 'Post' : (isPdf ? 'PDF' : 'Paper');
   const paperLink = paper.paperUrl
     ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
@@ -730,6 +745,7 @@ function renderCards(results) {
 
     if (state.speaker) recoveryActions.push({ id: 'clear-author', label: 'Clear author' });
     if (state.years.size > 0) recoveryActions.push({ id: 'clear-year', label: 'Clear year' });
+    if (state.contentTypes.size > 0) recoveryActions.push({ id: 'clear-content', label: 'Clear content type' });
     if (state.activeTags.size > 0) recoveryActions.push({ id: 'clear-topic', label: 'Clear key topic' });
     else if (state.query) recoveryActions.push({ id: 'clear-search', label: 'Clear search' });
     recoveryActions.push({ id: 'reset-all', label: 'Reset all' });
@@ -763,6 +779,10 @@ function renderCards(results) {
           updateClearBtn();
           syncUrl();
           render();
+          return;
+        }
+        if (action === 'clear-content') {
+          clearContentTypeFilters();
           return;
         }
         if (action === 'clear-topic' || action === 'clear-search') {
@@ -809,18 +829,20 @@ function renderResultCount(count) {
     (queryCountsAsFilter ? 1 : 0) +
     (state.speaker ? 1 : 0) +
     state.activeTags.size +
-    state.years.size;
+    state.years.size +
+    state.contentTypes.size;
 
   const noActiveFilters =
     !queryCountsAsFilter &&
     !state.speaker &&
     state.activeTags.size === 0 &&
-    state.years.size === 0;
+    state.years.size === 0 &&
+    state.contentTypes.size === 0;
 
   if (count === total && noActiveFilters) {
-    el.innerHTML = `<strong>${total.toLocaleString()}</strong> papers`;
+    el.innerHTML = `<strong>${total.toLocaleString()}</strong> items`;
   } else {
-    el.innerHTML = `<strong>${count.toLocaleString()}</strong> of ${total.toLocaleString()} papers`;
+    el.innerHTML = `<strong>${count.toLocaleString()}</strong> of ${total.toLocaleString()} items`;
   }
 
   if (!contextEl) return;
@@ -857,8 +879,13 @@ function updateHeroSubtitle(resultsCount) {
     return;
   }
 
+  if (state.contentTypes.has(BLOG_FILTER_VALUE)) {
+    el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> LLVM Project Blog post${resultsCount === 1 ? '' : 's'}`;
+    return;
+  }
+
   if (resultsCount === total) {
-    el.innerHTML = `Browse <strong>${total.toLocaleString()}</strong> papers from llvm.org archives`;
+    el.innerHTML = `Browse <strong>${total.toLocaleString()}</strong> papers and blog posts`;
     return;
   }
 
@@ -962,6 +989,17 @@ function renderActiveFilters() {
       `Remove year filter: ${year}`,
       () => removeYearFilter(year)
     ));
+  }
+
+  for (const contentType of [...state.contentTypes].sort()) {
+    if (contentType === BLOG_FILTER_VALUE) {
+      pills.push(createActiveFilterPill(
+        'Content',
+        'LLVM Blog Posts',
+        'Remove content type filter: LLVM Blog Posts',
+        () => removeContentTypeFilter(BLOG_FILTER_VALUE)
+      ));
+    }
   }
 
   if (pills.length > 0) {
@@ -1180,6 +1218,7 @@ function clearFilters() {
   state.activeTags.clear();
   state.speaker = '';
   state.years.clear();
+  state.contentTypes.clear();
 
   const input = document.getElementById('search-input');
   if (input) input.value = '';
@@ -1194,6 +1233,54 @@ function clearFilters() {
   updateClearBtn();
   syncUrl();
   render();
+}
+
+function syncContentTypeChipState() {
+  document.querySelectorAll('.filter-chip[data-type="content-type"]').forEach((chip) => {
+    const value = normalizeFilterValue(chip.dataset.value);
+    const isActive = state.contentTypes.has(value);
+    chip.classList.toggle('active', isActive);
+    chip.setAttribute('aria-checked', isActive ? 'true' : 'false');
+  });
+}
+
+function addContentTypeFilter(contentType) {
+  const value = normalizeFilterValue(contentType);
+  if (!value) return '';
+  if (value !== BLOG_FILTER_VALUE) return '';
+  if (!state.contentTypes.has(value)) state.contentTypes.add(value);
+  return value;
+}
+
+function removeContentTypeFilter(contentType, { skipRender = false } = {}) {
+  const value = normalizeFilterValue(contentType);
+  if (!value) return;
+  state.contentTypes.delete(value);
+  syncContentTypeChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function clearContentTypeFilters({ skipRender = false } = {}) {
+  state.contentTypes.clear();
+  syncContentTypeChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function toggleContentTypeFilter(contentType) {
+  const value = normalizeFilterValue(contentType);
+  if (!value) return;
+  if (state.contentTypes.has(value)) removeContentTypeFilter(value);
+  else {
+    addContentTypeFilter(value);
+    syncContentTypeChipState();
+    updateClearBtn();
+    syncUrl();
+    render();
+  }
 }
 
 // ============================================================
@@ -1211,6 +1298,7 @@ function syncYearChipsFromState() {
 function initFilters() {
   const tagCounts = {};
   const yearCounts = {};
+  const contentTypeCounts = new Map([[BLOG_FILTER_VALUE, 0]]);
 
   for (const paper of allPapers) {
     for (const topic of getPaperKeyTopics(paper, 8)) {
@@ -1220,6 +1308,10 @@ function initFilters() {
 
     if (paper._year) {
       yearCounts[paper._year] = (yearCounts[paper._year] || 0) + 1;
+    }
+
+    if (isBlogPaper(paper)) {
+      contentTypeCounts.set(BLOG_FILTER_VALUE, (contentTypeCounts.get(BLOG_FILTER_VALUE) || 0) + 1);
     }
 
   }
@@ -1252,6 +1344,19 @@ function initFilters() {
       </button>`).join('');
   }
 
+  const contentTypeContainer = document.getElementById('filter-content-types');
+  if (contentTypeContainer) {
+    const blogCount = contentTypeCounts.get(BLOG_FILTER_VALUE) || 0;
+    contentTypeContainer.innerHTML = blogCount > 0
+      ? `
+      <button class="filter-chip" data-type="content-type" data-value="${escapeHtml(BLOG_FILTER_VALUE)}"
+              role="switch" aria-checked="false">
+        ${escapeHtml(BLOG_FILTER_LABEL)}
+        <span class="filter-chip-count">${blogCount.toLocaleString()}</span>
+      </button>`
+      : '';
+  }
+
   document.querySelectorAll('.filter-chip[data-type]').forEach((chip) => {
     chip.addEventListener('click', () => {
       const type = chip.dataset.type;
@@ -1276,6 +1381,11 @@ function initFilters() {
 
       if (type === 'tag') {
         applyAutocompleteSelection('tag', value, 'sidebar');
+        return;
+      }
+
+      if (type === 'content-type') {
+        toggleContentTypeFilter(value);
       }
     });
   });
@@ -1451,6 +1561,7 @@ function syncUrl() {
   if (state.query) params.set('q', state.query);
   if (state.activeTags.size) params.set('tag', [...state.activeTags].sort((a, b) => a.localeCompare(b)).join(','));
   if (state.years.size) params.set('year', [...state.years].join(','));
+  if (state.contentTypes.size) params.set('content', [...state.contentTypes].sort((a, b) => a.localeCompare(b)).join(','));
   if (state.sortBy !== 'relevance') params.set('sort', state.sortBy);
 
   const newUrl = params.toString()
@@ -1468,10 +1579,27 @@ function loadStateFromUrl() {
   state.sortBy = PAPER_SORT_MODES.has(sortParam) ? sortParam : 'relevance';
   state.activeTags.clear();
   state.years.clear();
+  state.contentTypes.clear();
 
   const yearParam = String(params.get('year') || '').trim();
   if (yearParam) {
     yearParam.split(',').map((part) => part.trim()).filter(Boolean).forEach((year) => state.years.add(year));
+  }
+
+  const contentParam = String(params.get('content') || '').trim();
+  if (contentParam) {
+    contentParam
+      .split(',')
+      .map((part) => normalizeFilterValue(part))
+      .filter(Boolean)
+      .forEach((value) => {
+        if (value === BLOG_FILTER_VALUE) state.contentTypes.add(value);
+      });
+  }
+
+  const legacySourceParam = normalizeFilterValue(params.get('source'));
+  if (legacySourceParam === BLOG_SOURCE_SLUG || legacySourceParam === BLOG_FILTER_VALUE) {
+    state.contentTypes.add(BLOG_FILTER_VALUE);
   }
 
   if (!state.query) {
@@ -1493,6 +1621,7 @@ function loadStateFromUrl() {
 function applyUrlFilters() {
   syncYearChipsFromState();
   syncTopicChipState();
+  syncContentTypeChipState();
   syncSortControl();
   updateClearBtn();
 }
@@ -2045,7 +2174,8 @@ function hasNonSearchFiltersApplied() {
   return !!(
     state.speaker ||
     state.activeTags.size > 0 ||
-    state.years.size > 0
+    state.years.size > 0 ||
+    state.contentTypes.size > 0
   );
 }
 
@@ -2253,7 +2383,8 @@ function updateClearBtn() {
     state.query.length > 0 ||
     state.speaker ||
     state.activeTags.size > 0 ||
-    state.years.size > 0;
+    state.years.size > 0 ||
+    state.contentTypes.size > 0;
 
   const clearBtn = document.getElementById('clear-filters');
   if (clearBtn) clearBtn.classList.toggle('hidden', !hasActivity);

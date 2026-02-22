@@ -42,7 +42,7 @@
     body { background: transparent; }
   </style>
   <title>Academic Papers - LLVM Research Library</title>
-  <meta name="description" content="Browse academic LLVM papers hosted on llvm.org and available in llvm-www.">
+  <meta name="description" content="Browse LLVM papers and LLVM Project Blog posts in one searchable index.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -145,7 +145,7 @@
 
   <section class="search-hero" aria-label="Search papers">
     <div class="search-hero-shell">
-      <h1>Academic Papers on llvm.org</h1>
+      <h1>LLVM Papers and Blog Posts</h1>
       <p class="subtitle" id="papers-subtitle">Loading papers...</p>
       <div class="search-box search-box--with-global" role="search">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -211,6 +211,22 @@
                 <span class="filter-group-hint">Select one or more subject tags</span>
               </div>
               <div class="filter-group filter-group--wrap" id="filter-tags" aria-label="Key Topic filters"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="filter-accordion" data-accordion="content-type">
+          <button class="filter-accordion-toggle" id="toggle-content-type" aria-expanded="true" aria-controls="panel-content-type">
+            <span>Content Type</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="filter-accordion-panel" id="panel-content-type">
+            <div class="filter-scroll filter-scroll--secondary">
+              <div class="filter-cluster" aria-label="Filter by content type">
+                <div class="filter-group" id="filter-content-types" aria-label="Content type filters"></div>
+              </div>
             </div>
           </div>
         </section>
@@ -286,6 +302,6 @@
   </div>
   <script src="js/shared/library-utils.js?v=20260221-25"></script>
   <script src="js/papers-data.js?v=20260221-02"></script>
-  <script src="js/papers.js?v=20260222-02"></script>
+  <script src="js/papers.js?v=20260222-03"></script>
 </body>
 </html>
