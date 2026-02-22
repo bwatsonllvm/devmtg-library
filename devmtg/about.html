@@ -366,8 +366,9 @@
     <section class="about-section" aria-labelledby="about-overview-heading">
       <h2 id="about-overview-heading">What This Website Contains</h2>
       <p>
-        This library combines LLVM Developers' Meeting talks, LLVM-related research papers, and a merged people index.
+        This library combines LLVM Developers' Meeting talks, LLVM-related research papers, LLVM Project Blog posts, and a merged people index.
         It is designed for both quick lookup and deep research workflows.
+        Blog support is fully operational, including dedicated blog browsing, full-post rendering, filtering, and unified search integration.
       </p>
       <div class="about-stats-grid" aria-label="Library coverage">
         <article class="about-stat-card">
@@ -462,8 +463,9 @@
       <ul>
         <li><strong>Talks:</strong> synchronized from public <code>llvm-www/devmtg</code> pages into <code>devmtg/events/*.json</code>, then normalized to a consistent schema (IDs, meeting fields, speakers, slides/video links, categories, tags).</li>
         <li><strong>Papers:</strong> combined from LLVM publications (<code>llvm.org/pubs</code>) and OpenAlex discovery results that match LLVM-focused keywords/subprojects and known library contributors.</li>
+        <li><strong>Blogs:</strong> synchronized from <code>llvm/llvm-blog-www</code>, published in a dedicated Blogs section with full content and source links, and indexed alongside papers/talks in search.</li>
         <li><strong>People:</strong> derived from talk speakers and paper authors, then merged across name variants to reduce duplicates.</li>
-        <li><strong>Updates:</strong> generated from content deltas and shown newest-first, with links to in-library talk/paper detail pages.</li>
+        <li><strong>Updates:</strong> generated from content deltas and shown newest-first, with links to in-library talk/paper/blog detail pages.</li>
         <li><strong>Scope:</strong> all indexed material is public; this site is a research index and does not replace canonical event schedules.</li>
         <li>For official meeting announcements and schedules, see the <a href="https://llvm.org/devmtg/" target="_blank" rel="noopener">LLVM Developers' Meeting archive</a>.</li>
       </ul>
