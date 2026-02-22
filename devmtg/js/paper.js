@@ -10,6 +10,7 @@ const BLOG_SOURCE_SLUG_ALIASES = new Set([
 ]);
 const PAPERS_PAGE_PATH = 'papers.html';
 const BLOGS_PAGE_PATH = 'blogs.html';
+const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 
 // ============================================================
 // Data Loading
@@ -21,6 +22,10 @@ function cleanMetadataValue(value) {
   const lowered = cleaned.toLowerCase();
   if (['none', 'null', 'nan', 'n/a'].includes(lowered)) return '';
   return cleaned;
+}
+
+function isDirectPdfUrl(url) {
+  return DIRECT_PDF_URL_RE.test(String(url || '').trim());
 }
 
 function normalizePublicationAndVenue(publication, venue) {
@@ -1510,16 +1515,24 @@ function renderPaperDetail(paper, allPapers) {
   if (paper.venue && paper.venue !== paper.publication) infoParts.push(paper.venue);
 
   const links = [];
+  const paperIsPdf = isDirectPdfUrl(paper.paperUrl);
+  const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl);
   if (paper.paperUrl) {
-    const isPdf = /\.pdf(?:$|[?#])/i.test(paper.paperUrl);
-    const linkLabel = blogEntry ? 'Open Repository Post' : (isPdf ? 'Open PDF' : 'Open Paper');
+    const linkLabel = blogEntry ? 'Open Repository Post' : (paperIsPdf ? 'Open PDF' : 'Open Paper');
     links.push(`
       <a href="${escapeHtml(paper.paperUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(linkLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         ${escapeHtml(linkLabel)}
       </a>`);
   }
-  if (paper.sourceUrl) {
+  if (!blogEntry && sourceIsPdf && !paperIsPdf && paper.sourceUrl && paper.sourceUrl !== paper.paperUrl) {
+    const sourceLabel = 'Open PDF';
+    links.push(`
+      <a href="${escapeHtml(paper.sourceUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        ${escapeHtml(sourceLabel)}
+      </a>`);
+  } else if (paper.sourceUrl) {
     const sourceLabel = blogEntry ? 'Open Blog' : 'Source Listing';
     links.push(`
       <a href="${escapeHtml(paper.sourceUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">

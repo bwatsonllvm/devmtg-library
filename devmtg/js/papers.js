@@ -38,6 +38,7 @@ const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
 const PAPER_FILTER_VALUE = 'paper';
 const BLOG_FILTER_VALUE = 'blog';
 const CONTENT_TYPE_ORDER = [PAPER_FILTER_VALUE, BLOG_FILTER_VALUE];
+const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 const CONTENT_TYPE_META = {
   [PAPER_FILTER_VALUE]: {
     label: 'Paper',
@@ -107,6 +108,10 @@ function cleanMetadataValue(value) {
   const lowered = cleaned.toLowerCase();
   if (['none', 'null', 'nan', 'n/a'].includes(lowered)) return '';
   return cleaned;
+}
+
+function isDirectPdfUrl(url) {
+  return DIRECT_PDF_URL_RE.test(String(url || '').trim());
 }
 
 function normalizePublicationAndVenue(publication, venue) {
@@ -674,13 +679,13 @@ function renderPaperCard(paper, tokens) {
   const venueLabel = escapeHtml(paper.publication || paper.venue || (paper.type ? paper.type.replace(/-/g, ' ') : 'Academic paper'));
   const abstractText = paper.abstract || 'No abstract available.';
 
-  const sourceIsPdf = /\.pdf(?:$|[?#])/i.test(paper.sourceUrl || '');
-  const sourceLink = sourceIsPdf && paper.sourceUrl !== paper.paperUrl
-    ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open alternate PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">Source</span></a>`
+  const paperIsPdf = isDirectPdfUrl(paper.paperUrl || '');
+  const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl || '');
+  const sourceLink = !blogEntry && sourceIsPdf && !paperIsPdf && paper.sourceUrl && paper.sourceUrl !== paper.paperUrl
+    ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">PDF</span></a>`
     : '';
 
-  const isPdf = /\.pdf(?:$|[?#])/i.test(paper.paperUrl || '');
-  const paperActionLabel = isBlogPaper(paper) ? 'Post' : (isPdf ? 'PDF' : 'Paper');
+  const paperActionLabel = isBlogPaper(paper) ? 'Post' : (paperIsPdf ? 'PDF' : 'Paper');
   const paperLink = paper.paperUrl
     ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';

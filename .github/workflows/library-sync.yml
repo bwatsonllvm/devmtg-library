@@ -73,6 +73,14 @@ jobs:
             --landing-miss-recheck-days 30 \
             --mailto "llvm-library-bot@users.noreply.github.com"
 
+      - name: Backfill direct PDF links via OpenAlex + Unpaywall
+        run: |
+          python3 scripts/backfill-openalex-unpaywall-pdfs.py \
+            --bundle papers/combined-all-papers-deduped.json \
+            --manifest papers/index.json \
+            --cache papers/.cache/unpaywall-pdf-links.json \
+            --mailto "llvm-library-bot@users.noreply.github.com"
+
       - name: Build updates log
         run: |
           python3 scripts/build-update-log.py \
@@ -95,6 +103,7 @@ jobs:
             - refreshes OpenAlex-discovered papers
             - syncs LLVM blog posts from `llvm-blog-www`
             - rebuilds the single canonical papers database from OpenAlex + llvm.org/pubs
+            - backfills direct paper PDF links using OpenAlex + Unpaywall
             - records newly added talks/slides/videos/papers/blogs in `devmtg/updates/index.json`
             - updates corresponding manifests/data versions
           labels: automation,data-update

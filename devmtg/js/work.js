@@ -8,6 +8,7 @@ const TALK_BATCH_SIZE = 24;
 const PAPER_BATCH_SIZE = 24;
 const BLOG_BATCH_SIZE = 24;
 const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
+const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
@@ -116,6 +117,10 @@ function toTitleCaseSlug(slug) {
   return String(slug || '')
     .replace(/-/g, ' ')
     .replace(/\b\w/g, (ch) => ch.toUpperCase());
+}
+
+function isDirectPdfUrl(url) {
+  return DIRECT_PDF_URL_RE.test(String(url || '').trim());
 }
 
 function highlightText(text, tokens) {
@@ -589,12 +594,12 @@ function renderPaperCard(paper) {
   const authorNames = (paper.authors || []).map((author) => author.name).filter(Boolean);
   const authorsHtml = renderEntityLinks(authorNames, 'speaker');
   const topics = getPaperKeyTopics(paper, 8);
-  const sourceIsPdf = /\.pdf(?:$|[?#])/i.test(paper.sourceUrl || '');
-  const sourceLink = sourceIsPdf && paper.sourceUrl !== paper.paperUrl
-    ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open alternate PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">Source</span></a>`
+  const paperIsPdf = isDirectPdfUrl(paper.paperUrl || '');
+  const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl || '');
+  const sourceLink = !blogEntry && sourceIsPdf && !paperIsPdf && paper.sourceUrl && paper.sourceUrl !== paper.paperUrl
+    ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">PDF</span></a>`
     : '';
-  const isPdf = /\.pdf(?:$|[?#])/i.test(paper.paperUrl || '');
-  const paperActionLabel = blogEntry ? 'Post' : (isPdf ? 'PDF' : 'Paper');
+  const paperActionLabel = blogEntry ? 'Post' : (paperIsPdf ? 'PDF' : 'Paper');
   const paperLink = paper.paperUrl
     ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
