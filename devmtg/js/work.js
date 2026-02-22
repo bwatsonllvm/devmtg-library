@@ -83,6 +83,15 @@ function normalizeTopicKey(value) {
     .replace(/[^a-z0-9+]+/g, '');
 }
 
+function normalizePublicationLabel(value) {
+  const cleaned = String(value || '').replace(/\s+/g, ' ').trim();
+  if (!cleaned) return '';
+  if (/^arxiv(?:\.org)?(?:\s*\(cornell university\))?$/i.test(cleaned)) {
+    return 'arXiv';
+  }
+  return cleaned;
+}
+
 function getTalkKeyTopics(talk, limit = Infinity) {
   if (typeof HubUtils.getTalkKeyTopics === 'function') {
     return HubUtils.getTalkKeyTopics(talk, limit);
@@ -283,8 +292,8 @@ function normalizePaperRecord(rawPaper) {
   paper.title = String(paper.title || '').trim();
   paper.abstract = String(paper.abstract || '').trim();
   paper.year = String(paper.year || '').trim();
-  paper.publication = String(paper.publication || '').trim();
-  paper.venue = String(paper.venue || '').trim();
+  paper.publication = normalizePublicationLabel(paper.publication);
+  paper.venue = normalizePublicationLabel(paper.venue);
   paper.type = String(paper.type || '').trim();
   paper.paperUrl = String(paper.paperUrl || '').trim();
   paper.sourceUrl = String(paper.sourceUrl || '').trim();

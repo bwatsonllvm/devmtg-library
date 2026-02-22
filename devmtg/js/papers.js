@@ -110,15 +110,24 @@ function cleanMetadataValue(value) {
   return cleaned;
 }
 
+function normalizePublicationLabel(value) {
+  const cleaned = cleanMetadataValue(value);
+  if (!cleaned) return '';
+  if (/^arxiv(?:\.org)?(?:\s*\(cornell university\))?$/i.test(cleaned)) {
+    return 'arXiv';
+  }
+  return cleaned;
+}
+
 function isDirectPdfUrl(url) {
   return DIRECT_PDF_URL_RE.test(String(url || '').trim());
 }
 
 function normalizePublicationAndVenue(publication, venue) {
-  let normalizedPublication = cleanMetadataValue(publication);
+  let normalizedPublication = normalizePublicationLabel(publication);
   const rawVenueParts = String(venue || '')
     .split('|')
-    .map((part) => cleanMetadataValue(part))
+    .map((part) => normalizePublicationLabel(part))
     .filter(Boolean);
 
   let volume = '';
