@@ -204,6 +204,7 @@
       margin: 0 0 0.45rem;
       display: flex;
       align-items: center;
+      gap: 0.45rem;
     }
 
     .about-tag-card .badge {
@@ -230,7 +231,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260222-04">
+  <link rel="stylesheet" href="css/style.css?v=20260222-06">
 </head>
 <body>
 
@@ -411,12 +412,18 @@
       </p>
       <div class="about-tag-legend-grid" aria-label="Content type tag legend">
         <article class="about-tag-card">
-          <h3><span class="badge badge-paper">Paper</span></h3>
+          <h3>
+            <span class="filter-chip-type-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+            <span class="badge badge-paper">Paper</span>
+          </h3>
           <p>Marks research publications and paper metadata indexed in the Papers section and global search.</p>
         </article>
         <article class="about-tag-card">
-          <h3><span class="badge badge-blog">Blog</span></h3>
-          <p>Reserved for upcoming LLVM ecosystem blog posts and technical writeups that will be added soon.</p>
+          <h3>
+            <span class="filter-chip-type-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span>
+            <span class="badge badge-blog">Blog</span>
+          </h3>
+          <p>Marks LLVM Project Blog entries mirrored from <code>llvm-www-blog</code> with full post content and source links.</p>
         </article>
       </div>
       <p class="about-tag-note">Talk entries use one of the talk-type badges above; papers and blogs use content-type badges.</p>
@@ -436,11 +443,11 @@
       <h2 id="about-features-heading">How to Use All Features</h2>
       <ol>
         <li><strong>Start broad:</strong> use <a href="work.html">All Work</a> or any page search box to locate a topic, title, or contributor.</li>
-        <li><strong>Narrow with filters:</strong> Talks supports key topics, type, year, event, and resources; Papers supports key topics, year, and author targeting.</li>
+        <li><strong>Narrow with filters:</strong> Talks supports key topics, type, year, event, and resources; Papers supports key topics, type, year, and author targeting.</li>
         <li><strong>Use sort + layout controls:</strong> switch between relevance, chronology, citations, and compact/card views where available.</li>
         <li><strong>Pivot through People:</strong> open a person profile card to jump into their talks, papers, or global results.</li>
         <li><strong>Browse by event history:</strong> use <a href="meetings.html">Events</a> to inspect each LLVM Developers' Meeting edition.</li>
-        <li><strong>Open detail pages:</strong> talk and paper pages include abstracts, structured fields, and source links.</li>
+        <li><strong>Open detail pages:</strong> talk and paper pages include abstracts (or full blog content), structured fields, and source links.</li>
         <li><strong>Share reproducible views:</strong> active filters and searches are encoded in the URL so links preserve context.</li>
       </ol>
     </section>

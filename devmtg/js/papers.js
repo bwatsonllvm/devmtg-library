@@ -35,8 +35,21 @@ let loadMoreScrollHandler = null;
 const MIN_TOPIC_FILTER_COUNT = 4;
 const MAX_TOPIC_FILTERS = 180;
 const BLOG_SOURCE_SLUG = 'llvm-blog-www';
+const PAPER_FILTER_VALUE = 'paper';
 const BLOG_FILTER_VALUE = 'blog';
-const BLOG_FILTER_LABEL = 'LLVM Blog Posts';
+const CONTENT_TYPE_ORDER = [PAPER_FILTER_VALUE, BLOG_FILTER_VALUE];
+const CONTENT_TYPE_META = {
+  [PAPER_FILTER_VALUE]: {
+    label: 'Paper',
+    badgeClass: 'badge-paper',
+    iconSvg: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  },
+  [BLOG_FILTER_VALUE]: {
+    label: 'Blog',
+    badgeClass: 'badge-blog',
+    iconSvg: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
+  },
+};
 
 const ALL_WORK_PAGE_PATH = 'work.html';
 const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations']);
@@ -236,6 +249,20 @@ function normalizePaperRecord(rawPaper) {
 
 function isBlogPaper(paper) {
   return !!(paper && paper._isBlog);
+}
+
+function getPaperContentTypeValue(paper) {
+  return isBlogPaper(paper) ? BLOG_FILTER_VALUE : PAPER_FILTER_VALUE;
+}
+
+function getContentTypeMeta(contentType) {
+  const value = normalizeFilterValue(contentType);
+  return value ? (CONTENT_TYPE_META[value] || null) : null;
+}
+
+function getContentTypeLabel(contentType) {
+  const meta = getContentTypeMeta(contentType);
+  return meta ? meta.label : '';
 }
 
 function parseCitationCount(rawPaper) {
@@ -519,8 +546,8 @@ function filterAndSort() {
     entries = entries.filter(({ paper }) => state.years.has(paper._year));
   }
 
-  if (state.contentTypes.has(BLOG_FILTER_VALUE)) {
-    entries = entries.filter(({ paper }) => isBlogPaper(paper));
+  if (state.contentTypes.size > 0) {
+    entries = entries.filter(({ paper }) => state.contentTypes.has(getPaperContentTypeValue(paper)));
   }
 
   entries.sort((a, b) => {
@@ -588,7 +615,7 @@ function renderAuthorButtons(authors, tokens) {
 function renderPaperCard(paper, tokens) {
   const blogEntry = isBlogPaper(paper);
   const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
-  const badgeLabel = blogEntry ? 'Blog Post' : 'Paper';
+  const badgeLabel = blogEntry ? CONTENT_TYPE_META[BLOG_FILTER_VALUE].label : CONTENT_TYPE_META[PAPER_FILTER_VALUE].label;
   const titleEsc = escapeHtml(paper.title);
   const authorLabel = (paper.authors || []).map((author) => String(author.name || '').trim()).filter(Boolean).join(', ');
   const yearLabel = escapeHtml(paper._year || 'Unknown year');
@@ -882,8 +909,22 @@ function updateHeroSubtitle(resultsCount) {
     return;
   }
 
-  if (state.contentTypes.has(BLOG_FILTER_VALUE)) {
-    el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> LLVM Project Blog post${resultsCount === 1 ? '' : 's'}`;
+  const activeContentTypes = CONTENT_TYPE_ORDER.filter((contentType) => state.contentTypes.has(contentType));
+  if (activeContentTypes.length === 1) {
+    const contentType = activeContentTypes[0];
+    const label = getContentTypeLabel(contentType);
+    if (contentType === BLOG_FILTER_VALUE) {
+      el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> blog post${resultsCount === 1 ? '' : 's'}`;
+      return;
+    }
+    if (label) {
+      el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> ${escapeHtml(label.toLowerCase())}${resultsCount === 1 ? '' : 's'}`;
+      return;
+    }
+  }
+
+  if (activeContentTypes.length > 1 && !state.query && !state.activeTags.size && !state.years.size && !state.speaker) {
+    el.innerHTML = `Browse <strong>${resultsCount.toLocaleString()}</strong> papers and blog posts`;
     return;
   }
 
@@ -892,7 +933,7 @@ function updateHeroSubtitle(resultsCount) {
     return;
   }
 
-  el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> of ${total.toLocaleString()} papers`;
+  el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> of ${total.toLocaleString()} papers and blog posts`;
 }
 
 function showError(html) {
@@ -994,15 +1035,24 @@ function renderActiveFilters() {
     ));
   }
 
-  for (const contentType of [...state.contentTypes].sort()) {
-    if (contentType === BLOG_FILTER_VALUE) {
-      pills.push(createActiveFilterPill(
-        'Content',
-        'LLVM Blog Posts',
-        'Remove content type filter: LLVM Blog Posts',
-        () => removeContentTypeFilter(BLOG_FILTER_VALUE)
-      ));
-    }
+  const activeContentTypes = [...state.contentTypes]
+    .filter((contentType) => !!getContentTypeMeta(contentType))
+    .sort((a, b) => {
+      const aIndex = CONTENT_TYPE_ORDER.indexOf(a);
+      const bIndex = CONTENT_TYPE_ORDER.indexOf(b);
+      if (aIndex !== bIndex) return aIndex - bIndex;
+      return a.localeCompare(b);
+    });
+
+  for (const contentType of activeContentTypes) {
+    const label = getContentTypeLabel(contentType);
+    if (!label) continue;
+    pills.push(createActiveFilterPill(
+      'Type',
+      label,
+      `Remove content type filter: ${label}`,
+      () => removeContentTypeFilter(contentType)
+    ));
   }
 
   if (pills.length > 0) {
@@ -1250,7 +1300,7 @@ function syncContentTypeChipState() {
 function addContentTypeFilter(contentType) {
   const value = normalizeFilterValue(contentType);
   if (!value) return '';
-  if (value !== BLOG_FILTER_VALUE) return '';
+  if (!CONTENT_TYPE_META[value]) return '';
   if (!state.contentTypes.has(value)) state.contentTypes.add(value);
   return value;
 }
@@ -1301,7 +1351,10 @@ function syncYearChipsFromState() {
 function initFilters() {
   const tagCounts = {};
   const yearCounts = {};
-  const contentTypeCounts = new Map([[BLOG_FILTER_VALUE, 0]]);
+  const contentTypeCounts = new Map([
+    [PAPER_FILTER_VALUE, 0],
+    [BLOG_FILTER_VALUE, 0],
+  ]);
 
   for (const paper of allPapers) {
     for (const topic of getPaperKeyTopics(paper, 8)) {
@@ -1313,9 +1366,8 @@ function initFilters() {
       yearCounts[paper._year] = (yearCounts[paper._year] || 0) + 1;
     }
 
-    if (isBlogPaper(paper)) {
-      contentTypeCounts.set(BLOG_FILTER_VALUE, (contentTypeCounts.get(BLOG_FILTER_VALUE) || 0) + 1);
-    }
+    const contentType = getPaperContentTypeValue(paper);
+    contentTypeCounts.set(contentType, (contentTypeCounts.get(contentType) || 0) + 1);
 
   }
 
@@ -1349,15 +1401,20 @@ function initFilters() {
 
   const contentTypeContainer = document.getElementById('filter-content-types');
   if (contentTypeContainer) {
-    const blogCount = contentTypeCounts.get(BLOG_FILTER_VALUE) || 0;
-    contentTypeContainer.innerHTML = blogCount > 0
-      ? `
-      <button class="filter-chip" data-type="content-type" data-value="${escapeHtml(BLOG_FILTER_VALUE)}"
+    contentTypeContainer.innerHTML = CONTENT_TYPE_ORDER
+      .map((contentType) => {
+        const meta = CONTENT_TYPE_META[contentType];
+        const count = contentTypeCounts.get(contentType) || 0;
+        if (!meta || count <= 0) return '';
+        return `
+      <button class="filter-chip filter-chip--type" data-type="content-type" data-value="${escapeHtml(contentType)}"
               role="switch" aria-checked="false">
-        ${escapeHtml(BLOG_FILTER_LABEL)}
-        <span class="filter-chip-count">${blogCount.toLocaleString()}</span>
-      </button>`
-      : '';
+        <span class="filter-chip-type-icon" aria-hidden="true">${meta.iconSvg}</span>
+        <span class="badge ${escapeHtml(meta.badgeClass)}">${escapeHtml(meta.label)}</span>
+        <span class="filter-chip-count">${count.toLocaleString()}</span>
+      </button>`;
+      })
+      .join('');
   }
 
   document.querySelectorAll('.filter-chip[data-type]').forEach((chip) => {
@@ -1596,7 +1653,7 @@ function loadStateFromUrl() {
       .map((part) => normalizeFilterValue(part))
       .filter(Boolean)
       .forEach((value) => {
-        if (value === BLOG_FILTER_VALUE) state.contentTypes.add(value);
+        if (CONTENT_TYPE_META[value]) state.contentTypes.add(value);
       });
   }
 

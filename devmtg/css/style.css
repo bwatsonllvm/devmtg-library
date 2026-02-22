@@ -1401,6 +1401,41 @@ body.filter-collapsed .filter-collapse-btn svg {
   opacity: 0.7;
 }
 
+.filter-chip--type {
+  gap: 6px;
+  padding: 4px 9px;
+}
+
+.filter-chip-type-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.filter-chip-type-icon svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.filter-chip--type .badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: 2px 8px;
+}
+
+.filter-chip--type .filter-chip-count {
+  opacity: 0.78;
+}
+
+.filter-chip--type.active .filter-chip-type-icon {
+  color: var(--color-state-active-text);
+}
+
 .btn-clear-filters {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);

@@ -173,7 +173,7 @@ function setIssueContext(context) {
 
 function setIssueContextForPaper(paper) {
   if (!paper || typeof paper !== 'object') return;
-  const itemType = isBlogPaper(paper) ? 'Blog Post' : 'Paper';
+  const itemType = isBlogPaper(paper) ? 'Blog' : 'Paper';
   setIssueContext({
     pageType: 'Paper',
     itemType,
@@ -923,7 +923,7 @@ function getRelatedPapers(paper, allPapers) {
 function renderRelatedCard(paper) {
   const blogEntry = isBlogPaper(paper);
   const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
-  const badgeLabel = blogEntry ? 'Blog Post' : 'Paper';
+  const badgeLabel = blogEntry ? 'Blog' : 'Paper';
   const speakerLinksHtml = (paper.authors || []).length
     ? paper.authors.map((author) =>
       `<a href="papers.html?speaker=${encodeURIComponent(author.name)}" class="card-speaker-link" aria-label="View all papers by ${escapeHtml(author.name)}">${escapeHtml(author.name)}</a>`
@@ -965,7 +965,7 @@ function renderPaperDetail(paper, allPapers) {
   const doiUrl = doiUrlFromValue(paper.doi);
   const blogEntry = isBlogPaper(paper);
   const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
-  const badgeLabel = blogEntry ? 'Blog Post' : 'Paper';
+  const badgeLabel = blogEntry ? 'Blog' : 'Paper';
 
   const infoParts = [];
   if (paper._year) infoParts.push(paper._year);
@@ -983,7 +983,7 @@ function renderPaperDetail(paper, allPapers) {
       </a>`);
   }
   if (paper.sourceUrl) {
-    const sourceLabel = blogEntry ? 'Open Blog Post' : 'Source Listing';
+    const sourceLabel = blogEntry ? 'Open Blog' : 'Source Listing';
     links.push(`
       <a href="${escapeHtml(paper.sourceUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 1 0-7.07-7.07L10 6"/><path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.4a5 5 0 0 0 7.07 7.07L14 18"/></svg>
