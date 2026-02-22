@@ -2475,6 +2475,68 @@ mark {
   margin: var(--space-4) 0;
 }
 
+.abstract-body.blog-content figure,
+.abstract-body.blog-content .hugo-figure {
+  margin: var(--space-5) 0;
+}
+
+.abstract-body.blog-content figure img,
+.abstract-body.blog-content .hugo-figure img {
+  margin: 0;
+}
+
+.abstract-body.blog-content figure figcaption,
+.abstract-body.blog-content .hugo-figure figcaption {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.abstract-body.blog-content .hugo-shortcode-link {
+  margin: var(--space-4) 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+  background: var(--color-surface-subtle);
+}
+
+.abstract-body.blog-content details {
+  margin: var(--space-4) 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
+}
+
+.abstract-body.blog-content details > summary {
+  cursor: pointer;
+  font-weight: var(--font-weight-semi);
+  color: var(--color-text);
+}
+
+.abstract-body.blog-content details[open] > summary {
+  margin-bottom: var(--space-2);
+}
+
+.abstract-body.blog-content .blog-heading-like {
+  display: block;
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  font-weight: var(--font-weight-semi);
+  line-height: 1.3;
+}
+
+.abstract-body.blog-content .blog-centered {
+  text-align: center;
+}
+
+.abstract-body.blog-content .blog-centered img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .abstract-body.blog-content pre {
   margin: var(--space-4) 0;
   padding: var(--space-3) var(--space-4);

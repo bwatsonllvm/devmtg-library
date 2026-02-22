@@ -4,6 +4,10 @@
 
 const HubUtils = window.LLVMHubUtils || {};
 const BLOG_SOURCE_SLUG = 'llvm-blog-www';
+const BLOG_SOURCE_SLUG_ALIASES = new Set([
+  BLOG_SOURCE_SLUG,
+  'llvm-www-blog',
+]);
 
 // ============================================================
 // Data Loading
@@ -133,7 +137,7 @@ function normalizePaperRecord(rawPaper) {
   paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
   const normalizedType = paper.type.toLowerCase();
   const normalizedSource = paper.source.toLowerCase();
-  paper._isBlog = normalizedSource === BLOG_SOURCE_SLUG || normalizedType === 'blog-post' || normalizedType === 'blog';
+  paper._isBlog = BLOG_SOURCE_SLUG_ALIASES.has(normalizedSource) || normalizedType === 'blog-post' || normalizedType === 'blog';
   return paper;
 }
 
@@ -641,11 +645,15 @@ function applyLegacyStyleSemantics(el, styleValue) {
   const preformatted = /white-space\s*:\s*(pre|pre-wrap|pre-line)/.test(style);
   const blockCode = /display\s*:\s*block\b/.test(style);
   const hasCodeSurface = /background(?:-color)?\s*:/.test(style);
+  const headingLike = /font-size\s*:\s*(?:x-large|xx-large|larger|[2-9]\d(?:\.\d+)?px|1\.[6-9]\d*em|[2-9](?:\.\d+)?em)/.test(style);
+  const centered = /text-align\s*:\s*center\b/.test(style) || /margin(?:-left|-right)?\s*:\s*[^;]*\bauto\b/.test(style);
 
   if (monospace) appendClassName(el, 'blog-inline-mono');
   if (preformatted) appendClassName(el, 'blog-preformatted');
   if (blockCode && (tag === 'code' || tag === 'span' || tag === 'div')) appendClassName(el, 'blog-code-block-inline');
   if (hasCodeSurface && (tag === 'code' || tag === 'pre' || monospace)) appendClassName(el, 'blog-code-surface');
+  if (headingLike && (tag === 'span' || tag === 'div' || tag === 'p' || tag === 'strong' || tag === 'b')) appendClassName(el, 'blog-heading-like');
+  if (centered && (tag === 'div' || tag === 'p' || tag === 'figure')) appendClassName(el, 'blog-centered');
 }
 
 function normalizeLegacyCodeMarkup(fragmentRoot) {
@@ -765,7 +773,318 @@ function restoreInlineHtmlPlaceholders(text, placeholders) {
   return output;
 }
 
-function formatInlineMarkdown(text, baseUrl) {
+function normalizeReferenceLabel(label) {
+  return String(label || '').trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
+function extractMarkdownReferenceDefinitions(lines, baseUrl) {
+  const contentLines = [];
+  const references = new Map();
+  let codeFenceMarker = '';
+
+  for (const rawLine of lines || []) {
+    const line = String(rawLine || '');
+    const trimmed = line.trim();
+    const fenceMatch = trimmed.match(/^(```|~~~)/);
+
+    if (fenceMatch) {
+      if (codeFenceMarker) {
+        if (fenceMatch[1] === codeFenceMarker) codeFenceMarker = '';
+      } else {
+        codeFenceMarker = fenceMatch[1];
+      }
+      contentLines.push(line);
+      continue;
+    }
+
+    if (codeFenceMarker) {
+      contentLines.push(line);
+      continue;
+    }
+
+    const refMatch = line.match(/^\s{0,3}\[([^\]]+)\]:\s*(\S+)(?:\s+(?:"([^"]*)"|'([^']*)'|\(([^)]+)\)))?\s*$/);
+    if (!refMatch) {
+      contentLines.push(line);
+      continue;
+    }
+
+    const key = normalizeReferenceLabel(refMatch[1]);
+    if (!key) continue;
+
+    let rawUrl = String(refMatch[2] || '').trim();
+    if (rawUrl.startsWith('<') && rawUrl.endsWith('>')) {
+      rawUrl = rawUrl.slice(1, -1).trim();
+    }
+    const safeUrl = resolveContentUrl(rawUrl, baseUrl, { allowData: false });
+    if (!safeUrl) continue;
+
+    const title = String(refMatch[3] || refMatch[4] || refMatch[5] || '').trim();
+    references.set(key, { url: safeUrl, title });
+  }
+
+  return { contentLines, references };
+}
+
+function getMarkdownReferenceLink(referenceMap, label) {
+  if (!(referenceMap instanceof Map)) return null;
+  const key = normalizeReferenceLabel(label);
+  if (!key) return null;
+  return referenceMap.get(key) || null;
+}
+
+function parseShortcodeArgs(rawArgs) {
+  const text = String(rawArgs || '');
+  const tokens = [];
+  let token = '';
+  let quote = '';
+  let escaped = false;
+
+  const pushToken = () => {
+    const value = token.trim();
+    if (value) tokens.push(value);
+    token = '';
+  };
+
+  for (const ch of text) {
+    if (escaped) {
+      token += ch;
+      escaped = false;
+      continue;
+    }
+
+    if (quote) {
+      if (ch === '\\') {
+        escaped = true;
+        continue;
+      }
+      if (ch === quote) {
+        quote = '';
+        continue;
+      }
+      token += ch;
+      continue;
+    }
+
+    if (ch === '"' || ch === '\'') {
+      quote = ch;
+      continue;
+    }
+
+    if (/\s/.test(ch)) {
+      pushToken();
+      continue;
+    }
+
+    token += ch;
+  }
+  pushToken();
+
+  const named = new Map();
+  const positional = [];
+
+  for (const rawToken of tokens) {
+    const eqIdx = rawToken.indexOf('=');
+    if (eqIdx > 0) {
+      const key = rawToken.slice(0, eqIdx).trim().toLowerCase();
+      const value = rawToken.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
+      if (key && value) named.set(key, value);
+      continue;
+    }
+    positional.push(rawToken);
+  }
+
+  return { named, positional };
+}
+
+function shortcodeNamedOrPositional(parsedArgs, key, positionalIndex = 0) {
+  if (!parsedArgs || typeof parsedArgs !== 'object') return '';
+  const named = parsedArgs.named instanceof Map ? parsedArgs.named : new Map();
+  const positional = Array.isArray(parsedArgs.positional) ? parsedArgs.positional : [];
+
+  const namedValue = String(named.get(String(key || '').toLowerCase()) || '').trim();
+  if (namedValue) return namedValue;
+
+  return String(positional[positionalIndex] || '').trim();
+}
+
+function renderHugoShortcodeLink(rawUrl, label, baseUrl) {
+  const safeUrl = resolveContentUrl(rawUrl, baseUrl, { allowData: false });
+  if (!safeUrl) return '';
+  const linkLabel = String(label || '').trim() || 'Open linked content';
+  return `<p class="hugo-shortcode-link"><a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(linkLabel)}</a></p>`;
+}
+
+function renderHugoFigureShortcode(rawArgs, baseUrl) {
+  const parsed = parseShortcodeArgs(rawArgs);
+  const rawSrc = shortcodeNamedOrPositional(parsed, 'src', 0);
+  const safeSrc = resolveContentUrl(rawSrc, baseUrl, { allowData: true });
+  if (!safeSrc) return '';
+
+  const caption = shortcodeNamedOrPositional(parsed, 'caption', 1);
+  const title = shortcodeNamedOrPositional(parsed, 'title', 2);
+  const alt = shortcodeNamedOrPositional(parsed, 'alt', 3) || caption || title;
+  const rawLink = shortcodeNamedOrPositional(parsed, 'link', 4);
+  const safeLink = resolveContentUrl(rawLink, baseUrl, { allowData: false });
+  const attr = shortcodeNamedOrPositional(parsed, 'attr', 5);
+  const rawAttrLink = shortcodeNamedOrPositional(parsed, 'attrlink', 6);
+  const safeAttrLink = resolveContentUrl(rawAttrLink, baseUrl, { allowData: false });
+
+  const imgHtml = `<img src="${escapeHtml(safeSrc)}" alt="${escapeHtml(alt || '')}" loading="lazy">`;
+  const mediaHtml = safeLink
+    ? `<a href="${escapeHtml(safeLink)}" target="_blank" rel="noopener noreferrer">${imgHtml}</a>`
+    : imgHtml;
+
+  const captionParts = [];
+  if (title) captionParts.push(escapeHtml(title));
+  if (caption && (!title || caption !== title)) captionParts.push(escapeHtml(caption));
+  if (attr) {
+    const sourceLink = safeAttrLink
+      ? `<a href="${escapeHtml(safeAttrLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(attr)}</a>`
+      : escapeHtml(attr);
+    captionParts.push(`Source: ${sourceLink}`);
+  }
+
+  return `<figure class="hugo-figure">${mediaHtml}${captionParts.length ? `<figcaption>${captionParts.join(' · ')}</figcaption>` : ''}</figure>`;
+}
+
+function renderHugoHighlightShortcode(rawArgs, rawCodeBody) {
+  const parsed = parseShortcodeArgs(rawArgs);
+  const language = (
+    shortcodeNamedOrPositional(parsed, 'lang', 0)
+    || shortcodeNamedOrPositional(parsed, 'language', 0)
+  ).replace(/[^A-Za-z0-9_+-]/g, '').toLowerCase();
+  const codeBody = String(rawCodeBody || '').replace(/^\n+/, '').replace(/\n+$/, '');
+  return `\n\`\`\`${language}\n${codeBody}\n\`\`\`\n`;
+}
+
+function preserveMarkdownCodeFencePlaceholders(markdownText) {
+  const lines = String(markdownText || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  const placeholders = [];
+  const outputLines = [];
+  let codeFenceMarker = '';
+  let codeFenceLines = [];
+
+  const flushCodeFence = () => {
+    if (!codeFenceLines.length) return;
+    const placeholder = `@@BLOGCODEFENCE${placeholders.length}@@`;
+    placeholders.push({ placeholder, content: codeFenceLines.join('\n') });
+    outputLines.push(placeholder);
+    codeFenceLines = [];
+  };
+
+  for (const line of lines) {
+    const trimmed = String(line || '').trim();
+    const fenceMatch = trimmed.match(/^(```|~~~)\s*.*$/);
+
+    if (codeFenceMarker) {
+      codeFenceLines.push(line);
+      if (fenceMatch && fenceMatch[1] === codeFenceMarker) {
+        codeFenceMarker = '';
+        flushCodeFence();
+      }
+      continue;
+    }
+
+    if (fenceMatch) {
+      codeFenceMarker = fenceMatch[1];
+      codeFenceLines = [line];
+      continue;
+    }
+
+    outputLines.push(line);
+  }
+
+  // Keep unterminated fences untouched.
+  if (codeFenceLines.length) outputLines.push(...codeFenceLines);
+  return { tokenizedText: outputLines.join('\n'), placeholders };
+}
+
+function restoreMarkdownCodeFencePlaceholders(text, placeholders) {
+  let output = String(text || '');
+  for (const entry of placeholders || []) {
+    output = output.split(entry.placeholder).join(entry.content);
+  }
+  return output;
+}
+
+function transformHugoShortcodes(markdownText, baseUrl) {
+  let output = String(markdownText || '');
+  if (!output) return '';
+
+  const { tokenizedText, placeholders } = preserveMarkdownCodeFencePlaceholders(output);
+  output = tokenizedText;
+
+  output = output.replace(/<!--\s*more\s*-->/gi, '');
+
+  output = output.replace(
+    /\{\{[%<]\s*highlight\s*([\s\S]*?)\s*[>%]\}\}([\s\S]*?)\{\{[%<]\s*\/\s*highlight\s*[>%]\}\}/gi,
+    (_, rawArgs, codeBody) => renderHugoHighlightShortcode(rawArgs, codeBody),
+  );
+
+  output = output.replace(/\{\{[%<]\s*figure\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, rawArgs) => {
+    const html = renderHugoFigureShortcode(rawArgs, baseUrl);
+    return html ? `\n${html}\n` : '\n';
+  });
+
+  output = output.replace(/\{\{[%<]\s*(youtube|vimeo|tweet)\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, kind, rawArgs) => {
+    const parsed = parseShortcodeArgs(rawArgs);
+    const key = String(kind || '').toLowerCase();
+    const id = shortcodeNamedOrPositional(parsed, 'id', 0) || shortcodeNamedOrPositional(parsed, key, 0);
+    if (!id) return '';
+
+    if (key === 'youtube') {
+      return renderHugoShortcodeLink(`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`, 'Watch on YouTube', baseUrl);
+    }
+    if (key === 'vimeo') {
+      return renderHugoShortcodeLink(`https://vimeo.com/${encodeURIComponent(id)}`, 'Watch on Vimeo', baseUrl);
+    }
+    return renderHugoShortcodeLink(`https://x.com/i/web/status/${encodeURIComponent(id)}`, 'Open Tweet', baseUrl);
+  });
+
+  output = output.replace(/\{\{[%<]\s*gist\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, rawArgs) => {
+    const parsed = parseShortcodeArgs(rawArgs);
+    const first = shortcodeNamedOrPositional(parsed, 'id', 0) || shortcodeNamedOrPositional(parsed, 'gist', 0);
+    const second = shortcodeNamedOrPositional(parsed, 'file', 1) || shortcodeNamedOrPositional(parsed, 'name', 1);
+    let gistUrl = '';
+
+    if (/^https?:\/\//i.test(first)) {
+      gistUrl = first;
+    } else if (first && second) {
+      gistUrl = `https://gist.github.com/${first}/${second}`;
+    } else if (first) {
+      gistUrl = `https://gist.github.com/${first}`;
+    }
+
+    return renderHugoShortcodeLink(gistUrl, 'Open Gist', baseUrl);
+  });
+
+  output = output.replace(/\{\{[%<]\s*(?:relref|ref)\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, rawArgs) => {
+    const parsed = parseShortcodeArgs(rawArgs);
+    const target = shortcodeNamedOrPositional(parsed, 'path', 0) || shortcodeNamedOrPositional(parsed, 'url', 0);
+    const safeTarget = resolveContentUrl(target, baseUrl, { allowData: false });
+    return safeTarget || '';
+  });
+
+  // Drop unknown standalone shortcodes that would otherwise show as raw markup.
+  output = output.replace(/^\s*\{\{[%<][\s\S]*?[>%]\}\}\s*$/gm, '');
+  output = output.replace(/\n{3,}/g, '\n\n').trim();
+  return restoreMarkdownCodeFencePlaceholders(output, placeholders);
+}
+
+function isLikelyHugoBlogSource(paper) {
+  if (!paper || typeof paper !== 'object') return false;
+
+  const source = String(paper.source || '').trim().toLowerCase();
+  if (BLOG_SOURCE_SLUG_ALIASES.has(source)) return true;
+
+  const sourceUrl = String(paper.sourceUrl || '').trim();
+  if (/^https?:\/\/(?:www\.)?blog\.llvm\.org\//i.test(sourceUrl)) return true;
+
+  const paperUrl = String(paper.paperUrl || '').trim();
+  return /github\.com\/llvm\/(?:llvm-blog-www|llvm-www-blog)\b/i.test(paperUrl);
+}
+
+function formatInlineMarkdown(text, baseUrl, referenceMap) {
   if (!text) return '';
   const { tokenizedText, placeholders } = preserveInlineHtmlPlaceholders(text);
   let html = escapeHtml(tokenizedText);
@@ -785,6 +1104,33 @@ function formatInlineMarkdown(text, baseUrl) {
     return `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer"${titleAttr}>${escapeHtml(label || '')}</a>`;
   });
 
+  html = html.replace(/!\[([^\]]*)\]\[([^\]]*)\]/g, (match, alt, label) => {
+    const refLabel = label || alt;
+    const ref = getMarkdownReferenceLink(referenceMap, refLabel);
+    if (!ref || !ref.url) return match;
+    const titleAttr = ref.title ? ` title="${escapeHtml(ref.title)}"` : '';
+    return `<img src="${escapeHtml(ref.url)}" alt="${escapeHtml(alt || '')}" loading="lazy"${titleAttr}>`;
+  });
+
+  html = html.replace(/\[([^\]]+)\]\[([^\]]*)\]/g, (match, label, refLabel) => {
+    const lookup = refLabel || label;
+    const ref = getMarkdownReferenceLink(referenceMap, lookup);
+    if (!ref || !ref.url) return match;
+    const titleAttr = ref.title ? ` title="${escapeHtml(ref.title)}"` : '';
+    return `<a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer"${titleAttr}>${escapeHtml(label || '')}</a>`;
+  });
+
+  html = html.replace(/\[([^\]]+)\]/g, (match, label, offset, fullText) => {
+    const previousChar = offset > 0 ? fullText.charAt(offset - 1) : '';
+    const nextChar = fullText.charAt(offset + match.length) || '';
+    if (previousChar === '!' || nextChar === '(') return match;
+
+    const ref = getMarkdownReferenceLink(referenceMap, label);
+    if (!ref || !ref.url) return match;
+    const titleAttr = ref.title ? ` title="${escapeHtml(ref.title)}"` : '';
+    return `<a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer"${titleAttr}>${escapeHtml(label || '')}</a>`;
+  });
+
   html = html.replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`);
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
@@ -796,7 +1142,8 @@ function formatInlineMarkdown(text, baseUrl) {
 }
 
 function renderMarkdownToHtml(markdownText, baseUrl) {
-  const lines = String(markdownText || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  const rawLines = String(markdownText || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  const { contentLines: lines, references } = extractMarkdownReferenceDefinitions(rawLines, baseUrl);
   const out = [];
   let paragraph = [];
   let listType = '';
@@ -809,7 +1156,7 @@ function renderMarkdownToHtml(markdownText, baseUrl) {
   const flushParagraph = () => {
     if (!paragraph.length) return;
     const text = paragraph.join(' ').replace(/\s+/g, ' ').trim();
-    if (text) out.push(`<p>${formatInlineMarkdown(text, baseUrl)}</p>`);
+    if (text) out.push(`<p>${formatInlineMarkdown(text, baseUrl, references)}</p>`);
     paragraph = [];
   };
 
@@ -819,7 +1166,7 @@ function renderMarkdownToHtml(markdownText, baseUrl) {
       listItems = [];
       return;
     }
-    out.push(`<${listType}>${listItems.map((item) => `<li>${formatInlineMarkdown(item, baseUrl)}</li>`).join('')}</${listType}>`);
+    out.push(`<${listType}>${listItems.map((item) => `<li>${formatInlineMarkdown(item, baseUrl, references)}</li>`).join('')}</${listType}>`);
     listType = '';
     listItems = [];
   };
@@ -879,7 +1226,7 @@ function renderMarkdownToHtml(markdownText, baseUrl) {
       flushParagraph();
       flushList();
       const level = headingMatch[1].length;
-      out.push(`<h${level}>${formatInlineMarkdown(headingMatch[2], baseUrl)}</h${level}>`);
+      out.push(`<h${level}>${formatInlineMarkdown(headingMatch[2], baseUrl, references)}</h${level}>`);
       continue;
     }
 
@@ -912,7 +1259,7 @@ function renderMarkdownToHtml(markdownText, baseUrl) {
     if (quote) {
       flushParagraph();
       flushList();
-      out.push(`<blockquote><p>${formatInlineMarkdown(quote[1], baseUrl)}</p></blockquote>`);
+      out.push(`<blockquote><p>${formatInlineMarkdown(quote[1], baseUrl, references)}</p></blockquote>`);
       continue;
     }
 
@@ -927,7 +1274,7 @@ function renderMarkdownToHtml(markdownText, baseUrl) {
 }
 
 function renderBlogContent(paper) {
-  const body = String(paper.content || '').trim();
+  let body = String(paper.content || '').trim();
   if (!body) {
     return '<p><em>Blog content unavailable in local cache. Use the links above to open the original post.</em></p>';
   }
@@ -936,6 +1283,11 @@ function renderBlogContent(paper) {
 
   if (format === 'html') {
     return sanitizeHtmlFragment(body, baseUrl);
+  }
+
+  if (isLikelyHugoBlogSource(paper)) {
+    const transformed = transformHugoShortcodes(body, baseUrl);
+    if (transformed) body = transformed;
   }
 
   return renderMarkdownToHtml(body, baseUrl);
