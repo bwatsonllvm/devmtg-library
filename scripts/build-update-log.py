@@ -157,6 +157,63 @@ def paper_sort_hint(year: str) -> str:
     return "0000-00-00"
 
 
+def normalize_site_base(raw_site_base: str) -> str:
+    value = collapse_ws(raw_site_base)
+    if not value or value == ".":
+        return ""
+    if re.match(r"^https?://", value, flags=re.IGNORECASE):
+        return value.rstrip("/")
+    if value == "/":
+        return "/"
+    if value.startswith("/"):
+        return "/" + value.strip("/")
+    return value.strip("/")
+
+
+def build_detail_url(site_base: str, page_name: str, item_id: str) -> str:
+    encoded_id = urllib.parse.quote(item_id, safe="")
+    target = f"{page_name}?id={encoded_id}"
+    if not site_base:
+        return target
+    if site_base == "/":
+        return f"/{target}"
+    return f"{site_base.rstrip('/')}/{target}"
+
+
+def normalize_internal_library_url(raw_url: str, site_base: str) -> str:
+    url = collapse_ws(raw_url)
+    if not url:
+        return ""
+    if re.match(r"^(?:[a-z][a-z0-9+.-]*:|//|#)", url, flags=re.IGNORECASE):
+        return url
+
+    parsed = urllib.parse.urlsplit(url)
+    path = parsed.path or ""
+    suffix = ""
+    if parsed.query:
+        suffix += f"?{parsed.query}"
+    if parsed.fragment:
+        suffix += f"#{parsed.fragment}"
+
+    if path.startswith("/devmtg/"):
+        tail = path[len("/devmtg/") :]
+        if not site_base:
+            return tail + suffix
+        if site_base == "/":
+            return f"/{tail}{suffix}"
+        return f"{site_base.rstrip('/')}/{tail}{suffix}"
+
+    if not site_base and (path == "/talk.html" or path == "/paper.html"):
+        return path[1:] + suffix
+
+    if site_base and (path == "talk.html" or path == "paper.html"):
+        if site_base == "/":
+            return f"/{path}{suffix}"
+        return f"{site_base.rstrip('/')}/{path}{suffix}"
+
+    return url
+
+
 def talks_by_id(payload: dict | None) -> dict[str, dict]:
     out: dict[str, dict] = {}
     if not payload:
@@ -202,7 +259,7 @@ def talk_entry(
     meeting_date = collapse_ws(str(talk.get("meetingDate", "")))
     slides_url = collapse_ws(str(talk.get("slidesUrl", "")))
     video_url = talk_video_url(talk)
-    detail_url = f"{site_base}/talk.html?id={urllib.parse.quote(talk_id, safe='')}"
+    detail_url = build_detail_url(site_base, "talk.html", talk_id)
 
     normalized_parts = normalize_parts(parts)
     fingerprint = f"talk:{talk_id}:{','.join(normalized_parts)}"
@@ -233,7 +290,7 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
     source = collapse_ws(str(paper.get("sourceName", ""))) or collapse_ws(str(paper.get("source", "")))
     paper_url = collapse_ws(str(paper.get("paperUrl", "")))
     source_url = collapse_ws(str(paper.get("sourceUrl", "")))
-    detail_url = f"{site_base}/paper.html?id={urllib.parse.quote(paper_id, safe='')}"
+    detail_url = build_detail_url(site_base, "paper.html", paper_id)
 
     entry = {
         "kind": "paper",
@@ -421,7 +478,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", default="/Users/britton/Desktop/library")
     parser.add_argument("--log-json", default="/Users/britton/Desktop/library/devmtg/updates/index.json")
-    parser.add_argument("--site-base", default="/devmtg")
+    parser.add_argument("--site-base", default="")
     parser.add_argument("--retroactive-history", action="store_true")
     parser.add_argument("--history-from", default="")
     parser.add_argument("--history-to", default="HEAD")
@@ -431,7 +488,7 @@ def main() -> int:
 
     repo_root = Path(args.repo_root).resolve()
     log_json = Path(args.log_json).resolve()
-    site_base = "/" + collapse_ws(str(args.site_base)).strip("/")
+    site_base = normalize_site_base(str(args.site_base))
 
     logged_at_iso = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     if args.retroactive_history:
@@ -453,6 +510,13 @@ def main() -> int:
         existing_entries: list[dict] = []
     else:
         existing_entries = [entry for entry in (log_payload.get("entries") or []) if isinstance(entry, dict)]
+
+    for entry in existing_entries:
+        raw_url = collapse_ws(str(entry.get("url", "")))
+        if not raw_url:
+            continue
+        entry["url"] = normalize_internal_library_url(raw_url, site_base)
+
     existing_fingerprints = {
         collapse_ws(str(entry.get("fingerprint", ""))) for entry in existing_entries if collapse_ws(str(entry.get("fingerprint", "")))
     }

@@ -23,6 +23,19 @@ function collapseWs(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
 
+function isAbsoluteUrl(value) {
+  return /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(value);
+}
+
+function normalizeLibraryUrl(value) {
+  const raw = collapseWs(value);
+  if (!raw) return '#';
+  if (isAbsoluteUrl(raw)) return raw;
+  if (raw.startsWith('/devmtg/')) return raw.slice('/devmtg/'.length);
+  if (raw.startsWith('/talk.html') || raw.startsWith('/paper.html')) return raw.slice(1);
+  return raw;
+}
+
 function formatLoggedAt(value) {
   const raw = collapseWs(value);
   if (!raw) return 'Unknown time';
@@ -70,7 +83,7 @@ function formatParts(parts) {
 function renderEntry(entry) {
   const kind = collapseWs(entry.kind).toLowerCase() === 'paper' ? 'paper' : 'talk';
   const title = collapseWs(entry.title) || '(Untitled)';
-  const url = collapseWs(entry.url) || '#';
+  const url = normalizeLibraryUrl(entry.url);
   const loggedAtLabel = formatLoggedAt(entry.loggedAt);
   const partLabels = formatParts(entry.parts);
 

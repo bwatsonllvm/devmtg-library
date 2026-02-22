@@ -227,6 +227,9 @@ python3 /Users/britton/Desktop/library/scripts/build-update-log.py \
 /Users/britton/Desktop/library/scripts/validate-library-bundle.sh
 ```
 
+`build-update-log.py` emits deployment-safe relative library links by default (for example `paper.html?id=...`).
+If you need root-relative or absolute links, pass `--site-base` (for example `--site-base /devmtg` or `--site-base https://example.com/devmtg`).
+
 Update log output:
 
 - `devmtg/updates/index.json`
