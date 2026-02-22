@@ -25,6 +25,7 @@ const CATEGORY_META = {
   'quick-talk': { label: 'Quick Talk' },
   'lightning-talk': { label: 'Lightning Talk' },
   'student-talk': { label: 'Student Technical Talk' },
+  'llvm-foundation': { label: 'LLVM Foundation' },
   bof: { label: 'BoF' },
   poster: { label: 'Poster' },
   workshop: { label: 'Workshop' },

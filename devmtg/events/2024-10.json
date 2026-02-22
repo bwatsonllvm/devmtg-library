@@ -5,7 +5,7 @@
     "date": "October 22-24, 2024",
     "location": "Santa Clara, CA, USA",
     "canceled": false,
-    "talkCount": 74
+    "talkCount": 75
   },
   "talks": [
     {
@@ -2202,6 +2202,32 @@
       "tags": [
         "Optimizations",
         "Performance"
+      ]
+    },
+    {
+      "id": "2024-10-075",
+      "meeting": "2024-10",
+      "meetingName": "2024 US LLVM Developers' Meeting",
+      "meetingLocation": "Santa Clara, CA, USA",
+      "meetingDate": "October 22-24, 2024",
+      "category": "llvm-foundation",
+      "title": "LLVM Foundation Updates",
+      "speakers": [
+        {
+          "name": "LLVM Board of Directors",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM Foundation update session from the US LLVM Developers' Meeting, presented by the LLVM Board of Directors.",
+      "videoUrl": "https://youtu.be/0irIUlJMxbo",
+      "videoId": "0irIUlJMxbo",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
       ]
     }
   ]

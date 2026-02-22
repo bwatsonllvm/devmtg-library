@@ -70,6 +70,7 @@ const CATEGORY_META = {
   'quick-talk':     'Quick Talk',
   'lightning-talk': 'Lightning Talk',
   'student-talk':   'Student Technical Talk',
+  'llvm-foundation': 'LLVM Foundation',
   'bof':            'BoF',
   'poster':         'Poster',
   'workshop':       'Workshop',

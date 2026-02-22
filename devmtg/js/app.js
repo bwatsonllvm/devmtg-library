@@ -51,10 +51,11 @@ const CATEGORY_META = {
   'quick-talk':     { label: 'Quick Talk',      order: 4 },
   'lightning-talk': { label: 'Lightning Talk',  order: 5 },
   'student-talk':   { label: 'Student Technical Talk', order: 6 },
-  'bof':            { label: 'BoF',             order: 7 },
-  'poster':         { label: 'Poster',          order: 8 },
-  'workshop':       { label: 'Workshop',        order: 9 },
-  'other':          { label: 'Other',           order: 10 },
+  'llvm-foundation': { label: 'LLVM Foundation', order: 7 },
+  'bof':            { label: 'BoF',             order: 8 },
+  'poster':         { label: 'Poster',          order: 9 },
+  'workshop':       { label: 'Workshop',        order: 10 },
+  'other':          { label: 'Other',           order: 11 },
 };
 
 // ============================================================
@@ -408,6 +409,7 @@ const TALK_TYPE_ICON_SVG = {
   'quick-talk': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>',
   'lightning-talk': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
   'student-talk': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10l-10 5-10-5 10-5 10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+  'llvm-foundation': '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h16"/><path d="M4 9V7l8-4 8 4v2"/><path d="M6 9v8"/><path d="M10 9v8"/><path d="M14 9v8"/><path d="M18 9v8"/><path d="M4 17h16"/><path d="M2 21h20"/></svg>',
   bof: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
   poster: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="20" x2="9" y2="10"/></svg>',
   workshop: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',

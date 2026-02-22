@@ -5,7 +5,7 @@
     "date": "March 17-18, 2016",
     "location": "Barcelona, Spain",
     "canceled": false,
-    "talkCount": 17
+    "talkCount": 18
   },
   "talks": [
     {
@@ -444,6 +444,32 @@
       "projectGithub": "",
       "tags": [
         "Testing"
+      ]
+    },
+    {
+      "id": "2016-03-019",
+      "meeting": "2016-03",
+      "meetingName": "2016 European LLVM Developers' Meeting",
+      "meetingLocation": "Barcelona, Spain",
+      "meetingDate": "March 17-18, 2016",
+      "category": "llvm-foundation",
+      "title": "LLVM Foundation BoF",
+      "speakers": [
+        {
+          "name": "LLVM Board of Directors",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM Foundation BoF session presented by the LLVM Board of Directors.",
+      "videoUrl": "https://youtu.be/jWr-THo_MNE",
+      "videoId": "jWr-THo_MNE",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
       ]
     }
   ]

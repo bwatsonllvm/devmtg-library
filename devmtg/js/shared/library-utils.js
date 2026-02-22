@@ -11,10 +11,11 @@
     'quick-talk': 4,
     'lightning-talk': 5,
     'student-talk': 6,
-    'bof': 7,
-    'poster': 8,
-    'workshop': 9,
-    'other': 10,
+    'llvm-foundation': 7,
+    'bof': 8,
+    'poster': 9,
+    'workshop': 10,
+    'other': 11,
   };
   const KNOWN_TALK_CATEGORIES = new Set(Object.keys(CATEGORY_ORDER));
   const TALK_CATEGORY_ALIAS_MAP = {
@@ -51,6 +52,13 @@
     'student-technical': 'student-talk',
     'student-talk-session': 'student-talk',
     'student-talk-sessions': 'student-talk',
+
+    'llvm-foundation': 'llvm-foundation',
+    foundation: 'llvm-foundation',
+    'foundation-update': 'llvm-foundation',
+    'foundation-updates': 'llvm-foundation',
+    'llvm-foundation-update': 'llvm-foundation',
+    'llvm-foundation-updates': 'llvm-foundation',
 
     bof: 'bof',
     'birds-of-feather': 'bof',

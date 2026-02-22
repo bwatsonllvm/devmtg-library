@@ -5,7 +5,7 @@
     "date": "April 14-16, 2025",
     "location": "Berlin, Germany",
     "canceled": false,
-    "talkCount": 63
+    "talkCount": 64
   },
   "talks": [
     {
@@ -1834,6 +1834,32 @@
         "JIT",
         "MLIR",
         "Performance"
+      ]
+    },
+    {
+      "id": "2025-04-064",
+      "meeting": "2025-04",
+      "meetingName": "2025 European LLVM Developers' Meeting",
+      "meetingLocation": "Berlin, Germany",
+      "meetingDate": "April 14-16, 2025",
+      "category": "llvm-foundation",
+      "title": "LLVM Foundation Updates",
+      "speakers": [
+        {
+          "name": "LLVM Board of Directors",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM Foundation update session from EuroLLVM, presented by the LLVM Board of Directors.",
+      "videoUrl": "https://youtu.be/zxKL_ikhCdU",
+      "videoId": "zxKL_ikhCdU",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
       ]
     }
   ]

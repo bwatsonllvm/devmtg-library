@@ -5,7 +5,7 @@
     "date": "May 10-11, 2022",
     "location": "London, UK",
     "canceled": false,
-    "talkCount": 26
+    "talkCount": 27
   },
   "talks": [
     {
@@ -748,6 +748,32 @@
         "Community Building",
         "IR",
         "Programming Languages"
+      ]
+    },
+    {
+      "id": "2022-05-027",
+      "meeting": "2022-05",
+      "meetingName": "2022 European LLVM Developers' Meeting",
+      "meetingLocation": "London, UK",
+      "meetingDate": "May 10-11, 2022",
+      "category": "llvm-foundation",
+      "title": "LLVM Foundation Updates",
+      "speakers": [
+        {
+          "name": "LLVM Board of Directors",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "LLVM Foundation update session from EuroLLVM, presented by the LLVM Board of Directors.",
+      "videoUrl": "https://youtu.be/jWr-THo_MNE",
+      "videoId": "jWr-THo_MNE",
+      "slidesUrl": null,
+      "projectGithub": "",
+      "tags": [
+        "Community Building"
       ]
     }
   ]

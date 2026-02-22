@@ -638,11 +638,11 @@
       "meetingName": "2025 US LLVM Developers' Meeting",
       "meetingLocation": "Santa Clara, CA, USA",
       "meetingDate": "October 27-29, 2025",
-      "category": "technical-talk",
+      "category": "llvm-foundation",
       "title": "LLVM Foundation Updates",
       "speakers": [
         {
-          "name": "LLVM Foundation Board of Directors",
+          "name": "LLVM Board of Directors",
           "affiliation": "",
           "github": "",
           "linkedin": "",
