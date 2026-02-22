@@ -43,7 +43,6 @@ jobs:
             --index-json papers/index.json \
             --app-js devmtg/js/app.js \
             --subprojects-file papers/subproject-seeds.txt \
-            --skip-manifest-update \
             --skip-author-queries \
             --max-pages-per-keyword 5 \
             --per-page 200 \

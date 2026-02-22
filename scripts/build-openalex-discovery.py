@@ -823,7 +823,12 @@ def main() -> int:
     parser.add_argument("--no-verify-ssl", action="store_true", help="Disable TLS certificate verification")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--no-cache", action="store_true")
-    parser.add_argument("--skip-manifest-update", action="store_true")
+    parser.add_argument(
+        "--update-manifest",
+        action="store_true",
+        help="Also update papers/index.json (disabled by default in single-db pipeline).",
+    )
+    parser.add_argument("--skip-manifest-update", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
 
     events_dir = Path(args.events_dir).resolve()
@@ -1068,7 +1073,8 @@ def main() -> int:
 
     manifest_changed = False
     effective_data_version = ""
-    if args.skip_manifest_update:
+    should_update_manifest = bool(args.update_manifest) and not bool(args.skip_manifest_update)
+    if not should_update_manifest:
         if index_json.exists():
             try:
                 payload = json.loads(index_json.read_text(encoding="utf-8"))
@@ -1093,8 +1099,8 @@ def main() -> int:
     print(f"Unique works fetched: {len(all_works)}")
     print(f"Discovered papers written: {len(out_papers)} -> {output_bundle_path}")
     print(f"Bundle changed: {'yes' if bundle_changed else 'no'}")
-    if args.skip_manifest_update:
-        print("Manifest update: skipped (--skip-manifest-update)")
+    if not should_update_manifest:
+        print("Manifest update: skipped (default)")
     print(f"Manifest changed: {'yes' if manifest_changed else 'no'}")
     print(f"Manifest dataVersion: {effective_data_version or '(unchanged)'}")
     return 0

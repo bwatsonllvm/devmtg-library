@@ -1259,11 +1259,28 @@ def dedupe_records(records: list[dict]) -> list[dict]:
     return merged
 
 
-def update_manifest(manifest_path: Path, output_bundle_name: str, data_version: str):
+def update_manifest(
+    manifest_path: Path,
+    output_bundle_name: str,
+    data_version: str,
+    force_bump_data_version: bool = False,
+) -> tuple[bool, str]:
     payload = load_json(manifest_path) if manifest_path.exists() else {}
-    payload["dataVersion"] = data_version
-    payload["paperFiles"] = [output_bundle_name]
-    save_json(manifest_path, payload)
+    changed = False
+
+    files_before = payload.get("paperFiles") if isinstance(payload.get("paperFiles"), list) else []
+    files_after = [output_bundle_name]
+    if files_before != files_after:
+        payload["paperFiles"] = files_after
+        changed = True
+
+    if force_bump_data_version and payload.get("dataVersion") != data_version:
+        payload["dataVersion"] = data_version
+        changed = True
+
+    if changed:
+        save_json(manifest_path, payload)
+    return changed, collapse_ws(str(payload.get("dataVersion", "")))
 
 
 def main() -> int:
@@ -1381,9 +1398,15 @@ def main() -> int:
     print(f"Output changed: {'yes' if output_changed else 'no'}", flush=True)
 
     data_version = _dt.datetime.now(_dt.timezone.utc).date().isoformat() + "-papers-single-db-openalex-v1"
-    update_manifest(manifest_path, output_path.name, data_version)
+    manifest_changed, effective_data_version = update_manifest(
+        manifest_path,
+        output_path.name,
+        data_version,
+        force_bump_data_version=output_changed,
+    )
+    print(f"Manifest changed: {'yes' if manifest_changed else 'no'}", flush=True)
     print(
-        f"Manifest updated: {manifest_path} -> paperFiles=[{output_path.name}] dataVersion={data_version}",
+        f"Manifest state: {manifest_path} -> paperFiles=[{output_path.name}] dataVersion={effective_data_version or '(unchanged)'}",
         flush=True,
     )
     return 0
