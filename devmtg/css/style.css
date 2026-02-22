@@ -995,6 +995,18 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
   padding: 0;
 }
 
+.search-dropdown-section--action {
+  padding-top: var(--space-2);
+}
+
+.search-dropdown-item--action {
+  font-weight: var(--font-weight-semi);
+}
+
+.search-dropdown-item--action .search-dropdown-item-count {
+  color: var(--color-accent);
+}
+
 /* ============================================================
    Active Filters Strip
    ============================================================ */
@@ -2952,7 +2964,7 @@ mark {
 }
 
 @media (max-width: 1180px) {
-  .global-search-form {
+  .site-header .global-search-form {
     display: none;
   }
 }

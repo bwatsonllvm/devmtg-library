@@ -7,8 +7,9 @@
 
   let dataLoadPromise = null;
   let indexBuildPromise = null;
-  let renderToken = 0;
-  let activeItemIndex = -1;
+  const formStateMap = new WeakMap();
+  const GLOBAL_SEARCH_LABEL = 'Global search across talks, papers, people, and key topics';
+  const GLOBAL_SEARCH_PLACEHOLDER = 'Global search talks, papers, people, key topics…';
 
   const autocompleteIndex = {
     topics: [],
@@ -253,11 +254,23 @@
     return dropdown;
   }
 
+  function getFormState(form) {
+    let state = formStateMap.get(form);
+    if (!state) {
+      state = {
+        renderToken: 0,
+        activeItemIndex: -1,
+      };
+      formStateMap.set(form, state);
+    }
+    return state;
+  }
+
   function closeDropdown(form) {
     const dropdown = form.querySelector('.global-search-dropdown');
     if (!dropdown) return;
     dropdown.classList.add('hidden');
-    activeItemIndex = -1;
+    getFormState(form).activeItemIndex = -1;
   }
 
   function collectMatches(query) {
@@ -276,6 +289,7 @@
 
   function renderDropdown(form, input, query) {
     const dropdown = ensureDropdown(form);
+    const state = getFormState(form);
     const matches = collectMatches(query);
     const hasAny =
       matches.topics.length > 0 ||
@@ -292,8 +306,17 @@
     const personIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
     const talkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
     const paperIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+    const searchIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`;
 
-    const sections = [];
+    const sections = [`
+      <div class="search-dropdown-section search-dropdown-section--action">
+        <button class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
+                data-autocomplete-value="${escapeHtml(String(query || '').trim())}">
+          <span class="search-dropdown-item-icon">${searchIcon}</span>
+          <span class="search-dropdown-item-label">Search entire library for "${escapeHtml(String(query || '').trim())}"</span>
+          <span class="search-dropdown-item-count">All</span>
+        </button>
+      </div>`];
 
     if (matches.topics.length) {
       sections.push(`
@@ -353,7 +376,7 @@
 
     dropdown.innerHTML = sections.join('<div class="search-dropdown-divider"></div>');
     dropdown.classList.remove('hidden');
-    activeItemIndex = -1;
+    state.activeItemIndex = -1;
 
     dropdown.querySelectorAll('.search-dropdown-item').forEach((item) => {
       item.addEventListener('mousedown', (event) => {
@@ -372,42 +395,51 @@
   }
 
   async function renderDropdownAsync(form, input, query) {
-    const token = ++renderToken;
+    const state = getFormState(form);
+    const token = ++state.renderToken;
     await buildAutocompleteIndex();
-    if (token !== renderToken) return;
+    if (token !== state.renderToken) return;
     renderDropdown(form, input, query);
   }
 
   function navigateDropdown(form, direction) {
     const dropdown = form.querySelector('.global-search-dropdown');
     if (!dropdown || dropdown.classList.contains('hidden')) return false;
+    const state = getFormState(form);
 
     const items = [...dropdown.querySelectorAll('.search-dropdown-item')];
     if (!items.length) return false;
 
-    if (activeItemIndex >= 0 && activeItemIndex < items.length) {
-      items[activeItemIndex].setAttribute('aria-selected', 'false');
+    if (state.activeItemIndex >= 0 && state.activeItemIndex < items.length) {
+      items[state.activeItemIndex].setAttribute('aria-selected', 'false');
     }
 
-    activeItemIndex += direction;
-    if (activeItemIndex < 0) activeItemIndex = items.length - 1;
-    if (activeItemIndex >= items.length) activeItemIndex = 0;
+    state.activeItemIndex += direction;
+    if (state.activeItemIndex < 0) state.activeItemIndex = items.length - 1;
+    if (state.activeItemIndex >= items.length) state.activeItemIndex = 0;
 
-    const activeItem = items[activeItemIndex];
+    const activeItem = items[state.activeItemIndex];
     activeItem.setAttribute('aria-selected', 'true');
     activeItem.scrollIntoView({ block: 'nearest' });
     return true;
   }
 
-  function initGlobalSearchInput() {
-    const form = document.querySelector('.global-search-form');
+  function initGlobalSearchInput(form, initialValue) {
     const input = form ? form.querySelector('.global-search-input') : null;
     if (!form || !input) return;
 
-    if (!String(input.value || '').trim()) {
-      const params = new URLSearchParams(window.location.search);
-      const initialValue = deriveInitialQuery(params);
-      if (initialValue) input.value = initialValue;
+    if (!String(input.value || '').trim() && initialValue) {
+      input.value = initialValue;
+    }
+
+    if (!input.getAttribute('aria-label') || input.getAttribute('aria-label') === 'Search talks, papers, and people') {
+      input.setAttribute('aria-label', GLOBAL_SEARCH_LABEL);
+    }
+    if (!input.getAttribute('title')) {
+      input.setAttribute('title', GLOBAL_SEARCH_LABEL);
+    }
+    if (!String(input.getAttribute('placeholder') || '').trim() || !/global/i.test(String(input.getAttribute('placeholder') || ''))) {
+      input.setAttribute('placeholder', GLOBAL_SEARCH_PLACEHOLDER);
     }
 
     ensureDropdown(form);
@@ -439,10 +471,11 @@
         return;
       }
       if (event.key === 'Enter') {
+        const state = getFormState(form);
         const dropdown = form.querySelector('.global-search-dropdown');
-        if (!dropdown || dropdown.classList.contains('hidden') || activeItemIndex < 0) return;
+        if (!dropdown || dropdown.classList.contains('hidden') || state.activeItemIndex < 0) return;
         const items = dropdown.querySelectorAll('.search-dropdown-item');
-        const activeItem = items[activeItemIndex];
+        const activeItem = items[state.activeItemIndex];
         if (!activeItem) return;
 
         event.preventDefault();
@@ -466,9 +499,20 @@
     });
   }
 
+  function initGlobalSearchInputs() {
+    const forms = [...document.querySelectorAll('.global-search-form')];
+    if (!forms.length) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const initialValue = deriveInitialQuery(params);
+    for (const form of forms) {
+      initGlobalSearchInput(form, initialValue);
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGlobalSearchInput);
+    document.addEventListener('DOMContentLoaded', initGlobalSearchInputs);
   } else {
-    initGlobalSearchInput();
+    initGlobalSearchInputs();
   }
 })();
