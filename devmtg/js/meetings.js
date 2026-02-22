@@ -242,7 +242,6 @@ function renderMeetingCard(meeting, talkCount, slideCount) {
       <div class="meeting-card-footer">
         ${talkCount > 0
           ? `<span class="talk-count-badge" aria-label="${talkCount.toLocaleString()} talk${talkCount !== 1 ? 's' : ''}">
-               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                <span aria-hidden="true">${talkCount.toLocaleString()} talk${talkCount !== 1 ? 's' : ''}</span>
              </span>`
           : `<span class="talk-count-badge talk-count-badge--empty" aria-label="${hasNoContent ? 'No talks or slides published' : 'No talks scheduled yet'}">${hasNoContent ? 'No talks/slides' : 'No talks yet'}</span>`}
@@ -325,11 +324,15 @@ function renderMeetingsGrid(meetings, talkCounts, slideCounts) {
   }).join('');
 }
 
-function updateSubtitle(meetings, totalTalks) {
+function updateSubtitle(meetings) {
   const el = document.getElementById('meetings-subtitle');
   if (!el) return;
-  const count = meetings.length;
-  el.textContent = `${count} meeting${count !== 1 ? 's' : ''} · ${totalTalks.toLocaleString()} talks total`;
+  const totalEvents = meetings.length;
+  const llvmDevelopersMeetingCount = meetings.filter((meeting) => (
+    /developers['’]? meeting/i.test(String(meeting?.name || ''))
+  )).length;
+  const otherEventsCount = Math.max(0, totalEvents - llvmDevelopersMeetingCount);
+  el.textContent = `${llvmDevelopersMeetingCount.toLocaleString()} LLVM Developers' Meetings · ${otherEventsCount.toLocaleString()} other Events`;
 }
 
 // ============================================================
@@ -509,7 +512,7 @@ async function init() {
   // Sort: newest first, then by slug
   enriched.sort((a, b) => b.slug.localeCompare(a.slug));
 
-  updateSubtitle(enriched, talks.length);
+  updateSubtitle(enriched);
   renderMeetingsGrid(enriched, talkCounts, slideCounts);
 }
 
