@@ -327,8 +327,9 @@ function renderMeetingsGrid(meetings, talkCounts, slideCounts) {
 function updateSubtitle(meetings) {
   const el = document.getElementById('meetings-subtitle');
   if (!el) return;
-  const totalEvents = meetings.length;
-  const llvmDevelopersMeetingCount = meetings.filter((meeting) => (
+  const activeMeetings = meetings.filter((meeting) => !meeting?.canceled);
+  const totalEvents = activeMeetings.length;
+  const llvmDevelopersMeetingCount = activeMeetings.filter((meeting) => (
     /developers['’]? meeting/i.test(String(meeting?.name || ''))
   )).length;
   const otherEventsCount = Math.max(0, totalEvents - llvmDevelopersMeetingCount);
