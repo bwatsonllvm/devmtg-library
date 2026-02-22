@@ -1250,7 +1250,6 @@ function clearFilters() {
   });
 
   renderMeetingFilterOptions();
-  hideCrossWorkPrompt();
   closeDropdown();
   updateClearBtn();
   syncUrl();
@@ -1263,7 +1262,6 @@ function clearQuery() {
   state.query = '';
   state.activeSpeaker = '';
   state.activeTag     = '';
-  hideCrossWorkPrompt();
   syncTopicChipState();
   closeDropdown();
   updateClearBtn();
@@ -1828,7 +1826,7 @@ function showError(html) {
 
 const _xIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
-function createActiveFilterPill(typeLabel, valueLabel, ariaLabel, onRemove) {
+function createActiveFilterPill(typeLabel, valueLabel, ariaLabel, onRemove, options = {}) {
   const pill = document.createElement('span');
   pill.className = 'active-filter-pill';
 
@@ -1837,6 +1835,19 @@ function createActiveFilterPill(typeLabel, valueLabel, ariaLabel, onRemove) {
   type.textContent = typeLabel;
   pill.appendChild(type);
   pill.appendChild(document.createTextNode(` ${valueLabel}`));
+
+  const workHref = String(options.workHref || '').trim();
+  if (workHref) {
+    const workLink = document.createElement('a');
+    workLink.className = 'active-filter-pill__work';
+    workLink.href = workHref;
+    workLink.textContent = options.workLabel || 'All Work';
+    workLink.setAttribute('aria-label', options.workAriaLabel || `${typeLabel} ${valueLabel}: see all related work`);
+    workLink.addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
+    pill.appendChild(workLink);
+  }
 
   const button = document.createElement('button');
   button.type = 'button';
@@ -1876,23 +1887,37 @@ function renderActiveFilters() {
       'Speaker',
       state.speaker,
       `Remove speaker filter: ${state.speaker}`,
-      removeSpeakerFilter
+      removeSpeakerFilter,
+      {
+        workHref: buildAllWorkUrl('speaker', state.speaker),
+        workAriaLabel: `See all work for speaker ${state.speaker}`,
+      }
     ));
   }
 
   // Query pill — labelled as "Speaker", "Topic", or "Search"
   if (state.query) {
     let typeLabel = 'Search';
+    let workHref = '';
+    let workAriaLabel = '';
     if (state.activeSpeaker && state.activeSpeaker.toLowerCase() === state.query.toLowerCase()) {
       typeLabel = 'Speaker';
+      workHref = buildAllWorkUrl('speaker', state.query);
+      workAriaLabel = `See all work for speaker ${state.query}`;
     } else if (state.activeTag && state.activeTag.toLowerCase() === state.query.toLowerCase()) {
       typeLabel = 'Key Topic';
+      workHref = buildAllWorkUrl('topic', state.query);
+      workAriaLabel = `See all work for key topic ${state.query}`;
     }
     pills.push(createActiveFilterPill(
       typeLabel,
       state.query,
       `Remove ${typeLabel} filter: ${state.query}`,
-      clearQuery
+      clearQuery,
+      {
+        workHref,
+        workAriaLabel,
+      }
     ));
   }
 
@@ -2133,7 +2158,6 @@ function render() {
   renderResultCount(results.length);
   renderActiveFilters();
   updateHeroSubtitle();
-  renderCrossWorkPromptFromState();
   updateClearBtn();
   syncHeaderGlobalSearchInput();
 }
@@ -2860,75 +2884,6 @@ function buildAllWorkUrl(kind, value) {
   return `${ALL_WORK_PAGE_PATH}?${params.toString()}`;
 }
 
-function ensureCrossWorkPrompt() {
-  let prompt = document.getElementById('cross-work-cta');
-  if (prompt) return prompt;
-
-  const shell = document.querySelector('.search-hero-shell');
-  if (!shell) return null;
-
-  prompt = document.createElement('div');
-  prompt.id = 'cross-work-cta';
-  prompt.className = 'cross-work-cta hidden';
-  prompt.setAttribute('role', 'status');
-  prompt.setAttribute('aria-live', 'polite');
-  prompt.innerHTML = `
-    <span class="cross-work-cta-text"></span>
-    <a class="cross-work-cta-link" href="work.html">See All Work</a>
-    <button class="cross-work-cta-dismiss" type="button" aria-label="Dismiss all work prompt">×</button>
-  `;
-  shell.appendChild(prompt);
-
-  const dismissBtn = prompt.querySelector('.cross-work-cta-dismiss');
-  if (dismissBtn) dismissBtn.addEventListener('click', hideCrossWorkPrompt);
-
-  return prompt;
-}
-
-function hideCrossWorkPrompt() {
-  const prompt = document.getElementById('cross-work-cta');
-  if (!prompt) return;
-  prompt.classList.add('hidden');
-}
-
-function getCrossWorkSelection() {
-  if (state.speaker) {
-    return { kind: 'speaker', value: state.speaker, label: 'speaker' };
-  }
-
-  const normalizedQuery = normalizeFilterValue(state.query);
-  const normalizedActiveSpeaker = normalizeFilterValue(state.activeSpeaker);
-  if (state.activeSpeaker && normalizedQuery && normalizedQuery === normalizedActiveSpeaker) {
-    return { kind: 'speaker', value: state.activeSpeaker, label: 'speaker' };
-  }
-
-  const normalizedActiveTag = normalizeFilterValue(state.activeTag);
-  if (state.activeTag && normalizedQuery && normalizedQuery === normalizedActiveTag) {
-    return { kind: 'topic', value: state.activeTag, label: 'topic' };
-  }
-
-  return null;
-}
-
-function renderCrossWorkPromptFromState() {
-  const selection = getCrossWorkSelection();
-  if (!selection) {
-    hideCrossWorkPrompt();
-    return;
-  }
-
-  const prompt = ensureCrossWorkPrompt();
-  if (!prompt) return;
-
-  const textEl = prompt.querySelector('.cross-work-cta-text');
-  const linkEl = prompt.querySelector('.cross-work-cta-link');
-  if (!textEl || !linkEl) return;
-
-  textEl.textContent = `${selection.label === 'speaker' ? 'Speaker' : 'Key Topic'}: ${selection.value}`;
-  linkEl.href = buildAllWorkUrl(selection.kind, selection.value);
-  prompt.classList.remove('hidden');
-}
-
 function filterBySpeaker(name) {
   const value = String(name || '').trim();
   if (!value) return;
@@ -2945,7 +2900,6 @@ function filterBySpeaker(name) {
   updateClearBtn();
   syncUrl();
   render();
-  renderCrossWorkPromptFromState();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -2955,7 +2909,6 @@ function filterBySpeaker(name) {
 
 function filterByTag(tag) {
   applyAutocompleteSelection('tag', tag, 'search');
-  renderCrossWorkPromptFromState();
   // Scroll to top to show filtered results
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
