@@ -62,25 +62,6 @@
       flex: 0 0 auto;
     }
 
-    .home-hero-search.global-search-form {
-      display: block !important;
-      width: min(760px, 100%) !important;
-      min-width: 0 !important;
-      border: 0 !important;
-      background: transparent !important;
-      border-radius: 0 !important;
-      margin-inline: auto;
-      margin-top: 0.55rem;
-    }
-
-    .home-hero-search .global-search-input {
-      border-right: 0 !important;
-    }
-
-    .home-hero-search .search-input {
-      padding-right: 42px;
-    }
-
     .header-right .global-search-form {
       min-width: clamp(180px, 24vw, 320px);
     }
@@ -253,29 +234,6 @@
         LLVM Research Library
       </h1>
       <p class="subtitle">A unified research index for LLVM talks, papers, meetings, and people.</p>
-      <form id="home-global-search-form" class="search-box global-search-form home-hero-search" action="work.html" method="get" role="search" aria-label="Global search across talks, papers, and people">
-        <input type="hidden" name="mode" value="search">
-        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input
-          type="search"
-          class="search-input global-search-input"
-          id="home-search-input"
-          name="q"
-          placeholder="Global search talks, papers, people, key topics..."
-          autocomplete="off"
-          spellcheck="false"
-          aria-label="Global search across talks, papers, and people"
-        >
-        <button class="search-clear" id="home-search-clear" aria-label="Clear search" title="Clear">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </form>
     </div>
   </section>
 
@@ -294,6 +252,6 @@
   <script src="js/shared/library-utils.js?v=20260221-25"></script>
 
   <script src="js/shared/global-search.js?v=20260222-07"></script>
-  <script src="js/home.js?v=20260222-01"></script>
+  <script src="js/home.js?v=20260222-02"></script>
 </body>
 </html>
