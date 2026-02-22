@@ -8,9 +8,6 @@
   const PUBLIC_SITE_BASE_URL = 'https://bwatsonllvm.github.io/library/';
   const DEFAULT_DETAILS_PROMPT = 'Describe what should be corrected or added.';
 
-  const issueButton = document.getElementById('report-issue-btn');
-  if (!issueButton) return;
-
   function normalizeText(value) {
     return String(value || '')
       .replace(/\s+/g, ' ')
@@ -147,6 +144,9 @@
   }
 
   function applyIssueButtonHref() {
+    const buttons = document.querySelectorAll('#report-issue-btn');
+    if (!buttons.length) return;
+
     const context = (window.LLVM_LIBRARY_ISSUE_CONTEXT && typeof window.LLVM_LIBRARY_ISSUE_CONTEXT === 'object')
       ? window.LLVM_LIBRARY_ISSUE_CONTEXT
       : {};
@@ -177,9 +177,12 @@
     setParamIfPresent(params, 'details', details, 1000);
     setParamIfPresent(params, 'references', references, 2000);
 
-    issueButton.href = `${ISSUE_BASE_URL}?${params.toString()}`;
-    issueButton.setAttribute('target', '_blank');
-    issueButton.setAttribute('rel', 'noopener noreferrer');
+    const href = `${ISSUE_BASE_URL}?${params.toString()}`;
+    for (const issueButton of buttons) {
+      issueButton.href = href;
+      issueButton.setAttribute('target', '_blank');
+      issueButton.setAttribute('rel', 'noopener noreferrer');
+    }
   }
 
   window.setLibraryIssueContext = function setLibraryIssueContext(nextContext) {
