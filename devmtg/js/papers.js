@@ -34,7 +34,7 @@ let loadMoreObserver = null;
 let loadMoreScrollHandler = null;
 const MIN_TOPIC_FILTER_COUNT = 4;
 const MAX_TOPIC_FILTERS = 180;
-const BLOG_SOURCE_SLUG = 'llvm-blog-www';
+const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
 const PAPER_FILTER_VALUE = 'paper';
 const BLOG_FILTER_VALUE = 'blog';
 const CONTENT_TYPE_ORDER = [PAPER_FILTER_VALUE, BLOG_FILTER_VALUE];
@@ -227,7 +227,11 @@ function normalizePaperRecord(rawPaper) {
   paper._venueLower = paper.venue.toLowerCase();
   paper._typeLower = paper.type.toLowerCase();
   paper._sourceLower = paper.source.toLowerCase();
-  paper._isBlog = paper._sourceLower === BLOG_SOURCE_SLUG || paper._typeLower === 'blog-post' || paper._typeLower === 'blog';
+  paper._isBlog = BLOG_SOURCE_SLUGS.has(paper._sourceLower)
+    || paper._typeLower === 'blog-post'
+    || paper._typeLower === 'blog'
+    || /^https?:\/\/(?:www\.)?blog\.llvm\.org\//i.test(paper.sourceUrl)
+    || /github\.com\/llvm\/(?:llvm-blog-www|llvm-www-blog)\b/i.test(paper.paperUrl);
 
   const uniqueTokens = (parts) => {
     const seen = new Set();
@@ -1647,7 +1651,7 @@ function loadStateFromUrl() {
 
   const requestedContentType = normalizeFilterValue(String(params.get('content') || '').split(',')[0] || '');
   const legacySourceParam = normalizeFilterValue(params.get('source'));
-  const requestedScope = (requestedContentType === BLOG_FILTER_VALUE || legacySourceParam === BLOG_SOURCE_SLUG || legacySourceParam === BLOG_FILTER_VALUE)
+  const requestedScope = (requestedContentType === BLOG_FILTER_VALUE || BLOG_SOURCE_SLUGS.has(legacySourceParam) || legacySourceParam === BLOG_FILTER_VALUE)
     ? BLOG_FILTER_VALUE
     : (requestedContentType === PAPER_FILTER_VALUE ? PAPER_FILTER_VALUE : '');
   if (requestedScope && requestedScope !== PAGE_SCOPE) {
@@ -2517,16 +2521,7 @@ function hideCrossWorkPrompt() {
 }
 
 function getCrossWorkSelection() {
-  if (state.speaker) {
-    return { kind: 'speaker', value: state.speaker, label: 'author' };
-  }
-
   const normalizedQuery = normalizeFilterValue(state.query);
-  const normalizedActiveSpeaker = normalizeFilterValue(state.activeSpeaker);
-  if (state.activeSpeaker && normalizedQuery && normalizedQuery === normalizedActiveSpeaker) {
-    return { kind: 'speaker', value: state.activeSpeaker, label: 'author' };
-  }
-
   const sortedTags = [...state.activeTags].sort((a, b) => a.localeCompare(b));
   if (sortedTags.length === 1) {
     const onlyTag = sortedTags[0];
@@ -2534,6 +2529,15 @@ function getCrossWorkSelection() {
     if (!normalizedQuery || normalizedOnlyTag === normalizedQuery) {
       return { kind: 'topic', value: onlyTag, label: 'topic' };
     }
+  }
+
+  if (state.speaker) {
+    return { kind: 'speaker', value: state.speaker, label: 'author' };
+  }
+
+  const normalizedActiveSpeaker = normalizeFilterValue(state.activeSpeaker);
+  if (state.activeSpeaker && normalizedQuery && normalizedQuery === normalizedActiveSpeaker) {
+    return { kind: 'speaker', value: state.activeSpeaker, label: 'author' };
   }
 
   return null;
