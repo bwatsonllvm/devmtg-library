@@ -624,11 +624,15 @@ function renderPersonCard(person, tokens) {
         </div>
       </a>
       <div class="card-footer person-card-footer">
-        ${talksLink}
-        ${papersLink}
-        ${blogsLink}
-        ${allWorkLink}
-        ${reportIssueLink}
+        <div class="person-work-links">
+          ${talksLink}
+          ${papersLink}
+          ${blogsLink}
+          ${allWorkLink}
+        </div>
+        <div class="person-card-tools">
+          ${reportIssueLink}
+        </div>
       </div>
     </article>`;
 }
