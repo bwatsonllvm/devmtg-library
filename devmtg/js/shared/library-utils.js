@@ -68,6 +68,7 @@
 
     other: 'other',
   };
+  const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
 
   function normalizeCategoryKey(value) {
     return String(value || '')
@@ -344,6 +345,7 @@
   function mergePeopleBuckets(target, source) {
     target.talkCount += source.talkCount;
     target.paperCount += source.paperCount;
+    target.blogCount += source.blogCount;
     target.citationCount += source.citationCount;
 
     for (const [name, count] of source.nameCounts.entries()) {
@@ -357,6 +359,9 @@
     }
     for (const [name, count] of source.paperNameCounts.entries()) {
       target.paperNameCounts.set(name, (target.paperNameCounts.get(name) || 0) + count);
+    }
+    for (const [name, count] of source.blogNameCounts.entries()) {
+      target.blogNameCounts.set(name, (target.blogNameCounts.get(name) || 0) + count);
     }
   }
 
@@ -397,6 +402,22 @@
     return Math.round(numeric);
   }
 
+  function isBlogPaperRecord(paper) {
+    if (!paper || typeof paper !== 'object') return false;
+    if (paper._isBlog === true) return true;
+
+    const source = String(paper.source || '').trim().toLowerCase();
+    const type = String(paper.type || '').trim().toLowerCase();
+    const sourceUrl = String(paper.sourceUrl || '').trim();
+    const paperUrl = String(paper.paperUrl || '').trim();
+
+    if (BLOG_SOURCE_SLUGS.has(source)) return true;
+    if (type === 'blog' || type === 'blog-post') return true;
+    if (/^https?:\/\/(?:www\.)?blog\.llvm\.org\//i.test(sourceUrl)) return true;
+    if (/github\.com\/llvm\/(?:llvm-blog-www|llvm-www-blog)\b/i.test(paperUrl)) return true;
+    return false;
+  }
+
   function buildPeopleIndex(talks, papers) {
     const buckets = new Map();
 
@@ -409,11 +430,13 @@
           signature,
           talkCount: 0,
           paperCount: 0,
+          blogCount: 0,
           citationCount: 0,
           nameCounts: new Map(),
           affiliationCounts: new Map(),
           talkNameCounts: new Map(),
           paperNameCounts: new Map(),
+          blogNameCounts: new Map(),
         });
       }
       return buckets.get(key);
@@ -439,15 +462,21 @@
 
     for (const paper of (Array.isArray(papers) ? papers : [])) {
       const paperCitationCount = parsePaperCitationCount(paper);
+      const isBlog = isBlogPaperRecord(paper);
       for (const rawAuthor of (paper.authors || [])) {
         const author = normalizePersonRecord(rawAuthor);
         if (!author.name) continue;
         const bucket = ensureBucketByName(author.name);
         if (!bucket) continue;
-        bucket.paperCount += 1;
+        if (isBlog) bucket.blogCount += 1;
+        else bucket.paperCount += 1;
         bucket.citationCount += paperCitationCount;
         bucket.nameCounts.set(author.name, (bucket.nameCounts.get(author.name) || 0) + 1);
-        bucket.paperNameCounts.set(author.name, (bucket.paperNameCounts.get(author.name) || 0) + 1);
+        if (isBlog) {
+          bucket.blogNameCounts.set(author.name, (bucket.blogNameCounts.get(author.name) || 0) + 1);
+        } else {
+          bucket.paperNameCounts.set(author.name, (bucket.paperNameCounts.get(author.name) || 0) + 1);
+        }
         if (author.affiliation) {
           bucket.affiliationCounts.set(
             author.affiliation,
@@ -511,17 +540,20 @@
 
         const talkFilterName = chooseBestDisplayName(bucket.talkNameCounts) || displayName;
         const paperFilterName = chooseBestDisplayName(bucket.paperNameCounts) || displayName;
+        const blogFilterName = chooseBestDisplayName(bucket.blogNameCounts) || displayName;
 
         return {
           id: normalizePersonKey(displayName) || normalizePersonKey(variantNames[0] || ''),
           name: displayName || variantNames[0] || '',
           talkFilterName: talkFilterName || '',
           paperFilterName: paperFilterName || '',
+          blogFilterName: blogFilterName || '',
           variantNames,
           talkCount: bucket.talkCount,
           paperCount: bucket.paperCount,
+          blogCount: bucket.blogCount,
           citationCount: bucket.citationCount || 0,
-          totalCount: bucket.talkCount + bucket.paperCount,
+          totalCount: bucket.talkCount + bucket.paperCount + bucket.blogCount,
         };
       })
       .filter((person) => person.name)

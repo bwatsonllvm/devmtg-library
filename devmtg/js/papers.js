@@ -1,5 +1,5 @@
 /**
- * papers.js - Academic papers listing page for LLVM Research Library
+ * papers.js - Papers/blogs listing page logic for LLVM Research Library
  */
 
 // ============================================================
@@ -52,7 +52,16 @@ const CONTENT_TYPE_META = {
 };
 
 const ALL_WORK_PAGE_PATH = 'work.html';
+const BLOGS_PAGE_PATH = 'blogs.html';
+const PAPERS_PAGE_PATH = 'papers.html';
 const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations']);
+const PAGE_SCOPE = (() => {
+  const raw = normalizeFilterValue(document.body && document.body.dataset ? document.body.dataset.contentScope : '');
+  return raw === BLOG_FILTER_VALUE ? BLOG_FILTER_VALUE : PAPER_FILTER_VALUE;
+})();
+const PAGE_SCOPE_LABELS = PAGE_SCOPE === BLOG_FILTER_VALUE
+  ? { singular: 'blog', plural: 'blogs', singularTitle: 'blog post', pluralTitle: 'blog posts' }
+  : { singular: 'paper', plural: 'papers', singularTitle: 'paper', pluralTitle: 'papers' };
 
 const state = {
   query: '',
@@ -63,6 +72,8 @@ const state = {
   contentTypes: new Set(),
   sortBy: 'relevance',
 };
+
+let scopedPapers = [];
 
 // ============================================================
 // Data Loading
@@ -251,6 +262,11 @@ function isBlogPaper(paper) {
   return !!(paper && paper._isBlog);
 }
 
+function matchesPageScope(paper) {
+  if (PAGE_SCOPE === BLOG_FILTER_VALUE) return isBlogPaper(paper);
+  return !isBlogPaper(paper);
+}
+
 function getPaperContentTypeValue(paper) {
   return isBlogPaper(paper) ? BLOG_FILTER_VALUE : PAPER_FILTER_VALUE;
 }
@@ -286,7 +302,7 @@ function parseCitationCount(rawPaper) {
 }
 
 function buildSearchIndex() {
-  searchIndex = allPapers.map((paper) => ({ ...paper }));
+  searchIndex = scopedPapers.map((paper) => ({ ...paper }));
 }
 
 function tokenize(query) {
@@ -608,7 +624,7 @@ function renderAuthorButtons(authors, tokens) {
       labelHtml = highlightText(label, tokens);
     }
 
-    return `<button class="speaker-btn" onclick="event.stopPropagation();filterBySpeaker(${JSON.stringify(author.name)})" aria-label="Filter papers by author: ${escapeHtml(author.name)}">${labelHtml}</button>`;
+    return `<button class="speaker-btn" onclick="event.stopPropagation();filterBySpeaker(${JSON.stringify(author.name)})" aria-label="View talks and papers by ${escapeHtml(author.name)}">${labelHtml}</button>`;
   }).filter(Boolean).join('<span class="speaker-btn-sep">, </span>');
 }
 
@@ -647,7 +663,7 @@ function renderPaperCard(paper, tokens) {
 
   return `
     <article class="talk-card paper-card">
-      <a href="paper.html?id=${escapeHtml(paper.id)}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
+      <a href="paper.html?id=${escapeHtml(paper.id)}&from=${PAGE_SCOPE}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
         <div class="card-body">
           <div class="card-meta">
             <span class="badge ${badgeClass}">${badgeLabel}</span>
@@ -783,8 +799,8 @@ function renderCards(results) {
     grid.innerHTML = `
       <div class="empty-state" role="status">
         <div class="empty-state-icon" aria-hidden="true">PDF</div>
-        <h2>No papers found</h2>
-        <p>${query ? `No papers match "<strong>${escapeHtml(query)}</strong>".` : 'No papers match the current filters.'}</p>
+        <h2>No ${escapeHtml(PAGE_SCOPE_LABELS.plural)} found</h2>
+        <p>${query ? `No ${escapeHtml(PAGE_SCOPE_LABELS.plural)} match "<strong>${escapeHtml(query)}</strong>".` : `No ${escapeHtml(PAGE_SCOPE_LABELS.plural)} match the current filters.`}</p>
         <div class="empty-state-actions" aria-label="Recovery actions">
           ${recoveryActions.map((action) => `<button class="empty-action-btn" data-empty-action="${escapeHtml(action.id)}">${escapeHtml(action.label)}</button>`).join('')}
         </div>
@@ -853,7 +869,7 @@ function renderResultCount(count) {
   const contextEl = document.getElementById('results-context');
   if (!el) return;
 
-  const total = allPapers.length;
+  const total = scopedPapers.length;
   const queryCountsAsFilter = !!state.query && !hasTagFilter(state.query);
   const activeFilterCount =
     (queryCountsAsFilter ? 1 : 0) +
@@ -870,9 +886,9 @@ function renderResultCount(count) {
     state.contentTypes.size === 0;
 
   if (count === total && noActiveFilters) {
-    el.innerHTML = `<strong>${total.toLocaleString()}</strong> items`;
+    el.innerHTML = `<strong>${total.toLocaleString()}</strong> ${escapeHtml(PAGE_SCOPE_LABELS.pluralTitle)}`;
   } else {
-    el.innerHTML = `<strong>${count.toLocaleString()}</strong> of ${total.toLocaleString()} items`;
+    el.innerHTML = `<strong>${count.toLocaleString()}</strong> of ${total.toLocaleString()} ${escapeHtml(PAGE_SCOPE_LABELS.pluralTitle)}`;
   }
 
   if (!contextEl) return;
@@ -891,49 +907,32 @@ function updateHeroSubtitle(resultsCount) {
   const el = document.getElementById('papers-subtitle');
   if (!el) return;
 
-  const total = allPapers.length;
+  const total = scopedPapers.length;
+  const singular = PAGE_SCOPE_LABELS.singularTitle;
+  const plural = PAGE_SCOPE_LABELS.pluralTitle;
 
   if (state.speaker) {
-    el.innerHTML = `Showing all papers by <strong>${escapeHtml(state.speaker)}</strong>`;
+    el.innerHTML = `Showing all ${escapeHtml(plural)} by <strong>${escapeHtml(state.speaker)}</strong>`;
     return;
   }
 
   if (state.activeTags.size === 1 && (!state.query || hasTagFilter(state.query))) {
     const onlyTag = [...state.activeTags][0];
-    el.innerHTML = `Showing papers for key topic <strong>${escapeHtml(onlyTag)}</strong>`;
+    el.innerHTML = `Showing ${escapeHtml(plural)} for key topic <strong>${escapeHtml(onlyTag)}</strong>`;
     return;
   }
 
   if (state.activeTags.size > 1 && !state.query) {
-    el.innerHTML = `Showing papers across <strong>${state.activeTags.size.toLocaleString()}</strong> key topic filters`;
-    return;
-  }
-
-  const activeContentTypes = CONTENT_TYPE_ORDER.filter((contentType) => state.contentTypes.has(contentType));
-  if (activeContentTypes.length === 1) {
-    const contentType = activeContentTypes[0];
-    const label = getContentTypeLabel(contentType);
-    if (contentType === BLOG_FILTER_VALUE) {
-      el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> blog post${resultsCount === 1 ? '' : 's'}`;
-      return;
-    }
-    if (label) {
-      el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> ${escapeHtml(label.toLowerCase())}${resultsCount === 1 ? '' : 's'}`;
-      return;
-    }
-  }
-
-  if (activeContentTypes.length > 1 && !state.query && !state.activeTags.size && !state.years.size && !state.speaker) {
-    el.innerHTML = `Browse <strong>${resultsCount.toLocaleString()}</strong> papers and blog posts`;
+    el.innerHTML = `Showing ${escapeHtml(plural)} across <strong>${state.activeTags.size.toLocaleString()}</strong> key topic filters`;
     return;
   }
 
   if (resultsCount === total) {
-    el.innerHTML = `Browse <strong>${total.toLocaleString()}</strong> papers and blog posts`;
+    el.innerHTML = `Browse <strong>${total.toLocaleString()}</strong> ${escapeHtml(plural)}`;
     return;
   }
 
-  el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> of ${total.toLocaleString()} papers and blog posts`;
+  el.innerHTML = `Showing <strong>${resultsCount.toLocaleString()}</strong> of ${total.toLocaleString()} ${escapeHtml(resultsCount === 1 ? singular : plural)}`;
 }
 
 function showError(html) {
@@ -949,7 +948,7 @@ function showError(html) {
   grid.innerHTML = `
     <div class="empty-state" role="alert">
       <div class="empty-state-icon" aria-hidden="true">!</div>
-      <h2>Could not load papers</h2>
+      <h2>Could not load ${escapeHtml(PAGE_SCOPE_LABELS.plural)}</h2>
       <p>${html}</p>
     </div>`;
 }
@@ -1356,7 +1355,7 @@ function initFilters() {
     [BLOG_FILTER_VALUE, 0],
   ]);
 
-  for (const paper of allPapers) {
+  for (const paper of scopedPapers) {
     for (const topic of getPaperKeyTopics(paper, 8)) {
       if (String(topic || '').length > 48) continue;
       tagCounts[topic] = (tagCounts[topic] || 0) + 1;
@@ -1646,20 +1645,19 @@ function loadStateFromUrl() {
     yearParam.split(',').map((part) => part.trim()).filter(Boolean).forEach((year) => state.years.add(year));
   }
 
-  const contentParam = String(params.get('content') || '').trim();
-  if (contentParam) {
-    contentParam
-      .split(',')
-      .map((part) => normalizeFilterValue(part))
-      .filter(Boolean)
-      .forEach((value) => {
-        if (CONTENT_TYPE_META[value]) state.contentTypes.add(value);
-      });
-  }
-
+  const requestedContentType = normalizeFilterValue(String(params.get('content') || '').split(',')[0] || '');
   const legacySourceParam = normalizeFilterValue(params.get('source'));
-  if (legacySourceParam === BLOG_SOURCE_SLUG || legacySourceParam === BLOG_FILTER_VALUE) {
-    state.contentTypes.add(BLOG_FILTER_VALUE);
+  const requestedScope = (requestedContentType === BLOG_FILTER_VALUE || legacySourceParam === BLOG_SOURCE_SLUG || legacySourceParam === BLOG_FILTER_VALUE)
+    ? BLOG_FILTER_VALUE
+    : (requestedContentType === PAPER_FILTER_VALUE ? PAPER_FILTER_VALUE : '');
+  if (requestedScope && requestedScope !== PAGE_SCOPE) {
+    const redirectParams = new URLSearchParams(window.location.search);
+    redirectParams.delete('content');
+    redirectParams.delete('source');
+    const redirectPath = requestedScope === BLOG_FILTER_VALUE ? BLOGS_PAGE_PATH : PAPERS_PAGE_PATH;
+    const redirectUrl = redirectParams.toString() ? `${redirectPath}?${redirectParams.toString()}` : redirectPath;
+    window.location.replace(redirectUrl);
+    return;
   }
 
   if (!state.query) {
@@ -1942,7 +1940,7 @@ function buildPaperAutocompleteBase() {
   const peopleBuckets = new Map();
   const paperTitleCounts = new Map();
 
-  for (const paper of allPapers) {
+  for (const paper of scopedPapers) {
     for (const topic of getPaperKeyTopics(paper, 12)) addCountToMap(paperTopicCounts, topic);
     addCountToMap(paperTitleCounts, paper.title);
 
@@ -1995,7 +1993,7 @@ async function hydrateUniversalAutocomplete() {
     const paperTitleCounts = new Map();
     const nextTalkSearchIndex = [];
 
-    for (const paper of allPapers) {
+    for (const paper of scopedPapers) {
       for (const topic of getPaperKeyTopics(paper, 12)) addCountToMap(paperTopicCounts, topic);
       addCountToMap(paperTitleCounts, paper.title);
       const seenAuthors = new Set();
@@ -2145,15 +2143,17 @@ function renderDropdown(query) {
   }
 
   if (matchedPaperTitles.length > 0) {
+    const titleLabel = PAGE_SCOPE === BLOG_FILTER_VALUE ? 'Blog Titles' : 'Paper Titles';
+    const entryLabel = PAGE_SCOPE === BLOG_FILTER_VALUE ? 'Blog' : 'Paper';
     if (html) html += `<div class="search-dropdown-divider"></div>`;
     html += `<div class="search-dropdown-section">
-      <div class="search-dropdown-label" aria-hidden="true">Paper Titles</div>
+      <div class="search-dropdown-label" aria-hidden="true">${titleLabel}</div>
       ${matchedPaperTitles.map((paper) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
                 data-autocomplete-type="paper" data-autocomplete-value="${escapeHtml(paper.label)}">
           <span class="search-dropdown-item-icon">${paperIcon}</span>
           <span class="search-dropdown-item-label">${highlightMatch(paper.label, query)}</span>
-          <span class="search-dropdown-item-count">Paper</span>
+          <span class="search-dropdown-item-count">${entryLabel}</span>
         </button>`).join('')}
     </div>`;
   }
@@ -2481,7 +2481,7 @@ function buildAllWorkUrl(kind, value) {
   const params = new URLSearchParams();
   params.set('kind', kind);
   params.set('value', String(value || '').trim());
-  params.set('from', 'papers');
+  params.set('from', PAGE_SCOPE === BLOG_FILTER_VALUE ? 'blogs' : 'papers');
   return `${ALL_WORK_PAGE_PATH}?${params.toString()}`;
 }
 
@@ -2499,7 +2499,7 @@ function ensureCrossWorkPrompt() {
   prompt.setAttribute('aria-live', 'polite');
   prompt.innerHTML = `
     <span class="cross-work-cta-text"></span>
-    <a class="cross-work-cta-link" href="work.html">See Talks + Papers</a>
+    <a class="cross-work-cta-link" href="work.html">See All Work</a>
     <button class="cross-work-cta-dismiss" type="button" aria-label="Dismiss all work prompt">×</button>
   `;
   shell.appendChild(prompt);
@@ -2559,9 +2559,9 @@ function renderCrossWorkPromptFromState() {
 }
 
 function filterBySpeaker(name) {
-  applyAutocompleteSelection('speaker', name, 'search');
-  renderCrossWorkPromptFromState();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const value = String(name || '').trim();
+  if (!value) return;
+  window.location.href = buildAllWorkUrl('speaker', value);
 }
 
 function filterByTag(tag) {
@@ -2917,9 +2917,10 @@ function initShareMenu() {
   allPapers = Array.isArray(papers)
     ? papers.map(normalizePaperRecord).filter(Boolean)
     : [];
+  scopedPapers = allPapers.filter((paper) => matchesPageScope(paper));
 
   if (!allPapers.length) {
-    showError('No papers were loaded from <code>papers/*.json</code>.');
+    showError('No records were loaded from <code>papers/*.json</code>.');
     return;
   }
 

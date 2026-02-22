@@ -521,6 +521,14 @@ function twitterSvg() {
   return `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.734-8.838L1.254 2.25H8.08l4.259 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`;
 }
 
+function buildSpeakerWorkUrl(name) {
+  const params = new URLSearchParams();
+  params.set('kind', 'speaker');
+  params.set('value', String(name || '').trim());
+  params.set('from', 'talks');
+  return `work.html?${params.toString()}`;
+}
+
 function renderSpeakers(speakers) {
   if (!speakers || speakers.length === 0) {
     return '<p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">Speaker information not available.</p>';
@@ -535,7 +543,7 @@ function renderSpeakers(speakers) {
     return `
       <div class="speaker-chip">
         <div>
-          <a href="talks/?speaker=${encodeURIComponent(s.name)}" class="speaker-name-link" aria-label="View all talks by ${escapeHtml(s.name)}">${escapeHtml(s.name)}</a>
+          <a href="${buildSpeakerWorkUrl(s.name)}" class="speaker-name-link" aria-label="View talks and papers by ${escapeHtml(s.name)}">${escapeHtml(s.name)}</a>
           ${s.affiliation ? `<br><span class="speaker-affiliation">${escapeHtml(s.affiliation)}</span>` : ''}
         </div>
         ${socialLinks.length ? `<div class="speaker-social" aria-label="Social links for ${escapeHtml(s.name)}">${socialLinks.join('')}</div>` : ''}
@@ -575,7 +583,7 @@ function renderRelatedCard(talk) {
   // Per-name speaker links that navigate to speaker-filtered search
   const speakerLinksHtml = talk.speakers?.length
     ? talk.speakers.map(s =>
-        `<a href="talks/?speaker=${encodeURIComponent(s.name)}" class="card-speaker-link" aria-label="View all talks by ${escapeHtml(s.name)}">${escapeHtml(s.name)}</a>`
+        `<a href="${buildSpeakerWorkUrl(s.name)}" class="card-speaker-link" aria-label="View talks and papers by ${escapeHtml(s.name)}">${escapeHtml(s.name)}</a>`
       ).join('<span class="speaker-btn-sep">, </span>')
     : '';
 
@@ -690,7 +698,7 @@ function renderTalkDetail(talk, allTalks) {
 
   const html = `
     <div class="talk-detail">
-      <a href="talks/" class="back-btn" id="back-btn" aria-label="Back to all talks">
+      <a href="talks/" class="back-btn" id="back-btn" aria-label="Back">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
         <span aria-hidden="true">All Talks</span>
       </a>
@@ -763,7 +771,7 @@ function renderNotFound(id) {
   const root = document.getElementById('talk-detail-root');
   root.innerHTML = `
     <div class="talk-detail">
-      <a href="talks/" class="back-btn" aria-label="Back to all talks">
+      <a href="talks/" class="back-btn" aria-label="Back">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
         <span aria-hidden="true">All Talks</span>
       </a>

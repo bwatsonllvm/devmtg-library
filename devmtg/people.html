@@ -42,7 +42,7 @@
     body { background: transparent; }
   </style>
   <title>People — LLVM Research Library</title>
-  <meta name="description" content="Browse speakers and authors across LLVM talks and papers, with merged name variants.">
+  <meta name="description" content="Browse speakers and authors across LLVM talks, papers, and blogs, with merged name variants.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -70,6 +70,9 @@
       <a href="papers.html" class="nav-link" aria-label="Papers">
         <span aria-hidden="true">Papers</span>
       </a>
+      <a href="blogs.html" class="nav-link" aria-label="Blogs">
+        <span aria-hidden="true">Blogs</span>
+      </a>
       <a href="people.html" class="nav-link active" aria-current="page" aria-label="People">
         <span aria-hidden="true">People</span>
       </a>
@@ -92,6 +95,7 @@
         <a href="talks/" class="mobile-nav-link">Talks</a>
         <a href="meetings.html" class="mobile-nav-link">Events</a>
         <a href="papers.html" class="mobile-nav-link">Papers</a>
+        <a href="blogs.html" class="mobile-nav-link">Blogs</a>
         <a href="people.html" class="mobile-nav-link active" aria-current="page">People</a>
         <a href="about.html" class="mobile-nav-link">About</a>
         <a href="updates.html" class="mobile-nav-link">Updates</a>
@@ -156,10 +160,10 @@
           type="search"
           class="search-input"
           id="people-search"
-          placeholder="Search talks, papers, people, key topics…"
+          placeholder="Search talks, papers, blogs, people, key topics…"
           autocomplete="off"
           spellcheck="false"
-          aria-label="Search talks, papers, and people"
+          aria-label="Search talks, papers, blogs, and people"
         >
         <button class="search-global-btn" id="search-global" aria-label="Search everywhere" title="Search everywhere">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -179,6 +183,7 @@
         <button class="filter-chip active" data-people-filter="all" type="button">All</button>
         <button class="filter-chip" data-people-filter="talks" type="button">With talks</button>
         <button class="filter-chip" data-people-filter="papers" type="button">With papers</button>
+        <button class="filter-chip" data-people-filter="blogs" type="button">With blogs</button>
         <button class="filter-chip" data-people-filter="merged" type="button">Merged variants</button>
       </div>
     </div>
@@ -214,8 +219,8 @@
 
   <script src="js/events-data.js?v=20260220-12"></script>
   <script src="js/papers-data.js?v=20260221-02"></script>
-  <script src="js/shared/library-utils.js?v=20260221-25"></script>
+  <script src="js/shared/library-utils.js?v=20260222-26"></script>
   <script src="js/shared/report-issue.js?v=20260222-06"></script>
-  <script src="js/people.js?v=20260222-05"></script>
+  <script src="js/people.js?v=20260222-07"></script>
 </body>
 </html>

@@ -8,8 +8,16 @@
   let dataLoadPromise = null;
   let indexBuildPromise = null;
   const formStateMap = new WeakMap();
-  const GLOBAL_SEARCH_LABEL = 'Global search across talks, papers, people, and key topics';
-  const GLOBAL_SEARCH_PLACEHOLDER = 'Global search talks, papers, people, key topics…';
+  const GLOBAL_SEARCH_LABEL = 'Global search across talks, papers, blogs, people, and key topics';
+  const GLOBAL_SEARCH_PLACEHOLDER = 'Global search talks, papers, blogs, people, key topics…';
+  const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
+    'Search talks, papers, and people',
+    'Search talks, papers, blogs, and people',
+    'Global search across talks, papers, and people',
+    'Global search across talks, papers, people, and key topics',
+    'Global search across talks, papers, blogs, and people',
+    'Global search across talks, papers, blogs, people, and key topics',
+  ]);
 
   const autocompleteIndex = {
     topics: [],
@@ -363,13 +371,13 @@
     if (matches.papers.length) {
       sections.push(`
         <div class="search-dropdown-section">
-          <div class="search-dropdown-label" aria-hidden="true">Paper Titles</div>
+          <div class="search-dropdown-label" aria-hidden="true">Paper + Blog Titles</div>
           ${matches.papers.map((item) => `
             <button class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${paperIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
-              <span class="search-dropdown-item-count">Paper</span>
+              <span class="search-dropdown-item-count">Paper/Blog</span>
             </button>`).join('')}
         </div>`);
     }
@@ -432,7 +440,8 @@
       input.value = initialValue;
     }
 
-    if (!input.getAttribute('aria-label') || input.getAttribute('aria-label') === 'Search talks, papers, and people') {
+    const currentLabel = String(input.getAttribute('aria-label') || '').trim();
+    if (!currentLabel || LEGACY_GLOBAL_SEARCH_LABELS.has(currentLabel)) {
       input.setAttribute('aria-label', GLOBAL_SEARCH_LABEL);
     }
     if (!input.getAttribute('title')) {

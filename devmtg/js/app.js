@@ -515,7 +515,7 @@ function renderSpeakerButtons(speakers, tokens) {
     } else {
       nameHtml = highlightText(s.name, tokens);
     }
-    return `<button class="speaker-btn" onclick="event.stopPropagation();filterBySpeaker(${JSON.stringify(s.name)})" aria-label="View all talks by ${escapeHtml(s.name)}">${nameHtml}</button>`;
+    return `<button class="speaker-btn" onclick="event.stopPropagation();filterBySpeaker(${JSON.stringify(s.name)})" aria-label="View talks and papers by ${escapeHtml(s.name)}">${nameHtml}</button>`;
   }).join('<span class="speaker-btn-sep">, </span>');
 }
 
@@ -2551,13 +2551,13 @@ function renderDropdown(query) {
   if (matchedPaperTitles.length > 0) {
     if (html) html += `<div class="search-dropdown-divider"></div>`;
     html += `<div class="search-dropdown-section">
-      <div class="search-dropdown-label" aria-hidden="true">Paper Titles</div>
+      <div class="search-dropdown-label" aria-hidden="true">Paper + Blog Titles</div>
       ${matchedPaperTitles.map((paper) => `
         <button class="search-dropdown-item" role="option" aria-selected="false"
                 data-autocomplete-type="paper" data-autocomplete-value="${escapeHtml(paper.label)}">
           <span class="search-dropdown-item-icon">${paperIcon}</span>
           <span class="search-dropdown-item-label">${highlightMatch(paper.label, query)}</span>
-          <span class="search-dropdown-item-count">Paper</span>
+          <span class="search-dropdown-item-count">Paper/Blog</span>
         </button>`).join('')}
     </div>`;
   }
@@ -2887,7 +2887,7 @@ function ensureCrossWorkPrompt() {
   prompt.setAttribute('aria-live', 'polite');
   prompt.innerHTML = `
     <span class="cross-work-cta-text"></span>
-    <a class="cross-work-cta-link" href="work.html">See Talks + Papers</a>
+    <a class="cross-work-cta-link" href="work.html">See All Work</a>
     <button class="cross-work-cta-dismiss" type="button" aria-label="Dismiss all work prompt">×</button>
   `;
   shell.appendChild(prompt);
@@ -2943,9 +2943,9 @@ function renderCrossWorkPromptFromState() {
 }
 
 function filterBySpeaker(name) {
-  applyAutocompleteSelection('speaker', name, 'search');
-  renderCrossWorkPromptFromState();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const value = String(name || '').trim();
+  if (!value) return;
+  window.location.href = buildAllWorkUrl('speaker', value);
 }
 
 // ============================================================

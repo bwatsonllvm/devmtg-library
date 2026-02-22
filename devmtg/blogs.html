@@ -41,14 +41,14 @@
     html[data-theme="dark"] { background: #000000; }
     body { background: transparent; }
   </style>
-  <title>Papers - LLVM Research Library</title>
-  <meta name="description" content="Browse LLVM papers in a searchable index.">
+  <title>Blogs - LLVM Research Library</title>
+  <meta name="description" content="Browse LLVM Project Blog posts in a searchable index.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
   <link rel="stylesheet" href="css/style.css?v=20260222-08">
 </head>
-<body data-content-scope="paper">
+<body data-content-scope="blog">
 
   <nav class="skip-links" aria-label="Skip links">
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -67,10 +67,10 @@
   <a href="meetings.html" class="nav-link" aria-label="Events">
     <span aria-hidden="true">Events</span>
   </a>
-  <a href="papers.html" class="nav-link active" aria-current="page" aria-label="Papers">
+  <a href="papers.html" class="nav-link" aria-label="Papers">
     <span aria-hidden="true">Papers</span>
   </a>
-  <a href="blogs.html" class="nav-link" aria-label="Blogs">
+  <a href="blogs.html" class="nav-link active" aria-current="page" aria-label="Blogs">
     <span aria-hidden="true">Blogs</span>
   </a>
   <a href="people.html" class="nav-link" aria-label="People">
@@ -94,8 +94,8 @@
   <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
     <a href="talks/" class="mobile-nav-link">Talks</a>
     <a href="meetings.html" class="mobile-nav-link">Events</a>
-    <a href="papers.html" class="mobile-nav-link active" aria-current="page">Papers</a>
-    <a href="blogs.html" class="mobile-nav-link">Blogs</a>
+    <a href="papers.html" class="mobile-nav-link">Papers</a>
+    <a href="blogs.html" class="mobile-nav-link active" aria-current="page">Blogs</a>
     <a href="people.html" class="mobile-nav-link">People</a>
     <a href="about.html" class="mobile-nav-link">About</a>
     <a href="updates.html" class="mobile-nav-link">Updates</a>
@@ -147,10 +147,10 @@
 </div>
   </header>
 
-  <section class="search-hero" aria-label="Search papers">
+  <section class="search-hero" aria-label="Search blogs">
     <div class="search-hero-shell">
-      <h1>LLVM Papers</h1>
-      <p class="subtitle" id="papers-subtitle">Loading papers...</p>
+      <h1>LLVM Project Blogs</h1>
+      <p class="subtitle" id="papers-subtitle">Loading blogs...</p>
       <div class="search-box search-box--with-global" role="search">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -159,10 +159,10 @@
           type="search"
           class="search-input"
           id="search-input"
-          placeholder="Search papers, people, key topics…"
+          placeholder="Search blogs, people, key topics…"
           autocomplete="off"
           spellcheck="false"
-          aria-label="Search papers, people, and key topics"
+          aria-label="Search blogs, people, and key topics"
         >
         <button class="search-global-btn" id="search-global" aria-label="Search everywhere" title="Search everywhere">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -255,7 +255,7 @@
         </div>
         <div class="results-controls">
           <label for="papers-sort-select" class="results-sort-label">Sort by</label>
-          <select id="papers-sort-select" class="results-sort-select" aria-label="Sort papers">
+          <select id="papers-sort-select" class="results-sort-select" aria-label="Sort blogs">
             <option value="relevance">Relevance</option>
             <option value="year">Year</option>
             <option value="citations">Citation count</option>
@@ -279,10 +279,10 @@
       </div>
 
       <div class="talks-container" id="papers-container">
-        <div id="papers-grid" class="talks-grid" role="feed" aria-label="Paper results" aria-busy="true">
+        <div id="papers-grid" class="talks-grid" role="feed" aria-label="Blog results" aria-busy="true">
           <div class="loading-state">
             <div class="spinner" aria-hidden="true"></div>
-            <p>Loading papers...</p>
+            <p>Loading blogs...</p>
           </div>
         </div>
       </div>

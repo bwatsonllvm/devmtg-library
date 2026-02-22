@@ -67,8 +67,11 @@
   <a href="meetings.html" class="nav-link" aria-label="Events">
     <span aria-hidden="true">Events</span>
   </a>
-  <a href="papers.html" class="nav-link active" aria-current="page" aria-label="Papers">
+  <a href="papers.html" class="nav-link active" aria-current="page" aria-label="Papers" id="paper-nav-link-papers">
     <span aria-hidden="true">Papers</span>
+  </a>
+  <a href="blogs.html" class="nav-link" aria-label="Blogs" id="paper-nav-link-blogs">
+    <span aria-hidden="true">Blogs</span>
   </a>
   <a href="people.html" class="nav-link" aria-label="People">
     <span aria-hidden="true">People</span>
@@ -91,7 +94,8 @@
   <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
     <a href="talks/" class="mobile-nav-link">Talks</a>
     <a href="meetings.html" class="mobile-nav-link">Events</a>
-    <a href="papers.html" class="mobile-nav-link active" aria-current="page">Papers</a>
+    <a href="papers.html" class="mobile-nav-link active" aria-current="page" id="paper-nav-mobile-papers">Papers</a>
+    <a href="blogs.html" class="mobile-nav-link" id="paper-nav-mobile-blogs">Blogs</a>
     <a href="people.html" class="mobile-nav-link">People</a>
     <a href="about.html" class="mobile-nav-link">About</a>
     <a href="updates.html" class="mobile-nav-link">Updates</a>
@@ -99,16 +103,16 @@
 </div>
 
 <div class="header-right">
-  <form class="global-search-form" action="work.html" method="get" role="search" aria-label="Search talks, papers, and people">
+  <form class="global-search-form" action="work.html" method="get" role="search" aria-label="Search talks, papers, blogs, and people">
     <input type="hidden" name="mode" value="search">
     <input
       type="search"
       class="global-search-input"
       name="q"
-      placeholder="Search talks, papers, people, key topics…"
+      placeholder="Search talks, papers, blogs, people, key topics…"
       autocomplete="off"
       spellcheck="false"
-      aria-label="Search talks, papers, and people"
+      aria-label="Search talks, papers, blogs, and people"
     >
     <button class="global-search-submit" type="submit" aria-label="Run global search">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -167,10 +171,10 @@
       <p>Loading paper...</p>
     </div>
   </main>
-  <script src="js/shared/library-utils.js?v=20260221-25"></script>
+  <script src="js/shared/library-utils.js?v=20260222-26"></script>
   <script src="js/shared/report-issue.js?v=20260222-06"></script>
   <script src="js/papers-data.js?v=20260221-02"></script>
-  <script src="js/shared/global-search.js?v=20260222-07"></script>
-  <script src="js/paper.js?v=20260222-07"></script>
+  <script src="js/shared/global-search.js?v=20260222-08"></script>
+  <script src="js/paper.js?v=20260222-08"></script>
 </body>
 </html>

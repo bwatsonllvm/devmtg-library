@@ -8,6 +8,8 @@ const BLOG_SOURCE_SLUG_ALIASES = new Set([
   BLOG_SOURCE_SLUG,
   'llvm-www-blog',
 ]);
+const PAPERS_PAGE_PATH = 'papers.html';
+const BLOGS_PAGE_PATH = 'blogs.html';
 
 // ============================================================
 // Data Loading
@@ -207,6 +209,48 @@ function normalizePaperType(type) {
 
 function isBlogPaper(paper) {
   return !!(paper && paper._isBlog);
+}
+
+function getListingPathForPaper(paper) {
+  return isBlogPaper(paper) ? BLOGS_PAGE_PATH : PAPERS_PAGE_PATH;
+}
+
+function getListingLabelForPaper(paper) {
+  return isBlogPaper(paper) ? 'blogs' : 'papers';
+}
+
+function buildSpeakerWorkUrl(name, paper) {
+  const params = new URLSearchParams();
+  params.set('kind', 'speaker');
+  params.set('value', String(name || '').trim());
+  params.set('from', isBlogPaper(paper) ? 'blogs' : 'papers');
+  return `work.html?${params.toString()}`;
+}
+
+function setHeaderNavActive(link, active) {
+  if (!link) return;
+  link.classList.toggle('active', !!active);
+  if (active) link.setAttribute('aria-current', 'page');
+  else link.removeAttribute('aria-current');
+}
+
+function syncHeaderNavForPaper(paper) {
+  const blogEntry = isBlogPaper(paper);
+  const desktopPapers = document.getElementById('paper-nav-link-papers');
+  const desktopBlogs = document.getElementById('paper-nav-link-blogs');
+  const mobilePapers = document.getElementById('paper-nav-mobile-papers');
+  const mobileBlogs = document.getElementById('paper-nav-mobile-blogs');
+
+  setHeaderNavActive(desktopPapers, !blogEntry);
+  setHeaderNavActive(desktopBlogs, blogEntry);
+  setHeaderNavActive(mobilePapers, !blogEntry);
+  setHeaderNavActive(mobileBlogs, blogEntry);
+}
+
+function fallbackListingPathFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const from = String(params.get('from') || '').trim().toLowerCase();
+  return from === 'blogs' ? BLOGS_PAGE_PATH : PAPERS_PAGE_PATH;
 }
 
 function parseCitationCount(rawPaper) {
@@ -1312,7 +1356,7 @@ function renderAbstract(abstract) {
   }).join('\n');
 }
 
-function renderAuthors(authors) {
+function renderAuthors(authors, paper) {
   if (!authors || authors.length === 0) {
     return '<p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">Author information not available.</p>';
   }
@@ -1325,7 +1369,7 @@ function renderAuthors(authors) {
     return `
       <div class="speaker-chip">
         <div>
-          <a href="papers.html?speaker=${encodeURIComponent(author.name)}" class="speaker-name-link" aria-label="View all papers by ${name}">${name}</a>
+          <a href="${buildSpeakerWorkUrl(author.name, paper)}" class="speaker-name-link" aria-label="View talks and papers by ${name}">${name}</a>
           ${affiliation}
         </div>
       </div>`;
@@ -1372,7 +1416,7 @@ function renderRelatedCard(paper) {
   const badgeLabel = blogEntry ? 'Blog' : 'Paper';
   const speakerLinksHtml = (paper.authors || []).length
     ? paper.authors.map((author) =>
-      `<a href="papers.html?speaker=${encodeURIComponent(author.name)}" class="card-speaker-link" aria-label="View all papers by ${escapeHtml(author.name)}">${escapeHtml(author.name)}</a>`
+      `<a href="${buildSpeakerWorkUrl(author.name, paper)}" class="card-speaker-link" aria-label="View talks and papers by ${escapeHtml(author.name)}">${escapeHtml(author.name)}</a>`
     ).join('<span class="speaker-btn-sep">, </span>')
     : '';
 
@@ -1381,7 +1425,7 @@ function renderRelatedCard(paper) {
 
   return `
     <article class="talk-card paper-card">
-      <a href="paper.html?id=${escapeHtml(paper.id)}" class="card-link-wrap" aria-label="${relatedLabel}">
+      <a href="paper.html?id=${escapeHtml(paper.id)}&from=${blogEntry ? 'blogs' : 'papers'}" class="card-link-wrap" aria-label="${relatedLabel}">
         <div class="card-thumbnail paper-thumbnail" aria-hidden="true">
           <div class="card-thumbnail-placeholder paper-thumbnail-placeholder">
             ${_PAPER_PLACEHOLDER}
@@ -1406,10 +1450,12 @@ function renderRelatedCard(paper) {
 
 function renderPaperDetail(paper, allPapers) {
   const root = document.getElementById('paper-detail-root');
-  const authorsHtml = renderAuthors(paper.authors);
+  const blogEntry = isBlogPaper(paper);
+  const listingPath = getListingPathForPaper(paper);
+  const listingLabel = getListingLabelForPaper(paper);
+  const authorsHtml = renderAuthors(paper.authors, paper);
   const citationCount = Number.isFinite(paper.citationCount) ? paper.citationCount : 0;
   const doiUrl = doiUrlFromValue(paper.doi);
-  const blogEntry = isBlogPaper(paper);
   const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
   const badgeLabel = blogEntry ? 'Blog' : 'Paper';
 
@@ -1462,7 +1508,7 @@ function renderPaperDetail(paper, allPapers) {
         <div class="section-label" aria-hidden="true">Key Topics</div>
         <div class="detail-tags">
           ${keyTopics.map((topic) =>
-            `<a href="papers.html?tag=${encodeURIComponent(topic)}" class="detail-tag" aria-label="Browse papers for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
+            `<a href="${listingPath}?tag=${encodeURIComponent(topic)}" class="detail-tag" aria-label="Browse ${listingLabel} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
           ).join('')}
         </div>
       </section>`
@@ -1472,7 +1518,7 @@ function renderPaperDetail(paper, allPapers) {
     ? `<section class="tags-section" aria-label="Publication">
         <div class="section-label" aria-hidden="true">Publication</div>
         <div class="detail-tags">
-          <a href="papers.html?q=${encodeURIComponent(paper.publication)}" class="detail-tag" aria-label="Search papers for ${escapeHtml(paper.publication)}">${escapeHtml(paper.publication)}</a>
+          <a href="${listingPath}?q=${encodeURIComponent(paper.publication)}" class="detail-tag" aria-label="Search ${listingLabel} for ${escapeHtml(paper.publication)}">${escapeHtml(paper.publication)}</a>
         </div>
       </section>`
     : '';
@@ -1500,9 +1546,9 @@ function renderPaperDetail(paper, allPapers) {
 
   root.innerHTML = `
     <div class="talk-detail">
-      <a href="papers.html" class="back-btn" id="back-btn" aria-label="Back to all papers">
+      <a href="${listingPath}" class="back-btn" id="back-btn" aria-label="Back to all ${listingLabel}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        <span aria-hidden="true">All Papers</span>
+        <span aria-hidden="true">${escapeHtml(blogEntry ? 'All Blogs' : 'All Papers')}</span>
       </a>
 
       <div class="talk-header">
@@ -1564,13 +1610,15 @@ function renderPaperDetail(paper, allPapers) {
   }
 }
 
-function renderNotFound(id) {
+function renderNotFound(id, listingPath = fallbackListingPathFromUrl()) {
   const root = document.getElementById('paper-detail-root');
+  const listingLabel = listingPath === BLOGS_PAGE_PATH ? 'blogs' : 'papers';
+  const listingTitle = listingPath === BLOGS_PAGE_PATH ? 'All Blogs' : 'All Papers';
   root.innerHTML = `
     <div class="talk-detail">
-      <a href="papers.html" class="back-btn" aria-label="Back to all papers">
+      <a href="${listingPath}" class="back-btn" aria-label="Back to all ${listingLabel}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        <span aria-hidden="true">All Papers</span>
+        <span aria-hidden="true">${listingTitle}</span>
       </a>
       <div class="empty-state">
         <div class="empty-state-icon" aria-hidden="true">!</div>
@@ -1734,9 +1782,11 @@ async function init() {
 
   const params = new URLSearchParams(window.location.search);
   const paperId = params.get('id');
+  const fallbackListingPath = fallbackListingPathFromUrl();
+  syncHeaderNavForPaper({ _isBlog: fallbackListingPath === BLOGS_PAGE_PATH });
   setIssueContext({
     pageType: 'Paper',
-    itemType: 'Paper',
+    itemType: fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper',
     itemId: String(paperId || '').trim(),
   });
   const allPapers = await loadPapers();
@@ -1756,10 +1806,11 @@ async function init() {
   }
 
   if (!paperId) {
-    renderNotFound(null);
+    renderNotFound(null, fallbackListingPath);
+    const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
     setIssueContext({
-      itemTitle: 'Missing paper ID',
-      issueTitle: '[Paper] Missing paper ID',
+      itemTitle: `Missing ${missingItemLabel.toLowerCase()} ID`,
+      issueTitle: `[${missingItemLabel}] Missing ${missingItemLabel.toLowerCase()} ID`,
     });
     initShareMenu();
     return;
@@ -1767,10 +1818,11 @@ async function init() {
 
   const paper = allPapers.find((candidate) => candidate.id === paperId);
   if (!paper) {
-    renderNotFound(paperId);
+    renderNotFound(paperId, fallbackListingPath);
+    const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
     setIssueContext({
-      itemTitle: `Unknown paper ID: ${paperId}`,
-      issueTitle: `[Paper] Unknown paper ID: ${paperId}`,
+      itemTitle: `Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
+      issueTitle: `[${missingItemLabel}] Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
     });
     initShareMenu();
     return;
@@ -1778,6 +1830,7 @@ async function init() {
 
   document.title = `${paper.title} — LLVM Research Library`;
   updatePaperSeoMetadata(paper);
+  syncHeaderNavForPaper(paper);
   renderPaperDetail(paper, allPapers);
   setIssueContextForPaper(paper);
   initShareMenu();

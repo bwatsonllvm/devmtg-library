@@ -13,7 +13,7 @@ const ISSUE_DEFAULT_DETAILS = 'Describe what should be corrected or added.';
 
 const state = {
   query: '',
-  filter: 'all', // all | talks | papers | merged
+  filter: 'all', // all | talks | papers | blogs | merged
   sortBy: 'works',
 };
 
@@ -158,6 +158,14 @@ function buildPersonIssueUrl(person) {
   }
   params.set('details', ISSUE_DEFAULT_DETAILS);
   return `${ISSUE_BASE_URL}?${params.toString()}`;
+}
+
+function buildSpeakerWorkUrl(name) {
+  const params = new URLSearchParams();
+  params.set('kind', 'speaker');
+  params.set('value', String(name || '').trim());
+  params.set('from', 'people');
+  return `work.html?${params.toString()}`;
 }
 
 function getTalkSearchBlob(talk) {
@@ -343,13 +351,13 @@ function renderDropdown(query) {
   if (matchedPaperTitles.length) {
     sections.push(`
       <div class="search-dropdown-section">
-        <div class="search-dropdown-label" aria-hidden="true">Paper Titles</div>
+        <div class="search-dropdown-label" aria-hidden="true">Paper + Blog Titles</div>
         ${matchedPaperTitles.map((item) => `
           <button class="search-dropdown-item" role="option" aria-selected="false"
                   data-autocomplete-type="paper" data-autocomplete-value="${escapeHtml(item.label)}">
             <span class="search-dropdown-item-icon">${paperIcon}</span>
             <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
-            <span class="search-dropdown-item-count">Paper</span>
+            <span class="search-dropdown-item-count">Paper/Blog</span>
           </button>`).join('')}
       </div>`);
   }
@@ -514,6 +522,7 @@ function filterPeople() {
   return allPeople.filter((person) => {
     if (state.filter === 'talks' && person.talkCount === 0) return false;
     if (state.filter === 'papers' && person.paperCount === 0) return false;
+    if (state.filter === 'blogs' && (person.blogCount || 0) === 0) return false;
     if (state.filter === 'merged' && (person.variantNames || []).length < 2) return false;
 
     if (!tokens.length) return true;
@@ -587,7 +596,15 @@ function renderPersonCard(person, tokens) {
       </a>`
     : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Papers 0</span>`;
 
-  const allWorkLink = `<a class="card-link-btn card-link-btn--video" href="work.html?mode=search&q=${encodeURIComponent(person.name)}" aria-label="Search all work for ${escapeHtml(person.name)}">
+  const blogCount = Number(person.blogCount || 0);
+  const blogsLink = blogCount > 0
+    ? `<a class="card-link-btn" href="blogs.html?speaker=${encodeURIComponent(person.blogFilterName || person.paperFilterName || person.name)}" aria-label="View blogs by ${escapeHtml(person.name)}">
+        <span aria-hidden="true">Blogs ${blogCount.toLocaleString()}</span>
+      </a>`
+    : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Blogs 0</span>`;
+
+  const speakerWorkUrl = buildSpeakerWorkUrl(person.name);
+  const allWorkLink = `<a class="card-link-btn card-link-btn--video" href="${speakerWorkUrl}" aria-label="View talks and papers for ${escapeHtml(person.name)}">
       <span aria-hidden="true">All Work</span>
     </a>`;
   const reportIssueLink = `<a class="card-link-btn report-issue-link" href="${escapeHtml(buildPersonIssueUrl(person))}" target="_blank" rel="noopener noreferrer" aria-label="Report an issue for ${escapeHtml(person.name)} (opens in new tab)">
@@ -596,7 +613,7 @@ function renderPersonCard(person, tokens) {
 
   return `
     <article class="talk-card person-card">
-      <a href="work.html?mode=search&q=${encodeURIComponent(person.name)}" class="card-link-wrap" aria-label="Open all work for ${escapeHtml(person.name)}">
+      <a href="${speakerWorkUrl}" class="card-link-wrap" aria-label="View talks and papers for ${escapeHtml(person.name)}">
         <div class="card-body">
           <div class="card-meta">
             <span class="meeting-label">${person.totalCount.toLocaleString()} works</span>
@@ -609,6 +626,7 @@ function renderPersonCard(person, tokens) {
       <div class="card-footer person-card-footer">
         ${talksLink}
         ${papersLink}
+        ${blogsLink}
         ${allWorkLink}
         ${reportIssueLink}
       </div>

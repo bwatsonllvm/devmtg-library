@@ -1,18 +1,20 @@
 /**
- * work.js — Unified talks + papers view for a selected speaker/topic.
+ * work.js — Unified talks + papers + blogs view for a selected speaker/topic.
  */
 
 const HubUtils = window.LLVMHubUtils || {};
 
 const TALK_BATCH_SIZE = 24;
 const PAPER_BATCH_SIZE = 24;
+const BLOG_BATCH_SIZE = 24;
+const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
   kind: 'topic', // 'speaker' | 'topic'
   value: '',
   query: '',
-  from: 'talks', // 'talks' | 'papers'
+  from: 'talks', // 'talks' | 'papers' | 'blogs' | 'people' | 'work'
 };
 
 const CATEGORY_META = {
@@ -31,8 +33,10 @@ const CATEGORY_META = {
 
 let filteredTalks = [];
 let filteredPapers = [];
+let filteredBlogs = [];
 let renderedTalkCount = 0;
 let renderedPaperCount = 0;
+let renderedBlogCount = 0;
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -231,7 +235,8 @@ function parseStateFromUrl() {
   const queryParam = String(params.get('q') || '').trim();
   const modeParam = normalizeValue(params.get('mode'));
   const fromParam = normalizeValue(params.get('from'));
-  const from = fromParam === 'papers' ? 'papers' : 'talks';
+  const FROM_VALUES = new Set(['talks', 'papers', 'blogs', 'people', 'work']);
+  const from = FROM_VALUES.has(fromParam) ? fromParam : 'talks';
   const hasEntityContext = Boolean(valueParam || kindParam);
   const isSearchMode = modeParam === 'search' || (!hasEntityContext && !!queryParam);
 
@@ -277,6 +282,7 @@ function normalizePaperRecord(rawPaper) {
   paper.type = String(paper.type || '').trim();
   paper.paperUrl = String(paper.paperUrl || '').trim();
   paper.sourceUrl = String(paper.sourceUrl || '').trim();
+  paper.source = String(paper.source || '').trim();
   paper.citationCount = parseCitationCount(rawPaper);
 
   paper.authors = Array.isArray(paper.authors)
@@ -312,7 +318,18 @@ function normalizePaperRecord(rawPaper) {
 
   paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
   paper._citationCount = paper.citationCount;
+  const normalizedSource = paper.source.toLowerCase();
+  const normalizedType = paper.type.toLowerCase();
+  paper._isBlog = BLOG_SOURCE_SLUGS.has(normalizedSource)
+    || normalizedType === 'blog'
+    || normalizedType === 'blog-post'
+    || /^https?:\/\/(?:www\.)?blog\.llvm\.org\//i.test(paper.sourceUrl)
+    || /github\.com\/llvm\/(?:llvm-blog-www|llvm-www-blog)\b/i.test(paper.paperUrl);
   return paper;
+}
+
+function isBlogPaper(paper) {
+  return !!(paper && paper._isBlog);
 }
 
 function parseCitationCount(rawPaper) {
@@ -549,11 +566,13 @@ function renderTalkCard(talk) {
 
 function renderPaperCard(paper) {
   const tokens = state.mode === 'search' ? tokenizeQuery(state.query) : [];
+  const blogEntry = isBlogPaper(paper);
+  const listingFrom = blogEntry ? 'blogs' : 'papers';
   const titleEsc = escapeHtml(paper.title || 'Untitled paper');
   const authorLabel = (paper.authors || []).map((author) => String(author.name || '').trim()).filter(Boolean).join(', ');
   const venue = escapeHtml(paper.publication || paper.venue || toTitleCaseSlug(paper.type || 'paper'));
   const year = escapeHtml(paper._year || 'Unknown year');
-  const abstractText = paper.abstract || 'No abstract available.';
+  const abstractText = paper.abstract || (blogEntry ? 'No blog excerpt available.' : 'No abstract available.');
   const authorNames = (paper.authors || []).map((author) => author.name).filter(Boolean);
   const authorsHtml = renderEntityLinks(authorNames, 'speaker');
   const topics = getPaperKeyTopics(paper, 8);
@@ -562,7 +581,7 @@ function renderPaperCard(paper) {
     ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open alternate PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">Source</span></a>`
     : '';
   const isPdf = /\.pdf(?:$|[?#])/i.test(paper.paperUrl || '');
-  const paperActionLabel = isPdf ? 'PDF' : 'Paper';
+  const paperActionLabel = blogEntry ? 'Post' : (isPdf ? 'PDF' : 'Paper');
   const paperLink = paper.paperUrl
     ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
@@ -573,10 +592,10 @@ function renderPaperCard(paper) {
 
   return `
     <article class="talk-card paper-card">
-      <a href="paper.html?id=${escapeHtml(paper.id || '')}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
+      <a href="paper.html?id=${escapeHtml(paper.id || '')}&from=${listingFrom}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
         <div class="card-body">
           <div class="card-meta">
-            <span class="badge badge-paper">Paper</span>
+            <span class="badge ${blogEntry ? 'badge-blog' : 'badge-paper'}">${blogEntry ? 'Blog' : 'Paper'}</span>
             <span class="meeting-label">${year}</span>
             <span class="meeting-label">${venue}</span>
           </div>
@@ -661,48 +680,97 @@ function renderPaperBatch(reset = false) {
   }
 }
 
+function renderBlogBatch(reset = false) {
+  const grid = document.getElementById('work-blogs-grid');
+  const moreBtn = document.getElementById('work-blogs-more');
+  if (!grid || !moreBtn) return;
+
+  if (reset) {
+    grid.innerHTML = '';
+    renderedBlogCount = 0;
+  }
+
+  if (!filteredBlogs.length) {
+    moreBtn.classList.add('hidden');
+    setEmptyState('work-blogs-grid', 'blogs');
+    return;
+  }
+
+  const nextCount = Math.min(renderedBlogCount + BLOG_BATCH_SIZE, filteredBlogs.length);
+  const html = filteredBlogs.slice(renderedBlogCount, nextCount).map(renderPaperCard).join('');
+  grid.insertAdjacentHTML('beforeend', html);
+  grid.setAttribute('aria-busy', 'false');
+  renderedBlogCount = nextCount;
+
+  const remaining = filteredBlogs.length - renderedBlogCount;
+  if (remaining > 0) {
+    moreBtn.textContent = `Show more blogs (${remaining.toLocaleString()} left)`;
+    moreBtn.classList.remove('hidden');
+  } else {
+    moreBtn.classList.add('hidden');
+  }
+}
+
 function applyHeaderState() {
   const titleEl = document.getElementById('work-title');
   const subtitleEl = document.getElementById('work-subtitle');
   const summaryEl = document.getElementById('work-results-summary');
   const talksCountEl = document.getElementById('work-talks-count');
   const papersCountEl = document.getElementById('work-papers-count');
+  const blogsCountEl = document.getElementById('work-blogs-count');
   const backLink = document.getElementById('work-back-link');
 
   const entityLabel = state.kind === 'speaker' ? 'Speaker' : 'Key Topic';
-  const backHref = state.from === 'papers' ? 'papers.html' : 'talks/';
-  const backText = state.from === 'papers' ? 'Back to papers' : 'Back to talks';
+  const backHref = state.from === 'papers'
+    ? 'papers.html'
+    : (state.from === 'blogs'
+      ? 'blogs.html'
+      : (state.from === 'people' ? 'people.html' : 'talks/'));
+  const backText = state.from === 'papers'
+    ? 'Back to papers'
+    : (state.from === 'blogs'
+      ? 'Back to blogs'
+      : (state.from === 'people' ? 'Back to people' : 'Back'));
+  const showBackLink = state.mode !== 'search' && state.from !== 'work';
 
   if (backLink) {
     backLink.href = backHref;
     backLink.textContent = backText;
-    backLink.hidden = state.mode === 'search';
+    backLink.hidden = !showBackLink;
   }
 
   if (state.mode === 'search') {
     if (!state.query) {
       if (titleEl) titleEl.textContent = 'Global Search';
-      if (subtitleEl) subtitleEl.textContent = 'Search talks and papers from one place.';
+      if (subtitleEl) subtitleEl.textContent = 'Search talks, papers, and blogs from one place.';
       if (summaryEl) summaryEl.textContent = 'No search query provided';
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
+      if (blogsCountEl) blogsCountEl.textContent = '';
       return;
     }
 
     if (titleEl) titleEl.textContent = 'Global Search';
-    if (subtitleEl) subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong> across talks and papers`;
+    if (subtitleEl) subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong> across talks, papers, and blogs`;
   } else {
     if (!state.value) {
       if (titleEl) titleEl.textContent = 'All Work';
-      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or key topic from Talks or Papers to view all related work.';
+      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or key topic from Talks, Papers, or Blogs to view all related work.';
       if (summaryEl) summaryEl.textContent = 'No speaker/key topic selected';
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
+      if (blogsCountEl) blogsCountEl.textContent = '';
       return;
     }
 
     if (titleEl) titleEl.textContent = `${entityLabel}: ${state.value}`;
-    if (subtitleEl) subtitleEl.innerHTML = `Showing talks and papers for <strong>${escapeHtml(state.value)}</strong>`;
+    if (subtitleEl) {
+      if (state.kind === 'speaker') {
+        subtitleEl.innerHTML = `Showing talks and papers for <strong>${escapeHtml(state.value)}</strong>`;
+      } else {
+        subtitleEl.innerHTML = `Showing talks, papers, and blogs for <strong>${escapeHtml(state.value)}</strong>`;
+      }
+    }
   }
 
   if (talksCountEl) {
@@ -713,15 +781,20 @@ function applyHeaderState() {
     papersCountEl.textContent = `${filteredPapers.length.toLocaleString()} paper${filteredPapers.length === 1 ? '' : 's'}`;
   }
 
+  if (blogsCountEl) {
+    blogsCountEl.textContent = `${filteredBlogs.length.toLocaleString()} blog${filteredBlogs.length === 1 ? '' : 's'}`;
+  }
+
   if (summaryEl) {
-    const total = filteredTalks.length + filteredPapers.length;
-    summaryEl.innerHTML = `<strong>${total.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers`;
+    const total = filteredTalks.length + filteredPapers.length + filteredBlogs.length;
+    summaryEl.innerHTML = `<strong>${total.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs`;
   }
 }
 
 function renderError(message) {
   const talksGrid = document.getElementById('work-talks-grid');
   const papersGrid = document.getElementById('work-papers-grid');
+  const blogsGrid = document.getElementById('work-blogs-grid');
   const summaryEl = document.getElementById('work-results-summary');
 
   if (summaryEl) summaryEl.textContent = 'Could not load all work';
@@ -736,6 +809,11 @@ function renderError(message) {
   if (papersGrid) {
     papersGrid.setAttribute('aria-busy', 'false');
     papersGrid.innerHTML = html;
+  }
+
+  if (blogsGrid) {
+    blogsGrid.setAttribute('aria-busy', 'false');
+    blogsGrid.innerHTML = html;
   }
 }
 
@@ -1096,6 +1174,7 @@ async function init() {
     applyHeaderState();
     setEmptyState('work-talks-grid', 'talks');
     setEmptyState('work-papers-grid', 'papers');
+    setEmptyState('work-blogs-grid', 'blogs');
     return;
   }
 
@@ -1103,6 +1182,7 @@ async function init() {
     applyHeaderState();
     setEmptyState('work-talks-grid', 'talks');
     setEmptyState('work-papers-grid', 'papers');
+    setEmptyState('work-blogs-grid', 'blogs');
     return;
   }
 
@@ -1124,17 +1204,24 @@ async function init() {
     const papers = Array.isArray(paperPayload.papers)
       ? paperPayload.papers.map(normalizePaperRecord).filter(Boolean)
       : [];
+    const paperOnly = papers.filter((paper) => !isBlogPaper(paper));
+    const blogsOnly = papers.filter((paper) => isBlogPaper(paper));
 
     if (state.mode === 'search') {
       filteredTalks = rankTalksForQuery(talks, state.query);
-      filteredPapers = rankPapersForQuery(papers, state.query);
+      filteredPapers = rankPapersForQuery(paperOnly, state.query);
+      filteredBlogs = rankPapersForQuery(blogsOnly, state.query);
     } else {
       const normalizedNeedle = normalizeValue(state.value);
       filteredTalks = talks
         .filter((talk) => matchesTalkEntity(talk, normalizedNeedle))
         .sort(compareTalksNewestFirst);
 
-      filteredPapers = papers
+      filteredPapers = paperOnly
+        .filter((paper) => matchesPaperEntity(paper, normalizedNeedle))
+        .sort(comparePapersNewestFirst);
+
+      filteredBlogs = blogsOnly
         .filter((paper) => matchesPaperEntity(paper, normalizedNeedle))
         .sort(comparePapersNewestFirst);
     }
@@ -1142,12 +1229,15 @@ async function init() {
     applyHeaderState();
     renderTalkBatch(true);
     renderPaperBatch(true);
+    renderBlogBatch(true);
 
     const talksMoreBtn = document.getElementById('work-talks-more');
     const papersMoreBtn = document.getElementById('work-papers-more');
+    const blogsMoreBtn = document.getElementById('work-blogs-more');
 
     if (talksMoreBtn) talksMoreBtn.addEventListener('click', () => renderTalkBatch(false));
     if (papersMoreBtn) papersMoreBtn.addEventListener('click', () => renderPaperBatch(false));
+    if (blogsMoreBtn) blogsMoreBtn.addEventListener('click', () => renderBlogBatch(false));
   } catch (error) {
     renderError(`Could not load data: ${String(error && error.message ? error.message : error)}`);
   }

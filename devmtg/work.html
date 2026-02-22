@@ -60,7 +60,7 @@
     }
   </style>
   <title>All Work — LLVM Research Library</title>
-  <meta name="description" content="View talks and papers for a speaker or key topic in one place.">
+  <meta name="description" content="View talks, papers, and blogs for a speaker or key topic in one place.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -88,6 +88,9 @@
       <a href="papers.html" class="nav-link" aria-label="Papers">
         <span aria-hidden="true">Papers</span>
       </a>
+      <a href="blogs.html" class="nav-link" aria-label="Blogs">
+        <span aria-hidden="true">Blogs</span>
+      </a>
       <a href="people.html" class="nav-link" aria-label="People">
         <span aria-hidden="true">People</span>
       </a>
@@ -110,6 +113,7 @@
         <a href="talks/" class="mobile-nav-link">Talks</a>
         <a href="meetings.html" class="mobile-nav-link">Events</a>
         <a href="papers.html" class="mobile-nav-link">Papers</a>
+        <a href="blogs.html" class="mobile-nav-link">Blogs</a>
         <a href="people.html" class="mobile-nav-link">People</a>
         <a href="about.html" class="mobile-nav-link">About</a>
         <a href="updates.html" class="mobile-nav-link">Updates</a>
@@ -165,8 +169,8 @@
   <section class="search-hero search-hero--compact" aria-label="All work">
     <div class="search-hero-shell">
       <h1 id="work-title">All Work</h1>
-      <p class="subtitle" id="work-subtitle">Loading talks and papers...</p>
-      <form class="search-box global-search-form work-hero-search" action="work.html" method="get" role="search" aria-label="Search talks, papers, and people">
+      <p class="subtitle" id="work-subtitle">Loading talks, papers, and blogs...</p>
+      <form class="search-box global-search-form work-hero-search" action="work.html" method="get" role="search" aria-label="Search talks, papers, blogs, and people">
         <input type="hidden" name="mode" value="search">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"></circle>
@@ -177,10 +181,10 @@
           class="search-input global-search-input"
           id="work-search-input"
           name="q"
-          placeholder="Search talks, papers, people, key topics…"
+          placeholder="Search talks, papers, blogs, people, key topics…"
           autocomplete="off"
           spellcheck="false"
-          aria-label="Search talks, papers, and people"
+          aria-label="Search talks, papers, blogs, and people"
         >
         <button class="search-clear" id="work-search-clear" aria-label="Clear search" title="Clear">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
@@ -227,13 +231,27 @@
         </div>
         <button class="work-more-btn hidden" id="work-papers-more" type="button">Show more papers</button>
       </section>
+
+      <section class="work-section" aria-labelledby="work-blogs-heading">
+        <div class="work-section-header">
+          <h2 class="work-section-title" id="work-blogs-heading">Blogs</h2>
+          <span class="work-section-count" id="work-blogs-count"></span>
+        </div>
+        <div id="work-blogs-grid" class="talks-grid" role="feed" aria-label="Blog results" aria-busy="true">
+          <div class="loading-state">
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Loading blogs...</p>
+          </div>
+        </div>
+        <button class="work-more-btn hidden" id="work-blogs-more" type="button">Show more blogs</button>
+      </section>
     </main>
   </div>
 
   <script src="js/events-data.js?v=20260220-12"></script>
   <script src="js/papers-data.js?v=20260221-02"></script>
-  <script src="js/shared/library-utils.js?v=20260221-25"></script>
-  <script src="js/shared/global-search.js?v=20260222-07"></script>
-  <script src="js/work.js?v=20260222-01"></script>
+  <script src="js/shared/library-utils.js?v=20260222-26"></script>
+  <script src="js/shared/global-search.js?v=20260222-08"></script>
+  <script src="js/work.js?v=20260222-03"></script>
 </body>
 </html>
