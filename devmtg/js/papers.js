@@ -165,6 +165,33 @@ function normalizePublicationAndVenue(publication, venue) {
   };
 }
 
+function normalizeIsoDate(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|[T\s])/);
+  if (!match) return '';
+  const year = Number.parseInt(match[1], 10);
+  const month = Number.parseInt(match[2], 10);
+  const day = Number.parseInt(match[3], 10);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
+  if (month < 1 || month > 12 || day < 1 || day > 31) return '';
+  return `${match[1]}-${match[2]}-${match[3]}`;
+}
+
+function formatIsoDateLabel(value) {
+  const iso = normalizeIsoDate(value);
+  if (!iso) return '';
+  const [year, month, day] = iso.split('-').map((piece) => Number.parseInt(piece, 10));
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
+  const stamp = new Date(Date.UTC(year, month - 1, day));
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(stamp);
+}
+
 function normalizePaperRecord(rawPaper) {
   if (!rawPaper || typeof rawPaper !== 'object') return null;
 
@@ -173,6 +200,9 @@ function normalizePaperRecord(rawPaper) {
   paper.title = String(paper.title || '').trim();
   paper.abstract = String(paper.abstract || '').trim();
   paper.year = String(paper.year || '').trim();
+  paper.publishedDate = normalizeIsoDate(
+    paper.publishedDate || paper.publishDate || paper.date || rawPaper.publishedDate || rawPaper.publishDate || rawPaper.date
+  );
   const metadata = normalizePublicationAndVenue(paper.publication, paper.venue);
   paper.publication = metadata.publication;
   paper.venue = metadata.venue;
@@ -215,6 +245,8 @@ function normalizePaperRecord(rawPaper) {
   if (!paper.id || !paper.title) return null;
 
   paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
+  paper._publishedDate = paper.publishedDate;
+  paper._publishedDateLabel = formatIsoDateLabel(paper._publishedDate);
   paper._citationCount = paper.citationCount;
   paper._titleLower = paper.title.toLowerCase();
   paper._authorLower = paper.authors.map((author) => `${author.name} ${author.affiliation || ''}`.trim()).join(' ').toLowerCase();
@@ -636,7 +668,9 @@ function renderPaperCard(paper, tokens) {
   const badgeLabel = blogEntry ? CONTENT_TYPE_META[BLOG_FILTER_VALUE].label : CONTENT_TYPE_META[PAPER_FILTER_VALUE].label;
   const titleEsc = escapeHtml(paper.title);
   const authorLabel = (paper.authors || []).map((author) => String(author.name || '').trim()).filter(Boolean).join(', ');
-  const yearLabel = escapeHtml(paper._year || 'Unknown year');
+  const dateOrYearLabel = blogEntry
+    ? escapeHtml(paper._publishedDateLabel || paper._year || 'Unknown date')
+    : escapeHtml(paper._year || 'Unknown year');
   const venueLabel = escapeHtml(paper.publication || paper.venue || (paper.type ? paper.type.replace(/-/g, ' ') : 'Academic paper'));
   const abstractText = paper.abstract || 'No abstract available.';
 
@@ -669,7 +703,7 @@ function renderPaperCard(paper, tokens) {
         <div class="card-body">
           <div class="card-meta">
             <span class="badge ${badgeClass}">${badgeLabel}</span>
-            <span class="meeting-label">${yearLabel}</span>
+            <span class="meeting-label">${dateOrYearLabel}</span>
             <span class="meeting-label">${venueLabel}</span>
           </div>
           <p class="card-title">${highlightText(paper.title, tokens)}</p>

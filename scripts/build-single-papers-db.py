@@ -820,6 +820,7 @@ def merge_records(base: dict, incoming: dict) -> dict:
         "id",
         "title",
         "year",
+        "publishedDate",
         "publication",
         "venue",
         "type",

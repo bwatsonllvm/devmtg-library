@@ -79,7 +79,7 @@ function samePersonName(a, b) {
 function normalizeTopicKey(value) {
   return String(value || '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '');
+    .replace(/[^a-z0-9+]+/g, '');
 }
 
 function getTalkKeyTopics(talk, limit = Infinity) {
@@ -467,21 +467,33 @@ function rankPapersForQuery(papers, query) {
   return scored.map((entry) => entry.paper);
 }
 
-function matchesTalkEntity(talk, normalizedNeedle) {
+function matchesTalkEntity(talk, normalizedNeedle, normalizedTopicNeedle) {
   if (state.kind === 'speaker') {
     return (talk.speakers || []).some((speaker) => samePersonName(speaker.name, state.value));
   }
 
-  return getTalkKeyTopics(talk).some((topic) => normalizeValue(topic) === normalizedNeedle);
+  const topics = getTalkKeyTopics(talk);
+  if (normalizedTopicNeedle) {
+    return topics.some((topic) => normalizeTopicKey(topic) === normalizedTopicNeedle);
+  }
+  return topics.some((topic) => normalizeValue(topic) === normalizedNeedle);
 }
 
-function matchesPaperEntity(paper, normalizedNeedle) {
+function matchesPaperEntity(paper, normalizedNeedle, normalizedTopicNeedle) {
   if (state.kind === 'speaker') {
     return (paper.authors || []).some((author) => samePersonName(author.name, state.value));
   }
 
+  const canonicalTopics = getPaperKeyTopics(paper);
+  if (normalizedTopicNeedle && canonicalTopics.length > 0) {
+    return canonicalTopics.some((topic) => normalizeTopicKey(topic) === normalizedTopicNeedle);
+  }
+
   return [...(paper.tags || []), ...(paper.keywords || [])]
-    .some((tag) => normalizeValue(tag) === normalizedNeedle);
+    .some((topic) => {
+      if (normalizedTopicNeedle) return normalizeTopicKey(topic) === normalizedTopicNeedle;
+      return normalizeValue(topic) === normalizedNeedle;
+    });
 }
 
 function renderEntityLinks(items, kind) {
@@ -1214,16 +1226,17 @@ async function init() {
       filteredBlogs = rankPapersForQuery(blogsOnly, state.query);
     } else {
       const normalizedNeedle = normalizeValue(state.value);
+      const normalizedTopicNeedle = normalizeTopicKey(state.value);
       filteredTalks = talks
-        .filter((talk) => matchesTalkEntity(talk, normalizedNeedle))
+        .filter((talk) => matchesTalkEntity(talk, normalizedNeedle, normalizedTopicNeedle))
         .sort(compareTalksNewestFirst);
 
       filteredPapers = paperOnly
-        .filter((paper) => matchesPaperEntity(paper, normalizedNeedle))
+        .filter((paper) => matchesPaperEntity(paper, normalizedNeedle, normalizedTopicNeedle))
         .sort(comparePapersNewestFirst);
 
       filteredBlogs = blogsOnly
-        .filter((paper) => matchesPaperEntity(paper, normalizedNeedle))
+        .filter((paper) => matchesPaperEntity(paper, normalizedNeedle, normalizedTopicNeedle))
         .sort(comparePapersNewestFirst);
     }
 

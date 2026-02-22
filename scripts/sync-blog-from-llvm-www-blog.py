@@ -523,6 +523,7 @@ def build_blog_bundle(
                 "title": title,
                 "authors": authors,
                 "year": year,
+                "publishedDate": sort_date if re.fullmatch(r"\d{4}-\d{2}-\d{2}", sort_date) and sort_date != "0000-00-00" else "",
                 "publication": "LLVM Project Blog",
                 "venue": "LLVM Project Blog",
                 "type": "blog-post",

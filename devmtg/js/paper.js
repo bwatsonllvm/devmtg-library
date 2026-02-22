@@ -79,6 +79,33 @@ function normalizePublicationAndVenue(publication, venue) {
   };
 }
 
+function normalizeIsoDate(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|[T\s])/);
+  if (!match) return '';
+  const year = Number.parseInt(match[1], 10);
+  const month = Number.parseInt(match[2], 10);
+  const day = Number.parseInt(match[3], 10);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
+  if (month < 1 || month > 12 || day < 1 || day > 31) return '';
+  return `${match[1]}-${match[2]}-${match[3]}`;
+}
+
+function formatIsoDateLabel(value) {
+  const iso = normalizeIsoDate(value);
+  if (!iso) return '';
+  const [year, month, day] = iso.split('-').map((piece) => Number.parseInt(piece, 10));
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
+  const stamp = new Date(Date.UTC(year, month - 1, day));
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(stamp);
+}
+
 function normalizePaperRecord(rawPaper) {
   if (!rawPaper || typeof rawPaper !== 'object') return null;
 
@@ -87,6 +114,9 @@ function normalizePaperRecord(rawPaper) {
   paper.title = String(paper.title || '').trim();
   paper.abstract = String(paper.abstract || '').trim();
   paper.year = String(paper.year || '').trim();
+  paper.publishedDate = normalizeIsoDate(
+    paper.publishedDate || paper.publishDate || paper.date || rawPaper.publishedDate || rawPaper.publishDate || rawPaper.date
+  );
   const metadata = normalizePublicationAndVenue(paper.publication, paper.venue);
   paper.publication = metadata.publication;
   paper.venue = metadata.venue;
@@ -137,6 +167,8 @@ function normalizePaperRecord(rawPaper) {
 
   if (!paper.id || !paper.title) return null;
   paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
+  paper._publishedDate = paper.publishedDate;
+  paper._publishedDateLabel = formatIsoDateLabel(paper._publishedDate);
   const normalizedType = paper.type.toLowerCase();
   const normalizedSource = paper.source.toLowerCase();
   paper._isBlog = BLOG_SOURCE_SLUG_ALIASES.has(normalizedSource) || normalizedType === 'blog-post' || normalizedType === 'blog';
@@ -448,6 +480,7 @@ function updatePaperSeoMetadata(paper) {
     180
   ) || truncateText(`${paper.title}.`, 180);
   const schemaType = isBlogPaper(paper) ? 'BlogPosting' : 'ScholarlyArticle';
+  const publishedStamp = paper._publishedDate || (paper._year ? `${paper._year}-01-01` : '');
 
   upsertCanonical(canonicalUrl);
   upsertMetaTag('name', 'description', description);
@@ -457,7 +490,7 @@ function updatePaperSeoMetadata(paper) {
   upsertMetaTag('property', 'og:title', paper.title);
   upsertMetaTag('property', 'og:description', description);
   upsertMetaTag('property', 'og:url', canonicalUrl);
-  if (paper._year) upsertMetaTag('property', 'article:published_time', `${paper._year}-01-01`);
+  if (publishedStamp) upsertMetaTag('property', 'article:published_time', publishedStamp);
 
   upsertMetaTag('name', 'twitter:card', 'summary');
   upsertMetaTag('name', 'twitter:title', paper.title);
@@ -473,7 +506,7 @@ function updatePaperSeoMetadata(paper) {
     name: paper.title,
     description,
     author: authors.map((name) => ({ '@type': 'Person', name })),
-    datePublished: paper._year ? `${paper._year}-01-01` : undefined,
+    datePublished: publishedStamp || undefined,
     isPartOf: paper.publication ? { '@type': 'PublicationIssue', name: paper.publication } : undefined,
     keywords: getPaperKeyTopics(paper).join(', ') || undefined,
     url: canonicalUrl,
@@ -1421,7 +1454,9 @@ function renderRelatedCard(paper) {
     : '';
 
   const relatedLabel = `${escapeHtml(paper.title)}${speakerLinksHtml ? ` by ${escapeHtml((paper.authors || []).map((author) => author.name).join(', '))}` : ''}`;
-  const year = escapeHtml(paper._year || 'Unknown year');
+  const dateOrYear = blogEntry
+    ? escapeHtml(paper._publishedDateLabel || paper._year || 'Unknown date')
+    : escapeHtml(paper._year || 'Unknown year');
 
   return `
     <article class="talk-card paper-card">
@@ -1435,7 +1470,7 @@ function renderRelatedCard(paper) {
         <div class="card-body">
           <div class="card-meta">
             <span class="badge ${badgeClass}">${escapeHtml(badgeLabel)}</span>
-            <span class="meeting-label">${year}</span>
+            <span class="meeting-label">${dateOrYear}</span>
           </div>
           <p class="card-title">${escapeHtml(paper.title)}</p>
           ${speakerLinksHtml ? `<p class="card-speakers">${speakerLinksHtml}</p>` : ''}
@@ -1460,7 +1495,8 @@ function renderPaperDetail(paper, allPapers) {
   const badgeLabel = blogEntry ? 'Blog' : 'Paper';
 
   const infoParts = [];
-  if (paper._year) infoParts.push(paper._year);
+  if (blogEntry && paper._publishedDateLabel) infoParts.push(paper._publishedDateLabel);
+  else if (paper._year) infoParts.push(paper._year);
   if (paper.publication) infoParts.push(paper.publication);
   if (paper.venue && paper.venue !== paper.publication) infoParts.push(paper.venue);
 
