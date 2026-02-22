@@ -35,6 +35,7 @@ OpenAlex discovery is constrained by LLVM-focused keyword and subproject matchin
 
 The automated pipeline does not rely on a repository-maintained direct-name seed list.
 During the final merge, OpenAlex metadata is refreshed for titles, abstracts, authors, affiliations, citation counts, and URLs. For non-English or missing text, the pipeline also probes deeper landing-page metadata layers to recover English title/abstract when available.
+Discovery output is treated as an intermediate input; the final single-database build is the stage that updates `papers/index.json`.
 
 ### 3) People index (runtime derived)
 

@@ -10,7 +10,7 @@ This script:
      (including LLVM subprojects) and optionally direct per-author work searches
   3) Keeps works where at least one listed author matches a seed author exactly
      after normalization.
-  4) Emits papers/openalex-discovered.json and updates papers/index.json.
+  4) Emits papers/openalex-discovered.json and optionally updates papers/index.json.
 """
 
 from __future__ import annotations
@@ -823,6 +823,7 @@ def main() -> int:
     parser.add_argument("--no-verify-ssl", action="store_true", help="Disable TLS certificate verification")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--no-cache", action="store_true")
+    parser.add_argument("--skip-manifest-update", action="store_true")
     args = parser.parse_args()
 
     events_dir = Path(args.events_dir).resolve()
@@ -1065,13 +1066,23 @@ def main() -> int:
     if bundle_changed:
         output_bundle_path.write_text(new_bundle_text, encoding="utf-8")
 
-    data_version = _dt.date.today().isoformat() + "-llvm-org-pubs-plus-openalex"
-    manifest_changed, effective_data_version = update_manifest(
-        index_json,
-        output_bundle_name,
-        data_version,
-        force_bump_data_version=bundle_changed,
-    )
+    manifest_changed = False
+    effective_data_version = ""
+    if args.skip_manifest_update:
+        if index_json.exists():
+            try:
+                payload = json.loads(index_json.read_text(encoding="utf-8"))
+                effective_data_version = collapse_ws(str(payload.get("dataVersion", "")))
+            except Exception:
+                effective_data_version = ""
+    else:
+        data_version = _dt.datetime.now(_dt.timezone.utc).date().isoformat() + "-llvm-org-pubs-plus-openalex"
+        manifest_changed, effective_data_version = update_manifest(
+            index_json,
+            output_bundle_name,
+            data_version,
+            force_bump_data_version=bundle_changed,
+        )
 
     print(f"Seed authors: {len(seed_authors)}")
     print(f"LLVM subprojects configured: {len(subproject_aliases)}")
@@ -1082,6 +1093,8 @@ def main() -> int:
     print(f"Unique works fetched: {len(all_works)}")
     print(f"Discovered papers written: {len(out_papers)} -> {output_bundle_path}")
     print(f"Bundle changed: {'yes' if bundle_changed else 'no'}")
+    if args.skip_manifest_update:
+        print("Manifest update: skipped (--skip-manifest-update)")
     print(f"Manifest changed: {'yes' if manifest_changed else 'no'}")
     print(f"Manifest dataVersion: {effective_data_version or '(unchanged)'}")
     return 0

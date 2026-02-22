@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import copy
 import datetime as _dt
+import hashlib
 import html
 import json
 import re
@@ -884,15 +885,33 @@ def load_openalex_works_from_cache(cache_dir: Path, wanted_ids: set[str]) -> dic
     return out
 
 
+def _stable_openalex_batch_cache_path(cache_dir: Path, batch_ids: list[str]) -> Path:
+    digest = hashlib.sha1("|".join(sorted(batch_ids)).encode("utf-8")).hexdigest()[:20]
+    return cache_dir / f"single-db-openalex-{digest}.json"
+
+
+def _save_openalex_batch_to_cache(cache_dir: Path, batch_ids: list[str], payload: dict) -> bool:
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    path = _stable_openalex_batch_cache_path(cache_dir, batch_ids)
+    text = json.dumps(payload, ensure_ascii=False)
+    existing = path.read_text(encoding="utf-8") if path.exists() else ""
+    if existing == text:
+        return False
+    path.write_text(text, encoding="utf-8")
+    return True
+
+
 def fetch_openalex_works(
     ids: list[str],
     batch_size: int,
     mailto: str,
     user_agent: str,
-) -> dict[str, dict]:
+    cache_dir: Path | None = None,
+) -> tuple[dict[str, dict], int]:
     out: dict[str, dict] = {}
+    cache_files_written = 0
     if not ids:
-        return out
+        return out, cache_files_written
 
     pending_batches = [chunk for chunk in _chunks(ids, batch_size)]
     completed = 0
@@ -903,7 +922,7 @@ def fetch_openalex_works(
         params = {
             "filter": f"openalex:{'|'.join(batch)}",
             "per-page": str(len(batch)),
-            "select": "id,title,type,doi,publication_year,abstract_inverted_index,authorships,cited_by_count,primary_location,best_oa_location,open_access,locations,biblio",
+            "select": "id,updated_date,title,type,doi,publication_year,abstract_inverted_index,authorships,cited_by_count,primary_location,best_oa_location,open_access,locations,biblio",
         }
         if mailto:
             params["mailto"] = mailto
@@ -951,6 +970,9 @@ def fetch_openalex_works(
                 continue
             raise RuntimeError(f"Failed fetching OpenAlex work {batch[0]}: {last_err}")
 
+        if cache_dir is not None and _save_openalex_batch_to_cache(cache_dir, batch, payload):
+            cache_files_written += 1
+
         for work in _iter_works(payload):
             short_id = normalize_openalex_short_id(str(work.get("id", "")))
             if short_id:
@@ -960,7 +982,7 @@ def fetch_openalex_works(
         print(f"[openalex] fetched batch {completed}/{total} ({len(batch)} ids)", flush=True)
         time.sleep(0.06)
 
-    return out
+    return out, cache_files_written
 
 
 def load_landing_cache(path: Path) -> dict:
@@ -994,15 +1016,39 @@ def should_try_landing_fallback(record: dict) -> bool:
     return False
 
 
+def _parse_iso_datetime(value: str) -> _dt.datetime | None:
+    raw = collapse_ws(value)
+    if not raw:
+        return None
+    candidate = raw.replace("Z", "+00:00")
+    try:
+        parsed = _dt.datetime.fromisoformat(candidate)
+    except Exception:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=_dt.timezone.utc)
+    return parsed.astimezone(_dt.timezone.utc)
+
+
+def _cache_older_than(value: str, days: int) -> bool:
+    if days < 0:
+        return False
+    parsed = _parse_iso_datetime(value)
+    if parsed is None:
+        return True
+    age = _dt.datetime.now(_dt.timezone.utc) - parsed
+    return age >= _dt.timedelta(days=days)
+
+
 def apply_openalex_refresh(
     papers: list[dict],
     works_by_id: dict[str, dict],
     landing_cache: dict,
     landing_timeout_s: int,
-    mailto: str,
     user_agent: str,
     enable_landing_fallback: bool,
     landing_max_probes: int,
+    landing_miss_recheck_days: int,
 ) -> tuple[int, int, int, int]:
     refreshed = 0
     fallback_hits = 0
@@ -1067,14 +1113,17 @@ def apply_openalex_refresh(
         fallback_title = collapse_ws(str(cache_entry.get("title", "")))
         fallback_abstract = collapse_ws(str(cache_entry.get("abstract", "")))
         cache_updated_at = collapse_ws(str(cache_entry.get("updatedAt", "")))
+        cache_source_updated = collapse_ws(str(cache_entry.get("sourceUpdatedAt", "")))
+        work_updated = collapse_ws(str(work.get("updated_date", "")))
 
-        should_probe = cache_status not in {"hit", "miss"}
-        if not should_probe and cache_status == "hit":
-            pass
-        elif not should_probe and cache_status == "miss":
-            pass
-        elif fallback_title or fallback_abstract:
-            should_probe = False
+        should_probe = False
+        if cache_status == "hit":
+            should_probe = bool(work_updated and cache_source_updated and work_updated != cache_source_updated)
+        elif cache_status == "miss":
+            source_changed = bool(work_updated and cache_source_updated and work_updated != cache_source_updated)
+            should_probe = source_changed or _cache_older_than(cache_updated_at, landing_miss_recheck_days)
+        else:
+            should_probe = not (fallback_title or fallback_abstract)
 
         if should_probe:
             if landing_max_probes > 0 and landing_probes >= landing_max_probes:
@@ -1095,7 +1144,7 @@ def apply_openalex_refresh(
                 "title": fallback_title,
                 "abstract": fallback_abstract,
                 "status": cache_status,
-                "sourceUpdatedAt": cache_updated_at,
+                "sourceUpdatedAt": work_updated,
                 "updatedAt": _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
             }
 
@@ -1236,6 +1285,7 @@ def main() -> int:
     parser.add_argument("--skip-landing-fallback", action="store_true")
     parser.add_argument("--landing-timeout", type=int, default=25)
     parser.add_argument("--landing-max-probes", type=int, default=300)
+    parser.add_argument("--landing-miss-recheck-days", type=int, default=30)
     parser.add_argument("--user-agent", default="library-single-papers-db/1.0")
     args = parser.parse_args()
 
@@ -1280,15 +1330,18 @@ def main() -> int:
     missing_ids = sorted(wanted_ids - set(works_by_id.keys()))
     print(f"OpenAlex ids missing after cache scan: {len(missing_ids)}", flush=True)
     fetched = {}
+    cache_files_written = 0
     if missing_ids and not args.skip_network:
-        fetched = fetch_openalex_works(
+        fetched, cache_files_written = fetch_openalex_works(
             ids=missing_ids,
             batch_size=args.batch_size,
             mailto=args.mailto.strip(),
             user_agent=args.user_agent,
+            cache_dir=cache_dir,
         )
         works_by_id.update(fetched)
         print(f"OpenAlex works fetched from API: {len(fetched)}", flush=True)
+        print(f"OpenAlex cache files written: {cache_files_written}", flush=True)
     elif missing_ids:
         print("Skipping OpenAlex network fetch (--skip-network)", flush=True)
 
@@ -1298,10 +1351,10 @@ def main() -> int:
         works_by_id=works_by_id,
         landing_cache=landing_cache,
         landing_timeout_s=max(5, int(args.landing_timeout)),
-        mailto=args.mailto.strip(),
         user_agent=args.user_agent,
         enable_landing_fallback=not args.skip_landing_fallback and not args.skip_network,
         landing_max_probes=max(0, int(args.landing_max_probes)),
+        landing_miss_recheck_days=max(0, int(args.landing_miss_recheck_days)),
     )
     print(f"OpenAlex records refreshed: {refreshed_count}", flush=True)
     print(f"Landing-page English fallback probes: {landing_probes}", flush=True)
@@ -1327,7 +1380,7 @@ def main() -> int:
     print(f"Output bundle: {output_path}", flush=True)
     print(f"Output changed: {'yes' if output_changed else 'no'}", flush=True)
 
-    data_version = _dt.date.today().isoformat() + "-papers-single-db-openalex-v1"
+    data_version = _dt.datetime.now(_dt.timezone.utc).date().isoformat() + "-papers-single-db-openalex-v1"
     update_manifest(manifest_path, output_path.name, data_version)
     print(
         f"Manifest updated: {manifest_path} -> paperFiles=[{output_path.name}] dataVersion={data_version}",

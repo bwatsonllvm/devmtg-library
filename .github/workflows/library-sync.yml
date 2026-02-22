@@ -43,6 +43,7 @@ jobs:
             --index-json papers/index.json \
             --app-js devmtg/js/app.js \
             --subprojects-file papers/subproject-seeds.txt \
+            --skip-manifest-update \
             --skip-author-queries \
             --max-pages-per-keyword 5 \
             --per-page 200 \
@@ -58,6 +59,7 @@ jobs:
             --batch-size 40 \
             --landing-timeout 5 \
             --landing-max-probes 120 \
+            --landing-miss-recheck-days 30 \
             --mailto "llvm-library-bot@users.noreply.github.com"
 
       - name: Build updates log
