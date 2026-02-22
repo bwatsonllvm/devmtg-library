@@ -1447,6 +1447,14 @@ function renderRelatedCard(paper) {
   const blogEntry = isBlogPaper(paper);
   const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
   const badgeLabel = blogEntry ? 'Blog' : 'Paper';
+  const listingPath = getListingPathForPaper(paper);
+  const listingLabel = getListingLabelForPaper(paper);
+  const keyTopics = getPaperKeyTopics(paper, 8);
+  const tagsHtml = keyTopics.length
+    ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${keyTopics.slice(0, 4).map((topic) =>
+        `<a href="${listingPath}?tag=${encodeURIComponent(topic)}" class="card-tag" aria-label="Browse ${listingLabel} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
+      ).join('')}${keyTopics.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${keyTopics.length - 4}</span>` : ''}</div></div>`
+    : '';
   const speakerLinksHtml = (paper.authors || []).length
     ? paper.authors.map((author) =>
       `<a href="${buildSpeakerWorkUrl(author.name, paper)}" class="card-speaker-link" aria-label="View talks and papers by ${escapeHtml(author.name)}">${escapeHtml(author.name)}</a>`
@@ -1473,9 +1481,10 @@ function renderRelatedCard(paper) {
             <span class="meeting-label">${dateOrYear}</span>
           </div>
           <p class="card-title">${escapeHtml(paper.title)}</p>
-          ${speakerLinksHtml ? `<p class="card-speakers">${speakerLinksHtml}</p>` : ''}
         </div>
       </a>
+      ${speakerLinksHtml ? `<p class="card-speakers">${speakerLinksHtml}</p>` : ''}
+      ${tagsHtml}
     </article>`;
 }
 

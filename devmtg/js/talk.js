@@ -580,6 +580,12 @@ function renderRelatedCard(talk) {
     : '';
   const speakerText = talk.speakers?.map(s => s.name).join(', ') || '';
   const badgeCls = `badge badge-${escapeHtml(talk.category || 'other')}`;
+  const tags = getTalkKeyTopics(talk, 8);
+  const tagsHtml = tags.length
+    ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${tags.slice(0, 4).map((tag) =>
+        `<a href="talks/?tag=${encodeURIComponent(tag)}" class="card-tag" aria-label="Browse talks for key topic ${escapeHtml(tag)}">${escapeHtml(tag)}</a>`
+      ).join('')}${tags.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${tags.length - 4}</span>` : ''}</div></div>`
+    : '';
 
   // Per-name speaker links that navigate to speaker-filtered search
   const speakerLinksHtml = talk.speakers?.length
@@ -605,9 +611,10 @@ function renderRelatedCard(talk) {
             <span class="meeting-label">${escapeHtml(talk.meeting || '')}</span>
           </div>
           <p class="card-title">${escapeHtml(talk.title)}</p>
-          ${speakerLinksHtml ? `<p class="card-speakers">${speakerLinksHtml}</p>` : ''}
         </div>
       </a>
+      ${speakerLinksHtml ? `<p class="card-speakers">${speakerLinksHtml}</p>` : ''}
+      ${tagsHtml}
     </article>`;
 }
 
