@@ -577,10 +577,17 @@ function renderPersonCard(person, tokens) {
     seenVariantKeys.add(key);
     return true;
   });
+  const variantLinksHtml = variantNames
+    .slice(0, 4)
+    .map((name) => {
+      const href = buildSpeakerWorkUrl(name);
+      return `<a class="person-variant-pill" href="${escapeHtml(href)}" aria-label="View talks and papers for ${escapeHtml(name)}">${highlightText(name, tokens)}</a>`;
+    })
+    .join('');
   const variantsHtml = variantNames.length
     ? `<div class="person-variants" aria-label="Name variants">
         <span class="person-variants-label">Also appears as</span>
-        ${variantNames.slice(0, 4).map((name) => `<span class="person-variant-pill">${escapeHtml(name)}</span>`).join('')}
+        ${variantLinksHtml}
       </div>`
     : '';
 
@@ -620,9 +627,9 @@ function renderPersonCard(person, tokens) {
             ${citationHtml}
           </div>
           <p class="card-title">${nameHtml}</p>
-          ${variantsHtml}
         </div>
       </a>
+      ${variantsHtml}
       <div class="card-footer person-card-footer">
         <div class="person-work-links">
           ${talksLink}

@@ -1903,7 +1903,7 @@ body.filter-collapsed .filter-collapse-btn svg {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  margin-top: var(--space-1);
+  padding: 0 var(--space-4) var(--space-2);
 }
 
 .person-variants-label {
@@ -1915,13 +1915,23 @@ body.filter-collapsed .filter-collapse-btn svg {
 .person-variant-pill {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
-  background: var(--color-surface-hover);
-  color: var(--color-text-muted);
+  background: var(--color-surface);
+  color: var(--color-text);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.person-variant-pill:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+  color: var(--color-accent);
+  text-decoration: none;
 }
 
 .person-card-footer {
@@ -2010,10 +2020,10 @@ body.filter-collapsed .filter-collapse-btn svg {
 .card-tag {
   display: inline-flex;
   align-items: center;
-  padding: 2px 7px;
+  padding: 3px 8px;
   font-size: 11px;
   font-weight: var(--font-weight-medium);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text-muted);
@@ -3028,7 +3038,8 @@ mark {
 .link-btn:focus-visible,
 .card-link-btn:focus-visible,
 .detail-tag:focus-visible,
-.speaker-social-link:focus-visible {
+.speaker-social-link:focus-visible,
+.person-variant-pill:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
