@@ -1,5 +1,5 @@
 /**
- * updates.js — Render update log (talks/slides/videos/papers additions).
+ * updates.js — Render update log (talks/slides/videos/papers/blogs additions).
  */
 
 const UPDATE_LOG_PATH = 'updates/index.json';
@@ -68,6 +68,7 @@ function formatParts(parts) {
     slides: 'Slides',
     video: 'Video',
     paper: 'Paper',
+    blog: 'Blog',
   };
   const seen = new Set();
   const out = [];
@@ -81,7 +82,9 @@ function formatParts(parts) {
 }
 
 function renderEntry(entry) {
-  const kind = collapseWs(entry.kind).toLowerCase() === 'paper' ? 'paper' : 'talk';
+  const kindKey = collapseWs(entry.kind).toLowerCase();
+  const kind = kindKey === 'blog' ? 'blog' : (kindKey === 'paper' ? 'paper' : 'talk');
+  const kindLabel = kind === 'talk' ? 'Talk' : (kind === 'blog' ? 'Blog' : 'Paper');
   const title = collapseWs(entry.title) || '(Untitled)';
   const url = normalizeLibraryUrl(entry.url);
   const loggedAtLabel = formatLoggedAt(entry.loggedAt);
@@ -108,6 +111,15 @@ function renderEntry(entry) {
     const videoUrl = collapseWs(entry.videoUrl);
     if (slidesUrl) links.push(`<a href="${escapeHtml(slidesUrl)}" target="_blank" rel="noopener noreferrer">Slides</a>`);
     if (videoUrl) links.push(`<a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer">Video</a>`);
+  } else if (kind === 'blog') {
+    const blogUrl = collapseWs(entry.blogUrl) || collapseWs(entry.sourceUrl);
+    const repoUrl = collapseWs(entry.paperUrl);
+    if (blogUrl) links.push(`<a href="${escapeHtml(blogUrl)}" target="_blank" rel="noopener noreferrer">Blog post</a>`);
+    if (repoUrl && repoUrl !== blogUrl) {
+      links.push(`<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Repo source</a>`);
+    } else if (!blogUrl && repoUrl) {
+      links.push(`<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Source</a>`);
+    }
   } else {
     const paperUrl = collapseWs(entry.paperUrl);
     const sourceUrl = collapseWs(entry.sourceUrl);
@@ -120,7 +132,7 @@ function renderEntry(entry) {
   return `
     <article class="update-entry">
       <div class="update-meta">
-        <span class="update-kind ${kind}">${kind === 'paper' ? 'Paper' : 'Talk'}</span>
+        <span class="update-kind ${kind}">${kindLabel}</span>
         <span>${escapeHtml(loggedAtLabel)}</span>
       </div>
       <h2 class="update-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
@@ -292,7 +304,7 @@ function renderEntries(entries) {
 
   if (!entries.length) {
     setLoadStatus('');
-    root.innerHTML = '<section class="updates-empty"><h2>No updates yet</h2><p>Newly added talks, slides, videos, and papers will appear here after sync runs.</p></section>';
+    root.innerHTML = '<section class="updates-empty"><h2>No updates yet</h2><p>Newly added talks, slides, videos, papers, and blogs will appear here after sync runs.</p></section>';
     return;
   }
 

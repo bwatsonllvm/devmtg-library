@@ -49,6 +49,7 @@ The update log is generated from content deltas and records newly added:
 - talks
 - slides/video additions
 - papers
+- blog posts
 
 Entries are sorted newest to oldest and linked to in-library detail pages.
 

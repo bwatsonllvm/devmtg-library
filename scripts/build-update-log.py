@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build/update website update log entries for newly added talks/resources/papers.
+"""Build/update website update log entries for newly added talks/resources/papers/blogs.
 
 Default mode:
   - compares current working tree JSON bundles against HEAD versions in git
@@ -7,7 +7,7 @@ Default mode:
       * talks
       * slides added to an existing talk
       * videos added to an existing talk
-      * papers newly added to any papers/*.json bundle
+      * papers/blogs newly added to any papers/*.json bundle
   - collates talk + slides + video into one entry when they appear together
 
 Retroactive mode:
@@ -29,6 +29,7 @@ PART_ORDER = {
     "slides": 1,
     "video": 2,
     "paper": 3,
+    "blog": 4,
 }
 
 
@@ -155,6 +156,30 @@ def paper_sort_hint(year: str) -> str:
     if re.fullmatch(r"\d{4}", clean):
         return f"{clean}-00-00"
     return "0000-00-00"
+
+
+def is_blog_work(paper: dict) -> bool:
+    source = collapse_ws(str(paper.get("source", ""))).lower()
+    source_name = collapse_ws(str(paper.get("sourceName", ""))).lower()
+    work_type = collapse_ws(str(paper.get("type", ""))).lower()
+    publication = collapse_ws(str(paper.get("publication", ""))).lower()
+    venue = collapse_ws(str(paper.get("venue", ""))).lower()
+
+    if source in {"llvm-blog-www", "llvm-www-blog"}:
+        return True
+    if work_type in {"blog", "blog-post", "post"}:
+        return True
+    if "llvm project blog" in source_name:
+        return True
+    if "llvm project blog" in publication or "llvm project blog" in venue:
+        return True
+
+    tags = paper.get("tags")
+    if isinstance(tags, list):
+        for tag in tags:
+            if collapse_ws(str(tag)).lower() == "blog":
+                return True
+    return False
 
 
 def normalize_site_base(raw_site_base: str) -> str:
@@ -285,19 +310,23 @@ def talk_entry(
 
 def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
     paper_id = collapse_ws(str(paper.get("id", "")))
-    title = collapse_ws(str(paper.get("title", ""))) or "(Untitled paper)"
     year = collapse_ws(str(paper.get("year", "")))
     source = collapse_ws(str(paper.get("sourceName", ""))) or collapse_ws(str(paper.get("source", "")))
     paper_url = collapse_ws(str(paper.get("paperUrl", "")))
     source_url = collapse_ws(str(paper.get("sourceUrl", "")))
     detail_url = build_detail_url(site_base, "paper.html", paper_id)
+    is_blog = is_blog_work(paper)
+    kind = "blog" if is_blog else "paper"
+    part = "blog" if is_blog else "paper"
+    default_title = "(Untitled blog post)" if is_blog else "(Untitled paper)"
+    title = collapse_ws(str(paper.get("title", ""))) or default_title
 
     entry = {
-        "kind": "paper",
+        "kind": kind,
         "loggedAt": logged_at_iso,
         "sortHint": paper_sort_hint(year),
-        "fingerprint": f"paper:{paper_id}",
-        "parts": ["paper"],
+        "fingerprint": f"{kind}:{paper_id}",
+        "parts": [part],
         "title": title,
         "url": detail_url,
         "paperId": paper_id,
@@ -309,6 +338,10 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
         entry["paperUrl"] = paper_url
     if source_url:
         entry["sourceUrl"] = source_url
+    if is_blog:
+        blog_url = source_url or paper_url
+        if blog_url:
+            entry["blogUrl"] = blog_url
     return entry
 
 
@@ -367,6 +400,20 @@ def load_existing_log(log_path: Path) -> dict:
     if not isinstance(entries, list):
         payload["entries"] = []
     return payload
+
+
+def entry_fingerprint_aliases(entry: dict) -> set[str]:
+    aliases: set[str] = set()
+    fingerprint = collapse_ws(str(entry.get("fingerprint", "")))
+    if fingerprint:
+        aliases.add(fingerprint)
+
+    kind = collapse_ws(str(entry.get("kind", ""))).lower()
+    paper_id = collapse_ws(str(entry.get("paperId", "")))
+    if paper_id and kind in {"paper", "blog"}:
+        aliases.add(f"paper:{paper_id}")
+        aliases.add(f"blog:{paper_id}")
+    return aliases
 
 
 def resolve_git_revision(repo_root: Path, revision: str) -> str:
@@ -517,17 +564,17 @@ def main() -> int:
             continue
         entry["url"] = normalize_internal_library_url(raw_url, site_base)
 
-    existing_fingerprints = {
-        collapse_ws(str(entry.get("fingerprint", ""))) for entry in existing_entries if collapse_ws(str(entry.get("fingerprint", "")))
-    }
+    existing_fingerprints: set[str] = set()
+    for entry in existing_entries:
+        existing_fingerprints.update(entry_fingerprint_aliases(entry))
 
     appended = 0
     for entry in new_entries:
-        fingerprint = collapse_ws(str(entry.get("fingerprint", "")))
-        if not fingerprint or fingerprint in existing_fingerprints:
+        entry_aliases = entry_fingerprint_aliases(entry)
+        if not entry_aliases or any(alias in existing_fingerprints for alias in entry_aliases):
             continue
         existing_entries.append(entry)
-        existing_fingerprints.add(fingerprint)
+        existing_fingerprints.update(entry_aliases)
         appended += 1
 
     merged_entries = sort_entries(existing_entries)

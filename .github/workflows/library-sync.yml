@@ -95,6 +95,6 @@ jobs:
             - refreshes OpenAlex-discovered papers
             - syncs LLVM blog posts from `llvm-blog-www`
             - rebuilds the single canonical papers database from OpenAlex + llvm.org/pubs
-            - records newly added items in `devmtg/updates/index.json`
+            - records newly added talks/slides/videos/papers/blogs in `devmtg/updates/index.json`
             - updates corresponding manifests/data versions
           labels: automation,data-update
