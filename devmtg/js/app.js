@@ -408,8 +408,8 @@ function renderTalkTypeFilterChip(category, count) {
   return `
     <button class="filter-chip filter-chip--type" data-type="category" data-value="${escapeHtml(normalizedCategory)}"
             role="switch" aria-checked="false">
-      <span class="badge badge-${escapeHtml(badgeKey)}">${escapeHtml(label)}</span>
-      <span class="filter-chip-count">${count.toLocaleString()}</span>
+      <span class="badge filter-chip-type-label badge-${escapeHtml(badgeKey)}">${escapeHtml(label)}</span>
+      <span class="filter-chip-count filter-chip-type-count">${count.toLocaleString()}</span>
     </button>`;
 }
 

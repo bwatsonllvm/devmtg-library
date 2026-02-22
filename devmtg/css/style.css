@@ -1406,18 +1406,60 @@ body.filter-collapsed .filter-collapse-btn svg {
 }
 
 .filter-chip--type {
-  gap: 6px;
-  padding: 4px 9px;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  align-items: stretch;
+  min-height: 30px;
 }
 
-.filter-chip--type .badge {
+.filter-chip--type:hover {
+  background: transparent;
+  border-color: transparent;
+}
+
+.filter-chip--type .filter-chip-type-label {
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  padding: 2px 8px;
+  font-weight: var(--font-weight-semi);
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  line-height: 1;
 }
 
-.filter-chip--type .filter-chip-count {
-  opacity: 0.78;
+.filter-chip--type .filter-chip-type-count {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semi);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  opacity: 1;
+}
+
+.filter-chip--type.active {
+  color: inherit;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--color-border-focus);
+}
+
+.filter-chip--type.active:hover {
+  background: transparent;
+}
+
+.filter-chip--type.active .filter-chip-type-count {
+  border-color: var(--color-border-focus);
 }
 
 .btn-clear-filters {
