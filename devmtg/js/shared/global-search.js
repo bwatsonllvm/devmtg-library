@@ -9,7 +9,7 @@
   let indexBuildPromise = null;
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global search across talks, papers, blogs, people, and key topics';
-  const GLOBAL_SEARCH_PLACEHOLDER = 'Search library…';
+  const GLOBAL_SEARCH_PLACEHOLDER = 'Search library and more...';
   const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
     'Search talks, papers, and people',
     'Search talks, papers, blogs, and people',
@@ -447,9 +447,7 @@
     if (!input.getAttribute('title')) {
       input.setAttribute('title', GLOBAL_SEARCH_LABEL);
     }
-    if (!String(input.getAttribute('placeholder') || '').trim() || !/global/i.test(String(input.getAttribute('placeholder') || ''))) {
-      input.setAttribute('placeholder', GLOBAL_SEARCH_PLACEHOLDER);
-    }
+    input.setAttribute('placeholder', resolveSectionSearchPlaceholder());
 
     ensureDropdown(form);
 
@@ -517,6 +515,31 @@
     for (const form of forms) {
       initGlobalSearchInput(form, initialValue);
     }
+  }
+
+  function resolveSectionSearchPlaceholder() {
+    const pathname = String((window.location && window.location.pathname) || '').toLowerCase();
+    if (!pathname) return GLOBAL_SEARCH_PLACEHOLDER;
+
+    if (pathname.endsWith('/talk.html') || pathname.endsWith('/talks.html') || pathname.includes('/talks/')) {
+      return 'Search talks and more...';
+    }
+    if (pathname.endsWith('/paper.html') || pathname.endsWith('/papers.html')) {
+      return 'Search papers and more...';
+    }
+    if (pathname.endsWith('/blogs.html')) {
+      return 'Search blogs and more...';
+    }
+    if (pathname.endsWith('/people.html')) {
+      return 'Search people and more...';
+    }
+    if (pathname.endsWith('/events.html')) {
+      return 'Search events and more...';
+    }
+    if (pathname.endsWith('/work.html')) {
+      return 'Search all work and more...';
+    }
+    return GLOBAL_SEARCH_PLACEHOLDER;
   }
 
   if (document.readyState === 'loading') {
