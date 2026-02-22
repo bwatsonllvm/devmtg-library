@@ -9,7 +9,7 @@
   let indexBuildPromise = null;
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global search across talks, papers, blogs, people, and key topics';
-  const GLOBAL_SEARCH_PLACEHOLDER = 'Global search talks, papers, blogs, people, key topics…';
+  const GLOBAL_SEARCH_PLACEHOLDER = 'Search library…';
   const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
     'Search talks, papers, and people',
     'Search talks, papers, blogs, and people',

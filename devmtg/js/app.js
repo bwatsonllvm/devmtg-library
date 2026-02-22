@@ -2745,7 +2745,6 @@ function navigateDropdown(direction) {
 function initSearch() {
   const input = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
-  const globalBtn = document.getElementById('search-global');
 
   buildAutocompleteIndex();
 
@@ -2806,18 +2805,6 @@ function initSearch() {
     clearQuery();
     input.focus();
   });
-
-  if (globalBtn) {
-    globalBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      const value = String(input.value || state.query || '').trim();
-      if (!value) {
-        input.focus();
-        return;
-      }
-      routeToGlobalSearch(value);
-    });
-  }
 
   // Keyboard shortcut: / to focus search
   document.addEventListener('keydown', e => {

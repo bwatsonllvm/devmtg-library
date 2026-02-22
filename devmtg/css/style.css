@@ -816,7 +816,7 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 .search-input {
   width: 100%;
   height: 52px;
-  padding: 0 var(--space-4) 0 42px;
+  padding: 0 44px 0 42px;
   font-size: var(--font-size-base);
   color: var(--color-text);
   background: var(--color-surface);
@@ -825,10 +825,6 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
   outline: none;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
   -webkit-appearance: none;
-}
-
-.search-box--with-global .search-input {
-  padding-right: 74px;
 }
 
 .search-input::placeholder {
@@ -883,30 +879,6 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 
 .search-clear.visible {
   display: flex;
-}
-
-.search-global-btn {
-  position: absolute;
-  right: 44px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-full);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  background: transparent;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.search-global-btn:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
 }
 
 /* Search Autocomplete Dropdown */
@@ -2151,7 +2123,7 @@ body.filter-collapsed .filter-collapse-btn svg {
   padding: 2px var(--space-2);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   line-height: 1.4;
   letter-spacing: 0.01em;
@@ -3357,15 +3329,37 @@ mark {
 
   .results-bar {
     padding: var(--space-2);
-  }
-
-  .results-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 6px;
   }
 
+  .results-meta {
+    order: 2;
+    width: 100%;
+    gap: 4px 8px;
+    align-items: center;
+  }
+
   .results-controls {
+    order: 1;
     width: 100%;
     justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .results-context {
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    line-height: 1.35;
+  }
+
+  .active-filters {
+    gap: 6px;
+    padding-top: var(--space-2);
   }
 
   .filter-chip,

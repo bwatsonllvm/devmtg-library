@@ -2303,7 +2303,6 @@ function commitSearchValue(rawValue, allowGlobalRouting = true) {
 function initSearch() {
   const input = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
-  const globalBtn = document.getElementById('search-global');
   if (!input || !clearBtn) return;
 
   buildAutocompleteIndex();
@@ -2363,18 +2362,6 @@ function initSearch() {
     clearQuery();
     input.focus();
   });
-
-  if (globalBtn) {
-    globalBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      const value = String(input.value || state.query || '').trim();
-      if (!value) {
-        input.focus();
-        return;
-      }
-      routeToGlobalSearch(value);
-    });
-  }
 
   document.addEventListener('keydown', (event) => {
     if (event.key === '/' && document.activeElement !== input) {
