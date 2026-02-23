@@ -109,16 +109,24 @@
     }
 
     .update-row {
-      display: grid;
-      gap: 0.35rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
     }
 
     .update-row-label {
+      flex: 0 0 auto;
       color: var(--color-text-muted);
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-semibold);
       letter-spacing: 0.01em;
       line-height: 1.2;
+      white-space: nowrap;
+      padding-top: 0.16rem;
+    }
+
+    .update-row .card-tags {
+      flex: 1 1 auto;
     }
 
     .update-title {
