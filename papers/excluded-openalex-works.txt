@@ -7,3 +7,10 @@
 # This paper is unrelated to LLVM and slipped in via name collision + CIRCT acronym ambiguity.
 openalex:W2400645950
 doi:10.1097/00029330-200804010-00016
+
+# Non-LLVM false positives pulled via broad "llvm" query noise.
+openalex:W2039745104  # Some possibilities for applying Kotelnikov's theorem in stock control
+openalex:W1999372967  # Serum Factors Releasing Serotonin from Normal Platelets...
+openalex:W2277861397  # Research in the clinical biochemistry department...
+openalex:W2408849936  # Long-term results of Swenson's operation for Hirschsprung's disease.
+openalex:W2770313867  # Joint Bank Accounts in Ohio

@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -92,6 +94,7 @@ jobs:
         with:
           # Always open PRs as github-actions[bot] so maintainers can approve.
           token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
           branch: library/automated-sync
           delete-branch: true
           commit-message: "Library update bot sync (OpenAlex + llvm-www + llvm-blog)"
