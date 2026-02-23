@@ -100,40 +100,12 @@
       border-color: transparent;
     }
 
-    .update-parts {
+    .update-parts,
+    .update-topics,
+    .update-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .update-part {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.12rem 0.5rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--color-border);
-      font-size: var(--font-size-xs);
-      color: var(--color-text-muted);
-      background: var(--color-background);
-    }
-
-    .update-topics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.38rem;
-    }
-
-    .update-topic {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.16rem 0.56rem;
-      border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--color-accent) 22%, var(--color-border));
-      background: color-mix(in srgb, var(--color-accent-bg) 70%, var(--color-surface));
-      color: var(--color-accent);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.2;
+      gap: 4px;
     }
 
     .update-title {
@@ -159,24 +131,6 @@
       color: var(--color-text-muted);
       font-size: var(--font-size-sm);
       line-height: var(--line-height-base);
-    }
-
-    .update-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      font-size: var(--font-size-sm);
-    }
-
-    .update-links a {
-      color: var(--color-link);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color var(--transition-fast);
-    }
-
-    .update-links a:hover {
-      border-color: currentColor;
     }
 
     .updates-empty {
@@ -304,6 +258,6 @@
 
   <script src="js/shared/library-utils.js?v=20260222-26"></script>
 
-  <script src="js/updates.js?v=20260222-06"></script>
+  <script src="js/updates.js?v=20260223-01"></script>
 </body>
 </html>

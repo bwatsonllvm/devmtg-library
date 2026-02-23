@@ -136,6 +136,23 @@ function formatKeyTopics(topics, limit = 8) {
   return out;
 }
 
+function topicFilterHref(kind, topic) {
+  const label = collapseWs(topic);
+  if (!label) return '#';
+  if (kind === 'talk') return `talks/?tag=${encodeURIComponent(label)}`;
+  if (kind === 'blog') return `blogs/?tag=${encodeURIComponent(label)}`;
+  return `papers/?tag=${encodeURIComponent(label)}`;
+}
+
+function renderLinkTag(url, label, external = false) {
+  const safeUrl = external ? sanitizeExternalUrl(url) : normalizeLibraryUrl(url);
+  if (!safeUrl) return '';
+  const attrs = external
+    ? ' target="_blank" rel="noopener noreferrer"'
+    : '';
+  return `<a class="card-tag" href="${escapeHtml(safeUrl)}"${attrs}>${escapeHtml(label)}</a>`;
+}
+
 function renderEntry(entry) {
   const kindKey = collapseWs(entry.kind).toLowerCase();
   const kind = kindKey === 'blog' ? 'blog' : (kindKey === 'paper' ? 'paper' : 'talk');
@@ -144,7 +161,16 @@ function renderEntry(entry) {
   const url = normalizeLibraryUrl(entry.url);
   const loggedAtLabel = formatLoggedAt(entry.loggedAt);
   const partLabels = formatParts(entry.parts);
-  const keyTopics = formatKeyTopics(entry.keyTopics);
+  const visiblePartLabels = kind === 'talk'
+    ? partLabels
+    : partLabels.filter((label) => {
+      const lower = collapseWs(label).toLowerCase();
+      return lower !== 'paper' && lower !== 'blog';
+    });
+  const keyTopics = formatKeyTopics(entry.keyTopics).filter((topic) => {
+    const lower = collapseWs(topic).toLowerCase();
+    return lower !== 'paper' && lower !== 'blog';
+  });
 
   let context = '';
   if (kind === 'talk') {
@@ -160,31 +186,43 @@ function renderEntry(entry) {
   }
 
   const links = [];
-  links.push(`<a href="${escapeHtml(url)}">Open in Library</a>`);
+  links.push(renderLinkTag(url, 'Open in Library', false));
 
   if (kind === 'talk') {
-    const slidesUrl = sanitizeExternalUrl(entry.slidesUrl);
-    const videoUrl = sanitizeExternalUrl(entry.videoUrl);
-    if (slidesUrl) links.push(`<a href="${escapeHtml(slidesUrl)}" target="_blank" rel="noopener noreferrer">Slides</a>`);
-    if (videoUrl) links.push(`<a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer">Video</a>`);
+    links.push(renderLinkTag(entry.slidesUrl, 'Slides', true));
+    links.push(renderLinkTag(entry.videoUrl, 'Video', true));
   } else if (kind === 'blog') {
     const blogUrl = sanitizeExternalUrl(entry.blogUrl) || sanitizeExternalUrl(entry.sourceUrl);
     const repoUrl = sanitizeExternalUrl(entry.paperUrl);
-    if (blogUrl) links.push(`<a href="${escapeHtml(blogUrl)}" target="_blank" rel="noopener noreferrer">Blog post</a>`);
+    if (blogUrl) links.push(renderLinkTag(blogUrl, 'Blog Post', true));
     if (repoUrl && repoUrl !== blogUrl) {
-      links.push(`<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Repo source</a>`);
+      links.push(renderLinkTag(repoUrl, 'Repo Source', true));
     } else if (!blogUrl && repoUrl) {
-      links.push(`<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Source</a>`);
+      links.push(renderLinkTag(repoUrl, 'Source', true));
     }
   } else {
-    const paperUrl = sanitizeExternalUrl(entry.paperUrl);
-    const sourceUrl = sanitizeExternalUrl(entry.sourceUrl);
-    if (paperUrl) links.push(`<a href="${escapeHtml(paperUrl)}" target="_blank" rel="noopener noreferrer">Paper URL</a>`);
-    if (sourceUrl) links.push(`<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">Source URL</a>`);
+    links.push(renderLinkTag(entry.paperUrl, 'Paper', true));
+    links.push(renderLinkTag(entry.sourceUrl, 'Source', true));
   }
 
-  const partHtml = partLabels.map((label) => `<span class="update-part">${escapeHtml(label)}</span>`).join('');
-  const topicHtml = keyTopics.map((topic) => `<span class="update-topic">${escapeHtml(topic)}</span>`).join('');
+  const uniqueLinks = [];
+  const seenLinks = new Set();
+  for (const link of links) {
+    const key = collapseWs(link);
+    if (!key || seenLinks.has(key)) continue;
+    seenLinks.add(key);
+    uniqueLinks.push(link);
+  }
+
+  const partHtml = visiblePartLabels
+    .map((label) => `<span class="card-tag card-tag--paper">${escapeHtml(label)}</span>`)
+    .join('');
+  const topicHtml = keyTopics
+    .map((topic) => {
+      const href = topicFilterHref(kind, topic);
+      return `<a class="card-tag" href="${escapeHtml(href)}" aria-label="Browse ${kind === 'talk' ? 'talks' : (kind === 'blog' ? 'blogs' : 'papers')} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`;
+    })
+    .join('');
 
   return `
     <article class="update-entry">
@@ -194,9 +232,9 @@ function renderEntry(entry) {
       </div>
       <h2 class="update-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
       ${context ? `<div class="update-context">${escapeHtml(context)}</div>` : ''}
-      ${partHtml ? `<div class="update-parts">${partHtml}</div>` : ''}
-      ${topicHtml ? `<div class="update-topics" aria-label="Key topics">${topicHtml}</div>` : ''}
-      <div class="update-links">${links.join('')}</div>
+      ${partHtml ? `<div class="card-tags update-parts" aria-label="Updated assets">${partHtml}</div>` : ''}
+      ${topicHtml ? `<div class="card-tags update-topics" aria-label="Key topics">${topicHtml}</div>` : ''}
+      ${uniqueLinks.length ? `<div class="card-tags update-links" aria-label="Resource links">${uniqueLinks.join('')}</div>` : ''}
     </article>
   `;
 }
