@@ -104,4 +104,3 @@ jobs:
             - backfills direct paper PDF links using OpenAlex + Unpaywall
             - records newly added talks/slides/videos/papers/blogs in `updates/index.json`
             - updates corresponding manifests/data versions
-          labels: automation,data-update
