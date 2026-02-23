@@ -155,13 +155,14 @@ async function loadUpdateLog() {
     throw new Error(`${UPDATE_LOG_PATH}: expected JSON object`);
   }
   const entries = sortEntriesMostRecent(payload.entries);
+  const lastLibraryUpdateCompletedAt = collapseWs(payload.lastLibraryUpdateCompletedAt) || collapseWs(payload.generatedAt);
   return {
-    generatedAt: collapseWs(payload.generatedAt),
+    lastLibraryUpdateCompletedAt,
     entries,
   };
 }
 
-function updateSubtitle(entries, generatedAt) {
+function updateSubtitle(entries, lastLibraryUpdateCompletedAt) {
   const subtitle = document.getElementById('updates-subtitle');
   if (!subtitle) return;
   const count = entries.length;
@@ -169,8 +170,10 @@ function updateSubtitle(entries, generatedAt) {
     subtitle.textContent = 'No update entries recorded yet.';
     return;
   }
-  const generatedLabel = generatedAt ? ` · generated ${formatLoggedAt(generatedAt)}` : '';
-  subtitle.textContent = `${count.toLocaleString()} update entr${count === 1 ? 'y' : 'ies'}${generatedLabel}`;
+  const completedLabel = lastLibraryUpdateCompletedAt
+    ? ` · last library update completed ${formatLoggedAt(lastLibraryUpdateCompletedAt)}`
+    : '';
+  subtitle.textContent = `${count.toLocaleString()} update entr${count === 1 ? 'y' : 'ies'}${completedLabel}`;
 }
 
 function teardownInfiniteLoader() {
@@ -634,8 +637,8 @@ async function init() {
   initShareMenu();
 
   try {
-    const { entries, generatedAt } = await loadUpdateLog();
-    updateSubtitle(entries, generatedAt);
+    const { entries, lastLibraryUpdateCompletedAt } = await loadUpdateLog();
+    updateSubtitle(entries, lastLibraryUpdateCompletedAt);
     renderEntries(entries);
   } catch (error) {
     showError(String(error && error.message ? error.message : error));

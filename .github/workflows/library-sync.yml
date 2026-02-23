@@ -17,6 +17,8 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -84,6 +86,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.LIBRARY_SYNC_TOKEN != '' && secrets.LIBRARY_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
           branch: codex/automated-library-sync
           delete-branch: true
           commit-message: "Automated library sync (OpenAlex + llvm-www + llvm-blog)"

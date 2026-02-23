@@ -582,7 +582,15 @@ def main() -> int:
     merged_entries = sort_entries(existing_entries)
     existing_data_version = collapse_ws(str(log_payload.get("dataVersion", "")))
     existing_generated_at = collapse_ws(str(log_payload.get("generatedAt", "")))
+    existing_last_completed_at = collapse_ws(str(log_payload.get("lastLibraryUpdateCompletedAt", "")))
     should_refresh_metadata = appended > 0 or not log_json.exists() or (args.retroactive_history and not args.append_retroactive)
+    completed_at_iso = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+    effective_last_completed_at = (
+        completed_at_iso
+        if should_refresh_metadata
+        else (existing_last_completed_at or existing_generated_at or completed_at_iso)
+    )
 
     next_payload = {
         "dataVersion": (
@@ -590,9 +598,9 @@ def main() -> int:
             if should_refresh_metadata
             else (existing_data_version or _dt.date.today().isoformat() + "-updates-log")
         ),
-        "generatedAt": (
-            logged_at_iso if should_refresh_metadata else (existing_generated_at or logged_at_iso)
-        ),
+        # Retain generatedAt for backward compatibility with older clients.
+        "generatedAt": effective_last_completed_at,
+        "lastLibraryUpdateCompletedAt": effective_last_completed_at,
         "entries": merged_entries,
     }
 
