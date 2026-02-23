@@ -1,4 +1,4 @@
-name: Library Data Sync
+name: Library Update Bot
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: library-data-sync
+  group: library-update-bot
   cancel-in-progress: true
 
 jobs:
@@ -91,10 +91,10 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.LIBRARY_SYNC_TOKEN != '' && secrets.LIBRARY_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
-          branch: codex/automated-library-sync
+          branch: library/automated-sync
           delete-branch: true
-          commit-message: "Automated library sync (OpenAlex + llvm-www + llvm-blog)"
-          title: "Automated library sync (OpenAlex + llvm-www + llvm-blog)"
+          commit-message: "Library update bot sync (OpenAlex + llvm-www + llvm-blog)"
+          title: "Library update bot sync (OpenAlex + llvm-www + llvm-blog)"
           body: |
             Automated weekly sync:
             - adds/updates talks/slides/videos from `llvm-www/devmtg`
