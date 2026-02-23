@@ -1,0 +1,36 @@
+{
+  "meeting": {
+    "slug": "2007-07-25",
+    "name": "2007 Google Tech Talk",
+    "date": "July 25, 2007",
+    "location": "Mountain View, CA, USA",
+    "canceled": false,
+    "talkCount": 1
+  },
+  "talks": [
+    {
+      "id": "2007-07-25-001",
+      "meeting": "2007-07-25",
+      "meetingName": "2007 Google Tech Talk",
+      "meetingLocation": "Mountain View, CA, USA",
+      "meetingDate": "July 25, 2007",
+      "category": "technical-talk",
+      "title": "LLVM 2.0 and Beyond!",
+      "speakers": [
+        {
+          "name": "Chris Lattner",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "The LLVM 2.0 release brings a number of new features and capabilities to the LLVM toolset. This talk briefly describes those features, then moves on to talk about what is next: llvm 2.1, llvm-gcc 4.2, and puts a special emphasis on the 'clang' C front-end. This describes how the 'clang' preprocessor can be used to improve the scalability of distcc by up to 4.4x.",
+      "videoUrl": "https://www.youtube.com/watch?v=VeRaLPupGks",
+      "videoId": "VeRaLPupGks",
+      "slidesUrl": "https://llvm.org/pubs/2007-07-25-LLVM-2.0-and-Beyond.pdf",
+      "tags": [
+        "Clang",
+        "LLVM",
+        "Frontend"
+      ]
+    }
+  ]
+}

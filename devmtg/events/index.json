@@ -1,5 +1,5 @@
 {
-  "dataVersion": "2026-02-23-auto-sync-devmtg",
+  "dataVersion": "2026-02-23-manual-talk-reclassify-v1",
   "eventFiles": [
     "2026-01.json",
     "2025-10.json",
@@ -70,6 +70,7 @@
     "2009-10.json",
     "2008-08.json",
     "2008-08-23.json",
+    "2007-07-25.json",
     "2007-05.json"
   ]
 }

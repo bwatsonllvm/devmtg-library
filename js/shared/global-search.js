@@ -1,5 +1,5 @@
 /**
- * global-search.js — Header global search hydration + autocomplete.
+ * global-search.js — Header Global Search hydration + autocomplete.
  */
 
 (function () {
@@ -8,8 +8,8 @@
   let dataLoadPromise = null;
   let indexBuildPromise = null;
   const formStateMap = new WeakMap();
-  const GLOBAL_SEARCH_LABEL = 'Global search across talks, papers, blogs, people, and key topics';
-  const GLOBAL_SEARCH_PLACEHOLDER = 'Search library and more...';
+  const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, people, and key topics';
+  const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
   const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
     'Search talks, papers, and people',
     'Search talks, papers, blogs, and people',
@@ -257,7 +257,7 @@
     dropdown = document.createElement('div');
     dropdown.className = 'search-dropdown global-search-dropdown hidden';
     dropdown.setAttribute('role', 'listbox');
-    dropdown.setAttribute('aria-label', 'Global search suggestions');
+    dropdown.setAttribute('aria-label', 'Global Search suggestions');
     form.appendChild(dropdown);
     return dropdown;
   }
@@ -335,7 +335,7 @@
         <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
                 data-autocomplete-value="${escapeHtml(String(query || '').trim())}">
           <span class="search-dropdown-item-icon">${searchIcon}</span>
-          <span class="search-dropdown-item-label">Search entire library for "${escapeHtml(String(query || '').trim())}"</span>
+          <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(String(query || '').trim())}"</span>
           <span class="search-dropdown-item-count">All</span>
         </button>
       </div>`];
@@ -454,12 +454,24 @@
       input.value = initialValue;
     }
 
+    const currentFormLabel = String(form.getAttribute('aria-label') || '').trim();
+    if (!currentFormLabel || /search talks, papers/i.test(currentFormLabel) || /global search/i.test(currentFormLabel)) {
+      form.setAttribute('aria-label', GLOBAL_SEARCH_LABEL);
+    }
+
     const currentLabel = String(input.getAttribute('aria-label') || '').trim();
     if (!currentLabel || LEGACY_GLOBAL_SEARCH_LABELS.has(currentLabel)) {
       input.setAttribute('aria-label', GLOBAL_SEARCH_LABEL);
     }
     if (!input.getAttribute('title')) {
       input.setAttribute('title', GLOBAL_SEARCH_LABEL);
+    }
+    const submitButton = form.querySelector('.global-search-submit');
+    if (submitButton) {
+      submitButton.setAttribute('aria-label', 'Run Global Search');
+      if (!submitButton.getAttribute('title')) {
+        submitButton.setAttribute('title', 'Run Global Search');
+      }
     }
     input.setAttribute('placeholder', resolveSectionSearchPlaceholder());
 
@@ -561,7 +573,7 @@
       return 'Search people and more...';
     }
     if (pathname.endsWith('/work.html')) {
-      return 'Search all work and more...';
+      return 'Search the full library...';
     }
     return GLOBAL_SEARCH_PLACEHOLDER;
   }

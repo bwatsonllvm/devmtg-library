@@ -171,6 +171,7 @@ function buildPersonIssueUrl(person) {
 
 function buildSpeakerWorkUrl(name) {
   const params = new URLSearchParams();
+  params.set('mode', 'entity');
   params.set('kind', 'speaker');
   params.set('value', String(name || '').trim());
   params.set('from', 'people');
@@ -620,7 +621,7 @@ function renderPersonCard(person, tokens) {
     : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Blogs 0</span>`;
 
   const speakerWorkUrl = buildSpeakerWorkUrl(person.name);
-  const allWorkLink = `<a class="card-link-btn card-link-btn--video" href="${speakerWorkUrl}" aria-label="View talks and papers for ${escapeHtml(person.name)}">
+  const allWorkLink = `<a class="card-link-btn card-link-btn--video" href="${speakerWorkUrl}" aria-label="Open All Work for ${escapeHtml(person.name)}">
       <span aria-hidden="true">All Work</span>
     </a>`;
   const reportIssueLink = `<a class="card-link-btn report-issue-link" href="${escapeHtml(buildPersonIssueUrl(person))}" target="_blank" rel="noopener noreferrer" aria-label="Report an issue for ${escapeHtml(person.name)} (opens in new tab)">

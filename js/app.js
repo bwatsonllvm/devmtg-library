@@ -1895,7 +1895,7 @@ function createActiveFilterPill(typeLabel, valueLabel, ariaLabel, onRemove, opti
     workLink.className = 'active-filter-pill__work';
     workLink.href = workHref;
     workLink.textContent = options.workLabel || 'All Work';
-    workLink.setAttribute('aria-label', options.workAriaLabel || `${typeLabel} ${valueLabel}: see all related work`);
+    workLink.setAttribute('aria-label', options.workAriaLabel || `${typeLabel} ${valueLabel}: open All Work results`);
     workLink.addEventListener('click', (event) => {
       event.stopPropagation();
     });
@@ -1943,7 +1943,7 @@ function renderActiveFilters() {
       removeSpeakerFilter,
       {
         workHref: buildAllWorkUrl('speaker', state.speaker),
-        workAriaLabel: `See all work for speaker ${state.speaker}`,
+        workAriaLabel: `See All Work for speaker ${state.speaker}`,
       }
     ));
   }
@@ -1956,11 +1956,11 @@ function renderActiveFilters() {
     if (state.activeSpeaker && state.activeSpeaker.toLowerCase() === state.query.toLowerCase()) {
       typeLabel = 'Speaker';
       workHref = buildAllWorkUrl('speaker', state.query);
-      workAriaLabel = `See all work for speaker ${state.query}`;
+      workAriaLabel = `See All Work for speaker ${state.query}`;
     } else if (state.activeTag && state.activeTag.toLowerCase() === state.query.toLowerCase()) {
       typeLabel = 'Key Topic';
       workHref = buildAllWorkUrl('topic', state.query);
-      workAriaLabel = `See all work for key topic ${state.query}`;
+      workAriaLabel = `See All Work for key topic ${state.query}`;
     }
     pills.push(createActiveFilterPill(
       typeLabel,
@@ -2939,6 +2939,7 @@ function initCardNavigation() {
 
 function buildAllWorkUrl(kind, value) {
   const params = new URLSearchParams();
+  params.set('mode', 'entity');
   params.set('kind', kind);
   params.set('value', String(value || '').trim());
   params.set('from', 'talks');

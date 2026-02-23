@@ -325,6 +325,7 @@ document.addEventListener('error', (event) => {
 
 function buildWorkUrl(kind, value) {
   const params = new URLSearchParams();
+  params.set('mode', 'entity');
   params.set('kind', kind);
   params.set('value', String(value || '').trim());
   params.set('from', 'work');
@@ -342,7 +343,8 @@ function parseStateFromUrl() {
   const FROM_VALUES = new Set(['talks', 'papers', 'blogs', 'people', 'work']);
   const from = FROM_VALUES.has(fromParam) ? fromParam : 'talks';
   const hasEntityContext = Boolean(valueParam || kindParam);
-  const isSearchMode = modeParam === 'search' || (!hasEntityContext && !!queryParam);
+  const explicitEntityMode = modeParam === 'entity';
+  const isSearchMode = modeParam === 'search' || (!explicitEntityMode && !hasEntityContext && !!queryParam);
 
   state.kind = kind;
   state.mode = isSearchMode ? 'search' : 'entity';
@@ -369,6 +371,7 @@ function syncUrlState() {
     params.set('mode', 'search');
     if (state.query) params.set('q', state.query);
   } else {
+    params.set('mode', 'entity');
     params.set('kind', state.kind === 'speaker' ? 'speaker' : 'topic');
     if (state.value) params.set('value', state.value);
   }
@@ -1204,6 +1207,11 @@ function renderBlogBatch(reset = false) {
   }
 }
 
+function setWorkDocumentTitle(value) {
+  const title = String(value || '').trim();
+  document.title = title ? `${title} — LLVM Research Library` : 'LLVM Research Library';
+}
+
 function applyHeaderState() {
   const titleEl = document.getElementById('work-title');
   const subtitleEl = document.getElementById('work-subtitle');
@@ -1236,17 +1244,19 @@ function applyHeaderState() {
   if (state.mode === 'search') {
     if (!state.query) {
       if (titleEl) titleEl.textContent = 'Global Search';
-      if (subtitleEl) subtitleEl.textContent = 'Search talks, papers, and blogs from one place.';
+      if (subtitleEl) subtitleEl.textContent = 'Use Global Search across talks, papers, and blogs from one place.';
       if (summaryEl) summaryEl.textContent = 'No search query provided';
       if (universalCountEl) universalCountEl.textContent = '';
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
       if (blogsCountEl) blogsCountEl.textContent = '';
+      setWorkDocumentTitle('Global Search');
       return;
     }
 
     if (titleEl) titleEl.textContent = 'Global Search';
     if (subtitleEl) subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong>, ranked across talks, papers, and blogs`;
+    setWorkDocumentTitle(`Global Search: ${state.query}`);
   } else {
     if (!state.value) {
       if (titleEl) titleEl.textContent = 'All Work';
@@ -1256,17 +1266,19 @@ function applyHeaderState() {
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
       if (blogsCountEl) blogsCountEl.textContent = '';
+      setWorkDocumentTitle('All Work');
       return;
     }
 
     if (titleEl) titleEl.textContent = `${entityLabel}: ${state.value}`;
     if (subtitleEl) {
       if (state.kind === 'speaker') {
-        subtitleEl.innerHTML = `Showing talks and papers for <strong>${escapeHtml(state.value)}</strong>`;
+        subtitleEl.innerHTML = `All Work for <strong>${escapeHtml(state.value)}</strong> across talks and papers`;
       } else {
-        subtitleEl.innerHTML = `Showing talks, papers, and blogs for <strong>${escapeHtml(state.value)}</strong>`;
+        subtitleEl.innerHTML = `All Work for key topic <strong>${escapeHtml(state.value)}</strong> across talks, papers, and blogs`;
       }
     }
+    setWorkDocumentTitle(`All Work: ${entityLabel} ${state.value}`);
   }
 
   if (universalCountEl) {
@@ -1413,7 +1425,7 @@ function renderError(message) {
   const blogsGrid = document.getElementById('work-blogs-grid');
   const summaryEl = document.getElementById('work-results-summary');
 
-  if (summaryEl) summaryEl.textContent = 'Could not load all work';
+  if (summaryEl) summaryEl.textContent = 'Could not load work results';
 
   const html = `<div class="work-empty-state">${escapeHtml(message)}</div>`;
 

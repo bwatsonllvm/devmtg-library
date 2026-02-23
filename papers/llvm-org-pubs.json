@@ -7150,28 +7150,6 @@
       "publication": "Proc. of the 2007 ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI'07)"
     },
     {
-      "id": "pubs-2007-llvm-2-0-and-beyond",
-      "source": "llvm-org-pubs",
-      "title": "LLVM 2.0 and Beyond!",
-      "authors": [
-        {
-          "name": "Chris Lattner",
-          "affiliation": ""
-        }
-      ],
-      "year": "2007",
-      "venue": "Google Tech Talk | Mountain View, CA",
-      "type": "research-paper",
-      "abstract": "The LLVM 2.0 release brings a number of new features and capabilities to the LLVM toolset. This talk briefly describes those features, then moves on to talk about what is next: llvm 2.1, llvm-gcc 4.2, and puts a special emphasis on the 'clang' C front-end. This describes how the 'clang' preprocessor can be used to improve the scalability of distcc by up to 4.4x.",
-      "paperUrl": "https://llvm.org/pubs/2007-07-25-LLVM-2.0-and-Beyond.pdf",
-      "sourceUrl": "https://llvm.org/pubs/2007-07-25-LLVM-2.0-and-Beyond.html",
-      "tags": [
-        "Clang"
-      ],
-      "sourceName": "LLVM Publications",
-      "publication": "Google Tech Talk"
-    },
-    {
       "id": "pubs-2007-improving-switch-lowering-for-the-llvm-compiler-system",
       "source": "llvm-org-pubs",
       "title": "Improving Switch Lowering for The LLVM Compiler System",

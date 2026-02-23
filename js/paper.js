@@ -11,6 +11,9 @@ const BLOG_SOURCE_SLUG_ALIASES = new Set([
 const PAPERS_PAGE_PATH = 'papers/';
 const BLOGS_PAGE_PATH = 'blogs/';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
+const PAPER_TO_TALK_REDIRECTS = {
+  'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
+};
 
 // ============================================================
 // Data Loading
@@ -282,6 +285,7 @@ function getListingLabelForPaper(paper) {
 
 function buildSpeakerWorkUrl(name, paper) {
   const params = new URLSearchParams();
+  params.set('mode', 'entity');
   params.set('kind', 'speaker');
   params.set('value', String(name || '').trim());
   params.set('from', isBlogPaper(paper) ? 'blogs' : 'papers');
@@ -1900,6 +1904,12 @@ async function init() {
       issueTitle: `[${missingItemLabel}] Missing ${missingItemLabel.toLowerCase()} ID`,
     });
     initShareMenu();
+    return;
+  }
+
+  const migratedTalkId = PAPER_TO_TALK_REDIRECTS[String(paperId || '').trim()];
+  if (migratedTalkId) {
+    window.location.replace(`../talks/talk.html?id=${encodeURIComponent(migratedTalkId)}`);
     return;
   }
 

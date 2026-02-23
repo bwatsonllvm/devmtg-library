@@ -18,7 +18,7 @@ It is designed as a public, online reference site.
 
 Search now uses a shared, relevance-first stack intended to work for both LLVM newcomers and advanced researchers.
 
-### Global autocomplete and query routing
+### Global Search autocomplete and query routing
 
 - All `.global-search-form` inputs use a shared autocomplete index sourced from talks, papers/blogs, people, and key topics.
 - Suggestions are grouped into:
@@ -72,7 +72,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 - `papers/` and `blogs/`: sort (`relevance`, `year`, `citations`) + `grid/list` view toggle.
 - `work.html` (global/entity combined results):
   - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
-  - in global search mode (`mode=search`), results are interleaved across talks/papers/blogs by cross-type relevance (not fixed by content type)
+  - in Global Search mode (`mode=search`), results are interleaved across talks/papers/blogs by cross-type relevance (not fixed by content type)
   - exact/prefix title intent gets additional boost so precise queries surface the best matching item first, regardless of type
   - `expanded/compact` view toggle across talks, papers, and blogs sections
   - URL-state support for `sort` and `view`, with mode-aware defaults
@@ -84,7 +84,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 
 - `work.html` supports:
   - `mode=search&q=...` for global query mode
-  - `kind=speaker|topic&value=...` for entity mode
+  - `mode=entity&kind=speaker|topic&value=...` for entity mode (All Work)
   - `from=talks|papers|blogs|people|work` for back-link context
   - `sort=...` and `view=expanded|compact`
 - Default Work sort is:
@@ -94,6 +94,11 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - `llvm-hub-view` (talks/papers/blogs grid/list)
   - `llvm-hub-work-view` (work expanded/compact)
   - `llvm-hub-people-view` (people expanded/compact)
+
+### Terminology: All Work vs Global Search
+
+- **Global Search**: free-text, cross-library ranking mode (`work.html?mode=search&q=...`).
+- **All Work**: entity aggregation mode for a speaker or key topic (`work.html?mode=entity&kind=...&value=...`).
 
 ## How The Database Is Constructed
 

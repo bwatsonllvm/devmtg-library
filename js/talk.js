@@ -548,6 +548,7 @@ function twitterSvg() {
 
 function buildSpeakerWorkUrl(name) {
   const params = new URLSearchParams();
+  params.set('mode', 'entity');
   params.set('kind', 'speaker');
   params.set('value', String(name || '').trim());
   params.set('from', 'talks');
