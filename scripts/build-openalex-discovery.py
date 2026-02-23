@@ -901,15 +901,42 @@ def _canonicalize_publication_label(value: str) -> str:
     return clean
 
 
+def _publication_candidate_from_location(location: dict, allow_repository: bool) -> str:
+    if not isinstance(location, dict):
+        return ""
+
+    raw_source_name = _canonicalize_publication_label(str(location.get("raw_source_name", "")))
+    if raw_source_name:
+        return raw_source_name
+
+    source = location.get("source") or {}
+    if not isinstance(source, dict):
+        return ""
+
+    source_display_name = _canonicalize_publication_label(str(source.get("display_name", "")))
+    if not source_display_name:
+        return ""
+
+    source_type = collapse_ws(str(source.get("type", ""))).lower()
+    if source_type == "repository" and not allow_repository:
+        return ""
+    return source_display_name
+
+
 def pick_publication_and_venue(work: dict) -> tuple[str, str]:
     primary = work.get("primary_location") or {}
-    source = primary.get("source") or {}
+    best_oa = work.get("best_oa_location") or {}
+    all_locations = [primary, best_oa, *(work.get("locations") or [])]
 
-    publication = _canonicalize_publication_label(str(source.get("display_name", "")))
+    publication = ""
+    for loc in all_locations:
+        candidate = _publication_candidate_from_location(loc, allow_repository=False)
+        if candidate:
+            publication = candidate
+            break
     if not publication:
-        for loc in (work.get("locations") or []):
-            src = (loc or {}).get("source") or {}
-            candidate = _canonicalize_publication_label(str(src.get("display_name", "")))
+        for loc in all_locations:
+            candidate = _publication_candidate_from_location(loc, allow_repository=True)
             if candidate:
                 publication = candidate
                 break
