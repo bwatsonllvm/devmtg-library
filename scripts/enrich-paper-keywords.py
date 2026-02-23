@@ -107,10 +107,12 @@ def enrich_bundle(
 
 
 def main() -> int:
+    repo_root = Path(__file__).resolve().parents[1]
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--papers-dir", default="/Users/britton/Desktop/library/papers")
-    parser.add_argument("--manifest", default="/Users/britton/Desktop/library/papers/index.json")
-    parser.add_argument("--app-js", default="/Users/britton/Desktop/library/devmtg/js/app.js")
+    parser.add_argument("--papers-dir", default=str(repo_root / "papers"))
+    parser.add_argument("--manifest", default=str(repo_root / "papers/index.json"))
+    parser.add_argument("--app-js", default=str(repo_root / "devmtg/js/app.js"))
     parser.add_argument("--all-json", action="store_true", help="Process every papers/*.json file (except index.json)")
     parser.add_argument(
         "--keep-existing-keywords",

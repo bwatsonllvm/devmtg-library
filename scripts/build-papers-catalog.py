@@ -790,11 +790,13 @@ def build_dataset(
 
 
 def main() -> int:
+    repo_root = Path(__file__).resolve().parents[1]
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--src-repo", default="/tmp/llvm-www-pubs", help="Path to llvm-www-pubs checkout")
-    parser.add_argument("--app-js", default="/Users/britton/Desktop/library/devmtg/js/app.js", help="Path to devmtg app.js")
-    parser.add_argument("--old-dataset", default="/Users/britton/Desktop/library/papers/llvm-org-pubs.json", help="Existing dataset for abstract/author fallback")
-    parser.add_argument("--out-dir", default="/Users/britton/Desktop/library/papers", help="Output directory for generated papers data")
+    parser.add_argument("--app-js", default=str(repo_root / "devmtg/js/app.js"), help="Path to devmtg app.js")
+    parser.add_argument("--old-dataset", default=str(repo_root / "papers/llvm-org-pubs.json"), help="Existing dataset for abstract/author fallback")
+    parser.add_argument("--out-dir", default=str(repo_root / "papers"), help="Output directory for generated papers data")
     parser.add_argument(
         "--resolve-empty-links-from-openalex",
         action="store_true",
@@ -802,7 +804,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--openalex-cache",
-        default="/Users/britton/Desktop/library/papers/.cache/openalex-title-links.json",
+        default=str(repo_root / "papers/.cache/openalex-title-links.json"),
         help="Path to OpenAlex title lookup cache",
     )
     args = parser.parse_args()

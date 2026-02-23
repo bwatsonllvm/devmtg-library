@@ -170,9 +170,11 @@ def normalize_bundle(path: Path) -> int:
 
 
 def main() -> int:
+    repo_root = Path(__file__).resolve().parents[1]
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--papers-dir", default="/Users/britton/Desktop/library/papers")
-    parser.add_argument("--manifest", default="/Users/britton/Desktop/library/papers/index.json")
+    parser.add_argument("--papers-dir", default=str(repo_root / "papers"))
+    parser.add_argument("--manifest", default=str(repo_root / "papers/index.json"))
     args = parser.parse_args()
 
     papers_dir = Path(args.papers_dir).resolve()

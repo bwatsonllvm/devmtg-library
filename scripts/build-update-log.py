@@ -522,9 +522,11 @@ def build_entries_from_history(
 
 
 def main() -> int:
+    default_repo_root = Path(__file__).resolve().parents[1]
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--repo-root", default="/Users/britton/Desktop/library")
-    parser.add_argument("--log-json", default="/Users/britton/Desktop/library/devmtg/updates/index.json")
+    parser.add_argument("--repo-root", default=str(default_repo_root))
+    parser.add_argument("--log-json", default=str(default_repo_root / "devmtg/updates/index.json"))
     parser.add_argument("--site-base", default="")
     parser.add_argument("--retroactive-history", action="store_true")
     parser.add_argument("--history-from", default="")

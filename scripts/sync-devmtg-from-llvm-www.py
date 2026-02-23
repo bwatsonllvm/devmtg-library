@@ -939,9 +939,11 @@ def merge_meeting_talks(
 
 
 def main() -> int:
+    repo_root = Path(__file__).resolve().parents[1]
+
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--events-dir", default="/Users/britton/Desktop/library/devmtg/events")
-    parser.add_argument("--manifest", default="/Users/britton/Desktop/library/devmtg/events/index.json")
+    parser.add_argument("--events-dir", default=str(repo_root / "devmtg/events"))
+    parser.add_argument("--manifest", default=str(repo_root / "devmtg/events/index.json"))
     parser.add_argument("--repo", default=LLVM_WWW_REPO, help="GitHub repo in owner/name form")
     parser.add_argument("--ref", default=LLVM_WWW_REF, help="Git ref for llvm-www")
     parser.add_argument("--github-api-base", default=GITHUB_API_BASE)

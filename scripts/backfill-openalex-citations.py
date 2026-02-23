@@ -3,9 +3,9 @@
 
 Usage:
   ./scripts/backfill-openalex-citations.py \
-    --bundle /Users/britton/Desktop/library/papers/openalex-llvm-query.json \
-    --bundle /Users/britton/Desktop/library/papers/combined-all-papers-deduped.json \
-    --manifest /Users/britton/Desktop/library/papers/index.json
+    --bundle papers/openalex-llvm-query.json \
+    --bundle papers/combined-all-papers-deduped.json \
+    --manifest papers/index.json
 """
 
 from __future__ import annotations
