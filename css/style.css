@@ -1480,6 +1480,64 @@ body.filter-collapsed .filter-collapse-btn svg {
   min-width: 0;
 }
 
+.work-scope-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.work-scope-toggle[hidden] {
+  display: none !important;
+}
+
+.work-scope-btn {
+  min-height: 26px;
+  border: 0;
+  border-radius: calc(var(--radius-md) - 2px);
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast);
+  white-space: nowrap;
+}
+
+.work-scope-btn:hover {
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+}
+
+.work-scope-btn.active {
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+}
+
+.work-scope-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 10px;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+}
+
+.work-scope-btn.active .work-scope-count {
+  color: var(--color-text);
+}
+
 .results-sort-label {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
@@ -3026,6 +3084,7 @@ mark {
 /* Enhanced focus for interactive elements */
 .filter-chip:focus-visible,
 .btn-clear-filters:focus-visible,
+.work-scope-btn:focus-visible,
 .view-btn:focus-visible,
 .header-action-btn:focus-visible,
 .mobile-filter-toggle:focus-visible,
@@ -3421,10 +3480,26 @@ mark {
   .results-controls {
     order: 1;
     width: 100%;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     gap: 8px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+  }
+
+  .work-scope-toggle {
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .results-sort-select {
+    order: 2;
+  }
+
+  .view-toggle {
+    order: 3;
   }
 
   .results-sort-label {

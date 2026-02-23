@@ -172,6 +172,7 @@
       <p class="subtitle" id="work-subtitle">Loading talks, papers, and blogs...</p>
       <form class="search-box global-search-form work-hero-search" action="work.html" method="get" role="search" aria-label="Search talks, papers, blogs, and people">
         <input type="hidden" name="mode" value="search">
+        <input type="hidden" id="work-search-scope-input" name="scope" value="all">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -203,6 +204,24 @@
           <span class="results-count" id="work-results-summary" role="status" aria-live="polite">Loading...</span>
         </div>
         <div class="results-controls">
+          <div class="work-scope-toggle" id="work-scope-toggle" role="group" aria-label="Search scope">
+            <button type="button" class="work-scope-btn active" data-work-scope="all" aria-pressed="true">
+              <span>All</span>
+              <span class="work-scope-count" id="work-scope-count-all">0</span>
+            </button>
+            <button type="button" class="work-scope-btn" data-work-scope="talks" aria-pressed="false">
+              <span>Talks</span>
+              <span class="work-scope-count" id="work-scope-count-talks">0</span>
+            </button>
+            <button type="button" class="work-scope-btn" data-work-scope="papers" aria-pressed="false">
+              <span>Papers</span>
+              <span class="work-scope-count" id="work-scope-count-papers">0</span>
+            </button>
+            <button type="button" class="work-scope-btn" data-work-scope="blogs" aria-pressed="false">
+              <span>Blogs</span>
+              <span class="work-scope-count" id="work-scope-count-blogs">0</span>
+            </button>
+          </div>
           <label for="work-sort-select" class="results-sort-label">Sort by</label>
           <select id="work-sort-select" class="results-sort-select" aria-label="Sort work results">
             <option value="relevance">Relevance</option>
@@ -291,6 +310,6 @@
   <script src="js/papers-data.js?v=20260223-01"></script>
   <script src="js/shared/library-utils.js?v=20260223-04"></script>
   <script src="js/shared/global-search.js?v=20260223-02"></script>
-  <script src="js/work.js?v=20260223-03"></script>
+  <script src="js/work.js?v=20260223-04"></script>
 </body>
 </html>
