@@ -362,7 +362,38 @@ function normalizeTalks(rawTalks) {
 }
 
 function normalizePapers(rawPapers) {
-  return Array.isArray(rawPapers) ? rawPapers : [];
+  return Array.isArray(rawPapers)
+    ? rawPapers.filter((paper) => paper && typeof paper === 'object')
+    : [];
+}
+
+const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
+
+function isBlogPaperRecord(paper) {
+  if (!paper || typeof paper !== 'object') return false;
+  if (paper._isBlog === true) return true;
+
+  const source = String(paper.source || '').trim().toLowerCase();
+  const type = String(paper.type || '').trim().toLowerCase();
+  const sourceUrl = String(paper.sourceUrl || '').trim();
+  const paperUrl = String(paper.paperUrl || '').trim();
+
+  if (BLOG_SOURCE_SLUGS.has(source)) return true;
+  if (type === 'blog' || type === 'blog-post') return true;
+  if (/^https?:\/\/(?:www\.)?blog\.llvm\.org\//i.test(sourceUrl)) return true;
+  if (/github\.com\/llvm\/(?:llvm-blog-www|llvm-www-blog)\b/i.test(paperUrl)) return true;
+  return false;
+}
+
+function isValidPaperRecord(paper) {
+  if (!paper || typeof paper !== 'object') return false;
+  const id = String(paper.id || '').trim();
+  const title = String(paper.title || '').trim();
+  return !!(id && title);
+}
+
+function countPaperRecordsForPapersPage(papers) {
+  return papers.filter((paper) => isValidPaperRecord(paper) && !isBlogPaperRecord(paper)).length;
 }
 
 function isCanceledMeeting(meeting) {
@@ -415,7 +446,7 @@ async function loadAndRenderStats() {
   }
 
   setText('about-stat-talks', formatCount(talks.length));
-  setText('about-stat-papers', formatCount(papers.length));
+  setText('about-stat-papers', formatCount(countPaperRecordsForPapersPage(papers)));
   setText('about-stat-people', formatCount(peopleCount));
   setText('about-stat-meetings', formatCount(uniqueMeetings.size));
 }
