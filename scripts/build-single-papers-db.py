@@ -271,6 +271,38 @@ def looks_non_english(value: str, threshold: float = 0.35) -> bool:
     return english_ratio(text) < threshold
 
 
+def should_replace_text_with_candidate(
+    current: str,
+    candidate: str,
+    *,
+    threshold: float = 0.35,
+    current_is_placeholder: bool = False,
+) -> bool:
+    current_text = collapse_ws(current)
+    candidate_text = collapse_ws(candidate)
+    if not candidate_text:
+        return False
+    if not current_text:
+        return True
+    if current_is_placeholder:
+        return True
+
+    current_non_english = looks_non_english(current_text, threshold=threshold)
+    candidate_non_english = looks_non_english(candidate_text, threshold=threshold)
+
+    # Preserve existing English text when the candidate appears non-English.
+    if not current_non_english and candidate_non_english:
+        return False
+
+    # Prefer an English candidate when existing text is non-English.
+    if current_non_english and not candidate_non_english:
+        return True
+
+    # Both appear to be same language class (both English or both non-English):
+    # allow refresh to keep metadata in sync.
+    return True
+
+
 def parse_int(value) -> int | None:
     try:
         out = int(value)
@@ -1196,10 +1228,24 @@ def apply_openalex_refresh(
         citation_count = parse_int(work.get("cited_by_count"))
         paper_type = classify_type(str(work.get("type", "")), str(paper.get("type", "")))
 
-        if openalex_title:
+        current_title = collapse_ws(str(paper.get("title", "")))
+        current_abs = collapse_ws(str(paper.get("abstract", "")))
+
+        if should_replace_text_with_candidate(
+            current_title,
+            openalex_title,
+            threshold=0.35,
+        ):
             paper["title"] = openalex_title
-        if openalex_abs:
+            current_title = collapse_ws(openalex_title)
+        if should_replace_text_with_candidate(
+            current_abs,
+            openalex_abs,
+            threshold=0.45,
+            current_is_placeholder=is_placeholder_abstract(current_abs),
+        ):
             paper["abstract"] = openalex_abs
+            current_abs = collapse_ws(openalex_abs)
         if openalex_authors:
             paper["authors"] = openalex_authors
         if re.fullmatch(r"\d{4}", openalex_year):
@@ -1264,9 +1310,6 @@ def apply_openalex_refresh(
                 "sourceUpdatedAt": work_updated,
                 "updatedAt": _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
             }
-
-        current_title = collapse_ws(str(paper.get("title", "")))
-        current_abs = collapse_ws(str(paper.get("abstract", "")))
 
         if fallback_title:
             if _is_low_quality_fallback_title(
