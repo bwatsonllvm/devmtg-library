@@ -32,6 +32,72 @@ PART_ORDER = {
     "blog": 4,
 }
 
+MAX_KEY_TOPICS_PER_ENTRY = 8
+DEFAULT_KEY_TOPIC_CANONICAL = ["LLVM", "Clang", "MLIR", "OpenMP", "IR", "GPU", "Performance", "Security", "WASM"]
+DEFAULT_KEY_TOPIC_ALIASES = {
+    "llvm": "LLVM",
+    "clang": "Clang",
+    "clangd": "Clang",
+    "mlir": "MLIR",
+    "openmp": "OpenMP",
+    "libomp": "OpenMP",
+    "ir": "IR",
+    "intermediaterepresentation": "IR",
+    "gpu": "GPU",
+    "performance": "Performance",
+    "security": "Security",
+    "wasm": "WASM",
+    "webassembly": "WASM",
+}
+TOPIC_TEXT_RULES: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"\bllvm\b", flags=re.IGNORECASE), "LLVM"),
+    (re.compile(r"\bclang(?:d)?\b", flags=re.IGNORECASE), "Clang"),
+    (re.compile(r"\bmlir\b|\bmulti[- ]level intermediate representation\b", flags=re.IGNORECASE), "MLIR"),
+    (re.compile(r"\bflang\b", flags=re.IGNORECASE), "Flang"),
+    (re.compile(r"\blld\b", flags=re.IGNORECASE), "LLD"),
+    (re.compile(r"\blldb\b", flags=re.IGNORECASE), "LLDB"),
+    (re.compile(r"\bcirct\b", flags=re.IGNORECASE), "CIRCT"),
+    (re.compile(r"\bopenmp\b|\blibomp\b", flags=re.IGNORECASE), "OpenMP"),
+    (re.compile(r"\bcompiler[- ]?rt\b|\blibfuzzer\b", flags=re.IGNORECASE), "compiler-rt"),
+    (re.compile(r"\blibc\+\+\b", flags=re.IGNORECASE), "libc++"),
+    (re.compile(r"\blibc\b", flags=re.IGNORECASE), "libc"),
+    (re.compile(r"\bbolt\b", flags=re.IGNORECASE), "BOLT"),
+    (re.compile(r"\borc(?:\s*jit)?\b", flags=re.IGNORECASE), "ORC JIT"),
+    (re.compile(r"\bclangir\b|\bclang\s+ir\b", flags=re.IGNORECASE), "ClangIR"),
+    (re.compile(r"\bllvm\s+ir\b|\bintermediate representation\b|\bssa\b", flags=re.IGNORECASE), "IR"),
+    (re.compile(r"\bjust[- ]in[- ]time\b|\bjit\b", flags=re.IGNORECASE), "JIT"),
+    (re.compile(r"\blto\b|\blink[- ]time optimization\b", flags=re.IGNORECASE), "LTO"),
+    (re.compile(r"\bpgo\b|\bprofile[- ]guided optimization\b", flags=re.IGNORECASE), "PGO"),
+    (re.compile(r"\btesting\b|\bfuzz(?:ing|er|ers)?\b", flags=re.IGNORECASE), "Testing"),
+    (
+        re.compile(
+            r"\bsanitizer(?:s)?\b|\baddresssanitizer\b|\bthreadsanitizer\b|\bubsan\b|\basan\b|\btsan\b",
+            flags=re.IGNORECASE,
+        ),
+        "Sanitizers",
+    ),
+    (re.compile(r"\bsecurity\b|\bmemory safety\b|\bcontrol flow integrity\b|\bcfi\b", flags=re.IGNORECASE), "Security"),
+    (re.compile(r"\bperformance\b", flags=re.IGNORECASE), "Performance"),
+    (re.compile(r"\boptimizations?\b|\boptimisation\b", flags=re.IGNORECASE), "Optimizations"),
+    (re.compile(r"\bgpu(?:s)?\b", flags=re.IGNORECASE), "GPU"),
+    (re.compile(r"\bcuda\b", flags=re.IGNORECASE), "CUDA"),
+    (re.compile(r"\bopencl\b", flags=re.IGNORECASE), "OpenCL"),
+    (re.compile(r"\bhip\b|\brocm\b", flags=re.IGNORECASE), "HIP"),
+    (re.compile(r"\brisc[- ]?v\b", flags=re.IGNORECASE), "RISC-V"),
+    (re.compile(r"\baarch64\b|\barm64\b", flags=re.IGNORECASE), "AArch64"),
+    (re.compile(r"\bx86[-_ ]?64\b", flags=re.IGNORECASE), "x86-64"),
+    (re.compile(r"\bwebassembly\b|\bwasm(?:32|64)?\b", flags=re.IGNORECASE), "WASM"),
+    (re.compile(r"\bartificial intelligence\b|\bagentic ai\b|\bai\b", flags=re.IGNORECASE), "AI"),
+    (re.compile(r"\bmachine learning\b|\bdeep learning\b|\breinforcement learning\b|\bml\b", flags=re.IGNORECASE), "ML"),
+    (re.compile(r"\brust\b", flags=re.IGNORECASE), "Rust"),
+    (re.compile(r"\bswift\b", flags=re.IGNORECASE), "Swift"),
+    (re.compile(r"\bquantum (?:computing|compiler|compilation)\b", flags=re.IGNORECASE), "Quantum Computing"),
+    (re.compile(r"\bllvm foundation\b|\bfoundation update(?:s)?\b", flags=re.IGNORECASE), "LLVM Foundation"),
+    (re.compile(r"\bmcp\b", flags=re.IGNORECASE), "MCP"),
+    (re.compile(r"\bvplan\b", flags=re.IGNORECASE), "VPlan"),
+    (re.compile(r"\bmojo\b", flags=re.IGNORECASE), "Mojo"),
+]
+
 
 def collapse_ws(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
@@ -46,6 +112,342 @@ PLACEHOLDER_URL_VALUES = {"none", "null", "nil", "nan", "n/a", "na", "undefined"
 
 def is_placeholder_url_value(value: str | None) -> bool:
     return collapse_ws(str(value or "")).lower() in PLACEHOLDER_URL_VALUES
+
+
+def normalize_topic_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9+]+", "", collapse_ws(value).lower())
+
+
+def parse_js_quoted_values(raw: str) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for single, double in re.findall(r"'([^']+)'|\"([^\"]+)\"", raw):
+        value = collapse_ws(single or double)
+        key = normalize_topic_key(value)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(value)
+    return out
+
+
+def parse_key_topic_aliases(raw: str) -> list[tuple[str, str]]:
+    pairs: list[tuple[str, str]] = []
+    for line in raw.splitlines():
+        cleaned = line.split("//", 1)[0].strip().rstrip(",").strip()
+        if not cleaned:
+            continue
+        match = re.match(
+            r"(?:(['\"])(?P<qkey>.*?)\1|(?P<key>[A-Za-z0-9_]+))\s*:\s*(['\"])(?P<value>.*?)\4$",
+            cleaned,
+        )
+        if not match:
+            continue
+        alias = collapse_ws(match.group("qkey") or match.group("key") or "")
+        target = collapse_ws(match.group("value") or "")
+        if not alias or not target:
+            continue
+        pairs.append((alias, target))
+    return pairs
+
+
+def build_topic_lookup(repo_root: Path) -> dict[str, str]:
+    canonical_topics = list(DEFAULT_KEY_TOPIC_CANONICAL)
+    aliases = dict(DEFAULT_KEY_TOPIC_ALIASES)
+
+    library_utils_path = (repo_root / "js" / "shared" / "library-utils.js").resolve()
+    if library_utils_path.exists():
+        try:
+            text = library_utils_path.read_text(encoding="utf-8")
+
+            canonical_match = re.search(
+                r"const\s+KEY_TOPIC_CANONICAL\s*=\s*\[(.*?)\];",
+                text,
+                flags=re.DOTALL,
+            )
+            if canonical_match:
+                parsed = parse_js_quoted_values(canonical_match.group(1))
+                if parsed:
+                    canonical_topics = parsed
+
+            alias_match = re.search(
+                r"const\s+KEY_TOPIC_ALIAS_MAP_RAW\s*=\s*\{(.*?)\};",
+                text,
+                flags=re.DOTALL,
+            )
+            if alias_match:
+                for alias, canonical in parse_key_topic_aliases(alias_match.group(1)):
+                    aliases[normalize_topic_key(alias)] = canonical
+        except Exception:
+            # Keep defaults if parsing library-utils.js fails.
+            pass
+
+    canonical_by_key: dict[str, str] = {}
+    for topic in canonical_topics:
+        key = normalize_topic_key(topic)
+        if key and key not in canonical_by_key:
+            canonical_by_key[key] = topic
+
+    topic_by_key = dict(canonical_by_key)
+    for alias_key, target in aliases.items():
+        key = normalize_topic_key(alias_key)
+        canonical_topic = canonical_by_key.get(normalize_topic_key(target))
+        if key and canonical_topic:
+            topic_by_key[key] = canonical_topic
+
+    if "llvm" not in topic_by_key:
+        topic_by_key["llvm"] = canonical_by_key.get("llvm", "LLVM")
+    return topic_by_key
+
+
+def text_list(value: object) -> list[str]:
+    if isinstance(value, list):
+        raw_values = value
+    elif isinstance(value, tuple):
+        raw_values = list(value)
+    elif isinstance(value, str):
+        # Support legacy comma-delimited values if present.
+        raw_values = re.split(r"[;,|]", value) if any(sep in value for sep in (",", ";", "|")) else [value]
+    else:
+        return []
+
+    out: list[str] = []
+    for item in raw_values:
+        cleaned = collapse_ws(str(item))
+        if cleaned:
+            out.append(cleaned)
+    return out
+
+
+def collect_key_topics(seed_values: list[str], text: str, topic_by_key: dict[str, str], limit: int = MAX_KEY_TOPICS_PER_ENTRY) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def add(raw_value: str) -> None:
+        key = normalize_topic_key(raw_value)
+        if not key:
+            return
+        canonical = topic_by_key.get(key)
+        if not canonical:
+            singular = key[:-1] if key.endswith("s") and len(key) > 3 else key
+            canonical = topic_by_key.get(singular, "")
+        canonical_key = normalize_topic_key(canonical)
+        if not canonical or not canonical_key or canonical_key in seen:
+            return
+        seen.add(canonical_key)
+        out.append(canonical)
+
+    for value in seed_values:
+        add(value)
+        if len(out) >= limit:
+            return out[:limit]
+
+    haystack = collapse_ws(text)
+    if haystack:
+        for pattern, topic in TOPIC_TEXT_RULES:
+            if len(out) >= limit:
+                break
+            if pattern.search(haystack):
+                add(topic)
+
+        compact_text_key = normalize_topic_key(haystack)
+        if compact_text_key and len(out) < limit:
+            alias_items = sorted(topic_by_key.items(), key=lambda pair: len(pair[0]), reverse=True)
+            for alias_key, canonical in alias_items:
+                if len(out) >= limit:
+                    break
+                if len(alias_key) < 4:
+                    continue
+                if alias_key in compact_text_key:
+                    add(canonical)
+
+    if not out:
+        fallback = topic_by_key.get("llvm", "LLVM")
+        if fallback:
+            out.append(fallback)
+    return out[:limit]
+
+
+def talk_key_topics(talk: dict, topic_by_key: dict[str, str]) -> list[str]:
+    seed_values = [
+        *text_list(talk.get("tags")),
+        *text_list(talk.get("keywords")),
+    ]
+    text = " ".join(
+        part
+        for part in [
+            collapse_ws(str(talk.get("title", ""))),
+            collapse_ws(str(talk.get("abstract", ""))),
+            collapse_ws(str(talk.get("category", ""))),
+        ]
+        if part
+    )
+    return collect_key_topics(seed_values, text, topic_by_key)
+
+
+def paper_key_topics(paper: dict, topic_by_key: dict[str, str]) -> list[str]:
+    seed_values = [
+        *text_list(paper.get("tags")),
+        *text_list(paper.get("keywords")),
+        *text_list(paper.get("matchedSubprojects")),
+    ]
+    text = " ".join(
+        part
+        for part in [
+            collapse_ws(str(paper.get("title", ""))),
+            collapse_ws(str(paper.get("abstract", ""))),
+            collapse_ws(str(paper.get("publication", ""))),
+            collapse_ws(str(paper.get("venue", ""))),
+            collapse_ws(str(paper.get("sourceName", ""))),
+            collapse_ws(str(paper.get("source", ""))),
+        ]
+        if part
+    )
+    return collect_key_topics(seed_values, text, topic_by_key)
+
+
+def event_bundle_paths(repo_root: Path) -> list[Path]:
+    index_path = repo_root / "devmtg" / "events" / "index.json"
+    if not index_path.exists():
+        return []
+    payload = load_json_file(index_path)
+    files = payload.get("eventFiles") or []
+    if not isinstance(files, list):
+        return []
+
+    paths: list[Path] = []
+    for rel_name in files:
+        name = collapse_ws(str(rel_name))
+        if not name or not name.endswith(".json") or name == "index.json":
+            continue
+        path = (repo_root / "devmtg" / "events" / name).resolve()
+        if path.exists():
+            paths.append(path)
+    return paths
+
+
+def paper_bundle_paths(repo_root: Path) -> list[Path]:
+    index_path = repo_root / "papers" / "index.json"
+    if not index_path.exists():
+        return []
+    payload = load_json_file(index_path)
+    files = payload.get("paperFiles") or []
+    if not isinstance(files, list):
+        return []
+
+    paths: list[Path] = []
+    for rel_name in files:
+        name = collapse_ws(str(rel_name))
+        if not name or not name.endswith(".json") or name == "index.json":
+            continue
+        path = (repo_root / "papers" / name).resolve()
+        if path.exists():
+            paths.append(path)
+    return paths
+
+
+def score_talk_record(talk: dict) -> int:
+    return (
+        len(text_list(talk.get("tags")))
+        + len(text_list(talk.get("keywords")))
+        + (1 if has_text(str(talk.get("abstract", ""))) else 0)
+        + (1 if has_text(str(talk.get("title", ""))) else 0)
+    )
+
+
+def score_paper_record(paper: dict) -> int:
+    return (
+        len(text_list(paper.get("tags")))
+        + len(text_list(paper.get("keywords")))
+        + len(text_list(paper.get("matchedSubprojects")))
+        + (1 if has_text(str(paper.get("abstract", ""))) else 0)
+        + (1 if has_text(str(paper.get("title", ""))) else 0)
+    )
+
+
+def build_talk_lookup(repo_root: Path) -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for bundle_path in event_bundle_paths(repo_root):
+        payload = load_json_file(bundle_path)
+        talks = payload.get("talks") or []
+        if not isinstance(talks, list):
+            continue
+        for talk in talks:
+            if not isinstance(talk, dict):
+                continue
+            talk_id = collapse_ws(str(talk.get("id", "")))
+            if not talk_id:
+                continue
+            existing = out.get(talk_id)
+            if not existing or score_talk_record(talk) >= score_talk_record(existing):
+                out[talk_id] = talk
+    return out
+
+
+def build_paper_lookup(repo_root: Path) -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for bundle_path in paper_bundle_paths(repo_root):
+        payload = load_json_file(bundle_path)
+        papers = payload.get("papers") or []
+        if not isinstance(papers, list):
+            continue
+        for paper in papers:
+            if not isinstance(paper, dict):
+                continue
+            paper_id = collapse_ws(str(paper.get("id", "")))
+            if not paper_id:
+                continue
+            existing = out.get(paper_id)
+            if not existing or score_paper_record(paper) >= score_paper_record(existing):
+                out[paper_id] = paper
+    return out
+
+
+def entry_key_topics(
+    entry: dict,
+    talk_lookup: dict[str, dict],
+    paper_lookup: dict[str, dict],
+    topic_by_key: dict[str, str],
+) -> list[str]:
+    kind = collapse_ws(str(entry.get("kind", ""))).lower()
+    seed_values = text_list(entry.get("keyTopics"))
+    text_parts = [
+        collapse_ws(str(entry.get("title", ""))),
+        collapse_ws(str(entry.get("source", ""))),
+        collapse_ws(str(entry.get("meetingName", ""))),
+        collapse_ws(str(entry.get("meetingSlug", ""))),
+    ]
+
+    if kind == "talk":
+        talk_id = collapse_ws(str(entry.get("talkId", "")))
+        talk = talk_lookup.get(talk_id)
+        if talk:
+            seed_values.extend(text_list(talk.get("tags")))
+            seed_values.extend(text_list(talk.get("keywords")))
+            text_parts.extend(
+                [
+                    collapse_ws(str(talk.get("title", ""))),
+                    collapse_ws(str(talk.get("abstract", ""))),
+                    collapse_ws(str(talk.get("category", ""))),
+                ]
+            )
+    elif kind in {"paper", "blog"}:
+        paper_id = collapse_ws(str(entry.get("paperId", "")))
+        paper = paper_lookup.get(paper_id)
+        if paper:
+            seed_values.extend(text_list(paper.get("tags")))
+            seed_values.extend(text_list(paper.get("keywords")))
+            seed_values.extend(text_list(paper.get("matchedSubprojects")))
+            text_parts.extend(
+                [
+                    collapse_ws(str(paper.get("title", ""))),
+                    collapse_ws(str(paper.get("abstract", ""))),
+                    collapse_ws(str(paper.get("publication", ""))),
+                    collapse_ws(str(paper.get("venue", ""))),
+                ]
+            )
+
+    return collect_key_topics(seed_values, " ".join(part for part in text_parts if part), topic_by_key)
 
 
 def load_json_file(path: Path) -> dict:
@@ -335,6 +737,7 @@ def talk_entry(
     parts: list[str],
     logged_at_iso: str,
     site_base: str,
+    topic_by_key: dict[str, str],
 ) -> dict:
     talk_id = collapse_ws(str(talk.get("id", "")))
     title = collapse_ws(str(talk.get("title", ""))) or "(Untitled talk)"
@@ -359,6 +762,7 @@ def talk_entry(
         "meetingSlug": meeting_slug,
         "meetingName": meeting_name,
         "meetingDate": meeting_date,
+        "keyTopics": talk_key_topics(talk, topic_by_key),
     }
     if slides_url:
         entry["slidesUrl"] = slides_url
@@ -367,7 +771,7 @@ def talk_entry(
     return entry
 
 
-def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
+def paper_entry(paper: dict, logged_at_iso: str, site_base: str, topic_by_key: dict[str, str]) -> dict:
     paper_id = collapse_ws(str(paper.get("id", "")))
     year = collapse_ws(str(paper.get("year", "")))
     source = collapse_ws(str(paper.get("sourceName", ""))) or collapse_ws(str(paper.get("source", "")))
@@ -390,6 +794,7 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
         "url": detail_url,
         "paperId": paper_id,
         "year": year,
+        "keyTopics": paper_key_topics(paper, topic_by_key),
     }
     if source:
         entry["source"] = source
@@ -404,7 +809,13 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
     return entry
 
 
-def diff_talk_entries(current_payload: dict | None, prev_payload: dict | None, logged_at_iso: str, site_base: str) -> list[dict]:
+def diff_talk_entries(
+    current_payload: dict | None,
+    prev_payload: dict | None,
+    logged_at_iso: str,
+    site_base: str,
+    topic_by_key: dict[str, str],
+) -> list[dict]:
     entries: list[dict] = []
     current_talks = talks_by_id(current_payload)
     prev_talks = talks_by_id(prev_payload)
@@ -421,11 +832,17 @@ def diff_talk_entries(current_payload: dict | None, prev_payload: dict | None, l
             parts.append("video")
 
         if parts:
-            entries.append(talk_entry(current_talk, parts, logged_at_iso, site_base))
+            entries.append(talk_entry(current_talk, parts, logged_at_iso, site_base, topic_by_key))
     return entries
 
 
-def diff_paper_entries(current_payload: dict | None, prev_payload: dict | None, logged_at_iso: str, site_base: str) -> list[dict]:
+def diff_paper_entries(
+    current_payload: dict | None,
+    prev_payload: dict | None,
+    logged_at_iso: str,
+    site_base: str,
+    topic_by_key: dict[str, str],
+) -> list[dict]:
     entries: list[dict] = []
     current_papers = papers_by_id(current_payload)
     prev_papers = papers_by_id(prev_payload)
@@ -433,7 +850,7 @@ def diff_paper_entries(current_payload: dict | None, prev_payload: dict | None, 
     for paper_id, current_paper in current_papers.items():
         if paper_id in prev_papers:
             continue
-        entries.append(paper_entry(current_paper, logged_at_iso, site_base))
+        entries.append(paper_entry(current_paper, logged_at_iso, site_base, topic_by_key))
     return entries
 
 
@@ -515,7 +932,12 @@ def changed_json_paths_for_commit(repo_root: Path, commit: str, parent: str) -> 
     return changed
 
 
-def build_entries_from_working_tree_delta(repo_root: Path, site_base: str, logged_at_iso: str) -> tuple[list[dict], int, int]:
+def build_entries_from_working_tree_delta(
+    repo_root: Path,
+    site_base: str,
+    logged_at_iso: str,
+    topic_by_key: dict[str, str],
+) -> tuple[list[dict], int, int]:
     changed_json_paths = list_changed_json_paths(repo_root)
     changed_event_paths = sorted(path for path in changed_json_paths if is_event_json_path(path))
     changed_paper_paths = sorted(path for path in changed_json_paths if is_paper_json_path(path))
@@ -529,7 +951,7 @@ def build_entries_from_working_tree_delta(repo_root: Path, site_base: str, logge
         current_payload = load_json_file(abs_path)
         prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
         prev_payload = parse_json_text(prev_raw) if prev_raw else None
-        entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base))
+        entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
 
     for rel_path in changed_paper_paths:
         abs_path = repo_root / rel_path
@@ -538,7 +960,7 @@ def build_entries_from_working_tree_delta(repo_root: Path, site_base: str, logge
         current_payload = load_json_file(abs_path)
         prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
         prev_payload = parse_json_text(prev_raw) if prev_raw else None
-        entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base))
+        entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
 
     return entries, len(changed_event_paths), len(changed_paper_paths)
 
@@ -547,6 +969,7 @@ def build_entries_from_history(
     repo_root: Path,
     commits: list[str],
     site_base: str,
+    topic_by_key: dict[str, str],
 ) -> tuple[list[dict], int, int]:
     entries: list[dict] = []
     changed_event_count = 0
@@ -564,7 +987,7 @@ def build_entries_from_history(
             prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
             current_payload = parse_json_text(current_raw)
             prev_payload = parse_json_text(prev_raw) if prev_raw else None
-            entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base))
+            entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
             changed_event_count += 1
 
         for rel_path in sorted(path for path in changed_paths if is_paper_json_path(path)):
@@ -574,7 +997,7 @@ def build_entries_from_history(
             prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
             current_payload = parse_json_text(current_raw)
             prev_payload = parse_json_text(prev_raw) if prev_raw else None
-            entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base))
+            entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
             changed_paper_count += 1
 
     return entries, changed_event_count, changed_paper_count
@@ -597,6 +1020,9 @@ def main() -> int:
     repo_root = Path(args.repo_root).resolve()
     log_json = Path(args.log_json).resolve()
     site_base = normalize_site_base(str(args.site_base))
+    topic_by_key = build_topic_lookup(repo_root)
+    talk_lookup = build_talk_lookup(repo_root)
+    paper_lookup = build_paper_lookup(repo_root)
 
     logged_at_iso = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     if args.retroactive_history:
@@ -605,12 +1031,14 @@ def main() -> int:
             repo_root=repo_root,
             commits=commits,
             site_base=site_base,
+            topic_by_key=topic_by_key,
         )
     else:
         new_entries, changed_event_count, changed_paper_count = build_entries_from_working_tree_delta(
             repo_root=repo_root,
             site_base=site_base,
             logged_at_iso=logged_at_iso,
+            topic_by_key=topic_by_key,
         )
 
     log_payload = load_existing_log(log_json)
@@ -621,6 +1049,7 @@ def main() -> int:
 
     for entry in existing_entries:
         sanitize_update_entry_urls(entry, site_base)
+        entry["keyTopics"] = entry_key_topics(entry, talk_lookup, paper_lookup, topic_by_key)
 
     existing_fingerprints: set[str] = set()
     for entry in existing_entries:
@@ -628,6 +1057,8 @@ def main() -> int:
 
     appended = 0
     for entry in new_entries:
+        sanitize_update_entry_urls(entry, site_base)
+        entry["keyTopics"] = entry_key_topics(entry, talk_lookup, paper_lookup, topic_by_key)
         entry_aliases = entry_fingerprint_aliases(entry)
         if not entry_aliases or any(alias in existing_fingerprints for alias in entry_aliases):
             continue

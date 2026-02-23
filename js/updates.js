@@ -121,6 +121,21 @@ function formatParts(parts) {
   return out;
 }
 
+function formatKeyTopics(topics, limit = 8) {
+  const values = Array.isArray(topics) ? topics : [];
+  const out = [];
+  const seen = new Set();
+  for (const topic of values) {
+    const label = collapseWs(topic);
+    const key = label.toLowerCase();
+    if (!label || seen.has(key)) continue;
+    seen.add(key);
+    out.push(label);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
 function renderEntry(entry) {
   const kindKey = collapseWs(entry.kind).toLowerCase();
   const kind = kindKey === 'blog' ? 'blog' : (kindKey === 'paper' ? 'paper' : 'talk');
@@ -129,6 +144,7 @@ function renderEntry(entry) {
   const url = normalizeLibraryUrl(entry.url);
   const loggedAtLabel = formatLoggedAt(entry.loggedAt);
   const partLabels = formatParts(entry.parts);
+  const keyTopics = formatKeyTopics(entry.keyTopics);
 
   let context = '';
   if (kind === 'talk') {
@@ -168,6 +184,7 @@ function renderEntry(entry) {
   }
 
   const partHtml = partLabels.map((label) => `<span class="update-part">${escapeHtml(label)}</span>`).join('');
+  const topicHtml = keyTopics.map((topic) => `<span class="update-topic">${escapeHtml(topic)}</span>`).join('');
 
   return `
     <article class="update-entry">
@@ -178,6 +195,7 @@ function renderEntry(entry) {
       <h2 class="update-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
       ${context ? `<div class="update-context">${escapeHtml(context)}</div>` : ''}
       ${partHtml ? `<div class="update-parts">${partHtml}</div>` : ''}
+      ${topicHtml ? `<div class="update-topics" aria-label="Key topics">${topicHtml}</div>` : ''}
       <div class="update-links">${links.join('')}</div>
     </article>
   `;

@@ -89,6 +89,13 @@ ruby -rjson -e '
     abort("updates/index.json entry #{idx} missing kind") if String(entry["kind"]).strip.empty?
     abort("updates/index.json entry #{idx} missing title") if String(entry["title"]).strip.empty?
     abort("updates/index.json entry #{idx} missing url") if String(entry["url"]).strip.empty?
+    topics = entry["keyTopics"]
+    abort("updates/index.json entry #{idx} missing keyTopics array") unless topics.is_a?(Array)
+    abort("updates/index.json entry #{idx} keyTopics must not be empty") if topics.empty?
+    topics.each_with_index do |topic, tidx|
+      label = String(topic).strip
+      abort("updates/index.json entry #{idx} keyTopics[#{tidx}] must be non-empty string") if label.empty?
+    end
   end
 ' "$UPDATES_ROOT"
 
