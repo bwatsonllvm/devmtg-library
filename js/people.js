@@ -1218,17 +1218,22 @@ async function init() {
   let talks = [];
   let papers = [];
 
-  try {
-    if (typeof window.loadEventData === 'function') {
+  if (typeof window.loadEventData === 'function') {
+    try {
       const payload = await window.loadEventData();
       talks = normalizeTalks(payload.talks || []);
+    } catch {
+      // Keep talk list empty and continue.
     }
-    if (typeof window.loadPaperData === 'function') {
+  }
+
+  if (typeof window.loadPaperData === 'function') {
+    try {
       const payload = await window.loadPaperData();
       papers = normalizePapers(payload.papers || []);
+    } catch {
+      // Keep paper list empty and continue.
     }
-  } catch {
-    // Keep arrays empty and let rendering show fallback state.
   }
 
   allTalks = talks;

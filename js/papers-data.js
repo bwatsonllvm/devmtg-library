@@ -12,6 +12,16 @@
     return [...new Set(paths.map((p) => String(p || '').trim()).filter(Boolean))];
   }
 
+  function resolveUrl(ref, baseRef) {
+    const rawRef = String(ref || '').trim();
+    if (!rawRef) return '';
+    try {
+      return new URL(rawRef, baseRef || document.baseURI || window.location.href).toString();
+    } catch {
+      return rawRef;
+    }
+  }
+
   function normalizeManifestJson(payload, manifestRef) {
     const manifestLabel = String(manifestRef || 'papers/index.json');
     if (!payload || typeof payload !== 'object') {
@@ -31,7 +41,7 @@
       throw new Error(`${manifestLabel}: missing non-empty "paperFiles"`);
     }
 
-    const manifestUrl = new URL(manifestLabel, window.location.href);
+    const manifestUrl = new URL(manifestLabel, document.baseURI || window.location.href);
     const paperRefs = files
       .map((file) => String(file || '').trim())
       .filter(Boolean)
@@ -78,14 +88,31 @@
     }
   }
 
+  async function fetchJsonWithMeta(path) {
+    const resp = await fetch(path, { cache: 'no-store' });
+    if (!resp.ok) {
+      throw new Error(`${path}: HTTP ${resp.status}`);
+    }
+    try {
+      return {
+        payload: await resp.json(),
+        url: String(resp.url || path),
+      };
+    } catch (err) {
+      throw new Error(`${path}: invalid JSON (${err.message})`);
+    }
+  }
+
   async function loadManifest() {
     const candidates = uniquePaths(MANIFEST_JSON_CANDIDATES);
     const failures = [];
+    const baseRef = document.baseURI || window.location.href;
 
     for (const manifestRef of candidates) {
       try {
-        const manifestPayload = await fetchJson(manifestRef);
-        return normalizeManifestJson(manifestPayload, manifestRef);
+        const manifestUrl = resolveUrl(manifestRef, baseRef);
+        const { payload, url } = await fetchJsonWithMeta(manifestUrl || manifestRef);
+        return normalizeManifestJson(payload, url || manifestUrl || manifestRef);
       } catch (err) {
         failures.push(String(err && err.message ? err.message : err));
       }
