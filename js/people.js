@@ -307,7 +307,7 @@ function renderDropdown(query) {
 
   const sections = [`
       <div class="search-dropdown-section search-dropdown-section--action">
-        <button class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
+        <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
                 data-autocomplete-type="global" data-autocomplete-value="${escapeHtml(query)}">
           <span class="search-dropdown-item-icon">${searchIcon}</span>
           <span class="search-dropdown-item-label">Search entire library for "${escapeHtml(query)}"</span>
@@ -320,7 +320,7 @@ function renderDropdown(query) {
       <div class="search-dropdown-section">
         <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
         ${matchedTopics.map((item) => `
-          <button class="search-dropdown-item" role="option" aria-selected="false"
+          <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                   data-autocomplete-type="topic" data-autocomplete-value="${escapeHtml(item.label)}">
             <span class="search-dropdown-item-icon">${tagIcon}</span>
             <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -334,7 +334,7 @@ function renderDropdown(query) {
       <div class="search-dropdown-section">
         <div class="search-dropdown-label" aria-hidden="true">Speakers + Authors</div>
         ${matchedPeople.map((item) => `
-          <button class="search-dropdown-item" role="option" aria-selected="false"
+          <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                   data-autocomplete-type="person" data-autocomplete-value="${escapeHtml(item.label)}">
             <span class="search-dropdown-item-icon">${personIcon}</span>
             <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -348,7 +348,7 @@ function renderDropdown(query) {
       <div class="search-dropdown-section">
         <div class="search-dropdown-label" aria-hidden="true">Talk Titles</div>
         ${matchedTalkTitles.map((item) => `
-          <button class="search-dropdown-item" role="option" aria-selected="false"
+          <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                   data-autocomplete-type="talk" data-autocomplete-value="${escapeHtml(item.label)}">
             <span class="search-dropdown-item-icon">${talkIcon}</span>
             <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -362,7 +362,7 @@ function renderDropdown(query) {
       <div class="search-dropdown-section">
         <div class="search-dropdown-label" aria-hidden="true">Paper + Blog Titles</div>
         ${matchedPaperTitles.map((item) => `
-          <button class="search-dropdown-item" role="option" aria-selected="false"
+          <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                   data-autocomplete-type="paper" data-autocomplete-value="${escapeHtml(item.label)}">
             <span class="search-dropdown-item-icon">${paperIcon}</span>
             <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>

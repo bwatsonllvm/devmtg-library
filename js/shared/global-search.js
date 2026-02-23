@@ -332,7 +332,7 @@
 
     const sections = [`
       <div class="search-dropdown-section search-dropdown-section--action">
-        <button class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
+        <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
                 data-autocomplete-value="${escapeHtml(String(query || '').trim())}">
           <span class="search-dropdown-item-icon">${searchIcon}</span>
           <span class="search-dropdown-item-label">Search entire library for "${escapeHtml(String(query || '').trim())}"</span>
@@ -345,7 +345,7 @@
         <div class="search-dropdown-section">
           <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
           ${matches.topics.map((item) => `
-            <button class="search-dropdown-item" role="option" aria-selected="false"
+            <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${tagIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -359,7 +359,7 @@
         <div class="search-dropdown-section">
           <div class="search-dropdown-label" aria-hidden="true">Speakers + Authors</div>
           ${matches.people.map((item) => `
-            <button class="search-dropdown-item" role="option" aria-selected="false"
+            <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${personIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -373,7 +373,7 @@
         <div class="search-dropdown-section">
           <div class="search-dropdown-label" aria-hidden="true">Talk Titles</div>
           ${matches.talks.map((item) => `
-            <button class="search-dropdown-item" role="option" aria-selected="false"
+            <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${talkIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -387,7 +387,7 @@
         <div class="search-dropdown-section">
           <div class="search-dropdown-label" aria-hidden="true">Paper + Blog Titles</div>
           ${matches.papers.map((item) => `
-            <button class="search-dropdown-item" role="option" aria-selected="false"
+            <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${paperIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -494,7 +494,17 @@
       if (event.key === 'Enter') {
         const state = getFormState(form);
         const dropdown = form.querySelector('.global-search-dropdown');
-        if (!dropdown || dropdown.classList.contains('hidden') || state.activeItemIndex < 0) return;
+        if (!dropdown || dropdown.classList.contains('hidden')) return;
+        if (state.activeItemIndex < 0) {
+          event.preventDefault();
+          closeDropdown(form);
+          if (typeof form.requestSubmit === 'function') {
+            form.requestSubmit();
+          } else {
+            form.submit();
+          }
+          return;
+        }
         const items = dropdown.querySelectorAll('.search-dropdown-item');
         const activeItem = items[state.activeItemIndex];
         if (!activeItem) return;
