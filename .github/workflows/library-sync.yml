@@ -90,7 +90,8 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.LIBRARY_SYNC_TOKEN != '' && secrets.LIBRARY_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+          # Always open PRs as github-actions[bot] so maintainers can approve.
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: library/automated-sync
           delete-branch: true
           commit-message: "Library update bot sync (OpenAlex + llvm-www + llvm-blog)"
