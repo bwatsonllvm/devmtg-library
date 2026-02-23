@@ -1977,6 +1977,23 @@ body.filter-collapsed .filter-collapse-btn svg {
   background: var(--color-surface-hover);
 }
 
+/* Compact mode for people page keeps key actions while tightening content. */
+.talks-list.people-grid .person-card .card-link-wrap {
+  flex-direction: column;
+}
+
+.talks-list.people-grid .person-card .person-variants {
+  display: none;
+}
+
+.talks-list.people-grid .person-card .card-footer {
+  display: flex;
+}
+
+.talks-list.people-grid .person-card .card-title {
+  -webkit-line-clamp: 1;
+}
+
 .card-link-btn:hover {
   color: var(--color-text);
   border-color: var(--color-border-strong);

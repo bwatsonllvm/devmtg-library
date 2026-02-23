@@ -47,7 +47,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260222-20">
+  <link rel="stylesheet" href="css/style.css?v=20260223-02">
 </head>
 <body>
 
@@ -197,11 +197,26 @@
             <option value="alpha">Alphabetical (A-Z)</option>
             <option value="alpha-desc">Alphabetical (Z-A)</option>
           </select>
+          <div class="view-toggle" role="group" aria-label="Result density">
+            <button class="view-btn active" id="people-view-expanded" title="Expanded view" aria-label="Expanded view" aria-pressed="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </button>
+            <button class="view-btn" id="people-view-compact" title="Compact view" aria-label="Compact view" aria-pressed="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <section class="talks-container" aria-label="People list">
-        <div id="people-grid" class="talks-grid" aria-busy="true">
+        <div id="people-grid" class="talks-grid people-grid" aria-busy="true">
           <div class="loading-state">
             <div class="spinner" aria-hidden="true"></div>
             <p>Loading people...</p>
@@ -215,6 +230,6 @@
   <script src="js/papers-data.js?v=20260223-01"></script>
   <script src="js/shared/library-utils.js?v=20260222-26"></script>
   <script src="js/shared/report-issue.js?v=20260222-06"></script>
-  <script src="js/people.js?v=20260223-01"></script>
+  <script src="js/people.js?v=20260223-02"></script>
 </body>
 </html>

@@ -4,6 +4,8 @@
 
 const HubUtils = window.LLVMHubUtils || {};
 const PEOPLE_SORT_MODES = new Set(['works', 'citations', 'alpha', 'alpha-desc']);
+const PEOPLE_VIEW_MODES = new Set(['expanded', 'compact']);
+const PEOPLE_VIEW_STORAGE_KEY = 'llvm-hub-people-view';
 const INITIAL_RENDER_BATCH_SIZE = 60;
 const RENDER_BATCH_SIZE = 40;
 const LOAD_MORE_ROOT_MARGIN = '900px 0px';
@@ -15,6 +17,7 @@ const state = {
   query: '',
   filter: 'all', // all | talks | papers | blogs | merged
   sortBy: 'works',
+  viewMode: 'expanded',
 };
 
 let allPeople = [];
@@ -110,6 +113,12 @@ function tokenizeQuery(query) {
 
 function normalizeFilterValue(value) {
   return String(value || '').trim().toLowerCase();
+}
+
+function normalizeViewMode(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'compact' || normalized === 'list') return 'compact';
+  return 'expanded';
 }
 
 function highlightText(text, tokens) {
@@ -797,6 +806,48 @@ function initSortControl() {
   syncSortControl();
 }
 
+function syncViewControls() {
+  const expandedBtn = document.getElementById('people-view-expanded');
+  const compactBtn = document.getElementById('people-view-compact');
+  const isCompact = state.viewMode === 'compact';
+
+  if (expandedBtn) {
+    expandedBtn.classList.toggle('active', !isCompact);
+    expandedBtn.setAttribute('aria-pressed', !isCompact ? 'true' : 'false');
+  }
+  if (compactBtn) {
+    compactBtn.classList.toggle('active', isCompact);
+    compactBtn.setAttribute('aria-pressed', isCompact ? 'true' : 'false');
+  }
+}
+
+function applyViewMode(mode, persist = true) {
+  state.viewMode = mode === 'compact' ? 'compact' : 'expanded';
+  const grid = document.getElementById('people-grid');
+  if (grid) {
+    grid.classList.toggle('talks-list', state.viewMode === 'compact');
+    grid.classList.toggle('talks-grid', state.viewMode !== 'compact');
+  }
+  syncViewControls();
+  if (persist) localStorage.setItem(PEOPLE_VIEW_STORAGE_KEY, state.viewMode);
+}
+
+function initViewControls() {
+  const expandedBtn = document.getElementById('people-view-expanded');
+  const compactBtn = document.getElementById('people-view-compact');
+
+  if (expandedBtn) {
+    expandedBtn.addEventListener('click', () => applyViewMode('expanded'));
+  }
+  if (compactBtn) {
+    compactBtn.addEventListener('click', () => applyViewMode('compact'));
+  }
+
+  const saved = normalizeViewMode(localStorage.getItem(PEOPLE_VIEW_STORAGE_KEY));
+  state.viewMode = PEOPLE_VIEW_MODES.has(saved) ? saved : 'expanded';
+  applyViewMode(state.viewMode, false);
+}
+
 function syncFilterChips() {
   document.querySelectorAll('[data-people-filter]').forEach((chip) => {
     const active = chip.dataset.peopleFilter === state.filter;
@@ -1214,6 +1265,7 @@ async function init() {
   initShareMenu();
   initFilterChips();
   initSortControl();
+  initViewControls();
 
   let talks = [];
   let papers = [];

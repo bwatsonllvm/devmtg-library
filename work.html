@@ -64,7 +64,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260222-20">
+  <link rel="stylesheet" href="css/style.css?v=20260223-02">
 </head>
 <body>
 
@@ -202,6 +202,31 @@
         <div class="results-meta">
           <span class="results-count" id="work-results-summary" role="status" aria-live="polite">Loading...</span>
         </div>
+        <div class="results-controls">
+          <label for="work-sort-select" class="results-sort-label">Sort by</label>
+          <select id="work-sort-select" class="results-sort-select" aria-label="Sort work results">
+            <option value="relevance">Relevance</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="title">Title</option>
+            <option value="citations">Citation count</option>
+          </select>
+          <div class="view-toggle" role="group" aria-label="Result density">
+            <button class="view-btn active" id="work-view-expanded" title="Expanded view" aria-label="Expanded view" aria-pressed="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </button>
+            <button class="view-btn" id="work-view-compact" title="Compact view" aria-label="Compact view" aria-pressed="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
 
       <section class="work-section" aria-labelledby="work-talks-heading">
@@ -252,6 +277,6 @@
   <script src="js/papers-data.js?v=20260223-01"></script>
   <script src="js/shared/library-utils.js?v=20260222-26"></script>
   <script src="js/shared/global-search.js?v=20260222-10"></script>
-  <script src="js/work.js?v=20260222-06"></script>
+  <script src="js/work.js?v=20260223-01"></script>
 </body>
 </html>
