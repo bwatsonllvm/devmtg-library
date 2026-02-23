@@ -597,7 +597,7 @@ function renderTalkCard(talk) {
 
   return `
     <article class="talk-card">
-      <a href="talk.html?id=${escapeHtml(talk.id || '')}" class="card-link-wrap" aria-label="${titleEsc}${escapeHtml(speakerLabel)}">
+      <a href="talks/talk.html?id=${escapeHtml(talk.id || '')}" class="card-link-wrap" aria-label="${titleEsc}${escapeHtml(speakerLabel)}">
         <div class="card-thumbnail" aria-hidden="true">
           ${thumbnailHtml}
           ${talk.videoId ? `<div class="play-overlay" aria-hidden="true"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>` : ''}
@@ -647,7 +647,7 @@ function renderPaperCard(paper) {
 
   return `
     <article class="talk-card paper-card">
-      <a href="paper.html?id=${escapeHtml(paper.id || '')}&from=${listingFrom}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
+      <a href="papers/paper.html?id=${escapeHtml(paper.id || '')}&from=${listingFrom}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
         <div class="card-body">
           <div class="card-meta">
             <span class="badge ${blogEntry ? 'badge-blog' : 'badge-paper'}">${blogEntry ? 'Blog' : 'Paper'}</span>
@@ -777,10 +777,10 @@ function applyHeaderState() {
 
   const entityLabel = state.kind === 'speaker' ? 'Speaker' : 'Key Topic';
   const backHref = state.from === 'papers'
-    ? 'papers.html'
+    ? 'papers/'
     : (state.from === 'blogs'
-      ? 'blogs.html'
-      : (state.from === 'people' ? 'people.html' : 'talks/'));
+      ? 'blogs/'
+      : (state.from === 'people' ? 'people/' : 'talks/'));
   const backText = state.from === 'papers'
     ? 'Back to papers'
     : (state.from === 'blogs'

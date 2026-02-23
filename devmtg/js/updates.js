@@ -61,7 +61,18 @@ function normalizeLibraryUrl(value) {
   if (!raw) return '#';
   let normalized = raw;
   if (normalized.startsWith('/devmtg/')) normalized = normalized.slice('/devmtg/'.length);
-  else if (normalized.startsWith('/talk.html') || normalized.startsWith('/paper.html')) normalized = normalized.slice(1);
+  if (normalized.startsWith('/')) {
+    normalized = normalized
+      .replace(/^\/talk\.html/i, 'talks/talk.html')
+      .replace(/^\/paper\.html/i, 'papers/paper.html')
+      .replace(/^\/events\.html/i, 'talks/events.html')
+      .replace(/^\/papers\.html/i, 'papers/')
+      .replace(/^\/blogs\.html/i, 'blogs/')
+      .replace(/^\/people\.html/i, 'people/')
+      .replace(/^\/about\.html/i, 'about/')
+      .replace(/^\/updates\.html/i, 'updates/');
+    if (normalized.startsWith('/')) normalized = normalized.slice(1);
+  }
   return sanitizeLinkUrl(normalized, { allowRelative: true, allowHash: true }) || '#';
 }
 

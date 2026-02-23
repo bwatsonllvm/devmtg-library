@@ -229,6 +229,23 @@ def sanitize_http_url(raw_url: str) -> str:
     return urllib.parse.urlunsplit(parsed)
 
 
+def normalize_internal_route_path(raw_path: str) -> str:
+    path = collapse_ws(raw_path).lstrip("/")
+    if not path:
+        return path
+    aliases = {
+        "talk.html": "talks/talk.html",
+        "paper.html": "papers/paper.html",
+        "events.html": "talks/events.html",
+        "papers.html": "papers/",
+        "blogs.html": "blogs/",
+        "people.html": "people/",
+        "about.html": "about/",
+        "updates.html": "updates/",
+    }
+    return aliases.get(path.lower(), path)
+
+
 def normalize_internal_library_url(raw_url: str, site_base: str) -> str:
     url = collapse_ws(raw_url)
     if not url:
@@ -250,21 +267,20 @@ def normalize_internal_library_url(raw_url: str, site_base: str) -> str:
     if parsed.fragment:
         suffix += f"#{parsed.fragment}"
 
-    if path.startswith("/devmtg/"):
-        tail = path[len("/devmtg/") :]
+    from_devmtg_prefix = path.startswith("/devmtg/")
+    if from_devmtg_prefix:
+        path = path[len("/devmtg/") :]
+
+    normalized_path = normalize_internal_route_path(path)
+    if normalized_path != collapse_ws(path).lstrip("/") or from_devmtg_prefix:
         if not site_base:
-            return tail + suffix
+            return normalized_path + suffix
         if site_base == "/":
-            return f"/{tail}{suffix}"
-        return f"{site_base.rstrip('/')}/{tail}{suffix}"
+            return f"/{normalized_path}{suffix}"
+        return f"{site_base.rstrip('/')}/{normalized_path}{suffix}"
 
-    if not site_base and (path == "/talk.html" or path == "/paper.html"):
-        return path[1:] + suffix
-
-    if site_base and (path == "talk.html" or path == "paper.html"):
-        if site_base == "/":
-            return f"/{path}{suffix}"
-        return f"{site_base.rstrip('/')}/{path}{suffix}"
+    if not site_base and path.startswith("/"):
+        return path + suffix
 
     return url
 
@@ -272,7 +288,7 @@ def normalize_internal_library_url(raw_url: str, site_base: str) -> str:
 def sanitize_update_entry_urls(entry: dict, site_base: str) -> None:
     raw_url = collapse_ws(str(entry.get("url", "")))
     normalized_url = normalize_internal_library_url(raw_url, site_base)
-    entry["url"] = normalized_url or "updates.html"
+    entry["url"] = normalized_url or "updates/"
 
     for field in ("videoUrl", "slidesUrl", "paperUrl", "sourceUrl", "blogUrl"):
         safe = sanitize_http_url(str(entry.get(field, "")))
@@ -327,7 +343,7 @@ def talk_entry(
     meeting_date = collapse_ws(str(talk.get("meetingDate", "")))
     slides_url = sanitize_http_url(str(talk.get("slidesUrl", "")))
     video_url = talk_video_url(talk)
-    detail_url = build_detail_url(site_base, "talk.html", talk_id)
+    detail_url = build_detail_url(site_base, "talks/talk.html", talk_id)
 
     normalized_parts = normalize_parts(parts)
     fingerprint = f"talk:{talk_id}:{','.join(normalized_parts)}"
@@ -357,7 +373,7 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
     source = collapse_ws(str(paper.get("sourceName", ""))) or collapse_ws(str(paper.get("source", "")))
     paper_url = sanitize_http_url(str(paper.get("paperUrl", "")))
     source_url = sanitize_http_url(str(paper.get("sourceUrl", "")))
-    detail_url = build_detail_url(site_base, "paper.html", paper_id)
+    detail_url = build_detail_url(site_base, "papers/paper.html", paper_id)
     is_blog = is_blog_work(paper)
     kind = "blog" if is_blog else "paper"
     part = "blog" if is_blog else "paper"

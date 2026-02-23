@@ -118,8 +118,31 @@ def sanitize_link_url(value: str | None) -> str:
     if parsed.scheme or parsed.netloc:
         return ""
 
-    encoded = _encode_url_parts(parsed)
+    normalized_path = normalize_internal_library_path(parsed.path or "")
+    normalized = urllib.parse.SplitResult("", "", normalized_path, parsed.query, parsed.fragment)
+    encoded = _encode_url_parts(normalized)
     return urllib.parse.urlunsplit(("", "", encoded.path, encoded.query, encoded.fragment))
+
+
+def normalize_internal_library_path(path: str) -> str:
+    raw_path = str(path or "")
+    if raw_path.startswith("/devmtg/"):
+        raw_path = raw_path[len("/devmtg/") :]
+    elif raw_path.startswith("/"):
+        raw_path = raw_path[1:]
+
+    aliases = {
+        "talk.html": "talks/talk.html",
+        "paper.html": "papers/paper.html",
+        "events.html": "talks/events.html",
+        "papers.html": "papers/",
+        "blogs.html": "blogs/",
+        "people.html": "people/",
+        "about.html": "about/",
+        "updates.html": "updates/",
+    }
+    normalized_key = raw_path.lower()
+    return aliases.get(normalized_key, raw_path)
 
 
 def load_json(path: Path) -> dict:
@@ -229,9 +252,9 @@ def sanitize_updates(updates_path: Path) -> tuple[int, int]:
                 changed_fields += 1
             entry["url"] = safe_url
         else:
-            if str(current_url) != "updates.html":
+            if str(current_url) != "updates/":
                 changed_fields += 1
-            entry["url"] = "updates.html"
+            entry["url"] = "updates/"
 
         for field in ("videoUrl", "slidesUrl", "paperUrl", "sourceUrl", "blogUrl"):
             if sanitize_external_field(entry, field):

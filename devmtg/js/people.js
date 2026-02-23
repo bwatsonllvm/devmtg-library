@@ -130,7 +130,7 @@ function getPersonSearchBlob(person) {
 
 function buildPersonIssueUrl(person) {
   const name = String((person && person.name) || '').trim();
-  const publicUrl = `${PUBLIC_SITE_BASE_URL}people.html${name ? `?q=${encodeURIComponent(name)}` : ''}`;
+  const publicUrl = `${PUBLIC_SITE_BASE_URL}people/${name ? `?q=${encodeURIComponent(name)}` : ''}`;
   const context = {
     pageType: 'Person',
     itemType: 'Person',
@@ -598,14 +598,14 @@ function renderPersonCard(person, tokens) {
     : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Talks 0</span>`;
 
   const papersLink = person.paperCount > 0
-    ? `<a class="card-link-btn" href="papers.html?speaker=${encodeURIComponent(person.paperFilterName || person.name)}" aria-label="View papers by ${escapeHtml(person.name)}">
+    ? `<a class="card-link-btn" href="papers/?speaker=${encodeURIComponent(person.paperFilterName || person.name)}" aria-label="View papers by ${escapeHtml(person.name)}">
         <span aria-hidden="true">Papers ${person.paperCount.toLocaleString()}</span>
       </a>`
     : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Papers 0</span>`;
 
   const blogCount = Number(person.blogCount || 0);
   const blogsLink = blogCount > 0
-    ? `<a class="card-link-btn" href="blogs.html?speaker=${encodeURIComponent(person.blogFilterName || person.paperFilterName || person.name)}" aria-label="View blogs by ${escapeHtml(person.name)}">
+    ? `<a class="card-link-btn" href="blogs/?speaker=${encodeURIComponent(person.blogFilterName || person.paperFilterName || person.name)}" aria-label="View blogs by ${escapeHtml(person.name)}">
         <span aria-hidden="true">Blogs ${blogCount.toLocaleString()}</span>
       </a>`
     : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Blogs 0</span>`;

@@ -8,8 +8,8 @@ const BLOG_SOURCE_SLUG_ALIASES = new Set([
   BLOG_SOURCE_SLUG,
   'llvm-www-blog',
 ]);
-const PAPERS_PAGE_PATH = 'papers.html';
-const BLOGS_PAGE_PATH = 'blogs.html';
+const PAPERS_PAGE_PATH = 'papers/';
+const BLOGS_PAGE_PATH = 'blogs/';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 
 // ============================================================
@@ -1498,7 +1498,7 @@ function renderRelatedCard(paper) {
 
   return `
     <article class="talk-card paper-card">
-      <a href="paper.html?id=${escapeHtml(paper.id)}&from=${blogEntry ? 'blogs' : 'papers'}" class="card-link-wrap" aria-label="${relatedLabel}">
+      <a href="papers/paper.html?id=${escapeHtml(paper.id)}&from=${blogEntry ? 'blogs' : 'papers'}" class="card-link-wrap" aria-label="${relatedLabel}">
         <div class="card-thumbnail paper-thumbnail" aria-hidden="true">
           <div class="card-thumbnail-placeholder paper-thumbnail-placeholder">
             ${_PAPER_PLACEHOLDER}

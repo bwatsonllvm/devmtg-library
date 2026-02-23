@@ -626,7 +626,7 @@ function renderRelatedCard(talk) {
     : escapeHtml(talk.title);
   return `
     <article class="talk-card">
-      <a href="talk.html?id=${escapeHtml(talk.id)}" class="card-link-wrap" aria-label="${relatedLabel}">
+      <a href="talks/talk.html?id=${escapeHtml(talk.id)}" class="card-link-wrap" aria-label="${relatedLabel}">
         <div class="card-thumbnail" aria-hidden="true">
           ${thumbnailUrl
             ? `<img src="${escapeHtml(thumbnailUrl)}" alt="" loading="lazy" data-thumbnail-category="${escapeHtml(talk.category || '')}">`

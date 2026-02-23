@@ -610,7 +610,7 @@ function renderCard(talk, tokens) {
 
   return `
     <article class="talk-card">
-      <a href="talk.html?id=${escapeHtml(talk.id)}" class="card-link-wrap" aria-label="${titleEsc}${escapeHtml(speakerLabel)}">
+      <a href="talks/talk.html?id=${escapeHtml(talk.id)}" class="card-link-wrap" aria-label="${titleEsc}${escapeHtml(speakerLabel)}">
         <div class="card-thumbnail" aria-hidden="true">
           ${thumbnailHtml}
           ${talk.videoId ? `<div class="play-overlay" aria-hidden="true"><div class="play-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>` : ''}

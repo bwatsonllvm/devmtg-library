@@ -8,7 +8,31 @@ PAPERS="$ROOT/papers"
 fail() { echo "ERROR: $*" >&2; exit 1; }
 
 [ -d "$LIBRARY" ] || fail "Missing devmtg directory"
-for f in index.html events.html talk.html paper.html papers.html updates.html css/style.css js/app.js js/events-data.js js/meetings.js js/talk.js js/paper.js js/papers-data.js js/papers.js js/updates.js js/shared/library-utils.js images/llvm-logo.png events/index.json updates/index.json; do
+for f in \
+  index.html \
+  work.html \
+  talks/index.html \
+  talks/events.html \
+  talks/talk.html \
+  papers/index.html \
+  papers/paper.html \
+  blogs/index.html \
+  people/index.html \
+  about/index.html \
+  updates/index.html \
+  css/style.css \
+  js/app.js \
+  js/events-data.js \
+  js/meetings.js \
+  js/talk.js \
+  js/paper.js \
+  js/papers-data.js \
+  js/papers.js \
+  js/updates.js \
+  js/shared/library-utils.js \
+  images/llvm-logo.png \
+  events/index.json \
+  updates/index.json; do
   [ -f "$LIBRARY/$f" ] || fail "Missing required file: devmtg/$f"
 done
 [ -d "$PAPERS" ] || fail "Missing papers directory"
@@ -175,10 +199,27 @@ ruby -rjson -ruri -e '
 # Validate local asset references in html files
 ruby -e '
   hub = ARGV.fetch(0)
-  html_files = %w[index.html events.html talk.html paper.html papers.html updates.html].map { |f| File.join(hub, f) }
+  html_files = %w[
+    index.html
+    work.html
+    talks/index.html
+    talks/events.html
+    talks/talk.html
+    papers/index.html
+    papers/paper.html
+    blogs/index.html
+    people/index.html
+    about/index.html
+    updates/index.html
+  ].map { |f| File.join(hub, f) }
   bad = []
   html_files.each do |html|
     text = File.read(html)
+    base_href = text[/<base\s+href="([^"]+)"/i, 1]
+    base_dir = File.dirname(html)
+    if base_href && base_href !~ /\A[a-z][a-z0-9+.-]*:/i && !base_href.start_with?("//")
+      base_dir = File.expand_path(base_href, File.dirname(html))
+    end
     refs = text.scan(/(?:src|href)=\"([^\"]+)\"/).flatten
     refs.each do |ref|
       if ref.start_with?("javascript:", "data:")
@@ -189,7 +230,7 @@ ruby -e '
       next if ref.start_with?("?")
       clean = ref.split("?").first
       next if clean.empty?
-      path = File.expand_path(clean, File.dirname(html))
+      path = File.expand_path(clean, base_dir)
       bad << "#{File.basename(html)} -> #{ref}" unless File.exist?(path)
     end
   end

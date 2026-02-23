@@ -51,8 +51,8 @@ const CONTENT_TYPE_META = {
 };
 
 const ALL_WORK_PAGE_PATH = 'work.html';
-const BLOGS_PAGE_PATH = 'blogs.html';
-const PAPERS_PAGE_PATH = 'papers.html';
+const BLOGS_PAGE_PATH = 'blogs/';
+const PAPERS_PAGE_PATH = 'papers/';
 const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations']);
 const PAGE_SCOPE = (() => {
   const raw = normalizeFilterValue(document.body && document.body.dataset ? document.body.dataset.contentScope : '');
@@ -730,7 +730,7 @@ function renderPaperCard(paper, tokens) {
 
   return `
     <article class="talk-card paper-card">
-      <a href="paper.html?id=${escapeHtml(paper.id)}&from=${PAGE_SCOPE}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
+      <a href="papers/paper.html?id=${escapeHtml(paper.id)}&from=${PAGE_SCOPE}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
         <div class="card-body">
           <div class="card-meta">
             <span class="badge ${badgeClass}">${badgeLabel}</span>
