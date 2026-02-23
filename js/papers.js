@@ -2350,7 +2350,7 @@ function shouldRouteToGlobalSearch(query) {
   if (!value) return false;
 
   const topic = findTopicEntry(value);
-  if (topic && topic.paperCount === 0 && topic.talkCount > 0) return true;
+  if (topic && !hasNonSearchFiltersApplied() && topic.talkCount > 0) return true;
 
   const talkTitle = findTalkTitleEntry(value);
   const paperTitle = findPaperTitleEntry(value);
@@ -2374,7 +2374,7 @@ function shouldRouteToGlobalSearch(query) {
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
 
-  if (allowGlobalRouting && committed) {
+  if (allowGlobalRouting && committed && shouldRouteToGlobalSearch(committed)) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';
@@ -2432,7 +2432,7 @@ function initSearch() {
       } else {
         event.preventDefault();
         clearTimeout(debounceTimer);
-        const mode = commitSearchValue(input.value, false);
+        const mode = commitSearchValue(input.value, true);
         if (mode !== 'global') input.blur();
       }
     } else if (event.key === 'Escape') {

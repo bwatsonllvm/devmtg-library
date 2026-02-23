@@ -513,7 +513,7 @@ function selectAutocompleteItem(item) {
 
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
-  if (allowGlobalRouting && committed) {
+  if (allowGlobalRouting && committed && shouldRouteToGlobalSearch(committed)) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';
@@ -906,7 +906,7 @@ function initSearch() {
       }
 
       event.preventDefault();
-      const mode = commitSearchValue(input.value, false);
+      const mode = commitSearchValue(input.value, true);
       syncClearButton();
       if (mode !== 'global') input.blur();
       return;

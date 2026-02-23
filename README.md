@@ -14,6 +14,70 @@ The library is a searchable index of:
 
 It is designed as a public, online reference site.
 
+## Search And Discovery Experience (Updated February 23, 2026)
+
+Search now uses a shared, relevance-first stack intended to work for both LLVM newcomers and advanced researchers.
+
+### Global autocomplete and query routing
+
+- All `.global-search-form` inputs use a shared autocomplete index sourced from talks, papers/blogs, people, and key topics.
+- Suggestions are grouped into:
+  - Key Topics
+  - Speakers + Authors
+  - Talk Titles
+  - Paper + Blog Titles
+  - A direct action to search the entire library
+- Autocomplete ranking uses `rankAutocompleteEntries` (shared utility) with:
+  - exact/prefix/contains boosts
+  - popularity weighting
+  - fuzzy tolerance
+- Search placeholders adapt by section (`talks`, `papers`, `blogs`, `people`, `work`) to make scope obvious.
+
+### Relevance ranking model
+
+Shared ranking helpers in `js/shared/library-utils.js` power core search behavior:
+
+- Query normalization:
+  - case/diacritics normalization
+  - token aliasing and synonym expansion
+  - stopword handling and lightweight stemming
+  - quoted phrase parsing
+- Fuzzy robustness:
+  - subsequence matching
+  - bounded Levenshtein distance for typo tolerance
+- Weighted field scoring:
+  - talks: title, speakers, tags, meeting metadata, abstract, category, year
+  - papers/blogs: title, authors, topics, publication/venue, abstract, year
+- Coverage-aware gating with relaxed fallback when strict matching returns nothing.
+- Tie-break and quality boosts for recency, citations (papers/blogs), and beginner-intent queries.
+
+### Results controls across pages
+
+- `talks/`: sort (`relevance`, `newest`, `oldest`, `title`) + `grid/list` view toggle.
+- `papers/` and `blogs/`: sort (`relevance`, `year`, `citations`) + `grid/list` view toggle.
+- `work.html` (global/entity combined results):
+  - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
+  - `expanded/compact` view toggle across talks, papers, and blogs sections
+  - URL-state support for `sort` and `view`, with mode-aware defaults
+- `people/`:
+  - sort (`works`, `citations`, `alpha`, `alpha-desc`)
+  - `expanded/compact` view toggle
+
+### URL/state behavior
+
+- `work.html` supports:
+  - `mode=search&q=...` for global query mode
+  - `kind=speaker|topic&value=...` for entity mode
+  - `from=talks|papers|blogs|people|work` for back-link context
+  - `sort=...` and `view=expanded|compact`
+- Default Work sort is:
+  - `relevance` in search mode
+  - `newest` in entity mode
+- View preferences are persisted in local storage:
+  - `llvm-hub-view` (talks/papers/blogs grid/list)
+  - `llvm-hub-work-view` (work expanded/compact)
+  - `llvm-hub-people-view` (people expanded/compact)
+
 ## How The Database Is Constructed
 
 ### 1) Talks dataset (`devmtg/events/*.json`)
