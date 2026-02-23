@@ -19,17 +19,13 @@
       "speakers": [
         {
           "name": "Tobias Edler von Koch",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Kp6uVAcjRFw",
       "videoId": "Kp6uVAcjRFw",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/WelcomeTalk.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -43,17 +39,13 @@
       "speakers": [
         {
           "name": "Chandler Carruth",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/rY02LT08-J8",
       "videoId": "rY02LT08-J8",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Passes.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -67,17 +59,13 @@
       "speakers": [
         {
           "name": "Marshall Clow",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/hsinAb_R6lo",
       "videoId": "hsinAb_R6lo",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Slides%20-%20Marshall.pdf",
-      "projectGithub": "",
       "tags": [
         "C++"
       ]
@@ -95,7 +83,6 @@
       "videoUrl": "https://youtu.be/9XUQ-1pI5_c",
       "videoId": "9XUQ-1pI5_c",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/LTO-slides.pdf",
-      "projectGithub": "",
       "tags": [
         "LTO"
       ]
@@ -111,31 +98,20 @@
       "speakers": [
         {
           "name": "Reinoud Elhorst",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Mark Batty",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "David Chisnall",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Reinoud-EuroLLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -151,24 +127,16 @@
       "speakers": [
         {
           "name": "Andy Thomason",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Goldsmiths",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Tenseconds.pdf",
-      "projectGithub": "",
       "tags": [
         "Beginner"
       ]
@@ -184,17 +152,13 @@
       "speakers": [
         {
           "name": "Ulrich Weigand",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/zikDZ1Fi-qw",
       "videoId": "zikDZ1Fi-qw",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Euro-LLVM-2014-Weigand.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -208,17 +172,13 @@
       "speakers": [
         {
           "name": "JF Bastien",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/iYBSgdvv0BY",
       "videoId": "iYBSgdvv0BY",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/PortableNativeClient.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -232,17 +192,13 @@
       "speakers": [
         {
           "name": "Marcello Maggioni",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/xh6RWegAza0",
       "videoId": "xh6RWegAza0",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/pred_presentation.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -256,17 +212,12 @@
       "speakers": [
         {
           "name": "Daniel Jasper",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/clang-tidy%20LLVM%20Euro%202014.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -282,17 +233,13 @@
       "speakers": [
         {
           "name": "Greg Bedwell",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/zNqueISGrd8",
       "videoId": "zNqueISGrd8",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/GBedwell_PS4CPUToolchain_EuroLLVM2014_distribution.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -306,17 +253,13 @@
       "speakers": [
         {
           "name": "Andrew MacPherson",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/7zuuE0BuhYw",
       "videoId": "7zuuE0BuhYw",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/FabricEngine-LLVM.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -330,17 +273,13 @@
       "speakers": [
         {
           "name": "Frej Drejhammar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/oF3qYFh_xuI",
       "videoId": "oF3qYFh_xuI",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/drejhammar.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -356,17 +295,13 @@
       "speakers": [
         {
           "name": "Tom Spink",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/D8O-pVgyX_8",
       "videoId": "D8O-pVgyX_8",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Spink.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -380,17 +315,13 @@
       "speakers": [
         {
           "name": "Hans Wennborg",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/PX3UOXAlk0A",
       "videoId": "PX3UOXAlk0A",
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/clang-cl.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -406,17 +337,12 @@
       "speakers": [
         {
           "name": "Nick Lewycky",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/NickRefactoring.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -432,24 +358,16 @@
       "speakers": [
         {
           "name": "Fraser Cormack",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Pierre-André Saulais",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Talks/Building%20an%20LLVM%20backend.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -465,17 +383,12 @@
       "speakers": [
         {
           "name": "Kostya Serebryany",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/EuroLLVM%202014%20--%20container%20overflow.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -489,17 +402,12 @@
       "speakers": [
         {
           "name": "Gabor Greif",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/waymark.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -513,17 +421,12 @@
       "speakers": [
         {
           "name": "Jason Evans",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/HHVM_2014.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -539,17 +442,12 @@
       "speakers": [
         {
           "name": "Tobias Rieger",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/async%20magic%20presentation.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -565,17 +463,12 @@
       "speakers": [
         {
           "name": "Kostya Serebryany",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/EuroLLVM'14%20--%20ASan%20%2B%20Coverage.pdf",
-      "projectGithub": "",
+      "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/EuroLLVM'14%20--%20ASan%20+%20Coverage.pdf",
       "tags": [
         "Dynamic Analysis"
       ]
@@ -591,24 +484,16 @@
       "speakers": [
         {
           "name": "Gabor Ballabas",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Hungary",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/aarch64_buildbot.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -622,17 +507,12 @@
       "speakers": [
         {
           "name": "Tilmann Scheller",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/fast-jit-code-generation.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend",
         "JIT"
@@ -648,10 +528,8 @@
       "title": "OCLAcc - OpenCL for FPGA-Accelerators",
       "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/poster_oclacc.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU",
         "OpenCL"
@@ -668,17 +546,12 @@
       "speakers": [
         {
           "name": "Marcello Maggioni",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/data_structure_llvm.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -692,17 +565,12 @@
       "speakers": [
         {
           "name": "Jonathan Roelofs",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/LightningTalks/2014-3-31_ClangTargetSupport_LighteningTalk.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -718,17 +586,12 @@
       "speakers": [
         {
           "name": "Andrey Bokhanko",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/ClangIntel.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -744,38 +607,24 @@
       "speakers": [
         {
           "name": "Virgile Prevosto",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Franck Védrine",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Bart Jacobs",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Gijs van Spauwen",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/FramaC.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Frontend"
@@ -792,24 +641,16 @@
       "speakers": [
         {
           "name": "Yi-Hong Lyu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Academia Sinica",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/DBILL_poster.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -825,17 +666,12 @@
       "speakers": [
         {
           "name": "Simon Cook",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-04/PDFs/Posters/mageec-poster.pdf",
-      "projectGithub": "",
       "tags": []
     }
   ]

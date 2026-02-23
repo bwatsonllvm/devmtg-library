@@ -16,17 +16,11 @@
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
       "title": "Tilmann Scheller",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/fosdem-2016-llvm.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-002",
@@ -39,20 +33,13 @@
       "speakers": [
         {
           "name": "WebAssembly: Here Be Dragons",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/WebAssembly.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-003",
@@ -65,20 +52,13 @@
       "speakers": [
         {
           "name": "Modern C++ development tools",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/ModernCplusplusDevelopment.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-004",
@@ -91,20 +71,13 @@
       "speakers": [
         {
           "name": "Porting LLVM to a new OS",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Porting_LLVM_to_a_new_OS.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-006",
@@ -117,20 +90,13 @@
       "speakers": [
         {
           "name": "AAPSIM: Implementing a LLVM based simulator",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/fosdem16-aapsim.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-007",
@@ -140,17 +106,11 @@
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
       "title": "Alex Denisov",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/LLVM_Swift.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-008",
@@ -163,20 +123,13 @@
       "speakers": [
         {
           "name": "Using LLVM's LibFuzzer to Fuzz PostgreSQL",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/FOSDEM_PG_Fuzzer,pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-009",
@@ -186,17 +139,11 @@
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
       "title": "Sebastien Monot",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/LLVM-dataflow.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-010",
@@ -206,17 +153,11 @@
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
       "title": "Kristof Beyls",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Beyls_FOSDEM2016.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-01-011",
@@ -226,17 +167,11 @@
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
       "title": "Manuel Rigger",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Sulong.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     }
   ]
 }

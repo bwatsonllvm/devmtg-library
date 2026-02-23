@@ -19,17 +19,11 @@
       "speakers": [
         {
           "name": "Simon Moll",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "The Region Vectorizer (RV) is a data-parallel vecorizer for LLVM IR. This talk gives an overview of the RV vectorization system, its main features and future directions.",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Autovectorization",
         "IR"
@@ -46,17 +40,11 @@
       "speakers": [
         {
           "name": "Prithayan Barua",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "OpenMP offers directives for offloading computations from CPU hosts to accelerator devices such as GPUs. A key underlying challenge is in efficiently managing the movement of data across the host and the accelerator. Since the cost of data movement is high due to data volume and the delay of interconnection, how to efficiently manage the data movement operations to avoid redundancy is the challenge faced by the compilers. In this talk, we introduce an optimization framework that runs analysis and transformation on a novel intermediate representation: location-aware heap SSA (LASSA) that models the memory accesses and data movement across tasks running on different devices that have private storage. This framework casts the problem of removal of redundant data movements into a partial redundancy elimination (PRE) problem and applies the lazy code motion technique to optimize it. This is a work in progress, and we have a prototype LLVM implementation. We evaluated it with 10 benchmarks and got a Geo-mean speedup of 2.3X, and saved a Geo-mean 3480 MB of redundant data transfers.",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "GPU",
         "IR",
@@ -75,52 +63,31 @@
       "speakers": [
         {
           "name": "Utpal Bora",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Santanu Das",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Pankaj Kureja",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Saurabh Joshi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ramakrishna Upadrasta",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Sanjay Rajopadhye",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "In the era of Exascale computing, writing efficient parallel programs is indispensable and at the same time, writing sound parallel programs is highly difficult. While parallel programming is easier with frameworks such as OpenMP, the possibility of data races in these programs still persists. In this paper, we propose a fast, lightweight, language agnostic, and static data race checker for OpenMP programs based on the LLVM compiler framework. We compare our tool with other state-of-the-art data race checkers on a variety of well-established benchmarks. We show that the precision, accuracy, and the F1 score of our tool is comparable to other checkers while being orders of magnitude faster. To the best of our knowledge, this work is the only tool among the state-of-the-art data race checkers that can verify a FORTRAN program to be data race free.",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Flang",
         "Performance"
@@ -137,17 +104,11 @@
       "speakers": [
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "OpenMP support in LLVM is changing, fast and in many places. This talk will provide an overview of the changes, their status and goals, the rational behind them, as well as ways to contribute. A summary of the content is given below. Please note that the talk presents the work done by many people across the entire community. Due to relative frequent releases of new features, OpenMP was always a moving target when it comes to implementation. In addition, we currently working on increasing the hardware and language support: The second offloading target, namely AMDGPU, is advancing rapidly and with it the need to redesign/generalize the offloading code path in Clang and in the OpenMP device runtime library. On the language side, Flang, the Fortran compiler front-end, will require full support for OpenMP similar to the current implementation in Clang. To provide this support in a maintainable way, the code generation is transitioning out of Clang into LLVM-Core. In tandem with these changes, optimizations for OpenMP programs are developed. Utilizing abstract call sites, the Attributor performs scalar optimizations, e.g., constant propagation, across the boundaries of outlined OpenMP regions. Finally, explicit OpenMP aware optimizations are developed as part of the OpenMPOpt pass.",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Backend",
         "Clang",
@@ -165,14 +126,9 @@
       "meetingDate": "February 23, 2020",
       "category": "panel",
       "title": "Discussion Round --- Participating in LLVM - GSoC and other opportunities",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Community Building"
       ]
@@ -188,24 +144,15 @@
       "speakers": [
         {
           "name": "William Moses",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "LLVM automatically derives facts that are only used while the respective translation unit, or LLVM module, is processed (i.e. constant function, error-throwing, etc). This is true both in standard compilation but also link-time-optimization (LTO) in which the module is (partially) merged with others in the same project at link time. LTO is able to take advantage of this to optimize functions calls to outside the translation unit. However, LTO doesn't solve the problem for two reasons of practicality: LTO comes with a nontrivial compile-time investment; and many libraries upon which a program could depend, do not ship with LTO information, simply headers and binaries. In this extended abstract, we solve the problem by generating annotated versions of the source code that also include this derived information. Such an approach has the benefits of both worlds: allowing optimizations previously limited to LTO without running LTO and only requiring C/C++-compatible headers. Our modified Clang understands three custom attributes that encode arbitrary LLVM-IR attributes and it can emit C/C++-compatible headers with the aforementioned attribute embedded based on the information available in the LLVM-IR. We test the approach experimentally on the LLVM multisource application test suite and find that annotated headers find up to a 30\\% speedup, and represent half of the speedups found by full LTO.",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Embedded",
@@ -227,31 +174,20 @@
       "speakers": [
         {
           "name": "Shilei Tian",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Barbara Chapman",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "In the current implementation of LLVM OpenMP offloading, the runtime submits all kernels to the default stream and blocks the issuing thread until device execution is done. Since the default stream serializes all submitted kernel and lunches them sequentially, even in parallel issued kernels are not executed on a device concurrently. This is problematic especially if single kernels do not utilize the entire device consistently, a situation not uncommon on modern GPUs. In this work, we present a design and prototype to use multiple streams to offload OpenMP target regions in order for concurrent execution on the device. Our prototype infrastructure shows speedups of up to 1.33x on micro benchmarks and we expect further improvements from hardware-based dependence resolution.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2020-02-23/slides/Shilei-multistreams.pdf",
-      "projectGithub": "",
       "tags": [
         "CUDA",
         "GPU",
@@ -269,24 +205,15 @@
       "speakers": [
         {
           "name": "Kyungwoo Lee",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Nikolai Tillmann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "LTO"
       ]
@@ -302,34 +229,20 @@
       "speakers": [
         {
           "name": "Aditya Kumar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ian Levesque",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Sam Todd",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-02-23-010",
@@ -342,20 +255,12 @@
       "speakers": [
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     }
   ]
 }

@@ -19,17 +19,13 @@
       "speakers": [
         {
           "name": "Tatiana Shpeisman",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/qzljG6DKgic",
       "videoId": "qzljG6DKgic",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Keynote-ShpeismanLattner-MLIR.pdf",
-      "projectGithub": "",
       "tags": [
         "IR",
         "MLIR"
@@ -46,17 +42,13 @@
       "speakers": [
         {
           "name": "Bernhard Rosenkränzer (Linaro",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/QinoajSKQ1k",
       "videoId": "QinoajSKQ1k",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Rosenkranzer-Switching_a_Linux_distro.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -72,17 +64,13 @@
       "speakers": [
         {
           "name": "Tim Besard",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Fz-ogmASMAE",
       "videoId": "Fz-ogmASMAE",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Besard-Just_compile_it_high_level_programming_on_the_GPU_with_Julia.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU",
         "Programming Languages"
@@ -99,17 +87,13 @@
       "speakers": [
         {
           "name": "Stephen Kelly",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/yqi8U8Q0h2g",
       "videoId": "yqi8U8Q0h2g",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Kelly-The_future_of_AST_matcherbased_refactoring.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -123,17 +107,13 @@
       "speakers": [
         {
           "name": "François de Ferrière",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/LPj4phdJABw",
       "videoId": "LPj4phdJABw",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Ferriere-A_compiler_approach_to_cybersecurity.pdf",
-      "projectGithub": "",
       "tags": [
         "Security"
       ]
@@ -149,17 +129,13 @@
       "speakers": [
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/3AbS82C3X30",
       "videoId": "3AbS82C3X30",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Doerfert-Compiler_optimization_for_OpenMP_accelerator_offloading.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU",
         "Optimizations"
@@ -176,17 +152,13 @@
       "speakers": [
         {
           "name": "Matthias Liedtke",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/cyK-WIwnlUk",
       "videoId": "cyK-WIwnlUk",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Liedtke-Handling_massive_concurrency.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU"
       ]
@@ -202,17 +174,13 @@
       "speakers": [
         {
           "name": "Thomas Joerg",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/u3cWOd99xX0",
       "videoId": "u3cWOd99xX0",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Joerg-Automated_GPU_Kernel_Fusion_with_XLA.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU"
       ]
@@ -228,17 +196,13 @@
       "speakers": [
         {
           "name": "Ivo Gabe de Wolff",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/x6CBks1paF8",
       "videoId": "x6CBks1paF8",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-de-Wolff-Helium_Haskell_compiler.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -254,17 +218,13 @@
       "speakers": [
         {
           "name": "José Luis March Cabrelles",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/nSfT4oND9dU",
       "videoId": "nSfT4oND9dU",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Cabrelles-Testing_and_qualification_of_optimizing_compilers_for_functional_safety.pdf",
-      "projectGithub": "",
       "tags": [
         "Testing"
       ]
@@ -280,38 +240,25 @@
       "speakers": [
         {
           "name": "Nikola Prica",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Djordje Todorovic",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ananthakrishna Sowda",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ivan Baev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ih5v65K10M8",
       "videoId": "ih5v65K10M8",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Prica-Improving_LLVM_DebugInfo.pdf",
-      "projectGithub": "",
       "tags": [
         "Debug Information"
       ]
@@ -327,17 +274,12 @@
       "speakers": [
         {
           "name": "Jacob Kreindl",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Kreindl-LLVM_IR_in_GraalVM.pdf",
-      "projectGithub": "",
       "tags": [
         "IR"
       ]
@@ -353,17 +295,13 @@
       "speakers": [
         {
           "name": "Jonas Devlieghere",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ygdzXnfyvbg",
       "videoId": "ygdzXnfyvbg",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Devlieghere-LLDB_reproducers.pdf",
-      "projectGithub": "",
       "tags": [
         "LLDB"
       ]
@@ -379,17 +317,13 @@
       "speakers": [
         {
           "name": "Roland Schatz",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/zvsR90T_4ME",
       "videoId": "zvsR90T_4ME",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Schatz-Sulong_an_experience_report.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -403,17 +337,13 @@
       "speakers": [
         {
           "name": "Andrew Savonichev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/rfg19iODkhI",
       "videoId": "rfg19iODkhI",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Savonichev-SYCL_compiler.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -427,17 +357,13 @@
       "speakers": [
         {
           "name": "Huapeng Zhou",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/01WoFnyw6zE",
       "videoId": "01WoFnyw6zE",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Guo-Zhou-Handling_all_Facebook_requests_with_JITed_C++_code.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -451,17 +377,13 @@
       "speakers": [
         {
           "name": "Alex Lorenz",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Ptr6e4CVTd4",
       "videoId": "Ptr6e4CVTd4",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Lorenz-clang-scan-deps_Fast_dependency_scanning_for_explicit_modules.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -477,17 +399,13 @@
       "speakers": [
         {
           "name": "Sofia Celi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/TthVG_GdzHU",
       "videoId": "TthVG_GdzHU",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Celi-Clang_tools_for_implementing_cryptographic_protocols_like_OTRv4.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -503,24 +421,17 @@
       "speakers": [
         {
           "name": "Gabor Horvath",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Matthias Gehre",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/VynWyOIb6Bk",
       "videoId": "VynWyOIb6Bk",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Horvath-Implementing_the_C++_Core_Guidelines_Lifetime.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Performance"
@@ -537,17 +448,13 @@
       "speakers": [
         {
           "name": "Marshall Clow",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/coXGSfUak-Q",
       "videoId": "coXGSfUak-Q",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Clow-Changes_to_the_C++_standard_library_for_C++20.pdf",
-      "projectGithub": "",
       "tags": [
         "C++",
         "C++ Libs"
@@ -564,17 +471,13 @@
       "speakers": [
         {
           "name": "Robin Kruppe",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/dyrh2ZZX8EY",
       "videoId": "dyrh2ZZX8EY",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Kruppe-Espasa-RISC-V_Vectors_and_LLVM.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -588,17 +491,13 @@
       "speakers": [
         {
           "name": "Tim Northover",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/8RVRQrf15yY",
       "videoId": "8RVRQrf15yY",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Northover-A_tale_of_two_ABIs_ILP32_on_AArch64.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -612,17 +511,13 @@
       "speakers": [
         {
           "name": "Michael Berg",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/9pqobu3zQ7E",
       "videoId": "9pqobu3zQ7E",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Berg-LLVM_numerics_improvements.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -636,17 +531,13 @@
       "speakers": [
         {
           "name": "Brian Homerding",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/slrU-mz8if4",
       "videoId": "slrU-mz8if4",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Homerding-DOE_proxy_apps_compiler_performance_analysis_and_optimistic_annotation_exploration.pdf",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -662,24 +553,17 @@
       "speakers": [
         {
           "name": "Kit Barton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Hal Finkel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/-JQr9aNagQo",
       "videoId": "-JQr9aNagQo",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/TechTalk-Barton-Loop_fusion_loop_distribution_and_their_place_in_the_loop_optimization_pipeline.pdf",
-      "projectGithub": "",
       "tags": [
         "Loop transformations",
         "Optimizations"
@@ -696,24 +580,17 @@
       "speakers": [
         {
           "name": "Amini Mehdi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Alex Zinenko",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/cyICUIZ56wQ",
       "videoId": "cyICUIZ56wQ",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Tutorial-AminiVasilacheZinenko-MLIR.pdf",
-      "projectGithub": "",
       "tags": [
         "Beginner",
         "MLIR"
@@ -730,17 +607,13 @@
       "speakers": [
         {
           "name": "Alex Denisov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Yvj4G9B6pcU",
       "videoId": "Yvj4G9B6pcU",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Tutorial-Denisov-Building_an_LLVM_based_tool.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -754,17 +627,13 @@
       "speakers": [
         {
           "name": "Vince Bridgers",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/m8G_S5LwlTo",
       "videoId": "m8G_S5LwlTo",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Tutorial-Bridgers-LLVM_IR_tutorial.pdf",
-      "projectGithub": "",
       "tags": [
         "IR"
       ]
@@ -780,24 +649,17 @@
       "speakers": [
         {
           "name": "Juneyoung Lee (Seoul National University",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ralf Jung (MPI-SWS",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/CPokKMqAVdY",
       "videoId": "CPokKMqAVdY",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Lee-Safely_optimizing_casts_between_pointers_and_integers.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -811,17 +673,13 @@
       "speakers": [
         {
           "name": "Michael Halkenhäuser",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/-j9qjfTwt3k",
       "videoId": "-j9qjfTwt3k",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Halkenhauser-An_alternative_OpenMP_backend_for_Polly.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend",
         "Polly"
@@ -838,24 +696,17 @@
       "speakers": [
         {
           "name": "Fabian Wahlster",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Nicolai Hähnle",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/8K8ClHoZzHw",
       "videoId": "8K8ClHoZzHw",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Wahlster-Implementing_SPMD_control_flow_in_LLVM_using_reconverging_CFGs.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -869,31 +720,21 @@
       "speakers": [
         {
           "name": "Rodrigo Rocha",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Zheng Wang",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Hugh Leather",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/sOCFYfF3iwE",
       "videoId": "sOCFYfF3iwE",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Rocha-Function_merging_by_sequence_alignment.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -907,31 +748,21 @@
       "speakers": [
         {
           "name": "Son Tuan Vu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Karine Heydemann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Arnaud de Grandmaison",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/rMOfcvMYev8",
       "videoId": "rMOfcvMYev8",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-TuanVu-Compilation_and_optimization_with_security_annotations.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations",
         "Security"
@@ -948,17 +779,13 @@
       "speakers": [
         {
           "name": "Javier López-Gómez",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/FpCFl-JHcrs",
       "videoId": "FpCFl-JHcrs",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/SRC-Lopez-Gomez-Adding_support_for_C++_contracts_to_clang.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -975,8 +802,6 @@
       "abstract": "",
       "videoUrl": "https://youtu.be/9pqobu3zQ7E",
       "videoId": "9pqobu3zQ7E",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "IR"
       ]
@@ -992,17 +817,12 @@
       "speakers": [
         {
           "name": "Dibyendu Das",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Das-AMD_OLV.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization"
       ]
@@ -1018,24 +838,16 @@
       "speakers": [
         {
           "name": "Joel E. Denny",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Jeffrey S. Vetter",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Denny-clacc.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -1051,17 +863,12 @@
       "speakers": [
         {
           "name": "Phil Camp",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Camp-Program_Repo.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1075,17 +882,12 @@
       "speakers": [
         {
           "name": "Russell Gallop",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Gallop-Does_win32_clang_compiler.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -1101,17 +903,12 @@
       "speakers": [
         {
           "name": "Kristóf Umann (Ericsson Hungary",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Umann-Resolving_the_almost.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1128,17 +925,12 @@
       "speakers": [
         {
           "name": "Jordan Rupprecht",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Rupprecht-Adopting_LLVM_binary_utilities.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1152,17 +944,12 @@
       "speakers": [
         {
           "name": "Ádám Balogh",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Balogh-Multiplication_and_Division_in_the_Range-Based_Constraint_Manager.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1176,17 +963,12 @@
       "speakers": [
         {
           "name": "Ádám Balogh",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Balogh-Statistics_based_checkers_in_the_Clang_Static_Analyzer.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1203,17 +985,12 @@
       "speakers": [
         {
           "name": "Steve Scalpone",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Scalpone-Flang_update.pdf",
-      "projectGithub": "",
       "tags": [
         "Flang"
       ]
@@ -1229,17 +1006,12 @@
       "speakers": [
         {
           "name": "Lama Saba",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/o4R3SqyNbqU",
       "videoId": "o4R3SqyNbqU",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -1255,17 +1027,12 @@
       "speakers": [
         {
           "name": "Lewis Revill",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/k9D2yanT6Oo",
       "videoId": "k9D2yanT6Oo",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1279,17 +1046,12 @@
       "speakers": [
         {
           "name": "Réka Kovács",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Kovacs-Dangling_pointer_checker.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1306,17 +1068,12 @@
       "speakers": [
         {
           "name": "Réka Kovács",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Lightning-Kovacs-Cross_TU_reduction.pdf",
-      "projectGithub": "",
       "tags": [
         "Testing"
       ]
@@ -1332,17 +1089,11 @@
       "speakers": [
         {
           "name": "Simon Moll",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "IR"
       ]
@@ -1358,17 +1109,11 @@
       "speakers": [
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1381,10 +1126,8 @@
       "title": "LLVM binutils",
       "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/BoF-HendersonRupprecht-LLVM_binutils.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1398,17 +1141,11 @@
       "speakers": [
         {
           "name": "Andrew Savonichev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "GPU",
         "OpenCL"
@@ -1425,17 +1162,11 @@
       "speakers": [
         {
           "name": "Stephen Kelly",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1449,24 +1180,15 @@
       "speakers": [
         {
           "name": "Artem Dergachev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Gabor Horvath",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1483,17 +1205,11 @@
       "speakers": [
         {
           "name": "LLVM Foundation Board of Directors",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Community Building"
       ]
@@ -1509,17 +1225,12 @@
       "speakers": [
         {
           "name": "João Bispo",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Bispo-Clava_CC++_source_to_source_from_CMake_using_LARA.pdf",
-      "projectGithub": "",
       "tags": [
         "Infrastructure"
       ]
@@ -1535,24 +1246,16 @@
       "speakers": [
         {
           "name": "Juneyoung Lee (Seoul National University",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ralf Jung (MPI-SWS",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Lee-Safely_optimizing_casts_between_pointers_and_integers.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1566,24 +1269,15 @@
       "speakers": [
         {
           "name": "Lin-Ya Yu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Alexandre Isoard",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -1599,17 +1293,12 @@
       "speakers": [
         {
           "name": "Li-An Her",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Her-SplendidGVN_Partial_redundancy_elimination.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -1625,17 +1314,12 @@
       "speakers": [
         {
           "name": "Michael Halkenhäuser",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Halkenhauser-An_alternative_OpenMP_backend_for_Polly.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend",
         "Polly"
@@ -1652,17 +1336,12 @@
       "speakers": [
         {
           "name": "Russell Gallop",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Gallop-Does_the_win32_clang_compiler_reaaly_nee_to_be_over_21MB_in_size.png",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -1678,24 +1357,16 @@
       "speakers": [
         {
           "name": "Jack J. Garzella",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Shaobo He",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Garzella-Enabling_multi_and_cross_language_verification_with_LLVM.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1709,17 +1380,12 @@
       "speakers": [
         {
           "name": "Biplob",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Biplop-Tracing.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend",
         "Performance"
@@ -1736,17 +1402,12 @@
       "speakers": [
         {
           "name": "Huapeng Zhou",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Zhou-Handling_all_Facebook_requests_with_JITed_C++_code.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1760,24 +1421,16 @@
       "speakers": [
         {
           "name": "Fabian Wahlster",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Nicolai Hähnle",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Wahlster-Implementing_SPMD_control_flow_in_LLVM_using_reconverging_CFG.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1791,17 +1444,11 @@
       "speakers": [
         {
           "name": "Lewis Revill",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1815,17 +1462,12 @@
       "speakers": [
         {
           "name": "Hameeza Ahmed (NED University of Engineering",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Hameeza-LLVM_Miner_Text_Analytics_based_Static_Knowledge_Extractor.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1839,31 +1481,20 @@
       "speakers": [
         {
           "name": "Rodrigo Rocha",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Zheng Wang",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Hugh Leather",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Rocha-Function_merging_by_sequence_alignment.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -1877,31 +1508,20 @@
       "speakers": [
         {
           "name": "Son Tuan Vu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Karine Heydemann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Arnaud de Grandmaison",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-TuanVu-Compilation_and_optimization_with_security_annotations.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations",
         "Security"
@@ -1918,38 +1538,24 @@
       "speakers": [
         {
           "name": "Sahil Yerawar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Siddharth Bhat",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Philip Pfaffe",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ramakrishna Upadrasta",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Yerawar-ChapelPolly.pdf",
-      "projectGithub": "",
       "tags": [
         "Loop transformations",
         "Polly"
@@ -1966,17 +1572,11 @@
       "speakers": [
         {
           "name": "Carl Peto",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Embedded"
       ]
@@ -1992,24 +1592,16 @@
       "speakers": [
         {
           "name": "Vasileios Porpodas (Intel Corporation",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Luís F. W. Góes (PUC Minas",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Porpodas-Supernode_SLP.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization"
       ]
@@ -2025,17 +1617,12 @@
       "speakers": [
         {
           "name": "Javier López-Gómez",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": "",
       "videoId": "",
       "slidesUrl": "https://llvm.org/devmtg/2019-04/slides/Poster-Lopez-Gomez-Adding_support_for_C++_contracts_to_Clang.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -2051,17 +1638,11 @@
       "speakers": [
         {
           "name": "William S. Moses",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Security"
       ]

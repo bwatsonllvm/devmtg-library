@@ -19,20 +19,13 @@
       "speakers": [
         {
           "name": "P. Sewell",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2018-04/slides/Sewell-The_Cerberus_Memory_Object_Semantics.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-002",
@@ -45,20 +38,14 @@
       "speakers": [
         {
           "name": "R. Zhong",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/PmKWJ_1TBpc",
       "videoId": "PmKWJ_1TBpc",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Zhong-LLVM%20x%20Blockchain.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-003",
@@ -71,27 +58,18 @@
       "speakers": [
         {
           "name": "A. Sbirlea",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "N. Lopes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/r0XVS4Atl3U",
       "videoId": "r0XVS4Atl3U",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Lopes-Sbirlea-Pointers,%20Alias%20and%20ModRef%20Analyses.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-004",
@@ -104,17 +82,13 @@
       "speakers": [
         {
           "name": "J. Absar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/AmjliNp0_00",
       "videoId": "AmjliNp0_00",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Absar-ScalarEvolution.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -130,20 +104,12 @@
       "speakers": [
         {
           "name": "U. Weigand",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-006",
@@ -156,38 +122,23 @@
       "speakers": [
         {
           "name": "I. Biryukov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "H. Wu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "E. Liu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. McCall",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Infrastructure"
       ]
@@ -203,17 +154,11 @@
       "speakers": [
         {
           "name": "Devin Coughlin",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -230,17 +175,11 @@
       "speakers": [
         {
           "name": "LLVM Foundation Board of Directors",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Community Building"
       ]
@@ -256,41 +195,26 @@
       "speakers": [
         {
           "name": "H. Finkel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "X. Tian",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "G. Stelle",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/u2Soj49R-i4",
       "videoId": "u2Soj49R-i4",
-      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Finkel-Representing Parallelism Within LLVM.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Finkel-Representing%20Parallelism%20Within%20LLVM.pdf",
+      "tags": []
     },
     {
       "id": "2018-04-010",
@@ -303,17 +227,13 @@
       "speakers": [
         {
           "name": "D. Das",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Fd3afoM3UOE",
       "videoId": "Fd3afoM3UOE",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Das-An%20Introduction%20to%20AMD%20Optimizing%20Compiler.pdf",
-      "projectGithub": "",
       "tags": [
         "Beginner"
       ]
@@ -329,17 +249,13 @@
       "speakers": [
         {
           "name": "N. Igotti",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/DqsYo_4QWSg",
       "videoId": "DqsYo_4QWSg",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Igotti-Developing%20Kotlin.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Programming Languages"
@@ -356,24 +272,17 @@
       "speakers": [
         {
           "name": "D. Caballero",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. Guggilla",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/z6NeHLRNVok",
       "videoId": "z6NeHLRNVok",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Caballero-Extending%20LoopVectorize%20to%20Support%20Outer%20Loop%20Vectorization%20Using%20VPlan.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization",
         "VPlan"
@@ -390,17 +299,13 @@
       "speakers": [
         {
           "name": "Á. Balogh",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/t2u8n0dcUAA",
       "videoId": "t2u8n0dcUAA",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Balogh-Finding%20Iterator-related%20Errors%20with%20Clang%20Static%20Analyzer.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -417,17 +322,13 @@
       "speakers": [
         {
           "name": "G. Barany",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/V6ug3e3jC54",
       "videoId": "V6ug3e3jC54",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Barany-Finding%20Missed%20Optimizations%20in%20LLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -443,38 +344,25 @@
       "speakers": [
         {
           "name": "E. Liu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "H. Wu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "I. Biryukov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. McCall",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/BvjrZ3QioBI",
       "videoId": "BvjrZ3QioBI",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Biryukov-Global%20code%20completion%20and%20architecture%20of%20clangd.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -490,17 +378,13 @@
       "speakers": [
         {
           "name": "M. Clow",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/jxLKR1_oucc",
       "videoId": "jxLKR1_oucc",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Clow-Hardening%20the%20Standard%20Library.pdf",
-      "projectGithub": "",
       "tags": [
         "Security"
       ]
@@ -516,27 +400,17 @@
       "speakers": [
         {
           "name": "C. Hubain",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "C. Tessier",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/_CjpRKKyQN8",
       "videoId": "_CjpRKKyQN8",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-018",
@@ -549,20 +423,14 @@
       "speakers": [
         {
           "name": "P. Lotfi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/RHT-bh_xo6U",
       "videoId": "RHT-bh_xo6U",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Lotfi-MIR-Canon%20Improving%20Code%20Diff%20Through%20Canonical%20Transformation.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-019",
@@ -575,17 +443,12 @@
       "speakers": [
         {
           "name": "F. Sergeev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/6X12D46sRFw",
       "videoId": "6X12D46sRFw",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -601,17 +464,12 @@
       "speakers": [
         {
           "name": "E. Astigeevich",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/W8MMTpEkaJQ",
       "videoId": "W8MMTpEkaJQ",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -627,24 +485,17 @@
       "speakers": [
         {
           "name": "H. Finkel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "B. Homerding",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/xtE-f5Bxs2U",
       "videoId": "xtE-f5Bxs2U",
-      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Finkel-DOE Proxy Apps.pdf",
-      "projectGithub": "",
+      "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Finkel-DOE%20Proxy%20Apps.pdf",
       "tags": [
         "Clang",
         "Performance"
@@ -661,27 +512,18 @@
       "speakers": [
         {
           "name": "A. Gozillon",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "P. Keir",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/9QkWgDe9VPE",
       "videoId": "9QkWgDe9VPE",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Gozillon-Point-Free%20Templates.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-023",
@@ -694,20 +536,14 @@
       "speakers": [
         {
           "name": "O. Simhon",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Y9Q-GdRZTXM",
       "videoId": "Y9Q-GdRZTXM",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Simhon-Control%20Flow%20Enforcement%20Technology.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-024",
@@ -720,34 +556,22 @@
       "speakers": [
         {
           "name": "M. Dvorskiy",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Cownie",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "A. Kukanov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/umlqw1QTf7g",
       "videoId": "umlqw1QTf7g",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Cownie-Parallel%20STL%20LLVM%20in%205min.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-025",
@@ -760,20 +584,14 @@
       "speakers": [
         {
           "name": "K. Beyls",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/jqAUxr-vDe0",
       "videoId": "jqAUxr-vDe0",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Beyls-Reviews%20less%20of%20a%20bottleneck.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-026",
@@ -786,31 +604,21 @@
       "speakers": [
         {
           "name": "J. Denny",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. Lee",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Vetter",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ez8suNAu7D0",
       "videoId": "ez8suNAu7D0",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Vetter-Clacc.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -826,31 +634,21 @@
       "speakers": [
         {
           "name": "Juan Manuel Martinez Caamaño",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Fernandez",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. Guelton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/sFxqI6Z_bhE",
       "videoId": "sFxqI6Z_bhE",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Caamano-Easy_Jit.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -866,17 +664,13 @@
       "speakers": [
         {
           "name": "S. Scalpone",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/sFVRQDgKihY",
       "videoId": "sFVRQDgKihY",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Scalpone-FlangUpdate.pdf",
-      "projectGithub": "",
       "tags": [
         "Flang"
       ]
@@ -892,31 +686,21 @@
       "speakers": [
         {
           "name": "V. Porpodas",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "R. Rocha",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "L. Góes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/gIEn34LvyNo",
       "videoId": "gIEn34LvyNo",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Rocha-Look-Ahead%20SLP.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization"
       ]
@@ -932,20 +716,14 @@
       "speakers": [
         {
           "name": "J. Bennett",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/IwvUMFKmgPs",
       "videoId": "IwvUMFKmgPs",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Bennett-Low%20Cost%20Commercial%20Deployment.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-031",
@@ -958,17 +736,12 @@
       "speakers": [
         {
           "name": "G. Bedwell",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Bedwell-Measuring_the_User_Debugging_Experience.pdf",
-      "projectGithub": "",
       "tags": [
         "LLDB"
       ]
@@ -984,41 +757,26 @@
       "speakers": [
         {
           "name": "G. Chatelet",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "C. Courbet",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "B. De Backer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "O. Sykora",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ex_C27OoApI",
       "videoId": "ex_C27OoApI",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Chatelet-Measuring%20x86%20instruction%20latencies%20with%20LLVM.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-033",
@@ -1031,31 +789,21 @@
       "speakers": [
         {
           "name": "D. Schürmann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Lucas",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "B. Juurlink",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/qtLdi1IKhd8",
       "videoId": "qtLdi1IKhd8",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Schuermann-OpenMP%20Accelerator%20Offloading.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU",
         "OpenCL"
@@ -1072,20 +820,14 @@
       "speakers": [
         {
           "name": "M. Arenaz",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/KkJqZimMXd8",
       "videoId": "KkJqZimMXd8",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Arenaz-Parallware%20LLVM%20and%20Supercomputing.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-035",
@@ -1098,17 +840,13 @@
       "speakers": [
         {
           "name": "M. Gilbert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/6P9UaheAelY",
       "videoId": "6P9UaheAelY",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Gilbert-Returning%20data-now%20to%20asynchronous%20programming.pdf",
-      "projectGithub": "",
       "tags": [
         "Static Analysis"
       ]
@@ -1124,34 +862,22 @@
       "speakers": [
         {
           "name": "S. Moll",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "T. Klössner",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. Hack",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/jMnx_kS2Q30",
       "videoId": "jMnx_kS2Q30",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Moll-A%20new%20divergence%20analysis%20for%20LLVM.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-037",
@@ -1164,38 +890,25 @@
       "speakers": [
         {
           "name": "C. Courbet",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "O. Sykora",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "G. Chatelet",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "B. De Backer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/XinMk-t8N-w",
       "videoId": "XinMk-t8N-w",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Courbet-Static%20Performance%20Analysis%20with%20LLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -1211,34 +924,22 @@
       "speakers": [
         {
           "name": "R. Kruppe",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Oppermann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "A. Koch",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/iSMLYHRlNVc",
       "videoId": "iSMLYHRlNVc",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Kruppe-Supporting%20the%20Risc-V%20vector%20ext.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-039",
@@ -1251,17 +952,11 @@
       "speakers": [
         {
           "name": "S. Cook",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1278,31 +973,20 @@
       "speakers": [
         {
           "name": "A. Gerbes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "N. Jumah",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Kunkel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Gerbes-Automatic%20Profiling%20for%20Climate%20Modeling.pdf",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -1318,38 +1002,23 @@
       "speakers": [
         {
           "name": "G. Horvath",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "P. Szecsi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Z. Gera",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "D. Krupp",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1366,31 +1035,19 @@
       "speakers": [
         {
           "name": "G. Horváth",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "R. Kovács",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "P. Szécsi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1407,41 +1064,24 @@
       "speakers": [
         {
           "name": "L. Sommer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Oppermann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Korinth",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "A. Koch",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2018-04-044",
@@ -1454,38 +1094,23 @@
       "speakers": [
         {
           "name": "M. Gadelha",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Morse",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "L. Cordeiro",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "D. Nicole",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Frontend"
@@ -1502,24 +1127,17 @@
       "speakers": [
         {
           "name": "G. Márton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Z. Porkoláb",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/mv60fYkKNHc",
       "videoId": "mv60fYkKNHc",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Marton-Compile-Time%20Function%20Call%20Interception%20to%20Mock%20Fuctions.pdf",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -1535,17 +1153,11 @@
       "speakers": [
         {
           "name": "P. Szécsi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1562,20 +1174,14 @@
       "speakers": [
         {
           "name": "G. Sallai",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/VUJvKS68EfM",
       "videoId": "VUJvKS68EfM",
       "slidesUrl": "http://llvm.org/devmtg/2018-04/slides/Sallai-Using%20LLVM%20in%20a%20Model%20Checking%20Workflow.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     }
   ]
 }

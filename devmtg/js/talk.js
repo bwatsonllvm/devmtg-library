@@ -40,6 +40,21 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+function sanitizeExternalUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw, window.location.href);
+    const protocol = parsed.protocol.toLowerCase();
+    if (protocol === 'http:' || protocol === 'https:') {
+      return parsed.toString();
+    }
+  } catch {
+    return '';
+  }
+  return '';
+}
+
 function setIssueContext(context) {
   if (typeof window.setLibraryIssueContext !== 'function') return;
   if (!context || typeof context !== 'object') return;
@@ -458,11 +473,20 @@ function placeholderSvgForTalk(talk) {
 }
 
 window.thumbnailError = function(img, category) {
+  if (!img || !img.parentElement) return;
   const div = document.createElement('div');
   div.className = 'card-thumbnail-placeholder';
   div.innerHTML = placeholderSvgForCategory(category);
   img.parentElement.replaceChild(div, img);
 };
+
+document.addEventListener('error', (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLImageElement)) return;
+  const category = target.getAttribute('data-thumbnail-category');
+  if (!category) return;
+  window.thumbnailError(target, category);
+}, true);
 
 // ============================================================
 // Abstract Rendering
@@ -537,9 +561,12 @@ function renderSpeakers(speakers) {
 
   return speakers.map(s => {
     const socialLinks = [];
-    if (s.github)   socialLinks.push(`<a href="${escapeHtml(s.github)}"   class="speaker-social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(s.name)} on GitHub (opens in new tab)">${githubSvg()}</a>`);
-    if (s.linkedin) socialLinks.push(`<a href="${escapeHtml(s.linkedin)}" class="speaker-social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(s.name)} on LinkedIn (opens in new tab)">${linkedinSvg()}</a>`);
-    if (s.twitter)  socialLinks.push(`<a href="${escapeHtml(s.twitter)}"  class="speaker-social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(s.name)} on X (opens in new tab)">${twitterSvg()}</a>`);
+    const githubHref = sanitizeExternalUrl(s.github);
+    const linkedinHref = sanitizeExternalUrl(s.linkedin);
+    const twitterHref = sanitizeExternalUrl(s.twitter);
+    if (githubHref) socialLinks.push(`<a href="${escapeHtml(githubHref)}" class="speaker-social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(s.name)} on GitHub (opens in new tab)">${githubSvg()}</a>`);
+    if (linkedinHref) socialLinks.push(`<a href="${escapeHtml(linkedinHref)}" class="speaker-social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(s.name)} on LinkedIn (opens in new tab)">${linkedinSvg()}</a>`);
+    if (twitterHref) socialLinks.push(`<a href="${escapeHtml(twitterHref)}" class="speaker-social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(s.name)} on X (opens in new tab)">${twitterSvg()}</a>`);
 
     return `
       <div class="speaker-chip">
@@ -602,7 +629,7 @@ function renderRelatedCard(talk) {
       <a href="talk.html?id=${escapeHtml(talk.id)}" class="card-link-wrap" aria-label="${relatedLabel}">
         <div class="card-thumbnail" aria-hidden="true">
           ${thumbnailUrl
-            ? `<img src="${escapeHtml(thumbnailUrl)}" alt="" loading="lazy" onerror="thumbnailError(this,'${escapeHtml(talk.category || '')}')">`
+            ? `<img src="${escapeHtml(thumbnailUrl)}" alt="" loading="lazy" data-thumbnail-category="${escapeHtml(talk.category || '')}">`
             : `<div class="card-thumbnail-placeholder">${placeholderSvgForTalk(talk)}</div>`}
         </div>
         <div class="card-body">
@@ -647,30 +674,33 @@ function renderTalkDetail(talk, allTalks) {
 
   // Links bar
   const tEsc = escapeHtml(talk.title);
+  const videoHref = sanitizeExternalUrl(talk.videoUrl);
+  const slidesHref = sanitizeExternalUrl(talk.slidesUrl);
+  const githubHref = sanitizeExternalUrl(talk.projectGithub);
   const linkItems = [];
-  if (talk.videoUrl) {
-    const videoMeta = getVideoLinkMeta(talk.videoUrl, tEsc);
+  if (videoHref) {
+    const videoMeta = getVideoLinkMeta(videoHref, tEsc);
     const videoIcon = videoMeta.icon === 'download'
       ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>`
       : videoMeta.icon === 'tv'
         ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2" ry="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="17" x2="12" y2="20"/></svg>`
         : `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
     linkItems.push(`
-      <a href="${escapeHtml(talk.videoUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(videoMeta.ariaLabel)}">
+      <a href="${escapeHtml(videoHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(videoMeta.ariaLabel)}">
         ${videoIcon}
         ${escapeHtml(videoMeta.text)}
       </a>`);
   }
-  if (talk.slidesUrl) {
+  if (slidesHref) {
     linkItems.push(`
-      <a href="${escapeHtml(talk.slidesUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="View slides for ${tEsc} (opens in new tab)">
+      <a href="${escapeHtml(slidesHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="View slides for ${tEsc} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         View Slides
       </a>`);
   }
-  if (talk.projectGithub) {
+  if (githubHref) {
     linkItems.push(`
-      <a href="${escapeHtml(talk.projectGithub)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Project on GitHub: ${tEsc} (opens in new tab)">
+      <a href="${escapeHtml(githubHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Project on GitHub: ${tEsc} (opens in new tab)">
         ${githubSvg()}
         Project on GitHub
       </a>`);

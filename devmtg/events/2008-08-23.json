@@ -16,17 +16,11 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "LLVM Overview",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2008-08-23/llvm_intro.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2008-08-23-002",
@@ -36,14 +30,10 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "Using LLVM's JIT infastructure",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2008-08-23/llvmjittut.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -56,17 +46,11 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "Partial evaluation with LLVM",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2008-08-23/llvm_partial.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2008-08-23-004",
@@ -76,17 +60,11 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "LLVM First Steps",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2008-08-23/llvm_first_steps.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2008-08-23-005",
@@ -96,14 +74,10 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "An LLVM benchmark",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "http://shinh.skr.jp/llvmbench/000.html",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -116,17 +90,11 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "py2llvm: Python to LLVM translator",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2008-08-23/py2llvm.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2008-08-23-007",
@@ -136,17 +104,11 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "RSL (RenderMan Shading Language) - LLVM compiler project proposal",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2008-08-23/rsltollvm.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2008-08-23-008",
@@ -156,17 +118,11 @@
       "meetingDate": "August 23, 2008",
       "category": "technical-talk",
       "title": "Binaries are not only output",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2008-08-23/binaries_are_not_only_output.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     }
   ]
 }

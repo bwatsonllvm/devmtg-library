@@ -136,8 +136,8 @@ function normalizePaperRecord(rawPaper) {
   paper.venue = metadata.venue;
   paper.source = String(paper.source || '').trim();
   paper.type = String(paper.type || '').trim();
-  paper.paperUrl = String(paper.paperUrl || '').trim();
-  paper.sourceUrl = String(paper.sourceUrl || '').trim();
+  paper.paperUrl = sanitizeExternalUrl(paper.paperUrl || '');
+  paper.sourceUrl = sanitizeExternalUrl(paper.sourceUrl || '');
   paper.contentFormat = String(paper.contentFormat || paper.bodyFormat || '').trim().toLowerCase();
   paper.content = String(paper.content || paper.body || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
   paper.citationCount = parseCitationCount(rawPaper);
@@ -215,6 +215,21 @@ function escapeHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function sanitizeExternalUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw, window.location.href);
+    const protocol = parsed.protocol.toLowerCase();
+    if (protocol === 'http:' || protocol === 'https:') {
+      return parsed.toString();
+    }
+  } catch {
+    return '';
+  }
+  return '';
 }
 
 function setIssueContext(context) {
@@ -796,11 +811,12 @@ function sanitizeHtmlFragment(rawHtml, baseUrl) {
         continue;
       }
 
-      if (name === 'href') {
+      if (name === 'href' || name === 'xlink:href') {
         const safe = resolveContentUrl(value, baseUrl, { allowData: false });
         if (!safe) {
           el.removeAttribute(attr.name);
         } else {
+          if (name !== 'href') el.removeAttribute(attr.name);
           el.setAttribute('href', safe);
           if (el.tagName.toLowerCase() === 'a') {
             el.setAttribute('target', '_blank');
@@ -1514,6 +1530,10 @@ function renderPaperDetail(paper, allPapers) {
   const authorsHtml = renderAuthors(paper.authors, paper);
   const citationCount = Number.isFinite(paper.citationCount) ? paper.citationCount : 0;
   const doiUrl = doiUrlFromValue(paper.doi);
+  const paperHref = sanitizeExternalUrl(paper.paperUrl);
+  const sourceHref = sanitizeExternalUrl(paper.sourceUrl);
+  const doiHref = sanitizeExternalUrl(doiUrl);
+  const openalexHref = sanitizeExternalUrl(paper.openalexId);
   const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
   const badgeLabel = blogEntry ? 'Blog' : 'Paper';
 
@@ -1524,41 +1544,41 @@ function renderPaperDetail(paper, allPapers) {
   if (paper.venue && paper.venue !== paper.publication) infoParts.push(paper.venue);
 
   const links = [];
-  const paperIsPdf = isDirectPdfUrl(paper.paperUrl);
-  const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl);
-  if (paper.paperUrl) {
+  const paperIsPdf = isDirectPdfUrl(paperHref);
+  const sourceIsPdf = isDirectPdfUrl(sourceHref);
+  if (paperHref) {
     const linkLabel = blogEntry ? 'Open Repository Post' : (paperIsPdf ? 'Open PDF' : 'Open Paper');
     links.push(`
-      <a href="${escapeHtml(paper.paperUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(linkLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
+      <a href="${escapeHtml(paperHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(linkLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         ${escapeHtml(linkLabel)}
       </a>`);
   }
-  if (!blogEntry && sourceIsPdf && !paperIsPdf && paper.sourceUrl && paper.sourceUrl !== paper.paperUrl) {
+  if (!blogEntry && sourceIsPdf && !paperIsPdf && sourceHref && sourceHref !== paperHref) {
     const sourceLabel = 'Open PDF';
     links.push(`
-      <a href="${escapeHtml(paper.sourceUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
+      <a href="${escapeHtml(sourceHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         ${escapeHtml(sourceLabel)}
       </a>`);
-  } else if (paper.sourceUrl) {
+  } else if (sourceHref) {
     const sourceLabel = blogEntry ? 'Open Blog' : 'Source Listing';
     links.push(`
-      <a href="${escapeHtml(paper.sourceUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
+      <a href="${escapeHtml(sourceHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 1 0-7.07-7.07L10 6"/><path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.4a5 5 0 0 0 7.07 7.07L14 18"/></svg>
         ${escapeHtml(sourceLabel)}
       </a>`);
   }
-  if (doiUrl) {
+  if (doiHref) {
     links.push(`
-      <a href="${escapeHtml(doiUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open DOI for ${escapeHtml(paper.title)} (opens in new tab)">
+      <a href="${escapeHtml(doiHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open DOI for ${escapeHtml(paper.title)} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 0 0-7.07-7.07L10 6"/><path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.4a5 5 0 1 0 7.07 7.07L14 18"/></svg>
         DOI
       </a>`);
   }
-  if (paper.openalexId) {
+  if (openalexHref) {
     links.push(`
-      <a href="${escapeHtml(paper.openalexId)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open OpenAlex record for ${escapeHtml(paper.title)} (opens in new tab)">
+      <a href="${escapeHtml(openalexHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open OpenAlex record for ${escapeHtml(paper.title)} (opens in new tab)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
         OpenAlex
       </a>`);
@@ -1594,11 +1614,11 @@ function renderPaperDetail(paper, allPapers) {
   if (citationCount > 0) {
     metadataItems.push(`<span class="detail-tag detail-tag--meta" aria-label="${citationCount.toLocaleString()} citation${citationCount === 1 ? '' : 's'}">Cited by ${citationCount.toLocaleString()}</span>`);
   }
-  if (paper.doi) {
-    metadataItems.push(`<a href="${escapeHtml(doiUrl)}" class="detail-tag" target="_blank" rel="noopener noreferrer" aria-label="Open DOI ${escapeHtml(paper.doi)} (opens in new tab)">DOI: ${escapeHtml(paper.doi)}</a>`);
+  if (paper.doi && doiHref) {
+    metadataItems.push(`<a href="${escapeHtml(doiHref)}" class="detail-tag" target="_blank" rel="noopener noreferrer" aria-label="Open DOI ${escapeHtml(paper.doi)} (opens in new tab)">DOI: ${escapeHtml(paper.doi)}</a>`);
   }
-  if (paper.openalexId) {
-    metadataItems.push(`<a href="${escapeHtml(paper.openalexId)}" class="detail-tag" target="_blank" rel="noopener noreferrer" aria-label="Open OpenAlex record (opens in new tab)">OpenAlex record</a>`);
+  if (openalexHref) {
+    metadataItems.push(`<a href="${escapeHtml(openalexHref)}" class="detail-tag" target="_blank" rel="noopener noreferrer" aria-label="Open OpenAlex record (opens in new tab)">OpenAlex record</a>`);
   }
   metadataItems.push('<button type="button" class="detail-tag detail-tag--button" id="copy-bibtex-btn" aria-label="Copy BibTeX citation">Copy BibTeX</button>');
   const citationMetaHtml = `

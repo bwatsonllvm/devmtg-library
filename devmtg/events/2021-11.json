@@ -19,17 +19,13 @@
       "speakers": [
         {
           "name": "Kim Hazelwood",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/_D1EbgHcY7Y",
       "videoId": "_D1EbgHcY7Y",
-      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Hazelwood-Supporting Diversity and Inclusion in our Community - What NotTo Do.pdf",
-      "projectGithub": "",
+      "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Hazelwood-Supporting%20Diversity%20and%20Inclusion%20in%20our%20Community%20-%20What%20NotTo%20Do.pdf",
       "tags": [
         "Community Building"
       ]
@@ -45,24 +41,17 @@
       "speakers": [
         {
           "name": "Andrew Lenharth",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Chris Lattner",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ee01_yHjs9k",
       "videoId": "ee01_yHjs9k",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-CIRCT-LiftingHardwareDevOutOfThe20thCentury.pdf",
-      "projectGithub": "",
       "tags": [
         "CIRCT"
       ]
@@ -78,20 +67,14 @@
       "speakers": [
         {
           "name": "Petr Hosek",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/DYaqzEbU0Vk",
       "videoId": "DYaqzEbU0Vk",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-BuildinganOperatingSystemfromScratchwithLLVM.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-005",
@@ -104,27 +87,18 @@
       "speakers": [
         {
           "name": "John McCall",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Arnold Schwaighofer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/H_K-us4-K7s",
       "videoId": "H_K-us4-K7s",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-AsyncFunctionsInSwift.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-006",
@@ -134,14 +108,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Automatic and Customizable Code Rewriting and Refactoring with Clang",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/I0W2xb7041k",
       "videoId": "I0W2xb7041k",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Automatic_and_Customizable_Code_Rewriting_and_Refactoring_with_Clang.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -157,24 +128,17 @@
       "speakers": [
         {
           "name": "Amara Emerson",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Jessica Paquette",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/S6SNs2ttdoA",
       "videoId": "S6SNs2ttdoA",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-BringingupGlobalISelForOptimizedaarch64codegen.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -187,14 +151,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Building a faster expression evaluator for LLDB",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/9aThSRGjYdA",
       "videoId": "9aThSRGjYdA",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Buildingafaster-expression-evaluatorforLLDB.pdf",
-      "projectGithub": "",
       "tags": [
         "LLDB"
       ]
@@ -210,31 +171,21 @@
       "speakers": [
         {
           "name": "Juneyoung Lee",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Nuno Lopes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "George Mitenkov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/j9QJ56x4lRY",
       "videoId": "j9QJ56x4lRY",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ByteTypesOrHowToGetRidOfI8AbuseForCharsInLLVMIR.pdf",
-      "projectGithub": "",
       "tags": [
         "IR"
       ]
@@ -247,14 +198,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Charting CIRCT: the present and near future landscape",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/K-Aqyce5ra0",
       "videoId": "K-Aqyce5ra0",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ChartingCIRC-TThePresentAndFutureLandscape.pdf",
-      "projectGithub": "",
       "tags": [
         "CIRCT"
       ]
@@ -267,14 +215,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Clang Static Analyzer - A Tryst with Smart Pointers",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/vLgLFAywUvA",
       "videoId": "vLgLFAywUvA",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ClangStaticAnalyzer-ATrystwithSmartPointers.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -288,14 +233,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Clang vs. GCC for SPEC on AArch64",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/Xn2FC36fBHw",
       "videoId": "Xn2FC36fBHw",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ClangvsGCCForSPECOnAArch64.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -308,14 +250,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Compilation databases: how to help a clang-based tool to understand your project",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/2cGWSnWiZdU",
       "videoId": "2cGWSnWiZdU",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Compilation-Databases.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -331,17 +270,13 @@
       "speakers": [
         {
           "name": "Aart Bik",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/x-nHc3hBxHM",
       "videoId": "x-nHc3hBxHM",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-CompilerSupportforSparseTensorComputationsinMLIR.pdf",
-      "projectGithub": "",
       "tags": [
         "MLIR"
       ]
@@ -357,17 +292,13 @@
       "speakers": [
         {
           "name": "Vassil Vassilev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/33ncbIQoa4c",
       "videoId": "33ncbIQoa4c",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-EnablingInteractiveCppWithClang.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -380,14 +311,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Examining and mitigating the performance impact of C++ exceptions on the non-exceptional path in LLVM",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/7iIlqkLMKqE",
       "videoId": "7iIlqkLMKqE",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ExaminingandMitigatingthePerformanceImpactof-C-exceptionsonthe-non-exceptionalpathinLLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "C++",
         "Performance"
@@ -404,24 +332,17 @@
       "speakers": [
         {
           "name": "Ehsan Amiri",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Bryan Chan",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/_jaav92US5w",
       "videoId": "_jaav92US5w",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ExtendingLLVMOptimizationRepertoire-toBuildA-HighlyOptimizingCompiler.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -437,24 +358,16 @@
       "speakers": [
         {
           "name": "Kunwar Shaanjeet Singh Grover",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Arjun Pitchanathan",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/1RGb6LGV2Hg",
       "videoId": "1RGb6LGV2Hg",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "MLIR"
       ]
@@ -470,17 +383,13 @@
       "speakers": [
         {
           "name": "Min-Yih Hsu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/MeB7Dp3G2UE",
       "videoId": "MeB7Dp3G2UE",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-handling-inline-assembly-in-clang-and-llvm.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -496,20 +405,14 @@
       "speakers": [
         {
           "name": "Jeremy Morse",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/yxuwfNnp064",
       "videoId": "yxuwfNnp064",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ImprovingDebugVariableLocations.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-021",
@@ -519,14 +422,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Integrated Distributed ThinLTO with Icecream",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/5kLPkUTnqQc",
       "videoId": "5kLPkUTnqQc",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Distributed-ThinLTO-With-Icecream.pdf",
-      "projectGithub": "",
       "tags": [
         "LTO"
       ]
@@ -539,17 +439,12 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Introducing function specialisation, and can we enable it by default?",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/zJiCjeXgV5Q",
       "videoId": "zJiCjeXgV5Q",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-IntroducingFunctionSpecialisationAndCanWeEnableItByDefault.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-023",
@@ -559,14 +454,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Introduction to LLVM-IFS and its usages in Fuchsia build system",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/_pIorUFavc8",
       "videoId": "_pIorUFavc8",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Introduction-to-LLVM-IFS-and-its-usages-in-Fuchsia-build-system.pdf",
-      "projectGithub": "",
       "tags": [
         "Beginner",
         "Infrastructure"
@@ -580,17 +472,12 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Late Divergence Analysis",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/Kj3C5BoNkyE",
       "videoId": "Kj3C5BoNkyE",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LateDivergenceAnalysis.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-025",
@@ -600,17 +487,12 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Last Year in DFSan",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/32mA4lgzEYQ",
       "videoId": "32mA4lgzEYQ",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LastYearinDFSan.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-026",
@@ -620,14 +502,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "lldb-eval fuzzer: Finding bugs in an LLDB-based expression evaluator",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/dJ9k7-pmwvM",
       "videoId": "dJ9k7-pmwvM",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LLDB-eval-fuzzer-Finding-Bugs-In-LLDB-based-expression-evaluator.pdf",
-      "projectGithub": "",
       "tags": [
         "Dynamic Analysis",
         "LLDB"
@@ -644,59 +523,36 @@
       "speakers": [
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Rhonda McMahon",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Mircea Trofin",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ondrej Sykora",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Alok Mishra",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Konstantin Sidorov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Tarindu Jayatilaka",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/PLgbczJJC_I",
       "videoId": "PLgbczJJC_I",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "ML",
         "Optimizations"
@@ -713,17 +569,13 @@
       "speakers": [
         {
           "name": "Veselin Karaganev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/l2KWOqEGRwg",
       "videoId": "l2KWOqEGRwg",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ManyclangsFastbisectionwithasmallstorageCost.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Infrastructure"
@@ -740,24 +592,17 @@
       "speakers": [
         {
           "name": "Leonidas Kosmidis",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Marc Sole Bonet",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/0zAkGCyMshc",
       "videoId": "0zAkGCyMshc",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-NavigatingExoticSIMDLandswithanLLVMGuide.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization"
       ]
@@ -773,20 +618,13 @@
       "speakers": [
         {
           "name": "Florian Hahn",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/1hm5ZVmBEvo",
       "videoId": "1hm5ZVmBEvo",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-031",
@@ -796,14 +634,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "OpenCL support in clang status: OpenCL C 3.0, improvements and future directions",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/rdegu64RPuk",
       "videoId": "rdegu64RPuk",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OpenCL-support-in-clang-status.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "GPU",
@@ -821,20 +656,14 @@
       "speakers": [
         {
           "name": "Sander de Smalen",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/daWLCyhwrZ8",
       "videoId": "daWLCyhwrZ8",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OptimizingCodeForScalableVectorArchitectures.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-033",
@@ -847,31 +676,21 @@
       "speakers": [
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Giorgis Georgakoudis",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Joseph Huber",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/4EPl7De3cKg",
       "videoId": "4EPl7De3cKg",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OptimizingOpenMPGPUexecutioninLLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU"
       ]
@@ -884,17 +703,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "ORAQL: Optimistic Responses to Alias Queries in LLVM",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/7UVB5AFJM1w",
       "videoId": "7UVB5AFJM1w",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-035",
@@ -907,17 +720,12 @@
       "speakers": [
         {
           "name": "Lang Hames",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/i-inxFudrgI",
       "videoId": "i-inxFudrgI",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -933,20 +741,14 @@
       "speakers": [
         {
           "name": "Adam Tuft",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/RcnoDhA2AUg",
       "videoId": "RcnoDhA2AUg",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OtterTracingAndVisualisingOpenMPProgramsAsDAGsThroughLLVMsOMPTInterface.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-037",
@@ -956,14 +758,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Overflowing with Strings: A newish dimension in DWARF size concerns",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/oUgl6uT3Jq8",
       "videoId": "oUgl6uT3Jq8",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-OverflowingWithStrings.pdf",
-      "projectGithub": "",
       "tags": [
         "Debug Information"
       ]
@@ -976,17 +775,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Please Stop Adding Attributes",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/6bmlqtjSPFw",
       "videoId": "6bmlqtjSPFw",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-039",
@@ -999,17 +792,12 @@
       "speakers": [
         {
           "name": "Louis Dionne",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/B7gB6van7Bw",
       "videoId": "B7gB6van7Bw",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "C Libs",
         "C++",
@@ -1027,20 +815,14 @@
       "speakers": [
         {
           "name": "Jeroen Dobbelaere",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/08XwXB3GHck",
       "videoId": "08XwXB3GHck",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-ptr_provenanceAndLlvmNoaliasTheTaleOfFullRestrict.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-041",
@@ -1053,27 +835,18 @@
       "speakers": [
         {
           "name": "Alessandro Di Federico",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Anton Johansson",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ltKGd1iwDJc",
       "videoId": "ltKGd1iwDJc",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-QEMU-Hexagon.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-042",
@@ -1086,20 +859,14 @@
       "speakers": [
         {
           "name": "Leonard Chan",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/9HGKlDiJy8E",
       "videoId": "9HGKlDiJy8E",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RelativeVTablesinC.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-043",
@@ -1109,14 +876,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Representing Concurrency with Graph Regions in MLIR",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/Vfk9n3ir_5s",
       "videoId": "Vfk9n3ir_5s",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RepresentingConcurrencywithGraphRegionsinMLIR.pdf",
-      "projectGithub": "",
       "tags": [
         "MLIR"
       ]
@@ -1129,14 +893,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Retrospective on Debugger Support for Bare Metal",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/UY-IuQB8XYw",
       "videoId": "UY-IuQB8XYw",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RetrospectiveonDebuggerSupportforBareMetal.pdf",
-      "projectGithub": "",
       "tags": [
         "Embedded",
         "LLDB"
@@ -1150,14 +911,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Rotten Green Unit Tests",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/shBJwHiyirc",
       "videoId": "shBJwHiyirc",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-RottenGreenUnitTests.pdf",
-      "projectGithub": "",
       "tags": [
         "Testing"
       ]
@@ -1173,52 +931,33 @@
       "speakers": [
         {
           "name": "Konrad Trifunovic",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Anastasia Stulova",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Victor Lomuller",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Alexey Bader",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Michal Paszkowski",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ravi Narayanaswamy",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/KTPPVYMfAQE",
       "videoId": "KTPPVYMfAQE",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-SPIR-V-SupportinLLVMandClang.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "GPU"
@@ -1232,14 +971,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "Sparse Tensor Algebra Optimizations in MLIR",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/Tysy19M-4kw",
       "videoId": "Tysy19M-4kw",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-PureSparseTensorOptimizationsInMLIR.pdf",
-      "projectGithub": "",
       "tags": [
         "MLIR",
         "Optimizations"
@@ -1253,17 +989,12 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "A walk on the weird side: Opaque WebAssembly values and LLVM",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/UxnUht3uWzc",
       "videoId": "UxnUht3uWzc",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-UnaddressableAndOpaqueValuesWebAssembly.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-049",
@@ -1273,17 +1004,12 @@
       "meetingDate": "November 16-19, 2021",
       "category": "technical-talk",
       "title": "What's New in IR Similarity Identification and Outlining",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/rBZz7dzbiBw",
       "videoId": "rBZz7dzbiBw",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-WhatsNewInIRSimilarityIdentificationandOutlining.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-050",
@@ -1296,17 +1022,13 @@
       "speakers": [
         {
           "name": "Kiran Chandramohan",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/0eAOKA_GnS0",
       "videoId": "0eAOKA_GnS0",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-Flang-Tutorial.pdf",
-      "projectGithub": "",
       "tags": [
         "Beginner",
         "Flang",
@@ -1324,34 +1046,21 @@
       "speakers": [
         {
           "name": "Valentin Churavy",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "William Moses",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ludger Paehler",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/rux1-oje9u8",
       "videoId": "rux1-oje9u8",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-052",
@@ -1364,17 +1073,13 @@
       "speakers": [
         {
           "name": "Min-Yih Hsu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/UP-LBRbvI_U",
       "videoId": "UP-LBRbvI_U",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-how-to-write-a-tablegen-backend.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend",
         "IR"
@@ -1391,17 +1096,12 @@
       "speakers": [
         {
           "name": "Stephen Neuendorffer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/7wOU7csj1ME",
       "videoId": "7wOU7csj1ME",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Infrastructure"
       ]
@@ -1417,34 +1117,21 @@
       "speakers": [
         {
           "name": "Ettore Tiotto",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Whitney Tsang",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Yueh-Ting Chen",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/G6Fmeyv068w",
       "videoId": "G6Fmeyv068w",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-055",
@@ -1454,17 +1141,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "Automated LLVM flag mining, theory and practice",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/utsPSe8bvRk",
       "videoId": "utsPSe8bvRk",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-056",
@@ -1474,14 +1155,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "Clacc 2021: An Update on OpenACC Support for Clang and LLVM",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/yhdY-x1K2Ks",
       "videoId": "yhdY-x1K2Ks",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-clacc-2021-An-Update-on-Openacc-Support-For-Clang-and-LLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -1494,17 +1172,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "Fixing False Assumptions: Inter-Function vs Intra-Function Machine Outlining",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/nt_vBdfdH-U",
       "videoId": "nt_vBdfdH-U",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-058",
@@ -1514,14 +1186,10 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "Flang Update",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/5xuWFYvuOFA",
       "videoId": "5xuWFYvuOFA",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Flang"
       ]
@@ -1534,14 +1202,10 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "libclcxx: C++ libraries for OpenCL",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/DBknc1pRB9E",
       "videoId": "DBknc1pRB9E",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "C Libs",
         "GPU",
@@ -1556,14 +1220,10 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "LTO and JIT Support in LLVM OpenMP Target Offloading",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/T43nhJNSGHg",
       "videoId": "T43nhJNSGHg",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "JIT",
         "LTO"
@@ -1577,17 +1237,12 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "Packaging LLVM Snapshots",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/ZpusqyOb6jQ",
       "videoId": "ZpusqyOb6jQ",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-PackagingLLVMSnapshots.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-062",
@@ -1597,14 +1252,10 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "VPlan like vectorizer for MLIR",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/DgoX7ZFIjYg",
       "videoId": "DgoX7ZFIjYg",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Autovectorization",
         "MLIR",
@@ -1619,17 +1270,11 @@
       "meetingDate": "November 16-19, 2021",
       "category": "quick-talk",
       "title": "Win on Thumb-1 code size with Machine Outlining",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/_FgSUKwD4lI",
       "videoId": "_FgSUKwD4lI",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-064",
@@ -1639,17 +1284,12 @@
       "meetingDate": "November 16-19, 2021",
       "category": "lightning-talk",
       "title": "fp-model: single option floating point configuration",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/GPB_o_wXPcY",
       "videoId": "GPB_o_wXPcY",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-QuickTalks-fp-model-single-option-floating-point-configuration.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-065",
@@ -1662,52 +1302,32 @@
       "speakers": [
         {
           "name": "Soham Dixit",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Riccardo Mori",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Pratyush Das",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "George Mitenkov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Tarindu Jayatilaka",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Konstantin Sidorov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/mxI9fYbpndI",
       "videoId": "mxI9fYbpndI",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Community Building"
       ]
@@ -1723,24 +1343,16 @@
       "speakers": [
         {
           "name": "Monica Sarbu",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Madalina Tepelmann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/52a1bbHmFhs",
       "videoId": "52a1bbHmFhs",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Community Building"
       ]
@@ -1756,20 +1368,13 @@
       "speakers": [
         {
           "name": "Adelina Chalmers",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/uORjOwuSG_M",
       "videoId": "uORjOwuSG_M",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2021-11-068",
@@ -1782,17 +1387,13 @@
       "speakers": [
         {
           "name": "Kristof Beyls",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Foundation is dedicated to providing an inclusive and safe experience for everyone. We do not tolerate harassment of participants in any form. By registering for this event, we expect you to have read and agree to the LLVM Code of Conduct.",
       "videoUrl": "https://youtu.be/aAFDfhD-jDs",
       "videoId": "aAFDfhD-jDs",
       "slidesUrl": "https://llvm.org/devmtg/2021-11/slides/2021-LLVM-Relicensing-November2021-Update.pdf",
-      "projectGithub": "",
       "tags": [
         "Community Building"
       ]

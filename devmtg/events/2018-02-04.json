@@ -19,17 +19,13 @@
       "speakers": [
         {
           "name": "Mike Shah",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/8pdQFUOlHLQ",
       "videoId": "8pdQFUOlHLQ",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/introduction/attachments/slides/2675/export/events/attachments/introduction/slides/2675/Shah_Introduction_to_LLVM.",
-      "projectGithub": "",
       "tags": [
         "Beginner"
       ]
@@ -45,17 +41,13 @@
       "speakers": [
         {
           "name": "Rick Veens",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/XU3ttVvQKKA",
       "videoId": "XU3ttVvQKKA",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/wcet/attachments/slides/2377/export/events/attachments/wcet/slides/2377/slides.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -69,17 +61,13 @@
       "speakers": [
         {
           "name": "Paolo Savini",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/HY-Unf5LBoQ",
       "videoId": "HY-Unf5LBoQ",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/security/attachments/slides/2394/export/events/attachments/security/slides/2394/LLVM_CASE_FOSDEM_2018.pdf",
-      "projectGithub": "",
       "tags": [
         "Security"
       ]
@@ -95,17 +83,13 @@
       "speakers": [
         {
           "name": "Tom Tromey",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/KxKLurE5ERw",
       "videoId": "KxKLurE5ERw",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/rustdebug/attachments/slides/2529/export/events/attachments/rustdebug/slides/2529/llvm_rust.odp",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -119,17 +103,13 @@
       "speakers": [
         {
           "name": "Kai Nacke",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/qXPEtbDwd6A",
       "videoId": "qXPEtbDwd6A",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/heterogenousd/attachments/paper/2417/export/events/attachments/heterogenousd/paper/2417/HeterogeneousComputingwithD.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -143,17 +123,13 @@
       "speakers": [
         {
           "name": "Johan Fabry",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/E1x1ttYEQpI",
       "videoId": "E1x1ttYEQpI",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/raincodelabs/attachments/slides/2062/export/events/attachments/raincodelabs/slides/2062/LLVM_At_Raincode_Labs.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -167,17 +143,13 @@
       "speakers": [
         {
           "name": "Peter Smith",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/F4BlERa2J8o",
       "videoId": "F4BlERa2J8o",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/crosscompile/attachments/slides/2107/export/events/attachments/crosscompile/slides/2107/How_to_cross_compile_with_LLVM_based_tools.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -191,17 +163,13 @@
       "speakers": [
         {
           "name": "Juan Manuel Martinez Caamaño",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/5_rydTiB32I",
       "videoId": "5_rydTiB32I",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/easyjit/attachments/slides/2554/export/events/attachments/easyjit/slides/2554/easy_jit_fosdem.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -217,17 +185,13 @@
       "speakers": [
         {
           "name": "Serge Guelton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/N1md7_atQ9M",
       "videoId": "N1md7_atQ9M",
       "slidesUrl": "https://fosdem.org/2018/schedule/speaker/serge_guelton_serge_sans_paille/",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -241,17 +205,13 @@
       "speakers": [
         {
           "name": "Adrien Guinet",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/qZtS4EcUMtc",
       "videoId": "qZtS4EcUMtc",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/dragonffi/attachments/slides/2578/export/events/attachments/dragonffi/slides/2578/18_02_04_fosdem.tar.bz2",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "JIT"
@@ -268,17 +228,13 @@
       "speakers": [
         {
           "name": "Dávid Juhász",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/8yMc9YsNeLk",
       "videoId": "8yMc9YsNeLk",
       "slidesUrl": "https://fosdem.org/2018/schedule/event/uniqueprocessor/attachments/slides/2387/export/events/attachments/uniqueprocessor/slides/2387/IMSYS_FOSDEM_2018_LLVM_submission.pdf",
-      "projectGithub": "",
       "tags": [
         "IR"
       ]

@@ -19,17 +19,13 @@
       "speakers": [
         {
           "name": "Alexey Bataev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "OpenMP is a well-known and widely used API for shared-memory parallelism. Support for OpenMP in Clang/LLVM compiler is currently under development. In this talk, we will present current status of OpenMP support, what is done and what remains to be done, technical details behind OpenMP implementation. Also, we will elaborate on accelerators and pragma-assisted SIMD vectorization, introduced in the latest 4.0 edition of the OpenMP standard.",
       "videoUrl": "https://youtu.be/OI2Ccucy73Q",
       "videoId": "OI2Ccucy73Q",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Bataev-OpenMP.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization",
         "Clang"
@@ -46,17 +42,13 @@
       "speakers": [
         {
           "name": "David Menendez",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Optimizations are hard to get right. Even seemingly innocuous transformations in InstCombine can miss important corner cases. With Alive, you can specify peephole optimizations in a friendly, LLVM-like language, automatically determine their correctness, and generate the corresponding C++ code.",
       "videoUrl": "https://youtu.be/iV5jBtE35r4",
       "videoId": "iV5jBtE35r4",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Menendez-Alive.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -72,24 +64,17 @@
       "speakers": [
         {
           "name": "Tom Stellard",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Advanced Micro Devices",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "This talk will cover LLVM stable releases, how they work, who uses them, and how we can make them better.",
       "videoUrl": "https://youtu.be/9h5Zx_mO2tI",
       "videoId": "9h5Zx_mO2tI",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Stellard-llvm-stable-releases2014.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -103,24 +88,17 @@
       "speakers": [
         {
           "name": "Philip Reames",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Sanjoy Das",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Generating efficient code that is compatible with common high performance garbage collector implementations will strengthen LLVM's ability to support languages with managed runtime environments. To support this common use case, we have built and are in the process of contributing a safepoint insertion pass which can rewrite optimized IR into a form which respects the invariants required by a fully relocating garbage collector, and a set of intrinsics which enable work towards efficient lowering of safepoints. We'll cover the motivation, high level design, and show off some examples.",
       "videoUrl": "https://youtu.be/mdVR0RYJQ9w",
       "videoId": "mdVR0RYJQ9w",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Reames-GarbageCollection.pdf",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -136,17 +114,13 @@
       "speakers": [
         {
           "name": "Lu Zhao",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "We added a new debug mode for the Clang compiler which emits extra metadata in the LLVM bitcode. The metadata has turned the bitcode into a useful vehicle from which an intermediate representation for secure source code analysis can be derived. We have used this approach to find security vulnerabilities in the Objective-C source code.",
       "videoUrl": "https://youtu.be/xSN0J_JV06E",
       "videoId": "xSN0J_JV06E",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Zhao-SourceCodeAnalysisforSecurity.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "IR",
@@ -164,24 +138,17 @@
       "speakers": [
         {
           "name": "Andrew Trick",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Juergen Ributzka",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "FTL: WebKit’s LLVM based JIT FTL is the fourth-tier LLVM JIT that powers JavaScript in WebKit. We will talk about our experiences using LLVM to build this high-performance JIT. We will explain the motivation for new LLVM features, including patchpoints and a new form of stack maps, and will share our vision on future work and the direction we would like LLVM move to become a better platform for JIT clients.",
       "videoUrl": "https://youtu.be/bnY5FVxHUVc",
       "videoId": "bnY5FVxHUVc",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Trick-FTL.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT",
         "Performance"
@@ -198,17 +165,13 @@
       "speakers": [
         {
           "name": "John Criswell",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "This talk presents an LLVM-based system named Virtual Ghost that protects applications from a compromised operating system kernel. Virtual Ghost uses compiler instrumentation to protect application data from spying and corruption from the operating system kernel. It also uses an extended version of the LLVM instruction set to restrict how the operating system kernel can interact with the hardware, preventing the operating system kernel from using hardware configuration to corrupt application control-flow or to bypass the application data protection guarantees.",
       "videoUrl": "https://youtu.be/iVwShAxImHE",
       "videoId": "iVwShAxImHE",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Criswell-VirtualGhost.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -222,24 +185,17 @@
       "speakers": [
         {
           "name": "Fraser Cormack",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Pierre-André Saulais",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/b53WqCbLEYg",
       "videoId": "b53WqCbLEYg",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Cormack-BuildingAnLLVMBackend.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -255,17 +211,13 @@
       "speakers": [
         {
           "name": "Dave Estes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Uge_whHVmtM",
       "videoId": "Uge_whHVmtM",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Estes-MISchedulerTutorial.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -279,24 +231,17 @@
       "speakers": [
         {
           "name": "Eric Christopher",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "David Blaikie",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/_wqX9H2A66M",
       "videoId": "_wqX9H2A66M",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Christopher-DebugInfoTutorial.pdf",
-      "projectGithub": "",
       "tags": [
         "Debug Information"
       ]
@@ -312,17 +257,13 @@
       "speakers": [
         {
           "name": "Chandler Carruth",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Manager, Part 2 I will present a new design and implementation of the LLVM pass manager that is currently being developed in the tree. I will cover how it differs from the previous implementation and how those differences allow it to solve many of the long-standing limitations of the current implementation. I will discuss in depth how the new system supports richer analysis dependencies, flexible composition of function-level analyses and module- or call-graph-level transformations. The new pass manager also introduces a caching-based scheduling model which is substantially different from the prior ones and critical to understanding the impact of transitioning. And as I go through these topics I will introduce how to write a pass suitable for the new infrastructure and how to port an existing pass to live happily in both. Finally, I will show a specific new call-graph analysis used by the new pass manager and discuss how these two components can be used to parallelize the entire LLVM compilation pipeline. I will mention some of the basic correctness and efficiency challenges faced when running in parallel and detail the specific challenges and constraints pursuing this path would impose on analysis and optimization passes.",
       "videoUrl": "https://youtu.be/6NDQl544yEg",
       "videoId": "6NDQl544yEg",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Carruth-TheLLVMPassManagerPart2.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -338,24 +279,17 @@
       "speakers": [
         {
           "name": "James Molloy",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ana Pazos",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "What does it take to make LLVM as performant as GCC For the past 7 months Qualcomm and ARM have jointly been analyzing and improving performance for the AArch64 architecture in LLVM, based on a differential analysis against GCC. This talk aims to provide information on the areas that we're currently lacking compared to GCC, along with the progress that we've made so far.",
       "videoUrl": "https://youtu.be/EsNMa9nxLOk",
       "videoId": "EsNMa9nxLOk",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Molloy-LLVM-Performant-As-GCC-llvm-dev-2014.pdf",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -371,17 +305,13 @@
       "speakers": [
         {
           "name": "Robin Morisset",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Blowing up the Atomic Barrier Atomics in C11 and C++11 let the programmer express the guarantees needed for racy accesses in lock-free code, in theory bringing a zero-cost abstraction for parallelism to the language. This talk will showcase how you can use atomics today and where the abstraction breaks down. We’ll focus on LLVM’s recent improvements for atomics that provide significant performance gains on ARMv7, Power and x86. Finally we’ll discuss some extremely non-intuitive behaviors of atomics, how atomics in C++ may evolve, and how it may impact LLVM.",
       "videoUrl": "https://youtu.be/cDM6Gr_XzGI",
       "videoId": "cDM6Gr_XzGI",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Morisset-AtomicsPresentation.pdf",
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -397,24 +327,17 @@
       "speakers": [
         {
           "name": "Jordan Rose",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "John McCall",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Most languages that aren't a superset of C provide a Foreign Function Interface (FFI) that allows one to interface with existing C libraries. FFIs are often an afterthought, requiring manual or source-to-source translation from C header files to a subset of the target language, resulting in complicated build processes, frequent manual tweaking, and numerous implementation challenges. This talk will discuss an alternative approach that embeds Clang into an LLVM-based compiler front end to provide C compatibility without the traditional FFI. Embedding Clang provides seamless access to C APIs, moving the translation of APIs from external tools into the compiler itself. Moreover, one can leverage Clang's deep knowledge of C record layout and calling conventions to simplify the C interface and make both bring up and porting of a new compiler front end simpler.",
       "videoUrl": "https://youtu.be/_xAqf-VwaOM",
       "videoId": "_xAqf-VwaOM",
-      "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Skip the FFI.pdf",
-      "projectGithub": "",
+      "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Skip%20the%20FFI.pdf",
       "tags": [
         "Clang"
       ]
@@ -430,17 +353,13 @@
       "speakers": [
         {
           "name": "Bill Schmidt",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "The POWER instruction set architecture is designed to support both big-endian and little-endian memory models. However, many of the instructions designed for vector support assume that vector elements in registers appear in big endian order, that is, with the lowest-numbered vector element in the most significant portion of the register. This talk will outline some of the issues faced in designing a sensible vector programming model on a bi-endian architecture with a big-endian bias, and how we've addressed them. We will also discuss the current status of implementation in the GCC and Clang/LLVM compilers.",
       "videoUrl": "https://youtu.be/y_YU5CxrxNo",
       "videoId": "y_YU5CxrxNo",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Schmidt-SupportingVectorProgramming.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -456,17 +375,13 @@
       "speakers": [
         {
           "name": "Hal Finkel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Over the past year, LLVM has grown several new ways to communicate important information to the optimizer: An @llvm.assume intrinsic function to provided additional truths, scoped-noalias metadata to provided explicit pointer aliasing sets, and parameter attributes that specify pointer alignment, dereferenceability, and more. I'll explain the semantics of many of these new features, their intended uses, and a few ways they shouldn't be used. Finally, I'll discuss how Clang exposes and leverages these new features to encourage the generation of higher-performance code.",
       "videoUrl": "https://youtu.be/Zyeey4gkIg8",
       "videoId": "Zyeey4gkIg8",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Finkel-IntrinsicsMetadataAttributes.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Optimizations",
@@ -484,17 +399,13 @@
       "speakers": [
         {
           "name": "Prashantha NR",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Modern server workloads are limited by memory bandwidth. For regular accesses like loops, people change the loop iterations to change the access pattern; thereby gaining locality. Another way to alleviate the memory bottleneck is to change the data layout organization for better locality. In this talk we will speak about memory layout optimizations like Structure Splitting, Instance Interleaving, Struct Array copy, Array Remapping in LLVM compiler framework.",
       "videoUrl": "https://youtu.be/Ckzole3hArc",
       "videoId": "Ckzole3hArc",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Prashanth-DLO.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -510,17 +421,13 @@
       "speakers": [
         {
           "name": "David Majnemer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Fuzzing Clang to Find ABI Bugs Correctly implementing C++ is very hard, bugs can arise from incredibly subtle interactions of different language features. In this talk, we will discuss how we used fuzzing to dramatically increase the reliability of Clang's ABI-specific code.",
       "videoUrl": "https://youtu.be/0yUzo-pBkFk",
       "videoId": "0yUzo-pBkFk",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Majnemer-FuzzingClang.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Dynamic Analysis"
@@ -537,17 +444,13 @@
       "speakers": [
         {
           "name": "Tilmann Scheller",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "A closer look at ARM code quality This talk presents current performance numbers for the SPEC CPU benchmark suites on ARM, comparing the performance of LLVM and GCC, with the main focus on the SPEC CPU integer benchmarks. To dive a little bit deeper, we will also have a closer look at the generated assembly code of selected benchmarks where LLVM is performing worse than GCC. We will use the results of this performance analysis to point out potential code generation opportunities for LLVM.",
       "videoUrl": "https://youtu.be/1DM2Q75qDSU",
       "videoId": "1DM2Q75qDSU",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Scheller-ARMCodeQuality.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend",
         "Performance"
@@ -564,24 +467,17 @@
       "speakers": [
         {
           "name": "Sergei Larin",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Aditya Kumar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Discuss perspectives and tradeoffs in implementation of global instruction scheduling and support for it in the LLVM infrastructure. Present and discuss relative QuIC experience.",
       "videoUrl": "https://youtu.be/A88vO_lP5b8",
       "videoId": "A88vO_lP5b8",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Larin-GlobalInstructionScheduling.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -597,7 +493,6 @@
       "videoUrl": "https://youtu.be/sNZD7qFA2nY",
       "videoId": "sNZD7qFA2nY",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/#light",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -611,17 +506,13 @@
       "speakers": [
         {
           "name": "Alan Baker",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Altera Corporation’s OpenCL compiler uses LLVM to generate FPGA accelerators. In order to generate efficient hardware, many transformations were implemented. The key transformations will be discussed, emphasizing the FPGA vs CPU architectural differences that motivate them.",
       "videoUrl": "https://youtu.be/DGWFQXK_EU4",
       "videoId": "DGWFQXK_EU4",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Baker-CustomHardwareStateMachines.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU",
         "OpenCL"
@@ -638,17 +529,13 @@
       "speakers": [
         {
           "name": "Ivan Baev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Enabling new compiler optimizations or compiling at higher optimization levels do not necessarily improve performance. One common reason is the increased register pressure that results in an increased amount of spill code. We analyze several LLVM target-independent optimizations with respect to register pressure. We then describe algorithms for controlling register pressure in LICM and GVN and report their positive impact on run-time performance. A discussion on how to control register pressure in the inliner concludes the talk.",
       "videoUrl": "https://youtu.be/lJmXiwJo2ZQ",
       "videoId": "lJmXiwJo2ZQ",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Baev-Controlling_VRP.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations",
         "Performance"
@@ -665,17 +552,13 @@
       "speakers": [
         {
           "name": "Luke Zarko",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "The Kythe project aims to establish open data formats and protocols for interoperable developer tools. In this talk, we will introduce the Kythe model as it applies to C++14, concentrating on features required for generating cross-references. In the process, we will discuss how the Clang front-end was instrumental in developing an indexing tool that produces Kythe data describing C++ source code.",
       "videoUrl": "https://youtu.be/KDiXo5GwQ-U",
       "videoId": "KDiXo5GwQ-U",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Zarko-IndexingLargeMixedLang.pdf",
-      "projectGithub": "",
       "tags": [
         "C++",
         "Clang",
@@ -693,17 +576,13 @@
       "speakers": [
         {
           "name": "Eric Christopher",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "A talk on microarchitecture dependent optimization and code generation for individual functions, the changes that have been necessary to enable it, and function multiversioning as the next step.",
       "videoUrl": "https://youtu.be/iAaoGsCVeCI",
       "videoId": "iAaoGsCVeCI",
-      "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Christopher-Function Multiversioning Talk.pdf",
-      "projectGithub": "",
+      "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Christopher-Function%20Multiversioning%20Talk.pdf",
       "tags": [
         "Backend",
         "Optimizations"
@@ -720,24 +599,17 @@
       "speakers": [
         {
           "name": "Nathan Hawes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ben Barham",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Computers, LLC is presenting a poster on its upcoming Carte++ compiler release showing how the Clang/LLVM infrastructure has provided full language support and a rich set of compiler optimizations upon which to build the Carte++ code generator. The poster will illustrate specific optimizations and compiler challenges unique to SRC's FPGA-based hardware. Logistics DoubleTree by Hilton San Jose 2050 Gateway Place San Jose, CA 95110 You may book their hotel stay by using this link. Rate: $209 plus local taxes for superior double queen or superior king rooms Self Parking is $19 per day.",
       "videoUrl": "https://youtu.be/xelhxXfqngc",
       "videoId": "xelhxXfqngc",
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Hawes-Frappe.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Optimizations"
@@ -754,17 +626,12 @@
       "speakers": [
         {
           "name": "Vedant Kumar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "The effects of some loops can be captured by matrices. This talk shows how to take advantage of this fact to optimize away entire loops.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Kumar-LoopDiagonalization.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -778,17 +645,12 @@
       "speakers": [
         {
           "name": "Arnaud de Grandmaison",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "The PBQP register allocator has been part of the LLVM source code for a long time. This talk will present a high level overview of the PBQP allocator principles, as well as its status and future work.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/PBQP-update-and-in-the-wild.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -804,17 +666,12 @@
       "speakers": [
         {
           "name": "Arnaud de Grandmaison",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "This talk will present how the PBQP is used with 2 real world processors and report some performance numbers.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/PBQP-update-and-in-the-wild.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend",
         "Performance"
@@ -831,17 +688,12 @@
       "speakers": [
         {
           "name": "Yunzhong Gao",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "As a follow-up to last year's presentation, this is a talk on our experience implementing LTO on PlayStation(R)4’s proprietary linker, including some of the challenges and results we see in the games.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Gao-LTO-lightning-talk.pdf",
-      "projectGithub": "",
       "tags": [
         "LLD",
         "LTO",
@@ -859,17 +711,12 @@
       "speakers": [
         {
           "name": "Harsh Vardhan Dwivedi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "What is SWviz and why should I care about it anyway? SWViz is a tool to explore the call graph of a program. It’s chief advantage being able to leverage the linker and compiler (Clang) to generate accurate call-graphs. Through use of Swviz one can quickly gain an understanding of how a program is working. This leads to a massive cutdown in number of hours spent understanding the call-flow of any mature codebase. We’ll demonstrate use of SWViz with Linux Kernel.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Dwivedi-SWViz.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "LLD"
@@ -886,17 +733,12 @@
       "speakers": [
         {
           "name": "Peng Cheng",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "At MathWorks, LLVM has been used to create multi-thread JIT engines for interactive modeling and high performance simulation. This talk will present why and how LLVM is used to implement the JIT engines as well as some challenges.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Cheng-InteractiveModeling.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT",
         "Performance"
@@ -913,17 +755,12 @@
       "speakers": [
         {
           "name": "Timur Iskhodzhanov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "A fast memory error detector, now available to try on Windows. Brief overview of the internals and some initial deployment results.",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/ASan for Windows.pdf",
-      "projectGithub": "",
+      "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/ASan%20for%20Windows.pdf",
       "tags": [
         "Dynamic Analysis"
       ]
@@ -939,31 +776,20 @@
       "speakers": [
         {
           "name": "Peng Cheng",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Nathan Brewton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Dale Martin",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "To enable inter-module optimization during interactive modeling for high performance simulation of Simulink models, LLVM based JIT compilers have been developed at MathWorks. These JIT compilers support multiple threads on major platforms, including win32, win64, glnax64, and maci64, and achieve superior running time performance compared with previous shared library based compilers. This talk will present why and how LLVM is used to implement the JIT compilers as well as some challenges.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Cheng-InteractiveModelingPoster.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT",
         "Optimizations",
@@ -980,10 +806,8 @@
       "title": "ISPC: clang-based front-end",
       "speakers": [],
       "abstract": "ISPC is a C-based language based on the SPMD (single program, multiple data) programming model that generates efficient SIMD code for modern processors without the need for complex analysis and autovectorization. The project uses the LLVM infrastructure for optimization and code generation but originally used a custom front-end. The poster describes our experience with building a clang-based front-end and the engineering problems we have encountered introducing the concept of “varying” types to clang.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Babokin-ISPC_clang.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization",
         "Backend",
@@ -1003,17 +827,12 @@
       "speakers": [
         {
           "name": "Sunil Srivastava",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "This poster describes the design of an Itanium C++ ABI Test Suite that verifies a compiler’s compliance against the ABI specification to ensure link compatibility.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Srivastava-ABI-testsuite_poster.pdf",
-      "projectGithub": "",
       "tags": [
         "Testing"
       ]
@@ -1029,17 +848,12 @@
       "speakers": [
         {
           "name": "Harsh Vardhan Dwivedi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "What is SWviz and why should I care about it anyway? SWViz is a tool to explore the call graph of a program. It’s chief advantage being able to leverage the linker and compiler (Clang) to generate accurate call-graphs. Through use of Swviz one can quickly gain an understanding of how a program is working. This leads to a massive cutdown in number of hours spent understanding the call-flow of any mature codebase. We’ll demonstrate use of SWViz with Linux Kernel.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Dwivdei-SWVizPoster.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "LLD"
@@ -1056,17 +870,12 @@
       "speakers": [
         {
           "name": "Simon Cook",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Today we need compilers to optimize for energy rather than just size or speed. In this poster we present the results of integrating machine learning with LLVM, so the compiler can be trained on which optimizations minimize energy. As a side effect of energy optimization we also see significant performance benefits - nearly doubling performance compared to -O3 in some cases.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Cook-mageecPoster.pdf",
-      "projectGithub": "",
       "tags": [
         "ML",
         "Optimizations",
@@ -1084,45 +893,28 @@
       "speakers": [
         {
           "name": "Cristina Cifuentes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Nathan Keynes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Lin Gao",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Manuel Valdiviezo",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Andrew Gross",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "This poster describes one of several new Java security vulnerabilities and how we reused and extended LLVM’s IR in order to detect such vulnerability. One year later, full support for Java 7 and 8 are in place, along with various analyses that detect Java platform vulnerabilities.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Cifuentes-TranslatingJava.pdf",
-      "projectGithub": "",
       "tags": [
         "IR",
         "Security"
@@ -1139,17 +931,12 @@
       "speakers": [
         {
           "name": "Zinovy Nis",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "Intel® AVX-512 vector ISA continues to evolve. It has recently been enriched with new groups of instructions operating on different vector lengths and different vector element sizes. We’ll present the current status of new AVX-512 features enabling in CLANG/LLVM and show how these features can be exploited for performance improvements particularly by vectorizer.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Nis-AVX-512ArchPoster.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization",
         "Clang",
@@ -1168,38 +955,24 @@
       "speakers": [
         {
           "name": "Jeffrey Hammes",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Lisa Krause",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Matthew O’Connor",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Jon Steidel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "SRC Computers, LLC is presenting a poster on its upcoming Carte++ compiler release showing how the Clang/LLVM infrastructure has provided full language support and a rich set of compiler optimizations upon which to build the Carte++ code generator. The poster will illustrate specific optimizations and compiler challenges unique to SRC's FPGA-based hardware.",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2014-10/Slides/Krause-CartePoster.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Optimizations"

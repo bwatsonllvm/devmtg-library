@@ -19,20 +19,14 @@
       "speakers": [
         {
           "name": "Juneyoung Lee",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ZMaZH3YYJqY",
       "videoId": "ZMaZH3YYJqY",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Lee-UndefPoison.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-002",
@@ -45,24 +39,17 @@
       "speakers": [
         {
           "name": "Bill Wendling",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Nick Desaulniers",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/vcPD490s-hE",
       "videoId": "vcPD490s-hE",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Wendling_Desaulniers_asm_goto_w_outputs.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -78,38 +65,25 @@
       "speakers": [
         {
           "name": "Siva Chandra Reddy",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Guillaume Chatelet",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Paula Asker",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "David Finkelstein",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Dm8-ug9L0Gc",
       "videoId": "Dm8-ug9L0Gc",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Reddy-Libc_Status_Challenges_Future_Plans.pdf",
-      "projectGithub": "",
       "tags": [
         "C Libs"
       ]
@@ -125,20 +99,14 @@
       "speakers": [
         {
           "name": "Alan Phipps",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/H1hvtJPGWNQ",
       "videoId": "H1hvtJPGWNQ",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/PhippsAlan_BranchCoverage_LLVM_Conf_Talk_final.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-005",
@@ -151,41 +119,26 @@
       "speakers": [
         {
           "name": "Evgenii Stepanov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Kostya Serebryany",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Peter Collingbourne",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Mitch Phillips",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/tqG9pr1K5G8",
       "videoId": "tqG9pr1K5G8",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Stepanov-Memory_tagging_in_LLVM_and_Android.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-006",
@@ -198,24 +151,17 @@
       "speakers": [
         {
           "name": "Kelvin Li",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Tarique Islam",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Vp4GklTXDys",
       "videoId": "Vp4GklTXDys",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Islam-Li-Fortran_alias_representation.pdf",
-      "projectGithub": "",
       "tags": [
         "Flang",
         "IR"
@@ -232,17 +178,13 @@
       "speakers": [
         {
           "name": "Artur Pilipenko",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/WHiU2-h_kRM",
       "videoId": "WHiU2-h_kRM",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Pilipenko-Falcon-EA-LLVM-Dev-Mtg.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -258,17 +200,13 @@
       "speakers": [
         {
           "name": "Milena Vujosevic Janicic",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/-6dL-7xkIV0",
       "videoId": "-6dL-7xkIV0",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Janicic-Extending_Clang_Compliance_Automotive_Standards.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -284,20 +222,14 @@
       "speakers": [
         {
           "name": "Philip Reames",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/gyiEb4860rM",
       "videoId": "gyiEb4860rM",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Reames-Update_on_Optimizing_Multiple_Exit_Loops.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-010",
@@ -310,17 +242,13 @@
       "speakers": [
         {
           "name": "Aditya Kumar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/puZ2B408VsM",
       "videoId": "puZ2B408VsM",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Kumar-LLVMDevCodeSizePdf.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -336,27 +264,17 @@
       "speakers": [
         {
           "name": "Baptiste Saleil",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "João Carvalho",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/NYR8zn2kLL4",
       "videoId": "NYR8zn2kLL4",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-012",
@@ -369,38 +287,25 @@
       "speakers": [
         {
           "name": "Prashantha NR",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Vinay Madhusudan",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ranjith Kumar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Srihari",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/3gcw-8C9UbA",
       "videoId": "3gcw-8C9UbA",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/CIL_Common_MLIR_Abstraction.pdf",
-      "projectGithub": "",
       "tags": [
         "Flang",
         "IR",
@@ -418,20 +323,14 @@
       "speakers": [
         {
           "name": "Serge Guelton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/PkfTHdoUzT8",
       "videoId": "PkfTHdoUzT8",
       "slidesUrl": "http://serge-sans-paille.github.io/talks/llvmdev2020/output/index.html",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-014",
@@ -444,24 +343,17 @@
       "speakers": [
         {
           "name": "Alex Denisov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Stanislav Pankevich",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/DfoS9kdTWmI",
       "videoId": "DfoS9kdTWmI",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Denisov-LLVM-based_mutation_testing_for_C_and_CPlusPlus.pdf",
-      "projectGithub": "",
       "tags": [
         "Testing"
       ]
@@ -477,17 +369,13 @@
       "speakers": [
         {
           "name": "Florian Hahn",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/I8TIBvvM2K0",
       "videoId": "I8TIBvvM2K0",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Hahn-Matrix_Support_in_LLVM_and_Clang.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -503,17 +391,13 @@
       "speakers": [
         {
           "name": "Simeon Ehrig",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/XjjZRhiFDVs",
       "videoId": "XjjZRhiFDVs",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Ehrig-Adding_CUDA_support_to_Cling.pdf",
-      "projectGithub": "",
       "tags": [
         "CUDA",
         "GPU",
@@ -531,66 +415,41 @@
       "speakers": [
         {
           "name": "Johannes Doerfert",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Brian Homerding",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Stefanos Baziotis",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Stefan Stipanovic",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Hideto Ueno",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Kuter Dinel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Shinji Okumura",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Luofan Chen",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/uC-x_Je_sIw",
       "videoId": "uC-x_Je_sIw",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/The_Present_and_Future_of_Interprocedural_Optimization_in_LLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "LTO",
         "Optimizations"
@@ -607,17 +466,13 @@
       "speakers": [
         {
           "name": "L. Dionne",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/z5-wo0TW26M",
       "videoId": "z5-wo0TW26M",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Dionne-Pushing_Lits_Boundaries_to_testLibCPlusPlus.pdf",
-      "projectGithub": "",
       "tags": [
         "C Libs",
         "C++",
@@ -635,17 +490,13 @@
       "speakers": [
         {
           "name": "N. Hähnle",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/_Z5DuiVCFAw",
       "videoId": "_Z5DuiVCFAw",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Hahnle-Evolving_convergent_Lessons_from_Control_Flow_in_AMDGPU.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU"
       ]
@@ -661,24 +512,16 @@
       "speakers": [
         {
           "name": "A. Prantl",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "V. Kumar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Prantl-Kumar-How_to_update_debug_info.pdf",
-      "projectGithub": "",
       "tags": [
         "Debug Information"
       ]
@@ -694,24 +537,17 @@
       "speakers": [
         {
           "name": "M. Kruse",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "H. Finkel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/zHHUh0c5wig",
       "videoId": "zHHUh0c5wig",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/KruseFinkel-Proposal_for_A_Framework_for_More_Effective_Loop_Optimizations.pdf",
-      "projectGithub": "",
       "tags": [
         "Loop transformations",
         "Optimizations"
@@ -728,24 +564,17 @@
       "speakers": [
         {
           "name": "H. Finkel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "A. Mccaskey",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/A9COzFs-gEg",
       "videoId": "A9COzFs-gEg",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Finkel-Changing_Everything_With_Clang_Plugins.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Quantum Computing"
@@ -759,14 +588,11 @@
       "meetingDate": "October 6-8, 2020",
       "category": "technical-talk",
       "title": "(OpenMP) Parallelism-Aware Optimizations",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/gtxWkeLCxmU",
       "videoId": "gtxWkeLCxmU",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/OpenMP_Parallelism_Aware_Optimizations.pdf",
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -782,24 +608,17 @@
       "speakers": [
         {
           "name": "M. Grang",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "K. Kjeer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/EuxAzvtX9CI",
       "videoId": "EuxAzvtX9CI",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Checked_C_Adding_Memory_Safety_to_LLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Security"
       ]
@@ -815,20 +634,14 @@
       "speakers": [
         {
           "name": "N. Desaulniers",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/y4b-sgp6VYA",
       "videoId": "y4b-sgp6VYA",
       "slidesUrl": "https://clangbuiltlinux.github.io/llvm-dev-conf-2020/nick/debugging_llvm.html#/",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-026",
@@ -841,17 +654,13 @@
       "speakers": [
         {
           "name": "H. Qadeer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/D9vCJwwTKaw",
       "videoId": "D9vCJwwTKaw",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Qadeer-LLVM_in_a_Bare_Metal_Environment.pdf",
-      "projectGithub": "",
       "tags": [
         "Embedded"
       ]
@@ -867,24 +676,17 @@
       "speakers": [
         {
           "name": "P. Kosov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. Yakushkin",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/kauauderlAU",
       "videoId": "kauauderlAU",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/PGO_Instrumentation.pdf",
-      "projectGithub": "",
       "tags": [
         "PGO",
         "Performance"
@@ -901,20 +703,14 @@
       "speakers": [
         {
           "name": "J. Schmeiser",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/3RCDB3_wUEM",
       "videoId": "3RCDB3_wUEM",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Schmeiser-Understanding_Changes_made_by_pass_in_the_opt_pipeline.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-029",
@@ -927,17 +723,13 @@
       "speakers": [
         {
           "name": "V. Bridgers",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/UfLH7dORav8",
       "videoId": "UfLH7dORav8",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Clang-tidy_for_Customized_Checkers_and_Large_Scale.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -953,27 +745,18 @@
       "speakers": [
         {
           "name": "S. Baziotis",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. Moll",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/1e5y6WDbXCQ",
       "videoId": "1e5y6WDbXCQ",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Finding_Your_Way_Around_the_LLVM_Dependence_Analysis_Zoo.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-031",
@@ -986,17 +769,13 @@
       "speakers": [
         {
           "name": "V. Bridgers",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/nTslG8HtKeA",
       "videoId": "nTslG8HtKeA",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Using_the_clang_static_ananalyzer_to_find_bugs.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Static Analysis"
@@ -1010,14 +789,11 @@
       "meetingDate": "October 6-8, 2020",
       "category": "tutorial",
       "title": "A Deep Dive into the Interprocedural Optimization Infrastructure",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/I4Iv-HefknA",
       "videoId": "I4Iv-HefknA",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/A_Deep_Dive_into_Interprocedural_Optimization.pdf",
-      "projectGithub": "",
       "tags": [
         "LTO",
         "Optimizations"
@@ -1034,17 +810,13 @@
       "speakers": [
         {
           "name": "M. Amini",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Y4SvqTtOIDk",
       "videoId": "Y4SvqTtOIDk",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/MLIR_Tutorial.pdf",
-      "projectGithub": "",
       "tags": [
         "MLIR"
       ]
@@ -1060,17 +832,13 @@
       "speakers": [
         {
           "name": "A. Litteken",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/HaN83qMyAhY",
       "videoId": "HaN83qMyAhY",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Finding-outlining-ir-level-Andrew-Litteken.pdf",
-      "projectGithub": "",
       "tags": [
         "IR"
       ]
@@ -1086,27 +854,18 @@
       "speakers": [
         {
           "name": "A. Kumar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "S. Pop",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Ar17O-bb90E",
       "videoId": "Ar17O-bb90E",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/A_fast_algorithm_for_global_code_motion_of_congruent_instructions.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-036",
@@ -1116,17 +875,12 @@
       "meetingDate": "October 6-8, 2020",
       "category": "lightning-talk",
       "title": "From Implicit Pass Dependencies to Effectiveness Prediction",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/QvF68tOt_w8",
       "videoId": "QvF68tOt_w8",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Ueno-From_Implicit_Pass_Dependencies_to_Effectiveness_Prediction.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-037",
@@ -1139,38 +893,25 @@
       "speakers": [
         {
           "name": "A. Wang",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "P. Lin",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "C. Liao",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Y. Yan",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/BUXUhno8pfE",
       "videoId": "BUXUhno8pfE",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Wang-Using_Clang_as_An_Alternative_Frontend_of_the_ROSE.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang",
         "Frontend"
@@ -1187,24 +928,17 @@
       "speakers": [
         {
           "name": "V. Clement",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "J. Vetter",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/vVmCLdSboWc",
       "videoId": "vVmCLdSboWc",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Clement-OpenACC_support_in_Flang_with_a_MLIR_dialect.pdf",
-      "projectGithub": "",
       "tags": [
         "Flang",
         "IR",
@@ -1222,17 +956,13 @@
       "speakers": [
         {
           "name": "J. Henderson",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/0y6TlfFhCsU",
       "videoId": "0y6TlfFhCsU",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Henderson-DebugDataElimination.pdf",
-      "projectGithub": "",
       "tags": [
         "Debug Information"
       ]
@@ -1248,24 +978,17 @@
       "speakers": [
         {
           "name": "A. Phipps",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "C. Addison",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/H3BXmS8gZJY",
       "videoId": "H3BXmS8gZJY",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/PhippsAlan_EmbeddedCodeCoverage_LLVM_Conf_Talk_final.pdf",
-      "projectGithub": "",
       "tags": [
         "Embedded"
       ]
@@ -1281,27 +1004,18 @@
       "speakers": [
         {
           "name": "M. Goncharov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "C. Kühnel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/IWL-YHCClIA",
       "videoId": "IWL-YHCClIA",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Goncharov-Pre-merge_checks.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-042",
@@ -1314,17 +1028,13 @@
       "speakers": [
         {
           "name": "J. McCrea",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/I22VVp09sAY",
       "videoId": "I22VVp09sAY",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/McCrea-Getting_Stack_Size_Just_Right_on_XCore.pdf",
-      "projectGithub": "",
       "tags": [
         "Embedded"
       ]
@@ -1340,27 +1050,17 @@
       "speakers": [
         {
           "name": "Y. Yi",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "P. Bowen-Huggett",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/9bQEtJHkDTw",
       "videoId": "9bQEtJHkDTw",
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-044",
@@ -1373,24 +1073,17 @@
       "speakers": [
         {
           "name": "M. Morehouse",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "K. Serebryany",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/2KvaKEyMVEU",
       "videoId": "2KvaKEyMVEU",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Morehouse-GWP-Tsan.pdf",
-      "projectGithub": "",
       "tags": [
         "Dynamic Analysis"
       ]
@@ -1406,20 +1099,14 @@
       "speakers": [
         {
           "name": "D. Grumberg",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/0QJIPn7N6GA",
       "videoId": "0QJIPn7N6GA",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Grumberg-Frontend_Option_Parsing.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-046",
@@ -1432,17 +1119,13 @@
       "speakers": [
         {
           "name": "S. Baziotis",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/u3AYUZXpa0w",
       "videoId": "u3AYUZXpa0w",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Baziotis-Outer-Loop_Vectorization_Legality_Analysis_for_LLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization"
       ]
@@ -1458,17 +1141,13 @@
       "speakers": [
         {
           "name": "S. Scalpone",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/rO59gcuq0LU",
       "videoId": "rO59gcuq0LU",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Scalpone-FlangUpdate.pdf",
-      "projectGithub": "",
       "tags": [
         "Flang"
       ]
@@ -1481,17 +1160,12 @@
       "meetingDate": "October 6-8, 2020",
       "category": "lightning-talk",
       "title": "Code Feature Analysis, Tracking, and Future Usage",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
       "videoUrl": "https://youtu.be/pS9N_08x0GQ",
       "videoId": "pS9N_08x0GQ",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Jayatilaka-Code_Feature_Analysis_Tracking_and_Future_Usage.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2020-09-049",
@@ -1504,31 +1178,21 @@
       "speakers": [
         {
           "name": "M. Lücke",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "A. Smith",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "M. Steuwer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/fJZK9FWmpdc",
       "videoId": "fJZK9FWmpdc",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Lucke-Rise-A_Functional_Pattern-based_MLIR_Dialect.pdf",
-      "projectGithub": "",
       "tags": [
         "IR",
         "MLIR"
@@ -1545,17 +1209,13 @@
       "speakers": [
         {
           "name": "A. Johnston",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/yy9uaydiVAU",
       "videoId": "yy9uaydiVAU",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Johnston-SYCL_for_CUDA.pdf",
-      "projectGithub": "",
       "tags": [
         "CUDA"
       ]
@@ -1571,17 +1231,13 @@
       "speakers": [
         {
           "name": "J. Devlieghere",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/UgfzdAr9AFg",
       "videoId": "UgfzdAr9AFg",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Devlieghere-LLDB_scripting.pdf",
-      "projectGithub": "",
       "tags": [
         "LLDB"
       ]
@@ -1597,20 +1253,14 @@
       "speakers": [
         {
           "name": "E. Yakubova",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Slpszob1z4A",
       "videoId": "Slpszob1z4A",
       "slidesUrl": "https://llvm.org/devmtg/2020-09/slides/Yakubova-Adding_a_Subtarget_Support_to_LLVM_in_Five_Min.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     }
   ]
 }

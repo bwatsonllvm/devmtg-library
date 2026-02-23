@@ -24,7 +24,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1109/TPDS.2019.2960333",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "IEEE Transactions on Parallel and Distributed Systems"
@@ -60,7 +59,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://dl.acm.org/citation.cfm?id=3214297",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Seventh International Workshop on Hardware and Architectural Support for Security and Privacy (HASP)"
@@ -96,7 +94,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-dong.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Twenty Seventh Usenix Security Symposium"
@@ -136,7 +133,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://web.ist.utl.pt/nuno.lopes/pubs/llvmmem-oopsla18.pdf",
-      "sourceUrl": "",
       "tags": [
         "Optimizations"
       ],
@@ -162,7 +158,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://ieeexplore.ieee.org/document/8411727/",
-      "sourceUrl": "",
       "tags": [
         "Testing"
       ],
@@ -184,7 +179,6 @@
       "type": "thesis",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://scholarworks.rit.edu/theses/9550/",
-      "sourceUrl": "",
       "tags": [
         "Backend"
       ],
@@ -234,7 +228,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://web.ist.utl.pt/nuno.lopes/pubs/undef-pldi17.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proc. of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)"
@@ -258,7 +251,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://ieeexplore.ieee.org/document/8077808",
-      "sourceUrl": "",
       "tags": [
         "Security"
       ],
@@ -296,7 +288,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1002/cpe.4190",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Concurrency and Computation: Practice and Experience"
@@ -320,7 +311,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=3092268&CFID=967844128&CFTOKEN=15248470",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "International Symposium on Memory Management (ISMM)"
@@ -364,7 +354,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://ieeexplore.ieee.org/document/8077809",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "IEEE Cybersecurity Development Conference (SecDev)"
@@ -384,7 +373,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://dl.acm.org/citation.cfm?doid=3135932.3135947",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings Companion of the 2017 ACM SIGPLAN International Conference on Systems, Programming, Languages, and Applications: Software for Humanity (SPLASH 2017)"
@@ -416,7 +404,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://dl.acm.org/citation.cfm?id=3053007",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 2017 ACM Asia Conference on Computer and Communications Security (AsiaCCS)"
@@ -440,7 +427,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://soarlab.org/2017/09/aplas2017-hr",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Fifteenth Asian Symposium on Programming Languages and Systems (APLAS)"
@@ -468,7 +454,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://ieeexplore.ieee.org/document/8077803",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "IEEE Cybersecurity Development Conference (SecDev)"
@@ -496,7 +481,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://hal.archives-ouvertes.fr/hal-01192668",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "23rd IEEE International Symposium on Computer Arithmetic (ARITH)"
@@ -524,7 +508,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.utah.edu/~vcsharma/pubs/dpdns2016-shrg.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "21st IEEE Workshop on Dependable Parallel, Distributed and Network-Centric Systems (DPDNS)"
@@ -548,7 +531,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.rutgers.edu/~santosh.nagarakatte/papers/icse2016-alive-loops.pdf",
-      "sourceUrl": "",
       "tags": [
         "Optimizations"
       ],
@@ -578,7 +560,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cse.unsw.edu.au/~ysui/papers/cgo16.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "2016 International Symposium on Code Generation and Optimization (CGO 2016)"
@@ -602,7 +583,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cse.unsw.edu.au/~ysui/papers/cc16.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "25th International Conference on Compiler Construction (CC 2016)"
@@ -634,7 +614,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://link.springer.com/chapter/10.1007/978-3-319-43659-3_18",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Twenty-Second International Conference on Parallel and Distributed Computing (Euro-Par)"
@@ -662,7 +641,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://formalverification.cs.utah.edu/new/Publications.html#vcsharma_hipc16",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "IEEE International Conference of High-Performance Computing, Data, and Analysis (HiPC)"
@@ -686,7 +664,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cse.unsw.edu.au/~ysui/papers/fse16.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM SIGSOFT International Symposium on the Foundation of Software Engineering (FSE 2016)"
@@ -726,7 +703,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://ieeexplore.ieee.org/document/7546545",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 2016 IEEE Symposium on Security and Privacy (SP 2016)"
@@ -754,7 +730,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://thiernobarry.fr/publications/preprint/T-Barry.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Cryptography and Security in Computing Systems 2016” (CS2)"
@@ -806,7 +781,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://soarlab.org/publications/ipdps2016-agralslpm.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 30th IEEE International Parallel and Distributed Processing Symposium (IPDPS 2016)"
@@ -834,7 +808,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.rutgers.edu/~santosh.nagarakatte/papers/alive-fp-sas16.pdf",
-      "sourceUrl": "",
       "tags": [
         "Optimizations"
       ],
@@ -868,7 +841,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://web.ist.utl.pt/nuno.lopes/pubs/alive-pldi15.pdf",
-      "sourceUrl": "",
       "tags": [
         "Optimizations"
       ],
@@ -905,8 +877,7 @@
       "venue": "IEEE International Parallel and Distributed Processing Symposium (IPDPS)",
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
-      "paperUrl": "http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=7161599&url=http%3A%2F%2Fieeexplore.ieee.org%2Fxpls%2Fabs_all.jsp%3Farnumber%3D7161599",
-      "sourceUrl": "",
+      "paperUrl": "http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=7161599&url=http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=7161599",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "IEEE International Parallel and Distributed Processing Symposium (IPDPS)"
@@ -938,7 +909,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://crypto.junod.info/spro15.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the First International Workshop on Software Protection (SPRO 2015)"
@@ -962,7 +932,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://research.google.com/pubs/pub43308.html",
-      "sourceUrl": "",
       "tags": [
         "C++"
       ],
@@ -992,7 +961,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2737994",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 36th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI 2015)"
@@ -1024,7 +992,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2843863",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Fifth Program Protection and Reverse Engineering Workshop (PPREW-5)"
@@ -1052,7 +1019,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://soarlab.org/publications/ase2015-ddr.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Thirtieth IEEE/ACM International Conference on Automated Software Engineering (ASE 2015)"
@@ -1080,7 +1046,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://tinker.cc.gatech.edu/pdfs/a25-railing.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM Transactions on Architecture and Code Optimization"
@@ -1112,7 +1077,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://gsd.inesc-id.pt/~nmachado/papers/pldi15-nmachado.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proc. of the 36th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI 2015)"
@@ -1136,7 +1100,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://www.usenix.org/system/files/conference/usenixsecurity15/sec15-paper-araujo.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 24th USENIX Security Symposium"
@@ -1172,7 +1135,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2724717",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM Transactions on Architecture and Code Optimization (TACO)"
@@ -1224,7 +1186,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cl.cam.ac.uk/~dc552/papers/asplos15-memory-safe-c.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Twentieth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2015)"
@@ -1280,7 +1241,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://link.springer.com/article/10.1007/s10766-014-0320-y",
-      "sourceUrl": "",
       "tags": [
         "OpenCL",
         "Performance"
@@ -1311,7 +1271,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.rutgers.edu/~santosh.nagarakatte/papers/cgo2014-final.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 2014 International Symposium on Code Generation and Optimization (CGO 2014)"
@@ -1339,7 +1298,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://sva.cs.illinois.edu/pubs/VirtualGhost-ASPLOS-2014.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Nineteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2014)"
@@ -1363,7 +1321,6 @@
       "type": "thesis",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://dspace.cc.tut.fi/dpub/handle/123456789/22234",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Master's Thesis"
@@ -1383,7 +1340,6 @@
       "type": "thesis",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://hdl.handle.net/2142/50547",
-      "sourceUrl": "",
       "tags": [
         "Security"
       ],
@@ -1405,7 +1361,6 @@
       "type": "thesis",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.vu.nl/~giuffrida/papers/phdthesis.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Ph.D. Dissertation, Vrije University Amsterdam, The Netherlands"
@@ -1429,7 +1384,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://soarlab.org/2014/05/smack-decoupling-source-language-details-from-verifier-implementations",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Twenty Sixth International Conference on Computer Aided Verification (CAV 2014)"
@@ -1481,7 +1435,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://verify.rwth-aachen.de/giesl/papers/IJCAR14-LLVM.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Seventh International Joint Conference on Automated Reasoning (IJCAR 2014)"
@@ -1509,7 +1462,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://formalverification.cs.utah.edu/papers/SC14-GKLEE-SESA.pdf",
-      "sourceUrl": "",
       "tags": [
         "GPU"
       ],
@@ -1539,7 +1491,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://arcade.cs.columbia.edu/parashares-europar14.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "International Conference on Parallel Processing (Euro-Par)"
@@ -1567,7 +1518,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2601397",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Second ACM SIGSIM/PADS Conference on Principles of Advanced Discrete Simulation (SIGSIM-PADS 2014)"
@@ -1595,7 +1545,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://sva.cs.illinois.edu/pubs/KCoFI-Oakland-2014.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Thirty Fifth IEEE Symposium on Security and Privacy (Oakland 2014)"
@@ -1615,7 +1564,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://128.232.0.20/techreports/UCAM-CL-TR-865.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Technical Report UCAM-CL-TR-865, University of Cambridge"
@@ -1647,7 +1595,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.icir.org/robin/papers/imc14-hilti.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the ACM SIGCOMM Internet Measurement Conference"
@@ -1691,7 +1638,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.pds.ewi.tudelft.nl/fileadmin/pds/homepages/fang/papers/icpp2k14a214.pdf",
-      "sourceUrl": "",
       "tags": [
         "OpenCL",
         "Performance"
@@ -1726,7 +1672,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dx.doi.org/10.1002/spe.2297",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Software: Practice and Experience"
@@ -1770,7 +1715,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2576213&dl=ACM&coll=DL&CFID=513590721&CFTOKEN=44228041",
-      "sourceUrl": "",
       "tags": [
         "Backend"
       ],
@@ -1799,8 +1743,7 @@
       "venue": "Proceedings of the IEEE Thirty Fourth International Conference on Distributed Computing Systems (ICDCS)",
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
-      "paperUrl": "http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6888915&punumber%3D6888815%26filter%3DAND%28p_IS_Number%3A6888866%29%26pageNumber%3D2",
-      "sourceUrl": "",
+      "paperUrl": "http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6888915&punumber=6888815&filter=AND(p_IS_Number:6888866)&pageNumber=2",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the IEEE Thirty Fourth International Conference on Distributed Computing Systems (ICDCS)"
@@ -1848,7 +1791,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-kuznetsov.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eleventh USENIX Symposium on Operating Systems Design and Implementation (OSDI 2014)"
@@ -1888,7 +1830,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://james0zan.github.io/resource/fse14_zhang.pdf",
-      "sourceUrl": "",
       "tags": [
         "AI"
       ],
@@ -1914,7 +1855,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dx.doi.org/10.1007/978-3-319-11737-9_17",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Sixteenth International Conference on Formal Engineering Methods (ICFEM '14)"
@@ -1946,7 +1886,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451152&CFID=194387348&CFTOKEN=71893868",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -1978,7 +1917,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451131",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -2006,7 +1944,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cse.lehigh.edu/~gtan/paper/strato.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Twenty Second Usenix Security Symposium"
@@ -2034,7 +1971,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451147",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -2058,7 +1994,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451141&CFID=194387348&CFTOKEN=71893868",
-      "sourceUrl": "",
       "tags": [
         "Performance"
       ],
@@ -2096,7 +2031,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.ics.uci.edu/~ahomescu/multicompiler_cgo13.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 2013 International Symposium on Code Generation and Optimization (CGO 2013)"
@@ -2124,7 +2058,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dx.doi.org/10.1145/2512432",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM Transactions on Architecture and Code Optimization (TACO)"
@@ -2160,7 +2093,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451161&CFID=194387348&CFTOKEN=71893868",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -2196,7 +2128,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451120&CFID=194387348&CFTOKEN=71893868",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -2220,7 +2151,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://rd.springer.com/article/10.1007/s10836-013-5405-9",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Journal of Electronic Testing: Theory and Applications"
@@ -2252,7 +2182,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.rutgers.edu/~santosh.nagarakatte/pldi2013.pdf",
-      "sourceUrl": "",
       "tags": [
         "Optimizations"
       ],
@@ -2286,7 +2215,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://0b4af6cdc2f0c5998459-c0245c5c937c5dedcca3f1764ecc9b2f.r43.cf2.rackcdn.com/12341-sec13-paper_davidson.pdf",
-      "sourceUrl": "",
       "tags": [
         "Embedded"
       ],
@@ -2320,7 +2248,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://0b4af6cdc2f0c5998459-c0245c5c937c5dedcca3f1764ecc9b2f.r43.cf2.rackcdn.com/12295-sec13-paper_haller.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Twenty Second Usenix Security Symposium"
@@ -2356,7 +2283,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cl.cam.ac.uk/research/security/ctsrd/pdfs/201305-temporal-practical-capabilities.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Thirty Fourth IEEE Symposium on Security and Privacy (Oakland 2013)"
@@ -2384,7 +2310,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451136&CFID=194387348&CFTOKEN=71893868",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -2408,7 +2333,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451121&CFID=194387348&CFTOKEN=71893868",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -2444,7 +2368,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2451129&CFID=194387348&CFTOKEN=71893868",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2013)"
@@ -2472,7 +2395,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://link.springer.com/chapter/10.1007/978-3-642-37051-9_8",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 22nd International Conference on Compiler Construction (CC '13)"
@@ -2516,7 +2438,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2465380",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Eighth ACM European Conference on Computer Systems (Eurosys 2013)"
@@ -2544,7 +2465,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://infoscience.epfl.ch/record/186012?ln=en",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Fourteenth Workshop on Hot Topics in Operating Systems (HotOS XIV)"
@@ -2637,7 +2557,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://dl.acm.org/citation.cfm?id=2342821.2342828",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the 2012 USENIX Annual Technical Conference"
@@ -2673,7 +2592,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://systems.cs.columbia.edu/archive/pub/2012/06/sound-and-precise-analysis-of-parallel-programs-through-schedule-specialization/",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)"
@@ -2697,7 +2615,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.vu.nl/~giuffrida/papers/hotswup-2012.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proc. of the Fourth International Workshop on Hot Topics in Software Upgrades (HotSWUp '12)"
@@ -2725,7 +2642,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://arcade.cs.columbia.edu/harmony-isca12.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the International Symposium on Computer Architecture (ISCA '12)"
@@ -2749,7 +2665,6 @@
       "type": "thesis",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dl.acm.org/citation.cfm?id=2380498",
-      "sourceUrl": "",
       "tags": [
         "Testing"
       ],
@@ -2791,7 +2706,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cs.utah.edu/fv/pdf/PPoPP12-GKLEE-Extended-Version.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Principles and Practices of Parallel Programming (PPoPP)"
@@ -2823,7 +2737,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.cis.upenn.edu/~stevez/papers/ZNMZ12.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "SIGACT Symposium on Principles of Programming Languages (POPL)"
@@ -2851,7 +2764,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://erllvm.softlab.ntua.gr/files/erlang03-sagonas.pdf",
-      "sourceUrl": "",
       "tags": [
         "Backend"
       ],
@@ -2881,7 +2793,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://www.usenix.org/system/files/conference/usenixsecurity12/sec12-final181.pdf",
-      "sourceUrl": "",
       "tags": [
         "Security"
       ],
@@ -2915,7 +2826,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://www.usenix.org/conference/usenixfederatedconferencesweek/addresssanitizer-fast-address-sanity-checker",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proc. of the 2012 USENIX Annual Technical Conference"
@@ -2935,7 +2845,6 @@
       "type": "thesis",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://igitur-archive.library.uu.nl/student-theses/2012-0925-200740/UUindex.html",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "MSc Thesis"
@@ -2983,7 +2892,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6270679&isnumber=6270391",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Parallel and Distributed Processing Symposium Workshops & PhD Forum (IPDPSW), 2012 IEEE 26th International"
@@ -3003,7 +2911,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1109/cgo.2011.5764682",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "International Symposium on Code Generation and Optimization (CGO)"
@@ -3031,7 +2938,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dslab.epfl.ch/pubs/s2e.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the Sixteenth International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 2011)"
@@ -3075,7 +2981,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.hipeac.net/system/files?file=standaloneopencl.pdf",
-      "sourceUrl": "",
       "tags": [
         "OpenCL"
       ],
@@ -3101,7 +3006,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1145/1993478.1993485",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "International Symposium on Memory Management (ISMM)"
@@ -3148,7 +3052,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://homepages.uni-paderborn.de/mgrad/Mariusz_Grad_Homepage/Publications_files/grad11_raw_paper.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Reconfigurable Architectures Workshop (RAW 2011), Proceedings of the International Parallel and Distributed Processing Symposium"
@@ -3172,7 +3075,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1109/cgo.2011.5764696",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "International Symposium on Code Generation and Optimization (CGO)"
@@ -3200,7 +3102,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://llvm-md.org/pldi.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)"
@@ -3224,7 +3125,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dslab.epfl.ch/pubs/revgen.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Seventh Workshop on Hot Topics in System Dependability (HotDep)"
@@ -3260,7 +3160,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://systems.cs.columbia.edu/files/wpid-peregrine-sosp11.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM Symposium on Operating Systems Principles (SOSP)"
@@ -3300,7 +3199,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1145/2018436.2018470",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Annual Conference of the ACM Special Interest Group on Data Communication (SIGCOMM)"
@@ -3336,7 +3234,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://liberty.princeton.edu/Publications/index.php?abs=1&setselect=pldi11_commset",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)"
@@ -3364,7 +3261,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.eecs.harvard.edu/~greg/papers/cfiDataSandboxing.pdf",
-      "sourceUrl": "",
       "tags": [
         "Static Analysis"
       ],
@@ -3406,7 +3302,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://liberty.princeton.edu/Publications/index.php?abs=1&setselect=pldi11_cuda",
-      "sourceUrl": "",
       "tags": [
         "GPU"
       ],
@@ -3432,7 +3327,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://dx.doi.org/10.1002/spe.1059",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Software: Practice and Experience"
@@ -3472,7 +3366,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6045457&isnumber=6045429",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Embedded Computer Systems (SAMOS), 2011 International Conference"
@@ -3516,7 +3409,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1109/rtas.2011.33",
-      "sourceUrl": "",
       "tags": [
         "Embedded"
       ],
@@ -3622,7 +3514,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://www.rinta-aho.org/papers/NetFPGA2010-Cmb-nikander.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "1st European NetFPGA Developers Workshop"
@@ -3871,7 +3762,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://homepages.uni-paderborn.de/mgrad/Mariusz_Grad_Homepage/Publications_files/grad10_reconfig_paper.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the International Conference on Reconfigurable Computing (ReConFig 2010)"
@@ -4561,7 +4451,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1109/DSD.2010.52",
-      "sourceUrl": "",
       "tags": [
         "Embedded"
       ],
@@ -4617,7 +4506,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://homepages.uni-paderborn.de/mgrad/Mariusz_Grad_Homepage/Publications_files/grad09_fccm_poster.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of IEEE Symposium on Field-Programmable Custom Machines (FCCM 2009)"
@@ -4641,7 +4529,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "http://homepages.uni-paderborn.de/mgrad/Mariusz_Grad_Homepage/Publications_files/grad09_ersa_paper.pdf",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proceedings of the International Conference on Engineering of Reconfigurable Systems and Algorithms (ERSA 2009)"
@@ -4673,7 +4560,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1109/tase.2009.58",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "IEEE International Symposium on Theoretical Aspects of Software Engineering"
@@ -4890,7 +4776,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1109/itng.2009.219",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "2009 Sixth International Conference on Information Technology: New Generations"
@@ -4926,7 +4811,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1007/978-3-642-00641-8_25",
-      "sourceUrl": "",
       "tags": [
         "Embedded"
       ],
@@ -5039,7 +4923,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1007/978-3-642-03138-0_2",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proc. of the 9th International Workshop on Embedded Computer Systems: Architectures, Modeling, and Simulation"
@@ -5123,7 +5006,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1007/978-3-642-04772-5_107",
-      "sourceUrl": "",
       "tags": [
         "Performance"
       ],
@@ -5522,7 +5404,6 @@
       "type": "presentation-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1007/978-3-642-00641-8_21",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Proc. of the 5th International Workshop on Reconfigurable Computing: Architectures, Tools and Applications"
@@ -5791,7 +5672,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1007/978-3-642-04284-3_7",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "Analysis, Architectures and Modelling of Embedded Systems 2009 (IESS 2009)"
@@ -5950,7 +5830,6 @@
       "type": "research-paper",
       "abstract": "No abstract available in llvm.org/pubs metadata.",
       "paperUrl": "https://doi.org/10.1007/978-3-642-04468-7_23",
-      "sourceUrl": "",
       "tags": [],
       "sourceName": "LLVM Publications",
       "publication": "28th International Conference, SAFECOMP 2009"

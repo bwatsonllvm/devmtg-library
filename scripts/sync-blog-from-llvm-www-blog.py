@@ -17,6 +17,7 @@ import os
 import re
 import subprocess
 import tarfile
+import tempfile
 import urllib.parse
 from pathlib import Path
 
@@ -30,6 +31,12 @@ DEFAULT_SOURCE_SLUG = "llvm-blog-www"
 DEFAULT_SOURCE_NAME = "LLVM Project Blog (llvm/llvm-blog-www)"
 DEFAULT_USER_AGENT = "llvm-library-blog-sync/1.0"
 ALLOWED_EXTS = {".md", ".markdown", ".html", ".htm"}
+TRUSTED_GITHUB_TOKEN_HOSTS = {
+    "api.github.com",
+    "codeload.github.com",
+    "github.com",
+    "raw.githubusercontent.com",
+}
 
 
 def collapse_ws(value: str) -> str:
@@ -38,6 +45,21 @@ def collapse_ws(value: str) -> str:
 
 def normalize_key(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", collapse_ws(value).lower())
+
+
+def sanitize_http_url(value: str) -> str:
+    raw = collapse_ws(value)
+    if not raw:
+        return ""
+    try:
+        parsed = urllib.parse.urlparse(raw)
+    except Exception:
+        return ""
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return ""
+    if not parsed.netloc:
+        return ""
+    return urllib.parse.urlunparse(parsed)
 
 
 def strip_html(value: str) -> str:
@@ -312,11 +334,16 @@ def resolve_blog_url(front_matter: dict, blog_base_url: str, file_name: str) -> 
             if not value:
                 continue
             if re.match(r"^https?://", value, flags=re.IGNORECASE):
-                return value
-            return urllib.parse.urljoin(blog_base_url, value.lstrip("/"))
+                safe = sanitize_http_url(value)
+                if safe:
+                    return safe
+                continue
+            safe = sanitize_http_url(urllib.parse.urljoin(blog_base_url, value.lstrip("/")))
+            if safe:
+                return safe
 
     stem = file_name.rsplit(".", 1)[0]
-    return urllib.parse.urljoin(blog_base_url, f"posts/{stem}/")
+    return sanitize_http_url(urllib.parse.urljoin(blog_base_url, f"posts/{stem}/"))
 
 
 def summarize_body(body: str, extension: str, max_words: int = 110) -> str:
@@ -332,6 +359,18 @@ def summarize_body(body: str, extension: str, max_words: int = 110) -> str:
 def normalize_body(body: str) -> str:
     text = (body or "").replace("\r\n", "\n").replace("\r", "\n")
     return text.strip()
+
+
+def should_send_github_token(url: str) -> bool:
+    raw = collapse_ws(url)
+    if not raw:
+        return False
+    try:
+        parsed = urllib.parse.urlparse(raw)
+    except Exception:
+        return False
+    host = (parsed.hostname or "").lower()
+    return host in TRUSTED_GITHUB_TOKEN_HOSTS
 
 
 def run_curl(url: str, output_path: Path | None, user_agent: str, github_token: str, timeout_s: int, head_only: bool = False) -> str:
@@ -350,15 +389,27 @@ def run_curl(url: str, output_path: Path | None, user_agent: str, github_token: 
         user_agent,
     ]
     token = collapse_ws(github_token)
-    if token:
-        cmd.extend(["-H", f"Authorization: Bearer {token}"])
+    token_header_path: Path | None = None
+    if token and should_send_github_token(url):
+        fd, temp_path = tempfile.mkstemp(prefix="llvm-blog-github-auth-", suffix=".hdr")
+        os.close(fd)
+        token_header_path = Path(temp_path)
+        token_header_path.write_text(f"Authorization: Bearer {token}\n", encoding="utf-8")
+        cmd.extend(["-H", f"@{token_header_path}"])
     if head_only:
         cmd.append("-I")
     if output_path is not None:
         cmd.extend(["-o", str(output_path)])
     cmd.append(url)
 
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+    finally:
+        if token_header_path is not None:
+            try:
+                token_header_path.unlink()
+            except Exception:
+                pass
     if proc.returncode != 0:
         detail = collapse_ws(proc.stderr or proc.stdout or f"curl exited {proc.returncode}")
         raise RuntimeError(f"curl failed for {url}: {detail}")

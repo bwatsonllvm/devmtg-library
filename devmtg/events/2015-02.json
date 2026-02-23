@@ -19,17 +19,12 @@
       "speakers": [
         {
           "name": "Porting LLDB to a new Target",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/abid-lldb.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -43,17 +38,12 @@
       "speakers": [
         {
           "name": "LLVM's AArch64 support",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/beyls-aarch64.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -66,10 +56,8 @@
       "title": "Erkan Diken",
       "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/diken-movicompile.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -82,10 +70,8 @@
       "title": "David Chisnall",
       "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/chisnall-pointers-not-int.pdf",
-      "projectGithub": "",
       "tags": []
     }
   ]

@@ -19,17 +19,12 @@
       "speakers": [
         {
           "name": "Marshall Clow",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/zQ9tT8fbtSo",
       "videoId": "zQ9tT8fbtSo",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "C Libs",
         "C++",
@@ -48,17 +43,12 @@
       "speakers": [
         {
           "name": "Chadi Akel",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/7sVnjJlZTW4",
       "videoId": "7sVnjJlZTW4",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -72,17 +62,12 @@
       "speakers": [
         {
           "name": "Rui Ueyama",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/CYCRqjVa6l4",
       "videoId": "CYCRqjVa6l4",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "LLD"
       ]
@@ -98,17 +83,12 @@
       "speakers": [
         {
           "name": "David Kreitzer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/yHexQSFud3w",
       "videoId": "yHexQSFud3w",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -122,17 +102,12 @@
       "speakers": [
         {
           "name": "Kristof Beyls",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/COmfRpnujF8",
       "videoId": "COmfRpnujF8",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Performance"
       ]
@@ -148,17 +123,12 @@
       "speakers": [
         {
           "name": "Anastasia Stulova",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/3yzL2loPtgM",
       "videoId": "3yzL2loPtgM",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang",
         "GPU",
@@ -176,17 +146,12 @@
       "speakers": [
         {
           "name": "Maksim Panchenko",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/gw3iDO3By5Y",
       "videoId": "gw3iDO3By5Y",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -202,17 +167,12 @@
       "speakers": [
         {
           "name": "Yulei Sui",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/nD-i-enA8rc",
       "videoId": "nD-i-enA8rc",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -226,17 +186,12 @@
       "speakers": [
         {
           "name": "Chris Diamand",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/duoA1eWwE0E",
       "videoId": "duoA1eWwE0E",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "C Libs",
         "Clang"
@@ -253,17 +208,12 @@
       "speakers": [
         {
           "name": "Michael Kruse",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/fKW3yjhcrh0",
       "videoId": "fKW3yjhcrh0",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -277,17 +227,12 @@
       "speakers": [
         {
           "name": "Tobias Grosser",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/MOX4TxRIijg",
       "videoId": "MOX4TxRIijg",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Loop transformations",
         "Polly"
@@ -304,17 +249,12 @@
       "speakers": [
         {
           "name": "Luke Drummond",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/BBC61L0QKCM",
       "videoId": "BBC61L0QKCM",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "LLDB"
       ]
@@ -330,17 +270,12 @@
       "speakers": [
         {
           "name": "Victor Lomuller",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/YKX6EMEib4g",
       "videoId": "YKX6EMEib4g",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -356,17 +291,12 @@
       "speakers": [
         {
           "name": "Tilmann Scheller",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/cFgwEEBw7U0",
       "videoId": "cFgwEEBw7U0",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -380,17 +310,12 @@
       "speakers": [
         {
           "name": "Alexander Timofeev",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/2YSzLyBO4yM",
       "videoId": "2YSzLyBO4yM",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -404,17 +329,12 @@
       "speakers": [
         {
           "name": "Deepak Panickal",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/9hhDZeV0fYU",
       "videoId": "9hhDZeV0fYU",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Beginner",
         "LLDB"
@@ -431,17 +351,12 @@
       "speakers": [
         {
           "name": "Serge Guelton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Z5KcwVaak3s",
       "videoId": "Z5KcwVaak3s",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Testing"
       ]
@@ -457,17 +372,12 @@
       "speakers": [
         {
           "name": "LLVM Board of Directors",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "LLVM Foundation BoF session presented by the LLVM Board of Directors.",
       "videoUrl": "https://youtu.be/cmS6Sb5oReE",
       "videoId": "cmS6Sb5oReE",
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "LLVM Foundation"
       ]

@@ -86,6 +86,21 @@ def collapse_ws(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
 
 
+def sanitize_http_url(value: str) -> str:
+    raw = collapse_ws(value)
+    if not raw:
+        return ""
+    try:
+        parsed = urllib.parse.urlparse(raw)
+    except Exception:
+        return ""
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return ""
+    if not parsed.netloc:
+        return ""
+    return urllib.parse.urlunparse(parsed)
+
+
 def strip_tags(value: str) -> str:
     if not value:
         return ""
@@ -684,7 +699,7 @@ def pick_urls(work: dict) -> tuple[str, str]:
         primary.get("landing_page_url"),
         work.get("doi"),
     ]:
-        url = collapse_ws(str(value or ""))
+        url = sanitize_http_url(str(value or ""))
         if url:
             candidates.append(url)
 
@@ -696,11 +711,11 @@ def pick_urls(work: dict) -> tuple[str, str]:
     if not paper_url and candidates:
         paper_url = candidates[0]
 
-    source_url = collapse_ws(str(work.get("doi") or ""))
+    source_url = sanitize_http_url(str(work.get("doi") or ""))
     if not source_url:
-        source_url = collapse_ws(str(primary.get("landing_page_url") or best_oa.get("landing_page_url") or ""))
+        source_url = sanitize_http_url(str(primary.get("landing_page_url") or best_oa.get("landing_page_url") or ""))
     if not source_url:
-        source_url = collapse_ws(str(work.get("id") or ""))
+        source_url = sanitize_http_url(str(work.get("id") or ""))
 
     if source_url == paper_url:
         source_url = ""

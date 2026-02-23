@@ -87,6 +87,91 @@ ruby -rjson -e '
   end
 ' "$PAPERS"
 
+# Validate URL-bearing fields only use safe URL schemes
+ruby -rjson -ruri -e '
+  hub = ARGV.fetch(0)
+  papers_root = ARGV.fetch(1)
+  PLACEHOLDER_URL_VALUES = %w[none null nil nan n/a na undefined].freeze
+
+  def valid_http_url?(value)
+    uri = URI.parse(String(value))
+    %w[http https].include?(String(uri.scheme).downcase) && !String(uri.host).strip.empty?
+  rescue URI::InvalidURIError
+    false
+  end
+
+  def valid_linkish_url?(value)
+    text = String(value).strip
+    return false if text.empty?
+    return false if PLACEHOLDER_URL_VALUES.include?(text.downcase)
+    return false if text.match?(/\s/)
+    return true if text.start_with?("#")
+    return valid_http_url?("https:#{text}") if text.start_with?("//")
+    return valid_http_url?(text) if text =~ /\A[a-z][a-z0-9+.-]*:/i
+    true
+  end
+
+  bad = []
+
+  Dir[File.join(hub, "events", "*.json")].each do |event_path|
+    payload = JSON.parse(File.read(event_path))
+    talks = Array(payload["talks"])
+    talks.each_with_index do |talk, idx|
+      next unless talk.is_a?(Hash)
+      {
+        "videoUrl" => talk["videoUrl"],
+        "slidesUrl" => talk["slidesUrl"],
+        "projectGithub" => talk["projectGithub"],
+      }.each do |field, value|
+        text = String(value).strip
+        next if text.empty?
+        bad << "#{File.basename(event_path)} talks[#{idx}].#{field}=#{text}" unless valid_http_url?(text)
+      end
+
+      Array(talk["speakers"]).each_with_index do |speaker, sidx|
+        next unless speaker.is_a?(Hash)
+        {"github" => speaker["github"], "linkedin" => speaker["linkedin"], "twitter" => speaker["twitter"]}.each do |field, value|
+          text = String(value).strip
+          next if text.empty?
+          bad << "#{File.basename(event_path)} talks[#{idx}].speakers[#{sidx}].#{field}=#{text}" unless valid_http_url?(text)
+        end
+      end
+    end
+  end
+
+  Dir[File.join(papers_root, "*.json")].each do |paper_path|
+    payload = JSON.parse(File.read(paper_path))
+    papers = Array(payload["papers"])
+    papers.each_with_index do |paper, idx|
+      next unless paper.is_a?(Hash)
+      {"paperUrl" => paper["paperUrl"], "sourceUrl" => paper["sourceUrl"], "openalexId" => paper["openalexId"]}.each do |field, value|
+        text = String(value).strip
+        next if text.empty?
+        bad << "#{File.basename(paper_path)} papers[#{idx}].#{field}=#{text}" unless valid_http_url?(text)
+      end
+    end
+  end
+
+  updates_path = File.join(hub, "updates", "index.json")
+  updates_payload = JSON.parse(File.read(updates_path))
+  entries = Array(updates_payload["entries"])
+  entries.each_with_index do |entry, idx|
+    next unless entry.is_a?(Hash)
+    url_text = String(entry["url"]).strip
+    bad << "updates/index.json entries[#{idx}].url=#{url_text}" unless valid_linkish_url?(url_text)
+    {"videoUrl" => entry["videoUrl"], "slidesUrl" => entry["slidesUrl"], "paperUrl" => entry["paperUrl"], "sourceUrl" => entry["sourceUrl"], "blogUrl" => entry["blogUrl"]}.each do |field, value|
+      text = String(value).strip
+      next if text.empty?
+      bad << "updates/index.json entries[#{idx}].#{field}=#{text}" unless valid_http_url?(text)
+    end
+  end
+
+  unless bad.empty?
+    warn("Unsafe URL fields:\n" + bad.join("\n"))
+    exit 1
+  end
+' "$LIBRARY" "$PAPERS"
+
 # Validate local asset references in html files
 ruby -e '
   hub = ARGV.fetch(0)
@@ -96,7 +181,11 @@ ruby -e '
     text = File.read(html)
     refs = text.scan(/(?:src|href)=\"([^\"]+)\"/).flatten
     refs.each do |ref|
-      next if ref.start_with?("http://", "https://", "#", "mailto:", "javascript:", "data:")
+      if ref.start_with?("javascript:", "data:")
+        bad << "#{File.basename(html)} -> unsafe scheme #{ref}"
+        next
+      end
+      next if ref.start_with?("http://", "https://", "#", "mailto:")
       next if ref.start_with?("?")
       clean = ref.split("?").first
       next if clean.empty?

@@ -16,14 +16,9 @@
       "meetingDate": "February 7, 2015",
       "category": "tutorial",
       "title": "Introduction to the LLVM Project",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Beginner"
       ]
@@ -36,14 +31,9 @@
       "meetingDate": "February 7, 2015",
       "category": "tutorial",
       "title": "Getting started hacking on LLVM and Clang",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Beginner",
         "Clang"
@@ -57,14 +47,9 @@
       "meetingDate": "February 7, 2015",
       "category": "tutorial",
       "title": "The middle end optimizer",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -77,14 +62,9 @@
       "meetingDate": "February 7, 2015",
       "category": "tutorial",
       "title": "Diagnosing and fixing bugs in the middle end optimizer",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -97,14 +77,9 @@
       "meetingDate": "February 7, 2015",
       "category": "tutorial",
       "title": "Adding optimization passes to the middle end",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
       "tags": [
         "Optimizations"
       ]
@@ -117,17 +92,10 @@
       "meetingDate": "February 7, 2015",
       "category": "tutorial",
       "title": "Overview of the LLVM Code Generator",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2015-02-07-007",
@@ -137,17 +105,10 @@
       "meetingDate": "February 7, 2015",
       "category": "tutorial",
       "title": "Extended Q&A",
-      "speakers": [
-
-      ],
+      "speakers": [],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
-      "slidesUrl": null,
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     }
   ]
 }

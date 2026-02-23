@@ -102,6 +102,21 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+function sanitizeExternalUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw, window.location.href);
+    const protocol = parsed.protocol.toLowerCase();
+    if (protocol === 'http:' || protocol === 'https:') {
+      return parsed.toString();
+    }
+  } catch {
+    return '';
+  }
+  return '';
+}
+
 function cleanMetadataValue(value) {
   const cleaned = String(value || '').replace(/\s+/g, ' ').trim();
   if (!cleaned) return '';
@@ -690,13 +705,15 @@ function renderPaperCard(paper, tokens) {
 
   const paperIsPdf = isDirectPdfUrl(paper.paperUrl || '');
   const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl || '');
-  const sourceLink = !blogEntry && sourceIsPdf && !paperIsPdf && paper.sourceUrl && paper.sourceUrl !== paper.paperUrl
-    ? `<a href="${escapeHtml(paper.sourceUrl)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">PDF</span></a>`
+  const sourceHref = sanitizeExternalUrl(paper.sourceUrl);
+  const paperHref = sanitizeExternalUrl(paper.paperUrl);
+  const sourceLink = !blogEntry && sourceIsPdf && !paperIsPdf && sourceHref && sourceHref !== paperHref
+    ? `<a href="${escapeHtml(sourceHref)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">PDF</span></a>`
     : '';
 
   const paperActionLabel = isBlogPaper(paper) ? 'Post' : (paperIsPdf ? 'PDF' : 'Paper');
-  const paperLink = paper.paperUrl
-    ? `<a href="${escapeHtml(paper.paperUrl)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
+  const paperLink = paperHref
+    ? `<a href="${escapeHtml(paperHref)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
 
   const citationCount = Number.isFinite(paper._citationCount) ? paper._citationCount : 0;

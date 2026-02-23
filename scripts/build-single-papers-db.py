@@ -17,6 +17,7 @@ import copy
 import datetime as _dt
 import hashlib
 import html
+import ipaddress
 import json
 import re
 import subprocess
@@ -71,6 +72,48 @@ SOURCE_PRIORITY = {
 
 def collapse_ws(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
+
+
+def sanitize_http_url(value: str) -> str:
+    raw = collapse_ws(value)
+    if not raw:
+        return ""
+    try:
+        parsed = urllib.parse.urlparse(raw)
+    except Exception:
+        return ""
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return ""
+    if not parsed.netloc:
+        return ""
+    return urllib.parse.urlunparse(parsed)
+
+
+def is_public_http_url(value: str) -> bool:
+    safe = sanitize_http_url(value)
+    if not safe:
+        return False
+    try:
+        parsed = urllib.parse.urlparse(safe)
+    except Exception:
+        return False
+    host = (parsed.hostname or "").strip().lower().rstrip(".")
+    if not host:
+        return False
+    if host in {"localhost"} or host.endswith(".localhost") or host.endswith(".local"):
+        return False
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return True
+    return not (
+        ip.is_private
+        or ip.is_loopback
+        or ip.is_link_local
+        or ip.is_multicast
+        or ip.is_reserved
+        or ip.is_unspecified
+    )
 
 
 def full_unescape(value: str) -> str:
@@ -270,7 +313,7 @@ def pick_urls(work: dict) -> tuple[str, str]:
         primary.get("landing_page_url"),
         work.get("doi"),
     ]:
-        url = collapse_ws(str(value or ""))
+        url = sanitize_http_url(str(value or ""))
         if url:
             candidates.append(url)
 
@@ -282,11 +325,11 @@ def pick_urls(work: dict) -> tuple[str, str]:
     if not paper_url and candidates:
         paper_url = candidates[0]
 
-    source_url = collapse_ws(str(work.get("doi") or ""))
+    source_url = sanitize_http_url(str(work.get("doi") or ""))
     if not source_url:
-        source_url = collapse_ws(str(primary.get("landing_page_url") or best_oa.get("landing_page_url") or ""))
+        source_url = sanitize_http_url(str(primary.get("landing_page_url") or best_oa.get("landing_page_url") or ""))
     if not source_url:
-        source_url = collapse_ws(str(work.get("id") or ""))
+        source_url = sanitize_http_url(str(work.get("id") or ""))
 
     if source_url == paper_url:
         source_url = ""
@@ -354,10 +397,10 @@ def list_openalex_landing_urls(work: dict) -> list[str]:
         if not isinstance(loc, dict):
             continue
         for key in ["landing_page_url"]:
-            url = collapse_ws(str(loc.get(key, "")))
+            url = sanitize_http_url(str(loc.get(key, "")))
             if url and url not in out:
                 out.append(url)
-    doi_url = collapse_ws(str(work.get("doi", "")))
+    doi_url = sanitize_http_url(str(work.get("doi", "")))
     if doi_url and doi_url not in out:
         out.append(doi_url)
     return out
@@ -646,6 +689,9 @@ def _is_low_quality_fallback_title(value: str, publication: str, venue: str) -> 
 
 
 def _fetch_text(url: str, timeout_s: int, user_agent: str) -> str:
+    safe_url = sanitize_http_url(url)
+    if not safe_url or not is_public_http_url(safe_url):
+        raise RuntimeError("blocked non-public URL")
     cmd = [
         "curl",
         "-sS",
@@ -660,7 +706,7 @@ def _fetch_text(url: str, timeout_s: int, user_agent: str) -> str:
         user_agent,
         "-H",
         "Accept: text/html,application/xhtml+xml",
-        url,
+        safe_url,
     ]
     proc = subprocess.run(cmd, check=False, capture_output=True)
     if proc.returncode != 0:
@@ -741,7 +787,7 @@ def record_identity_keys(record: dict) -> list[str]:
     record_type = collapse_ws(str(record.get("type", ""))).lower()
     is_blog = source == "llvm-blog-www" or record_type in {"blog-post", "blog"}
     if is_blog:
-        blog_url = collapse_ws(str(record.get("paperUrl", ""))) or collapse_ws(str(record.get("sourceUrl", "")))
+        blog_url = sanitize_http_url(str(record.get("paperUrl", ""))) or sanitize_http_url(str(record.get("sourceUrl", "")))
         if blog_url:
             keys.append(f"blog:{blog_url.lower()}")
     year = collapse_ws(str(record.get("year", "")))
@@ -1244,6 +1290,8 @@ def load_source_records(bundle_paths: list[Path]) -> list[dict]:
             doi = normalize_doi(str(record.get("doi", "")))
             if doi:
                 record["doi"] = doi
+            record["paperUrl"] = sanitize_http_url(str(record.get("paperUrl", "")))
+            record["sourceUrl"] = sanitize_http_url(str(record.get("sourceUrl", "")))
             records.append(record)
     return records
 

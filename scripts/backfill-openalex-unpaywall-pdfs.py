@@ -106,7 +106,15 @@ def _normalize_url(value: object) -> str:
     url = _collapse_ws(str(value)).strip()
     if url.lower() in {"none", "null", "nan", "n/a"}:
         return ""
-    return url
+    try:
+        parsed = urllib.parse.urlparse(url)
+    except Exception:
+        return ""
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return ""
+    if not parsed.netloc:
+        return ""
+    return urllib.parse.urlunparse(parsed)
 
 
 def _is_direct_pdf_url(url: str) -> bool:

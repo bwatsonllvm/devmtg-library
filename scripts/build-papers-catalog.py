@@ -37,6 +37,21 @@ def collapse_ws(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
 
 
+def sanitize_http_url(raw_url: str) -> str:
+    value = collapse_ws(raw_url)
+    if not value:
+        return ""
+    try:
+        parsed = urlparse(value)
+    except Exception:
+        return ""
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return ""
+    if not parsed.netloc:
+        return ""
+    return parsed.geturl()
+
+
 def strip_tags(value: str) -> str:
     if not value:
         return ""
@@ -251,8 +266,8 @@ def resolve_paper_url(raw_url: str) -> str:
     if not raw:
         return ""
     if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", raw):
-        return raw
-    return urljoin(BASE_PUBS_URL, raw)
+        return sanitize_http_url(raw)
+    return sanitize_http_url(urljoin(BASE_PUBS_URL, raw))
 
 
 def is_pdf_url(raw_url: str) -> bool:
@@ -334,7 +349,9 @@ def extract_pdf_links_from_html(src_repo: Path, html_path: Path) -> list[str]:
             continue
 
         if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", href):
-            links.append(href)
+            safe = sanitize_http_url(href)
+            if safe:
+                links.append(safe)
             continue
 
         rel = href.lstrip("/")

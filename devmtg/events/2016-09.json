@@ -19,20 +19,14 @@
       "speakers": [
         {
           "name": "Andy Wingo",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/KYoDyM6l_5s",
       "videoId": "KYoDyM6l_5s",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Wingo-PersistentDataStructures.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-002",
@@ -45,17 +39,13 @@
       "speakers": [
         {
           "name": "Dmitry Melnik",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/0YobtXN6oQI",
       "videoId": "0YobtXN6oQI",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Melnik-LLV8.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -71,20 +61,14 @@
       "speakers": [
         {
           "name": "Chris Seaton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/bJzMfYX6n9A",
       "videoId": "bJzMfYX6n9A",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Seaton-Sulong.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-004",
@@ -97,20 +81,14 @@
       "speakers": [
         {
           "name": "Javed Absar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/J0AtVzvPp_Y",
       "videoId": "J0AtVzvPp_Y",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Absar-SchedulingInOrder.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-005",
@@ -123,27 +101,18 @@
       "speakers": [
         {
           "name": "Simon Cook",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         },
         {
           "name": "Ed Jones",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/Ad-zuxedEZQ",
       "videoId": "Ad-zuxedEZQ",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Jones-AAP.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-006",
@@ -156,17 +125,13 @@
       "speakers": [
         {
           "name": "Norman Rink",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/kG6kpQ-Deak",
       "videoId": "kG6kpQ-Deak",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Rink-SyntaxMacros.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -182,20 +147,14 @@
       "speakers": [
         {
           "name": "Graham Markall",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/d8LnP4vU2CA",
       "videoId": "d8LnP4vU2CA",
       "slidesUrl": "http://gmarkall.github.io/tutorials/llvm-cauldron-2016/",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-008",
@@ -208,17 +167,13 @@
       "speakers": [
         {
           "name": "Peter Smith",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/FIXaeRU31Ww",
       "videoId": "FIXaeRU31Ww",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Smith-NewLLDTarget.pdf",
-      "projectGithub": "",
       "tags": [
         "LLD"
       ]
@@ -234,17 +189,13 @@
       "speakers": [
         {
           "name": "Dmitry Melnik",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/NzOpNh_msng",
       "videoId": "NzOpNh_msng",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Melnik-PostgreSQLLLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "JIT"
       ]
@@ -260,20 +211,14 @@
       "speakers": [
         {
           "name": "Ken Boak",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/J1saqOhbRmA",
       "videoId": "J1saqOhbRmA",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Boak-MyStorm.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-011",
@@ -286,20 +231,14 @@
       "speakers": [
         {
           "name": "Alex Bradbury",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/32fmbEI9WrM",
       "videoId": "32fmbEI9WrM",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Bradbury-ContributorExperience.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-012",
@@ -312,20 +251,14 @@
       "speakers": [
         {
           "name": "Simon Cook",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/YdyZDZYBd-s",
       "videoId": "YdyZDZYBd-s",
       "slidesUrl": "https://llvm.org/devmtg/2016-09/slides/Cook-AAPSim.pdf",
-      "projectGithub": "",
-      "tags": [
-
-      ]
+      "tags": []
     },
     {
       "id": "2016-09-013",
@@ -338,17 +271,12 @@
       "speakers": [
         {
           "name": "Jonathan B Coe",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://github.com/jbcoe/C_API_generation/blob/master/demos/LLVM-Cauldron.ipynb",
-      "projectGithub": "",
       "tags": [
         "Programming Languages"
       ]

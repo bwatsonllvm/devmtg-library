@@ -61,6 +61,33 @@ def normalize_key(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", collapse_ws(value).lower())
 
 
+def sanitize_http_url(value: str) -> str:
+    raw = collapse_ws(value)
+    if not raw:
+        return ""
+    try:
+        parsed = urllib.parse.urlparse(raw)
+    except Exception:
+        return ""
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return ""
+    if not parsed.netloc:
+        return ""
+    return urllib.parse.urlunparse(parsed)
+
+
+def is_github_api_url(url: str) -> bool:
+    raw = collapse_ws(url)
+    if not raw:
+        return False
+    try:
+        parsed = urllib.parse.urlparse(raw)
+    except Exception:
+        return False
+    host = (parsed.hostname or "").lower()
+    return host == "api.github.com"
+
+
 def normalize_meta_value(value: str) -> str:
     return normalize_key(value)
 
@@ -302,7 +329,8 @@ def parse_video_id(video_url: str | None) -> str | None:
 
 def abs_devmtg_url(slug: str, href: str) -> str:
     base = f"https://llvm.org/devmtg/{slug}/"
-    return urllib.parse.urljoin(base, href)
+    resolved = urllib.parse.urljoin(base, href)
+    return sanitize_http_url(resolved)
 
 
 def configure_ssl_context(ca_bundle: str = "", no_verify_ssl: bool = False) -> None:
@@ -348,12 +376,13 @@ def ssl_help_hint() -> str:
 
 
 def _http_get(url: str, github_token: str = "") -> str:
+    api_url = is_github_api_url(url)
     headers = {
         "User-Agent": "llvm-library-devmtg-sync/1.0",
-        "Accept": "application/json" if "api.github.com" in url else "text/html,application/xhtml+xml",
+        "Accept": "application/json" if api_url else "text/html,application/xhtml+xml",
     }
     token = collapse_ws(github_token)
-    if token and "api.github.com" in url:
+    if token and api_url:
         headers["Authorization"] = f"Bearer {token}"
 
     req = urllib.request.Request(url, headers=headers, method="GET")
@@ -469,6 +498,8 @@ def parse_links_from_html(fragment: str, meeting_slug: str) -> tuple[str | None,
     ):
         text = collapse_ws(strip_html(label)).lower()
         url = abs_devmtg_url(meeting_slug, href)
+        if not url:
+            continue
 
         if "video" in text and not video_url:
             video_url = url

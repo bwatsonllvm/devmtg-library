@@ -23,17 +23,46 @@ function collapseWs(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
 
-function isAbsoluteUrl(value) {
-  return /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(value);
+function sanitizeExternalUrl(value) {
+  const raw = collapseWs(value);
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw, window.location.href);
+    const protocol = parsed.protocol.toLowerCase();
+    if (protocol === 'http:' || protocol === 'https:') {
+      return parsed.toString();
+    }
+  } catch {
+    return '';
+  }
+  return '';
+}
+
+function sanitizeLinkUrl(value, { allowRelative = false, allowHash = false } = {}) {
+  const raw = collapseWs(value);
+  if (!raw) return '';
+  if (allowHash && raw.startsWith('#')) return raw;
+
+  if (raw.startsWith('//')) {
+    return sanitizeExternalUrl(`https:${raw}`);
+  }
+
+  if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) {
+    return sanitizeExternalUrl(raw);
+  }
+
+  if (!allowRelative) return '';
+  if (/[\u0000-\u001F\u007F]/.test(raw)) return '';
+  return raw;
 }
 
 function normalizeLibraryUrl(value) {
   const raw = collapseWs(value);
   if (!raw) return '#';
-  if (isAbsoluteUrl(raw)) return raw;
-  if (raw.startsWith('/devmtg/')) return raw.slice('/devmtg/'.length);
-  if (raw.startsWith('/talk.html') || raw.startsWith('/paper.html')) return raw.slice(1);
-  return raw;
+  let normalized = raw;
+  if (normalized.startsWith('/devmtg/')) normalized = normalized.slice('/devmtg/'.length);
+  else if (normalized.startsWith('/talk.html') || normalized.startsWith('/paper.html')) normalized = normalized.slice(1);
+  return sanitizeLinkUrl(normalized, { allowRelative: true, allowHash: true }) || '#';
 }
 
 function formatLoggedAt(value) {
@@ -107,13 +136,13 @@ function renderEntry(entry) {
   links.push(`<a href="${escapeHtml(url)}">Open in Library</a>`);
 
   if (kind === 'talk') {
-    const slidesUrl = collapseWs(entry.slidesUrl);
-    const videoUrl = collapseWs(entry.videoUrl);
+    const slidesUrl = sanitizeExternalUrl(entry.slidesUrl);
+    const videoUrl = sanitizeExternalUrl(entry.videoUrl);
     if (slidesUrl) links.push(`<a href="${escapeHtml(slidesUrl)}" target="_blank" rel="noopener noreferrer">Slides</a>`);
     if (videoUrl) links.push(`<a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer">Video</a>`);
   } else if (kind === 'blog') {
-    const blogUrl = collapseWs(entry.blogUrl) || collapseWs(entry.sourceUrl);
-    const repoUrl = collapseWs(entry.paperUrl);
+    const blogUrl = sanitizeExternalUrl(entry.blogUrl) || sanitizeExternalUrl(entry.sourceUrl);
+    const repoUrl = sanitizeExternalUrl(entry.paperUrl);
     if (blogUrl) links.push(`<a href="${escapeHtml(blogUrl)}" target="_blank" rel="noopener noreferrer">Blog post</a>`);
     if (repoUrl && repoUrl !== blogUrl) {
       links.push(`<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Repo source</a>`);
@@ -121,8 +150,8 @@ function renderEntry(entry) {
       links.push(`<a href="${escapeHtml(repoUrl)}" target="_blank" rel="noopener noreferrer">Source</a>`);
     }
   } else {
-    const paperUrl = collapseWs(entry.paperUrl);
-    const sourceUrl = collapseWs(entry.sourceUrl);
+    const paperUrl = sanitizeExternalUrl(entry.paperUrl);
+    const sourceUrl = sanitizeExternalUrl(entry.sourceUrl);
     if (paperUrl) links.push(`<a href="${escapeHtml(paperUrl)}" target="_blank" rel="noopener noreferrer">Paper URL</a>`);
     if (sourceUrl) links.push(`<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">Source URL</a>`);
   }

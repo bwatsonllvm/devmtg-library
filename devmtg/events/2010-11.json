@@ -19,17 +19,13 @@
       "speakers": [
         {
           "name": "David Sehr",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/o54AJUVP3pc",
       "videoId": "o54AJUVP3pc",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Sehr-NativeClient.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -43,17 +39,13 @@
       "speakers": [
         {
           "name": "Micah Villmow",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/uc8cAB009Ok",
       "videoId": "uc8cAB009Ok",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Villmow-OpenCL.pdf",
-      "projectGithub": "",
       "tags": [
         "GPU",
         "OpenCL"
@@ -70,17 +62,13 @@
       "speakers": [
         {
           "name": "Craig Silverstein",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/jPw2sVAhbsQ",
       "videoId": "jPw2sVAhbsQ",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Silverstein-IncludeWhatYouUse.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -96,17 +84,13 @@
       "speakers": [
         {
           "name": "Doug Gregor",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "http://devimages.apple.com/llvm/videos/Libclang.mov",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Gregor-libclang.pdf",
-      "projectGithub": "",
       "tags": [
         "C Libs",
         "Clang"
@@ -123,17 +107,13 @@
       "speakers": [
         {
           "name": "Tobias Grosser",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/WwfZkQEuwEE",
       "videoId": "WwfZkQEuwEE",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Grosser-Polly.pdf",
-      "projectGithub": "",
       "tags": [
         "Loop transformations",
         "Optimizations",
@@ -151,17 +131,13 @@
       "speakers": [
         {
           "name": "Howard Hinnant",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "http://devimages.apple.com/llvm/videos/LibC++.mov",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Hinnant-libcxx.pdf",
-      "projectGithub": "",
       "tags": [
         "C Libs",
         "C++",
@@ -179,17 +155,13 @@
       "speakers": [
         {
           "name": "Peter Collingbourne",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/ZBXy6NSKwjs",
       "videoId": "ZBXy6NSKwjs",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Collingbourne-SymbolicCrossChecking.pdf",
-      "projectGithub": "",
       "tags": [
         "Autovectorization"
       ]
@@ -205,17 +177,13 @@
       "speakers": [
         {
           "name": "Daniel Dunbar",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "http://devimages.apple.com/llvm/videos/LLVM_Assembler_Infrastructure.mov",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Dunbar-MC.pdf",
-      "projectGithub": "",
       "tags": [
         "Backend"
       ]
@@ -231,17 +199,13 @@
       "speakers": [
         {
           "name": "Axel Naumann",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/BjmGOMJWeAo",
       "videoId": "BjmGOMJWeAo",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Naumann-Cling.pdf",
-      "projectGithub": "",
       "tags": [
         "Clang"
       ]
@@ -257,17 +221,13 @@
       "speakers": [
         {
           "name": "Greg Clayton",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "http://devimages.apple.com/llvm/videos/LLDB_Debugging_Infrastructure.mov",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Clayton-LLDB.pdf",
-      "projectGithub": "",
       "tags": [
         "LLDB"
       ]
@@ -283,17 +243,13 @@
       "speakers": [
         {
           "name": "Michael Muller",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/5nOiSCr7JPs",
       "videoId": "5nOiSCr7JPs",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Muller-Crack.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -307,17 +263,13 @@
       "speakers": [
         {
           "name": "Xuejun Yang",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/WEwEPAF53n4",
       "videoId": "WEwEPAF53n4",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Yang-HardenLLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Security",
         "Testing"
@@ -334,17 +286,13 @@
       "speakers": [
         {
           "name": "Nadav Rotem",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/tOJv1ua1pLg",
       "videoId": "tOJv1ua1pLg",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Rotem-CToVerilog.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -358,17 +306,13 @@
       "speakers": [
         {
           "name": "Michael Spencer",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/xGE3U_iE1-k",
       "videoId": "xGE3U_iE1-k",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Spencer-ObjectFiles.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -382,17 +326,13 @@
       "speakers": [
         {
           "name": "Renato Golin",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/gdqpZJypYx4",
       "videoId": "gdqpZJypYx4",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Golin-EDGToLLVM.pdf",
-      "projectGithub": "",
       "tags": [
         "Frontend"
       ]
@@ -408,17 +348,13 @@
       "speakers": [
         {
           "name": "Larry Gritz",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/iq-kZG1nuyY",
       "videoId": "iq-kZG1nuyY",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Gritz-OpenShadingLang.pdf",
-      "projectGithub": "",
       "tags": []
     },
     {
@@ -432,17 +368,13 @@
       "speakers": [
         {
           "name": "Erik Rubow",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
       "videoUrl": "https://youtu.be/W4OGYeNLC1w",
       "videoId": "W4OGYeNLC1w",
       "slidesUrl": "https://llvm.org/devmtg/2010-11/Rubow-Click.pdf",
-      "projectGithub": "",
       "tags": []
     }
   ]

@@ -41,6 +41,13 @@ def has_text(value: str | None) -> bool:
     return bool(collapse_ws(str(value or "")))
 
 
+PLACEHOLDER_URL_VALUES = {"none", "null", "nil", "nan", "n/a", "na", "undefined"}
+
+
+def is_placeholder_url_value(value: str | None) -> bool:
+    return collapse_ws(str(value or "")).lower() in PLACEHOLDER_URL_VALUES
+
+
 def load_json_file(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -136,7 +143,7 @@ def talk_has_video(talk: dict) -> bool:
 def talk_video_url(talk: dict) -> str:
     explicit = collapse_ws(str(talk.get("videoUrl", "")))
     if explicit:
-        return explicit
+        return sanitize_http_url(explicit)
     vid = collapse_ws(str(talk.get("videoId", "")))
     if vid:
         return f"https://www.youtube.com/watch?v={urllib.parse.quote(vid, safe='')}"
@@ -205,12 +212,35 @@ def build_detail_url(site_base: str, page_name: str, item_id: str) -> str:
     return f"{site_base.rstrip('/')}/{target}"
 
 
+def sanitize_http_url(raw_url: str) -> str:
+    url = collapse_ws(raw_url)
+    if not url:
+        return ""
+    if is_placeholder_url_value(url):
+        return ""
+    try:
+        parsed = urllib.parse.urlsplit(url)
+    except Exception:
+        return ""
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return ""
+    if not parsed.netloc:
+        return ""
+    return urllib.parse.urlunsplit(parsed)
+
+
 def normalize_internal_library_url(raw_url: str, site_base: str) -> str:
     url = collapse_ws(raw_url)
     if not url:
         return ""
-    if re.match(r"^(?:[a-z][a-z0-9+.-]*:|//|#)", url, flags=re.IGNORECASE):
+    if is_placeholder_url_value(url):
+        return ""
+    if url.startswith("#"):
         return url
+    if url.startswith("//"):
+        return sanitize_http_url(f"https:{url}")
+    if re.match(r"^[a-z][a-z0-9+.-]*:", url, flags=re.IGNORECASE):
+        return sanitize_http_url(url)
 
     parsed = urllib.parse.urlsplit(url)
     path = parsed.path or ""
@@ -237,6 +267,19 @@ def normalize_internal_library_url(raw_url: str, site_base: str) -> str:
         return f"{site_base.rstrip('/')}/{path}{suffix}"
 
     return url
+
+
+def sanitize_update_entry_urls(entry: dict, site_base: str) -> None:
+    raw_url = collapse_ws(str(entry.get("url", "")))
+    normalized_url = normalize_internal_library_url(raw_url, site_base)
+    entry["url"] = normalized_url or "updates.html"
+
+    for field in ("videoUrl", "slidesUrl", "paperUrl", "sourceUrl", "blogUrl"):
+        safe = sanitize_http_url(str(entry.get(field, "")))
+        if safe:
+            entry[field] = safe
+        else:
+            entry.pop(field, None)
 
 
 def talks_by_id(payload: dict | None) -> dict[str, dict]:
@@ -282,7 +325,7 @@ def talk_entry(
     meeting_slug = collapse_ws(str(talk.get("meeting", "")))
     meeting_name = collapse_ws(str(talk.get("meetingName", "")))
     meeting_date = collapse_ws(str(talk.get("meetingDate", "")))
-    slides_url = collapse_ws(str(talk.get("slidesUrl", "")))
+    slides_url = sanitize_http_url(str(talk.get("slidesUrl", "")))
     video_url = talk_video_url(talk)
     detail_url = build_detail_url(site_base, "talk.html", talk_id)
 
@@ -312,8 +355,8 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str) -> dict:
     paper_id = collapse_ws(str(paper.get("id", "")))
     year = collapse_ws(str(paper.get("year", "")))
     source = collapse_ws(str(paper.get("sourceName", ""))) or collapse_ws(str(paper.get("source", "")))
-    paper_url = collapse_ws(str(paper.get("paperUrl", "")))
-    source_url = collapse_ws(str(paper.get("sourceUrl", "")))
+    paper_url = sanitize_http_url(str(paper.get("paperUrl", "")))
+    source_url = sanitize_http_url(str(paper.get("sourceUrl", "")))
     detail_url = build_detail_url(site_base, "paper.html", paper_id)
     is_blog = is_blog_work(paper)
     kind = "blog" if is_blog else "paper"
@@ -561,10 +604,7 @@ def main() -> int:
         existing_entries = [entry for entry in (log_payload.get("entries") or []) if isinstance(entry, dict)]
 
     for entry in existing_entries:
-        raw_url = collapse_ws(str(entry.get("url", "")))
-        if not raw_url:
-            continue
-        entry["url"] = normalize_internal_library_url(raw_url, site_base)
+        sanitize_update_entry_urls(entry, site_base)
 
     existing_fingerprints: set[str] = set()
     for entry in existing_entries:

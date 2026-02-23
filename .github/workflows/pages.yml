@@ -23,6 +23,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate bundle
+        run: scripts/validate-library-bundle.sh
       - name: Prepare site bundle
         run: |
           rm -rf _site

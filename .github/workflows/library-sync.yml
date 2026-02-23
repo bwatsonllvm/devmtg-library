@@ -74,6 +74,10 @@ jobs:
             --cache papers/.cache/unpaywall-pdf-links.json \
             --mailto "llvm-library-bot@users.noreply.github.com"
 
+      - name: Sanitize URL-bearing fields
+        run: |
+          python3 scripts/sanitize-library-urls.py --repo-root .
+
       - name: Build updates log
         run: |
           python3 scripts/build-update-log.py \
