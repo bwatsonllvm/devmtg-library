@@ -749,6 +749,12 @@
     'beginner', 'beginners', 'intro', 'introduction', 'newcomer', 'newcomers',
     'starter', 'start', 'starting', 'basics', 'basic', 'learn',
   ]);
+  const BEGINNER_SIGNAL_RE = /\bbeginner(?:s)?\b|\bintro(?:duction)?\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasic(?:s)?\b/;
+  const SEARCH_BROAD_TOKENS = new Set([
+    'llvm', 'compiler', 'compilers', 'toolchain', 'project', 'projects',
+    'research', 'talk', 'talks', 'paper', 'papers', 'blog', 'blogs',
+    'session', 'sessions', 'meeting', 'meetings', 'developers', 'library',
+  ]);
 
   const SEARCH_TOKEN_ALIAS_MAP = {
     llvms: 'llvm',
@@ -950,6 +956,7 @@
 
       return {
         token,
+        isBroad: SEARCH_BROAD_TOKENS.has(token),
         specificity: 1 + Math.min(0.75, Math.max(0, token.length - 2) * 0.08),
         variants: [...variantMap.entries()].map(([term, weight]) => ({ term, weight })),
       };
@@ -980,10 +987,15 @@
     }
 
     const beginnerIntent = tokens.some((token) => BEGINNER_INTENT_TOKENS.has(token));
+    const hasNarrowClauses = clauses.some((clause) => !clause.isBroad);
+    const requiredClauseCount = hasNarrowClauses
+      ? clauses.filter((clause) => !clause.isBroad).length
+      : clauses.length;
 
     return {
       rawTokens: tokens,
       clauses,
+      requiredClauseCount,
       phrases,
       normalizedQuery,
       beginnerIntent,
@@ -1139,27 +1151,40 @@
 
     let total = 0;
     let matchedClauses = 0;
+    let matchedRequiredClauses = 0;
+    const clauseCount = model.clauses.length;
+    const requiredClauseCount = Number.isFinite(model.requiredClauseCount) && model.requiredClauseCount > 0
+      ? Math.min(clauseCount, Math.floor(model.requiredClauseCount))
+      : clauseCount;
+    const treatAllClausesAsRequired = requiredClauseCount === clauseCount;
 
     for (const clause of model.clauses) {
       const clauseScore = scoreClauseAgainstFields(clause, doc.fields, fieldConfig);
-      if (clauseScore > 0) matchedClauses += 1;
+      if (clauseScore > 0) {
+        matchedClauses += 1;
+        if (treatAllClausesAsRequired || !clause.isBroad) matchedRequiredClauses += 1;
+      }
       total += clauseScore * (clause.specificity || 1);
     }
 
     if (matchedClauses === 0) return 0;
 
-    const clauseCount = model.clauses.length;
     const coverage = matchedClauses / clauseCount;
+    const requiredCoverage = matchedRequiredClauses / requiredClauseCount;
     if (!relaxed) {
-      if (clauseCount >= 3 && coverage < 0.34) return 0;
-      if (clauseCount === 2 && coverage < 0.5) return 0;
-    } else if (clauseCount >= 4 && coverage < 0.2) {
-      return 0;
+      if (requiredClauseCount >= 3 && requiredCoverage < 0.67) return 0;
+      if (requiredClauseCount === 2 && requiredCoverage < 1) return 0;
+      if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
+    } else {
+      if (requiredClauseCount >= 3 && requiredCoverage < 0.34) return 0;
+      if (requiredClauseCount === 2 && requiredCoverage < 0.5) return 0;
+      if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
     }
 
+    const effectiveCoverage = (requiredCoverage * 0.72) + (coverage * 0.28);
     const coverageMultiplier = relaxed
-      ? (0.58 + (coverage * 0.9))
-      : (0.42 + (Math.pow(coverage, 1.2) * 0.9));
+      ? (0.52 + (effectiveCoverage * 1.02))
+      : (0.28 + (Math.pow(effectiveCoverage, 1.5) * 1.16));
     total *= coverageMultiplier;
 
     if (Array.isArray(model.phrases) && model.phrases.length) {
@@ -1207,6 +1232,22 @@
     return doc;
   }
 
+  function hasBeginnerSignal(doc) {
+    const fields = doc && doc.fields ? doc.fields : {};
+    const text = [
+      fields.title && fields.title.text,
+      fields.tags && fields.tags.text,
+      fields.topics && fields.topics.text,
+      fields.abstract && fields.abstract.text,
+      fields.content && fields.content.text,
+      fields.category && fields.category.text,
+      fields.publication && fields.publication.text,
+      fields.venue && fields.venue.text,
+    ].filter(Boolean).join(' ');
+    if (!text) return false;
+    return BEGINNER_SIGNAL_RE.test(text);
+  }
+
   function scoreTalkWithModel(indexedTalk, model, relaxed = false) {
     const doc = buildTalkSearchDoc(indexedTalk);
     if (!doc) return 0;
@@ -1233,12 +1274,15 @@
     if (base <= 0) return 0;
 
     let total = base;
+    const beginnerSignal = model.beginnerIntent ? hasBeginnerSignal(doc) : false;
+    if (model.beginnerIntent && !beginnerSignal && !relaxed) return 0;
     if (doc.year) {
       total += Math.max(0, doc.year - 2006) * 0.14;
     }
     if (model.beginnerIntent) {
       if (doc.fields.tags.text.includes('beginner')) total += 11;
       if (doc.fields.category.text.includes('tutorial')) total += 5;
+      if (beginnerSignal) total += 4;
     }
     return total;
   }
@@ -1312,6 +1356,12 @@
     const topics = paper._topicsLower
       || `${Array.isArray(paper.tags) ? paper.tags.join(' ') : ''} ${Array.isArray(paper.keywords) ? paper.keywords.join(' ') : ''}`;
     const abstractText = paper._abstractLower || paper.abstract || '';
+    const content = paper._contentLower
+      || paper.content
+      || paper.body
+      || paper.markdown
+      || paper.html
+      || '';
     const publication = paper._publicationLower || paper.publication || '';
     const venue = paper._venueLower || paper.venue || '';
     const yearField = paper._yearLower || paper._year || paper.year || '';
@@ -1322,6 +1372,7 @@
         authors: makeSearchField(authors),
         topics: makeSearchField(topics),
         abstract: makeSearchField(abstractText),
+        content: makeSearchField(content),
         publication: makeSearchField(publication),
         venue: makeSearchField(venue),
         year: makeSearchField(yearField),
@@ -1347,6 +1398,7 @@
         { key: 'publication', weight: 4.7, fuzzy: true },
         { key: 'venue', weight: 4.2, fuzzy: true },
         { key: 'abstract', weight: 3.3, fuzzy: false },
+        { key: 'content', weight: 2.1, fuzzy: false },
         { key: 'year', weight: 1.7, fuzzy: false },
       ],
       phraseFieldConfig: [
@@ -1356,14 +1408,18 @@
         { key: 'publication', weight: 2.3 },
         { key: 'venue', weight: 2.0 },
         { key: 'abstract', weight: 1.2 },
+        { key: 'content', weight: 0.9 },
       ],
     });
     if (base <= 0) return 0;
 
     let total = base;
+    const beginnerSignal = model.beginnerIntent ? hasBeginnerSignal(doc) : false;
+    if (model.beginnerIntent && !beginnerSignal && !relaxed) return 0;
     if (doc.year) total += Math.max(0, doc.year - 2000) * 0.12;
     if (doc.citationCount > 0) total += Math.min(8, Math.log1p(doc.citationCount) * 1.3);
     if (model.beginnerIntent && doc.fields.topics.text.includes('beginner')) total += 8;
+    if (model.beginnerIntent && beginnerSignal) total += 4;
     return total;
   }
 
