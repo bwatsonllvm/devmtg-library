@@ -181,6 +181,57 @@ def canonical_openalex_url(short_id: str) -> str:
     return f"https://openalex.org/{short_id}" if short_id else ""
 
 
+def load_excluded_identity_keys(exclude_file: Path | None) -> tuple[set[str], set[str], set[str]]:
+    excluded_openalex_keys: set[str] = set()
+    excluded_doi_keys: set[str] = set()
+    excluded_title_keys: set[str] = set()
+
+    if not exclude_file or not exclude_file.exists():
+        return excluded_openalex_keys, excluded_doi_keys, excluded_title_keys
+
+    for raw_line in exclude_file.read_text(encoding="utf-8").splitlines():
+        line = collapse_ws(raw_line.split("#", 1)[0])
+        if not line:
+            continue
+
+        prefix = ""
+        value = line
+        if ":" in line:
+            left, right = line.split(":", 1)
+            prefix = collapse_ws(left).lower()
+            value = collapse_ws(right)
+
+        if prefix in {"openalex", "oa", "work"}:
+            openalex = normalize_openalex_short_id(value)
+            if openalex:
+                excluded_openalex_keys.add(openalex)
+            continue
+
+        if prefix == "doi":
+            doi = normalize_doi(value)
+            if doi:
+                excluded_doi_keys.add(doi)
+            continue
+
+        if prefix == "title":
+            title = normalize_title_key(value)
+            if title:
+                excluded_title_keys.add(title)
+            continue
+
+        openalex = normalize_openalex_short_id(line)
+        if openalex:
+            excluded_openalex_keys.add(openalex)
+            continue
+
+        doi = normalize_doi(line)
+        if doi:
+            excluded_doi_keys.add(doi)
+            continue
+
+    return excluded_openalex_keys, excluded_doi_keys, excluded_title_keys
+
+
 def normalize_affiliation(value: str) -> str:
     clean = strip_markup(value).strip(" ,;|")
     clean = re.sub(r"\s+,", ",", clean)
@@ -1264,8 +1315,17 @@ def sort_papers(papers: list[dict]):
     papers.sort(key=key, reverse=True)
 
 
-def load_source_records(bundle_paths: list[Path]) -> list[dict]:
+def load_source_records(
+    bundle_paths: list[Path],
+    excluded_openalex_keys: set[str] | None = None,
+    excluded_doi_keys: set[str] | None = None,
+    excluded_title_keys: set[str] | None = None,
+) -> tuple[list[dict], int]:
+    excluded_openalex_keys = excluded_openalex_keys or set()
+    excluded_doi_keys = excluded_doi_keys or set()
+    excluded_title_keys = excluded_title_keys or set()
     records: list[dict] = []
+    excluded_count = 0
     for path in bundle_paths:
         payload = load_json(path)
         bundle_source = payload.get("source") if isinstance(payload.get("source"), dict) else {}
@@ -1292,8 +1352,26 @@ def load_source_records(bundle_paths: list[Path]) -> list[dict]:
                 record["doi"] = doi
             record["paperUrl"] = sanitize_http_url(str(record.get("paperUrl", "")))
             record["sourceUrl"] = sanitize_http_url(str(record.get("sourceUrl", "")))
+
+            openalex_key = normalize_openalex_short_id(
+                str(record.get("openalexId", "")) or str(record.get("sourceUrl", "")) or str(record.get("id", ""))
+            )
+            doi_key = normalize_doi(
+                str(record.get("doi", "")) or str(record.get("sourceUrl", "")) or str(record.get("paperUrl", ""))
+            )
+            title_key = normalize_title_key(str(record.get("title", "")))
+            if openalex_key and openalex_key in excluded_openalex_keys:
+                excluded_count += 1
+                continue
+            if doi_key and doi_key in excluded_doi_keys:
+                excluded_count += 1
+                continue
+            if title_key and title_key in excluded_title_keys:
+                excluded_count += 1
+                continue
+
             records.append(record)
-    return records
+    return records, excluded_count
 
 
 def dedupe_records(records: list[dict]) -> list[dict]:
@@ -1364,6 +1442,11 @@ def main() -> int:
     parser.add_argument("--manifest", default="papers/index.json")
     parser.add_argument("--cache-dir", default="papers/.cache/openalex")
     parser.add_argument("--landing-cache", default="papers/.cache/openalex-landing-enrichment.json")
+    parser.add_argument(
+        "--exclude-works-file",
+        default="papers/excluded-openalex-works.txt",
+        help="Optional newline-delimited exclusions (openalex:, doi:, or title:).",
+    )
     parser.add_argument("--batch-size", type=int, default=40)
     parser.add_argument("--mailto", default="llvm-library-bot@users.noreply.github.com")
     parser.add_argument("--skip-network", action="store_true")
@@ -1392,10 +1475,19 @@ def main() -> int:
     manifest_path = Path(args.manifest).resolve()
     cache_dir = Path(args.cache_dir).resolve()
     landing_cache_path = Path(args.landing_cache).resolve()
+    exclude_works_file = Path(args.exclude_works_file).resolve() if args.exclude_works_file else None
+    excluded_openalex_keys, excluded_doi_keys, excluded_title_keys = load_excluded_identity_keys(exclude_works_file)
 
-    source_records = load_source_records(bundle_paths)
+    source_records, excluded_count = load_source_records(
+        bundle_paths,
+        excluded_openalex_keys=excluded_openalex_keys,
+        excluded_doi_keys=excluded_doi_keys,
+        excluded_title_keys=excluded_title_keys,
+    )
     print(f"Source bundles: {len(bundle_paths)}", flush=True)
     print(f"Source records loaded: {len(source_records)}", flush=True)
+    if excluded_count:
+        print(f"Source records excluded by blocklist: {excluded_count}", flush=True)
 
     deduped = dedupe_records(source_records)
     print(f"Records after dedupe: {len(deduped)}", flush=True)
