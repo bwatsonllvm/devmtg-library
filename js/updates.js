@@ -6,6 +6,7 @@ const UPDATE_LOG_PATH = 'updates/index.json';
 const INITIAL_RENDER_BATCH_SIZE = 60;
 const RENDER_BATCH_SIZE = 40;
 const LOAD_MORE_ROOT_MARGIN = '900px 0px';
+const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 let activeRenderEntries = [];
 let renderedCount = 0;
 let loadMoreObserver = null;
@@ -101,22 +102,15 @@ function sortEntriesMostRecent(entries) {
   return [...entries].sort((left, right) => parseLoggedAtTimestamp(right) - parseLoggedAtTimestamp(left));
 }
 
-function formatParts(parts) {
+function normalizePartKeys(parts) {
   const values = Array.isArray(parts) ? parts : [];
-  const labels = {
-    talk: 'Talk',
-    slides: 'Slides',
-    video: 'Video',
-    paper: 'Paper',
-    blog: 'Blog',
-  };
   const seen = new Set();
   const out = [];
   for (const part of values) {
     const key = collapseWs(part).toLowerCase();
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    out.push(labels[key] || key);
+    out.push(key);
   }
   return out;
 }
@@ -144,6 +138,71 @@ function topicFilterHref(kind, topic) {
   return `papers/?tag=${encodeURIComponent(label)}`;
 }
 
+function isDirectPdfUrl(url) {
+  return DIRECT_PDF_URL_RE.test(String(url || '').trim());
+}
+
+function sourceNameFromHost(hostname) {
+  const host = String(hostname || '').toLowerCase().replace(/^www\./, '');
+  if (!host) return 'External Source';
+  if (host === 'youtu.be' || host.endsWith('youtube.com')) return 'YouTube';
+  if (host === 'devimages.apple.com') return 'Apple Developer';
+  return host;
+}
+
+function videoLinkLabel(videoUrl) {
+  const href = sanitizeExternalUrl(videoUrl);
+  if (!href) return 'Video';
+  try {
+    const parsed = new URL(href);
+    const sourceName = sourceNameFromHost(parsed.hostname);
+    const isYouTube = sourceName === 'YouTube';
+    const isDownload =
+      /\.(mov|m4v|mp4|mkv|avi|wmv|webm)$/i.test(parsed.pathname) ||
+      /download/i.test(parsed.pathname) ||
+      /download/i.test(parsed.search);
+    if (isDownload) return isYouTube ? 'Download' : `Download (${sourceName})`;
+    if (!isYouTube) return `Watch on ${sourceName}`;
+    return 'Watch';
+  } catch {
+    return 'Video';
+  }
+}
+
+function formatIncludedParts(entry, kind) {
+  const parts = normalizePartKeys(entry.parts);
+  const out = [];
+  const seen = new Set();
+  const add = (label) => {
+    const text = collapseWs(label);
+    const key = text.toLowerCase();
+    if (!text || seen.has(key)) return;
+    seen.add(key);
+    out.push(text);
+  };
+
+  for (const part of parts) {
+    if (part === 'talk') add('Talk');
+    else if (part === 'slides') add('Slides');
+    else if (part === 'video') add(videoLinkLabel(entry.videoUrl));
+    else if (part === 'paper') add(isDirectPdfUrl(entry.paperUrl) ? 'PDF' : 'Paper');
+    else if (part === 'blog') add('Post');
+  }
+
+  if (!out.length) {
+    if (kind === 'talk') add('Talk');
+    else if (kind === 'blog') add('Post');
+    else add(isDirectPdfUrl(entry.paperUrl) ? 'PDF' : 'Paper');
+  }
+  return out;
+}
+
+function detailLinkLabel(kind) {
+  if (kind === 'talk') return 'Talk Details';
+  if (kind === 'blog') return 'Blog Details';
+  return 'Paper Details';
+}
+
 function renderLinkTag(url, label, external = false) {
   const safeUrl = external ? sanitizeExternalUrl(url) : normalizeLibraryUrl(url);
   if (!safeUrl) return '';
@@ -160,13 +219,7 @@ function renderEntry(entry) {
   const title = collapseWs(entry.title) || '(Untitled)';
   const url = normalizeLibraryUrl(entry.url);
   const loggedAtLabel = formatLoggedAt(entry.loggedAt);
-  const partLabels = formatParts(entry.parts);
-  const visiblePartLabels = kind === 'talk'
-    ? partLabels
-    : partLabels.filter((label) => {
-      const lower = collapseWs(label).toLowerCase();
-      return lower !== 'paper' && lower !== 'blog';
-    });
+  const includedLabels = formatIncludedParts(entry, kind);
   const keyTopics = formatKeyTopics(entry.keyTopics).filter((topic) => {
     const lower = collapseWs(topic).toLowerCase();
     return lower !== 'paper' && lower !== 'blog';
@@ -185,36 +238,49 @@ function renderEntry(entry) {
     context = pieces.join(' · ');
   }
 
-  const links = [];
-  links.push(renderLinkTag(url, 'Open in Library', false));
+  const linkItems = [];
+  const addLink = (href, label, external) => {
+    const rawHref = collapseWs(href);
+    const rawLabel = collapseWs(label);
+    if (!rawHref || !rawLabel) return;
+    linkItems.push({ href: rawHref, label: rawLabel, external: !!external });
+  };
+  addLink(url, detailLinkLabel(kind), false);
 
   if (kind === 'talk') {
-    links.push(renderLinkTag(entry.slidesUrl, 'Slides', true));
-    links.push(renderLinkTag(entry.videoUrl, 'Video', true));
+    addLink(entry.slidesUrl, 'Slides', true);
+    addLink(entry.videoUrl, videoLinkLabel(entry.videoUrl), true);
   } else if (kind === 'blog') {
     const blogUrl = sanitizeExternalUrl(entry.blogUrl) || sanitizeExternalUrl(entry.sourceUrl);
     const repoUrl = sanitizeExternalUrl(entry.paperUrl);
-    if (blogUrl) links.push(renderLinkTag(blogUrl, 'Blog Post', true));
+    if (blogUrl) addLink(blogUrl, 'Post', true);
     if (repoUrl && repoUrl !== blogUrl) {
-      links.push(renderLinkTag(repoUrl, 'Repo Source', true));
+      addLink(repoUrl, 'Repo Source', true);
     } else if (!blogUrl && repoUrl) {
-      links.push(renderLinkTag(repoUrl, 'Source', true));
+      addLink(repoUrl, 'Post', true);
     }
   } else {
-    links.push(renderLinkTag(entry.paperUrl, 'Paper', true));
-    links.push(renderLinkTag(entry.sourceUrl, 'Source', true));
+    const paperHref = sanitizeExternalUrl(entry.paperUrl);
+    const sourceHref = sanitizeExternalUrl(entry.sourceUrl);
+    const paperIsPdf = isDirectPdfUrl(paperHref);
+    const sourceIsPdf = isDirectPdfUrl(sourceHref);
+    if (paperHref) addLink(paperHref, paperIsPdf ? 'PDF' : 'Paper', true);
+    if (sourceHref && sourceHref !== paperHref) {
+      const sourceLabel = sourceIsPdf && !paperIsPdf ? 'PDF' : 'Source Listing';
+      addLink(sourceHref, sourceLabel, true);
+    }
   }
 
   const uniqueLinks = [];
   const seenLinks = new Set();
-  for (const link of links) {
-    const key = collapseWs(link);
+  for (const link of linkItems) {
+    const key = `${link.external ? 'ext' : 'int'}|${link.href}|${link.label.toLowerCase()}`;
     if (!key || seenLinks.has(key)) continue;
     seenLinks.add(key);
-    uniqueLinks.push(link);
+    uniqueLinks.push(renderLinkTag(link.href, link.label, link.external));
   }
 
-  const partHtml = visiblePartLabels
+  const partHtml = includedLabels
     .map((label) => `<span class="card-tag card-tag--paper">${escapeHtml(label)}</span>`)
     .join('');
   const topicHtml = keyTopics
@@ -232,9 +298,9 @@ function renderEntry(entry) {
       </div>
       <h2 class="update-title"><a href="${escapeHtml(url)}">${escapeHtml(title)}</a></h2>
       ${context ? `<div class="update-context">${escapeHtml(context)}</div>` : ''}
-      ${partHtml ? `<div class="card-tags update-parts" aria-label="Updated assets">${partHtml}</div>` : ''}
-      ${topicHtml ? `<div class="card-tags update-topics" aria-label="Key topics">${topicHtml}</div>` : ''}
-      ${uniqueLinks.length ? `<div class="card-tags update-links" aria-label="Resource links">${uniqueLinks.join('')}</div>` : ''}
+      ${partHtml ? `<div class="update-row"><div class="update-row-label">What's included:</div><div class="card-tags update-parts" aria-label="What's included">${partHtml}</div></div>` : ''}
+      ${topicHtml ? `<div class="update-row"><div class="update-row-label">Key topics:</div><div class="card-tags update-topics" aria-label="Key topics">${topicHtml}</div></div>` : ''}
+      ${uniqueLinks.length ? `<div class="update-row"><div class="update-row-label">Links:</div><div class="card-tags update-links" aria-label="Resource links">${uniqueLinks.join('')}</div></div>` : ''}
     </article>
   `;
 }
