@@ -312,9 +312,10 @@ function filterAndSort() {
   let results = searchIndex;
   const tokens = state.query.length >= 2 ? tokenize(state.query) : [];
   searchMode = tokens.length > 0 ? 'exact' : 'browse';
+  const hasSharedTalkRanker = typeof HubUtils.rankTalksByQuery === 'function';
 
   if (tokens.length > 0) {
-    if (typeof HubUtils.rankTalksByQuery === 'function') {
+    if (hasSharedTalkRanker) {
       results = HubUtils.rankTalksByQuery(results, state.query);
     } else {
       const scored = [];
@@ -324,23 +325,23 @@ function filterAndSort() {
       }
       scored.sort((a, b) => b.score - a.score);
       results = scored.map((x) => x.talk);
-    }
 
-    if (results.length === 0) {
-      const fuzzy = [];
-      for (const t of searchIndex) {
-        const score = fuzzyScoreTalk(t, tokens);
-        if (score > 0) fuzzy.push({ talk: t, score });
+      if (results.length === 0) {
+        const fuzzy = [];
+        for (const t of searchIndex) {
+          const score = fuzzyScoreTalk(t, tokens);
+          if (score > 0) fuzzy.push({ talk: t, score });
+        }
+        fuzzy.sort((a, b) => {
+          const scoreDiff = b.score - a.score;
+          if (scoreDiff !== 0) return scoreDiff;
+          const meetingDiff = String(b.talk.meeting || '').localeCompare(String(a.talk.meeting || ''));
+          if (meetingDiff !== 0) return meetingDiff;
+          return String(a.talk.title || '').localeCompare(String(b.talk.title || ''));
+        });
+        results = fuzzy.map((entry) => entry.talk);
+        if (results.length > 0) searchMode = 'fuzzy';
       }
-      fuzzy.sort((a, b) => {
-        const scoreDiff = b.score - a.score;
-        if (scoreDiff !== 0) return scoreDiff;
-        const meetingDiff = String(b.talk.meeting || '').localeCompare(String(a.talk.meeting || ''));
-        if (meetingDiff !== 0) return meetingDiff;
-        return String(a.talk.title || '').localeCompare(String(b.talk.title || ''));
-      });
-      results = fuzzy.map((entry) => entry.talk);
-      if (results.length > 0) searchMode = 'fuzzy';
     }
   }
 
@@ -397,6 +398,31 @@ function sanitizeExternalUrl(value) {
     return '';
   }
   return '';
+}
+
+function stripSearchSourceText(value) {
+  return String(value || '')
+    .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]+)]\([^)]*\)/g, '$1 ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/[`*_>#~|]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildContextSnippet(sourceText, query, maxLength = 300) {
+  const text = stripSearchSourceText(sourceText);
+  if (!text) return '';
+
+  if (query && query.length >= 2 && typeof HubUtils.buildSearchSnippet === 'function') {
+    const snippet = HubUtils.buildSearchSnippet(text, query, { maxLength });
+    if (snippet) return snippet;
+  }
+
+  if (text.length <= maxLength) return text;
+  const hardSlice = text.slice(0, maxLength).trim();
+  const softSlice = hardSlice.replace(/\s+\S*$/, '').trim();
+  return `${softSlice || hardSlice}...`;
 }
 
 function highlightText(text, tokens) {
@@ -549,7 +575,7 @@ document.addEventListener('error', (event) => {
 
 function renderCard(talk, tokens) {
   const speakerText = formatSpeakers(talk.speakers);
-  const abstractPreview = talk.abstract ? talk.abstract.slice(0, 300) : '';
+  const abstractPreview = buildContextSnippet(talk.abstract || '', state.query, 300);
   const thumbnailUrl = talk.videoId
     ? `https://img.youtube.com/vi/${talk.videoId}/hqdefault.jpg`
     : '';
@@ -2354,6 +2380,12 @@ function buildPaperSearchEntry(rawPaper) {
     : [];
   const topics = getPaperKeyTopics(paper, 12);
   const abstractText = String(paper.abstract || '').trim();
+  const contentText = [
+    paper.content,
+    paper.body,
+    paper.markdown,
+    paper.html,
+  ].map((value) => String(value || '').trim()).filter(Boolean).join(' ');
   const publication = String(paper.publication || '').trim();
   const venue = String(paper.venue || '').trim();
   const year = String(paper.year || '').trim();
@@ -2364,6 +2396,7 @@ function buildPaperSearchEntry(rawPaper) {
     _authorsLower: authors.join(' ').toLowerCase(),
     _topicsLower: topics.join(' ').toLowerCase(),
     _abstractLower: abstractText.toLowerCase(),
+    _contentLower: contentText.toLowerCase(),
     _publicationLower: publication.toLowerCase(),
     _venueLower: venue.toLowerCase(),
     _yearLower: year.toLowerCase(),

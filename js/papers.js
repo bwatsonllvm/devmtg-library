@@ -282,10 +282,19 @@ function normalizePaperRecord(rawPaper) {
   paper._abstractLower = paper.abstract.toLowerCase();
   paper._tagsLower = paper.tags.join(' ').toLowerCase();
   paper._keywordsLower = paper.keywords.join(' ').toLowerCase();
+  paper._authorsLower = paper._authorLower;
+  paper._topicsLower = `${paper._tagsLower} ${paper._keywordsLower}`.trim();
+  paper._contentLower = [
+    paper.content,
+    paper.body,
+    paper.markdown,
+    paper.html,
+  ].map((value) => String(value || '').trim()).filter(Boolean).join(' ').toLowerCase();
   paper._publicationLower = paper.publication.toLowerCase();
   paper._venueLower = paper.venue.toLowerCase();
   paper._typeLower = paper.type.toLowerCase();
   paper._sourceLower = paper.source.toLowerCase();
+  paper._yearLower = paper._year.toLowerCase();
   paper._isBlog = BLOG_SOURCE_SLUGS.has(paper._sourceLower)
     || paper._typeLower === 'blog-post'
     || paper._typeLower === 'blog'
@@ -365,7 +374,7 @@ function parseCitationCount(rawPaper) {
 }
 
 function buildSearchIndex() {
-  searchIndex = scopedPapers.map((paper) => ({ ...paper }));
+  searchIndex = Array.isArray(scopedPapers) ? [...scopedPapers] : [];
 }
 
 function tokenize(query) {
@@ -579,23 +588,29 @@ function filterAndSort() {
   let entries = searchIndex.map((paper) => ({ paper, score: 0 }));
 
   if (tokens.length > 0) {
-    const scored = [];
-    for (const paper of searchIndex) {
-      const score = scorePaperMatch(paper, tokens);
-      if (score > 0) scored.push({ paper, score });
-    }
-
-    entries = scored;
-
-    if (entries.length === 0) {
-      const fuzzy = [];
+    if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
+      const ranked = HubUtils.rankPaperRecordsByQuery(searchIndex, state.query);
+      const baseScore = ranked.length || 1;
+      entries = ranked.map((paper, index) => ({ paper, score: baseScore - index }));
+    } else {
+      const scored = [];
       for (const paper of searchIndex) {
-        const score = fuzzyScorePaper(paper, tokens);
-        if (score > 0) fuzzy.push({ paper, score });
+        const score = scorePaperMatch(paper, tokens);
+        if (score > 0) scored.push({ paper, score });
       }
 
-      entries = fuzzy;
-      if (entries.length > 0) searchMode = 'fuzzy';
+      entries = scored;
+
+      if (entries.length === 0) {
+        const fuzzy = [];
+        for (const paper of searchIndex) {
+          const score = fuzzyScorePaper(paper, tokens);
+          if (score > 0) fuzzy.push({ paper, score });
+        }
+
+        entries = fuzzy;
+        if (entries.length > 0) searchMode = 'fuzzy';
+      }
     }
   }
 
@@ -671,6 +686,45 @@ function highlightText(text, tokens) {
   return result;
 }
 
+function stripSearchSourceText(value) {
+  return String(value || '')
+    .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]+)]\([^)]*\)/g, '$1 ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/[`*_>#~|]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildContextSnippet(sourceText, query, maxLength = 340) {
+  const text = stripSearchSourceText(sourceText);
+  if (!text) return '';
+
+  if (query && query.length >= 2 && typeof HubUtils.buildSearchSnippet === 'function') {
+    const snippet = HubUtils.buildSearchSnippet(text, query, { maxLength });
+    if (snippet) return snippet;
+  }
+
+  if (text.length <= maxLength) return text;
+  const hardSlice = text.slice(0, maxLength).trim();
+  const softSlice = hardSlice.replace(/\s+\S*$/, '').trim();
+  return `${softSlice || hardSlice}...`;
+}
+
+function getPaperPreviewSource(paper) {
+  const parts = [
+    paper && paper.abstract,
+    paper && paper.content,
+    paper && paper.body,
+    paper && paper.markdown,
+    paper && paper.html,
+  ]
+    .map((value) => stripSearchSourceText(value))
+    .filter(Boolean);
+
+  return parts.join(' ');
+}
+
 function renderAuthorButtons(authors, tokens) {
   if (!authors || authors.length === 0) return 'Authors unknown';
 
@@ -701,7 +755,9 @@ function renderPaperCard(paper, tokens) {
     ? escapeHtml(paper._publishedDateLabel || paper._year || 'Unknown date')
     : escapeHtml(paper._year || 'Unknown year');
   const venueLabel = escapeHtml(paper.publication || paper.venue || (paper.type ? paper.type.replace(/-/g, ' ') : 'Academic paper'));
-  const abstractText = paper.abstract || 'No abstract available.';
+  const previewSource = getPaperPreviewSource(paper);
+  const fallbackExcerpt = blogEntry ? 'No blog excerpt available.' : 'No abstract available.';
+  const abstractText = buildContextSnippet(previewSource, state.query, 340) || fallbackExcerpt;
 
   const paperIsPdf = isDirectPdfUrl(paper.paperUrl || '');
   const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl || '');
@@ -1952,6 +2008,9 @@ function fuzzyScoreTalkMatch(indexedTalk, tokens) {
 
 function countTalkMatchesForQuery(query) {
   if (!talkSearchIndex.length) return 0;
+  if (typeof HubUtils.rankTalksByQuery === 'function') {
+    return HubUtils.rankTalksByQuery(talkSearchIndex, query).length;
+  }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
 
@@ -1969,6 +2028,9 @@ function countTalkMatchesForQuery(query) {
 }
 
 function countPaperMatchesForQuery(query) {
+  if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
+    return HubUtils.rankPaperRecordsByQuery(searchIndex, query).length;
+  }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
 

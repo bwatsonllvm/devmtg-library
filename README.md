@@ -47,9 +47,24 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - bounded Levenshtein distance for typo tolerance
 - Weighted field scoring:
   - talks: title, speakers, tags, meeting metadata, abstract, category, year
-  - papers/blogs: title, authors, topics, publication/venue, abstract, year
-- Coverage-aware gating with relaxed fallback when strict matching returns nothing.
+  - papers/blogs: title, authors, topics, publication/venue, abstract, body/content text, year
+- Coverage-aware gating:
+  - broad tokens (like `llvm`, `paper`, `talk`) are de-emphasized as required matches when narrow terms exist
+  - stricter required-clause thresholds for longer, specific queries
+  - relaxed fallback only when strict matching returns nothing
+- Lower-noise synonym handling:
+  - low-signal expansions are filtered
+  - beginner-intent expansions prioritize `intro/introduction/tutorial` over generic terms
 - Tie-break and quality boosts for recency, citations (papers/blogs), and beginner-intent queries.
+- Shared rankers (`rankTalksByQuery`, `rankPaperRecordsByQuery`) are now used consistently across talks, papers/blogs, and global work search surfaces.
+
+### Context-aware result previews
+
+- Result cards now show query-centered snippets instead of only leading text.
+- Snippets are extracted from the full searchable body when available:
+  - talks: abstracts
+  - papers/blogs: abstract + on-repo body/content/markdown/html fields
+- Matched terms remain highlighted in these snippets to make relevance transparent for both novice and advanced queries.
 
 ### Results controls across pages
 

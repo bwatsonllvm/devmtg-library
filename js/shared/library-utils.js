@@ -755,6 +755,9 @@
     'research', 'talk', 'talks', 'paper', 'papers', 'blog', 'blogs',
     'session', 'sessions', 'meeting', 'meetings', 'developers', 'library',
   ]);
+  const SEARCH_LOW_SIGNAL_SYNONYMS = new Set([
+    'start', 'starting', 'started', 'getting', 'learn', 'learning', 'basic', 'basics',
+  ]);
 
   const SEARCH_TOKEN_ALIAS_MAP = {
     llvms: 'llvm',
@@ -779,14 +782,13 @@
   };
 
   const SEARCH_TOKEN_SYNONYMS_RAW = {
-    beginner: ['intro', 'tutorial', 'getting', 'started'],
-    beginners: ['beginner', 'intro', 'tutorial'],
+    beginner: ['intro', 'introduction', 'tutorial'],
+    beginners: ['beginner', 'intro', 'introduction', 'tutorial'],
     intro: ['introduction', 'beginner', 'tutorial'],
     introduction: ['intro', 'beginner'],
     compiler: ['llvm', 'clang', 'toolchain', 'codegen'],
     compilers: ['compiler', 'llvm', 'clang'],
     clang: ['frontend', 'c++'],
-    llvm: ['compiler', 'toolchain'],
     debug: ['lldb', 'debugging', 'dwarf'],
     debugger: ['lldb', 'debug'],
     debugging: ['debug', 'lldb'],
@@ -952,7 +954,12 @@
       if (stripped && stripped !== token) addVariant(stripped, 0.74);
 
       const synonyms = SEARCH_TOKEN_SYNONYMS[token] || [];
-      for (const synonym of synonyms) addVariant(synonym, 0.72);
+      for (const synonym of synonyms) {
+        const normalizedSynonym = normalizeSearchToken(synonym);
+        if (!normalizedSynonym) continue;
+        if (SEARCH_LOW_SIGNAL_SYNONYMS.has(normalizedSynonym)) continue;
+        addVariant(normalizedSynonym, 0.64);
+      }
 
       return {
         token,
@@ -1000,6 +1007,121 @@
       normalizedQuery,
       beginnerIntent,
     };
+  }
+
+  function stripSearchSnippetSource(value) {
+    const raw = String(value || '');
+    if (!raw) return '';
+    return collapseWhitespace(
+      raw
+        .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+        .replace(/\[([^\]]+)]\([^)]*\)/g, '$1 ')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/[`*_>#~|]/g, ' ')
+    );
+  }
+
+  function truncateSearchSnippet(text, maxLength) {
+    const value = collapseWhitespace(text);
+    if (!value) return '';
+    if (value.length <= maxLength) return value;
+    const hardSlice = value.slice(0, maxLength).trim();
+    const softSlice = hardSlice.replace(/\s+\S*$/, '').trim();
+    const trimmed = softSlice || hardSlice;
+    return `${trimmed}...`;
+  }
+
+  function buildSearchSnippet(sourceText, queryOrTokens, options = {}) {
+    const maxLength = Number.isFinite(options.maxLength)
+      ? Math.max(90, Math.min(600, Math.floor(options.maxLength)))
+      : 220;
+    const text = stripSearchSnippetSource(sourceText);
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+
+    const model = buildSearchQueryModel(queryOrTokens);
+    if ((!model || !Array.isArray(model.clauses) || !model.clauses.length) && !(model && model.normalizedQuery)) {
+      return truncateSearchSnippet(text, maxLength);
+    }
+
+    const haystack = text.toLowerCase();
+    let bestIndex = -1;
+    let bestLength = 0;
+    let bestScore = -Infinity;
+
+    const considerNeedle = (rawNeedle, baseScore) => {
+      const rawValue = String(rawNeedle || '').trim().toLowerCase();
+      if (!rawValue) return;
+      const needle = rawValue.includes(' ')
+        ? collapseWhitespace(rawValue)
+        : normalizeSearchToken(rawValue);
+      if (!needle || needle.length < 2) return;
+      let offset = 0;
+      while (offset < haystack.length) {
+        const index = haystack.indexOf(needle, offset);
+        if (index < 0) break;
+
+        const before = index > 0 ? haystack[index - 1] : ' ';
+        const after = index + needle.length < haystack.length ? haystack[index + needle.length] : ' ';
+        const startBoundary = /[^a-z0-9+#.]/.test(before);
+        const endBoundary = /[^a-z0-9+#.]/.test(after);
+        const boundaryBonus = (startBoundary ? 1.8 : 0) + (endBoundary ? 1.8 : 0);
+        const score = baseScore + (needle.length * 0.22) + boundaryBonus - (index * 0.00035);
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestIndex = index;
+          bestLength = needle.length;
+        }
+
+        offset = index + needle.length;
+        if (startBoundary && endBoundary) break;
+      }
+    };
+
+    for (const phraseEntry of (model.phrases || [])) {
+      const phrase = normalizeSearchText(phraseEntry && phraseEntry.value);
+      if (!phrase || phrase.length < 2) continue;
+      const phraseWeight = Number(phraseEntry && phraseEntry.weight) || 1;
+      considerNeedle(phrase, 34 + (phraseWeight * 8));
+    }
+
+    for (const clause of (model.clauses || [])) {
+      if (!clause || !clause.token) continue;
+      considerNeedle(clause.token, 23 + ((clause.specificity || 1) * 2));
+      for (const variant of (clause.variants || [])) {
+        if (!variant || !variant.term || variant.term === clause.token) continue;
+        const variantWeight = Number(variant.weight) || 0;
+        if (variantWeight <= 0) continue;
+        const synonymPenalty = variantWeight < 0.7 ? 6 : 0;
+        considerNeedle(variant.term, 16 + (variantWeight * 6) - synonymPenalty);
+      }
+    }
+
+    if (bestIndex < 0) {
+      return truncateSearchSnippet(text, maxLength);
+    }
+
+    const center = bestIndex + Math.floor(bestLength / 2);
+    let start = Math.max(0, center - Math.floor(maxLength / 2));
+    let end = Math.min(text.length, start + maxLength);
+    if (end - start < maxLength) start = Math.max(0, end - maxLength);
+
+    if (start > 0) {
+      const nextSpace = text.indexOf(' ', start);
+      if (nextSpace !== -1 && nextSpace - start <= 24) start = nextSpace + 1;
+    }
+
+    if (end < text.length) {
+      const prevSpace = text.lastIndexOf(' ', end);
+      if (prevSpace > start + Math.floor(maxLength * 0.55)) end = prevSpace;
+    }
+
+    let snippet = text.slice(start, end).trim();
+    if (!snippet) return truncateSearchSnippet(text, maxLength);
+    if (start > 0) snippet = `...${snippet}`;
+    if (end < text.length) snippet = `${snippet}...`;
+    return snippet;
   }
 
   function parseYearNumber(value) {
@@ -1157,10 +1279,11 @@
       ? Math.min(clauseCount, Math.floor(model.requiredClauseCount))
       : clauseCount;
     const treatAllClausesAsRequired = requiredClauseCount === clauseCount;
+    const clauseCoverageThreshold = relaxed ? 0.9 : 1.35;
 
     for (const clause of model.clauses) {
       const clauseScore = scoreClauseAgainstFields(clause, doc.fields, fieldConfig);
-      if (clauseScore > 0) {
+      if (clauseScore >= clauseCoverageThreshold) {
         matchedClauses += 1;
         if (treatAllClausesAsRequired || !clause.isBroad) matchedRequiredClauses += 1;
       }
@@ -1172,11 +1295,14 @@
     const coverage = matchedClauses / clauseCount;
     const requiredCoverage = matchedRequiredClauses / requiredClauseCount;
     if (!relaxed) {
-      if (requiredClauseCount >= 3 && requiredCoverage < 0.67) return 0;
+      if (requiredClauseCount >= 5 && requiredCoverage < 0.8) return 0;
+      if (requiredClauseCount === 4 && requiredCoverage < 0.75) return 0;
+      if (requiredClauseCount === 3 && requiredCoverage < 0.67) return 0;
       if (requiredClauseCount === 2 && requiredCoverage < 1) return 0;
       if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
     } else {
-      if (requiredClauseCount >= 3 && requiredCoverage < 0.34) return 0;
+      if (requiredClauseCount >= 4 && requiredCoverage < 0.5) return 0;
+      if (requiredClauseCount === 3 && requiredCoverage < 0.34) return 0;
       if (requiredClauseCount === 2 && requiredCoverage < 0.5) return 0;
       if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
     }
@@ -1960,6 +2086,7 @@
   const api = {
     arePersonMiddleVariants,
     buildPeopleIndex,
+    buildSearchSnippet,
     CATEGORY_ORDER,
     compareRankedEntries,
     extractYouTubeId,

@@ -182,6 +182,44 @@ function highlightText(text, tokens) {
   return result;
 }
 
+function stripSearchSourceText(value) {
+  return String(value || '')
+    .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]+)]\([^)]*\)/g, '$1 ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/[`*_>#~|]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildContextSnippet(sourceText, query, maxLength = 320) {
+  const text = stripSearchSourceText(sourceText);
+  if (!text) return '';
+
+  if (query && query.length >= 2 && typeof HubUtils.buildSearchSnippet === 'function') {
+    const snippet = HubUtils.buildSearchSnippet(text, query, { maxLength });
+    if (snippet) return snippet;
+  }
+
+  if (text.length <= maxLength) return text;
+  const hardSlice = text.slice(0, maxLength).trim();
+  const softSlice = hardSlice.replace(/\s+\S*$/, '').trim();
+  return `${softSlice || hardSlice}...`;
+}
+
+function getPaperPreviewSource(paper) {
+  const parts = [
+    paper && paper.abstract,
+    paper && paper.content,
+    paper && paper.body,
+    paper && paper.markdown,
+    paper && paper.html,
+  ]
+    .map((value) => stripSearchSourceText(value))
+    .filter(Boolean);
+  return parts.join(' ');
+}
+
 function categoryLabel(cat) {
   return CATEGORY_META[cat]?.label ?? toTitleCaseSlug(cat || 'other');
 }
@@ -415,6 +453,19 @@ function normalizePaperRecord(rawPaper) {
 
   paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
   paper._citationCount = paper.citationCount;
+  paper._titleLower = paper.title.toLowerCase();
+  paper._authorsLower = paper.authors.map((author) => `${author.name || ''}`).join(' ').toLowerCase();
+  paper._topicsLower = `${paper.tags.join(' ')} ${paper.keywords.join(' ')}`.trim().toLowerCase();
+  paper._abstractLower = paper.abstract.toLowerCase();
+  paper._contentLower = [
+    paper.content,
+    paper.body,
+    paper.markdown,
+    paper.html,
+  ].map((value) => String(value || '').trim()).filter(Boolean).join(' ').toLowerCase();
+  paper._publicationLower = paper.publication.toLowerCase();
+  paper._venueLower = paper.venue.toLowerCase();
+  paper._yearLower = paper._year.toLowerCase();
   const normalizedSource = paper.source.toLowerCase();
   const normalizedType = paper.type.toLowerCase();
   paper._isBlog = BLOG_SOURCE_SLUGS.has(normalizedSource)
@@ -709,9 +760,10 @@ function renderTagLinks(tags) {
 }
 
 function renderTalkCard(talk) {
-  const tokens = state.mode === 'search' ? tokenizeQuery(state.query) : [];
+  const query = state.mode === 'search' ? state.query : '';
+  const tokens = query ? tokenizeQuery(query) : [];
   const titleEsc = escapeHtml(talk.title || 'Untitled talk');
-  const abstractPreview = talk.abstract ? talk.abstract.slice(0, 300) : '';
+  const abstractPreview = buildContextSnippet(talk.abstract || '', query, 300);
   const thumbnailUrl = talk.videoId
     ? `https://img.youtube.com/vi/${talk.videoId}/hqdefault.jpg`
     : '';
@@ -768,14 +820,17 @@ function renderTalkCard(talk) {
 }
 
 function renderPaperCard(paper) {
-  const tokens = state.mode === 'search' ? tokenizeQuery(state.query) : [];
+  const query = state.mode === 'search' ? state.query : '';
+  const tokens = query ? tokenizeQuery(query) : [];
   const blogEntry = isBlogPaper(paper);
   const listingFrom = blogEntry ? 'blogs' : 'papers';
   const titleEsc = escapeHtml(paper.title || 'Untitled paper');
   const authorLabel = (paper.authors || []).map((author) => String(author.name || '').trim()).filter(Boolean).join(', ');
   const venue = escapeHtml(paper.publication || paper.venue || toTitleCaseSlug(paper.type || 'paper'));
   const year = escapeHtml(paper._year || 'Unknown year');
-  const abstractText = paper.abstract || (blogEntry ? 'No blog excerpt available.' : 'No abstract available.');
+  const previewSource = getPaperPreviewSource(paper);
+  const abstractText = buildContextSnippet(previewSource, query, 340)
+    || (blogEntry ? 'No blog excerpt available.' : 'No abstract available.');
   const authorNames = (paper.authors || []).map((author) => author.name).filter(Boolean);
   const authorsHtml = renderEntityLinks(authorNames, 'speaker');
   const topics = getPaperKeyTopics(paper, 8);
