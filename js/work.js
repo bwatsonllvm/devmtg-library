@@ -491,6 +491,10 @@ function rankTalksForQuery(talks, query) {
 }
 
 function rankPapersForQuery(papers, query) {
+  if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
+    return HubUtils.rankPaperRecordsByQuery(papers, query);
+  }
+
   const tokens = tokenizeQuery(query);
   if (!tokens.length) return [...papers].sort(comparePapersNewestFirst);
 

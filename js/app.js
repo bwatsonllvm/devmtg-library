@@ -2497,6 +2497,17 @@ function highlightMatch(text, query) {
   return escapeHtml(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
 }
 
+function rankAutocompleteMatches(entries, query, limit) {
+  const list = Array.isArray(entries) ? entries : [];
+  const max = Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : list.length;
+  if (typeof HubUtils.rankAutocompleteEntries === 'function') {
+    return HubUtils.rankAutocompleteEntries(list, query, { limit: max });
+  }
+  const q = String(query || '').toLowerCase();
+  if (!q) return list.slice(0, max);
+  return list.filter((entry) => String(entry && entry.label || '').toLowerCase().includes(q)).slice(0, max);
+}
+
 function renderDropdown(query) {
   const dropdown = document.getElementById('search-dropdown');
   if (!query || query.length < 1) {
@@ -2505,23 +2516,10 @@ function renderDropdown(query) {
     return;
   }
 
-  const q = query.toLowerCase();
-
-  const matchedTopics = autocompleteIndex.topics
-    .filter(t => t.label.toLowerCase().includes(q))
-    .slice(0, 6);
-
-  const matchedPeople = autocompleteIndex.people
-    .filter(s => s.label.toLowerCase().includes(q))
-    .slice(0, 6);
-
-  const matchedTalkTitles = autocompleteIndex.talks
-    .filter((talk) => talk.label.toLowerCase().includes(q))
-    .slice(0, 4);
-
-  const matchedPaperTitles = autocompleteIndex.papers
-    .filter((paper) => paper.label.toLowerCase().includes(q))
-    .slice(0, 4);
+  const matchedTopics = rankAutocompleteMatches(autocompleteIndex.topics, query, 6);
+  const matchedPeople = rankAutocompleteMatches(autocompleteIndex.people, query, 6);
+  const matchedTalkTitles = rankAutocompleteMatches(autocompleteIndex.talks, query, 4);
+  const matchedPaperTitles = rankAutocompleteMatches(autocompleteIndex.papers, query, 4);
 
   const tagIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`;
   const personIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
@@ -2677,6 +2675,9 @@ function countTalkMatchesForQuery(query) {
 
 function countPaperMatchesForQuery(query) {
   if (!paperSearchIndex.length) return 0;
+  if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
+    return HubUtils.rankPaperRecordsByQuery(paperSearchIndex, query).length;
+  }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
 

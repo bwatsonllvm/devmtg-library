@@ -281,17 +281,31 @@
     getFormState(form).activeItemIndex = -1;
   }
 
-  function collectMatches(query) {
+  function rankAutocompleteMatches(entries, query, limit) {
+    const list = Array.isArray(entries) ? entries : [];
+    const max = Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : list.length;
+    if (typeof HubUtils.rankAutocompleteEntries === 'function') {
+      return HubUtils.rankAutocompleteEntries(list, query, { limit: max });
+    }
+
     const q = String(query || '').trim().toLowerCase();
-    if (!q) {
+    if (!q) return list.slice(0, max);
+    return list
+      .filter((item) => String((item && item.label) || '').toLowerCase().includes(q))
+      .slice(0, max);
+  }
+
+  function collectMatches(query) {
+    const rawQuery = String(query || '').trim();
+    if (!rawQuery) {
       return { topics: [], people: [], talks: [], papers: [] };
     }
 
     return {
-      topics: autocompleteIndex.topics.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 6),
-      people: autocompleteIndex.people.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 6),
-      talks: autocompleteIndex.talks.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 4),
-      papers: autocompleteIndex.papers.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 4),
+      topics: rankAutocompleteMatches(autocompleteIndex.topics, rawQuery, 6),
+      people: rankAutocompleteMatches(autocompleteIndex.people, rawQuery, 6),
+      talks: rankAutocompleteMatches(autocompleteIndex.talks, rawQuery, 4),
+      papers: rankAutocompleteMatches(autocompleteIndex.papers, rawQuery, 4),
     };
   }
 
