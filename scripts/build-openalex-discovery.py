@@ -826,13 +826,15 @@ def update_manifest(
 
 
 def main() -> int:
+    repo_root = Path(__file__).resolve().parents[1]
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--events-dir", default="/Users/britton/Desktop/library/devmtg/events")
-    parser.add_argument("--papers-dir", default="/Users/britton/Desktop/library/papers")
-    parser.add_argument("--app-js", default="/Users/britton/Desktop/library/devmtg/js/app.js")
-    parser.add_argument("--index-json", default="/Users/britton/Desktop/library/papers/index.json")
+    parser.add_argument("--events-dir", default=str(repo_root / "devmtg/events"))
+    parser.add_argument("--papers-dir", default=str(repo_root / "papers"))
+    parser.add_argument("--app-js", default=str(repo_root / "devmtg/js/app.js"))
+    parser.add_argument("--index-json", default=str(repo_root / "papers/index.json"))
     parser.add_argument("--output-bundle", default="openalex-discovered.json")
-    parser.add_argument("--cache-dir", default="/Users/britton/Desktop/library/papers/.cache/openalex")
+    parser.add_argument("--cache-dir", default=str(repo_root / "papers/.cache/openalex"))
     parser.add_argument("--start-year", type=int, default=2000)
     parser.add_argument("--max-pages-per-keyword", type=int, default=25)
     parser.add_argument("--per-page", type=int, default=200)

@@ -37,16 +37,7 @@ jobs:
 
       - name: Refresh OpenAlex discovered papers
         run: |
-          python3 scripts/build-openalex-discovery.py \
-            --events-dir devmtg/events \
-            --papers-dir papers \
-            --index-json papers/index.json \
-            --app-js devmtg/js/app.js \
-            --subprojects-file papers/subproject-seeds.txt \
-            --skip-author-queries \
-            --max-pages-per-keyword 5 \
-            --per-page 200 \
-            --mailto "llvm-library-bot@users.noreply.github.com"
+          python3 scripts/build-openalex-discovery.py --events-dir devmtg/events --papers-dir papers --index-json papers/index.json --app-js devmtg/js/app.js --subprojects-file papers/subproject-seeds.txt --skip-author-queries --max-pages-per-keyword 5 --per-page 200 --mailto "llvm-library-bot@users.noreply.github.com"
 
       - name: Sync LLVM blog posts from llvm-blog-www
         env:
