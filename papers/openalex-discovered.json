@@ -55,6 +55,8 @@
       ],
       "matchedAuthors": [
         "A.K. Tyagi",
+        "Farzam Dorostkar",
+        "Michel Dagenais",
         "Vince Bridgers"
       ],
       "matchedSubprojects": [
@@ -172,6 +174,7 @@
         "Basedon Dual Pruning"
       ],
       "matchedAuthors": [
+        "Fanxing Meng",
         "Tao Zhang",
         "Yi Wang"
       ],
@@ -358,12 +361,28 @@
         "Silicon Mapping"
       ],
       "matchedAuthors": [
+        "A. Rosti",
         "Andra Bisca",
+        "Brandon Freiberger",
+        "Eddie Richter",
+        "Endri Taka",
+        "Erika Hunhoff",
+        "Erwei Wang",
         "Gagandeep Singh",
         "Jack Lo",
+        "Javier Setoain",
         "Jeff Fifield",
+        "Jinming Zhuang",
         "Joseph Melber",
-        "Stephen Neuendorffer"
+        "K. Denolf",
+        "Niansong Zhang",
+        "Phil James-Roxby",
+        "Pranathi Vasireddy",
+        "Samuel Bayliss",
+        "Sangeeta Chowdhary",
+        "Stephen Neuendorffer",
+        "Zachary Taylor Blair",
+        "Zhewen Yu"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -425,7 +444,11 @@
         "Graphs"
       ],
       "matchedAuthors": [
+        "Alexandre Lopoukhine",
+        "Bjorn De Sutter",
         "Jianyi Cheng",
+        "Jules Merckx",
+        "Samuel Coward",
         "Tobias Grosser"
       ],
       "matchedSubprojects": [
@@ -544,6 +567,7 @@
         "Baowen Xu",
         "Jiangchang Wu",
         "Maolin Sun",
+        "Qingkai Shi",
         "Qingyang Li",
         "Yibiao Yang",
         "Yuming Zhou"
@@ -614,8 +638,11 @@
       ],
       "matchedAuthors": [
         "Anton Lydike",
+        "David Katz",
+        "George Bisbas",
         "Justs Zarins",
         "Nick Brown",
+        "Nicolai Stawinoga",
         "Tobias Grosser"
       ],
       "matchedSubprojects": [
@@ -691,7 +718,10 @@
         "Trade Offs"
       ],
       "matchedAuthors": [
+        "Alexandre Lopoukhine",
+        "Christian Ulmann",
         "Christos Vasiladiotis",
+        "Martin Paul Lücke",
         "Mathieu Fehr",
         "Michel Steuwer",
         "Michel Weber",
@@ -763,7 +793,11 @@
         "Non Destructive Rewriting"
       ],
       "matchedAuthors": [
+        "Alexandre Lopoukhine",
+        "Bjorn De Sutter",
         "Jianyi Cheng",
+        "Jules Merckx",
+        "Samuel Coward",
         "Tobias Grosser"
       ],
       "matchedSubprojects": [
@@ -882,6 +916,9 @@
         "Llm Assisted"
       ],
       "matchedAuthors": [
+        "Jianjiang Zeng",
+        "Kan Wu",
+        "Li Lü",
         "Long Cheng",
         "Rodrigo C. O. Rocha",
         "Tianyi Liu",
@@ -1012,8 +1049,12 @@
       "matchedAuthors": [
         "Jorge Echavarria",
         "Laura Schulz",
+        "Marco De Pascale",
+        "Mario Hernández Vera",
         "Martin Schulz",
-        "Muhammad Nufail Farooqi"
+        "Martín Letras",
+        "Muhammad Nufail Farooqi",
+        "Nathaniel Tornow"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -1064,7 +1105,9 @@
         "Optimized Arithmetic Circuits"
       ],
       "matchedAuthors": [
-        "Florent de Dinechin"
+        "Florent de Dinechin",
+        "Louis V. Ledoux",
+        "Pierre Cochard"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -1195,6 +1238,7 @@
       ],
       "matchedAuthors": [
         "Albert Cohen",
+        "Martin Paul Lücke",
         "Michel Steuwer",
         "Oleksandr Zinenko",
         "William S. Moses"
@@ -1281,7 +1325,13 @@
       "matchedAuthors": [
         "Anton Lydike",
         "Jackson Woodruff",
-        "Tobias Grosser"
+        "Jonas Crols",
+        "Joren Dumoulin",
+        "Josse Van Delm",
+        "Marian Verhelst",
+        "Ryan Antonio",
+        "Tobias Grosser",
+        "Xun Yi"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -1341,7 +1391,9 @@
       ],
       "matchedAuthors": [
         "Alexander Brauckmann",
+        "Elizabeth Polgreen",
         "José Wesley de Souza Magalhães",
+        "Luc Jaulmes",
         "Michael O’Boyle"
       ],
       "matchedSubprojects": [
@@ -1395,7 +1447,9 @@
         "Tensor Computations"
       ],
       "matchedAuthors": [
-        "Javed Absar"
+        "Javed Absar",
+        "Muthu Manikandan Baskaran",
+        "Samarth Narang"
       ],
       "matchedSubprojects": []
     },
@@ -1535,6 +1589,7 @@
       ],
       "matchedAuthors": [
         "Alexis Engelke",
+        "Tobias Kamm",
         "Tobias Schwarz"
       ],
       "matchedSubprojects": []
@@ -2244,7 +2299,13 @@
       ],
       "matchedAuthors": [
         "Adrián Castelló",
-        "Enrique S. Quintana–Ort́ı"
+        "Enrique S. Quintana–Ort́ı",
+        "Francisco D. Igual",
+        "Grace Dinh",
+        "Hèctor Martínez",
+        "Jie Lei",
+        "Sandra Catalán",
+        "Yuka Ikarashi"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -2295,7 +2356,8 @@
       ],
       "matchedAuthors": [
         "Jason Lowe-Power",
-        "Mahyar Samani"
+        "Mahyar Samani",
+        "Ziwei Qiu"
       ],
       "matchedSubprojects": []
     },
@@ -2356,8 +2418,11 @@
         "Providing Users"
       ],
       "matchedAuthors": [
+        "Jinman Zhao",
         "Kai-Ting Amy Wang",
-        "Tarek S. Abdelrahman"
+        "Seyed Aryan Vahabpour",
+        "Tarek S. Abdelrahman",
+        "Xinru Yue"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -2484,6 +2549,7 @@
         "Compiler Guided"
       ],
       "matchedAuthors": [
+        "Måns I. Andersson",
         "Stefano Markidis",
         "Yifei He"
       ],
@@ -2593,6 +2659,7 @@
         "Hardware"
       ],
       "matchedAuthors": [
+        "Aurélien Delval",
         "Pablo de Oliveira Castro",
         "William Jalby",
         "Étienne Renault"
@@ -2804,6 +2871,8 @@
         "Pedro Valero‐Lara",
         "Philip W. Fackler",
         "Rafael Ferreira da Silva",
+        "Tatiana Melnichenko",
+        "Wael Elwasif",
         "William F. Godoy"
       ],
       "matchedSubprojects": [
@@ -2861,6 +2930,7 @@
       ],
       "matchedAuthors": [
         "Amir Mohammad Tavakkoli",
+        "Cosmin E. Oancea",
         "Mary Hall"
       ],
       "matchedSubprojects": [
@@ -3114,12 +3184,15 @@
         "HPC"
       ],
       "matchedAuthors": [
+        "A. Banerjee",
         "Andrew Gozillon",
         "Dan Palermo",
         "Dominik Adamski",
+        "Jan Leyonberg",
         "Kareem Ergawy",
         "Michael Klemm",
-        "Pranav Bhandarkar"
+        "Pranav Bhandarkar",
+        "Sergio Afonso"
       ],
       "matchedSubprojects": [
         "flang",
@@ -3351,7 +3424,9 @@
         "Unleashing Grey Box"
       ],
       "matchedAuthors": [
-        "Stefan Nagy"
+        "Dillon Otto",
+        "Stefan Nagy",
+        "Tanner Rowlett"
       ],
       "matchedSubprojects": [
         "libfuzzer"
@@ -4190,6 +4265,12 @@
         "Next Generation"
       ],
       "matchedAuthors": [
+        "Albert de Montserrat",
+        "Boris Kaus",
+        "Ivan Utkin",
+        "Ludovic Räss",
+        "Paul Tackley",
+        "Thibault Duretz",
         "William S. Moses"
       ],
       "matchedSubprojects": []
@@ -4445,7 +4526,17 @@
         "Memory Requests"
       ],
       "matchedAuthors": [
-        "Scott Mahlke"
+        "Akash Poptani",
+        "Alireza Khadem",
+        "Daichi Fujiki",
+        "Galen Shipman",
+        "Jered Dominguez-Trujillo",
+        "Kamalavasan Kamalakkannan",
+        "Nishil Talati",
+        "Reetuparna Das",
+        "Scott Mahlke",
+        "Yufeng Gu",
+        "Zhenyan Zhu"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -4749,7 +4840,9 @@
       ],
       "matchedAuthors": [
         "Abdel‐Hameed A. Badawy",
+        "John Shalf",
         "Nandakishore Santhi",
+        "Nazmus Sakib",
         "Tarun Prabhu"
       ],
       "matchedSubprojects": [
@@ -4887,8 +4980,11 @@
       ],
       "matchedAuthors": [
         "Ke Jiang",
+        "Sen Deng",
         "Shuai Wang",
-        "Yinqian Zhang"
+        "Tianwei Zhang",
+        "Yinqian Zhang",
+        "Yinshuai Li"
       ],
       "matchedSubprojects": []
     },
@@ -5002,7 +5098,10 @@
         "Real World"
       ],
       "matchedAuthors": [
-        "Emery D. Berger"
+        "Emery D. Berger",
+        "Kyla H. Levin",
+        "Nicolas van Kempen",
+        "Stephen N. Freund"
       ],
       "matchedSubprojects": [
         "lldb"
@@ -5106,6 +5205,7 @@
         "Chen Zhao",
         "Hongbin Zhang",
         "Mingjie Xing",
+        "Shihao Gao",
         "Yang Liu",
         "Yanjun Wu"
       ],
@@ -5219,6 +5319,75 @@
       ]
     },
     {
+      "id": "openalex-w4415241235",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "An Open-Source HW-SW Co-Development Framework Enabling Efficient Multi-Accelerator Systems",
+      "authors": [
+        {
+          "name": "Ryan Antonio",
+          "affiliation": ""
+        },
+        {
+          "name": "Joren Dumoulin",
+          "affiliation": ""
+        },
+        {
+          "name": "Xiaoling Yi",
+          "affiliation": ""
+        },
+        {
+          "name": "Josse Van Delm",
+          "affiliation": ""
+        },
+        {
+          "name": "Yimin Deng",
+          "affiliation": ""
+        },
+        {
+          "name": "Guilherme Paim",
+          "affiliation": ""
+        },
+        {
+          "name": "Marian Verhelst",
+          "affiliation": ""
+        }
+      ],
+      "year": "2025",
+      "publication": "arXiv",
+      "venue": "arXiv",
+      "type": "research-paper",
+      "abstract": "Heterogeneous accelerator-centric compute clusters are emerging as efficient solutions for diverse AI workloads. However, current integration strategies often compromise data movement efficiency and encounter compatibility issues in hardware and software. This prevents a unified approach that balances performance and ease of use. To this end, we present SNAX, an open-source integrated HW-SW framework enabling efficient multi-accelerator platforms through a novel hybrid-coupling scheme, consisting of loosely coupled asynchronous control and tightly coupled data access. SNAX brings reusable hardware modules designed to enhance compute accelerator utilization, and its customizable MLIR-based compiler to automate key system management tasks, jointly enabling rapid development and deployment of customized multi-accelerator compute clusters. Through extensive experimentation, we demonstrate SNAX's efficiency and flexibility in a low-power heterogeneous SoC. Accelerators can easily be integrated and programmed to achieve &gt; 10x improvement in neural network performance compared to other accelerator systems while maintaining accelerator utilization of &gt; 90% in full system operation.",
+      "paperUrl": "https://arxiv.org/pdf/2508.14582",
+      "sourceUrl": "https://doi.org/10.48550/arxiv.2508.14582",
+      "openalexId": "https://openalex.org/W4415241235",
+      "doi": "10.48550/arxiv.2508.14582",
+      "tags": [
+        "MLIR",
+        "Performance",
+        "AI",
+        "ML"
+      ],
+      "keywords": [
+        "MLIR",
+        "Performance",
+        "AI",
+        "Multi Accelerator",
+        "Compute Clusters",
+        "Accelerator Utilization",
+        "Hardware"
+      ],
+      "matchedAuthors": [
+        "Joren Dumoulin",
+        "Josse Van Delm",
+        "Marian Verhelst",
+        "Ryan Antonio"
+      ],
+      "matchedSubprojects": [
+        "mlir"
+      ]
+    },
+    {
       "id": "openalex-w4409333498",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
@@ -5273,8 +5442,14 @@
         "Compilation"
       ],
       "matchedAuthors": [
+        "Cristian Tirelli",
+        "David Atienza",
         "Giovanni Ansaloni",
-        "Laura Pozzi"
+        "Juan Sapriza",
+        "Lara Orlandic",
+        "Laura Pozzi",
+        "Rubén Rodríguez Rodríguez",
+        "Yuxuan Wang"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -5456,7 +5631,11 @@
       ],
       "matchedAuthors": [
         "Anthony M. Cabrera",
+        "Arjun S. Bhamra",
         "Austin J. Adams",
+        "Cameron C. Hoechst",
+        "Jeffrey Young",
+        "Ryan R. Abusaada",
         "Sharjeel Khan",
         "Thomas M. Conte",
         "Travis S. Humble"
@@ -5665,9 +5844,13 @@
       ],
       "matchedAuthors": [
         "Alban Dutilleul",
+        "Alexandre Lopoukhine",
         "Anton Lydike",
         "Christos Vasiladiotis",
+        "Federico Ficarelli",
+        "Josse Van Delm",
         "Luca Benini",
+        "Marian Verhelst",
         "Tobias Grosser"
       ],
       "matchedSubprojects": [
@@ -5805,7 +5988,14 @@
         "Programming Environment"
       ],
       "matchedAuthors": [
-        "Barbara Chapman"
+        "Aniello Esposito",
+        "Barbara Chapman",
+        "K. Grace Johnson",
+        "Kirk Bresniker",
+        "Marco Fiorentino",
+        "Masoud Mohseni",
+        "Raymond G. Beausoleil",
+        "Xin Zhan"
       ],
       "matchedSubprojects": []
     },
@@ -6109,6 +6299,7 @@
         "Target Registered Report"
       ],
       "matchedAuthors": [
+        "Florian Bauckholt",
         "Thorsten Holz"
       ],
       "matchedSubprojects": [
@@ -6215,6 +6406,8 @@
       "matchedAuthors": [
         "Alex C. Keizer",
         "Andrés Goens",
+        "C.E. Hughes",
+        "S. Bhat",
         "Tobias Grosser"
       ],
       "matchedSubprojects": [
@@ -6340,7 +6533,12 @@
         "Sparse Tensor"
       ],
       "matchedAuthors": [
-        "Zhiru Zhang"
+        "Benjamin Brock",
+        "Hongbo Rong",
+        "Jie Liu",
+        "Zhiru Zhang",
+        "Zhongyuan Zhao",
+        "Zijian Ding"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -6769,6 +6967,11 @@
         "Upstream MLIR"
       ],
       "matchedAuthors": [
+        "Adam Siemieniuk",
+        "Alexander Heinecke",
+        "Evangelos Georganas",
+        "Hans Pabst",
+        "Kavitha T. Madhu",
         "Lorenzo Chelini",
         "Niranjan Hasabnis",
         "Renato Golin"
@@ -7042,7 +7245,10 @@
         "Machine Learning"
       ],
       "matchedAuthors": [
-        "R. Govindarajan"
+        "Matthew J. Thazhuthaveetil",
+        "R Govindarajan",
+        "Shilpa Babalad",
+        "Shirish Shevade"
       ],
       "matchedSubprojects": [
         "polly"
@@ -7157,6 +7363,7 @@
       ],
       "matchedAuthors": [
         "Albert Cohen",
+        "Martin Paul Lücke",
         "Michel Steuwer",
         "William S. Moses"
       ],
@@ -7220,7 +7427,8 @@
         "Cindy Rubio-González",
         "Giorgis Georgakoudis",
         "Ignacio Laguna",
-        "Konstantinos Parasyris"
+        "Konstantinos Parasyris",
+        "Patrick L. Chapman"
       ],
       "matchedSubprojects": [
         "clang",
@@ -7628,7 +7836,10 @@
       ],
       "matchedAuthors": [
         "Jianyi Cheng",
-        "Lorenzo Chelini"
+        "Lorenzo Chelini",
+        "Rafael Barbalho",
+        "Samuel Coward",
+        "Theo Drane"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -8118,7 +8329,11 @@
         "Neural Networks"
       ],
       "matchedAuthors": [
-        "Wei Zhang"
+        "Bohan Hu",
+        "Jiang Xu",
+        "Wei Zhang",
+        "Yinyi Liu",
+        "Zhenguo Liu"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -8510,11 +8725,20 @@
         "Functional Programming"
       ],
       "matchedAuthors": [
+        "Andrei Ștefănescu",
+        "Benjamin G. Davis",
+        "Benjamin Selfridge",
+        "Brett Boston",
+        "Daniel Matichuk",
+        "Daniel Wagner",
         "Iavor S. Diatchki",
         "Joe Hendrix",
+        "Kevin Quick",
         "Mike Dodds",
         "Ryan G. Scott",
-        "Tristan Ravitch"
+        "Simon Winwood",
+        "Tristan Ravitch",
+        "Valentin Robert"
       ],
       "matchedSubprojects": []
     },
@@ -8754,6 +8978,7 @@
         "Avery Laird",
         "Cong Yan",
         "Jubi Taneja",
+        "Madan Musuvathi",
         "Shuvendu K. Lahiri"
       ],
       "matchedSubprojects": [
@@ -9294,7 +9519,9 @@
       ],
       "matchedAuthors": [
         "Jackson Woodruff",
+        "Jordi Armengol-Estapé",
         "Michael O’Boyle",
+        "Pasquale Minervini",
         "Rodrigo C. O. Rocha"
       ],
       "matchedSubprojects": []
@@ -9485,6 +9712,7 @@
       "matchedAuthors": [
         "Emil Vatai",
         "Jens Domke",
+        "Rin Iwai",
         "Yukinori Sato"
       ],
       "matchedSubprojects": [
@@ -10101,6 +10329,9 @@
         "Compressing Structured Tensor"
       ],
       "matchedAuthors": [
+        "Amir Shaikhha",
+        "Emilien Bauer",
+        "Mahdi Ghorbani",
         "Tobias Grosser"
       ],
       "matchedSubprojects": [
@@ -10603,7 +10834,8 @@
         "Hotpatches"
       ],
       "matchedAuthors": [
-        "Karthik Pattabiraman"
+        "Karthik Pattabiraman",
+        "Mohsen Salehi"
       ],
       "matchedSubprojects": []
     },
@@ -10646,6 +10878,63 @@
         "Ruturaj K. Vaidya"
       ],
       "matchedSubprojects": []
+    },
+    {
+      "id": "openalex-w4402442330",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "AsFuzzer: Differential Testing of Assemblers with Error-Driven Grammar Inference",
+      "authors": [
+        {
+          "name": "Hyungseok Kim",
+          "affiliation": "Electronics and Telecommunications Research Institute"
+        },
+        {
+          "name": "Soomin Kim",
+          "affiliation": "Korea Advanced Institute of Science and Technology"
+        },
+        {
+          "name": "J. J. Lee",
+          "affiliation": "Korea Advanced Institute of Science and Technology"
+        },
+        {
+          "name": "Sang Kil",
+          "affiliation": "Korea Advanced Institute of Science and Technology"
+        }
+      ],
+      "year": "2024",
+      "publication": "",
+      "venue": "",
+      "type": "research-paper",
+      "abstract": "Assembler is a critical component of the compiler toolchain, which has been less tested than the other components. Unfortunately, current grammar-based fuzzing techniques suffer from several challenges when testing assemblers. First, each different assembler accepts different grammar rules and syntaxes, and there are no existing assembly grammar specifications. Second, not every assembler is open-source, which makes it difficult to extract grammar rules from the source code. While existing black-box grammar inference approaches are applicable to such closed-source assemblers, they suffer from the scalability issue, which renders them impractical for testing assemblers. To address these challenges, we propose a novel way to test assemblers by automatically inferring their grammar rules with only a few queries to the target assemblers by leveraging their error messages. The key insight is that assembly error messages often deliver useful information to infer the underlying grammar rules. We have implemented our technique in a tool named AsFuzzer, and evaluated it on 4 real-world assemblers including Clang-integrated assembler (Clang), GNU assembler (GAS), Intel’s assembler (ICC), and Microsoft macro assembler (MASM). With AsFuzzer, we have successfully found 497 buggy instruction opcodes for six popular architectures, and reported them to the developers.",
+      "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3650212.3680345?download=true",
+      "sourceUrl": "https://doi.org/10.1145/3650212.3680345",
+      "openalexId": "https://openalex.org/W4402442330",
+      "doi": "10.1145/3650212.3680345",
+      "tags": [
+        "Clang",
+        "Testing",
+        "Infrastructure"
+      ],
+      "keywords": [
+        "Clang",
+        "Testing",
+        "Infrastructure",
+        "Fuzzing",
+        "Differential Testing",
+        "Grammar Rules",
+        "Testing Assemblers",
+        "Asfuzzer Differential Testing",
+        "Driven Grammar Inference",
+        "Error Messages",
+        "Error Driven Grammar"
+      ],
+      "matchedAuthors": [
+        "Sang Kil"
+      ],
+      "matchedSubprojects": [
+        "clang"
+      ]
     },
     {
       "id": "openalex-w4399554046",
@@ -10905,7 +11194,13 @@
       "matchedAuthors": [
         "Antonino Tumeo",
         "David Kaeli",
-        "Nícolas Bohm Agostini"
+        "José Cano",
+        "José Luis Abellán",
+        "Jude Haris",
+        "Malith Jayaweera",
+        "Norm Rubin",
+        "Nícolas Bohm Agostini",
+        "Perry Gibson"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -10989,7 +11284,9 @@
       ],
       "matchedAuthors": [
         "Anton Lydike",
+        "Emilien Bauer",
         "Gabriel Rodriguez‐Canal",
+        "George Bisbas",
         "Lawrence Mitchell",
         "Mathieu Fehr",
         "Maurice Jamieson",
@@ -11533,6 +11830,7 @@
       ],
       "matchedAuthors": [
         "Alexander Brauckmann",
+        "Elizabeth Polgreen",
         "Michael O’Boyle",
         "Tobias Grosser"
       ],
@@ -11963,6 +12261,8 @@
         "Chun‐Chieh Yang",
         "Hui-Hsin Liao",
         "Jenq-Kuen Lee",
+        "Tien-Yuan Hsieh",
+        "Wei-Hsu Chu",
         "Yi‐Ping You"
       ],
       "matchedSubprojects": [
@@ -12024,6 +12324,7 @@
       ],
       "matchedAuthors": [
         "Anton Lydike",
+        "Emilien Bauer",
         "Gabriel Rodriguez‐Canal",
         "Maurice Jamieson",
         "Nick Brown",
@@ -12079,6 +12380,7 @@
       ],
       "matchedAuthors": [
         "Alastair F. Donaldson",
+        "Dan Iorga",
         "John Wickerson"
       ],
       "matchedSubprojects": [
@@ -12150,6 +12452,9 @@
         "Trade Offs"
       ],
       "matchedAuthors": [
+        "Alexandre Lopoukhine",
+        "Christian Ulmann",
+        "Martin Paul Lücke",
         "Mathieu Fehr",
         "Michel Steuwer",
         "Michel Weber",
@@ -12488,7 +12793,10 @@
       ],
       "matchedAuthors": [
         "Jianyi Cheng",
-        "Lorenzo Chelini"
+        "Lorenzo Chelini",
+        "Rafael Barbalho",
+        "Samuel Coward",
+        "Theo Drane"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -12582,7 +12890,8 @@
         "Maximizing Edge Tpu"
       ],
       "matchedAuthors": [
-        "Ding‐Yong Hong"
+        "Ding‐Yong Hong",
+        "Kung-Fu Chen"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -12847,7 +13156,9 @@
         "Basic Block Sections"
       ],
       "matchedAuthors": [
+        "Han Shen",
         "Krzysztof Pszeniczny",
+        "Rahman Lavaee",
         "Snehasish Kumar",
         "Sriraman Tallam",
         "Xinliang Li"
@@ -13658,7 +13969,8 @@
         "Numa Node"
       ],
       "matchedAuthors": [
-        "Mitsuhisa Sato"
+        "Mitsuhisa Sato",
+        "Miwako Tsuji"
       ],
       "matchedSubprojects": [
         "openmp"
@@ -13791,10 +14103,12 @@
         "Learning Driven Adaptive"
       ],
       "matchedAuthors": [
+        "Bronis de Supinski",
         "Chunhua Liao",
         "David Beckingsale",
         "Giorgis Georgakoudis",
-        "Konstantinos Parasyris"
+        "Konstantinos Parasyris",
+        "S.J. Gamblin"
       ],
       "matchedSubprojects": [
         "clang",
@@ -13885,11 +14199,17 @@
         "Semantics"
       ],
       "matchedAuthors": [
+        "Aidan Denlinger",
+        "Alexandra E. Michael",
+        "Anitha Gollamudi",
         "Bryan Parno",
         "Conrad Watt",
         "Craig Disselkoen",
         "Deian Stefan",
-        "Evan Johnson"
+        "Evan Johnson",
+        "Jay Bosamiya",
+        "Marco Patrignani",
+        "Marco Vassena"
       ],
       "matchedSubprojects": [
         "clang"
@@ -14114,7 +14434,8 @@
         "Utilization"
       ],
       "matchedAuthors": [
-        "Dibyendu Das"
+        "Dibyendu Das",
+        "Sandya Mannarswamy"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -14182,7 +14503,9 @@
         "Antonino Tumeo",
         "Cheng Tan",
         "Nirav Dave",
-        "Nícolas Bohm Agostini"
+        "Nícolas Bohm Agostini",
+        "Tong Geng",
+        "Yixuan Luo"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -14611,7 +14934,12 @@
         "Encryption Scheme"
       ],
       "matchedAuthors": [
-        "Juneyoung Lee"
+        "Hyeongyu Kim",
+        "Junbum Shin",
+        "Juneyoung Lee",
+        "Nam SeungHyeon",
+        "S. Park",
+        "Woosung Song"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -14917,6 +15245,7 @@
       ],
       "matchedAuthors": [
         "Anton Lydike",
+        "Emilien Bauer",
         "Maurice Jamieson",
         "Nick Brown",
         "Tobias Grosser"
@@ -15088,6 +15417,7 @@
       ],
       "matchedAuthors": [
         "Artur Podobas",
+        "Måns I. Andersson",
         "Stefano Markidis",
         "Yifei He"
       ],
@@ -15443,6 +15773,7 @@
         "Cristiano Giuffrida",
         "Erik van der Kouwe",
         "Herbert Bos",
+        "Klaus von Gleissenthall",
         "Raphael Isemann"
       ],
       "matchedSubprojects": [
@@ -15762,6 +16093,8 @@
       ],
       "matchedAuthors": [
         "Andrew Gozillon",
+        "Hossein Haeri",
+        "James Riordan",
         "Paul Keir"
       ],
       "matchedSubprojects": [
@@ -15882,6 +16215,9 @@
       ],
       "matchedAuthors": [
         "Albert Cohen",
+        "Bertrand Michel",
+        "Bruno Maugars",
+        "Mohamed Essadki",
         "Nicolas Vasilache",
         "Oleksandr Zinenko"
       ],
@@ -15987,7 +16323,11 @@
         "Whole Program Critical"
       ],
       "matchedAuthors": [
-        "Bo Jiang"
+        "Bo Jiang",
+        "Hao Wang",
+        "Peiyang Li",
+        "Yuening Su",
+        "Zixin Liu"
       ],
       "matchedSubprojects": [
         "clang"
@@ -16218,7 +16558,9 @@
         "Power Schedule"
       ],
       "matchedAuthors": [
-        "Marcel Böhme"
+        "Marcel Böhme",
+        "Sang Kil",
+        "Valentin J. M. Manès"
       ],
       "matchedSubprojects": [
         "libfuzzer"
@@ -16453,6 +16795,7 @@
       "matchedAuthors": [
         "David Lange",
         "Garima Singh",
+        "Jonas Rembser",
         "L. Moneta",
         "Vassil Vassilev"
       ],
@@ -16623,7 +16966,12 @@
         "Hardware"
       ],
       "matchedAuthors": [
-        "Zhiru Zhang"
+        "Benjamin Brock",
+        "Hongbo Rong",
+        "Jie Liu",
+        "Zhiru Zhang",
+        "Zhongyuan Zhao",
+        "Zijian Ding"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -16673,7 +17021,9 @@
         "Coalescing Friendly"
       ],
       "matchedAuthors": [
-        "Alan L. Cox"
+        "Alan L. Cox",
+        "Eliot H. Solomon",
+        "Yufeng Zhou"
       ],
       "matchedSubprojects": [
         "clang"
@@ -16902,7 +17252,13 @@
       "matchedAuthors": [
         "Antonino Tumeo",
         "David Kaeli",
-        "Nícolas Bohm Agostini"
+        "José Cano",
+        "José Luis Abellán",
+        "Jude Haris",
+        "Malith Jayaweera",
+        "Norm Rubin",
+        "Nícolas Bohm Agostini",
+        "Perry Gibson"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -17061,7 +17417,10 @@
       ],
       "matchedAuthors": [
         "Jingling Xue",
-        "Yulei Sui"
+        "Rui Yan",
+        "Yingzi Ma",
+        "Yulei Sui",
+        "Zhe Chen"
       ],
       "matchedSubprojects": [
         "addresssanitizer"
@@ -17464,7 +17823,7 @@
       "matchedAuthors": [
         "Ashwin Prasad",
         "Kaushik Sunder Rajan",
-        "R. Govindarajan",
+        "R Govindarajan",
         "Sampath Rajendra",
         "Uday Bondhugula"
       ],
@@ -17585,7 +17944,10 @@
         "Supporting Semiring"
       ],
       "matchedAuthors": [
-        "Gökçen Kestor"
+        "Gökçen Kestor",
+        "Luanzheng Guo",
+        "Rizwan A. Ashraf",
+        "Ryan Friese"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -17724,6 +18086,8 @@
         "Compilation"
       ],
       "matchedAuthors": [
+        "Ben Vanik",
+        "Hsin-I Cindy Liu",
         "M. Ravishankar",
         "Marius Brehler",
         "Nicolas Vasilache",
@@ -17796,7 +18160,10 @@
       "matchedAuthors": [
         "Gang Tan",
         "Jack Sampson",
+        "Kaiming Huang",
         "Mathias Payer",
+        "Trent Jaeger",
+        "Yongzhe Huang",
         "Zhiyun Qian"
       ],
       "matchedSubprojects": [
@@ -18455,6 +18822,7 @@
         "Deming Chen",
         "Hanchen Ye",
         "Hyunmin Jeong",
+        "Jack Huang",
         "Jianyi Cheng",
         "Stephen Neuendorffer"
       ],
@@ -18693,7 +19061,11 @@
         "Learning Compilers"
       ],
       "matchedAuthors": [
-        "Juneyoung Lee"
+        "Ho Young Jhoo",
+        "Inwhan Chun",
+        "Juneyoung Lee",
+        "Nam SeungHyeon",
+        "Seongwon Bang"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -18750,6 +19122,9 @@
         "Memory Errors"
       ],
       "matchedAuthors": [
+        "Hubert Rosier",
+        "Roland H. C. Yap",
+        "Yuancheng Jiang",
         "Zhenkai Liang"
       ],
       "matchedSubprojects": [
@@ -18812,7 +19187,10 @@
         "Shine Language Oriented"
       ],
       "matchedAuthors": [
-        "Michel Steuwer"
+        "Bastian Köpcke",
+        "Federico Pizzuti",
+        "Michel Steuwer",
+        "Thomas Kœhler"
       ],
       "matchedSubprojects": [
         "mlir",
@@ -19137,10 +19515,15 @@
         "Offers Empowering LLVM"
       ],
       "matchedAuthors": [
+        "Angelo Matni",
         "David I. August",
         "Enrico Armenio Deiana",
+        "Ishita Chaturvedi",
+        "Lukas Gross",
         "Simone Campanoni",
+        "Sotiris Apostolakis",
         "Souradip Ghosh",
+        "Yian Su",
         "Ziyang Xu",
         "Zujun Tan"
       ],
@@ -19203,6 +19586,7 @@
       ],
       "matchedAuthors": [
         "Daniele G. Spampinato",
+        "Henrik Barthels",
         "Lorenzo Chelini",
         "Marcin Copik",
         "Paolo Bientinesi",
@@ -19714,8 +20098,14 @@
         "Aware Scale Optimization"
       ],
       "matchedAuthors": [
+        "Changsu Kim",
+        "Dongyoon Lee",
+        "Eunkyung Kim",
         "Hanjun Kim",
-        "Seonyeong Heo"
+        "Seonyeong Heo",
+        "Seonyoung Cheon",
+        "Shinnung Jeong",
+        "Yongwoo Lee"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -19770,6 +20160,7 @@
       ],
       "matchedAuthors": [
         "Artur Podobas",
+        "Måns I. Andersson",
         "Stefano Markidis",
         "Yifei He"
       ],
@@ -20073,6 +20464,10 @@
         "Hardware"
       ],
       "matchedAuthors": [
+        "Fedor Shmarov",
+        "Franz Brauße",
+        "Giles Reger",
+        "Konstantin Korovin",
         "Lucas C. Cordeiro",
         "Mikhail R. Gadelha",
         "Rafael Menezes"
@@ -20471,7 +20866,11 @@
         "Revealed Various"
       ],
       "matchedAuthors": [
-        "Charitha Saumya"
+        "Akul Abhilash Pillai",
+        "Aravind Machiry",
+        "Charitha Saumya",
+        "Milind Kulkarni",
+        "Vidush Singhal"
       ],
       "matchedSubprojects": []
     },
@@ -20581,7 +20980,9 @@
       ],
       "matchedAuthors": [
         "Adrian Sampson",
-        "Stephen Neuendorffer"
+        "Stephen Neuendorffer",
+        "Yuwei Ye",
+        "Zhijing Li"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -20641,8 +21042,10 @@
       ],
       "matchedAuthors": [
         "Aart J. C. Bik",
+        "Bixia Zheng",
         "Fredrik Kjølstad",
         "Nicolas Vasilache",
+        "Penporn Koanantakool",
         "Tatiana Shpeisman"
       ],
       "matchedSubprojects": [
@@ -21404,7 +21807,9 @@
       "matchedAuthors": [
         "Jingling Xue",
         "Jun Wu",
-        "Qi Zhang"
+        "Qi Zhang",
+        "Yan Jun-qi",
+        "Zhe Chen"
       ],
       "matchedSubprojects": [
         "addresssanitizer"
@@ -21514,6 +21919,8 @@
       ],
       "matchedAuthors": [
         "David Gen�s",
+        "Franz, Michael",
+        "Maitland, Michael",
         "Michael Franz",
         "Min-Yih Hsu"
       ],
@@ -22385,6 +22792,7 @@
         "Deming Chen",
         "Hanchen Ye",
         "Hyunmin Jeong",
+        "Jack Huang",
         "Jianyi Cheng",
         "Stephen Neuendorffer"
       ],
@@ -22460,6 +22868,7 @@
         "Deming Chen",
         "Hanchen Ye",
         "Hyunmin Jeong",
+        "Jack Huang",
         "Jianyi Cheng",
         "Stephen Neuendorffer"
       ],
@@ -22668,6 +23077,7 @@
       ],
       "matchedAuthors": [
         "Albert Cohen",
+        "Andi Drebes",
         "Henk Corporaal",
         "Lorenzo Chelini",
         "Nicolas Vasilache",
@@ -23301,6 +23711,7 @@
       "matchedAuthors": [
         "Ramakrishna Upadrasta",
         "Saurabh Joshi",
+        "Shraiysh Vaishay",
         "Utpal Bora"
       ],
       "matchedSubprojects": [
@@ -23522,6 +23933,9 @@
       ],
       "matchedAuthors": [
         "Girish Mururu",
+        "Matthew Pruett",
+        "Michael D. Brown",
+        "Robert Bigelow",
         "Santosh Pande"
       ],
       "matchedSubprojects": [
@@ -23721,6 +24135,7 @@
       ],
       "matchedAuthors": [
         "Albert Cohen",
+        "Andy Davis",
         "Chris Lattner",
         "Jacques A. Pienaar",
         "Mehdi Amini",
@@ -25078,6 +25493,7 @@
         "Loop Optimization Transformations"
       ],
       "matchedAuthors": [
+        "Jaehoon Koo",
         "Mary Hall",
         "Michael Kruse",
         "Paul Hovland",
@@ -26010,7 +26426,11 @@
         "DSL"
       ],
       "matchedAuthors": [
-        "Gökçen Kestor"
+        "Bin Ren",
+        "Gökçen Kestor",
+        "Jiajia Li",
+        "Luanzheng Guo",
+        "Ruiqin Tian"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -26633,6 +27053,8 @@
         "Parallelism"
       ],
       "matchedAuthors": [
+        "Adrian S. Lemoine",
+        "Bibek Wagle",
         "Hartmut Kaiser",
         "Patrick Diehl",
         "Shahrzad Shirzad",
@@ -26739,6 +27161,8 @@
         "Hardware"
       ],
       "matchedAuthors": [
+        "Miguel A. Arroyo",
+        "Mohamed Tarek Ibn Ziad",
         "Simha Sethumadhavan"
       ],
       "matchedSubprojects": [
@@ -26918,6 +27342,7 @@
         "Statically Instrumenting Cots"
       ],
       "matchedAuthors": [
+        "Dongyan Xu",
         "Mathias Payer",
         "Nathan Burow",
         "S. Dinesh"
@@ -27291,6 +27716,7 @@
       "matchedAuthors": [
         "Henk Corporaal",
         "Kanishkan Vadivel",
+        "Konrad Komisarczyk",
         "Lorenzo Chelini",
         "Roel Jordans"
       ],
@@ -27549,6 +27975,7 @@
       ],
       "matchedAuthors": [
         "Albert Cohen",
+        "Andy Davis",
         "Chris Lattner",
         "Jacques A. Pienaar",
         "Mehdi Amini",
@@ -28257,12 +28684,16 @@
       ],
       "matchedAuthors": [
         "Alexandre E. Eichenberger",
+        "Anh Leu",
         "Gheorghe-Teodor Bercea",
         "Gong Su",
+        "Haruki Imai",
         "Jin Tian",
         "Kevin O'Brien",
+        "Kiyokuni Kawachiya",
         "Tong Chen",
-        "Tung D. Le"
+        "Tung D. Le",
+        "Yasushi Negishi"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -28473,9 +28904,12 @@
         "MLIR Codelet"
       ],
       "matchedAuthors": [
+        "Dawson Fox",
+        "Diego A. Roa Perdomo",
         "Guang R. Gao",
         "Jose M Monsalve Diaz",
-        "Ryan Kabrick"
+        "Ryan Kabrick",
+        "Siddhisanket Raskar"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -28628,12 +29062,17 @@
         "Reoptimization"
       ],
       "matchedAuthors": [
+        "Adrian Dabrowski",
         "Anil Altinay",
         "Cristiano Giuffrida",
         "David Gen�s",
+        "Dixin Zhou",
         "Herbert Bos",
         "Joseph Nash",
         "Michael Franz",
+        "Prabhu Rajasekaran",
+        "Stijn Volckaert",
+        "Taddeus Kroes",
         "Yeoul Na"
       ],
       "matchedSubprojects": [
@@ -30262,6 +30701,7 @@
         "Binary Optimizer"
       ],
       "matchedAuthors": [
+        "Bill Nell",
         "Guilherme Ottoni",
         "Maksim Panchenko",
         "Rafael Auler"
@@ -30460,6 +30900,7 @@
         "Claudia Eckert",
         "Gang Tan",
         "Jens Großklags",
+        "Matthias Neumayer",
         "Paul Muntean",
         "Zhiqiang Lin"
       ],
@@ -30848,6 +31289,7 @@
         "Hardware"
       ],
       "matchedAuthors": [
+        "Kanad Sinha",
         "Simha Sethumadhavan"
       ],
       "matchedSubprojects": [
@@ -31369,7 +31811,12 @@
         "Memory"
       ],
       "matchedAuthors": [
-        "Emery D. Berger"
+        "Emery D. Berger",
+        "Harpreet Singh Chawla",
+        "Neel Shah",
+        "Sundaresan Rajasekaran",
+        "Timothy Wood",
+        "Zhen Ni"
       ],
       "matchedSubprojects": [
         "addresssanitizer"
@@ -31428,6 +31875,7 @@
         "Binary Optimizer"
       ],
       "matchedAuthors": [
+        "Bill Nell",
         "Guilherme Ottoni",
         "Maksim Panchenko",
         "Rafael Auler"
@@ -32045,8 +32493,11 @@
         "Pure MPI"
       ],
       "matchedAuthors": [
+        "Daniel J. Bodony",
+        "Jonathan B. Freund",
         "Laxmikant V. Kalé",
         "Matthias Diener",
+        "Michael Campbell",
         "Sam White"
       ],
       "matchedSubprojects": [
@@ -32886,8 +33337,12 @@
         "Ahmad‐Reza Sadeghi",
         "Andrei Homescu",
         "Christopher Liebchen",
+        "Georg Koppen",
+        "Mauro Conti",
+        "Mike Perry",
         "Per Larsen",
-        "Stephen Crane"
+        "Stephen Crane",
+        "Tommaso Frassetto"
       ],
       "matchedSubprojects": [
         "addresssanitizer"
@@ -34193,7 +34648,10 @@
         "Rayleigh Fading Links"
       ],
       "matchedAuthors": [
-        "S. Lee"
+        "Dimitris A. Pados",
+        "John D. Matyjas",
+        "S. Lee",
+        "Weifeng Su"
       ],
       "matchedSubprojects": [
         "lldb"
