@@ -229,7 +229,21 @@
         </div>
       </div>
 
-      <section class="work-section" aria-labelledby="work-talks-heading">
+      <section class="work-section hidden" id="work-universal-section" aria-labelledby="work-universal-heading">
+        <div class="work-section-header">
+          <h2 class="work-section-title" id="work-universal-heading">Top Results</h2>
+          <span class="work-section-count" id="work-universal-count"></span>
+        </div>
+        <div id="work-universal-grid" class="talks-grid" role="feed" aria-label="Top search results" aria-busy="true">
+          <div class="loading-state">
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Loading results...</p>
+          </div>
+        </div>
+        <button class="work-more-btn hidden" id="work-universal-more" type="button">Show more results</button>
+      </section>
+
+      <section class="work-section" id="work-talks-section" aria-labelledby="work-talks-heading">
         <div class="work-section-header">
           <h2 class="work-section-title" id="work-talks-heading">Talks</h2>
           <span class="work-section-count" id="work-talks-count"></span>
@@ -243,7 +257,7 @@
         <button class="work-more-btn hidden" id="work-talks-more" type="button">Show more talks</button>
       </section>
 
-      <section class="work-section" aria-labelledby="work-papers-heading">
+      <section class="work-section" id="work-papers-section" aria-labelledby="work-papers-heading">
         <div class="work-section-header">
           <h2 class="work-section-title" id="work-papers-heading">Papers</h2>
           <span class="work-section-count" id="work-papers-count"></span>
@@ -257,7 +271,7 @@
         <button class="work-more-btn hidden" id="work-papers-more" type="button">Show more papers</button>
       </section>
 
-      <section class="work-section" aria-labelledby="work-blogs-heading">
+      <section class="work-section" id="work-blogs-section" aria-labelledby="work-blogs-heading">
         <div class="work-section-header">
           <h2 class="work-section-title" id="work-blogs-heading">Blogs</h2>
           <span class="work-section-count" id="work-blogs-count"></span>
@@ -275,8 +289,8 @@
 
   <script src="js/events-data.js?v=20260223-01"></script>
   <script src="js/papers-data.js?v=20260223-01"></script>
-  <script src="js/shared/library-utils.js?v=20260223-03"></script>
+  <script src="js/shared/library-utils.js?v=20260223-04"></script>
   <script src="js/shared/global-search.js?v=20260223-02"></script>
-  <script src="js/work.js?v=20260223-02"></script>
+  <script src="js/work.js?v=20260223-03"></script>
 </body>
 </html>

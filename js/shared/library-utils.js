@@ -1419,6 +1419,20 @@
     return scoreTalkWithModel(indexedTalk, model, false);
   }
 
+  function scoreTalkRecordByModel(indexedTalk, model, options = {}) {
+    if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
+    const relaxed = options && options.relaxed === true;
+    return scoreTalkWithModel(indexedTalk, model, relaxed);
+  }
+
+  function scoreTalkRecordByQuery(indexedTalk, query, options = {}) {
+    const model = buildSearchQueryModel(query);
+    if (!model.clauses.length) return 0;
+    let score = scoreTalkWithModel(indexedTalk, model, false);
+    if (score > 0 || !(options && options.relaxed === true)) return score;
+    return scoreTalkWithModel(indexedTalk, model, true);
+  }
+
   function compareRankedEntries(a, b) {
     const scoreDiff = (b.score || 0) - (a.score || 0);
     if (scoreDiff !== 0) return scoreDiff;
@@ -1596,6 +1610,20 @@
 
     scored.sort(compareRankedPaperEntries);
     return scored.map((entry) => entry.paper);
+  }
+
+  function scorePaperRecordByModel(paper, model, options = {}) {
+    if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
+    const relaxed = options && options.relaxed === true;
+    return scorePaperWithModel(paper, model, relaxed);
+  }
+
+  function scorePaperRecordByQuery(paper, query, options = {}) {
+    const model = buildSearchQueryModel(query);
+    if (!model.clauses.length) return 0;
+    let score = scorePaperWithModel(paper, model, false);
+    if (score > 0 || !(options && options.relaxed === true)) return score;
+    return scorePaperWithModel(paper, model, true);
   }
 
   function compareAutocompleteEntries(a, b) {
@@ -2086,6 +2114,7 @@
   const api = {
     arePersonMiddleVariants,
     buildPeopleIndex,
+    buildSearchQueryModel,
     buildSearchSnippet,
     CATEGORY_ORDER,
     compareRankedEntries,
@@ -2110,7 +2139,11 @@
     rankAutocompleteEntries,
     rankPaperRecordsByQuery,
     rankTalksByQuery,
+    scorePaperRecordByModel,
+    scorePaperRecordByQuery,
     scoreMatch,
+    scoreTalkRecordByModel,
+    scoreTalkRecordByQuery,
     sortCategoryEntries,
     tokenizeQuery,
   };

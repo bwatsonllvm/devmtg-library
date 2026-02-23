@@ -72,6 +72,8 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 - `papers/` and `blogs/`: sort (`relevance`, `year`, `citations`) + `grid/list` view toggle.
 - `work.html` (global/entity combined results):
   - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
+  - in global search mode (`mode=search`), results are interleaved across talks/papers/blogs by cross-type relevance (not fixed by content type)
+  - exact/prefix title intent gets additional boost so precise queries surface the best matching item first, regardless of type
   - `expanded/compact` view toggle across talks, papers, and blogs sections
   - URL-state support for `sort` and `view`, with mode-aware defaults
 - `people/`:
