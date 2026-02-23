@@ -32,15 +32,6 @@
 
   function normalizeLibraryPath(url) {
     let path = String((url && url.pathname) || '').replace(/^\/+/, '');
-    if (path === 'library' || path === 'devmtg' || path === '_site') {
-      return '';
-    }
-
-    const devmtgIndex = path.indexOf('devmtg/');
-    if (devmtgIndex !== -1) {
-      return path.slice(devmtgIndex + 'devmtg/'.length);
-    }
-
     const libraryIndex = path.indexOf('library/');
     if (libraryIndex !== -1) {
       path = path.slice(libraryIndex + 'library/'.length);
@@ -49,6 +40,17 @@
     if (path.startsWith('_site/')) {
       path = path.slice('_site/'.length);
     }
+
+    if (!path || path === 'library' || path === '_site' || path === 'devmtg') {
+      return '';
+    }
+    if (path === 'devmtg/events' || path.startsWith('devmtg/events/')) {
+      return path;
+    }
+    if (path.startsWith('devmtg/')) {
+      return path.slice('devmtg/'.length);
+    }
+
     return path;
   }
 

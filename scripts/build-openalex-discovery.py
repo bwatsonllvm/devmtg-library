@@ -3,7 +3,7 @@
 
 This script:
   1) Builds a seed author set from:
-     - devmtg talk speakers
+     - devmtg/events talk speakers
      - existing papers authors
      - optional extra author lists
   2) Queries OpenAlex for LLVM-related keyword searches
@@ -846,7 +846,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--events-dir", default=str(repo_root / "devmtg/events"))
     parser.add_argument("--papers-dir", default=str(repo_root / "papers"))
-    parser.add_argument("--app-js", default=str(repo_root / "devmtg/js/app.js"))
+    parser.add_argument("--app-js", default=str(repo_root / "js/app.js"))
     parser.add_argument("--index-json", default=str(repo_root / "papers/index.json"))
     parser.add_argument("--output-bundle", default="openalex-discovered.json")
     parser.add_argument("--cache-dir", default=str(repo_root / "papers/.cache/openalex"))

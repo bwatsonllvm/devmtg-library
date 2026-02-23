@@ -1,11 +1,12 @@
 /**
- * events-data.js — Load canonical meeting/talk data from events/*.json files.
+ * events-data.js — Load canonical meeting/talk data from devmtg/events/*.json files.
  */
 
 (function () {
   let inMemoryCache = null;
 
-  const MANIFEST_JSON_PATH = 'events/index.json';
+  const MANIFEST_JSON_PATH = 'devmtg/events/index.json';
+  const EVENTS_PREFIX = 'devmtg/events/';
   const CACHE_PREFIX = 'llvm-hub-event-data:v2:';
 
   function normalizeManifestJson(payload) {
@@ -29,7 +30,12 @@
     const eventRefs = files
       .map((file) => String(file || '').trim())
       .filter(Boolean)
-      .map((file) => file.startsWith('events/') ? file : `events/${file}`);
+      .map((file) => {
+        const normalized = file.replace(/^\/+/, '');
+        if (normalized.startsWith(EVENTS_PREFIX)) return normalized;
+        if (normalized.startsWith('events/')) return `${EVENTS_PREFIX}${normalized.slice('events/'.length)}`;
+        return `${EVENTS_PREFIX}${normalized}`;
+      });
 
     for (const ref of eventRefs) {
       if (!ref.toLowerCase().endsWith('.json')) {

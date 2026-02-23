@@ -302,7 +302,7 @@ function renderMeetingsGrid(meetings, talkCounts, slideCounts) {
       <div class="empty-state">
         <div class="empty-state-icon" aria-hidden="true">📅</div>
         <h2>No meetings found</h2>
-        <p>Ensure <code>events/index.json</code> and <code>events/*.json</code> are present.</p>
+        <p>Ensure <code>devmtg/events/index.json</code> and <code>devmtg/events/*.json</code> are present.</p>
       </div>`;
     return;
   }

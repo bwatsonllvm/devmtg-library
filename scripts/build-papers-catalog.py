@@ -4,7 +4,7 @@
 Inputs:
   - /tmp/llvm-www-pubs/pubs.js (default)
   - /tmp/llvm-www-pubs/*.html (for abstract extraction when present)
-  - devmtg/js/app.js (for canonical talk tag vocabulary)
+  - js/app.js (for canonical talk tag vocabulary)
 
 Outputs:
   - papers/index.json
@@ -811,7 +811,7 @@ def main() -> int:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--src-repo", default="/tmp/llvm-www-pubs", help="Path to llvm-www-pubs checkout")
-    parser.add_argument("--app-js", default=str(repo_root / "devmtg/js/app.js"), help="Path to devmtg app.js")
+    parser.add_argument("--app-js", default=str(repo_root / "js/app.js"), help="Path to library app.js")
     parser.add_argument("--old-dataset", default=str(repo_root / "papers/llvm-org-pubs.json"), help="Existing dataset for abstract/author fallback")
     parser.add_argument("--out-dir", default=str(repo_root / "papers"), help="Output directory for generated papers data")
     parser.add_argument(

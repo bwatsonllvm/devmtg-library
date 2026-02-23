@@ -32,10 +32,11 @@ jobs:
       - name: Prepare site bundle
         run: |
           rm -rf _site
-          mkdir -p _site
-          cp -R devmtg/. _site/
-          mkdir -p _site/papers
-          cp -R papers/. _site/papers/
+          mkdir -p _site/papers _site/devmtg
+          cp index.html work.html _site/
+          cp -R talks blogs people about updates css js images _site/
+          rsync -a --exclude '.cache/' papers/ _site/papers/
+          cp -R devmtg/events _site/devmtg/
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

@@ -4,7 +4,7 @@
 This script performs a one-time cleanup pass over:
   - devmtg/events/*.json
   - papers/*.json
-  - devmtg/updates/index.json
+  - updates/index.json
 
 It removes placeholder URL strings, repairs common malformed values, and
 enforces safe http/https URL schemes for external links.
@@ -273,7 +273,7 @@ def main() -> int:
     repo_root = Path(args.repo_root).resolve()
     events_dir = repo_root / "devmtg" / "events"
     papers_dir = repo_root / "papers"
-    updates_path = repo_root / "devmtg" / "updates" / "index.json"
+    updates_path = repo_root / "updates" / "index.json"
 
     events_changed_files, events_changed_fields = sanitize_events(events_dir)
     papers_changed_files, papers_changed_fields = sanitize_papers(papers_dir)

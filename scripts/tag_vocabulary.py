@@ -95,7 +95,10 @@ def load_canonical_tags(app_js_path: Path, events_dir: Path | None = None) -> li
 
     candidate_events_dir = events_dir
     if candidate_events_dir is None:
-        candidate_events_dir = (app_js_path.parent.parent / "events").resolve()
+        repo_root = app_js_path.parent.parent
+        devmtg_events = (repo_root / "devmtg" / "events").resolve()
+        legacy_events = (repo_root / "events").resolve()
+        candidate_events_dir = devmtg_events if devmtg_events.exists() else legacy_events
 
     inferred = _parse_tags_from_events(candidate_events_dir)
     if inferred:

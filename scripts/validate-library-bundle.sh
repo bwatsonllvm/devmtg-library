@@ -2,12 +2,18 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-LIBRARY="$ROOT/devmtg"
-PAPERS="$ROOT/papers"
+SITE_ROOT="$ROOT"
+EVENTS_ROOT="$ROOT/devmtg/events"
+UPDATES_ROOT="$ROOT/updates"
+PAPERS_ROOT="$ROOT/papers"
 
 fail() { echo "ERROR: $*" >&2; exit 1; }
 
-[ -d "$LIBRARY" ] || fail "Missing devmtg directory"
+[ -d "$SITE_ROOT" ] || fail "Missing repository root: $SITE_ROOT"
+[ -d "$EVENTS_ROOT" ] || fail "Missing events directory: devmtg/events"
+[ -d "$UPDATES_ROOT" ] || fail "Missing updates directory: updates"
+[ -d "$PAPERS_ROOT" ] || fail "Missing papers directory: papers"
+
 for f in \
   index.html \
   work.html \
@@ -20,6 +26,7 @@ for f in \
   people/index.html \
   about/index.html \
   updates/index.html \
+  updates/index.json \
   css/style.css \
   js/app.js \
   js/events-data.js \
@@ -31,47 +38,46 @@ for f in \
   js/updates.js \
   js/shared/library-utils.js \
   images/llvm-logo.png \
-  events/index.json \
-  updates/index.json; do
-  [ -f "$LIBRARY/$f" ] || fail "Missing required file: devmtg/$f"
+  images/llvm-favicon.png \
+  devmtg/events/index.json; do
+  [ -f "$SITE_ROOT/$f" ] || fail "Missing required file: $f"
 done
-[ -d "$PAPERS" ] || fail "Missing papers directory"
-[ -f "$PAPERS/index.json" ] || fail "Missing required file: papers/index.json"
+[ -f "$PAPERS_ROOT/index.json" ] || fail "Missing required file: papers/index.json"
 
-# Ensure events are JSON-native
-if find "$LIBRARY/events" -maxdepth 1 -name '*.md' | grep -q .; then
+# Ensure event bundles are JSON-native.
+if find "$EVENTS_ROOT" -maxdepth 1 -name '*.md' | grep -q .; then
   fail "Found markdown event files in devmtg/events; expected JSON-only"
 fi
 
-# Validate index manifest points to existing json files
+# Validate event manifest points to existing JSON files.
 ruby -rjson -e '
-  hub = ARGV.fetch(0)
-  idx_path = File.join(hub, "events", "index.json")
+  events_root = ARGV.fetch(0)
+  idx_path = File.join(events_root, "index.json")
   idx = JSON.parse(File.read(idx_path))
   files = Array(idx["eventFiles"])
-  abort("index.json has empty eventFiles") if files.empty?
+  abort("devmtg/events/index.json has empty eventFiles") if files.empty?
   missing = []
   files.each do |f|
-    missing << f unless File.exist?(File.join(hub, "events", f))
-    abort("index.json contains non-json entry: #{f}") unless f.end_with?(".json")
+    missing << f unless File.exist?(File.join(events_root, f))
+    abort("devmtg/events/index.json contains non-json entry: #{f}") unless f.end_with?(".json")
   end
   unless missing.empty?
     abort("Missing event files: #{missing.join(", ")}")
   end
-' "$LIBRARY"
+' "$EVENTS_ROOT"
 
-# Validate every events/*.json parses
+# Validate every devmtg/events/*.json parses.
 ruby -rjson -e '
-  hub = ARGV.fetch(0)
-  Dir[File.join(hub, "events", "*.json")].each do |f|
+  events_root = ARGV.fetch(0)
+  Dir[File.join(events_root, "*.json")].each do |f|
     JSON.parse(File.read(f))
   end
-' "$LIBRARY"
+' "$EVENTS_ROOT"
 
-# Validate updates log JSON
+# Validate updates log JSON.
 ruby -rjson -e '
-  hub = ARGV.fetch(0)
-  path = File.join(hub, "updates", "index.json")
+  updates_root = ARGV.fetch(0)
+  path = File.join(updates_root, "index.json")
   payload = JSON.parse(File.read(path))
   abort("updates/index.json must contain an object") unless payload.is_a?(Hash)
   abort("updates/index.json missing dataVersion") if String(payload["dataVersion"]).strip.empty?
@@ -84,9 +90,9 @@ ruby -rjson -e '
     abort("updates/index.json entry #{idx} missing title") if String(entry["title"]).strip.empty?
     abort("updates/index.json entry #{idx} missing url") if String(entry["url"]).strip.empty?
   end
-' "$LIBRARY"
+' "$UPDATES_ROOT"
 
-# Validate papers manifest points to existing json files
+# Validate papers manifest points to existing JSON files.
 ruby -rjson -e '
   papers_root = ARGV.fetch(0)
   idx_path = File.join(papers_root, "index.json")
@@ -101,20 +107,21 @@ ruby -rjson -e '
   unless missing.empty?
     abort("Missing paper files: #{missing.join(", ")}")
   end
-' "$PAPERS"
+' "$PAPERS_ROOT"
 
-# Validate every papers/*.json parses
+# Validate every papers/*.json parses.
 ruby -rjson -e '
   papers_root = ARGV.fetch(0)
   Dir[File.join(papers_root, "*.json")].each do |f|
     JSON.parse(File.read(f))
   end
-' "$PAPERS"
+' "$PAPERS_ROOT"
 
-# Validate URL-bearing fields only use safe URL schemes
+# Validate URL-bearing fields only use safe URL schemes.
 ruby -rjson -ruri -e '
-  hub = ARGV.fetch(0)
-  papers_root = ARGV.fetch(1)
+  events_root = ARGV.fetch(0)
+  updates_root = ARGV.fetch(1)
+  papers_root = ARGV.fetch(2)
   PLACEHOLDER_URL_VALUES = %w[none null nil nan n/a na undefined].freeze
 
   def valid_http_url?(value)
@@ -137,7 +144,7 @@ ruby -rjson -ruri -e '
 
   bad = []
 
-  Dir[File.join(hub, "events", "*.json")].each do |event_path|
+  Dir[File.join(events_root, "*.json")].each do |event_path|
     payload = JSON.parse(File.read(event_path))
     talks = Array(payload["talks"])
     talks.each_with_index do |talk, idx|
@@ -176,7 +183,7 @@ ruby -rjson -ruri -e '
     end
   end
 
-  updates_path = File.join(hub, "updates", "index.json")
+  updates_path = File.join(updates_root, "index.json")
   updates_payload = JSON.parse(File.read(updates_path))
   entries = Array(updates_payload["entries"])
   entries.each_with_index do |entry, idx|
@@ -194,11 +201,11 @@ ruby -rjson -ruri -e '
     warn("Unsafe URL fields:\n" + bad.join("\n"))
     exit 1
   end
-' "$LIBRARY" "$PAPERS"
+' "$EVENTS_ROOT" "$UPDATES_ROOT" "$PAPERS_ROOT"
 
-# Validate local asset references in html files
+# Validate local asset references in HTML files.
 ruby -e '
-  hub = ARGV.fetch(0)
+  site_root = ARGV.fetch(0)
   html_files = %w[
     index.html
     work.html
@@ -211,7 +218,8 @@ ruby -e '
     people/index.html
     about/index.html
     updates/index.html
-  ].map { |f| File.join(hub, f) }
+  ].map { |f| File.join(site_root, f) }
+
   bad = []
   html_files.each do |html|
     text = File.read(html)
@@ -238,6 +246,6 @@ ruby -e '
     warn("Broken local references:\n" + bad.join("\n"))
     exit 1
   end
-' "$LIBRARY"
+' "$SITE_ROOT"
 
 echo "OK: library bundle validation passed"

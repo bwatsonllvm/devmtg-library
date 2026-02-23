@@ -112,7 +112,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--papers-dir", default=str(repo_root / "papers"))
     parser.add_argument("--manifest", default=str(repo_root / "papers/index.json"))
-    parser.add_argument("--app-js", default=str(repo_root / "devmtg/js/app.js"))
+    parser.add_argument("--app-js", default=str(repo_root / "js/app.js"))
     parser.add_argument("--all-json", action="store_true", help="Process every papers/*.json file (except index.json)")
     parser.add_argument(
         "--keep-existing-keywords",

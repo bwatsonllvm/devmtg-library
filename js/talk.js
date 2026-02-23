@@ -994,7 +994,7 @@ async function init() {
         <div class="empty-state" role="alert">
           <div class="empty-state-icon" aria-hidden="true">⚠️</div>
           <h2>Could not load data</h2>
-          <p>Ensure <code>events/index.json</code> and <code>events/*.json</code> are available and that <code>js/events-data.js</code> loads first.</p>
+          <p>Ensure <code>devmtg/events/index.json</code> and <code>devmtg/events/*.json</code> are available and that <code>js/events-data.js</code> loads first.</p>
         </div>
       </div>`;
     initShareMenu();

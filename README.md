@@ -43,7 +43,7 @@ Discovery output is treated as an intermediate input; the final single-database 
 
 People records are not a separate hand-curated database file. They are built from talk speakers and paper authors, with name normalization and merge rules to reduce duplicate variants.
 
-### 4) Update log (`devmtg/updates/index.json`)
+### 4) Update log (`updates/index.json`)
 
 The update log is generated from content deltas and records newly added:
 - talks
@@ -76,10 +76,11 @@ Automation stages:
 
 ## Repository Layout
 
-- `devmtg/`: static site bundle (HTML/CSS/JS/data)
+- `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes
+- `css/`, `js/`, `images/`: shared site assets
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version
-- `devmtg/updates/index.json`: update-log dataset
+- `updates/index.json`: update-log dataset
 - `papers/*.json`: source and derived paper bundles (site serves the manifest-listed file)
 - `papers/index.json`: paper manifest + data version
 - `scripts/`: ingestion, normalization, and validation tooling
