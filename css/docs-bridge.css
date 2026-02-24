@@ -1042,6 +1042,29 @@ body {
   margin: 0 auto;
 }
 
+/* Clang docs: keep non-heading content weight regular for a consistent reading rhythm. */
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content * {
+  font-weight: var(--font-weight-normal, 400) !important;
+}
+
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h1,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h2,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h3,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h4,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h5,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h6 {
+  font-weight: var(--font-weight-semi, 600) !important;
+}
+
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h1 *,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h2 *,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h3 *,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h4 *,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h5 *,
+html[data-docs-corpus="clang"] .library-docs-bridge .docs-hugo-content h6 * {
+  font-weight: inherit !important;
+}
+
 .library-docs-bridge .docs-hugo-content > * {
   max-width: 100%;
 }

@@ -256,8 +256,8 @@ const DOCUMENTATION_OPTIONS = {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-09` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-25` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-10` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-26` });
   }
 
   function removeLegacySphinxChrome() {
@@ -388,21 +388,36 @@ const DOCUMENTATION_OPTIONS = {
         </nav>
         <div class="mobile-nav-menu" id="mobile-nav-menu">
           <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
-            Browse
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+            <span class="mobile-nav-toggle-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="7" x2="20" y2="7"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="17" x2="20" y2="17"></line>
+              </svg>
+            </span>
+            <span>Menu</span>
           </button>
           <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
-            <a href="${rootPath}talks/" class="mobile-nav-link">Talks</a>
-            <a href="${rootPath}talks/events.html" class="mobile-nav-link">Events</a>
-            <a href="${rootPath}papers/" class="mobile-nav-link">Papers</a>
-            <a href="${rootPath}blogs/" class="mobile-nav-link">Blogs</a>
-            <a href="${rootPath}people/" class="mobile-nav-link">People</a>
-            <a href="${rootPath}about/" class="mobile-nav-link">About</a>
-            <a href="${rootPath}docs/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'llvm-core' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'llvm-core' ? ' aria-current="page"' : ''}>Docs: LLVM Core</a>
-            <a href="${rootPath}docs/clang/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'clang' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'clang' ? ' aria-current="page"' : ''}>Docs: Clang</a>
-            <a href="${rootPath}updates/" class="mobile-nav-link">Updates</a>
+            <div class="mobile-nav-group" role="group" aria-label="Browse">
+              <p class="mobile-nav-group-label">Browse</p>
+              <a href="${rootPath}talks/" class="mobile-nav-link">Talks</a>
+              <a href="${rootPath}talks/events.html" class="mobile-nav-link">Events</a>
+              <a href="${rootPath}papers/" class="mobile-nav-link">Papers</a>
+              <a href="${rootPath}blogs/" class="mobile-nav-link">Blogs</a>
+              <a href="${rootPath}people/" class="mobile-nav-link">People</a>
+              <a href="${rootPath}about/" class="mobile-nav-link">About</a>
+              <a href="${rootPath}updates/" class="mobile-nav-link">Updates</a>
+            </div>
+            <div class="mobile-nav-group" role="group" aria-label="Documentation sources">
+              <p class="mobile-nav-group-label">Docs</p>
+              <a href="${rootPath}docs/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'llvm-core' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'llvm-core' ? ' aria-current="page"' : ''}>LLVM Core</a>
+              <a href="${rootPath}docs/clang/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'clang' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'clang' ? ' aria-current="page"' : ''}>Clang</a>
+            </div>
+            <div class="mobile-nav-group" role="group" aria-label="Page tools">
+              <p class="mobile-nav-group-label">Tools</p>
+              <button class="mobile-nav-link mobile-nav-link--button" type="button" data-mobile-header-action="share">Share page</button>
+              <button class="mobile-nav-link mobile-nav-link--button" type="button" data-mobile-header-action="display">Display settings</button>
+            </div>
           </div>
         </div>
         <div class="header-right">
@@ -452,7 +467,7 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function ensureHomeScript(rootPath) {
-    const src = `${rootPath}js/home.js?v=20260222-02`;
+    const src = `${rootPath}js/home.js?v=20260224-03`;
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) return;
     const script = document.createElement('script');

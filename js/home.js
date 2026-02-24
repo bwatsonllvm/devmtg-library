@@ -64,7 +64,37 @@ function initMobileNavMenu() {
   const panel = document.getElementById('mobile-nav-panel');
   if (!menu || !toggle || !panel) return;
 
+  const closeHeaderPopup = (menuId, panelId, toggleId) => {
+    const popupMenu = document.getElementById(menuId);
+    const popupPanel = document.getElementById(panelId);
+    const popupToggle = document.getElementById(toggleId);
+    if (popupMenu) popupMenu.classList.remove('open');
+    if (popupPanel) popupPanel.hidden = true;
+    if (popupToggle) popupToggle.setAttribute('aria-expanded', 'false');
+  };
+
+  const closeHeaderPopovers = () => {
+    closeHeaderPopup('share-menu', 'share-panel', 'share-btn');
+    closeHeaderPopup('customization-menu', 'customization-panel', 'customization-toggle');
+  };
+
+  const triggerHeaderAction = (action) => {
+    const actionToControlId = {
+      share: 'share-btn',
+      display: 'customization-toggle',
+    };
+    const targetId = actionToControlId[String(action || '').trim()];
+    if (!targetId) return;
+    const target = document.getElementById(targetId);
+    if (!target) return;
+    closeHeaderPopovers();
+    window.requestAnimationFrame(() => {
+      target.click();
+    });
+  };
+
   const openMenu = () => {
+    closeHeaderPopovers();
     menu.classList.add('open');
     panel.hidden = false;
     toggle.setAttribute('aria-expanded', 'true');
@@ -88,6 +118,15 @@ function initMobileNavMenu() {
   });
 
   panel.addEventListener('click', (event) => {
+    const actionTarget = event.target.closest('[data-mobile-header-action]');
+    if (actionTarget) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeMenu();
+      triggerHeaderAction(actionTarget.getAttribute('data-mobile-header-action'));
+      return;
+    }
+
     const target = event.target.closest('a,button');
     if (target) closeMenu();
   });
