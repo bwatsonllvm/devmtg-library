@@ -21,8 +21,16 @@
     'yearFrom',
     'yearTo',
   ];
+  const ADVANCED_FIELD_SET = new Set(ADVANCED_FIELDS);
   const ADVANCED_WHERE_VALUES = new Set(['anywhere', 'title', 'abstract']);
   const SEARCH_SCOPE_VALUES = new Set(['all', 'talks', 'papers', 'blogs', 'people']);
+  const ADVANCED_FIELDS_BY_CONTEXT = {
+    all: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'publication', 'yearFrom', 'yearTo'],
+    talks: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'yearFrom', 'yearTo'],
+    papers: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'publication', 'yearFrom', 'yearTo'],
+    blogs: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'yearFrom', 'yearTo'],
+    people: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'author', 'publication', 'yearFrom', 'yearTo'],
+  };
   const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
     'Search talks, papers, and people',
     'Search talks, papers, blogs, and people',
@@ -79,6 +87,28 @@
     return 'All';
   }
 
+  function resolveContextBlurb(scope) {
+    if (scope === 'talks') return 'Tailored for talks, speakers, and event content';
+    if (scope === 'papers') return 'Tailored for papers, authors, venues, and abstracts';
+    if (scope === 'blogs') return 'Tailored for blog posts, authors, and post content';
+    if (scope === 'people') return 'Tailored for people, expertise, affiliations, and publications';
+    return 'Cross-type search across talks, papers, blogs, and people';
+  }
+
+  function resolveAdvancedContextScope(defaultScope) {
+    const normalized = normalizeScope(defaultScope, 'all');
+    if (normalized === 'talks') return 'talks';
+    if (normalized === 'papers') return 'papers';
+    if (normalized === 'blogs') return 'blogs';
+    if (normalized === 'people') return 'people';
+    return 'all';
+  }
+
+  function getContextAdvancedFields(contextScope) {
+    const key = resolveAdvancedContextScope(contextScope);
+    return ADVANCED_FIELDS_BY_CONTEXT[key] ? [...ADVANCED_FIELDS_BY_CONTEXT[key]] : [...ADVANCED_FIELDS_BY_CONTEXT.all];
+  }
+
   function resolvePageDefaultScope() {
     const bodyScope = String(document.body && document.body.dataset ? document.body.dataset.contentScope : '')
       .trim()
@@ -133,6 +163,137 @@
     return { yearFrom: from, yearTo: to };
   }
 
+  function renderWhereOptions(contextScope) {
+    if (contextScope === 'talks') {
+      return `
+        <option value="anywhere">Anywhere in talks</option>
+        <option value="title">Talk title</option>
+        <option value="abstract">Talk summary</option>`;
+    }
+    if (contextScope === 'papers') {
+      return `
+        <option value="anywhere">Anywhere in papers</option>
+        <option value="title">Paper title</option>
+        <option value="abstract">Abstract/content</option>`;
+    }
+    if (contextScope === 'blogs') {
+      return `
+        <option value="anywhere">Anywhere in blogs</option>
+        <option value="title">Post title</option>
+        <option value="abstract">Post content</option>`;
+    }
+    return `
+      <option value="anywhere">Anywhere</option>
+      <option value="title">Title</option>
+      <option value="abstract">Abstract/content</option>`;
+  }
+
+  function renderAuthorFieldLabel(contextScope) {
+    if (contextScope === 'talks') return 'Speaker';
+    if (contextScope === 'people') return 'Person name';
+    return 'Author';
+  }
+
+  function renderAuthorPlaceholder(contextScope) {
+    if (contextScope === 'talks') return 'Chris Lattner';
+    if (contextScope === 'people') return 'PJ Hayes';
+    return 'PJ Hayes';
+  }
+
+  function renderPublicationLabel(contextScope) {
+    if (contextScope === 'people') return 'Publication/venue';
+    return 'Publication';
+  }
+
+  function renderPublicationPlaceholder(contextScope) {
+    if (contextScope === 'people') return 'arXiv, CGO, PLDI';
+    return 'Nature, arXiv, CGO';
+  }
+
+  function renderAdvancedField(field, contextScope) {
+    if (field === 'allWords') {
+      return `<label class="global-search-advanced-field">
+          <span>With all words</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="allWords" autocomplete="off" spellcheck="false" placeholder="llvm mlir">
+        </label>`;
+    }
+    if (field === 'exactPhrase') {
+      return `<label class="global-search-advanced-field">
+          <span>With exact phrase</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="exactPhrase" autocomplete="off" spellcheck="false" placeholder="MLIR for Beginners">
+        </label>`;
+    }
+    if (field === 'anyWords') {
+      return `<label class="global-search-advanced-field">
+          <span>With at least one word</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="anyWords" autocomplete="off" spellcheck="false" placeholder="gpu tensor">
+        </label>`;
+    }
+    if (field === 'withoutWords') {
+      return `<label class="global-search-advanced-field">
+          <span>Without words</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="withoutWords" autocomplete="off" spellcheck="false" placeholder="swift rust">
+        </label>`;
+    }
+    if (field === 'where') {
+      return `<label class="global-search-advanced-field">
+          <span>Where words occur</span>
+          <select class="global-search-advanced-input" data-advanced-field="where" aria-label="Where words should be matched">
+            ${renderWhereOptions(contextScope)}
+          </select>
+        </label>`;
+    }
+    if (field === 'author') {
+      return `<label class="global-search-advanced-field">
+          <span>${renderAuthorFieldLabel(contextScope)}</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="author" autocomplete="off" spellcheck="false" placeholder="${renderAuthorPlaceholder(contextScope)}">
+        </label>`;
+    }
+    if (field === 'publication') {
+      return `<label class="global-search-advanced-field">
+          <span>${renderPublicationLabel(contextScope)}</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="publication" autocomplete="off" spellcheck="false" placeholder="${renderPublicationPlaceholder(contextScope)}">
+        </label>`;
+    }
+    if (field === 'yearFrom') {
+      return `<div class="global-search-advanced-field global-search-advanced-field--year-range">
+          <span>Publication year</span>
+          <div class="global-search-advanced-date-range">
+            <input type="number" class="global-search-advanced-input" data-advanced-field="yearFrom" min="1900" max="2100" step="1" inputmode="numeric" placeholder="From">
+            <span class="global-search-advanced-date-sep">to</span>
+            <input type="number" class="global-search-advanced-input" data-advanced-field="yearTo" min="1900" max="2100" step="1" inputmode="numeric" placeholder="To">
+          </div>
+        </div>`;
+    }
+    return '';
+  }
+
+  function buildAdvancedFieldsMarkup(contextScope, defaultScope) {
+    const fields = getContextAdvancedFields(contextScope);
+    const seen = new Set();
+    const out = [];
+
+    if (defaultScope !== 'all') {
+      out.push(`<label class="global-search-advanced-field">
+          <span>Search scope</span>
+          <select class="global-search-advanced-input" data-advanced-field="scope" aria-label="Search scope">
+            <option value="${defaultScope}">${resolveScopeLabel(defaultScope)} only</option>
+            <option value="all">All content</option>
+          </select>
+        </label>`);
+    }
+
+    for (const field of fields) {
+      if (field === 'yearTo') continue;
+      if (seen.has(field)) continue;
+      seen.add(field);
+      const markup = renderAdvancedField(field, contextScope);
+      if (markup) out.push(markup);
+      if (field === 'yearFrom') seen.add('yearTo');
+    }
+    return out.join('');
+  }
+
   function ensureAdvancedHiddenInputs(form, defaultScope) {
     ensureHiddenInput(form, 'mode', 'search');
     const scopeInput = ensureHiddenInput(form, 'scope', defaultScope);
@@ -159,16 +320,49 @@
     if (!state.advanced) {
       state.advanced = {
         defaultScope: 'all',
+        contextScope: 'all',
+        supportedFields: new Set(ADVANCED_FIELDS),
         toggle: null,
         panel: null,
+        scopeButtons: [],
       };
     }
     return state.advanced;
   }
 
+  function isAdvancedFieldSupported(form, field) {
+    if (!ADVANCED_FIELD_SET.has(field)) return false;
+    const advanced = getAdvancedPanelState(form);
+    if (!advanced || !(advanced.supportedFields instanceof Set) || !advanced.supportedFields.size) return true;
+    return advanced.supportedFields.has(field);
+  }
+
+  function sanitizeAdvancedFieldsForContext(form) {
+    for (const field of ADVANCED_FIELDS) {
+      const hidden = form.querySelector(`input[type="hidden"][name="${field}"]`);
+      if (!hidden) continue;
+      if (isAdvancedFieldSupported(form, field)) continue;
+      hidden.value = field === 'where' ? 'anywhere' : '';
+    }
+  }
+
+  function updateScopeButtonsState(form) {
+    const advanced = getAdvancedPanelState(form);
+    const buttons = Array.isArray(advanced.scopeButtons) ? advanced.scopeButtons : [];
+    if (!buttons.length) return;
+    const effectiveScope = getEffectiveScopeValue(form);
+    for (const button of buttons) {
+      const buttonScope = normalizeScope(button.getAttribute('data-advanced-scope') || '', advanced.defaultScope);
+      const isActive = buttonScope === effectiveScope;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    }
+  }
+
   function hasAdvancedHiddenValues(form) {
     if (!form) return false;
     for (const field of ADVANCED_FIELDS) {
+      if (!isAdvancedFieldSupported(form, field)) continue;
       if (field === 'where') {
         const whereInput = form.querySelector('input[type="hidden"][name="where"]');
         if (whereInput && normalizeWhere(whereInput.value) !== 'anywhere') return true;
@@ -224,6 +418,7 @@
     const badge = toggle.querySelector('[data-advanced-count]');
     let count = 0;
     for (const field of ADVANCED_FIELDS) {
+      if (!isAdvancedFieldSupported(form, field)) continue;
       const input = form.querySelector(`input[type="hidden"][name="${field}"]`);
       if (!input) continue;
       const value = String(input.value || '').trim();
@@ -238,6 +433,7 @@
       badge.hidden = count <= 0;
       badge.textContent = count > 0 ? String(count) : '';
     }
+    updateScopeButtonsState(form);
   }
 
   function closeAdvancedPanel(form) {
@@ -266,6 +462,7 @@
     if (!panel) return;
 
     for (const field of ADVANCED_FIELDS) {
+      if (!isAdvancedFieldSupported(form, field)) continue;
       const hidden = form.querySelector(`input[type="hidden"][name="${field}"]`);
       const control = panel.querySelector(`[data-advanced-field="${field}"]`);
       if (!hidden || !control) continue;
@@ -299,6 +496,7 @@
     if (!panel) return;
 
     for (const field of ADVANCED_FIELDS) {
+      if (!isAdvancedFieldSupported(form, field)) continue;
       const hidden = form.querySelector(`input[type="hidden"][name="${field}"]`);
       const control = panel.querySelector(`[data-advanced-field="${field}"]`);
       if (!hidden || !control) continue;
@@ -350,83 +548,90 @@
       'all'
     );
     advanced.defaultScope = defaultScope;
+    advanced.contextScope = resolveAdvancedContextScope(defaultScope);
+    advanced.supportedFields = new Set(getContextAdvancedFields(advanced.contextScope));
+    advanced.scopeButtons = [];
 
     form.classList.add('has-advanced-search');
     ensureAdvancedHiddenInputs(form, defaultScope);
     applyAdvancedFieldsFromUrl(form, params);
+    sanitizeAdvancedFieldsForContext(form);
 
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'global-search-advanced-toggle';
     toggle.setAttribute('aria-label', 'Advanced search');
     toggle.setAttribute('aria-expanded', 'false');
-    toggle.innerHTML = '<span>Advanced</span><span class="global-search-advanced-count" data-advanced-count hidden></span>';
-
-    const scopeField = defaultScope !== 'all'
-      ? `<label class="global-search-advanced-field">
-            <span>Search within</span>
-            <select class="global-search-advanced-input" data-advanced-field="scope" aria-label="Search scope">
-              <option value="${defaultScope}">${resolveScopeLabel(defaultScope)} only</option>
-              <option value="all">All</option>
-            </select>
-          </label>`
-      : '';
+    const toggleLabel = form.classList.contains('search-box') ? 'Advanced' : 'Adv';
+    toggle.innerHTML = `<span class="global-search-advanced-toggle-label">${toggleLabel}</span><span class="global-search-advanced-count" data-advanced-count hidden></span>`;
 
     const panel = document.createElement('div');
     panel.className = 'global-search-advanced-panel hidden';
     panel.setAttribute('aria-label', 'Advanced search fields');
     panel.innerHTML = `
+      <div class="global-search-advanced-head">
+        <p class="global-search-advanced-title">Advanced Search</p>
+        <p class="global-search-advanced-context">${escapeHtml(resolveContextBlurb(advanced.contextScope))}</p>
+      </div>
       <div class="global-search-advanced-grid">
-        ${scopeField}
-        <label class="global-search-advanced-field">
-          <span>All words</span>
-          <input type="search" class="global-search-advanced-input" data-advanced-field="allWords" autocomplete="off" spellcheck="false" placeholder="llvm mlir">
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Exact phrase</span>
-          <input type="search" class="global-search-advanced-input" data-advanced-field="exactPhrase" autocomplete="off" spellcheck="false" placeholder="MLIR for Beginners">
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Any words</span>
-          <input type="search" class="global-search-advanced-input" data-advanced-field="anyWords" autocomplete="off" spellcheck="false" placeholder="gpu tensor">
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Without words</span>
-          <input type="search" class="global-search-advanced-input" data-advanced-field="withoutWords" autocomplete="off" spellcheck="false" placeholder="swift rust">
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Where words occur</span>
-          <select class="global-search-advanced-input" data-advanced-field="where" aria-label="Where words should be matched">
-            <option value="anywhere">Anywhere</option>
-            <option value="title">Title</option>
-            <option value="abstract">Abstract/content</option>
-          </select>
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Author</span>
-          <input type="search" class="global-search-advanced-input" data-advanced-field="author" autocomplete="off" spellcheck="false" placeholder="PJ Hayes">
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Publication</span>
-          <input type="search" class="global-search-advanced-input" data-advanced-field="publication" autocomplete="off" spellcheck="false" placeholder="Nature">
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Year from</span>
-          <input type="number" class="global-search-advanced-input" data-advanced-field="yearFrom" min="1900" max="2100" step="1" inputmode="numeric" placeholder="1996">
-        </label>
-        <label class="global-search-advanced-field">
-          <span>Year to</span>
-          <input type="number" class="global-search-advanced-input" data-advanced-field="yearTo" min="1900" max="2100" step="1" inputmode="numeric" placeholder="2026">
-        </label>
+        ${buildAdvancedFieldsMarkup(advanced.contextScope, defaultScope)}
       </div>
       <div class="global-search-advanced-actions">
         <button type="button" class="global-search-advanced-btn global-search-advanced-btn--primary" data-advanced-action="apply">Apply</button>
-        <button type="button" class="global-search-advanced-btn" data-advanced-action="clear">Clear</button>
+        <button type="button" class="global-search-advanced-btn" data-advanced-action="clear">Reset</button>
       </div>`;
 
-    const submitButton = form.querySelector('.global-search-submit');
-    if (submitButton) form.insertBefore(toggle, submitButton);
-    else form.appendChild(toggle);
+    if (form.classList.contains('search-box')) {
+      const toolsRow = document.createElement('div');
+      toolsRow.className = 'global-search-tools-row';
+
+      const leftTools = document.createElement('div');
+      leftTools.className = 'global-search-tools-left';
+
+      if (defaultScope !== 'all') {
+        const scopeSwitch = document.createElement('div');
+        scopeSwitch.className = 'global-search-scope-switch';
+        scopeSwitch.setAttribute('role', 'group');
+        scopeSwitch.setAttribute('aria-label', 'Search scope');
+        const options = [
+          { value: defaultScope, label: `${resolveScopeLabel(defaultScope)} only` },
+          { value: 'all', label: 'All content' },
+        ];
+        for (const option of options) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'global-search-scope-btn';
+          button.setAttribute('data-advanced-scope', option.value);
+          button.setAttribute('aria-pressed', 'false');
+          button.textContent = option.label;
+          button.addEventListener('click', (event) => {
+            event.preventDefault();
+            const nextScope = normalizeScope(option.value, defaultScope);
+            const scopeHidden = form.querySelector('input[type="hidden"][name="scope"]');
+            if (scopeHidden) scopeHidden.value = nextScope;
+            const scopeControl = panel.querySelector('[data-advanced-field="scope"]');
+            if (scopeControl) scopeControl.value = nextScope;
+            updateAdvancedToggleState(form);
+          });
+          scopeSwitch.appendChild(button);
+          advanced.scopeButtons.push(button);
+        }
+        leftTools.appendChild(scopeSwitch);
+      } else {
+        const contextPill = document.createElement('span');
+        contextPill.className = 'global-search-context-pill';
+        contextPill.textContent = 'Cross-type search';
+        leftTools.appendChild(contextPill);
+      }
+
+      toolsRow.appendChild(leftTools);
+      toolsRow.appendChild(toggle);
+      form.appendChild(toolsRow);
+    } else {
+      const submitButton = form.querySelector('.global-search-submit');
+      if (submitButton) form.insertBefore(toggle, submitButton);
+      else form.appendChild(toggle);
+    }
     form.appendChild(panel);
 
     advanced.toggle = toggle;
@@ -476,6 +681,7 @@
           }
           const scopeHidden = form.querySelector('input[type="hidden"][name="scope"]');
           if (scopeHidden) scopeHidden.value = normalizeScope(defaultScope, 'all');
+          sanitizeAdvancedFieldsForContext(form);
           syncAdvancedPanelFromHidden(form);
           return;
         }
@@ -507,6 +713,7 @@
 
     form.addEventListener('submit', () => {
       syncHiddenFromAdvancedPanel(form);
+      sanitizeAdvancedFieldsForContext(form);
       const modeInput = form.querySelector('input[type="hidden"][name="mode"]');
       if (modeInput) modeInput.value = 'search';
       const scopeInput = form.querySelector('input[type="hidden"][name="scope"]');
@@ -989,7 +1196,7 @@
         submitButton.setAttribute('title', 'Run Global Search');
       }
     }
-    input.setAttribute('placeholder', resolveSectionSearchPlaceholder());
+    input.setAttribute('placeholder', resolveSectionSearchPlaceholder(form));
 
     ensureDropdown(form);
     injectAdvancedSearchUi(form, params);
@@ -1079,7 +1286,15 @@
     }
   }
 
-  function resolveSectionSearchPlaceholder() {
+  function resolveSectionSearchPlaceholder(form) {
+    const scope = normalizeScope(
+      form && (form.getAttribute('data-search-scope') || (form.dataset ? form.dataset.searchScope : '') || resolvePageDefaultScope()),
+      'all'
+    );
+    if (scope === 'talks') return 'Search talks (titles, speakers, summaries)...';
+    if (scope === 'papers') return 'Search papers (titles, authors, abstracts)...';
+    if (scope === 'blogs') return 'Search blogs (titles, authors, content)...';
+    if (scope === 'people') return 'Search people (names, expertise, affiliations)...';
     return GLOBAL_SEARCH_PLACEHOLDER;
   }
 
