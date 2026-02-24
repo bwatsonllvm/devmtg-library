@@ -155,7 +155,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-18` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-19` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -1337,6 +1337,18 @@ const DOCUMENTATION_OPTIONS = {
     return cleaned || 'LLVM Documentation';
   }
 
+  function ensureFooterContentAlignment() {
+    const footer = document.querySelector('.footer');
+    if (!footer) return;
+    if (footer.querySelector('.docs-footer-inner')) return;
+    const inner = document.createElement('div');
+    inner.className = 'docs-footer-inner';
+    while (footer.firstChild) {
+      inner.appendChild(footer.firstChild);
+    }
+    footer.appendChild(inner);
+  }
+
   function bridgeSphinxBodyToHugoLayout(rootPath) {
     const docsBody = document.querySelector('.document .body');
     if (!docsBody || docsBody.dataset.docsHugoBridged === '1') return;
@@ -1421,6 +1433,7 @@ const DOCUMENTATION_OPTIONS = {
     }
 
     bridgeSphinxBodyToHugoLayout(rootPath);
+    ensureFooterContentAlignment();
     ensureSyncMetaData(rootPath, function () {
       refreshDocsSyncLabels();
       refreshSidebarReleasePanel(rootPath);
