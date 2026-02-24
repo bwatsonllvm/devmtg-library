@@ -161,8 +161,9 @@
         <h1>Talks</h1>
         <p class="search-hero-title-aside">Talks and slide decks from LLVM Developers' Meetings and other events</p>
       </div>
-      <p class="subtitle" id="hero-subtitle">Browse <strong id="total-count">…</strong> talks from 2007 to present</p>
-      <div class="search-box" role="search">
+      <p class="subtitle" id="hero-subtitle">Global Search is primary. Browse <strong id="total-count">…</strong> talks from 2007 to present with filters below.</p>
+      <form class="search-box global-search-form" action="work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, people, and key topics">
+        <input type="hidden" name="mode" value="search">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
@@ -170,7 +171,8 @@
           type="search"
           class="search-input global-search-input"
           id="search-input"
-          placeholder="Search talks and more..."
+          name="q"
+          placeholder="Search the full library..."
           autocomplete="off"
           spellcheck="false"
           aria-label="Global Search across talks, papers, blogs, people, and key topics"
@@ -181,7 +183,7 @@
           </svg>
         </button>
         <div class="search-dropdown hidden" id="search-dropdown" role="listbox" aria-label="Search suggestions"></div>
-      </div>
+      </form>
       <!-- Active filter pills: rendered by renderActiveFilters() -->
       <div class="active-filters hidden" id="active-filters" role="status" aria-label="Active filters" aria-live="polite"></div>
     </div>
@@ -369,6 +371,6 @@
   <!-- Event data loader -->
   <script src="js/events-data.js?v=20260223-01"></script>
   <script src="js/shared/library-utils.js?v=20260224-01"></script>
-  <script src="js/app.js?v=20260223-03"></script>
+  <script src="js/app.js?v=20260224-04"></script>
 </body>
 </html>

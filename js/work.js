@@ -1,5 +1,5 @@
 /**
- * work.js — Unified talks + papers + blogs view for a selected speaker/topic.
+ * work.js — Unified talks + papers + blogs + people view for search/entity pages.
  */
 
 const HubUtils = window.LLVMHubUtils || {};
@@ -7,13 +7,14 @@ const HubUtils = window.LLVMHubUtils || {};
 const TALK_BATCH_SIZE = 24;
 const PAPER_BATCH_SIZE = 24;
 const BLOG_BATCH_SIZE = 24;
+const PEOPLE_BATCH_SIZE = 24;
 const UNIVERSAL_BATCH_SIZE = 36;
 const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 const WORK_SORT_MODES = new Set(['relevance', 'newest', 'oldest', 'title', 'citations']);
 const WORK_VIEW_MODES = new Set(['expanded', 'compact']);
 const WORK_VIEW_STORAGE_KEY = 'llvm-hub-work-view';
-const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs']);
+const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs', 'people']);
 const WORK_TIME_FILTERS = new Set(['any', 'since-2026', 'since-2025', 'since-2022', 'custom']);
 const WORK_TYPE_FILTERS = new Set(['any', 'review']);
 const WORK_YEAR_MIN = 1990;
@@ -21,7 +22,7 @@ const WORK_YEAR_MAX = 2100;
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
-  scope: 'all', // 'all' | 'talks' | 'papers' | 'blogs' (search mode only)
+  scope: 'all', // 'all' | 'talks' | 'papers' | 'blogs' | 'people' (search mode only)
   kind: 'topic', // 'speaker' | 'topic'
   value: '',
   query: '',
@@ -52,19 +53,23 @@ const CATEGORY_META = {
 let filteredTalks = [];
 let filteredPapers = [];
 let filteredBlogs = [];
+let filteredPeople = [];
 let filteredUniversal = [];
 let renderedTalkCount = 0;
 let renderedPaperCount = 0;
 let renderedBlogCount = 0;
+let renderedPeopleCount = 0;
 let renderedUniversalCount = 0;
 let allTalkRecords = [];
 let allPaperRecords = [];
 let allBlogRecords = [];
+let allPeopleRecords = [];
 let searchResultCounts = {
   all: 0,
   talks: 0,
   papers: 0,
   blogs: 0,
+  people: 0,
 };
 
 function escapeHtml(str) {
@@ -178,6 +183,40 @@ function samePersonName(a, b) {
     return HubUtils.arePersonMiddleVariants(a, b);
   }
   return false;
+}
+
+function normalizePersonDisplayName(value) {
+  if (typeof HubUtils.normalizePersonDisplayName === 'function') {
+    return HubUtils.normalizePersonDisplayName(value);
+  }
+  return String(value || '').trim();
+}
+
+function getPersonVariantNames(person) {
+  if (!person || typeof person !== 'object') return [];
+  const candidates = [person.name, ...(Array.isArray(person.variantNames) ? person.variantNames : [])];
+  const out = [];
+  const seen = new Set();
+  for (const candidate of candidates) {
+    const label = normalizePersonDisplayName(candidate);
+    const key = normalizePersonKey(label);
+    if (!label || !key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(label);
+  }
+  return out;
+}
+
+function findPersonRecordByName(value) {
+  const label = normalizePersonDisplayName(value);
+  const key = normalizePersonKey(label);
+  if (!label || !key) return null;
+  return allPeopleRecords.find((person) => {
+    for (const variant of getPersonVariantNames(person)) {
+      if (normalizePersonKey(variant) === key) return true;
+    }
+    return false;
+  }) || null;
 }
 
 function normalizeTopicKey(value) {
@@ -497,6 +536,7 @@ function getSearchScopeCount(scope) {
   if (scope === 'talks') return Number(searchResultCounts.talks || 0);
   if (scope === 'papers') return Number(searchResultCounts.papers || 0);
   if (scope === 'blogs') return Number(searchResultCounts.blogs || 0);
+  if (scope === 'people') return Number(searchResultCounts.people || 0);
   return Number(searchResultCounts.all || 0);
 }
 
@@ -508,6 +548,7 @@ function getSearchScopeLabel(scope) {
   if (scope === 'talks') return 'Talks';
   if (scope === 'papers') return 'Papers';
   if (scope === 'blogs') return 'Blogs';
+  if (scope === 'people') return 'People';
   return 'All';
 }
 
@@ -542,10 +583,12 @@ function syncScopeControlCounts() {
   const countTalks = document.getElementById('work-scope-count-talks');
   const countPapers = document.getElementById('work-scope-count-papers');
   const countBlogs = document.getElementById('work-scope-count-blogs');
+  const countPeople = document.getElementById('work-scope-count-people');
   if (countAll) countAll.textContent = getSearchScopeCount('all').toLocaleString();
   if (countTalks) countTalks.textContent = getSearchScopeCount('talks').toLocaleString();
   if (countPapers) countPapers.textContent = getSearchScopeCount('papers').toLocaleString();
   if (countBlogs) countBlogs.textContent = getSearchScopeCount('blogs').toLocaleString();
+  if (countPeople) countPeople.textContent = getSearchScopeCount('people').toLocaleString();
 }
 
 function syncScopeControls() {
@@ -586,7 +629,7 @@ function initScopeControl() {
       const nextScope = normalizeSearchScope(button.getAttribute('data-work-scope'));
       if (nextScope === state.scope) return;
       state.scope = nextScope;
-      if (state.scope === 'talks' && state.typeFilter !== 'any') {
+      if ((state.scope === 'talks' || state.scope === 'people') && state.typeFilter !== 'any') {
         state.typeFilter = 'any';
       }
       state.sortBy = normalizeSortMode(state.sortBy);
@@ -610,7 +653,7 @@ function syncAdvancedFilterControlVisibility() {
   const typeLabel = document.querySelector('label[for="work-type-select"]');
   const customRange = document.getElementById('work-custom-range');
   const customVisible = searchMode && state.timeFilter === 'custom';
-  const typeEnabled = searchMode && state.scope !== 'talks';
+  const typeEnabled = searchMode && state.scope !== 'talks' && state.scope !== 'people';
 
   if (timeLabel) timeLabel.hidden = !searchMode;
   if (timeSelect) {
@@ -633,7 +676,7 @@ function syncAdvancedFilterControls() {
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
   if (timeSelect) timeSelect.value = normalizeTimeFilter(state.timeFilter);
   if (typeSelect) {
-    const nextType = state.scope === 'talks' ? 'any' : normalizeTypeFilter(state.typeFilter);
+    const nextType = (state.scope === 'talks' || state.scope === 'people') ? 'any' : normalizeTypeFilter(state.typeFilter);
     typeSelect.value = nextType;
   }
   if (yearFromInput) yearFromInput.value = normalizedYears.from > 0 ? String(normalizedYears.from) : '';
@@ -648,7 +691,7 @@ function applySearchFilterControls(options = {}) {
 
   state.timeFilter = normalizeTimeFilter(state.timeFilter);
   state.typeFilter = normalizeTypeFilter(state.typeFilter);
-  if (state.scope === 'talks') state.typeFilter = 'any';
+  if (state.scope === 'talks' || state.scope === 'people') state.typeFilter = 'any';
 
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
   if (state.timeFilter === 'custom') {
@@ -888,6 +931,50 @@ function sortPaperResults(papers) {
   return entries.sort(comparePapersNewestFirst);
 }
 
+function comparePeopleByName(a, b) {
+  return String(a && a.name || '').localeCompare(String(b && b.name || ''));
+}
+
+function comparePeopleNewestFirst(a, b) {
+  const yearDiff = Number(b && b._latestYear || 0) - Number(a && a._latestYear || 0);
+  if (yearDiff !== 0) return yearDiff;
+  const worksDiff = Number(b && b.totalCount || 0) - Number(a && a.totalCount || 0);
+  if (worksDiff !== 0) return worksDiff;
+  return comparePeopleByName(a, b);
+}
+
+function comparePeopleOldestFirst(a, b) {
+  const yearA = Number(a && a._earliestYear || 0);
+  const yearB = Number(b && b._earliestYear || 0);
+  if (yearA > 0 && yearB > 0 && yearA !== yearB) return yearA - yearB;
+  if (yearA > 0 && yearB <= 0) return -1;
+  if (yearA <= 0 && yearB > 0) return 1;
+  const worksDiff = Number(b && b.totalCount || 0) - Number(a && a.totalCount || 0);
+  if (worksDiff !== 0) return worksDiff;
+  return comparePeopleByName(a, b);
+}
+
+function comparePeopleCitations(a, b) {
+  const citationsDiff = Number(b && b.citationCount || 0) - Number(a && a.citationCount || 0);
+  if (citationsDiff !== 0) return citationsDiff;
+  return comparePeopleNewestFirst(a, b);
+}
+
+function comparePeopleWorks(a, b) {
+  const worksDiff = Number(b && b.totalCount || 0) - Number(a && a.totalCount || 0);
+  if (worksDiff !== 0) return worksDiff;
+  return comparePeopleCitations(a, b);
+}
+
+function sortPeopleResults(people) {
+  const entries = [...(people || [])];
+  if (state.sortBy === 'oldest') return entries.sort(comparePeopleOldestFirst);
+  if (state.sortBy === 'title') return entries.sort(comparePeopleByName);
+  if (state.sortBy === 'citations') return entries.sort(comparePeopleCitations);
+  if (state.mode === 'search' && state.sortBy === 'relevance') return entries;
+  return entries.sort(comparePeopleNewestFirst);
+}
+
 function tokenizeQuery(query) {
   if (typeof HubUtils.tokenizeQuery === 'function') return HubUtils.tokenizeQuery(query);
   const tokens = [];
@@ -960,6 +1047,230 @@ function matchesPaperSearchFilters(paper, filterWindow) {
   return true;
 }
 
+function matchesPersonSearchFilters(person, filterWindow) {
+  if (!filterWindow || typeof filterWindow !== 'object') return true;
+  const from = Number.isFinite(filterWindow.from) ? Number(filterWindow.from) : 0;
+  const to = Number.isFinite(filterWindow.to) ? Number(filterWindow.to) : 0;
+  if (from <= 0 && to <= 0) return true;
+
+  const latestYear = Number(person && person._latestYear || 0);
+  const earliestYear = Number(person && person._earliestYear || 0);
+  const rangeStart = earliestYear > 0 ? earliestYear : latestYear;
+  const rangeEnd = latestYear > 0 ? latestYear : earliestYear;
+  if (rangeStart <= 0 && rangeEnd <= 0) return false;
+  if (from > 0 && rangeEnd < from) return false;
+  if (to > 0 && rangeStart > to) return false;
+  return true;
+}
+
+function buildPersonKeySetFromResults(talks, papers, blogs) {
+  const keys = new Set();
+  const addName = (value) => {
+    const key = normalizePersonKey(value);
+    if (key) keys.add(key);
+  };
+
+  for (const talk of (talks || [])) {
+    for (const speaker of (talk && talk.speakers) || []) addName(speaker && speaker.name);
+  }
+  for (const paper of (papers || [])) {
+    for (const author of (paper && paper.authors) || []) addName(author && author.name);
+  }
+  for (const blog of (blogs || [])) {
+    for (const author of (blog && blog.authors) || []) addName(author && author.name);
+  }
+
+  return keys;
+}
+
+function personRecordMatchesKeySet(person, keySet) {
+  if (!(keySet instanceof Set) || !keySet.size) return false;
+  for (const variant of getPersonVariantNames(person)) {
+    const key = normalizePersonKey(variant);
+    if (key && keySet.has(key)) return true;
+  }
+  return false;
+}
+
+function buildPersonContextScoreMap(talks, papers, blogs) {
+  const scoreByKey = new Map();
+  const addScore = (name, score) => {
+    const key = normalizePersonKey(name);
+    if (!key || !Number.isFinite(score) || score <= 0) return;
+    scoreByKey.set(key, Number(scoreByKey.get(key) || 0) + score);
+  };
+
+  for (const talk of (talks || [])) {
+    for (const speaker of (talk && talk.speakers) || []) addScore(speaker && speaker.name, 1.35);
+  }
+  for (const paper of (papers || [])) {
+    for (const author of (paper && paper.authors) || []) addScore(author && author.name, 1.85);
+  }
+  for (const blog of (blogs || [])) {
+    for (const author of (blog && blog.authors) || []) addScore(author && author.name, 1.15);
+  }
+
+  return scoreByKey;
+}
+
+function getPersonContextScore(person, scoreByKey) {
+  if (!(scoreByKey instanceof Map) || !scoreByKey.size || !person) return 0;
+  let best = 0;
+  for (const variant of getPersonVariantNames(person)) {
+    const key = normalizePersonKey(variant);
+    if (!key) continue;
+    const score = Number(scoreByKey.get(key) || 0);
+    if (score > best) best = score;
+  }
+  return best;
+}
+
+function rankPeopleWithContext(rankedPeople, scoreByKey, filterWindow) {
+  const ranked = Array.isArray(rankedPeople) ? rankedPeople : [];
+  const seen = new Set();
+  const merged = [];
+
+  const pushUnique = (person) => {
+    if (!person || !matchesPersonSearchFilters(person, filterWindow)) return false;
+    const keys = getPersonVariantNames(person)
+      .map((variant) => normalizePersonKey(variant))
+      .filter(Boolean);
+    if (!keys.length) return false;
+    if (keys.some((key) => seen.has(key))) return false;
+    keys.forEach((key) => seen.add(key));
+    merged.push(person);
+    return true;
+  };
+
+  for (const person of ranked) pushUnique(person);
+
+  const contextualScored = [];
+  for (const person of allPeopleRecords) {
+    if (!matchesPersonSearchFilters(person, filterWindow)) continue;
+    const contextScore = getPersonContextScore(person, scoreByKey);
+    if (contextScore <= 0) continue;
+    contextualScored.push({ person, contextScore });
+  }
+  contextualScored.sort((a, b) =>
+    (Number(b.contextScore || 0) - Number(a.contextScore || 0))
+    || comparePeopleWorks(a.person, b.person)
+  );
+  let contextualRanked = contextualScored;
+  if (contextualScored.length) {
+    const topContextScore = Number(contextualScored[0].contextScore || 0);
+    if (topContextScore > 0) {
+      const minContextScore = Math.max(1.05, topContextScore * 0.17);
+      contextualRanked = contextualScored.filter((entry) => Number(entry.contextScore || 0) >= minContextScore);
+    }
+    if (contextualRanked.length > 320) {
+      contextualRanked = contextualRanked.slice(0, 320);
+    }
+  }
+
+  if (!merged.length) {
+    const contextualOnly = [];
+    for (const entry of contextualRanked) {
+      if (pushUnique(entry.person)) contextualOnly.push(entry.person);
+    }
+    return contextualOnly;
+  }
+
+  for (const entry of contextualRanked) pushUnique(entry.person);
+  return merged;
+}
+
+function getPersonSearchBlob(person) {
+  const variants = getPersonVariantNames(person);
+  const parts = [
+    ...variants,
+    person && person.talkFilterName,
+    person && person.paperFilterName,
+    person && person.blogFilterName,
+  ];
+  return normalizeSearchText(parts.filter(Boolean).join(' '));
+}
+
+function scorePersonRecordByModel(person, model, options = {}) {
+  if (!person || !model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
+
+  const relaxed = options.relaxed === true;
+  const name = normalizeSearchText(person.name || '');
+  const variants = getPersonVariantNames(person).map((value) => normalizeSearchText(value)).filter(Boolean);
+  const blob = getPersonSearchBlob(person);
+
+  if (!blob) return 0;
+
+  for (const excluded of (model.excludeClauses || [])) {
+    if (!excluded || !Array.isArray(excluded.variants)) continue;
+    for (const variant of excluded.variants) {
+      const term = normalizeSearchText(variant && variant.term);
+      if (term && blob.includes(term)) return 0;
+    }
+  }
+  for (const excludedPhrase of (model.excludePhrases || [])) {
+    const phrase = normalizeSearchText(excludedPhrase);
+    if (phrase && blob.includes(phrase)) return 0;
+  }
+
+  let total = 0;
+  let matchedClauses = 0;
+  for (const clause of model.clauses) {
+    if (!clause || !Array.isArray(clause.variants) || !clause.variants.length) continue;
+    let bestClauseScore = 0;
+    for (const variant of clause.variants) {
+      const term = normalizeSearchText(variant && variant.term);
+      const weight = Number(variant && variant.weight || 0);
+      if (!term || weight <= 0) continue;
+
+      let termScore = 0;
+      if (name === term) termScore = Math.max(termScore, 18);
+      else if (name.startsWith(`${term} `) || name.startsWith(term)) termScore = Math.max(termScore, 13);
+      else if (name.includes(term)) termScore = Math.max(termScore, 9);
+
+      for (const candidate of variants) {
+        if (candidate === term) termScore = Math.max(termScore, 12);
+        else if (candidate.startsWith(`${term} `) || candidate.startsWith(term)) termScore = Math.max(termScore, 9);
+        else if (candidate.includes(term)) termScore = Math.max(termScore, 7);
+      }
+
+      if (blob.includes(term)) termScore = Math.max(termScore, 4);
+      if (termScore <= 0) continue;
+
+      const weightedScore = termScore * weight * (Number(clause.specificity || 1));
+      if (weightedScore > bestClauseScore) bestClauseScore = weightedScore;
+    }
+
+    if (bestClauseScore > 0) matchedClauses += 1;
+    total += bestClauseScore;
+  }
+
+  if (!matchedClauses || total <= 0) return 0;
+
+  const clauseCount = Math.max(1, model.clauses.length);
+  const coverage = matchedClauses / clauseCount;
+  if (!relaxed && coverage < 1) return 0;
+  if (relaxed && clauseCount >= 3 && coverage < 0.5) return 0;
+  if (relaxed && clauseCount < 3 && coverage < 1) return 0;
+
+  let phraseBonus = 0;
+  for (const phraseEntry of (model.phrases || [])) {
+    const phrase = normalizeSearchText(phraseEntry && phraseEntry.value);
+    const phraseWeight = Number(phraseEntry && phraseEntry.weight || 1);
+    if (!phrase || phraseWeight <= 0) continue;
+    if (name === phrase) phraseBonus += 20 * phraseWeight;
+    else if (name.startsWith(`${phrase} `) || name.startsWith(phrase)) phraseBonus += 14 * phraseWeight;
+    else if (blob.includes(phrase)) phraseBonus += 8 * phraseWeight;
+  }
+
+  const countBoost = Math.log1p(Number(person.totalCount || 0)) * 2.4;
+  const citationBoost = Math.log1p(Number(person.citationCount || 0)) * 1.7;
+  const yearBoost = Number(person._latestYear || 0) > 0
+    ? Math.max(0, Number(person._latestYear || 0) - 2006) * 0.05
+    : 0;
+
+  return (total * (0.52 + coverage)) + phraseBonus + countBoost + citationBoost + yearBoost;
+}
+
 function computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens) {
   const normalizedTitle = normalizeSearchText(title);
   if (!normalizedTitle || !normalizedQuery) return 0;
@@ -990,6 +1301,7 @@ function computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens) {
 function getUniversalEntryTitle(entry) {
   if (!entry || typeof entry !== 'object') return '';
   if (entry.kind === 'talk') return String((entry.talk && entry.talk.title) || '');
+  if (entry.kind === 'person') return String((entry.person && entry.person.name) || '');
   return String((entry.paper && entry.paper.title) || '');
 }
 
@@ -999,6 +1311,10 @@ function getUniversalEntryYear(entry) {
     const talk = entry.talk || {};
     return parseYearValue(talk.meeting || talk.meetingDate || talk._year);
   }
+  if (entry.kind === 'person') {
+    const person = entry.person || {};
+    return Number(person._latestYear || 0);
+  }
   const paper = entry.paper || {};
   return parseYearValue(paper._year || paper.year || paper.publishedDate || paper.publishDate || paper.date);
 }
@@ -1006,6 +1322,11 @@ function getUniversalEntryYear(entry) {
 function getUniversalEntryCitations(entry) {
   if (!entry || typeof entry !== 'object') return 0;
   if (entry.kind === 'talk') return 0;
+  if (entry.kind === 'person') {
+    const person = entry.person || {};
+    const citations = Number(person.citationCount || 0);
+    return Number.isFinite(citations) && citations > 0 ? citations : 0;
+  }
   const paper = entry.paper || {};
   const citations = Number(paper._citationCount || paper.citationCount || 0);
   return Number.isFinite(citations) && citations > 0 ? citations : 0;
@@ -1045,10 +1366,11 @@ function compareUniversalEntries(a, b) {
   return getUniversalEntryTitle(a).localeCompare(getUniversalEntryTitle(b));
 }
 
-function buildUniversalResultsFromRankedLists(talks, papers, blogs, query) {
+function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, query) {
   const rankedTalks = Array.isArray(talks) ? talks : [];
   const rankedPapers = Array.isArray(papers) ? papers : [];
   const rankedBlogs = Array.isArray(blogs) ? blogs : [];
+  const rankedPeople = Array.isArray(people) ? people : [];
   const normalizedQuery = normalizeSearchText(query);
   const normalizedTokens = tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
   const model = typeof HubUtils.buildSearchQueryModel === 'function'
@@ -1057,6 +1379,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, query) {
   const hasModel = !!(model && Array.isArray(model.clauses) && model.clauses.length > 0);
   const canScoreTalkByModel = hasModel && typeof HubUtils.scoreTalkRecordByModel === 'function';
   const canScorePaperByModel = hasModel && typeof HubUtils.scorePaperRecordByModel === 'function';
+  const canScorePeopleByModel = hasModel;
   const strict = [];
   const relaxed = [];
   const fallback = [];
@@ -1067,21 +1390,33 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, query) {
       bucket.push({ kind, talk: record, score, rankIndex });
       return;
     }
+    if (kind === 'person') {
+      bucket.push({ kind, person: record, score, rankIndex });
+      return;
+    }
     bucket.push({ kind, paper: record, score, rankIndex });
   };
 
   const pushForKind = (records, kind) => {
     const values = Array.isArray(records) ? records : [];
-    const canScoreByModel = kind === 'talk' ? canScoreTalkByModel : canScorePaperByModel;
+    const canScoreByModel = kind === 'talk'
+      ? canScoreTalkByModel
+      : (kind === 'person' ? canScorePeopleByModel : canScorePaperByModel);
 
     values.forEach((record, index) => {
-      const title = getUniversalEntryTitle(kind === 'talk' ? { kind, talk: record } : { kind, paper: record });
+      const title = getUniversalEntryTitle(
+        kind === 'talk'
+          ? { kind, talk: record }
+          : (kind === 'person' ? { kind, person: record } : { kind, paper: record })
+      );
       const titleBoost = computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens);
 
       if (canScoreByModel) {
         const strictScore = kind === 'talk'
           ? HubUtils.scoreTalkRecordByModel(record, model, { relaxed: false })
-          : HubUtils.scorePaperRecordByModel(record, model, { relaxed: false });
+          : (kind === 'person'
+            ? scorePersonRecordByModel(record, model, { relaxed: false })
+            : HubUtils.scorePaperRecordByModel(record, model, { relaxed: false }));
         if (strictScore > 0) {
           pushEntry(strict, kind, record, strictScore + titleBoost, index);
           return;
@@ -1089,14 +1424,17 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, query) {
 
         const relaxedScore = kind === 'talk'
           ? HubUtils.scoreTalkRecordByModel(record, model, { relaxed: true })
-          : HubUtils.scorePaperRecordByModel(record, model, { relaxed: true });
+          : (kind === 'person'
+            ? scorePersonRecordByModel(record, model, { relaxed: true })
+            : HubUtils.scorePaperRecordByModel(record, model, { relaxed: true }));
         if (relaxedScore > 0) {
           pushEntry(relaxed, kind, record, relaxedScore + (titleBoost * 0.9), index);
           return;
         }
       }
 
-      const fallbackScore = (230 / (index + 2)) + titleBoost;
+      const fallbackBase = kind === 'person' ? 210 : 230;
+      const fallbackScore = (fallbackBase / (index + 2)) + titleBoost;
       pushEntry(fallback, kind, record, fallbackScore, index);
     });
   };
@@ -1104,6 +1442,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, query) {
   pushForKind(rankedTalks, 'talk');
   pushForKind(rankedPapers, 'paper');
   pushForKind(rankedBlogs, 'blog');
+  pushForKind(rankedPeople, 'person');
 
   let entries = [];
   if (strict.length > 0) {
@@ -1217,25 +1556,121 @@ function rankPapersForQuery(papers, query) {
   return scored.map((entry) => entry.paper);
 }
 
+function rankPeopleForQuery(people, query) {
+  const records = Array.isArray(people) ? [...people] : [];
+  const model = typeof HubUtils.buildSearchQueryModel === 'function'
+    ? HubUtils.buildSearchQueryModel(query)
+    : null;
+  const hasModel = !!(model && Array.isArray(model.clauses) && model.clauses.length > 0);
+  const compareScored = (a, b) =>
+    (Number(b.score || 0) - Number(a.score || 0))
+    || comparePeopleWorks(a.person, b.person);
+
+  if (hasModel) {
+    let scored = [];
+    for (const person of records) {
+      const score = scorePersonRecordByModel(person, model, { relaxed: false });
+      if (score > 0) scored.push({ person, score });
+    }
+
+    if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
+      for (const person of records) {
+        const score = scorePersonRecordByModel(person, model, { relaxed: true });
+        if (score > 0) scored.push({ person, score });
+      }
+    }
+
+    if (scored.length) {
+      scored.sort(compareScored);
+      const topScore = Number(scored[0].score || 0);
+      if (topScore > 0) {
+        const relativeFloor = model.beginnerIntent
+          ? 0.42
+          : (model.clauses.length <= 2 ? 0.3 : 0.22);
+        const absoluteFloor = model.beginnerIntent ? 8 : 4;
+        const threshold = Math.max(absoluteFloor, topScore * relativeFloor);
+        const pruned = scored.filter((entry) => Number(entry.score || 0) >= threshold);
+        return (pruned.length ? pruned : scored.slice(0, Math.min(180, scored.length)))
+          .map((entry) => entry.person);
+      }
+      return scored.map((entry) => entry.person);
+    }
+  }
+
+  const tokens = tokenizeQuery(query);
+  if (!tokens.length) return records.sort(comparePeopleWorks);
+
+  const scored = [];
+  for (const person of records) {
+    const name = normalizeSearchText(person.name || '');
+    const variants = getPersonVariantNames(person).map((value) => normalizeSearchText(value)).filter(Boolean);
+    const blob = getPersonSearchBlob(person);
+    if (!blob) continue;
+
+    let total = 0;
+    let matched = 0;
+    for (const token of tokens) {
+      let tokenScore = 0;
+      if (name === token) tokenScore = Math.max(tokenScore, 140);
+      else if (name.startsWith(`${token} `) || name.startsWith(token)) tokenScore = Math.max(tokenScore, 95);
+      else if (name.includes(token)) tokenScore = Math.max(tokenScore, 62);
+
+      for (const variant of variants) {
+        if (variant === token) tokenScore = Math.max(tokenScore, 92);
+        else if (variant.startsWith(`${token} `) || variant.startsWith(token)) tokenScore = Math.max(tokenScore, 68);
+        else if (variant.includes(token)) tokenScore = Math.max(tokenScore, 48);
+      }
+
+      if (blob.includes(token)) tokenScore = Math.max(tokenScore, 28);
+      if (tokenScore <= 0) {
+        total = 0;
+        break;
+      }
+      matched += 1;
+      total += tokenScore;
+    }
+
+    if (!total || matched < tokens.length) continue;
+    total += Math.log1p(Number(person.totalCount || 0)) * 7;
+    total += Math.log1p(Number(person.citationCount || 0)) * 5;
+    total += Number(person._latestYear || 0) > 0 ? (Number(person._latestYear || 0) - 2006) * 0.09 : 0;
+    scored.push({ person, score: total });
+  }
+
+  scored.sort(compareScored);
+  return scored.map((entry) => entry.person);
+}
+
 function recomputeFilteredResults() {
   if (state.mode === 'search') {
     const filterWindow = resolveTimeFilterWindow();
     const rankedTalks = rankTalksForQuery(allTalkRecords, state.query);
     const rankedPapers = rankPapersForQuery(allPaperRecords, state.query);
     const rankedBlogs = rankPapersForQuery(allBlogRecords, state.query);
+    const rankedPeople = rankPeopleForQuery(allPeopleRecords, state.query);
     const scopedTalks = rankedTalks.filter((talk) => matchesTalkSearchFilters(talk, filterWindow));
     const scopedPapers = rankedPapers.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
     const scopedBlogs = rankedBlogs.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
+    const personContextScores = buildPersonContextScoreMap(scopedTalks, scopedPapers, scopedBlogs);
+    const scopedPeople = rankPeopleWithContext(rankedPeople, personContextScores, filterWindow);
     filteredTalks = sortTalkResults(scopedTalks);
     filteredPapers = sortPaperResults(scopedPapers);
     filteredBlogs = sortPaperResults(scopedBlogs);
-    const universalEntries = buildUniversalResultsFromRankedLists(scopedTalks, scopedPapers, scopedBlogs, state.query);
+    filteredPeople = sortPeopleResults(scopedPeople);
+    const universalEntries = buildUniversalResultsFromRankedLists(
+      scopedTalks,
+      scopedPapers,
+      scopedBlogs,
+      scopedPeople,
+      state.query
+    );
     filteredUniversal = state.scope === 'all' ? universalEntries : [];
     searchResultCounts = {
       all: universalEntries.length,
       talks: filteredTalks.length,
       papers: filteredPapers.length,
       blogs: filteredBlogs.length,
+      people: filteredPeople.length,
     };
     syncScopeControlCounts();
     return;
@@ -1246,6 +1681,7 @@ function recomputeFilteredResults() {
     talks: 0,
     papers: 0,
     blogs: 0,
+    people: 0,
   };
   filteredUniversal = [];
   const normalizedNeedle = normalizeValue(state.value);
@@ -1260,6 +1696,19 @@ function recomputeFilteredResults() {
   filteredBlogs = sortPaperResults(
     allBlogRecords.filter((paper) => matchesPaperEntity(paper, normalizedNeedle, normalizedTopicNeedle))
   );
+
+  if (state.kind === 'speaker') {
+    const exactPerson = findPersonRecordByName(state.value);
+    if (exactPerson) {
+      filteredPeople = sortPeopleResults([exactPerson]);
+    } else {
+      const personKeys = buildPersonKeySetFromResults(filteredTalks, filteredPapers, filteredBlogs);
+      filteredPeople = sortPeopleResults(allPeopleRecords.filter((person) => personRecordMatchesKeySet(person, personKeys)));
+    }
+  } else {
+    const personKeys = buildPersonKeySetFromResults(filteredTalks, filteredPapers, filteredBlogs);
+    filteredPeople = sortPeopleResults(allPeopleRecords.filter((person) => personRecordMatchesKeySet(person, personKeys)));
+  }
 }
 
 function matchesTalkEntity(talk, normalizedNeedle, normalizedTopicNeedle) {
@@ -1426,9 +1875,81 @@ function renderPaperCard(paper) {
     </article>`;
 }
 
+function renderPersonCard(person) {
+  const query = state.mode === 'search' ? state.query : state.value;
+  const tokens = query ? tokenizeQuery(query) : [];
+  const titleEsc = escapeHtml(person.name || 'Unknown person');
+  const variantNames = getPersonVariantNames(person).filter((name) => !samePersonName(name, person.name));
+  const variantLinksHtml = variantNames
+    .slice(0, 4)
+    .map((name) => `<a class="person-variant-pill" href="${escapeHtml(buildWorkUrl('speaker', name))}" aria-label="Open all work for ${escapeHtml(name)}">${highlightText(name, tokens)}</a>`)
+    .join('');
+  const variantsHtml = variantLinksHtml
+    ? `<div class="person-variants" aria-label="Name variants">
+        <span class="person-variants-label">Also appears as</span>
+        ${variantLinksHtml}
+      </div>`
+    : '';
+
+  const talksLabel = Number(person.talkCount || 0);
+  const papersLabel = Number(person.paperCount || 0);
+  const blogsLabel = Number(person.blogCount || 0);
+  const citationCount = Number(person.citationCount || 0);
+  const allWorkUrl = buildWorkUrl('speaker', person.name);
+  const talksUrl = `talks/?speaker=${encodeURIComponent(person.talkFilterName || person.name || '')}`;
+  const papersUrl = `papers/?speaker=${encodeURIComponent(person.paperFilterName || person.name || '')}`;
+  const blogsUrl = `blogs/?speaker=${encodeURIComponent(person.blogFilterName || person.paperFilterName || person.name || '')}`;
+  const citationsHtml = citationCount > 0
+    ? `<span class="meeting-label">${citationCount.toLocaleString()} citations</span>`
+    : '';
+
+  const talksLink = talksLabel > 0
+    ? `<a class="card-link-btn" href="${talksUrl}" aria-label="Open talks for ${titleEsc}">
+        <span aria-hidden="true">Talks ${talksLabel.toLocaleString()}</span>
+      </a>`
+    : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Talks 0</span>`;
+
+  const papersLink = papersLabel > 0
+    ? `<a class="card-link-btn" href="${papersUrl}" aria-label="Open papers for ${titleEsc}">
+        <span aria-hidden="true">Papers ${papersLabel.toLocaleString()}</span>
+      </a>`
+    : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Papers 0</span>`;
+
+  const blogsLink = blogsLabel > 0
+    ? `<a class="card-link-btn" href="${blogsUrl}" aria-label="Open blogs for ${titleEsc}">
+        <span aria-hidden="true">Blogs ${blogsLabel.toLocaleString()}</span>
+      </a>`
+    : `<span class="card-link-btn card-link-btn--disabled" aria-hidden="true">Blogs 0</span>`;
+
+  return `
+    <article class="talk-card person-card">
+      <a href="${escapeHtml(allWorkUrl)}" class="card-link-wrap" aria-label="Open all work for ${titleEsc}">
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="meeting-label">${Number(person.totalCount || 0).toLocaleString()} works</span>
+            ${citationsHtml}
+          </div>
+          <p class="card-title">${highlightText(person.name || 'Unknown person', tokens)}</p>
+        </div>
+      </a>
+      ${variantsHtml}
+      <div class="card-footer person-card-footer">
+        <div class="person-work-links">
+          ${talksLink}
+          ${papersLink}
+          ${blogsLink}
+          <a class="card-link-btn card-link-btn--video" href="${escapeHtml(allWorkUrl)}" aria-label="Open all work for ${titleEsc}">
+            <span aria-hidden="true">All Work</span>
+          </a>
+        </div>
+      </div>
+    </article>`;
+}
+
 function renderUniversalCard(entry) {
   if (!entry || typeof entry !== 'object') return '';
   if (entry.kind === 'talk' && entry.talk) return renderTalkCard(entry.talk);
+  if (entry.kind === 'person' && entry.person) return renderPersonCard(entry.person);
   if ((entry.kind === 'paper' || entry.kind === 'blog') && entry.paper) return renderPaperCard(entry.paper);
   return '';
 }
@@ -1566,6 +2087,37 @@ function renderBlogBatch(reset = false) {
   }
 }
 
+function renderPeopleBatch(reset = false) {
+  const grid = document.getElementById('work-people-grid');
+  const moreBtn = document.getElementById('work-people-more');
+  if (!grid || !moreBtn) return;
+
+  if (reset) {
+    grid.innerHTML = '';
+    renderedPeopleCount = 0;
+  }
+
+  if (!filteredPeople.length) {
+    moreBtn.classList.add('hidden');
+    setEmptyState('work-people-grid', 'people');
+    return;
+  }
+
+  const nextCount = Math.min(renderedPeopleCount + PEOPLE_BATCH_SIZE, filteredPeople.length);
+  const html = filteredPeople.slice(renderedPeopleCount, nextCount).map(renderPersonCard).join('');
+  grid.insertAdjacentHTML('beforeend', html);
+  grid.setAttribute('aria-busy', 'false');
+  renderedPeopleCount = nextCount;
+
+  const remaining = filteredPeople.length - renderedPeopleCount;
+  if (remaining > 0) {
+    moreBtn.textContent = `Show more people (${remaining.toLocaleString()} left)`;
+    moreBtn.classList.remove('hidden');
+  } else {
+    moreBtn.classList.add('hidden');
+  }
+}
+
 function setWorkDocumentTitle(value) {
   const title = String(value || '').trim();
   document.title = title ? `${title} — LLVM Research Library` : 'LLVM Research Library';
@@ -1579,6 +2131,7 @@ function applyHeaderState() {
   const talksCountEl = document.getElementById('work-talks-count');
   const papersCountEl = document.getElementById('work-papers-count');
   const blogsCountEl = document.getElementById('work-blogs-count');
+  const peopleCountEl = document.getElementById('work-people-count');
   const backLink = document.getElementById('work-back-link');
 
   const entityLabel = state.kind === 'speaker' ? 'Speaker' : 'Key Topic';
@@ -1603,12 +2156,13 @@ function applyHeaderState() {
   if (state.mode === 'search') {
     if (!state.query) {
       if (titleEl) titleEl.textContent = 'Global Search';
-      if (subtitleEl) subtitleEl.textContent = 'Use Global Search across talks, papers, and blogs from one place.';
+      if (subtitleEl) subtitleEl.textContent = 'Use Global Search across talks, papers, blogs, and people from one place.';
       if (summaryEl) summaryEl.textContent = 'No search query provided';
       if (universalCountEl) universalCountEl.textContent = '';
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
       if (blogsCountEl) blogsCountEl.textContent = '';
+      if (peopleCountEl) peopleCountEl.textContent = '';
       setWorkDocumentTitle('Global Search');
       return;
     }
@@ -1616,7 +2170,7 @@ function applyHeaderState() {
     if (titleEl) titleEl.textContent = 'Global Search';
     if (subtitleEl) {
       if (state.scope === 'all') {
-        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong>, ranked across talks, papers, and blogs`;
+        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong>, ranked across talks, papers, blogs, and people`;
       } else {
         subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong> in <strong>${escapeHtml(getSearchScopeLabel(state.scope))}</strong>`;
       }
@@ -1625,12 +2179,13 @@ function applyHeaderState() {
   } else {
     if (!state.value) {
       if (titleEl) titleEl.textContent = 'All Work';
-      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or key topic from Talks, Papers, or Blogs to view all related work.';
+      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or key topic to view related talks, papers, blogs, and people.';
       if (summaryEl) summaryEl.textContent = 'No speaker/key topic selected';
       if (universalCountEl) universalCountEl.textContent = '';
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
       if (blogsCountEl) blogsCountEl.textContent = '';
+      if (peopleCountEl) peopleCountEl.textContent = '';
       setWorkDocumentTitle('All Work');
       return;
     }
@@ -1638,9 +2193,9 @@ function applyHeaderState() {
     if (titleEl) titleEl.textContent = `${entityLabel}: ${state.value}`;
     if (subtitleEl) {
       if (state.kind === 'speaker') {
-        subtitleEl.innerHTML = `All Work for <strong>${escapeHtml(state.value)}</strong> across talks and papers`;
+        subtitleEl.innerHTML = `All Work for <strong>${escapeHtml(state.value)}</strong> across talks, papers, blogs, and people`;
       } else {
-        subtitleEl.innerHTML = `All Work for key topic <strong>${escapeHtml(state.value)}</strong> across talks, papers, and blogs`;
+        subtitleEl.innerHTML = `All Work for key topic <strong>${escapeHtml(state.value)}</strong> across talks, papers, blogs, and people`;
       }
     }
     setWorkDocumentTitle(`All Work: ${entityLabel} ${state.value}`);
@@ -1666,6 +2221,10 @@ function applyHeaderState() {
     blogsCountEl.textContent = `${filteredBlogs.length.toLocaleString()} blog${filteredBlogs.length === 1 ? '' : 's'}`;
   }
 
+  if (peopleCountEl) {
+    peopleCountEl.textContent = `${filteredPeople.length.toLocaleString()} people`;
+  }
+
   if (summaryEl) {
     const sortLabel = state.sortBy === 'relevance'
       ? ((state.mode === 'search' && state.scope === 'all') ? 'cross-type relevance' : 'relevance')
@@ -1683,14 +2242,14 @@ function applyHeaderState() {
       const scopeTotal = getActiveSearchScopeCount();
       const allTotal = getSearchScopeCount('all');
       if (state.scope === 'all') {
-        summaryEl.innerHTML = `<strong>${allTotal.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
+        summaryEl.innerHTML = `<strong>${allTotal.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · ${filteredPeople.length.toLocaleString()} people · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
       } else {
         const scopeLabel = getSearchScopeLabel(state.scope).toLowerCase();
-        summaryEl.innerHTML = `<strong>${scopeTotal.toLocaleString()}</strong> ${scopeLabel} results · ${allTotal.toLocaleString()} total across all types · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
+        summaryEl.innerHTML = `<strong>${scopeTotal.toLocaleString()}</strong> ${scopeLabel} results · ${allTotal.toLocaleString()} total across all types · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · ${filteredPeople.length.toLocaleString()} people · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
       }
     } else {
-      const total = filteredTalks.length + filteredPapers.length + filteredBlogs.length;
-      summaryEl.innerHTML = `<strong>${total.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · Sorted by ${sortLabel} · ${densityLabel} view`;
+      const total = filteredTalks.length + filteredPapers.length + filteredBlogs.length + filteredPeople.length;
+      summaryEl.innerHTML = `<strong>${total.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · ${filteredPeople.length.toLocaleString()} people · Sorted by ${sortLabel} · ${densityLabel} view`;
     }
   }
 }
@@ -1726,12 +2285,14 @@ function syncSearchSectionVisibility() {
   const talksSection = document.getElementById('work-talks-section');
   const papersSection = document.getElementById('work-papers-section');
   const blogsSection = document.getElementById('work-blogs-section');
+  const peopleSection = document.getElementById('work-people-section');
 
   if (!searchMode) {
     if (universalSection) universalSection.classList.add('hidden');
     if (talksSection) talksSection.classList.remove('hidden');
     if (papersSection) papersSection.classList.remove('hidden');
     if (blogsSection) blogsSection.classList.remove('hidden');
+    if (peopleSection) peopleSection.classList.remove('hidden');
     return;
   }
 
@@ -1739,6 +2300,7 @@ function syncSearchSectionVisibility() {
   if (talksSection) talksSection.classList.toggle('hidden', state.scope !== 'talks');
   if (papersSection) papersSection.classList.toggle('hidden', state.scope !== 'papers');
   if (blogsSection) blogsSection.classList.toggle('hidden', state.scope !== 'blogs');
+  if (peopleSection) peopleSection.classList.toggle('hidden', state.scope !== 'people');
 }
 
 function applyViewMode(mode, persist = true, refreshHeader = true) {
@@ -1748,6 +2310,10 @@ function applyViewMode(mode, persist = true, refreshHeader = true) {
     const el = document.getElementById(id);
     if (el) el.className = gridClass;
   });
+  const peopleGrid = document.getElementById('work-people-grid');
+  if (peopleGrid) {
+    peopleGrid.className = `${gridClass} people-grid`;
+  }
   syncViewControls();
   if (refreshHeader) applyHeaderState();
 
@@ -1775,12 +2341,17 @@ function rerenderWorkSections() {
       renderBlogBatch(true);
       return;
     }
+    if (state.scope === 'people') {
+      renderPeopleBatch(true);
+      return;
+    }
     renderUniversalBatch(true);
     return;
   }
   renderTalkBatch(true);
   renderPaperBatch(true);
   renderBlogBatch(true);
+  renderPeopleBatch(true);
 }
 
 function initSortControl() {
@@ -1824,6 +2395,7 @@ function renderError(message) {
   const talksGrid = document.getElementById('work-talks-grid');
   const papersGrid = document.getElementById('work-papers-grid');
   const blogsGrid = document.getElementById('work-blogs-grid');
+  const peopleGrid = document.getElementById('work-people-grid');
   const summaryEl = document.getElementById('work-results-summary');
 
   if (summaryEl) summaryEl.textContent = 'Could not load work results';
@@ -1848,6 +2420,11 @@ function renderError(message) {
   if (blogsGrid) {
     blogsGrid.setAttribute('aria-busy', 'false');
     blogsGrid.innerHTML = html;
+  }
+
+  if (peopleGrid) {
+    peopleGrid.setAttribute('aria-busy', 'false');
+    peopleGrid.innerHTML = html;
   }
 }
 
@@ -2193,6 +2770,62 @@ function initWorkHeroSearch() {
   syncClear();
 }
 
+function buildPeopleRecordsWithMetadata(talks, papers, blogs) {
+  const basePeople = typeof HubUtils.buildPeopleIndex === 'function'
+    ? HubUtils.buildPeopleIndex(talks, [...papers, ...blogs])
+    : [];
+  const statsByKey = new Map();
+
+  const recordYear = (name, year) => {
+    const key = normalizePersonKey(name);
+    if (!key || !Number.isFinite(year) || year <= 0) return;
+    if (!statsByKey.has(key)) {
+      statsByKey.set(key, { latestYear: 0, earliestYear: 0 });
+    }
+    const stats = statsByKey.get(key);
+    if (year > Number(stats.latestYear || 0)) stats.latestYear = year;
+    if (!stats.earliestYear || year < Number(stats.earliestYear || 0)) stats.earliestYear = year;
+  };
+
+  for (const talk of (talks || [])) {
+    const year = getTalkYear(talk);
+    for (const speaker of (talk && talk.speakers) || []) {
+      recordYear(speaker && speaker.name, year);
+    }
+  }
+  for (const paper of (papers || [])) {
+    const year = getPaperYear(paper);
+    for (const author of (paper && paper.authors) || []) {
+      recordYear(author && author.name, year);
+    }
+  }
+  for (const blog of (blogs || [])) {
+    const year = getPaperYear(blog);
+    for (const author of (blog && blog.authors) || []) {
+      recordYear(author && author.name, year);
+    }
+  }
+
+  return basePeople.map((person) => {
+    let latestYear = 0;
+    let earliestYear = 0;
+    for (const variant of getPersonVariantNames(person)) {
+      const stats = statsByKey.get(normalizePersonKey(variant));
+      if (!stats) continue;
+      if (Number(stats.latestYear || 0) > latestYear) latestYear = Number(stats.latestYear || 0);
+      const candidateEarliest = Number(stats.earliestYear || 0);
+      if (candidateEarliest > 0 && (!earliestYear || candidateEarliest < earliestYear)) {
+        earliestYear = candidateEarliest;
+      }
+    }
+    return {
+      ...person,
+      _latestYear: latestYear,
+      _earliestYear: earliestYear,
+    };
+  });
+}
+
 async function init() {
   initTheme();
   initTextSize();
@@ -2218,6 +2851,7 @@ async function init() {
     setEmptyState('work-talks-grid', 'talks');
     setEmptyState('work-papers-grid', 'papers');
     setEmptyState('work-blogs-grid', 'blogs');
+    setEmptyState('work-people-grid', 'people');
     return;
   }
 
@@ -2227,6 +2861,7 @@ async function init() {
     setEmptyState('work-talks-grid', 'talks');
     setEmptyState('work-papers-grid', 'papers');
     setEmptyState('work-blogs-grid', 'blogs');
+    setEmptyState('work-people-grid', 'people');
     return;
   }
 
@@ -2253,18 +2888,21 @@ async function init() {
     allTalkRecords = talks;
     allPaperRecords = paperOnly;
     allBlogRecords = blogsOnly;
+    allPeopleRecords = buildPeopleRecordsWithMetadata(talks, paperOnly, blogsOnly);
     recomputeFilteredResults();
     rerenderWorkSections();
 
     const talksMoreBtn = document.getElementById('work-talks-more');
     const papersMoreBtn = document.getElementById('work-papers-more');
     const blogsMoreBtn = document.getElementById('work-blogs-more');
+    const peopleMoreBtn = document.getElementById('work-people-more');
     const universalMoreBtn = document.getElementById('work-universal-more');
 
     if (universalMoreBtn) universalMoreBtn.addEventListener('click', () => renderUniversalBatch(false));
     if (talksMoreBtn) talksMoreBtn.addEventListener('click', () => renderTalkBatch(false));
     if (papersMoreBtn) papersMoreBtn.addEventListener('click', () => renderPaperBatch(false));
     if (blogsMoreBtn) blogsMoreBtn.addEventListener('click', () => renderBlogBatch(false));
+    if (peopleMoreBtn) peopleMoreBtn.addEventListener('click', () => renderPeopleBatch(false));
   } catch (error) {
     renderError(`Could not load data: ${String(error && error.message ? error.message : error)}`);
   }

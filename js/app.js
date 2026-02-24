@@ -1673,7 +1673,7 @@ function updateHeroSubtitle() {
   } else if (state.activeTag && state.query && !state.meeting) {
     el.innerHTML = `Showing all talks for key topic <strong>${escapeHtml(state.activeTag)}</strong>`;
   } else {
-    el.innerHTML = `Browse <strong id="total-count">${allTalks.length.toLocaleString()}</strong> talks from 2007 to present`;
+    el.innerHTML = `Global Search is primary. Browse <strong id="total-count">${allTalks.length.toLocaleString()}</strong> talks from 2007 to present with filters below.`;
   }
 }
 
@@ -2065,6 +2065,16 @@ function applyTopicSearchFilter(tag) {
 function applyAutocompleteSelection(type, value, source = 'search') {
   const input = document.getElementById('search-input');
   let effectiveType = String(type || '').trim();
+  const selectionSource = normalizeValue(source || 'search');
+
+  if (selectionSource === 'search') {
+    const query = String(value || '').trim();
+    if (query) {
+      closeDropdown();
+      routeToGlobalSearch(query);
+      return;
+    }
+  }
 
   if (effectiveType === 'person') {
     effectiveType = 'speaker';
@@ -2775,7 +2785,7 @@ function shouldRouteToGlobalSearch(query) {
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
 
-  if (allowGlobalRouting && committed && shouldRouteToGlobalSearch(committed)) {
+  if (allowGlobalRouting && committed) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';
@@ -2970,7 +2980,7 @@ function filterBySpeaker(name) {
 // ============================================================
 
 function filterByTag(tag) {
-  applyAutocompleteSelection('tag', tag, 'search');
+  applyAutocompleteSelection('tag', tag, 'card');
   // Scroll to top to show filtered results
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }

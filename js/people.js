@@ -490,14 +490,15 @@ function shouldRouteToGlobalSearch(query) {
 }
 
 function applyAutocompleteSelection(type, value) {
-  if (String(type || '').trim() === 'global') {
+  const query = String(value || '').trim();
+  if (query) {
     closeDropdown();
-    routeToGlobalSearch(value);
+    routeToGlobalSearch(query);
     return 'global';
   }
 
   const input = document.getElementById('people-search');
-  state.query = String(value || '').trim();
+  state.query = query;
   if (input) input.value = state.query;
   closeDropdown();
   render();
@@ -514,7 +515,7 @@ function selectAutocompleteItem(item) {
 
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
-  if (allowGlobalRouting && committed && shouldRouteToGlobalSearch(committed)) {
+  if (allowGlobalRouting && committed) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';
@@ -760,7 +761,7 @@ function render() {
   if (state.query) {
     subtitle.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong>`;
   } else {
-    subtitle.innerHTML = `Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles`;
+    subtitle.innerHTML = `Global Search is primary. Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
   }
 
   if (!people.length) {

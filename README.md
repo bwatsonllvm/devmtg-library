@@ -21,6 +21,8 @@ Search now uses a shared, relevance-first stack intended to work for both LLVM n
 ### Global Search autocomplete and query routing
 
 - All `.global-search-form` inputs use a shared autocomplete index sourced from talks, papers/blogs, people, and key topics.
+- Search boxes across home, talks, papers, blogs, people, about, and detail pages now default to **Global Search** routing (`work.html?mode=search&q=...`) for typed queries and autocomplete selections.
+- Browsing remains available as secondary behavior through section filters/chips/card actions (for example, topic chips and sidebar facets).
 - Suggestions are grouped into:
   - Key Topics
   - Speakers + Authors
@@ -31,7 +33,7 @@ Search now uses a shared, relevance-first stack intended to work for both LLVM n
   - exact/prefix/contains boosts
   - popularity weighting
   - fuzzy tolerance
-- Search placeholders adapt by section (`talks`, `papers`, `blogs`, `people`, `work`) to make scope obvious.
+- Search placeholders and labels are standardized to global-library wording so behavior is consistent across routes.
 
 ### Relevance ranking model
 
@@ -88,13 +90,14 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 - `talks/`: sort (`relevance`, `newest`, `oldest`, `title`) + `grid/list` view toggle.
 - `papers/` and `blogs/`: sort (`relevance`, `year`, `citations`) + `grid/list` view toggle.
 - `work.html` (global/entity combined results):
-  - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs` (default `All`)
+  - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs`, `People` (default `All`)
   - time filter in Global Search mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
   - type filter in Global Search mode: `Any type`, `Review articles`
   - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
-  - in Global Search mode (`mode=search`), results are interleaved across talks/papers/blogs by cross-type relevance (not fixed by content type)
+  - in Global Search mode (`mode=search`), results are interleaved across talks/papers/blogs/people by cross-type relevance (not fixed by content type)
   - exact/prefix title intent gets additional boost so precise queries surface the best matching item first, regardless of type
-  - `expanded/compact` view toggle across talks, papers, and blogs sections
+  - people ranking combines direct query-name matching with cross-reference context from matched talks/papers/blogs so relevant people surface for both name and topic queries
+  - `expanded/compact` view toggle across talks, papers, blogs, and people sections
   - URL-state support for `sort`, `view`, `scope`, `time`, `type`, `yearFrom`, and `yearTo`, with mode-aware defaults
 - `people/`:
   - sort (`works`, `citations`, `alpha`, `alpha-desc`)
@@ -104,7 +107,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 
 - `work.html` supports:
   - `mode=search&q=...` for global query mode
-  - optional `scope=all|talks|papers|blogs` in search mode to focus results by content type
+  - optional `scope=all|talks|papers|blogs|people` in search mode to focus results by content type
   - optional `time=any|since-2026|since-2025|since-2022|custom` in search mode
   - optional `type=any|review` in search mode
   - optional `yearFrom=YYYY&yearTo=YYYY` for custom ranges (`time=custom`)
@@ -122,6 +125,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 ### Terminology: All Work vs Global Search
 
 - **Global Search**: free-text, cross-library ranking mode (`work.html?mode=search&q=...`).
+- Global Search is the default search path from section search boxes; browsing/filtering is secondary.
 - **All Work**: entity aggregation mode for a speaker or key topic (`work.html?mode=entity&kind=...&value=...`).
 
 ## How The Database Is Constructed

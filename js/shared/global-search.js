@@ -554,27 +554,6 @@
   }
 
   function resolveSectionSearchPlaceholder() {
-    const pathname = String((window.location && window.location.pathname) || '').toLowerCase();
-    if (!pathname) return GLOBAL_SEARCH_PLACEHOLDER;
-
-    if (pathname.endsWith('/events.html') || pathname.includes('/talks/events.html')) {
-      return 'Search events and more...';
-    }
-    if (pathname.endsWith('/talk.html') || pathname.endsWith('/talks.html') || pathname.includes('/talks/')) {
-      return 'Search talks and more...';
-    }
-    if (pathname.endsWith('/paper.html') || pathname.endsWith('/papers.html') || pathname.includes('/papers/')) {
-      return 'Search papers and more...';
-    }
-    if (pathname.endsWith('/blogs.html') || pathname.includes('/blogs/')) {
-      return 'Search blogs and more...';
-    }
-    if (pathname.endsWith('/people.html') || pathname.includes('/people/')) {
-      return 'Search people and more...';
-    }
-    if (pathname.endsWith('/work.html')) {
-      return 'Search the full library...';
-    }
     return GLOBAL_SEARCH_PLACEHOLDER;
   }
 

@@ -970,7 +970,7 @@ function renderCards(results) {
 
     grid.querySelectorAll('.suggestion-chip').forEach((chip) => {
       chip.addEventListener('click', () => {
-        applyAutocompleteSelection('tag', chip.dataset.suggestion || '', 'search');
+        applyAutocompleteSelection('tag', chip.dataset.suggestion || '', 'suggestion');
       });
     });
 
@@ -1051,7 +1051,7 @@ function updateHeroSubtitle(resultsCount) {
   }
 
   if (resultsCount === total) {
-    el.innerHTML = `Browse <strong>${total.toLocaleString()}</strong> ${escapeHtml(plural)}`;
+    el.innerHTML = `Global Search is primary. Browse <strong>${total.toLocaleString()}</strong> ${escapeHtml(plural)} with filters below.`;
     return;
   }
 
@@ -1322,6 +1322,16 @@ function applyTopicSearchFilter(tag, source = 'search') {
 function applyAutocompleteSelection(type, value, source = 'search') {
   const input = document.getElementById('search-input');
   let effectiveType = String(type || '').trim();
+  const selectionSource = normalizeFilterValue(source || 'search');
+
+  if (selectionSource === 'search') {
+    const query = String(value || '').trim();
+    if (query) {
+      closeDropdown();
+      routeToGlobalSearch(query);
+      return;
+    }
+  }
 
   if (effectiveType === 'person') {
     effectiveType = 'speaker';
@@ -2436,7 +2446,7 @@ function shouldRouteToGlobalSearch(query) {
 function commitSearchValue(rawValue, allowGlobalRouting = true) {
   const committed = String(rawValue || '').trim();
 
-  if (allowGlobalRouting && committed && shouldRouteToGlobalSearch(committed)) {
+  if (allowGlobalRouting && committed) {
     closeDropdown();
     routeToGlobalSearch(committed);
     return 'global';
@@ -2668,7 +2678,7 @@ function filterBySpeaker(name) {
 }
 
 function filterByTag(tag) {
-  applyAutocompleteSelection('tag', tag, 'search');
+  applyAutocompleteSelection('tag', tag, 'card');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

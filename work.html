@@ -60,7 +60,7 @@
     }
   </style>
   <title>All Work &amp; Global Search — LLVM Research Library</title>
-  <meta name="description" content="View talks, papers, and blogs for a speaker or key topic in one place.">
+  <meta name="description" content="View talks, papers, blogs, and people for a speaker, key topic, or global query in one place.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -169,8 +169,8 @@
   <section class="search-hero search-hero--compact" aria-label="All Work and Global Search">
     <div class="search-hero-shell">
       <h1 id="work-title">All Work</h1>
-      <p class="subtitle" id="work-subtitle">Loading talks, papers, and blogs...</p>
-      <form class="search-box global-search-form work-hero-search" action="work.html" method="get" role="search" aria-label="Search talks, papers, blogs, and people">
+      <p class="subtitle" id="work-subtitle">Loading talks, papers, blogs, and people...</p>
+      <form class="search-box global-search-form work-hero-search" action="work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, people, and key topics">
         <input type="hidden" name="mode" value="search">
         <input type="hidden" id="work-search-scope-input" name="scope" value="all">
         <input type="hidden" id="work-search-time-input" name="time" value="any">
@@ -189,7 +189,7 @@
           placeholder="Search the full library..."
           autocomplete="off"
           spellcheck="false"
-          aria-label="Search talks, papers, blogs, and people"
+          aria-label="Global Search across talks, papers, blogs, people, and key topics"
         >
         <button type="button" class="search-clear" id="work-search-clear" aria-label="Clear search" title="Clear">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
@@ -224,6 +224,10 @@
             <button type="button" class="work-scope-btn" data-work-scope="blogs" aria-pressed="false">
               <span>Blogs</span>
               <span class="work-scope-count" id="work-scope-count-blogs">0</span>
+            </button>
+            <button type="button" class="work-scope-btn" data-work-scope="people" aria-pressed="false">
+              <span>People</span>
+              <span class="work-scope-count" id="work-scope-count-people">0</span>
             </button>
           </div>
           <label for="work-time-select" class="results-sort-label">Time</label>
@@ -325,13 +329,27 @@
         </div>
         <button class="work-more-btn hidden" id="work-blogs-more" type="button">Show more blogs</button>
       </section>
+
+      <section class="work-section" id="work-people-section" aria-labelledby="work-people-heading">
+        <div class="work-section-header">
+          <h2 class="work-section-title" id="work-people-heading">People</h2>
+          <span class="work-section-count" id="work-people-count"></span>
+        </div>
+        <div id="work-people-grid" class="talks-grid people-grid" role="feed" aria-label="People results" aria-busy="true">
+          <div class="loading-state">
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Loading people...</p>
+          </div>
+        </div>
+        <button class="work-more-btn hidden" id="work-people-more" type="button">Show more people</button>
+      </section>
     </main>
   </div>
 
   <script src="js/events-data.js?v=20260223-01"></script>
   <script src="js/papers-data.js?v=20260223-01"></script>
   <script src="js/shared/library-utils.js?v=20260224-01"></script>
-  <script src="js/shared/global-search.js?v=20260223-02"></script>
-  <script src="js/work.js?v=20260224-01"></script>
+  <script src="js/shared/global-search.js?v=20260224-03"></script>
+  <script src="js/work.js?v=20260224-03"></script>
 </body>
 </html>
