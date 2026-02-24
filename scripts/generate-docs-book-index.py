@@ -79,6 +79,21 @@ def collect_source_docs(source_root: Path) -> Dict[str, SourceDoc]:
     return docs
 
 
+def collect_html_only_docs(docs_root: Path, source_docs: Dict[str, SourceDoc]) -> Dict[str, Path]:
+    html_docs: Dict[str, Path] = {}
+    for path in sorted(docs_root.rglob("*.html")):
+        rel = path.relative_to(docs_root).as_posix()
+        if rel.startswith("_static/"):
+            continue
+        if rel in {"search.html", "genindex.html"}:
+            continue
+        slug = norm_slug(rel[: -len(".html")])
+        if not slug or slug in source_docs:
+            continue
+        html_docs[slug] = path
+    return html_docs
+
+
 def extract_html_title(html_path: Path) -> Optional[str]:
     if not html_path.exists():
         return None
@@ -382,6 +397,13 @@ def build_tree_node(
 def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict[str, object]:
     titles = {slug: extract_title(doc.path, docs_root, slug) for slug, doc in source_docs.items()}
     edges = parse_toctree_edges(source_docs)
+    html_only_docs = collect_html_only_docs(docs_root, source_docs)
+
+    for slug, html_path in html_only_docs.items():
+        fallback = slug.split("/")[-1].replace("-", " ").replace("_", " ").strip() or slug
+        titles[slug] = extract_html_title(html_path) or fallback
+        edges.setdefault(slug, [])
+
     docs_variant = detect_docs_variant(source_docs, docs_root)
 
     if docs_variant == "clang":
@@ -423,7 +445,8 @@ def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict
         chapters.insert(0, {"title": "Overview", "entries": [index_node]})
 
     # Ensure complete coverage with an appendix.
-    remaining = [slug for slug in sorted(source_docs.keys(), key=natural_key) if slug not in assigned]
+    all_docs = set(source_docs.keys()) | set(html_only_docs.keys())
+    remaining = [slug for slug in sorted(all_docs, key=natural_key) if slug not in assigned]
     appendix_entries: List[Dict[str, object]] = []
     for slug in remaining:
         node = build_tree_node(slug, edges, titles, assigned, set())
@@ -435,6 +458,8 @@ def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict
     return {
         "meta": {
             "source_docs_count": len(source_docs),
+            "html_only_docs_count": len(html_only_docs),
+            "total_docs_count": len(all_docs),
             "chapter_count": len(chapters),
             "covered_docs_count": len(assigned),
         },
