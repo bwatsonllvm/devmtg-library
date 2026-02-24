@@ -34,10 +34,22 @@ let loadMoreObserver = null;
 let loadMoreScrollHandler = null;
 const MIN_TOPIC_FILTER_COUNT = 4;
 const MAX_TOPIC_FILTERS = 180;
+const MIN_PUBLICATION_FILTER_COUNT = 2;
+const MAX_PUBLICATION_FILTERS = 200;
+const MIN_AFFILIATION_FILTER_COUNT = 2;
+const MAX_AFFILIATION_FILTERS = 240;
 const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
 const PAPER_FILTER_VALUE = 'paper';
 const BLOG_FILTER_VALUE = 'blog';
 const CONTENT_TYPE_ORDER = [PAPER_FILTER_VALUE, BLOG_FILTER_VALUE];
+const CITATION_BUCKETS = [
+  { key: '500+', label: '500+ citations', min: 500, max: Infinity },
+  { key: '100-499', label: '100-499 citations', min: 100, max: 499 },
+  { key: '50-99', label: '50-99 citations', min: 50, max: 99 },
+  { key: '10-49', label: '10-49 citations', min: 10, max: 49 },
+  { key: '1-9', label: '1-9 citations', min: 1, max: 9 },
+  { key: '0', label: '0 citations', min: 0, max: 0 },
+];
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 const CONTENT_TYPE_META = {
   [PAPER_FILTER_VALUE]: {
@@ -69,10 +81,15 @@ const state = {
   speaker: '', // exact author filter from author button click
   years: new Set(),
   contentTypes: new Set(),
+  citationBuckets: new Set(),
+  affiliations: new Set(),
+  publications: new Set(),
   sortBy: 'relevance',
 };
 
 let scopedPapers = [];
+let publicationFilterOptions = [];
+let affiliationFilterOptions = [];
 
 // ============================================================
 // Data Loading
@@ -126,12 +143,67 @@ function cleanMetadataValue(value) {
 }
 
 function normalizePublicationLabel(value) {
-  const cleaned = cleanMetadataValue(value);
+  let cleaned = cleanMetadataValue(value);
   if (!cleaned) return '';
+  if (typeof HubUtils.normalizePublication === 'function') {
+    const normalized = HubUtils.normalizePublication(cleaned);
+    cleaned = cleanMetadataValue(normalized || cleaned);
+  }
   if (/^arxiv(?:\.org)?(?:\s*\(cornell university\))?$/i.test(cleaned)) {
     return 'arXiv';
   }
   return cleaned;
+}
+
+function normalizeAffiliationLabel(value) {
+  let cleaned = cleanMetadataValue(value);
+  if (!cleaned) return '';
+  if (typeof HubUtils.normalizeAffiliation === 'function') {
+    const normalized = HubUtils.normalizeAffiliation(cleaned);
+    cleaned = cleanMetadataValue(normalized || cleaned);
+  }
+  return cleaned;
+}
+
+function normalizeAffiliationKey(value) {
+  if (typeof HubUtils.normalizeAffiliationKey === 'function') {
+    return HubUtils.normalizeAffiliationKey(value);
+  }
+  return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
+}
+
+function normalizePublicationKey(value) {
+  if (typeof HubUtils.normalizePublicationKey === 'function') {
+    return HubUtils.normalizePublicationKey(value);
+  }
+  return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
+}
+
+function normalizePublicationFilterKey(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (/^(?:acro|text):[a-z0-9]+$/i.test(raw)) return raw.toLowerCase();
+  return normalizePublicationKey(raw);
+}
+
+function normalizeCitationBucketKey(value) {
+  const key = String(value || '').trim();
+  if (!key) return '';
+  return CITATION_BUCKETS.some((bucket) => bucket.key === key) ? key : '';
+}
+
+function getCitationBucketForCount(count) {
+  const numeric = Number.isFinite(Number(count)) ? Number(count) : 0;
+  for (const bucket of CITATION_BUCKETS) {
+    const meetsMin = numeric >= bucket.min;
+    const meetsMax = bucket.max === Infinity ? true : numeric <= bucket.max;
+    if (meetsMin && meetsMax) return bucket.key;
+  }
+  return '0';
+}
+
+function getCitationBucketLabel(key) {
+  return CITATION_BUCKETS.find((bucket) => bucket.key === key)?.label || key;
 }
 
 function isDirectPdfUrl(url) {
@@ -644,6 +716,35 @@ function filterAndSort() {
     entries = entries.filter(({ paper }) => state.contentTypes.has(getPaperContentTypeValue(paper)));
   }
 
+  if (state.citationBuckets.size > 0) {
+    entries = entries.filter(({ paper }) => {
+      const bucket = getCitationBucketForCount(paper._citationCount || 0);
+      return state.citationBuckets.has(bucket);
+    });
+  }
+
+  if (state.publications.size > 0) {
+    entries = entries.filter(({ paper }) => {
+      const publication = normalizePublicationLabel(paper.publication || paper.venue || '');
+      const key = normalizePublicationKey(publication);
+      if (!key) return false;
+      return state.publications.has(key);
+    });
+  }
+
+  if (state.affiliations.size > 0) {
+    entries = entries.filter(({ paper }) => {
+      const authors = Array.isArray(paper.authors) ? paper.authors : [];
+      return authors.some((author) => {
+        const affiliation = normalizeAffiliationLabel(author && author.affiliation);
+        if (!affiliation) return false;
+        const key = normalizeAffiliationKey(affiliation);
+        if (!key) return false;
+        return state.affiliations.has(key);
+      });
+    });
+  }
+
   entries.sort((a, b) => {
     if (state.sortBy === 'year') {
       const yearDiff = comparePapersNewestFirst(a.paper, b.paper);
@@ -914,6 +1015,9 @@ function renderCards(results) {
 
     if (state.speaker) recoveryActions.push({ id: 'clear-author', label: 'Clear author' });
     if (state.years.size > 0) recoveryActions.push({ id: 'clear-year', label: 'Clear year' });
+    if (state.citationBuckets.size > 0) recoveryActions.push({ id: 'clear-citations', label: 'Clear citations' });
+    if (state.publications.size > 0) recoveryActions.push({ id: 'clear-publication', label: 'Clear publication' });
+    if (state.affiliations.size > 0) recoveryActions.push({ id: 'clear-affiliation', label: 'Clear affiliation' });
     if (state.contentTypes.size > 0) recoveryActions.push({ id: 'clear-content', label: 'Clear content type' });
     if (state.activeTags.size > 0) recoveryActions.push({ id: 'clear-topic', label: 'Clear key topic' });
     else if (state.query) recoveryActions.push({ id: 'clear-search', label: 'Clear search' });
@@ -952,6 +1056,18 @@ function renderCards(results) {
         }
         if (action === 'clear-content') {
           clearContentTypeFilters();
+          return;
+        }
+        if (action === 'clear-citations') {
+          clearCitationFilters();
+          return;
+        }
+        if (action === 'clear-publication') {
+          clearPublicationFilters();
+          return;
+        }
+        if (action === 'clear-affiliation') {
+          clearAffiliationFilters();
           return;
         }
         if (action === 'clear-topic' || action === 'clear-search') {
@@ -999,14 +1115,20 @@ function renderResultCount(count) {
     (state.speaker ? 1 : 0) +
     state.activeTags.size +
     state.years.size +
-    state.contentTypes.size;
+    state.contentTypes.size +
+    state.citationBuckets.size +
+    state.affiliations.size +
+    state.publications.size;
 
   const noActiveFilters =
     !queryCountsAsFilter &&
     !state.speaker &&
     state.activeTags.size === 0 &&
     state.years.size === 0 &&
-    state.contentTypes.size === 0;
+    state.contentTypes.size === 0 &&
+    state.citationBuckets.size === 0 &&
+    state.affiliations.size === 0 &&
+    state.publications.size === 0;
 
   if (count === total && noActiveFilters) {
     el.innerHTML = `<strong>${total.toLocaleString()}</strong> ${escapeHtml(PAGE_SCOPE_LABELS.pluralTitle)}`;
@@ -1081,6 +1203,20 @@ function showError(html) {
 // ============================================================
 
 const _xIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+function getPublicationFilterLabel(key) {
+  const target = normalizePublicationFilterKey(key);
+  if (!target) return '';
+  const matched = publicationFilterOptions.find((entry) => entry.key === target);
+  return matched ? matched.label : '';
+}
+
+function getAffiliationFilterLabel(key) {
+  const target = normalizeAffiliationKey(key);
+  if (!target) return '';
+  const matched = affiliationFilterOptions.find((entry) => entry.key === target);
+  return matched ? matched.label : '';
+}
 
 function createActiveFilterPill(typeLabel, valueLabel, ariaLabel, onRemove, options = {}) {
   const pill = document.createElement('span');
@@ -1203,6 +1339,63 @@ function renderActiveFilters() {
       label,
       `Remove content type filter: ${label}`,
       () => removeContentTypeFilter(contentType)
+    ));
+  }
+
+  const citationKeys = [...state.citationBuckets]
+    .map((key) => normalizeCitationBucketKey(key))
+    .filter(Boolean)
+    .sort((a, b) => {
+      const aIdx = CITATION_BUCKETS.findIndex((bucket) => bucket.key === a);
+      const bIdx = CITATION_BUCKETS.findIndex((bucket) => bucket.key === b);
+      return aIdx - bIdx;
+    });
+
+  for (const citationKey of citationKeys) {
+    const label = getCitationBucketLabel(citationKey);
+    pills.push(createActiveFilterPill(
+      'Citations',
+      label,
+      `Remove citation filter: ${label}`,
+      () => removeCitationFilter(citationKey)
+    ));
+  }
+
+  const publicationKeys = [...state.publications]
+    .map((key) => normalizePublicationFilterKey(key))
+    .filter(Boolean)
+    .sort((a, b) => {
+      const labelA = getPublicationFilterLabel(a) || a;
+      const labelB = getPublicationFilterLabel(b) || b;
+      return labelA.localeCompare(labelB);
+    });
+
+  for (const publicationKey of publicationKeys) {
+    const label = getPublicationFilterLabel(publicationKey) || publicationKey;
+    pills.push(createActiveFilterPill(
+      'Publication',
+      label,
+      `Remove publication filter: ${label}`,
+      () => removePublicationFilter(publicationKey)
+    ));
+  }
+
+  const affiliationKeys = [...state.affiliations]
+    .map((key) => normalizeAffiliationKey(key))
+    .filter(Boolean)
+    .sort((a, b) => {
+      const labelA = getAffiliationFilterLabel(a) || a;
+      const labelB = getAffiliationFilterLabel(b) || b;
+      return labelA.localeCompare(labelB);
+    });
+
+  for (const affiliationKey of affiliationKeys) {
+    const label = getAffiliationFilterLabel(affiliationKey) || affiliationKey;
+    pills.push(createActiveFilterPill(
+      'Affiliation',
+      label,
+      `Remove affiliation filter: ${label}`,
+      () => removeAffiliationFilter(affiliationKey)
     ));
   }
 
@@ -1421,6 +1614,9 @@ function clearFilters() {
   state.speaker = '';
   state.years.clear();
   state.contentTypes.clear();
+  state.citationBuckets.clear();
+  state.publications.clear();
+  state.affiliations.clear();
 
   const input = document.getElementById('search-input');
   if (input) input.value = '';
@@ -1431,6 +1627,9 @@ function clearFilters() {
   });
 
   closeDropdown();
+  syncPublicationChipState();
+  syncAffiliationChipState();
+  syncCitationChipState();
   updateClearBtn();
   syncUrl();
   render();
@@ -1484,6 +1683,150 @@ function toggleContentTypeFilter(contentType) {
   }
 }
 
+function syncCitationChipState() {
+  document.querySelectorAll('.filter-chip[data-type="citation"]').forEach((chip) => {
+    const key = normalizeCitationBucketKey(chip.dataset.value);
+    const isActive = key ? state.citationBuckets.has(key) : false;
+    chip.classList.toggle('active', isActive);
+    chip.setAttribute('aria-checked', isActive ? 'true' : 'false');
+  });
+}
+
+function addCitationFilter(bucketKey) {
+  const key = normalizeCitationBucketKey(bucketKey);
+  if (!key) return '';
+  if (!state.citationBuckets.has(key)) state.citationBuckets.add(key);
+  return key;
+}
+
+function removeCitationFilter(bucketKey, { skipRender = false } = {}) {
+  const key = normalizeCitationBucketKey(bucketKey);
+  if (!key) return;
+  state.citationBuckets.delete(key);
+  syncCitationChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function clearCitationFilters({ skipRender = false } = {}) {
+  state.citationBuckets.clear();
+  syncCitationChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function toggleCitationFilter(bucketKey) {
+  const key = normalizeCitationBucketKey(bucketKey);
+  if (!key) return;
+  if (state.citationBuckets.has(key)) {
+    removeCitationFilter(key);
+  } else {
+    addCitationFilter(key);
+    syncCitationChipState();
+    updateClearBtn();
+    syncUrl();
+    render();
+  }
+}
+
+function syncPublicationChipState() {
+  document.querySelectorAll('.filter-chip[data-type="publication"]').forEach((chip) => {
+    const key = normalizePublicationFilterKey(chip.dataset.value);
+    const isActive = key ? state.publications.has(key) : false;
+    chip.classList.toggle('active', isActive);
+    chip.setAttribute('aria-checked', isActive ? 'true' : 'false');
+  });
+}
+
+function addPublicationFilter(value) {
+  const key = normalizePublicationFilterKey(value);
+  if (!key) return '';
+  if (!state.publications.has(key)) state.publications.add(key);
+  return key;
+}
+
+function removePublicationFilter(value, { skipRender = false } = {}) {
+  const key = normalizePublicationFilterKey(value);
+  if (!key) return;
+  state.publications.delete(key);
+  syncPublicationChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function clearPublicationFilters({ skipRender = false } = {}) {
+  state.publications.clear();
+  syncPublicationChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function togglePublicationFilter(value) {
+  const key = normalizePublicationFilterKey(value);
+  if (!key) return;
+  if (state.publications.has(key)) {
+    removePublicationFilter(key);
+  } else {
+    addPublicationFilter(key);
+    syncPublicationChipState();
+    updateClearBtn();
+    syncUrl();
+    render();
+  }
+}
+
+function syncAffiliationChipState() {
+  document.querySelectorAll('.filter-chip[data-type="affiliation"]').forEach((chip) => {
+    const key = normalizeAffiliationKey(chip.dataset.value);
+    const isActive = key ? state.affiliations.has(key) : false;
+    chip.classList.toggle('active', isActive);
+    chip.setAttribute('aria-checked', isActive ? 'true' : 'false');
+  });
+}
+
+function addAffiliationFilter(value) {
+  const key = normalizeAffiliationKey(value);
+  if (!key) return '';
+  if (!state.affiliations.has(key)) state.affiliations.add(key);
+  return key;
+}
+
+function removeAffiliationFilter(value, { skipRender = false } = {}) {
+  const key = normalizeAffiliationKey(value);
+  if (!key) return;
+  state.affiliations.delete(key);
+  syncAffiliationChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function clearAffiliationFilters({ skipRender = false } = {}) {
+  state.affiliations.clear();
+  syncAffiliationChipState();
+  updateClearBtn();
+  syncUrl();
+  if (!skipRender) render();
+}
+
+function toggleAffiliationFilter(value) {
+  const key = normalizeAffiliationKey(value);
+  if (!key) return;
+  if (state.affiliations.has(key)) {
+    removeAffiliationFilter(key);
+  } else {
+    addAffiliationFilter(key);
+    syncAffiliationChipState();
+    updateClearBtn();
+    syncUrl();
+    render();
+  }
+}
+
 // ============================================================
 // Filters
 // ============================================================
@@ -1503,6 +1846,9 @@ function initFilters() {
     [PAPER_FILTER_VALUE, 0],
     [BLOG_FILTER_VALUE, 0],
   ]);
+  const citationCounts = new Map(CITATION_BUCKETS.map((bucket) => [bucket.key, 0]));
+  const publicationCounts = new Map();
+  const affiliationCounts = new Map();
 
   for (const paper of scopedPapers) {
     for (const topic of getPaperKeyTopics(paper, 8)) {
@@ -1517,6 +1863,46 @@ function initFilters() {
     const contentType = getPaperContentTypeValue(paper);
     contentTypeCounts.set(contentType, (contentTypeCounts.get(contentType) || 0) + 1);
 
+    const citationBucket = getCitationBucketForCount(paper._citationCount || 0);
+    citationCounts.set(citationBucket, (citationCounts.get(citationBucket) || 0) + 1);
+
+    const publicationLabel = normalizePublicationLabel(paper.publication || paper.venue || '');
+    const publicationKey = normalizePublicationKey(publicationLabel);
+    if (publicationKey && publicationLabel) {
+      if (!publicationCounts.has(publicationKey)) {
+        publicationCounts.set(publicationKey, {
+          key: publicationKey,
+          label: publicationLabel,
+          count: 0,
+        });
+      }
+      const publicationBucket = publicationCounts.get(publicationKey);
+      publicationBucket.count += 1;
+      if (publicationLabel.length > publicationBucket.label.length) {
+        publicationBucket.label = publicationLabel;
+      }
+    }
+
+    const seenAffiliations = new Set();
+    for (const author of (paper.authors || [])) {
+      const affiliationLabel = normalizeAffiliationLabel(author && author.affiliation);
+      if (!affiliationLabel) continue;
+      const affiliationKey = normalizeAffiliationKey(affiliationLabel);
+      if (!affiliationKey || seenAffiliations.has(affiliationKey)) continue;
+      seenAffiliations.add(affiliationKey);
+      if (!affiliationCounts.has(affiliationKey)) {
+        affiliationCounts.set(affiliationKey, {
+          key: affiliationKey,
+          label: affiliationLabel,
+          count: 0,
+        });
+      }
+      const affiliationBucket = affiliationCounts.get(affiliationKey);
+      affiliationBucket.count += 1;
+      if (affiliationLabel.length > affiliationBucket.label.length) {
+        affiliationBucket.label = affiliationLabel;
+      }
+    }
   }
 
   const tags = Object.entries(tagCounts)
@@ -1544,6 +1930,63 @@ function initFilters() {
               role="switch" aria-checked="false">
         ${escapeHtml(year)}
         <span class="filter-chip-count">${count.toLocaleString()}</span>
+      </button>`).join('');
+  }
+
+  const citationContainer = document.getElementById('filter-citations');
+  if (citationContainer) {
+    const citationEntries = CITATION_BUCKETS
+      .map((bucket) => ({ ...bucket, count: citationCounts.get(bucket.key) || 0 }))
+      .filter((bucket) => bucket.count > 0);
+    citationContainer.innerHTML = citationEntries.map((bucket) => `
+      <button class="filter-chip" data-type="citation" data-value="${escapeHtml(bucket.key)}"
+              role="switch" aria-checked="false">
+        ${escapeHtml(bucket.label)}
+        <span class="filter-chip-count">${bucket.count.toLocaleString()}</span>
+      </button>`).join('');
+  }
+
+  publicationFilterOptions = [...publicationCounts.values()]
+    .filter((entry) => entry.count >= MIN_PUBLICATION_FILTER_COUNT)
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, MAX_PUBLICATION_FILTERS);
+
+  affiliationFilterOptions = [...affiliationCounts.values()]
+    .filter((entry) => entry.count >= MIN_AFFILIATION_FILTER_COUNT)
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, MAX_AFFILIATION_FILTERS);
+
+  const validPublicationKeys = new Set(publicationFilterOptions.map((entry) => entry.key));
+  for (const key of [...state.publications]) {
+    if (!validPublicationKeys.has(normalizePublicationFilterKey(key))) {
+      state.publications.delete(key);
+    }
+  }
+
+  const validAffiliationKeys = new Set(affiliationFilterOptions.map((entry) => entry.key));
+  for (const key of [...state.affiliations]) {
+    if (!validAffiliationKeys.has(normalizeAffiliationKey(key))) {
+      state.affiliations.delete(key);
+    }
+  }
+
+  const publicationContainer = document.getElementById('filter-publications');
+  if (publicationContainer) {
+    publicationContainer.innerHTML = publicationFilterOptions.map((entry) => `
+      <button class="filter-chip filter-chip--tag" data-type="publication" data-value="${escapeHtml(entry.key)}"
+              role="switch" aria-checked="false">
+        ${escapeHtml(entry.label)}
+        <span class="filter-chip-count">${entry.count.toLocaleString()}</span>
+      </button>`).join('');
+  }
+
+  const affiliationContainer = document.getElementById('filter-affiliations');
+  if (affiliationContainer) {
+    affiliationContainer.innerHTML = affiliationFilterOptions.map((entry) => `
+      <button class="filter-chip filter-chip--tag" data-type="affiliation" data-value="${escapeHtml(entry.key)}"
+              role="switch" aria-checked="false">
+        ${escapeHtml(entry.label)}
+        <span class="filter-chip-count">${entry.count.toLocaleString()}</span>
       </button>`).join('');
   }
 
@@ -1593,6 +2036,21 @@ function initFilters() {
 
       if (type === 'content-type') {
         toggleContentTypeFilter(value);
+        return;
+      }
+
+      if (type === 'citation') {
+        toggleCitationFilter(value);
+        return;
+      }
+
+      if (type === 'publication') {
+        togglePublicationFilter(value);
+        return;
+      }
+
+      if (type === 'affiliation') {
+        toggleAffiliationFilter(value);
       }
     });
   });
@@ -1769,6 +2227,31 @@ function syncUrl() {
   if (state.activeTags.size) params.set('tag', [...state.activeTags].sort((a, b) => a.localeCompare(b)).join(','));
   if (state.years.size) params.set('year', [...state.years].join(','));
   if (state.contentTypes.size) params.set('content', [...state.contentTypes].sort((a, b) => a.localeCompare(b)).join(','));
+  if (state.citationBuckets.size) {
+    const orderedBuckets = [...state.citationBuckets]
+      .map((key) => normalizeCitationBucketKey(key))
+      .filter(Boolean)
+      .sort((a, b) => {
+        const aIdx = CITATION_BUCKETS.findIndex((bucket) => bucket.key === a);
+        const bIdx = CITATION_BUCKETS.findIndex((bucket) => bucket.key === b);
+        return aIdx - bIdx;
+      });
+    if (orderedBuckets.length) params.set('cite', orderedBuckets.join(','));
+  }
+  if (state.publications.size) {
+    const publicationKeys = [...state.publications]
+      .map((key) => normalizePublicationFilterKey(key))
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b));
+    if (publicationKeys.length) params.set('pub', publicationKeys.join(','));
+  }
+  if (state.affiliations.size) {
+    const affiliationKeys = [...state.affiliations]
+      .map((key) => normalizeAffiliationKey(key))
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b));
+    if (affiliationKeys.length) params.set('aff', affiliationKeys.join(','));
+  }
   if (state.sortBy !== 'relevance') params.set('sort', state.sortBy);
 
   const newUrl = params.toString()
@@ -1787,6 +2270,9 @@ function loadStateFromUrl() {
   state.activeTags.clear();
   state.years.clear();
   state.contentTypes.clear();
+  state.citationBuckets.clear();
+  state.publications.clear();
+  state.affiliations.clear();
 
   const yearParam = String(params.get('year') || '').trim();
   if (yearParam) {
@@ -1818,6 +2304,33 @@ function loadStateFromUrl() {
     tagParam.split(',').map((part) => part.trim()).filter(Boolean).forEach((tag) => addTagFilter(tag));
   }
 
+  const citationParam = String(params.get('cite') || '').trim();
+  if (citationParam) {
+    citationParam
+      .split(',')
+      .map((part) => normalizeCitationBucketKey(part))
+      .filter(Boolean)
+      .forEach((key) => state.citationBuckets.add(key));
+  }
+
+  const publicationParam = String(params.get('pub') || '').trim();
+  if (publicationParam) {
+    publicationParam
+      .split(',')
+      .map((part) => normalizePublicationFilterKey(part))
+      .filter(Boolean)
+      .forEach((key) => state.publications.add(key));
+  }
+
+  const affiliationParam = String(params.get('aff') || '').trim();
+  if (affiliationParam) {
+    affiliationParam
+      .split(',')
+      .map((part) => normalizeAffiliationKey(part))
+      .filter(Boolean)
+      .forEach((key) => state.affiliations.add(key));
+  }
+
   state.activeSpeaker = '';
 
   const input = document.getElementById('search-input');
@@ -1825,9 +2338,33 @@ function loadStateFromUrl() {
 }
 
 function applyUrlFilters() {
+  const validCitationKeys = new Set(CITATION_BUCKETS.map((bucket) => bucket.key));
+  for (const key of [...state.citationBuckets]) {
+    if (!validCitationKeys.has(normalizeCitationBucketKey(key))) {
+      state.citationBuckets.delete(key);
+    }
+  }
+
+  const validPublicationKeys = new Set(publicationFilterOptions.map((entry) => entry.key));
+  for (const key of [...state.publications]) {
+    if (!validPublicationKeys.has(normalizePublicationFilterKey(key))) {
+      state.publications.delete(key);
+    }
+  }
+
+  const validAffiliationKeys = new Set(affiliationFilterOptions.map((entry) => entry.key));
+  for (const key of [...state.affiliations]) {
+    if (!validAffiliationKeys.has(normalizeAffiliationKey(key))) {
+      state.affiliations.delete(key);
+    }
+  }
+
   syncYearChipsFromState();
   syncTopicChipState();
   syncContentTypeChipState();
+  syncCitationChipState();
+  syncPublicationChipState();
+  syncAffiliationChipState();
   syncSortControl();
   updateClearBtn();
 }
@@ -2397,7 +2934,10 @@ function hasNonSearchFiltersApplied() {
     state.speaker ||
     state.activeTags.size > 0 ||
     state.years.size > 0 ||
-    state.contentTypes.size > 0
+    state.contentTypes.size > 0 ||
+    state.citationBuckets.size > 0 ||
+    state.affiliations.size > 0 ||
+    state.publications.size > 0
   );
 }
 
@@ -2699,7 +3239,10 @@ function updateClearBtn() {
     state.speaker ||
     state.activeTags.size > 0 ||
     state.years.size > 0 ||
-    state.contentTypes.size > 0;
+    state.contentTypes.size > 0 ||
+    state.citationBuckets.size > 0 ||
+    state.publications.size > 0 ||
+    state.affiliations.size > 0;
 
   const clearBtn = document.getElementById('clear-filters');
   if (clearBtn) clearBtn.classList.toggle('hidden', !hasActivity);

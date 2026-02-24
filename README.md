@@ -22,6 +22,10 @@ Search now uses a shared, relevance-first stack intended to work for both LLVM n
 
 - All `.global-search-form` inputs use a shared autocomplete index sourced from talks, papers/blogs, people, and key topics.
 - Home, section pages (`talks/`, `papers/`, `blogs/`, `people/`), detail pages, `about/`, and `work.html` now all use the shared `js/shared/global-search.js` component for a unified search-bar UX.
+- Advanced search is now available from every shared search bar (not only `work.html`):
+  - fields: all words, exact phrase, any words, without words, where words occur, author, publication, year range
+  - section pages default advanced scope to the active section (`talks`, `papers`, `blogs`, `people`) with a switch to `All`
+  - when advanced fields are active, submit is forced to Global Search so constraints are applied by the shared ranking model
 - Search behavior is route-aware:
   - home/about/detail/work routes default to **Global Search** (`work.html?mode=search&q=...`)
   - section index pages (`talks/`, `papers/`, `blogs/`, `people/`) default to contextual local filtering
@@ -103,6 +107,11 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 
 - `talks/`: sort (`relevance`, `newest`, `oldest`, `title`) + `grid/list` view toggle.
 - `papers/` and `blogs/`: sort (`relevance`, `year`, `citations`) + `grid/list` view toggle.
+- `papers/` adds sidebar filters for:
+  - citation buckets
+  - publications
+  - affiliations
+  - all persisted in URL state
 - `work.html` (global/entity combined results):
   - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs`, `People` (default `All`)
   - time filter in Global Search mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
@@ -144,6 +153,10 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - `llvm-hub-view` (talks/papers/blogs grid/list)
   - `llvm-hub-work-view` (work expanded/compact)
   - `llvm-hub-people-view` (people expanded/compact)
+- `papers/` and `blogs/` additionally support:
+  - `cite=<bucket,...>` citation filters (`500+`, `100-499`, `50-99`, `10-49`, `1-9`, `0`)
+  - `pub=<normalized-publication-key,...>`
+  - `aff=<normalized-affiliation-key,...>`
 
 ### Terminology: All Work vs Global Search
 

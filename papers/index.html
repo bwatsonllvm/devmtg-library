@@ -47,7 +47,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260224-05">
+  <link rel="stylesheet" href="css/style.css?v=20260224-06">
 </head>
 <body data-content-scope="paper">
 
@@ -234,6 +234,54 @@
           </div>
         </section>
 
+        <section class="filter-accordion" data-accordion="citations">
+          <button class="filter-accordion-toggle" id="toggle-citations" aria-expanded="true" aria-controls="panel-citations">
+            <span>Citations</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="filter-accordion-panel" id="panel-citations">
+            <div class="filter-scroll filter-scroll--secondary">
+              <div class="filter-cluster" aria-label="Filter by citation bucket">
+                <div class="filter-group" id="filter-citations" aria-label="Citation filters"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="filter-accordion" data-accordion="publications">
+          <button class="filter-accordion-toggle" id="toggle-publications" aria-expanded="true" aria-controls="panel-publications">
+            <span>Publications</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="filter-accordion-panel" id="panel-publications">
+            <div class="filter-scroll filter-scroll--secondary">
+              <div class="filter-cluster" aria-label="Filter by publication">
+                <div class="filter-group filter-group--wrap" id="filter-publications" aria-label="Publication filters"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="filter-accordion" data-accordion="affiliations">
+          <button class="filter-accordion-toggle" id="toggle-affiliations" aria-expanded="true" aria-controls="panel-affiliations">
+            <span>Affiliations</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="filter-accordion-panel" id="panel-affiliations">
+            <div class="filter-scroll filter-scroll--secondary">
+              <div class="filter-cluster" aria-label="Filter by affiliation">
+                <div class="filter-group filter-group--wrap" id="filter-affiliations" aria-label="Affiliation filters"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <div class="mobile-filter-footer">
           <button class="mobile-filter-footer-btn mobile-filter-footer-btn--secondary" id="mobile-filter-clear" type="button">Clear all</button>
           <button class="mobile-filter-footer-btn" id="mobile-filter-apply" type="button">Apply filters</button>
@@ -289,7 +337,7 @@
   </div>
   <script src="js/shared/library-utils.js?v=20260224-05"></script>
   <script src="js/papers-data.js?v=20260223-01"></script>
-  <script src="js/shared/global-search.js?v=20260224-05"></script>
-  <script src="js/papers.js?v=20260224-08"></script>
+  <script src="js/shared/global-search.js?v=20260224-06"></script>
+  <script src="js/papers.js?v=20260224-09"></script>
 </body>
 </html>

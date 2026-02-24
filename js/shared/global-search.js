@@ -10,6 +10,19 @@
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
+  const ADVANCED_FIELDS = [
+    'allWords',
+    'exactPhrase',
+    'anyWords',
+    'withoutWords',
+    'where',
+    'author',
+    'publication',
+    'yearFrom',
+    'yearTo',
+  ];
+  const ADVANCED_WHERE_VALUES = new Set(['anywhere', 'title', 'abstract']);
+  const SEARCH_SCOPE_VALUES = new Set(['all', 'talks', 'papers', 'blogs', 'people']);
   const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
     'Search talks, papers, and people',
     'Search talks, papers, blogs, and people',
@@ -25,6 +38,491 @@
     talks: [],
     papers: [],
   };
+
+  function normalizeText(value, maxLength = 240) {
+    return String(value || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, maxLength);
+  }
+
+  function normalizeWhere(value) {
+    const normalized = String(value || '').trim().toLowerCase();
+    return ADVANCED_WHERE_VALUES.has(normalized) ? normalized : 'anywhere';
+  }
+
+  function normalizeYear(value) {
+    const normalized = String(value || '').trim();
+    if (!normalized) return '';
+    if (!/^\d{4}$/.test(normalized)) return '';
+    const year = Number.parseInt(normalized, 10);
+    if (!Number.isFinite(year) || year < 1900 || year > 2100) return '';
+    return String(year);
+  }
+
+  function normalizeScope(value, fallback = 'all') {
+    const normalized = String(value || '').trim().toLowerCase();
+    if (SEARCH_SCOPE_VALUES.has(normalized)) return normalized;
+    return SEARCH_SCOPE_VALUES.has(fallback) ? fallback : 'all';
+  }
+
+  function isWorkSearchPage() {
+    const path = String(window.location.pathname || '').toLowerCase();
+    return path.endsWith('/work.html') || path.endsWith('/work');
+  }
+
+  function resolveScopeLabel(scope) {
+    if (scope === 'talks') return 'Talks';
+    if (scope === 'papers') return 'Papers';
+    if (scope === 'blogs') return 'Blogs';
+    if (scope === 'people') return 'People';
+    return 'All';
+  }
+
+  function resolvePageDefaultScope() {
+    const bodyScope = String(document.body && document.body.dataset ? document.body.dataset.contentScope : '')
+      .trim()
+      .toLowerCase();
+    if (bodyScope === 'paper') return 'papers';
+    if (bodyScope === 'blog') return 'blogs';
+
+    const path = String(window.location.pathname || '').toLowerCase();
+    if (path.includes('/people/')) return 'people';
+    if (path.includes('/blogs/')) return 'blogs';
+    if (path.includes('/papers/')) return 'papers';
+    if (path.includes('/talks/')) return 'talks';
+    return 'all';
+  }
+
+  function shouldEnableAdvancedSearch(form) {
+    if (!form) return false;
+    if (isWorkSearchPage()) return false;
+    if (form.classList.contains('work-hero-search')) return false;
+    if (form.querySelector('#work-search-input')) return false;
+    if (document.getElementById('work-advanced-panel')) return false;
+    return true;
+  }
+
+  function ensureHiddenInput(form, name, fallbackValue = '') {
+    if (!form) return null;
+    let input = form.querySelector(`input[type="hidden"][name="${name}"]`);
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      form.prepend(input);
+    }
+    if (!String(input.value || '').trim() && fallbackValue !== undefined) {
+      input.value = String(fallbackValue || '');
+    }
+    return input;
+  }
+
+  function normalizeAdvancedField(name, value) {
+    if (name === 'where') return normalizeWhere(value);
+    if (name === 'yearFrom' || name === 'yearTo') return normalizeYear(value);
+    return normalizeText(value, 240);
+  }
+
+  function normalizeAdvancedYearRange(yearFrom, yearTo) {
+    const from = normalizeYear(yearFrom);
+    const to = normalizeYear(yearTo);
+    if (from && to && Number.parseInt(from, 10) > Number.parseInt(to, 10)) {
+      return { yearFrom: to, yearTo: from };
+    }
+    return { yearFrom: from, yearTo: to };
+  }
+
+  function ensureAdvancedHiddenInputs(form, defaultScope) {
+    ensureHiddenInput(form, 'mode', 'search');
+    const scopeInput = ensureHiddenInput(form, 'scope', defaultScope);
+    if (scopeInput) {
+      scopeInput.value = normalizeScope(scopeInput.value, defaultScope);
+    }
+    for (const field of ADVANCED_FIELDS) {
+      const fallback = field === 'where' ? 'anywhere' : '';
+      const input = ensureHiddenInput(form, field, fallback);
+      if (!input) continue;
+      input.value = normalizeAdvancedField(field, input.value);
+    }
+    const yearFromInput = form.querySelector('input[type="hidden"][name="yearFrom"]');
+    const yearToInput = form.querySelector('input[type="hidden"][name="yearTo"]');
+    if (yearFromInput && yearToInput) {
+      const normalizedYears = normalizeAdvancedYearRange(yearFromInput.value, yearToInput.value);
+      yearFromInput.value = normalizedYears.yearFrom;
+      yearToInput.value = normalizedYears.yearTo;
+    }
+  }
+
+  function getAdvancedPanelState(form) {
+    const state = getFormState(form);
+    if (!state.advanced) {
+      state.advanced = {
+        defaultScope: 'all',
+        toggle: null,
+        panel: null,
+      };
+    }
+    return state.advanced;
+  }
+
+  function hasAdvancedHiddenValues(form) {
+    if (!form) return false;
+    for (const field of ADVANCED_FIELDS) {
+      if (field === 'where') {
+        const whereInput = form.querySelector('input[type="hidden"][name="where"]');
+        if (whereInput && normalizeWhere(whereInput.value) !== 'anywhere') return true;
+        continue;
+      }
+      const input = form.querySelector(`input[type="hidden"][name="${field}"]`);
+      if (input && String(input.value || '').trim()) return true;
+    }
+    return false;
+  }
+
+  function getEffectiveScopeValue(form) {
+    const advanced = getAdvancedPanelState(form);
+    const scopeInput = form.querySelector('input[type="hidden"][name="scope"]');
+    return normalizeScope(scopeInput ? scopeInput.value : '', advanced.defaultScope || 'all');
+  }
+
+  function hasAdvancedOverrides(form) {
+    const advanced = getAdvancedPanelState(form);
+    if (hasAdvancedHiddenValues(form)) return true;
+    return getEffectiveScopeValue(form) !== normalizeScope(advanced.defaultScope, 'all');
+  }
+
+  function resolveSubmitType(form, requestedType) {
+    const type = String(requestedType || 'query').trim().toLowerCase() || 'query';
+    if (type === 'global') return 'global';
+    return hasAdvancedOverrides(form) ? 'global' : type;
+  }
+
+  function normalizeScopeForGlobalSubmit(form) {
+    const advanced = getAdvancedPanelState(form);
+    const scopeInput = form.querySelector('input[type="hidden"][name="scope"]');
+    if (!scopeInput) return;
+    if (hasAdvancedHiddenValues(form)) return;
+
+    const defaultScope = normalizeScope(advanced.defaultScope, 'all');
+    const currentScope = normalizeScope(scopeInput.value, defaultScope);
+    if (currentScope !== defaultScope) return;
+
+    scopeInput.value = 'all';
+    const scopeControl = advanced.panel
+      ? advanced.panel.querySelector('[data-advanced-field="scope"]')
+      : null;
+    if (scopeControl) scopeControl.value = 'all';
+    updateAdvancedToggleState(form);
+  }
+
+  function updateAdvancedToggleState(form) {
+    const advanced = getAdvancedPanelState(form);
+    const toggle = advanced.toggle;
+    if (!toggle) return;
+
+    const badge = toggle.querySelector('[data-advanced-count]');
+    let count = 0;
+    for (const field of ADVANCED_FIELDS) {
+      const input = form.querySelector(`input[type="hidden"][name="${field}"]`);
+      if (!input) continue;
+      const value = String(input.value || '').trim();
+      if (!value) continue;
+      if (field === 'where' && normalizeWhere(value) === 'anywhere') continue;
+      count += 1;
+    }
+    if (getEffectiveScopeValue(form) !== normalizeScope(advanced.defaultScope, 'all')) count += 1;
+
+    toggle.classList.toggle('active', count > 0);
+    if (badge) {
+      badge.hidden = count <= 0;
+      badge.textContent = count > 0 ? String(count) : '';
+    }
+  }
+
+  function closeAdvancedPanel(form) {
+    const advanced = getAdvancedPanelState(form);
+    const panel = advanced.panel;
+    const toggle = advanced.toggle;
+    if (!panel || !toggle) return;
+    panel.classList.add('hidden');
+    toggle.setAttribute('aria-expanded', 'false');
+    form.classList.remove('advanced-open');
+  }
+
+  function openAdvancedPanel(form) {
+    const advanced = getAdvancedPanelState(form);
+    const panel = advanced.panel;
+    const toggle = advanced.toggle;
+    if (!panel || !toggle) return;
+    panel.classList.remove('hidden');
+    toggle.setAttribute('aria-expanded', 'true');
+    form.classList.add('advanced-open');
+  }
+
+  function syncHiddenFromAdvancedPanel(form) {
+    const advanced = getAdvancedPanelState(form);
+    const panel = advanced.panel;
+    if (!panel) return;
+
+    for (const field of ADVANCED_FIELDS) {
+      const hidden = form.querySelector(`input[type="hidden"][name="${field}"]`);
+      const control = panel.querySelector(`[data-advanced-field="${field}"]`);
+      if (!hidden || !control) continue;
+      hidden.value = normalizeAdvancedField(field, control.value);
+    }
+
+    const yearFromInput = form.querySelector('input[type="hidden"][name="yearFrom"]');
+    const yearToInput = form.querySelector('input[type="hidden"][name="yearTo"]');
+    if (yearFromInput && yearToInput) {
+      const normalizedYears = normalizeAdvancedYearRange(yearFromInput.value, yearToInput.value);
+      yearFromInput.value = normalizedYears.yearFrom;
+      yearToInput.value = normalizedYears.yearTo;
+      const fromControl = panel.querySelector('[data-advanced-field="yearFrom"]');
+      const toControl = panel.querySelector('[data-advanced-field="yearTo"]');
+      if (fromControl) fromControl.value = normalizedYears.yearFrom;
+      if (toControl) toControl.value = normalizedYears.yearTo;
+    }
+
+    const scopeControl = panel.querySelector('[data-advanced-field="scope"]');
+    const scopeHidden = form.querySelector('input[type="hidden"][name="scope"]');
+    if (scopeControl && scopeHidden) {
+      scopeHidden.value = normalizeScope(scopeControl.value, advanced.defaultScope);
+    }
+
+    updateAdvancedToggleState(form);
+  }
+
+  function syncAdvancedPanelFromHidden(form) {
+    const advanced = getAdvancedPanelState(form);
+    const panel = advanced.panel;
+    if (!panel) return;
+
+    for (const field of ADVANCED_FIELDS) {
+      const hidden = form.querySelector(`input[type="hidden"][name="${field}"]`);
+      const control = panel.querySelector(`[data-advanced-field="${field}"]`);
+      if (!hidden || !control) continue;
+      control.value = normalizeAdvancedField(field, hidden.value);
+    }
+
+    const scopeControl = panel.querySelector('[data-advanced-field="scope"]');
+    const scopeHidden = form.querySelector('input[type="hidden"][name="scope"]');
+    if (scopeControl && scopeHidden) {
+      scopeControl.value = normalizeScope(scopeHidden.value, advanced.defaultScope);
+    }
+
+    updateAdvancedToggleState(form);
+  }
+
+  function applyAdvancedFieldsFromUrl(form, params) {
+    if (!params || typeof params.get !== 'function') return;
+    for (const field of ADVANCED_FIELDS) {
+      if (!params.has(field)) continue;
+      const hidden = form.querySelector(`input[type="hidden"][name="${field}"]`);
+      if (!hidden) continue;
+      hidden.value = normalizeAdvancedField(field, params.get(field));
+    }
+
+    const yearFromInput = form.querySelector('input[type="hidden"][name="yearFrom"]');
+    const yearToInput = form.querySelector('input[type="hidden"][name="yearTo"]');
+    if (yearFromInput && yearToInput) {
+      const normalizedYears = normalizeAdvancedYearRange(yearFromInput.value, yearToInput.value);
+      yearFromInput.value = normalizedYears.yearFrom;
+      yearToInput.value = normalizedYears.yearTo;
+    }
+
+    if (params.has('scope')) {
+      const advanced = getAdvancedPanelState(form);
+      const scopeInput = form.querySelector('input[type="hidden"][name="scope"]');
+      if (scopeInput) {
+        scopeInput.value = normalizeScope(params.get('scope'), advanced.defaultScope || 'all');
+      }
+    }
+  }
+
+  function injectAdvancedSearchUi(form, params) {
+    if (!shouldEnableAdvancedSearch(form)) return;
+    if (form.dataset.globalSearchAdvancedReady === 'true') return;
+
+    const advanced = getAdvancedPanelState(form);
+    const defaultScope = normalizeScope(
+      form.getAttribute('data-search-scope') || form.dataset.searchScope || resolvePageDefaultScope(),
+      'all'
+    );
+    advanced.defaultScope = defaultScope;
+
+    form.classList.add('has-advanced-search');
+    ensureAdvancedHiddenInputs(form, defaultScope);
+    applyAdvancedFieldsFromUrl(form, params);
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'global-search-advanced-toggle';
+    toggle.setAttribute('aria-label', 'Advanced search');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.innerHTML = '<span>Advanced</span><span class="global-search-advanced-count" data-advanced-count hidden></span>';
+
+    const scopeField = defaultScope !== 'all'
+      ? `<label class="global-search-advanced-field">
+            <span>Search within</span>
+            <select class="global-search-advanced-input" data-advanced-field="scope" aria-label="Search scope">
+              <option value="${defaultScope}">${resolveScopeLabel(defaultScope)} only</option>
+              <option value="all">All</option>
+            </select>
+          </label>`
+      : '';
+
+    const panel = document.createElement('div');
+    panel.className = 'global-search-advanced-panel hidden';
+    panel.setAttribute('aria-label', 'Advanced search fields');
+    panel.innerHTML = `
+      <div class="global-search-advanced-grid">
+        ${scopeField}
+        <label class="global-search-advanced-field">
+          <span>All words</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="allWords" autocomplete="off" spellcheck="false" placeholder="llvm mlir">
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Exact phrase</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="exactPhrase" autocomplete="off" spellcheck="false" placeholder="MLIR for Beginners">
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Any words</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="anyWords" autocomplete="off" spellcheck="false" placeholder="gpu tensor">
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Without words</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="withoutWords" autocomplete="off" spellcheck="false" placeholder="swift rust">
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Where words occur</span>
+          <select class="global-search-advanced-input" data-advanced-field="where" aria-label="Where words should be matched">
+            <option value="anywhere">Anywhere</option>
+            <option value="title">Title</option>
+            <option value="abstract">Abstract/content</option>
+          </select>
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Author</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="author" autocomplete="off" spellcheck="false" placeholder="PJ Hayes">
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Publication</span>
+          <input type="search" class="global-search-advanced-input" data-advanced-field="publication" autocomplete="off" spellcheck="false" placeholder="Nature">
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Year from</span>
+          <input type="number" class="global-search-advanced-input" data-advanced-field="yearFrom" min="1900" max="2100" step="1" inputmode="numeric" placeholder="1996">
+        </label>
+        <label class="global-search-advanced-field">
+          <span>Year to</span>
+          <input type="number" class="global-search-advanced-input" data-advanced-field="yearTo" min="1900" max="2100" step="1" inputmode="numeric" placeholder="2026">
+        </label>
+      </div>
+      <div class="global-search-advanced-actions">
+        <button type="button" class="global-search-advanced-btn global-search-advanced-btn--primary" data-advanced-action="apply">Apply</button>
+        <button type="button" class="global-search-advanced-btn" data-advanced-action="clear">Clear</button>
+      </div>`;
+
+    const submitButton = form.querySelector('.global-search-submit');
+    if (submitButton) form.insertBefore(toggle, submitButton);
+    else form.appendChild(toggle);
+    form.appendChild(panel);
+
+    advanced.toggle = toggle;
+    advanced.panel = panel;
+
+    syncAdvancedPanelFromHidden(form);
+    if (hasAdvancedOverrides(form)) {
+      openAdvancedPanel(form);
+    }
+
+    toggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const isOpen = panel.classList.contains('hidden');
+      if (isOpen) openAdvancedPanel(form);
+      else closeAdvancedPanel(form);
+    });
+
+    panel.querySelectorAll('[data-advanced-field]').forEach((field) => {
+      field.addEventListener('input', () => {
+        syncHiddenFromAdvancedPanel(form);
+      });
+      field.addEventListener('change', () => {
+        syncHiddenFromAdvancedPanel(form);
+      });
+      field.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          syncHiddenFromAdvancedPanel(form);
+          form.dataset.searchSubmitType = 'global';
+          form.dataset.searchSubmitSource = 'advanced';
+          if (typeof form.requestSubmit === 'function') form.requestSubmit();
+          else form.submit();
+        }
+      });
+    });
+
+    panel.querySelectorAll('[data-advanced-action]').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        const action = String(button.getAttribute('data-advanced-action') || '').trim().toLowerCase();
+        if (action === 'clear') {
+          for (const field of ADVANCED_FIELDS) {
+            const hidden = form.querySelector(`input[type="hidden"][name="${field}"]`);
+            if (!hidden) continue;
+            hidden.value = field === 'where' ? 'anywhere' : '';
+          }
+          const scopeHidden = form.querySelector('input[type="hidden"][name="scope"]');
+          if (scopeHidden) scopeHidden.value = normalizeScope(defaultScope, 'all');
+          syncAdvancedPanelFromHidden(form);
+          return;
+        }
+
+        syncHiddenFromAdvancedPanel(form);
+        form.dataset.searchSubmitType = 'global';
+        form.dataset.searchSubmitSource = 'advanced';
+        if (typeof form.requestSubmit === 'function') form.requestSubmit();
+        else form.submit();
+      });
+    });
+
+    document.addEventListener('pointerdown', (event) => {
+      if (form.contains(event.target)) return;
+      closeAdvancedPanel(form);
+    });
+
+    document.addEventListener('focusin', (event) => {
+      if (form.contains(event.target)) return;
+      closeAdvancedPanel(form);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.classList.contains('hidden')) {
+        closeAdvancedPanel(form);
+        toggle.focus();
+      }
+    });
+
+    form.addEventListener('submit', () => {
+      syncHiddenFromAdvancedPanel(form);
+      const modeInput = form.querySelector('input[type="hidden"][name="mode"]');
+      if (modeInput) modeInput.value = 'search';
+      const scopeInput = form.querySelector('input[type="hidden"][name="scope"]');
+      if (scopeInput) scopeInput.value = normalizeScope(scopeInput.value, defaultScope);
+      const submitType = String(form.dataset.searchSubmitType || 'query').trim().toLowerCase();
+      if (submitType === 'global') {
+        normalizeScopeForGlobalSubmit(form);
+      }
+      if (hasAdvancedOverrides(form)) {
+        form.dataset.searchSubmitType = 'global';
+      }
+      updateAdvancedToggleState(form);
+    }, { capture: true });
+
+    form.dataset.globalSearchAdvancedReady = 'true';
+  }
 
   function pickFirstCsvValue(value) {
     return String(value || '')
@@ -413,7 +911,10 @@
         window.setTimeout(() => { handled = false; }, 0);
         event.preventDefault();
         event.stopPropagation();
-        form.dataset.searchSubmitType = String(item.dataset.autocompleteType || 'query').trim().toLowerCase();
+        const requestedType = String(item.dataset.autocompleteType || 'query').trim().toLowerCase();
+        const submitType = resolveSubmitType(form, requestedType);
+        form.dataset.searchSubmitType = submitType;
+        if (submitType === 'global') normalizeScopeForGlobalSubmit(form);
         form.dataset.searchSubmitSource = 'autocomplete';
         const value = String(item.dataset.autocompleteValue || '').trim();
         if (!value) return;
@@ -461,7 +962,7 @@
     return true;
   }
 
-  function initGlobalSearchInput(form, initialValue) {
+  function initGlobalSearchInput(form, initialValue, params) {
     const input = form ? form.querySelector('.global-search-input') : null;
     if (!form || !input) return;
 
@@ -491,6 +992,7 @@
     input.setAttribute('placeholder', resolveSectionSearchPlaceholder());
 
     ensureDropdown(form);
+    injectAdvancedSearchUi(form, params);
 
     input.addEventListener('focus', () => {
       const value = String(input.value || '').trim();
@@ -524,7 +1026,9 @@
         if (!dropdown || dropdown.classList.contains('hidden')) return;
         if (state.activeItemIndex < 0) {
           event.preventDefault();
-          form.dataset.searchSubmitType = 'query';
+          const submitType = resolveSubmitType(form, 'query');
+          form.dataset.searchSubmitType = submitType;
+          if (submitType === 'global') normalizeScopeForGlobalSubmit(form);
           form.dataset.searchSubmitSource = 'enter';
           closeDropdown(form);
           if (typeof form.requestSubmit === 'function') {
@@ -539,7 +1043,10 @@
         if (!activeItem) return;
 
         event.preventDefault();
-        form.dataset.searchSubmitType = String(activeItem.dataset.autocompleteType || 'query').trim().toLowerCase();
+        const requestedType = String(activeItem.dataset.autocompleteType || 'query').trim().toLowerCase();
+        const submitType = resolveSubmitType(form, requestedType);
+        form.dataset.searchSubmitType = submitType;
+        if (submitType === 'global') normalizeScopeForGlobalSubmit(form);
         form.dataset.searchSubmitSource = 'enter';
         const value = String(activeItem.dataset.autocompleteValue || '').trim();
         if (!value) return;
@@ -568,7 +1075,7 @@
     const params = new URLSearchParams(window.location.search);
     const initialValue = deriveInitialQuery(params);
     for (const form of forms) {
-      initGlobalSearchInput(form, initialValue);
+      initGlobalSearchInput(form, initialValue, params);
     }
   }
 
