@@ -91,7 +91,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-10` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-11` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -324,6 +324,43 @@ const DOCUMENTATION_OPTIONS = {
     toggle.title = `${isExpanded ? 'Collapse' : 'Expand'} ${label}`;
   }
 
+  function buildSidebarRelationBar(rootPath) {
+    const relationBar = document.createElement('nav');
+    relationBar.className = 'docs-book-relbar';
+    relationBar.setAttribute('aria-label', 'Document relation links');
+
+    const links = [
+      { text: 'index', href: (document.querySelector('link[rel="index"]') || {}).href || `${rootPath}docs/genindex.html` },
+      { text: 'next', href: (document.querySelector('link[rel="next"]') || {}).href || '' },
+      { text: 'previous', href: (document.querySelector('link[rel="prev"]') || {}).href || '' },
+    ];
+
+    links.forEach((entry, idx) => {
+      if (idx > 0) {
+        const sep = document.createElement('span');
+        sep.className = 'docs-book-rel-sep';
+        sep.setAttribute('aria-hidden', 'true');
+        sep.textContent = '|';
+        relationBar.appendChild(sep);
+      }
+
+      if (entry.href) {
+        const link = document.createElement('a');
+        link.className = 'docs-book-rel-link';
+        link.href = entry.href;
+        link.textContent = entry.text;
+        relationBar.appendChild(link);
+      } else {
+        const text = document.createElement('span');
+        text.className = 'docs-book-rel-text is-disabled';
+        text.textContent = entry.text;
+        relationBar.appendChild(text);
+      }
+    });
+
+    return relationBar;
+  }
+
   function buildBookEntriesList(entries, chapterPrefix, rootPath, currentSlug, depth, pathPrefix) {
     const list = document.createElement('ol');
     list.className = depth === 0 ? 'docs-book-list' : 'docs-book-sublist';
@@ -425,6 +462,25 @@ const DOCUMENTATION_OPTIONS = {
 
     wrapper.innerHTML = '';
 
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'docs-book-sidebar-toggle';
+    toggleBtn.id = 'docs-book-sidebar-toggle';
+    toggleBtn.type = 'button';
+    toggleBtn.setAttribute('aria-pressed', 'false');
+    toggleBtn.setAttribute('aria-label', 'Collapse sidebar');
+    toggleBtn.title = 'Collapse sidebar';
+    toggleBtn.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    `;
+
+    const sidebarTop = document.createElement('div');
+    sidebarTop.className = 'docs-book-sidebar-top';
+    sidebarTop.appendChild(buildSidebarRelationBar(rootPath));
+    sidebarTop.appendChild(toggleBtn);
+    wrapper.appendChild(sidebarTop);
+
     if (quickSearchClone) {
       quickSearchClone.style.display = 'block';
       wrapper.appendChild(quickSearchClone);
@@ -441,20 +497,6 @@ const DOCUMENTATION_OPTIONS = {
     navTitle.className = 'docs-book-index-title';
     navTitle.textContent = 'Book Index';
     navHead.appendChild(navTitle);
-
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'docs-book-sidebar-toggle';
-    toggleBtn.id = 'docs-book-sidebar-toggle';
-    toggleBtn.type = 'button';
-    toggleBtn.setAttribute('aria-pressed', 'false');
-    toggleBtn.setAttribute('aria-label', 'Collapse sidebar');
-    toggleBtn.title = 'Collapse sidebar';
-    toggleBtn.innerHTML = `
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="15 18 9 12 15 6"></polyline>
-      </svg>
-    `;
-    navHead.appendChild(toggleBtn);
     nav.appendChild(navHead);
 
     payload.chapters.forEach((chapter, chapterIdx) => {
