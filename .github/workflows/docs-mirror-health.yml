@@ -25,4 +25,11 @@ jobs:
         run: |
           python3 scripts/check-docs-mirror-health.py \
             --repo-root . \
+            --docs-dir docs \
+            --expected-source-prefix "https://llvm.org/docs/" \
+            --max-age-days 14
+          python3 scripts/check-docs-mirror-health.py \
+            --repo-root . \
+            --docs-dir docs/clang \
+            --expected-source-prefix "https://clang.llvm.org/docs/" \
             --max-age-days 14

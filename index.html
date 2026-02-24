@@ -114,7 +114,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260224-08">
+  <link rel="stylesheet" href="css/style.css?v=20260224-09">
 </head>
 <body>
 
@@ -147,9 +147,18 @@
       <a href="about/" class="nav-link" aria-label="About this site">
         <span aria-hidden="true">About</span>
       </a>
-      <a href="docs/" class="nav-link" aria-label="Documentation">
-        <span aria-hidden="true">Docs</span>
-      </a>
+      <div class="nav-dropdown nav-dropdown-docs">
+    <a href="docs/" class="nav-link nav-dropdown-toggle" aria-label="Documentation">
+      <span aria-hidden="true">Docs</span>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </a>
+    <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
+      <a href="docs/" class="nav-dropdown-link" role="menuitem">LLVM Core</a>
+      <a href="docs/clang/" class="nav-dropdown-link" role="menuitem">Clang</a>
+    </div>
+  </div>
       <a href="updates/" class="nav-link" aria-label="Update log">
         <span aria-hidden="true">Updates</span>
       </a>
@@ -169,7 +178,8 @@
         <a href="blogs/" class="mobile-nav-link">Blogs</a>
         <a href="people/" class="mobile-nav-link">People</a>
         <a href="about/" class="mobile-nav-link">About</a>
-        <a href="docs/" class="mobile-nav-link">Docs</a>
+        <a href="docs/" class="mobile-nav-link">Docs: LLVM Core</a>
+    <a href="docs/clang/" class="mobile-nav-link">Docs: Clang</a>
         <a href="updates/" class="mobile-nav-link">Updates</a>
       </div>
     </div>
@@ -268,7 +278,7 @@
 
   <script src="js/shared/library-utils.js?v=20260224-05"></script>
 
-  <script src="js/shared/global-search.js?v=20260224-09"></script>
+  <script src="js/shared/global-search.js?v=20260224-10"></script>
   <script src="js/home.js?v=20260222-02"></script>
 </body>
 </html>

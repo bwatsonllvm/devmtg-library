@@ -11,7 +11,8 @@
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, docs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
-  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-02';
+  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-03';
+  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-03';
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
@@ -97,7 +98,7 @@
     if (scope === 'talks') return 'Tailored for talks, speakers, and event content';
     if (scope === 'papers') return 'Tailored for papers, authors, venues, and abstracts';
     if (scope === 'blogs') return 'Tailored for blog posts, authors, and post content';
-    if (scope === 'docs') return 'Tailored for LLVM docs pages, headings, and guide content';
+    if (scope === 'docs') return 'Tailored for LLVM Core and Clang docs pages, headings, and guide content';
     if (scope === 'people') return 'Tailored for people, expertise, affiliations, and publications';
     return 'Cross-type search across talks, papers, blogs, docs, and people';
   }
@@ -911,11 +912,45 @@
     if (docsIndexLoadPromise) return docsIndexLoadPromise;
 
     docsIndexLoadPromise = (async () => {
-      if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
-        return true;
+      let llvmPayload = (window.LLVMCoreDocsUniversalSearchIndex && Array.isArray(window.LLVMCoreDocsUniversalSearchIndex.entries))
+        ? window.LLVMCoreDocsUniversalSearchIndex
+        : null;
+      let clangPayload = (window.LLVMClangDocsUniversalSearchIndex && Array.isArray(window.LLVMClangDocsUniversalSearchIndex.entries))
+        ? window.LLVMClangDocsUniversalSearchIndex
+        : null;
+
+      if (!llvmPayload) {
+        try {
+          await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
+          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+            llvmPayload = window.LLVMDocsUniversalSearchIndex;
+            window.LLVMCoreDocsUniversalSearchIndex = llvmPayload;
+          }
+        } catch {
+          // Continue; docs autocomplete can still run with any available corpus.
+        }
       }
-      await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
-      return !!(window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries));
+
+      if (!clangPayload) {
+        try {
+          await ensureScript(CLANG_DOCS_UNIVERSAL_INDEX_SRC);
+          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+            clangPayload = window.LLVMDocsUniversalSearchIndex;
+            window.LLVMClangDocsUniversalSearchIndex = clangPayload;
+          }
+        } catch {
+          // Continue with LLVM Core docs only when Clang index is unavailable.
+        }
+      }
+
+      if (llvmPayload) {
+        window.LLVMDocsUniversalSearchIndex = llvmPayload;
+      }
+
+      return !!(
+        (llvmPayload && Array.isArray(llvmPayload.entries))
+        || (clangPayload && Array.isArray(clangPayload.entries))
+      );
     })().catch(() => false);
 
     return docsIndexLoadPromise;
@@ -963,24 +998,25 @@
         bucket.labels.set(label, (bucket.labels.get(label) || 0) + 1);
       };
 
-      const addDocTitle = (title, href) => {
+      const addDocTitle = (title, href, sourceLabel, basePrefix) => {
         const label = normalizeText(title, 220);
         if (!label) return;
+        const renderedLabel = `${label} (${sourceLabel})`;
         const rawHref = normalizeText(href, 400);
         let url = '';
         if (rawHref) {
           if (/^https?:\/\//i.test(rawHref)) url = rawHref;
           else if (rawHref.startsWith('/')) url = rawHref;
           else if (rawHref.startsWith('docs/')) url = rawHref;
-          else url = `docs/${rawHref}`.replace(/\/{2,}/g, '/');
+          else url = `${basePrefix}/${rawHref}`.replace(/\/{2,}/g, '/');
         }
         if (!url) {
-          url = 'docs/';
+          url = `${basePrefix}/`.replace(/\/{2,}/g, '/');
         }
-        if (!docsTitleBuckets.has(label)) {
-          docsTitleBuckets.set(label, { count: 0, url });
+        if (!docsTitleBuckets.has(renderedLabel)) {
+          docsTitleBuckets.set(renderedLabel, { count: 0, url });
         }
-        const bucket = docsTitleBuckets.get(label);
+        const bucket = docsTitleBuckets.get(renderedLabel);
         bucket.count += 1;
       };
 
@@ -1014,16 +1050,21 @@
         }
       }
 
-      if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+      const docsPayloads = [
+        { payload: window.LLVMCoreDocsUniversalSearchIndex, sourceLabel: 'LLVM Core', basePrefix: 'docs' },
+        { payload: window.LLVMClangDocsUniversalSearchIndex, sourceLabel: 'Clang', basePrefix: 'docs/clang' },
+      ];
+      docsPayloads.forEach(({ payload, sourceLabel, basePrefix }) => {
+        if (!payload || !Array.isArray(payload.entries)) return;
         try {
-          for (const entry of window.LLVMDocsUniversalSearchIndex.entries) {
+          for (const entry of payload.entries) {
             if (!entry || typeof entry !== 'object') continue;
-            addDocTitle(entry.title, entry.href);
+            addDocTitle(entry.title, entry.href, sourceLabel, basePrefix);
           }
         } catch {
           // Ignore docs index parse failures; other autocomplete buckets remain available.
         }
-      }
+      });
 
       autocompleteIndex.topics = mapToSortedEntries(topicCounts);
       autocompleteIndex.people = [...peopleBuckets.values()]

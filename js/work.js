@@ -22,7 +22,8 @@ const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
 const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
 const UNIVERSAL_MAX_RESULTS = 1200;
-const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-02';
+const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-03';
+const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-03';
 const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
 
 const state = {
@@ -124,16 +125,42 @@ async function loadDocsUniversalRecords() {
   if (docsDataLoadPromise) return docsDataLoadPromise;
 
   docsDataLoadPromise = (async () => {
-    if (!(window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries))) {
-      await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
+    if (!(window.LLVMCoreDocsUniversalSearchIndex && Array.isArray(window.LLVMCoreDocsUniversalSearchIndex.entries))) {
+      try {
+        await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
+        if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+          window.LLVMCoreDocsUniversalSearchIndex = window.LLVMDocsUniversalSearchIndex;
+        }
+      } catch {
+        // Continue; docs search can still operate with whichever indexes loaded.
+      }
     }
 
-    const payload = window.LLVMDocsUniversalSearchIndex;
-    if (!payload || !Array.isArray(payload.entries)) return [];
+    if (!(window.LLVMClangDocsUniversalSearchIndex && Array.isArray(window.LLVMClangDocsUniversalSearchIndex.entries))) {
+      try {
+        await ensureScript(CLANG_DOCS_UNIVERSAL_INDEX_SRC);
+        if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+          window.LLVMClangDocsUniversalSearchIndex = window.LLVMDocsUniversalSearchIndex;
+        }
+      } catch {
+        // Continue with LLVM Core docs only when Clang index is unavailable.
+      }
+    }
 
-    return payload.entries
-      .map((entry, index) => normalizeDocsRecord(entry, index))
-      .filter(Boolean);
+    const llvmPayload = window.LLVMCoreDocsUniversalSearchIndex;
+    const clangPayload = window.LLVMClangDocsUniversalSearchIndex;
+    if (llvmPayload && Array.isArray(llvmPayload.entries)) {
+      window.LLVMDocsUniversalSearchIndex = llvmPayload;
+    }
+
+    const llvmEntries = (llvmPayload && Array.isArray(llvmPayload.entries))
+      ? llvmPayload.entries.map((entry, index) => normalizeDocsRecord(entry, index, 'docs'))
+      : [];
+    const clangEntries = (clangPayload && Array.isArray(clangPayload.entries))
+      ? clangPayload.entries.map((entry, index) => normalizeDocsRecord(entry, index + llvmEntries.length, 'docs/clang'))
+      : [];
+
+    return [...llvmEntries, ...clangEntries].filter(Boolean);
   })().catch(() => []);
 
   return docsDataLoadPromise;
@@ -1175,21 +1202,22 @@ function isBlogPaper(paper) {
   return !!(paper && paper._isBlog);
 }
 
-function resolveDocsRecordHref(rawHref, rawSlug) {
+function resolveDocsRecordHref(rawHref, rawSlug, docsBasePrefix = 'docs') {
   const href = String(rawHref || '').trim();
   const slug = String(rawSlug || '').trim();
+  const basePrefix = String(docsBasePrefix || 'docs').replace(/^\/+|\/+$/g, '');
   if (href) {
     if (/^https?:\/\//i.test(href)) return href;
     if (href.startsWith('/')) return href;
     if (href.startsWith('docs/')) return href;
-    return `docs/${href}`.replace(/\/{2,}/g, '/');
+    return `${basePrefix}/${href}`.replace(/\/{2,}/g, '/');
   }
-  if (!slug || slug === 'index') return 'docs/';
-  if (slug.endsWith('/index')) return `docs/${slug.slice(0, -6)}/`.replace(/\/{2,}/g, '/');
-  return `docs/${slug}.html`.replace(/\/{2,}/g, '/');
+  if (!slug || slug === 'index') return `${basePrefix}/`;
+  if (slug.endsWith('/index')) return `${basePrefix}/${slug.slice(0, -6)}/`.replace(/\/{2,}/g, '/');
+  return `${basePrefix}/${slug}.html`.replace(/\/{2,}/g, '/');
 }
 
-function normalizeDocsRecord(rawEntry, fallbackIndex = 0) {
+function normalizeDocsRecord(rawEntry, fallbackIndex = 0, docsBasePrefix = 'docs') {
   if (!rawEntry || typeof rawEntry !== 'object') return null;
 
   const title = normalizeAdvancedText(rawEntry.title, 320);
@@ -1204,13 +1232,17 @@ function normalizeDocsRecord(rawEntry, fallbackIndex = 0) {
       .slice(0, 10)
     : [];
   const searchText = normalizeAdvancedText(rawEntry.search, 2200);
-  const href = resolveDocsRecordHref(rawEntry.href, slug);
-  const id = slug || `doc-${fallbackIndex + 1}`;
+  const href = resolveDocsRecordHref(rawEntry.href, slug, docsBasePrefix);
+  const idCore = slug || `doc-${fallbackIndex + 1}`;
+  const idPrefix = String(docsBasePrefix || 'docs').replace(/[^a-z0-9/_-]+/gi, '').replace(/\//g, '-');
+  const id = `${idPrefix}:${idCore}`;
+  const collection = String(docsBasePrefix || '').replace(/^\/+|\/+$/g, '') === 'docs/clang' ? 'Clang' : 'LLVM Core';
 
   if (!title || !href) return null;
 
   return {
     id,
+    collection,
     slug,
     title,
     href,
@@ -2728,6 +2760,7 @@ function renderDocsCard(doc) {
         <div class="card-body">
           <div class="card-meta">
             <span class="badge badge-blog">Docs</span>
+            ${doc.collection ? `<span class="meeting-label">${escapeHtml(doc.collection)}</span>` : ''}
             ${chapter ? `<span class="meeting-label">${escapeHtml(chapter)}</span>` : ''}
             ${outline ? `<span class="meeting-label">${escapeHtml(outline)}</span>` : ''}
           </div>

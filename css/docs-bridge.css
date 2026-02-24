@@ -78,6 +78,17 @@ body {
   color: var(--color-text, #111827) !important;
 }
 
+.library-docs-bridge .site-nav .nav-dropdown-link,
+.library-docs-bridge .site-nav .nav-dropdown-link:visited {
+  color: var(--color-text-muted, #6b7280) !important;
+}
+
+.library-docs-bridge .site-nav .nav-dropdown-link:hover,
+.library-docs-bridge .site-nav .nav-dropdown-link.active,
+.library-docs-bridge .site-nav .nav-dropdown-link[aria-current="page"] {
+  color: var(--color-text, #111827) !important;
+}
+
 .library-docs-bridge .mobile-nav-link,
 .library-docs-bridge .mobile-nav-link:visited {
   color: var(--color-text-muted, #6b7280) !important;

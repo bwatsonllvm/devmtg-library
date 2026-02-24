@@ -18,14 +18,6 @@ import urllib.parse
 from pathlib import Path
 
 
-REQUIRED_BRIDGE_FILES = [
-    Path("docs/_static/documentation_options.js"),
-    Path("docs/_static/docs-book-index.js"),
-    Path("docs/_static/docs-universal-search-index.js"),
-    Path("docs/_static/docs-sync-meta.json"),
-    Path("css/docs-bridge.css"),
-]
-
 REQUIRED_BRIDGE_MARKERS = [
     "buildDocsTrustStrip",
     "buildInlinePageToc",
@@ -39,6 +31,16 @@ REQUIRED_BRIDGE_MARKERS = [
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Check mirrored LLVM docs health in this repo.")
     parser.add_argument("--repo-root", default=".", help="Repository root path.")
+    parser.add_argument(
+        "--docs-dir",
+        default="docs",
+        help="Docs mirror directory relative to repo root (default: docs).",
+    )
+    parser.add_argument(
+        "--expected-source-prefix",
+        default="https://llvm.org/docs/",
+        help="Expected docs sync sourceUrl prefix.",
+    )
     parser.add_argument(
         "--max-age-days",
         type=int,
@@ -58,7 +60,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--known-broken-links-file",
-        default="docs/_static/docs-known-broken-links.txt",
+        default="",
         help="Path to newline-delimited known broken local link entries.",
     )
     return parser.parse_args()
@@ -79,25 +81,34 @@ def read_json(path: Path) -> dict:
     return payload
 
 
-def verify_bridge_assets(repo_root: Path) -> None:
-    for rel_path in REQUIRED_BRIDGE_FILES:
+def verify_bridge_assets(repo_root: Path, docs_dir: Path) -> None:
+    required_bridge_files = [
+        docs_dir / "_static/documentation_options.js",
+        docs_dir / "_static/docs-book-index.js",
+        docs_dir / "_static/docs-universal-search-index.js",
+        docs_dir / "_static/docs-sync-meta.json",
+        Path("css/docs-bridge.css"),
+    ]
+    for rel_path in required_bridge_files:
         path = repo_root / rel_path
         if not path.is_file():
             fail(f"Missing required bridge asset: {rel_path}")
 
-    docs_js = (repo_root / "docs/_static/documentation_options.js").read_text(encoding="utf-8")
+    docs_js_path = repo_root / docs_dir / "_static/documentation_options.js"
+    docs_js = docs_js_path.read_text(encoding="utf-8")
     for marker in REQUIRED_BRIDGE_MARKERS:
         if marker not in docs_js:
-            fail(f"Bridge marker missing in docs/_static/documentation_options.js: {marker}")
+            fail(f"Bridge marker missing in {docs_js_path.relative_to(repo_root)}: {marker}")
 
-    universal_js = (repo_root / "docs/_static/docs-universal-search-index.js").read_text(encoding="utf-8")
+    universal_path = repo_root / docs_dir / "_static/docs-universal-search-index.js"
+    universal_js = universal_path.read_text(encoding="utf-8")
     match = re.search(
         r"window\.LLVMDocsUniversalSearchIndex\s*=\s*(\{.*\})\s*;\s*$",
         universal_js,
         flags=re.DOTALL,
     )
     if not match:
-        fail("docs/_static/docs-universal-search-index.js missing expected payload wrapper")
+        fail(f"{universal_path.relative_to(repo_root)} missing expected payload wrapper")
     try:
         payload = json.loads(match.group(1))
     except Exception as exc:  # noqa: BLE001
@@ -121,12 +132,17 @@ def parse_synced_at(raw: str) -> dt.datetime:
     return parsed.astimezone(dt.timezone.utc)
 
 
-def verify_sync_metadata(repo_root: Path, max_age_days: int) -> None:
-    meta_path = repo_root / "docs/_static/docs-sync-meta.json"
+def verify_sync_metadata(
+    repo_root: Path,
+    docs_dir: Path,
+    expected_source_prefix: str,
+    max_age_days: int,
+) -> None:
+    meta_path = repo_root / docs_dir / "_static/docs-sync-meta.json"
     meta = read_json(meta_path)
     source_url = str(meta.get("sourceUrl", "")).strip()
-    if not source_url.startswith("https://llvm.org/docs/"):
-        fail(f"Unexpected docs sourceUrl in {meta_path}: {source_url!r}")
+    if not source_url.startswith(expected_source_prefix):
+        fail(f"Unexpected docs sourceUrl in {meta_path.relative_to(repo_root)}: {source_url!r}")
     synced_at = parse_synced_at(str(meta.get("syncedAt", "")))
     now_utc = dt.datetime.now(dt.timezone.utc)
     age = now_utc - synced_at
@@ -139,6 +155,7 @@ def verify_sync_metadata(repo_root: Path, max_age_days: int) -> None:
         )
     print(
         "Docs sync metadata OK:",
+        f"mirror={docs_dir.as_posix()}",
         f"source={source_url}",
         f"syncedAt={synced_at.isoformat()}",
         f"age_days={age.total_seconds() / 86400:.2f}",
@@ -188,11 +205,31 @@ def candidate_paths(repo_root: Path, html_path: Path, ref: str) -> list[Path]:
     return candidates
 
 
-def verify_local_docs_links(repo_root: Path, max_examples: int, known_failures: set[str]) -> None:
-    docs_root = repo_root / "docs"
+def verify_local_docs_links(repo_root: Path, docs_dir: Path, max_examples: int, known_failures: set[str]) -> None:
+    docs_root = repo_root / docs_dir
     html_files = sorted(docs_root.rglob("*.html"))
+    nested_mirror_roots = []
+    for child in docs_root.iterdir():
+        if not child.is_dir():
+            continue
+        if (child / "_static" / "docs-sync-meta.json").is_file():
+            nested_mirror_roots.append(child.resolve())
+    if nested_mirror_roots:
+        filtered = []
+        for html_path in html_files:
+            skip = False
+            for nested_root in nested_mirror_roots:
+                try:
+                    html_path.resolve().relative_to(nested_root)
+                    skip = True
+                    break
+                except ValueError:
+                    continue
+            if not skip:
+                filtered.append(html_path)
+        html_files = filtered
     if not html_files:
-        fail("No docs HTML files found for link checks.")
+        fail(f"No docs HTML files found for link checks in {docs_dir}.")
 
     failures: list[str] = []
     for html_path in html_files:
@@ -225,7 +262,7 @@ def verify_local_docs_links(repo_root: Path, max_examples: int, known_failures: 
 
     if known_failures:
         print(f"Known broken links allowlisted: {len(known_failures)}")
-    print(f"Local docs link check OK: scanned {len(html_files)} HTML files")
+    print(f"Local docs link check OK: mirror={docs_dir.as_posix()} scanned={len(html_files)}")
 
 
 def main() -> None:
@@ -233,13 +270,33 @@ def main() -> None:
     repo_root = Path(args.repo_root).resolve()
     if not repo_root.is_dir():
         fail(f"Invalid --repo-root: {repo_root}")
+    docs_dir = Path(str(args.docs_dir or "docs").strip()).as_posix().strip("/")
+    if not docs_dir:
+        docs_dir = "docs"
+    docs_dir_path = Path(docs_dir)
+    expected_source_prefix = str(args.expected_source_prefix or "").strip()
+    if not expected_source_prefix:
+        fail("Empty --expected-source-prefix")
 
-    verify_bridge_assets(repo_root)
-    verify_sync_metadata(repo_root, max_age_days=args.max_age_days)
+    verify_bridge_assets(repo_root, docs_dir_path)
+    verify_sync_metadata(
+        repo_root,
+        docs_dir_path,
+        expected_source_prefix=expected_source_prefix,
+        max_age_days=args.max_age_days,
+    )
     if not args.no_check_links:
-        known_failures = load_known_broken_links(repo_root, args.known_broken_links_file)
-        verify_local_docs_links(repo_root, max_examples=args.max_link_errors, known_failures=known_failures)
-    print("OK: docs mirror health checks passed")
+        known_broken_path = str(args.known_broken_links_file or "").strip()
+        if not known_broken_path:
+            known_broken_path = f"{docs_dir}/_static/docs-known-broken-links.txt"
+        known_failures = load_known_broken_links(repo_root, known_broken_path)
+        verify_local_docs_links(
+            repo_root,
+            docs_dir_path,
+            max_examples=args.max_link_errors,
+            known_failures=known_failures,
+        )
+    print(f"OK: docs mirror health checks passed for {docs_dir}")
 
 
 if __name__ == "__main__":

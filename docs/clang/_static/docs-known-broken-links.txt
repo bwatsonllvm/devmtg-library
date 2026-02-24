@@ -1,0 +1,7 @@
+docs/clang/ClangPlugins.html: /doxygen/structclang_1_1ParsedAttrInfo_1_1Spelling.html
+docs/clang/JSONCompilationDatabase.html: /doxygen/group__COMPILATIONDB.html
+docs/clang/LibASTMatchersReference.html: ../menu.css
+docs/clang/LibASTMatchersReference.html: ../content.css
+docs/clang/LibASTMatchersTutorial.html: ../doxygen/ASTMatchers_8h_source.html
+docs/clang/analyzer/developer-docs/IPA.html: rdar://problem/12147064
+docs/clang/analyzer/user-docs/CommandLineUsage.html: ../xcode.html

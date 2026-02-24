@@ -26,11 +26,17 @@ for f in \
   people/index.html \
   about/index.html \
   docs/index.html \
+  docs/clang/index.html \
   docs/_static/docs-book-index.js \
+  docs/clang/_static/docs-book-index.js \
   docs/_static/docs-universal-search-index.js \
+  docs/clang/_static/docs-universal-search-index.js \
   docs/_static/docs-known-broken-links.txt \
+  docs/clang/_static/docs-known-broken-links.txt \
   docs/_static/docs-sync-meta.json \
+  docs/clang/_static/docs-sync-meta.json \
   docs/_static/documentation_options.js \
+  docs/clang/_static/documentation_options.js \
   updates/index.html \
   updates/index.json \
   css/style.css \

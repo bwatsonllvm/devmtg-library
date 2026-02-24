@@ -262,6 +262,8 @@ def build_tree_node(
     assigned: set[str],
     stack: set[str],
 ) -> Optional[Dict[str, object]]:
+    if slug not in titles:
+        return None
     if slug in assigned or slug in stack:
         return None
 

@@ -223,7 +223,7 @@ Automation stages:
 1. Sync talks/slides/videos from `llvm-www/devmtg`
 2. Refresh OpenAlex-discovered papers
 3. Sync LLVM blog posts from `llvm-blog-www`
-4. Sync mirrored docs from `llvm.org/docs` and regenerate `docs/_static/docs-book-index.js`
+4. Sync mirrored docs from `llvm.org/docs` and `clang.llvm.org/docs`, regenerating both docs book/search indexes
 5. Rebuild the single canonical papers database (OpenAlex + llvm.org/pubs + blog)
 6. Backfill direct paper PDF links via OpenAlex + Unpaywall
 7. Rebuild the updates log
@@ -233,14 +233,14 @@ Automation stages:
 
 ## Docs Mirror Boundaries
 
-The docs section is a mirror-first surface. To keep it faithful to upstream LLVM docs while improving usability:
+The docs section is a mirror-first surface. To keep it faithful to upstream LLVM/Clang docs while improving usability:
 
-- Do not rewrite mirrored docs content in `docs/**/*.html`.
+- Do not rewrite mirrored docs content in `docs/**/*.html` or `docs/clang/**/*.html`.
 - Do not change canonical docs order or upstream heading structure.
 - Do not change canonical docs URL paths/anchors.
 - Keep UX improvements in bridge-layer files (`docs/_static/documentation_options.js`, `css/docs-bridge.css`, generated sidebar metadata).
-- Keep mirror freshness metadata in `docs/_static/docs-sync-meta.json`.
-- Keep upstream breakage baseline in `docs/_static/docs-known-broken-links.txt` and only fail on new link regressions.
+- Keep mirror freshness metadata in `docs/_static/docs-sync-meta.json` and `docs/clang/_static/docs-sync-meta.json`.
+- Keep upstream breakage baseline in `docs/_static/docs-known-broken-links.txt` and `docs/clang/_static/docs-known-broken-links.txt`; only fail on new link regressions.
 - Preserve graceful fallback: if custom sidebar/index logic fails, Sphinx navigation must still work.
 
 ## Validation And Test Gates
@@ -268,8 +268,9 @@ Mirror health is also checked on a daily schedule in:
 ## Repository Layout
 
 - `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes
-- `docs/`: mirrored LLVM documentation site content plus bridge customizations
-- `docs/_static/docs-sync-meta.json`: docs mirror freshness metadata (source + synced timestamp + latest GitHub release metadata)
+- `docs/`: mirrored LLVM core documentation site content plus bridge customizations
+- `docs/clang/`: mirrored Clang documentation site content plus bridge customizations
+- `docs/_static/docs-sync-meta.json` and `docs/clang/_static/docs-sync-meta.json`: docs mirror freshness metadata (source + synced timestamp + latest GitHub release metadata)
 - `css/`, `js/`, `images/`: shared site assets
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version
