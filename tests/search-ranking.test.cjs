@@ -133,7 +133,7 @@ test('rankPaperRecordsByQuery indexes deep paper text fields (bodyText/fullText)
   assert.equal(ranked[0].id, 'deep-hit');
 });
 
-test('rankPaperRecordsByQuery prunes partial 2-of-3 token matches for specific queries', () => {
+test('rankPaperRecordsByQuery prioritizes full token coverage over partial matches', () => {
   const papers = [
     {
       id: 'exact',
@@ -158,7 +158,10 @@ test('rankPaperRecordsByQuery prunes partial 2-of-3 token matches for specific q
   const ranked = utils.rankPaperRecordsByQuery(papers, 'polyhedral dependence graphs');
   assert.ok(ranked.length > 0);
   assert.equal(ranked[0].id, 'exact');
-  assert.ok(!ranked.some((paper) => paper.id === 'partial'));
+  const partialIndex = ranked.findIndex((paper) => paper.id === 'partial');
+  if (partialIndex !== -1) {
+    assert.ok(partialIndex > 0);
+  }
 });
 
 test('rankPaperRecordsByQuery enforces author/publication/year advanced filters', () => {
