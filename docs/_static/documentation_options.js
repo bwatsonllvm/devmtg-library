@@ -122,7 +122,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-12` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-13` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -570,6 +570,46 @@ const DOCUMENTATION_OPTIONS = {
     return relationBar;
   }
 
+  function getLatestReleaseNumber() {
+    const raw = (typeof DOCUMENTATION_OPTIONS === 'object' && DOCUMENTATION_OPTIONS && DOCUMENTATION_OPTIONS.VERSION)
+      ? String(DOCUMENTATION_OPTIONS.VERSION).trim()
+      : '';
+    return raw || 'Unknown';
+  }
+
+  function buildSidebarReleasePanel() {
+    const panel = document.createElement('section');
+    panel.className = 'docs-book-release';
+    panel.setAttribute('aria-label', 'LLVM release and downloads');
+
+    const version = document.createElement('div');
+    version.className = 'docs-book-release-version';
+    version.textContent = `Latest release: LLVM ${getLatestReleaseNumber()}`;
+    panel.appendChild(version);
+
+    const links = document.createElement('div');
+    links.className = 'docs-book-release-links';
+
+    const notes = document.createElement('a');
+    notes.className = 'docs-book-release-link';
+    notes.href = 'https://llvm.org/docs/ReleaseNotes.html';
+    notes.target = '_blank';
+    notes.rel = 'noopener noreferrer';
+    notes.textContent = 'Latest release notes';
+    links.appendChild(notes);
+
+    const download = document.createElement('a');
+    download.className = 'docs-book-release-link';
+    download.href = 'https://github.com/llvm/llvm-project/';
+    download.target = '_blank';
+    download.rel = 'noopener noreferrer';
+    download.textContent = 'Download via GitHub';
+    links.appendChild(download);
+
+    panel.appendChild(links);
+    return panel;
+  }
+
   function normalizeSearchInputPresentation(scope) {
     const root = scope && scope.querySelector ? scope : document;
     const labels = root.querySelectorAll('#searchlabel');
@@ -902,6 +942,7 @@ const DOCUMENTATION_OPTIONS = {
     const currentSlug = resolveCurrentDocSlug(rootPath);
 
     wrapper.innerHTML = '';
+    wrapper.appendChild(buildSidebarReleasePanel());
 
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'docs-book-sidebar-toggle';
