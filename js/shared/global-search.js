@@ -433,7 +433,6 @@
     if (!toggle) return;
 
     const badge = toggle.querySelector('[data-advanced-count]');
-    const stateLabel = toggle.querySelector('[data-advanced-state]');
     const panelOpen = !!(advanced.panel && !advanced.panel.classList.contains('hidden'));
     let count = 0;
     for (const field of ADVANCED_FIELDS) {
@@ -451,10 +450,9 @@
     const isOn = hasOverrides || panelOpen;
     toggle.classList.toggle('active', isOn);
     toggle.classList.toggle('has-overrides', hasOverrides);
-    if (stateLabel) stateLabel.textContent = isOn ? 'On' : 'Off';
     toggle.setAttribute('data-advanced-active', hasOverrides ? 'true' : 'false');
     toggle.setAttribute('data-advanced-open', panelOpen ? 'true' : 'false');
-    toggle.setAttribute('aria-label', `Advanced search (${isOn ? 'On' : 'Off'})`);
+    toggle.setAttribute('aria-label', 'Advanced search');
     toggle.setAttribute('aria-pressed', panelOpen ? 'true' : 'false');
     if (badge) {
       badge.hidden = !hasOverrides;
@@ -598,7 +596,7 @@
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-pressed', 'false');
     const toggleLabel = form.classList.contains('search-box') ? 'Advanced' : 'Adv';
-    toggle.innerHTML = `<span class="global-search-advanced-toggle-label">${toggleLabel}</span><span class="global-search-advanced-switch" aria-hidden="true"><span class="global-search-advanced-switch-knob"></span></span><span class="global-search-advanced-state" data-advanced-state>Off</span><span class="global-search-advanced-count" data-advanced-count hidden></span>`;
+    toggle.innerHTML = `<span class="global-search-advanced-toggle-label">${toggleLabel}</span><span class="global-search-advanced-switch" aria-hidden="true"><span class="global-search-advanced-switch-knob"></span></span><span class="global-search-advanced-count" data-advanced-count hidden></span>`;
 
     const panel = document.createElement('div');
     panel.className = 'global-search-advanced-panel hidden';

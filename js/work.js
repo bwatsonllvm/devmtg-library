@@ -907,7 +907,6 @@ function syncAdvancedFilterControlVisibility() {
   const timeLabel = document.querySelector('label[for="work-time-select"]');
   const customRange = document.getElementById('work-custom-range');
   const advancedToggle = document.getElementById('work-advanced-toggle');
-  const advancedState = document.getElementById('work-advanced-state');
   const advancedPanel = document.getElementById('work-advanced-panel');
   const advancedCount = document.getElementById('work-advanced-count');
   const customVisible = searchMode && state.timeFilter === 'custom';
@@ -928,9 +927,8 @@ function syncAdvancedFilterControlVisibility() {
     advancedToggle.setAttribute('data-advanced-open', searchMode && state.advancedOpen ? 'true' : 'false');
     advancedToggle.setAttribute('aria-expanded', searchMode && state.advancedOpen ? 'true' : 'false');
     advancedToggle.setAttribute('aria-pressed', searchMode && state.advancedOpen ? 'true' : 'false');
-    advancedToggle.setAttribute('aria-label', `Advanced search tools (${advancedVisualOn ? 'On' : 'Off'})`);
+    advancedToggle.setAttribute('aria-label', 'Advanced search tools');
   }
-  if (advancedState) advancedState.textContent = advancedVisualOn ? 'On' : 'Off';
   if (advancedCount) {
     advancedCount.textContent = advancedActive ? String(activeAdvancedCount) : '';
     advancedCount.hidden = !advancedActive;
