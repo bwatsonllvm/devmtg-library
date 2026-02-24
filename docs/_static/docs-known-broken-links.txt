@@ -1,0 +1,14 @@
+# Known upstream-local broken links present in the mirrored llvm.org/docs snapshot.
+# Format: <docs relative html file>: <raw local href/src value>
+docs/AliasAnalysis.html: doxygen/structLICM.html
+docs/CommandGuide/llvm-offload-binary.html: clang.html
+docs/CompileCudaWithLLVM.html: /library/docs/doxygen/html/SpeculativeExecution_8cpp_source.html
+docs/CompileCudaWithLLVM.html: /library/docs/doxygen/html/BypassSlowDivision_8cpp_source.html
+docs/DeveloperPolicy.html: /library/docs/lnt/intro.html
+docs/ReleaseProcess.html: /library/docs/lnt/quickstart.html
+docs/TestSuiteGuide.html: /library/docs/lnt
+docs/TestSuiteGuide.html: /library/docs/lnt/tests.html#cross-compiling
+docs/TestSuiteGuide.html: /library/docs/lnt/tests.html#llvm-cmake-test-suite
+docs/WritingAnLLVMBackend.html: /doxygen/TargetRegistry_8h-source.html
+docs/tutorial/BuildingAJIT1.html: BuildingAJIT5.html
+docs/tutorial/BuildingAJIT4.html: BuildingAJIT5.html

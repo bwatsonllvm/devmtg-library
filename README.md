@@ -229,6 +229,19 @@ Automation stages:
 7. Rebuild the updates log
 8. Run code-quality checks (Python lint/static checks, shell syntax, JS search regression tests)
 9. Validate bundle integrity
+10. Validate docs mirror health (freshness + local link integrity + bridge asset checks)
+
+## Docs Mirror Boundaries
+
+The docs section is a mirror-first surface. To keep it faithful to upstream LLVM docs while improving usability:
+
+- Do not rewrite mirrored docs content in `docs/**/*.html`.
+- Do not change canonical docs order or upstream heading structure.
+- Do not change canonical docs URL paths/anchors.
+- Keep UX improvements in bridge-layer files (`docs/_static/documentation_options.js`, `css/docs-bridge.css`, generated sidebar metadata).
+- Keep mirror freshness metadata in `docs/_static/docs-sync-meta.json`.
+- Keep upstream breakage baseline in `docs/_static/docs-known-broken-links.txt` and only fail on new link regressions.
+- Preserve graceful fallback: if custom sidebar/index logic fails, Sphinx navigation must still work.
 
 ## Validation And Test Gates
 
@@ -249,10 +262,14 @@ These checks run in:
 - `.github/workflows/pages.yml` (deploy gate)
 - `.github/workflows/library-sync.yml` (automation PR gate)
 
+Mirror health is also checked on a daily schedule in:
+- `.github/workflows/docs-mirror-health.yml`
+
 ## Repository Layout
 
 - `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes
 - `docs/`: mirrored LLVM documentation site content plus bridge customizations
+- `docs/_static/docs-sync-meta.json`: docs mirror freshness metadata (source + synced timestamp)
 - `css/`, `js/`, `images/`: shared site assets
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version

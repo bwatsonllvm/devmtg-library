@@ -34,3 +34,9 @@ jobs:
 
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh
+
+      - name: Validate docs mirror health
+        run: |
+          python3 scripts/check-docs-mirror-health.py \
+            --repo-root . \
+            --max-age-days 45

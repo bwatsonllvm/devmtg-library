@@ -9,6 +9,8 @@ REGENERATE_BOOK_INDEX=1
 KEEP_PATHS=(
   "_static/documentation_options.js"
   "_static/docs-book-index.js"
+  "_static/docs-known-broken-links.txt"
+  "_static/docs-sync-meta.json"
 )
 
 fail() {
@@ -135,5 +137,24 @@ if [[ "$REGENERATE_BOOK_INDEX" -eq 1 ]]; then
     --source-root "$DOCS_DIR/_sources" \
     --output "$DOCS_DIR/_static/docs-book-index.js"
 fi
+
+python3 - "$DOCS_DIR" "$SOURCE_URL" <<'PY'
+import datetime
+import json
+import pathlib
+import sys
+
+docs_dir = pathlib.Path(sys.argv[1])
+source_url = sys.argv[2]
+meta_path = docs_dir / "_static" / "docs-sync-meta.json"
+meta_path.parent.mkdir(parents=True, exist_ok=True)
+
+payload = {
+    "sourceUrl": source_url,
+    "syncedAt": datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+    "generator": "scripts/sync-docs-from-llvm-org.sh",
+}
+meta_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+PY
 
 echo "Docs mirror sync complete."
