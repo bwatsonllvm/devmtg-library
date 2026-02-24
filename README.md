@@ -226,8 +226,29 @@ Automation stages:
 2. Refresh OpenAlex-discovered papers
 3. Sync LLVM blog posts from `llvm-blog-www`
 4. Rebuild the single canonical papers database (OpenAlex + llvm.org/pubs + blog)
-5. Rebuild the updates log
-6. Validate bundle integrity
+5. Backfill direct paper PDF links via OpenAlex + Unpaywall
+6. Rebuild the updates log
+7. Run code-quality checks (Python lint/static checks, shell syntax, JS search regression tests)
+8. Validate bundle integrity
+
+## Validation And Test Gates
+
+CI now runs two validation layers before merge/deploy:
+
+1. Code-quality checks (`scripts/validate-code-quality.sh`)
+   - `python3 -m compileall -q scripts`
+   - `ruff check scripts`
+   - `bash -n scripts/*.sh`
+   - `node --test tests`
+2. Bundle/data checks (`scripts/validate-library-bundle.sh`)
+
+Search relevance behavior is covered by deterministic regression tests in:
+- `tests/search-ranking.test.cjs`
+
+These checks run in:
+- `.github/workflows/library-validate.yml` (PR validation)
+- `.github/workflows/pages.yml` (deploy gate)
+- `.github/workflows/library-sync.yml` (automation PR gate)
 
 ## Repository Layout
 

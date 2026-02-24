@@ -3017,7 +3017,6 @@ function initSearch() {
   const input = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
   if (!input || !clearBtn) return;
-  buildAutocompleteIndex();
 
   const searchForm = input.closest('form');
   const useUniversalSearch = !!(searchForm && searchForm.classList.contains('global-search-form'));
@@ -3091,6 +3090,8 @@ function initSearch() {
     syncClearBtn();
     return;
   }
+
+  buildAutocompleteIndex();
 
   input.addEventListener('input', () => {
     const rawValue = input.value;
@@ -3199,7 +3200,7 @@ function setViewMode(mode) {
     listBtn.setAttribute('aria-pressed', viewMode === 'list' ? 'true' : 'false');
   }
 
-  localStorage.setItem('llvm-hub-view', viewMode);
+  safeStorageSet('llvm-hub-view', viewMode);
 }
 
 function initViewControls() {
@@ -3207,7 +3208,7 @@ function initViewControls() {
   const listBtn = document.getElementById('view-list');
   if (!gridBtn || !listBtn) return;
 
-  const savedView = localStorage.getItem('llvm-hub-view') || 'grid';
+  const savedView = safeStorageGet('llvm-hub-view') || 'grid';
   setViewMode(savedView);
 
   gridBtn.addEventListener('click', () => setViewMode('grid'));
@@ -3320,8 +3321,32 @@ const THEME_PREF_VALUES = new Set(['system', 'light', 'dark']);
 const TEXT_SIZE_VALUES = new Set(['small', 'default', 'large']);
 let systemThemeQuery = null;
 
+function safeStorageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
+function safeStorageRemove(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
 function getThemePreference() {
-  const saved = localStorage.getItem(THEME_PREF_KEY);
+  const saved = safeStorageGet(THEME_PREF_KEY);
   return THEME_PREF_VALUES.has(saved) ? saved : 'system';
 }
 
@@ -3336,11 +3361,11 @@ function applyTheme(preference, persist = false) {
   document.documentElement.setAttribute('data-theme', resolved);
   document.documentElement.setAttribute('data-theme-preference', pref);
   document.documentElement.style.backgroundColor = resolved === 'dark' ? '#000000' : '#f5f5f5';
-  if (persist) localStorage.setItem(THEME_PREF_KEY, pref);
+  if (persist) safeStorageSet(THEME_PREF_KEY, pref);
 }
 
 function getTextSizePreference() {
-  const saved = localStorage.getItem(TEXT_SIZE_KEY);
+  const saved = safeStorageGet(TEXT_SIZE_KEY);
   return TEXT_SIZE_VALUES.has(saved) ? saved : 'default';
 }
 
@@ -3351,7 +3376,7 @@ function applyTextSize(size, persist = false) {
   } else {
     document.documentElement.setAttribute('data-text-size', textSize);
   }
-  if (persist) localStorage.setItem(TEXT_SIZE_KEY, textSize);
+  if (persist) safeStorageSet(TEXT_SIZE_KEY, textSize);
 }
 
 function syncCustomizationMenuControls() {
@@ -3434,8 +3459,8 @@ function initCustomizationMenu() {
   });
 
   resetBtn.addEventListener('click', () => {
-    localStorage.removeItem(THEME_PREF_KEY);
-    localStorage.removeItem(TEXT_SIZE_KEY);
+    safeStorageRemove(THEME_PREF_KEY);
+    safeStorageRemove(TEXT_SIZE_KEY);
     applyTheme('system');
     applyTextSize('default');
     syncCustomizationMenuControls();

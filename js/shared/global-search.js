@@ -1259,13 +1259,16 @@
 
     input.addEventListener('focus', () => {
       const value = String(input.value || '').trim();
-      if (!value) return;
+      if (value.length < 2) {
+        closeDropdown(form);
+        return;
+      }
       renderDropdownAsync(form, input, value);
     });
 
     input.addEventListener('input', () => {
       const value = String(input.value || '').trim();
-      if (!value) {
+      if (value.length < 2) {
         closeDropdown(form);
         return;
       }

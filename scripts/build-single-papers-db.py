@@ -215,6 +215,11 @@ def collapse_ws(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
 
 
+def strip_diacritics(value: str) -> str:
+    text = unicodedata.normalize("NFKD", value or "")
+    return "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+
+
 def sanitize_http_url(value: str) -> str:
     raw = collapse_ws(value)
     if not raw:

@@ -20,6 +20,8 @@ const WORK_TYPE_FILTERS = new Set(['any', 'review']);
 const WORK_ADVANCED_WHERE_MODES = new Set(['anywhere', 'title', 'abstract']);
 const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
+const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
+const UNIVERSAL_MAX_RESULTS = 1200;
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
@@ -610,7 +612,7 @@ function parseStateFromUrl() {
   if (urlView) {
     state.viewMode = normalizeViewMode(urlView);
   } else {
-    const savedView = localStorage.getItem(WORK_VIEW_STORAGE_KEY);
+    const savedView = safeStorageGet(WORK_VIEW_STORAGE_KEY);
     state.viewMode = WORK_VIEW_MODES.has(normalizeViewMode(savedView))
       ? normalizeViewMode(savedView)
       : 'expanded';
@@ -802,6 +804,7 @@ function initScopeControl() {
         state.typeFilter = 'any';
       }
       state.sortBy = normalizeSortMode(state.sortBy);
+      recomputeFilteredResults();
       syncScopeControls();
       syncAdvancedFilterControls();
       syncSortControl();
@@ -1901,6 +1904,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
         }
       }
 
+      if (index >= UNIVERSAL_FALLBACK_PER_KIND_LIMIT) return;
       const fallbackBase = kind === 'person' ? 210 : 230;
       const fallbackScore = (fallbackBase / (index + 2)) + titleBoost;
       pushEntry(fallback, kind, record, fallbackScore, index);
@@ -1915,16 +1919,32 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
   let entries = [];
   if (strict.length > 0) {
     const softenedRelaxed = relaxed.map((entry) => ({ ...entry, score: entry.score * 0.62 }));
-    const softenedFallback = fallback.map((entry) => ({ ...entry, score: entry.score * 0.38 }));
-    entries = [...strict, ...softenedRelaxed, ...softenedFallback];
+    entries = [...strict, ...softenedRelaxed];
   } else if (relaxed.length > 0) {
-    const softenedFallback = fallback.map((entry) => ({ ...entry, score: entry.score * 0.55 }));
-    entries = [...relaxed, ...softenedFallback];
+    entries = [...relaxed];
   } else {
     entries = fallback;
   }
 
-  return entries.sort(compareUniversalEntries);
+  const sorted = entries.sort(compareUniversalEntries);
+  if (state.sortBy !== 'relevance') {
+    return sorted.slice(0, UNIVERSAL_MAX_RESULTS);
+  }
+  if (!sorted.length) return sorted;
+
+  const topScore = Number(sorted[0].score || 0);
+  if (!(topScore > 0)) {
+    return sorted.slice(0, Math.min(180, UNIVERSAL_MAX_RESULTS));
+  }
+
+  const queryTokenCount = tokenizeQuery(rankingQuery).length;
+  const relativeFloor = queryTokenCount >= 4
+    ? 0.22
+    : (queryTokenCount === 3 ? 0.18 : 0.14);
+  const absoluteFloor = queryTokenCount >= 4 ? 7 : 4;
+  const threshold = Math.max(absoluteFloor, topScore * relativeFloor);
+  const pruned = sorted.filter((entry, index) => index < 120 || Number(entry.score || 0) >= threshold);
+  return (pruned.length ? pruned : sorted.slice(0, 180)).slice(0, UNIVERSAL_MAX_RESULTS);
 }
 
 function indexTalkForSearch(talk) {
@@ -2143,7 +2163,7 @@ function recomputeFilteredResults() {
       state.query,
       advancedOptions
     );
-    filteredUniversal = state.scope === 'all' ? universalEntries : [];
+    filteredUniversal = universalEntries;
     searchResultCounts = {
       all: universalEntries.length,
       talks: filteredTalks.length,
@@ -2801,7 +2821,7 @@ function applyViewMode(mode, persist = true, refreshHeader = true) {
   if (refreshHeader) applyHeaderState();
 
   if (persist) {
-    localStorage.setItem(WORK_VIEW_STORAGE_KEY, state.viewMode);
+    safeStorageSet(WORK_VIEW_STORAGE_KEY, state.viewMode);
   }
 }
 
@@ -2917,8 +2937,32 @@ const THEME_PREF_VALUES = new Set(['system', 'light', 'dark']);
 const TEXT_SIZE_VALUES = new Set(['small', 'default', 'large']);
 let systemThemeQuery = null;
 
+function safeStorageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
+function safeStorageRemove(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
 function getThemePreference() {
-  const saved = localStorage.getItem(THEME_PREF_KEY);
+  const saved = safeStorageGet(THEME_PREF_KEY);
   return THEME_PREF_VALUES.has(saved) ? saved : 'system';
 }
 
@@ -2933,11 +2977,11 @@ function applyTheme(preference, persist = false) {
   document.documentElement.setAttribute('data-theme', resolved);
   document.documentElement.setAttribute('data-theme-preference', pref);
   document.documentElement.style.backgroundColor = resolved === 'dark' ? '#000000' : '#f5f5f5';
-  if (persist) localStorage.setItem(THEME_PREF_KEY, pref);
+  if (persist) safeStorageSet(THEME_PREF_KEY, pref);
 }
 
 function getTextSizePreference() {
-  const saved = localStorage.getItem(TEXT_SIZE_KEY);
+  const saved = safeStorageGet(TEXT_SIZE_KEY);
   return TEXT_SIZE_VALUES.has(saved) ? saved : 'default';
 }
 
@@ -2948,7 +2992,7 @@ function applyTextSize(size, persist = false) {
   } else {
     document.documentElement.setAttribute('data-text-size', textSize);
   }
-  if (persist) localStorage.setItem(TEXT_SIZE_KEY, textSize);
+  if (persist) safeStorageSet(TEXT_SIZE_KEY, textSize);
 }
 
 function syncCustomizationMenuControls() {
@@ -3028,8 +3072,8 @@ function initCustomizationMenu() {
   });
 
   resetBtn.addEventListener('click', () => {
-    localStorage.removeItem(THEME_PREF_KEY);
-    localStorage.removeItem(TEXT_SIZE_KEY);
+    safeStorageRemove(THEME_PREF_KEY);
+    safeStorageRemove(TEXT_SIZE_KEY);
     applyTheme('system');
     applyTextSize('default');
     syncCustomizationMenuControls();

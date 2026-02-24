@@ -8,3 +8,7 @@ Thumbs.db
 
 # Local discovery caches
 papers/.cache/
+
+# Python bytecode
+__pycache__/
+*.pyc

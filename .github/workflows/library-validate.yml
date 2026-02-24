@@ -21,5 +21,16 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install quality tooling
+        run: python3 -m pip install --upgrade pip ruff
+
+      - name: Run code quality checks
+        run: bash scripts/validate-code-quality.sh
+
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh

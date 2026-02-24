@@ -30,6 +30,14 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install quality tooling
+        run: python3 -m pip install --upgrade pip ruff
+
       - name: Sync events talks/slides/videos from llvm-www
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -85,6 +93,9 @@ jobs:
           python3 scripts/build-update-log.py \
             --repo-root . \
             --log-json updates/index.json
+
+      - name: Run code quality checks
+        run: bash scripts/validate-code-quality.sh
 
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh
