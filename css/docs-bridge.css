@@ -7,6 +7,7 @@
 :root {
   --docs-sidebar-width: var(--sidebar-width, clamp(236px, 21vw, 308px));
   --docs-sidebar-collapsed-width: var(--sidebar-collapsed-width, clamp(48px, 4.2vw, 56px));
+  --docs-right-rail-width: clamp(220px, 18vw, 278px);
   --docs-content-max: var(--max-width, 1280px);
 }
 
@@ -84,6 +85,7 @@ body {
   margin: 0 !important;
   padding: var(--space-3) var(--layout-edge) var(--space-12);
   padding-left: calc(var(--docs-sidebar-width) + (var(--layout-edge) * 2));
+  padding-right: calc(var(--docs-right-rail-width) + (var(--layout-edge) * 2));
   background: transparent !important;
   text-align: left !important;
 }
@@ -96,7 +98,10 @@ body {
 }
 
 .library-docs-bridge .body {
-  width: min(var(--docs-content-max), calc(100vw - var(--docs-sidebar-width) - (var(--layout-edge) * 3)));
+  width: min(
+    var(--docs-content-max),
+    calc(100vw - var(--docs-sidebar-width) - var(--docs-right-rail-width) - (var(--layout-edge) * 4))
+  );
   max-width: 100%;
   margin: 0 auto !important;
   padding: 0 !important;
@@ -318,33 +323,57 @@ body {
   gap: var(--space-3);
 }
 
-.library-docs-bridge .docs-book-release {
+.library-docs-bridge .docs-release-rail {
+  position: fixed;
+  top: calc(var(--header-height) + var(--layout-edge));
+  right: var(--layout-edge);
+  width: var(--docs-right-rail-width);
+  margin: 0;
+  max-height: calc(100vh - var(--header-height) - (var(--layout-edge) * 2));
+  overflow-y: auto;
+  z-index: calc(var(--z-sticky) - 1);
+}
+
+.library-docs-bridge .docs-release-rail-card {
   display: grid;
   gap: 8px;
   padding: 10px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
 }
 
-.library-docs-bridge .docs-book-release-version {
-  color: var(--color-text, #111827);
-  font-size: var(--font-size-xs, 12px);
+.library-docs-bridge .docs-release-rail-title {
+  margin: 0;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 11px;
   font-weight: var(--font-weight-semi, 600);
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
-.library-docs-bridge .docs-book-release-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 10px;
+.library-docs-bridge .docs-release-version {
+  margin: 0;
+  color: var(--color-text, #111827);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: var(--font-weight-semi, 600);
+  line-height: 1.35;
 }
 
-.library-docs-bridge .docs-book-release-link,
-.library-docs-bridge .docs-book-release-link:visited {
-  color: var(--color-accent);
-  font-size: var(--font-size-xs, 12px);
-  line-height: 1.25;
+.library-docs-bridge .docs-release-links {
+  display: grid;
+  gap: 6px;
+}
+
+.library-docs-bridge .docs-release-link,
+.library-docs-bridge .docs-release-link:visited {
+  color: var(--color-text-muted, #6b7280);
+  font-size: var(--font-size-sm, 13px);
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.library-docs-bridge .docs-release-link:hover {
+  color: var(--color-text, #111827);
   text-decoration: underline;
 }
 
@@ -689,7 +718,10 @@ body {
   }
 
   .library-docs-bridge.docs-book-sidebar-collapsed .body {
-    width: min(var(--docs-content-max), calc(100vw - var(--docs-sidebar-collapsed-width) - (var(--layout-edge) * 3)));
+    width: min(
+      var(--docs-content-max),
+      calc(100vw - var(--docs-sidebar-collapsed-width) - var(--docs-right-rail-width) - (var(--layout-edge) * 4))
+    );
   }
 
   .library-docs-bridge.docs-book-sidebar-collapsed .sphinxsidebar {
@@ -705,7 +737,6 @@ body {
     justify-content: center;
   }
 
-  .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-release,
   .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-relbar,
   .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-index,
   .library-docs-bridge.docs-book-sidebar-collapsed #searchbox {
@@ -878,6 +909,7 @@ body {
 .library-docs-bridge .footer {
   margin: 0 var(--layout-edge) var(--space-8);
   margin-left: calc(var(--docs-sidebar-width) + (var(--layout-edge) * 2));
+  margin-right: calc(var(--docs-right-rail-width) + (var(--layout-edge) * 2));
   padding: var(--space-3) var(--space-4) 0;
   border-top: 1px solid var(--color-divider);
   background: transparent !important;
@@ -896,6 +928,10 @@ body {
    Responsive
    ============================================================ */
 @media (max-width: 1024px) {
+  .library-docs-bridge .docs-release-rail {
+    display: none;
+  }
+
   .library-docs-bridge .sphinxsidebar {
     position: static !important;
     top: auto;
@@ -909,6 +945,7 @@ body {
 
   .library-docs-bridge .document {
     padding-left: var(--layout-edge);
+    padding-right: var(--layout-edge);
   }
 
   .library-docs-bridge .body {
@@ -917,6 +954,7 @@ body {
 
   .library-docs-bridge .footer {
     margin-left: var(--layout-edge);
+    margin-right: var(--layout-edge);
   }
 }
 

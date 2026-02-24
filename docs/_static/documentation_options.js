@@ -19,6 +19,7 @@ const DOCUMENTATION_OPTIONS = {
   const DOCS_NODE_COLLAPSE_KEY = 'llvm-docs-book-node-collapse-v1';
   const DOCS_SYNC_META_FILENAME = 'docs-sync-meta.json';
   const DOCS_REPORT_ISSUE_BASE = 'https://github.com/bwatsonllvm/library/issues/new';
+  const DOCS_GITHUB_RELEASES_URL = 'https://github.com/llvm/llvm-project/releases';
   const DOCS_SEARCH_ALIASES = [
     { token: 'langref', label: 'LLVM Language Reference', slug: 'LangRef' },
     { token: 'llvm ir', label: 'LLVM Language Reference', slug: 'LangRef' },
@@ -122,7 +123,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-13` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-14` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -570,44 +571,96 @@ const DOCUMENTATION_OPTIONS = {
     return relationBar;
   }
 
-  function getLatestReleaseNumber() {
-    const raw = (typeof DOCUMENTATION_OPTIONS === 'object' && DOCUMENTATION_OPTIONS && DOCUMENTATION_OPTIONS.VERSION)
-      ? String(DOCUMENTATION_OPTIONS.VERSION).trim()
-      : '';
-    return raw || 'Unknown';
+  function normalizeReleaseVersionValue(raw) {
+    const source = String(raw || '').trim();
+    if (!source) return '';
+    let value = source.replace(/^llvmorg-/i, '');
+    value = value.replace(/^LLVM\s+/i, '');
+    return value.trim();
   }
 
-  function buildSidebarReleasePanel() {
-    const panel = document.createElement('section');
-    panel.className = 'docs-book-release';
-    panel.setAttribute('aria-label', 'LLVM release and downloads');
+  function getLatestReleaseModel(rootPath) {
+    const metaRoot = (window.LLVMDocsSyncMeta && typeof window.LLVMDocsSyncMeta === 'object')
+      ? window.LLVMDocsSyncMeta
+      : null;
+    const latestRelease = (metaRoot && metaRoot.latestRelease && typeof metaRoot.latestRelease === 'object')
+      ? metaRoot.latestRelease
+      : null;
 
-    const version = document.createElement('div');
-    version.className = 'docs-book-release-version';
-    version.textContent = `Latest release: LLVM ${getLatestReleaseNumber()}`;
-    panel.appendChild(version);
+    const fromMeta = latestRelease
+      ? (latestRelease.version || latestRelease.name || latestRelease.tag || '')
+      : '';
+    const fromDocs = (typeof DOCUMENTATION_OPTIONS === 'object' && DOCUMENTATION_OPTIONS && DOCUMENTATION_OPTIONS.VERSION)
+      ? DOCUMENTATION_OPTIONS.VERSION
+      : '';
+
+    const normalizedVersion = normalizeReleaseVersionValue(fromMeta)
+      || normalizeReleaseVersionValue(fromDocs)
+      || 'Unknown';
+
+    const githubHref = latestRelease && String(latestRelease.githubUrl || '').trim()
+      ? String(latestRelease.githubUrl).trim()
+      : DOCS_GITHUB_RELEASES_URL;
+
+    return {
+      versionLabel: `Latest release: LLVM ${normalizedVersion}`,
+      releaseNotesHref: slugToDocsHref('ReleaseNotes', rootPath),
+      githubHref,
+    };
+  }
+
+  function buildReleaseRail(rootPath) {
+    const release = getLatestReleaseModel(rootPath);
+
+    const rail = document.createElement('aside');
+    rail.id = 'docs-release-rail';
+    rail.className = 'docs-release-rail';
+    rail.setAttribute('aria-label', 'LLVM release and downloads');
+
+    const card = document.createElement('section');
+    card.className = 'docs-release-rail-card';
+
+    const title = document.createElement('h3');
+    title.className = 'docs-release-rail-title';
+    title.textContent = 'Release';
+    card.appendChild(title);
+
+    const version = document.createElement('p');
+    version.className = 'docs-release-version';
+    version.textContent = release.versionLabel;
+    card.appendChild(version);
 
     const links = document.createElement('div');
-    links.className = 'docs-book-release-links';
+    links.className = 'docs-release-links';
 
     const notes = document.createElement('a');
-    notes.className = 'docs-book-release-link';
-    notes.href = 'https://llvm.org/docs/ReleaseNotes.html';
-    notes.target = '_blank';
-    notes.rel = 'noopener noreferrer';
+    notes.className = 'docs-release-link';
+    notes.href = release.releaseNotesHref;
     notes.textContent = 'Latest release notes';
     links.appendChild(notes);
 
     const download = document.createElement('a');
-    download.className = 'docs-book-release-link';
-    download.href = 'https://github.com/llvm/llvm-project/';
+    download.className = 'docs-release-link';
+    download.href = release.githubHref;
     download.target = '_blank';
     download.rel = 'noopener noreferrer';
     download.textContent = 'Download via GitHub';
     links.appendChild(download);
 
-    panel.appendChild(links);
-    return panel;
+    card.appendChild(links);
+    rail.appendChild(card);
+    return rail;
+  }
+
+  function renderReleaseRail(rootPath) {
+    if (!document.body) return;
+    const nextRail = buildReleaseRail(rootPath);
+    const existing = document.getElementById('docs-release-rail');
+    if (existing && existing.parentNode) {
+      existing.parentNode.replaceChild(nextRail, existing);
+    } else {
+      document.body.appendChild(nextRail);
+    }
   }
 
   function normalizeSearchInputPresentation(scope) {
@@ -942,7 +995,6 @@ const DOCUMENTATION_OPTIONS = {
     const currentSlug = resolveCurrentDocSlug(rootPath);
 
     wrapper.innerHTML = '';
-    wrapper.appendChild(buildSidebarReleasePanel());
 
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'docs-book-sidebar-toggle';
@@ -1036,6 +1088,7 @@ const DOCUMENTATION_OPTIONS = {
     });
 
     wrapper.appendChild(nav);
+    renderReleaseRail(rootPath);
 
     initSidebarCollapseControl();
     return true;
@@ -1165,7 +1218,10 @@ const DOCUMENTATION_OPTIONS = {
     }
 
     bridgeSphinxBodyToHugoLayout(rootPath);
-    ensureSyncMetaData(rootPath, refreshDocsSyncLabels);
+    ensureSyncMetaData(rootPath, function () {
+      refreshDocsSyncLabels();
+      renderReleaseRail(rootPath);
+    });
 
     normalizeSearchInputPresentation(document);
     enhanceSearchPageExperience(rootPath);

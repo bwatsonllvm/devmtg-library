@@ -269,7 +269,7 @@ Mirror health is also checked on a daily schedule in:
 
 - `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes
 - `docs/`: mirrored LLVM documentation site content plus bridge customizations
-- `docs/_static/docs-sync-meta.json`: docs mirror freshness metadata (source + synced timestamp)
+- `docs/_static/docs-sync-meta.json`: docs mirror freshness metadata (source + synced timestamp + latest GitHub release metadata)
 - `css/`, `js/`, `images/`: shared site assets
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version

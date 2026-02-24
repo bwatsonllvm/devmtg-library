@@ -67,6 +67,7 @@ fi
 command -v wget >/dev/null 2>&1 || fail "wget is required"
 command -v rsync >/dev/null 2>&1 || fail "rsync is required"
 command -v python3 >/dev/null 2>&1 || fail "python3 is required"
+command -v curl >/dev/null 2>&1 || fail "curl is required"
 
 SOURCE_URL="$(python3 - "$SOURCE_URL" <<'PY'
 import sys
@@ -138,9 +139,17 @@ if [[ "$REGENERATE_BOOK_INDEX" -eq 1 ]]; then
     --output "$DOCS_DIR/_static/docs-book-index.js"
 fi
 
-python3 - "$DOCS_DIR" "$SOURCE_URL" <<'PY'
+LATEST_RELEASE_JSON="$(curl -fsSL \
+  --retry 3 \
+  --retry-delay 2 \
+  --connect-timeout 10 \
+  --max-time 20 \
+  https://api.github.com/repos/llvm/llvm-project/releases/latest 2>/dev/null || true)"
+
+LLVM_DOCS_LATEST_RELEASE_JSON="$LATEST_RELEASE_JSON" python3 - "$DOCS_DIR" "$SOURCE_URL" <<'PY'
 import datetime
 import json
+import os
 import pathlib
 import sys
 
@@ -149,11 +158,62 @@ source_url = sys.argv[2]
 meta_path = docs_dir / "_static" / "docs-sync-meta.json"
 meta_path.parent.mkdir(parents=True, exist_ok=True)
 
+def normalize_release_version(raw):
+    value = str(raw or "").strip()
+    if not value:
+        return ""
+    if value.lower().startswith("llvmorg-"):
+        value = value[len("llvmorg-") :]
+    if value.lower().startswith("llvm "):
+        value = value[len("llvm ") :]
+    return value.strip()
+
+
+def parse_latest_release(payload):
+    if not isinstance(payload, dict):
+        return {}
+
+    tag = str(payload.get("tag_name", "")).strip()
+    name = str(payload.get("name", "")).strip()
+    version = normalize_release_version(name) or normalize_release_version(tag)
+    github_url = str(payload.get("html_url", "")).strip()
+    published_at = str(payload.get("published_at", "")).strip()
+
+    release = {}
+    if tag:
+        release["tag"] = tag
+    if name:
+        release["name"] = name
+    if version:
+        release["version"] = version
+    if github_url:
+        release["githubUrl"] = github_url
+    if published_at:
+        release["publishedAt"] = published_at
+    return release
+
+
+def resolve_latest_release_from_env():
+    raw = str(os.environ.get("LLVM_DOCS_LATEST_RELEASE_JSON", "")).strip()
+    if not raw:
+        return {}
+    try:
+        payload = json.loads(raw)
+    except Exception:  # noqa: BLE001
+        return {}
+    return parse_latest_release(payload)
+
+
+latest_release = resolve_latest_release_from_env()
+
 payload = {
     "sourceUrl": source_url,
     "syncedAt": datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     "generator": "scripts/sync-docs-from-llvm-org.sh",
 }
+if latest_release:
+    payload["latestRelease"] = latest_release
+
 meta_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 PY
 
