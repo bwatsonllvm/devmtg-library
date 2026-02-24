@@ -816,7 +816,10 @@ function getPaperPreviewSource(paper) {
   const parts = [
     paper && paper.abstract,
     paper && paper.content,
+    paper && paper.bodyText,
     paper && paper.body,
+    paper && paper.fullText,
+    paper && paper.text,
     paper && paper.markdown,
     paper && paper.html,
   ]

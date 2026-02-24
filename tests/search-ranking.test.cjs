@@ -27,6 +27,16 @@ test('buildSearchQueryModel parses advanced filters and constraints', () => {
   assert.equal(model.yearRange.to, 2024);
 });
 
+test('buildSearchQueryModel keeps fielded operators scoped to their target fields', () => {
+  const model = utils.buildSearchQueryModel('author:"Alice Smith" topic:mlir venue:arxiv');
+
+  assert.equal(Array.isArray(model.clauses), true);
+  assert.equal(model.clauses.length, 0);
+  assert.ok(Array.isArray(model.fieldClauses.authors) && model.fieldClauses.authors.length > 0);
+  assert.ok(Array.isArray(model.fieldClauses.topics) && model.fieldClauses.topics.length > 0);
+  assert.ok(Array.isArray(model.fieldClauses.venue) && model.fieldClauses.venue.length > 0);
+});
+
 test('rankPaperRecordsByQuery prioritizes exact-title paper matches', () => {
   const papers = [
     {
@@ -92,6 +102,63 @@ test('rankPaperRecordsByQuery matches abstract/body content when title misses qu
   const ranked = utils.rankPaperRecordsByQuery(papers, 'polyhedral dependence graphs');
   assert.ok(ranked.length > 0);
   assert.equal(ranked[0].id, 'content-hit');
+});
+
+test('rankPaperRecordsByQuery indexes deep paper text fields (bodyText/fullText)', () => {
+  const papers = [
+    {
+      id: 'deep-hit',
+      title: 'Transform Dialect Notes',
+      abstract: 'Overview without the target phrase.',
+      bodyText: 'This section details polyhedral dependence graphs for schedule construction.',
+      authors: [{ name: 'Dana Lee' }],
+      publication: 'MLIR Workshop',
+      year: 2024,
+      tags: ['mlir'],
+    },
+    {
+      id: 'shallow',
+      title: 'General LLVM overview',
+      abstract: 'General notes about optimization.',
+      fullText: 'No dependence graph material.',
+      authors: [{ name: 'Eli Roe' }],
+      publication: 'LLVM Notes',
+      year: 2024,
+      tags: ['llvm'],
+    },
+  ];
+
+  const ranked = utils.rankPaperRecordsByQuery(papers, 'polyhedral dependence graphs');
+  assert.ok(ranked.length > 0);
+  assert.equal(ranked[0].id, 'deep-hit');
+});
+
+test('rankPaperRecordsByQuery prunes partial 2-of-3 token matches for specific queries', () => {
+  const papers = [
+    {
+      id: 'exact',
+      title: 'Polyhedral dependence graphs in MLIR',
+      abstract: 'We use polyhedral dependence graphs to drive scheduling.',
+      authors: [{ name: 'Alice Smith' }],
+      publication: 'Compiler Research',
+      year: 2024,
+      tags: ['mlir'],
+    },
+    {
+      id: 'partial',
+      title: 'Polyhedral dependence modeling',
+      abstract: 'Discusses polyhedral dependence methods, without graph construction details.',
+      authors: [{ name: 'Bob Jones' }],
+      publication: 'Compiler Notes',
+      year: 2024,
+      tags: ['mlir'],
+    },
+  ];
+
+  const ranked = utils.rankPaperRecordsByQuery(papers, 'polyhedral dependence graphs');
+  assert.ok(ranked.length > 0);
+  assert.equal(ranked[0].id, 'exact');
+  assert.ok(!ranked.some((paper) => paper.id === 'partial'));
 });
 
 test('rankPaperRecordsByQuery enforces author/publication/year advanced filters', () => {

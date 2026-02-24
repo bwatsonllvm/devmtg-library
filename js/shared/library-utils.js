@@ -1760,7 +1760,6 @@
 
       for (const token of tokenizeSearchText(value, 2)) {
         appendUniqueToken(termBucket[normalizedField], token);
-        if (!excluded) appendUniqueToken(tokens, token);
       }
     };
 
@@ -2671,7 +2670,7 @@
         ? Math.min(clauseCount, Math.floor(model.requiredClauseCount))
         : clauseCount;
       const treatAllClausesAsRequired = requiredClauseCount === clauseCount;
-      const clauseCoverageThreshold = relaxed ? 0.9 : 1.35;
+      const clauseCoverageThreshold = relaxed ? 0.9 : 1.45;
 
       for (const clause of model.clauses) {
         const clauseScore = scoreClauseAgainstFields(clause, doc.fields, fieldConfig);
@@ -2688,7 +2687,7 @@
       if (!relaxed) {
         if (requiredClauseCount >= 5 && requiredCoverage < 0.8) return 0;
         if (requiredClauseCount === 4 && requiredCoverage < 0.75) return 0;
-        if (requiredClauseCount === 3 && requiredCoverage < 0.67) return 0;
+        if (requiredClauseCount === 3 && requiredCoverage < 0.8) return 0;
         if (requiredClauseCount === 2 && requiredCoverage < 1) return 0;
         if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
       } else {
@@ -2914,22 +2913,46 @@
     const topScore = Number(scored[0].score || 0);
     if (!(topScore > 0)) return scored;
 
-    const maxResults = Number.isFinite(options.maxResults) && options.maxResults > 0
+    const clauseCount = Array.isArray(model && model.clauses) ? model.clauses.length : 0;
+    const narrowClauseCount = Array.isArray(model && model.clauses)
+      ? model.clauses.filter((clause) => clause && clause.isBroad !== true).length
+      : 0;
+    const requiredPhraseCount = Array.isArray(model && model.requiredPhrases)
+      ? model.requiredPhrases.length
+      : 0;
+    const focusedIntent = narrowClauseCount >= 2 || requiredPhraseCount > 0;
+    const highlySpecificIntent = narrowClauseCount >= 3 || requiredPhraseCount >= 1;
+
+    let maxResults = Number.isFinite(options.maxResults) && options.maxResults > 0
       ? Math.floor(options.maxResults)
       : 1600;
-    const minTail = Number.isFinite(options.minTail) && options.minTail > 0
+    if (highlySpecificIntent) maxResults = Math.min(maxResults, 700);
+    else if (focusedIntent) maxResults = Math.min(maxResults, 1000);
+
+    let minTail = Number.isFinite(options.minTail) && options.minTail > 0
       ? Math.floor(options.minTail)
       : 120;
-    const relativeFloor = Number.isFinite(options.relativeFloor)
+    if (highlySpecificIntent) minTail = Math.min(minTail, 100);
+
+    let relativeFloor = Number.isFinite(options.relativeFloor)
       ? options.relativeFloor
       : (
         model.beginnerIntent
           ? 0.44
-          : (model.clauses.length <= 2 ? 0.34 : 0.24)
+          : (clauseCount <= 2 ? 0.34 : 0.24)
       );
-    const absoluteFloor = Number.isFinite(options.absoluteFloor)
+    if (focusedIntent) {
+      relativeFloor = Math.max(relativeFloor, model.beginnerIntent ? 0.48 : 0.28);
+    }
+    if (highlySpecificIntent) {
+      relativeFloor = Math.max(relativeFloor, model.beginnerIntent ? 0.54 : 0.34);
+    }
+
+    let absoluteFloor = Number.isFinite(options.absoluteFloor)
       ? options.absoluteFloor
       : (model.beginnerIntent ? 14 : 8);
+    if (focusedIntent) absoluteFloor = Math.max(absoluteFloor, model.beginnerIntent ? 15 : 9);
+    if (highlySpecificIntent) absoluteFloor = Math.max(absoluteFloor, model.beginnerIntent ? 16 : 11);
 
     const threshold = Math.max(absoluteFloor, topScore * Math.max(0.08, relativeFloor));
     const filtered = scored.filter((entry) => Number(entry.score || 0) >= threshold);
@@ -2985,11 +3008,14 @@
     const authors = paper._authorsLower
       || (Array.isArray(paper.authors) ? paper.authors.map((author) => (author && author.name) || '').join(' ') : '');
     const topics = paper._topicsLower
-      || `${Array.isArray(paper.tags) ? paper.tags.join(' ') : ''} ${Array.isArray(paper.keywords) ? paper.keywords.join(' ') : ''}`;
+      || `${Array.isArray(paper.tags) ? paper.tags.join(' ') : ''} ${Array.isArray(paper.keywords) ? paper.keywords.join(' ') : ''} ${Array.isArray(paper.matchedSubprojects) ? paper.matchedSubprojects.join(' ') : ''}`;
     const abstractText = paper._abstractLower || paper.abstract || '';
     const content = paper._contentLower
       || paper.content
+      || paper.bodyText
       || paper.body
+      || paper.fullText
+      || paper.text
       || paper.markdown
       || paper.html
       || '';

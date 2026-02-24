@@ -403,7 +403,10 @@ function getPaperPreviewSource(paper) {
   const parts = [
     paper && paper.abstract,
     paper && paper.content,
+    paper && paper.bodyText,
     paper && paper.body,
+    paper && paper.fullText,
+    paper && paper.text,
     paper && paper.markdown,
     paper && paper.html,
   ]
@@ -1730,6 +1733,17 @@ function scorePersonRecordByModel(person, model, options = {}) {
 function computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens) {
   const normalizedTitle = normalizeSearchText(title);
   if (!normalizedTitle || !normalizedQuery) return 0;
+  const titleWords = normalizedTitle.split(/\s+/).filter(Boolean);
+  const titleWordSet = new Set(titleWords);
+
+  const hasTokenBoundaryMatch = (token) => {
+    const term = normalizeSearchText(token);
+    if (!term) return false;
+    if (titleWordSet.has(term)) return true;
+    if (term.length >= 4 && titleWords.some((word) => word.startsWith(term))) return true;
+    if (term.length >= 5 && titleWords.some((word) => term.startsWith(word))) return true;
+    return false;
+  };
 
   let boost = 0;
   if (normalizedTitle === normalizedQuery) {
@@ -1743,7 +1757,7 @@ function computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens) {
   if (Array.isArray(normalizedTokens) && normalizedTokens.length) {
     let matchedTokens = 0;
     for (const token of normalizedTokens) {
-      if (token && normalizedTitle.includes(token)) matchedTokens += 1;
+      if (token && hasTokenBoundaryMatch(token)) matchedTokens += 1;
     }
     if (matchedTokens > 0) {
       boost += (matchedTokens / normalizedTokens.length) * 28;
@@ -1822,32 +1836,25 @@ function compareUniversalEntries(a, b) {
   return getUniversalEntryTitle(a).localeCompare(getUniversalEntryTitle(b));
 }
 
-function buildSearchRankingText(query, advancedOptions = {}) {
-  const parts = [];
-  const baseQuery = normalizeAdvancedText(query, 300);
-  if (baseQuery) parts.push(baseQuery);
-  if (advancedOptions && typeof advancedOptions === 'object') {
-    if (advancedOptions.allWords) parts.push(normalizeAdvancedText(advancedOptions.allWords, 220));
-    if (advancedOptions.exactPhrase) parts.push(normalizeAdvancedText(advancedOptions.exactPhrase, 220));
-    if (advancedOptions.anyWords) parts.push(normalizeAdvancedText(advancedOptions.anyWords, 220));
-    if (advancedOptions.author) parts.push(normalizeAdvancedText(advancedOptions.author, 180));
-    if (advancedOptions.publication) parts.push(normalizeAdvancedText(advancedOptions.publication, 180));
-  }
-  return parts.filter(Boolean).join(' ');
-}
-
 function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, query, advancedOptions = null) {
   const rankedTalks = Array.isArray(talks) ? talks : [];
   const rankedPapers = Array.isArray(papers) ? papers : [];
   const rankedBlogs = Array.isArray(blogs) ? blogs : [];
   const rankedPeople = Array.isArray(people) ? people : [];
-  const rankingQuery = buildSearchRankingText(query, advancedOptions || {});
-  const normalizedQuery = normalizeSearchText(rankingQuery);
-  const normalizedTokens = tokenizeQuery(rankingQuery).map((token) => normalizeSearchText(token)).filter(Boolean);
+  const normalizedQuery = normalizeSearchText(query);
+  const normalizedTokens = tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
   const model = typeof HubUtils.buildSearchQueryModel === 'function'
     ? HubUtils.buildSearchQueryModel(query, advancedOptions || undefined)
     : null;
   const hasModel = !!(model && model.hasSearchConstraints);
+  const narrowClauseCount = hasModel
+    ? (Array.isArray(model.clauses) ? model.clauses.filter((clause) => clause && clause.isBroad !== true).length : 0)
+    : 0;
+  const requiredPhraseCount = hasModel
+    ? (Array.isArray(model.requiredPhrases) ? model.requiredPhrases.length : 0)
+    : 0;
+  const focusedIntent = hasModel && (narrowClauseCount >= 2 || requiredPhraseCount > 0);
+  const highlySpecificIntent = hasModel && (narrowClauseCount >= 3 || requiredPhraseCount >= 1);
   const canScoreTalkByModel = hasModel && typeof HubUtils.scoreTalkRecordByModel === 'function';
   const canScorePaperByModel = hasModel && typeof HubUtils.scorePaperRecordByModel === 'function';
   const canScorePeopleByModel = hasModel;
@@ -1918,8 +1925,13 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
 
   let entries = [];
   if (strict.length > 0) {
-    const softenedRelaxed = relaxed.map((entry) => ({ ...entry, score: entry.score * 0.62 }));
-    entries = [...strict, ...softenedRelaxed];
+    if (highlySpecificIntent || strict.length >= 120) {
+      entries = [...strict];
+    } else {
+      const relaxedMultiplier = focusedIntent ? 0.56 : 0.62;
+      const softenedRelaxed = relaxed.map((entry) => ({ ...entry, score: entry.score * relaxedMultiplier }));
+      entries = [...strict, ...softenedRelaxed];
+    }
   } else if (relaxed.length > 0) {
     entries = [...relaxed];
   } else {
@@ -1937,13 +1949,22 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
     return sorted.slice(0, Math.min(180, UNIVERSAL_MAX_RESULTS));
   }
 
-  const queryTokenCount = tokenizeQuery(rankingQuery).length;
-  const relativeFloor = queryTokenCount >= 4
+  const queryTokenCount = tokenizeQuery(query).length;
+  let relativeFloor = queryTokenCount >= 4
     ? 0.22
     : (queryTokenCount === 3 ? 0.18 : 0.14);
-  const absoluteFloor = queryTokenCount >= 4 ? 7 : 4;
+  let absoluteFloor = queryTokenCount >= 4 ? 7 : 4;
+  if (focusedIntent) {
+    relativeFloor = Math.max(relativeFloor, 0.26);
+    absoluteFloor = Math.max(absoluteFloor, 7);
+  }
+  if (highlySpecificIntent) {
+    relativeFloor = Math.max(relativeFloor, 0.34);
+    absoluteFloor = Math.max(absoluteFloor, 10);
+  }
   const threshold = Math.max(absoluteFloor, topScore * relativeFloor);
-  const pruned = sorted.filter((entry, index) => index < 120 || Number(entry.score || 0) >= threshold);
+  const keepHead = highlySpecificIntent ? 80 : 120;
+  const pruned = sorted.filter((entry, index) => index < keepHead || Number(entry.score || 0) >= threshold);
   return (pruned.length ? pruned : sorted.slice(0, 180)).slice(0, UNIVERSAL_MAX_RESULTS);
 }
 
