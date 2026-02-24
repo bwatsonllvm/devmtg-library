@@ -22,7 +22,7 @@ from pathlib import Path
 
 MAX_HEADINGS = 10
 MAX_SUMMARY_CHARS = 280
-MAX_SEARCH_CHARS = 1400
+MAX_SEARCH_CHARS = 6000
 SKIP_HTML = {"search.html", "genindex.html", "py-modindex.html"}
 
 

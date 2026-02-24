@@ -21,7 +21,7 @@ const DOCUMENTATION_OPTIONS = {
   const DOCS_REPORT_ISSUE_BASE = 'https://github.com/bwatsonllvm/library/issues/new';
   const DOCS_GITHUB_RELEASES_URL = 'https://github.com/llvm/llvm-project/releases';
   const DOCS_UNIVERSAL_SEARCH_FILENAME = 'docs-universal-search-index.js';
-  const DOCS_UNIVERSAL_SEARCH_VERSION = '20260224-01';
+  const DOCS_UNIVERSAL_SEARCH_VERSION = '20260224-02';
   const DOCS_UNIVERSAL_SEARCH_MAX_SIDEBAR_RESULTS = 7;
   const DOCS_UNIVERSAL_SEARCH_MAX_PAGE_RESULTS = 80;
   const DOCS_SEARCH_STOP_WORDS = new Set([
@@ -1277,7 +1277,7 @@ const DOCUMENTATION_OPTIONS = {
         }
         const results = runUniversalDocsSearch(query, DOCS_UNIVERSAL_SEARCH_MAX_SIDEBAR_RESULTS);
         if (!results.length) {
-          status.textContent = 'No direct matches.';
+          status.textContent = 'No quick matches. Press Enter for full docs search.';
           return;
         }
         status.textContent = `${results.length} quick result${results.length === 1 ? '' : 's'}`;
@@ -1318,9 +1318,6 @@ const DOCUMENTATION_OPTIONS = {
     const resultsRoot = document.getElementById('search-results');
     if (!resultsRoot || !resultsRoot.parentElement) return;
     searchForm.dataset.docsUniversalPageInit = '1';
-
-    resultsRoot.hidden = true;
-    resultsRoot.setAttribute('aria-hidden', 'true');
 
     const panel = document.createElement('section');
     panel.className = 'docs-universal-search-page';
@@ -1368,7 +1365,7 @@ const DOCUMENTATION_OPTIONS = {
       }
 
       if (!query) {
-        status.textContent = 'Type a query to search all mirrored LLVM docs.';
+        status.textContent = 'Quick results appear here as you type. Full Sphinx results are shown below.';
         list.innerHTML = '';
         return;
       }
@@ -1381,14 +1378,14 @@ const DOCUMENTATION_OPTIONS = {
       ensureUniversalSearchIndexData(rootPath, function (ok) {
         if (token !== pendingToken) return;
         if (!ok) {
-          status.textContent = 'Universal docs index is unavailable right now.';
+          status.textContent = 'Quick index unavailable. Full Sphinx search results are shown below.';
           setNoResultsPanel(query);
           return;
         }
 
         const results = runUniversalDocsSearch(query, DOCS_UNIVERSAL_SEARCH_MAX_PAGE_RESULTS);
         if (!results.length) {
-          status.textContent = `No direct matches for \"${query}\".`;
+          status.textContent = `No quick matches for \"${query}\". Check full Sphinx results below.`;
           setNoResultsPanel(query);
           return;
         }
@@ -1402,13 +1399,8 @@ const DOCUMENTATION_OPTIONS = {
     searchInput.addEventListener('input', function () {
       if (inputDebounce) window.clearTimeout(inputDebounce);
       inputDebounce = window.setTimeout(function () {
-        renderQuery(searchInput.value, 'replace');
+        renderQuery(searchInput.value, null);
       }, 110);
-    });
-
-    searchForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      renderQuery(searchInput.value, 'push');
     });
 
     window.addEventListener('popstate', function () {

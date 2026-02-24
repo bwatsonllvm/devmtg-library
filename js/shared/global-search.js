@@ -11,7 +11,7 @@
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, docs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
-  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-01';
+  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-02';
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
