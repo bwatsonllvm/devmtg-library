@@ -30,9 +30,22 @@ body {
   text-align: left !important;
   background: var(--color-bg, #f5f5f5) !important;
   color: var(--color-text, #111827) !important;
-  font-family: var(--font-sans, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif) !important;
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji') !important;
   font-size: var(--font-size-base, 16px) !important;
   line-height: var(--line-height-base, 1.6) !important;
+}
+
+.library-docs-bridge .document,
+.library-docs-bridge .documentwrapper,
+.library-docs-bridge .bodywrapper,
+.library-docs-bridge .body,
+.library-docs-bridge .sphinxsidebar,
+.library-docs-bridge .sphinxsidebarwrapper,
+.library-docs-bridge .docs-hugo-shell,
+.library-docs-bridge .docs-hugo-content,
+.library-docs-bridge .docs-book-index,
+.library-docs-bridge .docs-release-rail {
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji') !important;
 }
 
 /* ============================================================
@@ -467,6 +480,21 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 6px;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.library-docs-bridge .docs-book-chapter-head:hover {
+  border-color: var(--color-border);
+  background: var(--color-surface-hover);
+}
+
+.library-docs-bridge .docs-book-chapter-head:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
 }
 
 .library-docs-bridge .docs-book-chapter-toggle {
@@ -542,6 +570,18 @@ body {
   gap: 4px;
 }
 
+.library-docs-bridge .docs-book-item-row.has-children {
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding-right: 2px;
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.library-docs-bridge .docs-book-item-row.has-children:hover {
+  border-color: var(--color-border);
+  background: var(--color-surface-hover);
+}
+
 .library-docs-bridge .docs-book-item-toggle,
 .library-docs-bridge .docs-book-item-spacer {
   flex: 0 0 18px;
@@ -602,6 +642,33 @@ body {
   color: var(--color-state-active-text, #111827);
   background: var(--color-state-active-bg);
   border-color: var(--color-state-active-border);
+}
+
+.library-docs-bridge .docs-book-section-link,
+.library-docs-bridge .docs-book-section-link:visited {
+  cursor: pointer;
+}
+
+.library-docs-bridge .docs-book-open-link,
+.library-docs-bridge .docs-book-open-link:visited {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-subtle, #9ca3af);
+  text-decoration: none;
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.library-docs-bridge .docs-book-open-link:hover {
+  color: var(--color-text, #111827);
+  border-color: var(--color-border);
+  background: var(--color-surface);
 }
 
 .library-docs-bridge .docs-book-number {
@@ -862,6 +929,23 @@ body {
   border: 1px solid var(--color-border);
   padding: 0.45rem 0.6rem;
   vertical-align: top;
+}
+
+.library-docs-bridge .docs-hugo-content nav.contents,
+.library-docs-bridge .docs-hugo-content aside.topic,
+.library-docs-bridge .docs-hugo-content div.topic {
+  margin: var(--space-4) 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
+}
+
+.library-docs-bridge .docs-hugo-content p.topic-title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text, #111827);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: var(--font-weight-semi, 600);
 }
 
 .library-docs-bridge .docs-hugo-content .admonition,

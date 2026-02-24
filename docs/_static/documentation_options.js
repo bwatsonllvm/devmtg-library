@@ -123,7 +123,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-15` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-17` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -526,6 +526,17 @@ const DOCUMENTATION_OPTIONS = {
     `;
   }
 
+  function buildOpenDocIcon() {
+    return `
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M14 5h5v5"></path>
+        <path d="M10 14L19 5"></path>
+        <path d="M19 14v5h-5"></path>
+        <path d="M5 10V5h5"></path>
+      </svg>
+    `;
+  }
+
   function setNodeToggleState(toggle, expanded, label) {
     if (!toggle) return;
     const isExpanded = !!expanded;
@@ -667,15 +678,16 @@ const DOCUMENTATION_OPTIONS = {
     const root = scope && scope.querySelector ? scope : document;
     const labels = root.querySelectorAll('#searchlabel');
     labels.forEach((label) => {
-      label.textContent = 'Search docs';
+      if (label && label.parentNode) {
+        label.parentNode.removeChild(label);
+      }
     });
 
     const searchInputs = root.querySelectorAll('input[name="q"], input[type="search"]');
     searchInputs.forEach((input) => {
       input.setAttribute('placeholder', 'Search docs...');
-      if (!input.getAttribute('aria-label')) {
-        input.setAttribute('aria-label', 'Search docs');
-      }
+      input.removeAttribute('aria-labelledby');
+      input.setAttribute('aria-label', 'Search docs');
     });
   }
 
@@ -925,25 +937,22 @@ const DOCUMENTATION_OPTIONS = {
 
       const row = document.createElement('div');
       row.className = 'docs-book-item-row';
+      if (hasChildren) {
+        row.classList.add('has-children');
+      }
 
       let childList = null;
+      let itemToggle = null;
       const childListId = `docs-book-node-${depth + 1}-${nodePath}`;
 
       if (hasChildren) {
-        const itemToggle = document.createElement('button');
+        itemToggle = document.createElement('button');
         itemToggle.className = 'docs-book-item-toggle';
         itemToggle.type = 'button';
         itemToggle.setAttribute('aria-controls', childListId);
         itemToggle.innerHTML = buildDisclosureChevron();
         setNodeToggleState(itemToggle, startExpanded, `${number} ${title}`);
         row.appendChild(itemToggle);
-
-        itemToggle.addEventListener('click', function () {
-          const collapsed = item.classList.toggle('is-collapsed');
-          if (childList) childList.hidden = collapsed;
-          setStoredNodeCollapseState(stateNodeId, collapsed);
-          setNodeToggleState(itemToggle, !collapsed, `${number} ${title}`);
-        });
       } else {
         const spacer = document.createElement('span');
         spacer.className = 'docs-book-item-spacer';
@@ -955,6 +964,11 @@ const DOCUMENTATION_OPTIONS = {
       link.className = 'docs-book-link';
       link.href = slugToDocsHref(slug, rootPath);
       link.setAttribute('aria-label', `${number} ${title}`);
+      if (hasChildren) {
+        link.classList.add('docs-book-section-link');
+        link.setAttribute('aria-expanded', startExpanded ? 'true' : 'false');
+        link.title = `Expand/collapse ${number} ${title}`;
+      }
 
       if (slug === currentSlug) {
         link.classList.add('active');
@@ -972,6 +986,40 @@ const DOCUMENTATION_OPTIONS = {
       link.appendChild(textSpan);
 
       row.appendChild(link);
+
+      const toggleNode = hasChildren ? function () {
+        const collapsed = item.classList.toggle('is-collapsed');
+        if (childList) childList.hidden = collapsed;
+        setStoredNodeCollapseState(stateNodeId, collapsed);
+        if (itemToggle) {
+          setNodeToggleState(itemToggle, !collapsed, `${number} ${title}`);
+        }
+        link.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      } : null;
+
+      if (hasChildren && toggleNode) {
+        itemToggle.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleNode();
+        });
+
+        link.addEventListener('click', function (event) {
+          if (event.defaultPrevented) return;
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+          event.preventDefault();
+          toggleNode();
+        });
+
+        const openLink = document.createElement('a');
+        openLink.className = 'docs-book-open-link';
+        openLink.href = slugToDocsHref(slug, rootPath);
+        openLink.setAttribute('aria-label', `Open ${number} ${title}`);
+        openLink.title = `Open ${number} ${title}`;
+        openLink.innerHTML = buildOpenDocIcon();
+        row.appendChild(openLink);
+      }
+
       item.appendChild(row);
 
       if (hasChildren) {
@@ -1056,6 +1104,8 @@ const DOCUMENTATION_OPTIONS = {
 
       const chapterHead = document.createElement('div');
       chapterHead.className = 'docs-book-chapter-head';
+      chapterHead.setAttribute('role', 'button');
+      chapterHead.setAttribute('tabindex', '0');
 
       const chapterToggle = document.createElement('button');
       chapterToggle.className = 'docs-book-chapter-toggle';
@@ -1065,6 +1115,8 @@ const DOCUMENTATION_OPTIONS = {
       chapterToggle.setAttribute('aria-controls', chapterBodyId);
       setNodeToggleState(chapterToggle, chapterExpanded, chapterLabel);
       chapterHead.appendChild(chapterToggle);
+      chapterHead.setAttribute('aria-controls', chapterBodyId);
+      chapterHead.setAttribute('aria-expanded', chapterExpanded ? 'true' : 'false');
 
       const chapterTitle = document.createElement('h4');
       chapterTitle.className = 'docs-book-chapter-title';
@@ -1081,11 +1133,30 @@ const DOCUMENTATION_OPTIONS = {
       );
       chapterSection.appendChild(chapterBody);
 
-      chapterToggle.addEventListener('click', function () {
+      const toggleChapter = function () {
         const collapsed = chapterSection.classList.toggle('is-collapsed');
         chapterBody.hidden = collapsed;
         setStoredNodeCollapseState(chapterStateId, collapsed);
         setNodeToggleState(chapterToggle, !collapsed, chapterLabel);
+        chapterHead.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      };
+
+      chapterToggle.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleChapter();
+      });
+
+      chapterHead.addEventListener('click', function (event) {
+        if (event.target && event.target.closest('.docs-book-chapter-toggle')) return;
+        toggleChapter();
+      });
+
+      chapterHead.addEventListener('keydown', function (event) {
+        if (event.target && event.target.closest('.docs-book-chapter-toggle')) return;
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggleChapter();
       });
 
       nav.appendChild(chapterSection);
