@@ -91,7 +91,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-08` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-09` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -308,21 +308,74 @@ const DOCUMENTATION_OPTIONS = {
     }
   }
 
-  function buildBookEntriesList(entries, chapterPrefix, rootPath, currentSlug, depth) {
+  function buildDisclosureChevron() {
+    return `
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    `;
+  }
+
+  function setNodeToggleState(toggle, expanded, label) {
+    if (!toggle) return;
+    const isExpanded = !!expanded;
+    toggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    toggle.setAttribute('aria-label', `${isExpanded ? 'Collapse' : 'Expand'} ${label}`);
+    toggle.title = `${isExpanded ? 'Collapse' : 'Expand'} ${label}`;
+  }
+
+  function buildBookEntriesList(entries, chapterPrefix, rootPath, currentSlug, depth, pathPrefix) {
     const list = document.createElement('ol');
     list.className = depth === 0 ? 'docs-book-list' : 'docs-book-sublist';
 
     entries.forEach((entry, index) => {
       const number = `${chapterPrefix}.${index + 1}`;
+      const nodePath = `${pathPrefix}-${index + 1}`;
       const item = document.createElement('li');
       item.className = 'docs-book-item';
 
-      if (nodeContainsSlug(entry, currentSlug)) {
+      const isActivePath = nodeContainsSlug(entry, currentSlug);
+      if (isActivePath) {
         item.classList.add('is-active-path');
       }
 
       const title = String(entry && entry.title ? entry.title : 'Untitled');
       const slug = entry && entry.slug ? String(entry.slug) : '';
+      const children = Array.isArray(entry && entry.children) ? entry.children : [];
+      const hasChildren = children.length > 0;
+      const startExpanded = !hasChildren || isActivePath;
+
+      if (hasChildren && !startExpanded) {
+        item.classList.add('is-collapsed');
+      }
+
+      const row = document.createElement('div');
+      row.className = 'docs-book-item-row';
+
+      let childList = null;
+      const childListId = `docs-book-node-${depth + 1}-${nodePath}`;
+
+      if (hasChildren) {
+        const itemToggle = document.createElement('button');
+        itemToggle.className = 'docs-book-item-toggle';
+        itemToggle.type = 'button';
+        itemToggle.setAttribute('aria-controls', childListId);
+        itemToggle.innerHTML = buildDisclosureChevron();
+        setNodeToggleState(itemToggle, startExpanded, `${number} ${title}`);
+        row.appendChild(itemToggle);
+
+        itemToggle.addEventListener('click', function () {
+          const collapsed = item.classList.toggle('is-collapsed');
+          if (childList) childList.hidden = collapsed;
+          setNodeToggleState(itemToggle, !collapsed, `${number} ${title}`);
+        });
+      } else {
+        const spacer = document.createElement('span');
+        spacer.className = 'docs-book-item-spacer';
+        spacer.setAttribute('aria-hidden', 'true');
+        row.appendChild(spacer);
+      }
+
       const link = document.createElement('a');
       link.className = 'docs-book-link';
       link.href = slugToDocsHref(slug, rootPath);
@@ -343,11 +396,14 @@ const DOCUMENTATION_OPTIONS = {
       textSpan.textContent = title;
       link.appendChild(textSpan);
 
-      item.appendChild(link);
+      row.appendChild(link);
+      item.appendChild(row);
 
-      const children = Array.isArray(entry && entry.children) ? entry.children : [];
-      if (children.length) {
-        item.appendChild(buildBookEntriesList(children, number, rootPath, currentSlug, depth + 1));
+      if (hasChildren) {
+        childList = buildBookEntriesList(children, number, rootPath, currentSlug, depth + 1, nodePath);
+        childList.id = childListId;
+        childList.hidden = !startExpanded;
+        item.appendChild(childList);
       }
 
       list.appendChild(item);
@@ -368,6 +424,11 @@ const DOCUMENTATION_OPTIONS = {
     const currentSlug = resolveCurrentDocSlug(rootPath);
 
     wrapper.innerHTML = '';
+
+    if (quickSearchClone) {
+      quickSearchClone.style.display = 'block';
+      wrapper.appendChild(quickSearchClone);
+    }
 
     const nav = document.createElement('nav');
     nav.className = 'docs-book-index';
@@ -399,26 +460,55 @@ const DOCUMENTATION_OPTIONS = {
     payload.chapters.forEach((chapter, chapterIdx) => {
       const entries = Array.isArray(chapter && chapter.entries) ? chapter.entries : [];
       if (!entries.length) return;
+      const chapterNumber = chapterIdx + 1;
+      const chapterLabel = `${chapterNumber}. ${String(chapter.title || `Chapter ${chapterNumber}`)}`;
+      const chapterContainsCurrent = entries.some((entry) => nodeContainsSlug(entry, currentSlug));
+      const chapterExpanded = !!chapterContainsCurrent;
 
       const chapterSection = document.createElement('section');
       chapterSection.className = 'docs-book-chapter';
 
+      if (!chapterExpanded) {
+        chapterSection.classList.add('is-collapsed');
+      }
+
+      const chapterHead = document.createElement('div');
+      chapterHead.className = 'docs-book-chapter-head';
+
+      const chapterToggle = document.createElement('button');
+      chapterToggle.className = 'docs-book-chapter-toggle';
+      chapterToggle.type = 'button';
+      chapterToggle.innerHTML = buildDisclosureChevron();
+      const chapterBodyId = `docs-book-chapter-${chapterNumber}`;
+      chapterToggle.setAttribute('aria-controls', chapterBodyId);
+      setNodeToggleState(chapterToggle, chapterExpanded, chapterLabel);
+      chapterHead.appendChild(chapterToggle);
+
       const chapterTitle = document.createElement('h4');
       chapterTitle.className = 'docs-book-chapter-title';
-      chapterTitle.textContent = `${chapterIdx + 1}. ${String(chapter.title || `Chapter ${chapterIdx + 1}`)}`;
-      chapterSection.appendChild(chapterTitle);
+      chapterTitle.textContent = chapterLabel;
+      chapterHead.appendChild(chapterTitle);
+      chapterSection.appendChild(chapterHead);
 
-      chapterSection.appendChild(
-        buildBookEntriesList(entries, String(chapterIdx + 1), rootPath, currentSlug, 0),
+      const chapterBody = document.createElement('div');
+      chapterBody.className = 'docs-book-chapter-body';
+      chapterBody.id = chapterBodyId;
+      chapterBody.hidden = !chapterExpanded;
+      chapterBody.appendChild(
+        buildBookEntriesList(entries, String(chapterNumber), rootPath, currentSlug, 0, `c${chapterNumber}`),
       );
+      chapterSection.appendChild(chapterBody);
+
+      chapterToggle.addEventListener('click', function () {
+        const collapsed = chapterSection.classList.toggle('is-collapsed');
+        chapterBody.hidden = collapsed;
+        setNodeToggleState(chapterToggle, !collapsed, chapterLabel);
+      });
+
       nav.appendChild(chapterSection);
     });
 
     wrapper.appendChild(nav);
-    if (quickSearchClone) {
-      quickSearchClone.style.display = 'block';
-      wrapper.appendChild(quickSearchClone);
-    }
 
     initSidebarCollapseControl();
     return true;
