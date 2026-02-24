@@ -18,9 +18,8 @@ const DOCUMENTATION_OPTIONS = {
 
   function resolveRootPath() {
     const pathname = String(window.location.pathname || '/');
-    const marker = '/docs/';
-    const markerIndex = pathname.indexOf(marker);
-    if (markerIndex >= 0) return pathname.slice(0, markerIndex + 1);
+    const match = pathname.match(/^(.*?\/)docs(?:\/|$)/);
+    if (match && match[1]) return match[1];
     return '/';
   }
 
@@ -54,7 +53,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-02` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-03` });
   }
 
   function applyStoredDisplayPreferences() {
