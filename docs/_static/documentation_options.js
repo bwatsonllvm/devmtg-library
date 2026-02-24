@@ -331,8 +331,8 @@ const DOCUMENTATION_OPTIONS = {
 
     const links = [
       { text: 'index', href: (document.querySelector('link[rel="index"]') || {}).href || `${rootPath}docs/genindex.html` },
-      { text: 'next', href: (document.querySelector('link[rel="next"]') || {}).href || '' },
       { text: 'previous', href: (document.querySelector('link[rel="prev"]') || {}).href || '' },
+      { text: 'next', href: (document.querySelector('link[rel="next"]') || {}).href || '' },
     ];
 
     links.forEach((entry, idx) => {
@@ -482,6 +482,14 @@ const DOCUMENTATION_OPTIONS = {
     wrapper.appendChild(sidebarTop);
 
     if (quickSearchClone) {
+      const searchLabel = quickSearchClone.querySelector('#searchlabel');
+      if (searchLabel) searchLabel.textContent = 'Search docs';
+
+      const searchInput = quickSearchClone.querySelector('input[type="text"]');
+      if (searchInput) {
+        searchInput.setAttribute('placeholder', 'Search docs...');
+      }
+
       quickSearchClone.style.display = 'block';
       wrapper.appendChild(quickSearchClone);
     }
