@@ -44,7 +44,20 @@ const DOCUMENTATION_OPTIONS = {
     return node;
   }
 
+  function ensureCriticalBridgeStyles() {
+    const node = ensureHeadTag('style', { id: 'llvm-docs-bridge-critical' });
+    if (!node) return;
+    node.textContent = [
+      'div.related,div.logo,div.clearer{display:none!important;}',
+      '.library-docs-bridge .site-header a:visited{color:inherit!important;}',
+      '.library-docs-bridge .sphinxsidebar a:visited{color:var(--color-text-muted,#6b7280)!important;}',
+      '.library-docs-bridge .docs-hugo-content a:visited{color:var(--color-accent)!important;}',
+      '.library-docs-bridge .docs-hugo-content h1,.library-docs-bridge .docs-hugo-content h2,.library-docs-bridge .docs-hugo-content h3,.library-docs-bridge .docs-hugo-content h4,.library-docs-bridge .docs-hugo-content h5,.library-docs-bridge .docs-hugo-content h6{color:var(--color-text,#111827)!important;}',
+    ].join('');
+  }
+
   function ensureStyles(rootPath) {
+    ensureCriticalBridgeStyles();
     ensureHeadTag('meta', { name: 'color-scheme', content: 'light dark' });
     ensureHeadTag('link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' });
     ensureHeadTag('link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' });
@@ -53,7 +66,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-04` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-05` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -177,6 +190,68 @@ const DOCUMENTATION_OPTIONS = {
     document.body.appendChild(script);
   }
 
+  function deriveFallbackTitle() {
+    const title = String(document.title || '').trim();
+    const cleaned = title
+      .replace(/\s+[\u2013\u2014-]\s+LLVM.*$/i, '')
+      .replace(/\s+[\u2013\u2014-]\s+documentation$/i, '')
+      .trim();
+    return cleaned || 'LLVM Documentation';
+  }
+
+  function bridgeSphinxBodyToHugoLayout() {
+    const docsBody = document.querySelector('.document .body');
+    if (!docsBody || docsBody.dataset.docsHugoBridged === '1') return;
+    docsBody.dataset.docsHugoBridged = '1';
+
+    const shell = document.createElement('div');
+    shell.className = 'talk-detail docs-hugo-shell';
+
+    const header = document.createElement('div');
+    header.className = 'talk-header';
+
+    const headerMeta = document.createElement('div');
+    headerMeta.className = 'talk-header-meta';
+    const badge = document.createElement('span');
+    badge.className = 'badge badge-blog';
+    badge.textContent = 'Docs';
+    headerMeta.appendChild(badge);
+    header.appendChild(headerMeta);
+
+    const firstHeading = docsBody.querySelector('h1');
+    if (firstHeading) {
+      firstHeading.classList.add('talk-title');
+      header.appendChild(firstHeading);
+    } else {
+      const fallbackTitle = document.createElement('h1');
+      fallbackTitle.className = 'talk-title';
+      fallbackTitle.textContent = deriveFallbackTitle();
+      header.appendChild(fallbackTitle);
+    }
+    shell.appendChild(header);
+
+    const articleSection = document.createElement('section');
+    articleSection.className = 'abstract-section';
+    articleSection.setAttribute('aria-label', 'Documentation content');
+
+    const articleLabel = document.createElement('div');
+    articleLabel.className = 'section-label';
+    articleLabel.setAttribute('aria-hidden', 'true');
+    articleLabel.textContent = 'Article';
+    articleSection.appendChild(articleLabel);
+
+    const articleBody = document.createElement('div');
+    articleBody.className = 'abstract-body blog-content docs-hugo-content';
+
+    while (docsBody.firstChild) {
+      articleBody.appendChild(docsBody.firstChild);
+    }
+
+    articleSection.appendChild(articleBody);
+    shell.appendChild(articleSection);
+    docsBody.appendChild(shell);
+  }
+
   const rootPath = resolveRootPath();
   ensureStyles(rootPath);
   applyStoredDisplayPreferences();
@@ -196,10 +271,7 @@ const DOCUMENTATION_OPTIONS = {
       documentRoot.setAttribute('tabindex', '-1');
     }
 
-    const docsBody = document.querySelector('.document .body');
-    if (docsBody) {
-      docsBody.classList.add('abstract-body', 'blog-content');
-    }
+    bridgeSphinxBodyToHugoLayout();
 
     ensureHomeScript(rootPath);
   });

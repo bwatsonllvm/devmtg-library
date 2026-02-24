@@ -1,6 +1,7 @@
 /* ============================================================
    LLVM Library Docs Bridge
-   Re-skin mirrored Sphinx docs to match the site design system.
+   Render mirrored Sphinx docs with the same visual language
+   as blog detail pages (Hugo-style content surface).
    ============================================================ */
 
 :root {
@@ -8,13 +9,15 @@
   --docs-content-max: var(--max-width, 1280px);
 }
 
-.logo,
-.related {
+/* Hide legacy Sphinx chrome even before bridge JS finishes. */
+div.logo,
+div.related,
+div.clearer {
   display: none !important;
 }
 
 html {
-  background: var(--color-bg);
+  background: var(--color-bg, #f5f5f5);
 }
 
 body {
@@ -23,19 +26,16 @@ body {
   border: 0 !important;
   padding: 0 !important;
   text-align: left !important;
-  background: var(--color-bg) !important;
-  color: var(--color-text) !important;
-  font-family: var(--font-sans) !important;
-  font-size: var(--font-size-base) !important;
-  line-height: var(--line-height-base) !important;
+  background: var(--color-bg, #f5f5f5) !important;
+  color: var(--color-text, #111827) !important;
+  font-family: var(--font-sans, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif) !important;
+  font-size: var(--font-size-base, 16px) !important;
+  line-height: var(--line-height-base, 1.6) !important;
 }
 
-.library-docs-bridge .logo,
-.library-docs-bridge .related,
-.library-docs-bridge .clearer {
-  display: none !important;
-}
-
+/* ============================================================
+   Site Header Parity
+   ============================================================ */
 .library-docs-bridge .site-header {
   background: var(--color-bg, #f5f5f5) !important;
   border-bottom: 1px solid var(--color-border, #e0e0e0) !important;
@@ -46,7 +46,7 @@ body {
 .library-docs-bridge .site-header a:link,
 .library-docs-bridge .site-header a:visited {
   color: inherit !important;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .library-docs-bridge .site-logo,
@@ -76,6 +76,9 @@ body {
   color: var(--color-text, #111827) !important;
 }
 
+/* ============================================================
+   Docs Layout
+   ============================================================ */
 .library-docs-bridge .document {
   margin: 0 !important;
   padding: var(--space-3) var(--layout-edge) var(--space-12);
@@ -95,16 +98,14 @@ body {
   width: min(var(--docs-content-max), calc(100vw - var(--docs-sidebar-width) - (var(--layout-edge) * 3)));
   max-width: 100%;
   margin: 0 auto !important;
-  padding: clamp(22px, 2.6vw, 36px) clamp(18px, 2.2vw, 34px) clamp(40px, 5vw, 72px) !important;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface) !important;
-  color: var(--color-text);
-  box-shadow: none;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--color-text, #111827);
 }
 
 /* ============================================================
-   Sidebar
+   Sidebar (match talks/papers scale)
    ============================================================ */
 .library-docs-bridge .sphinxsidebar {
   position: fixed !important;
@@ -124,7 +125,6 @@ body {
   overflow-x: hidden;
   overscroll-behavior: contain;
   z-index: calc(var(--z-sticky) - 1);
-  font-size: var(--font-size-sm);
 }
 
 .library-docs-bridge .sphinxsidebarwrapper {
@@ -141,10 +141,8 @@ body {
   background: transparent;
   color: var(--color-text-muted, #6b7280);
   font-size: 11px;
-  font-weight: var(--font-weight-semi);
+  font-weight: var(--font-weight-semi, 600);
   line-height: 1.3;
-  letter-spacing: 0;
-  text-transform: none;
 }
 
 .library-docs-bridge .sphinxsidebar ul {
@@ -165,22 +163,19 @@ body {
   padding: 0;
 }
 
-.library-docs-bridge .sphinxsidebar a {
+.library-docs-bridge .sphinxsidebar a,
+.library-docs-bridge .sphinxsidebar a:visited {
   display: block;
   margin: 0;
   padding: 5px 8px;
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--color-text-muted, #6b7280);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: var(--font-weight-normal, 400);
   line-height: 1.35;
   text-decoration: none;
   transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
-}
-
-.library-docs-bridge .sphinxsidebar a:visited {
-  color: var(--color-text-muted, #6b7280);
 }
 
 .library-docs-bridge .sphinxsidebar a:hover {
@@ -196,11 +191,11 @@ body {
   color: var(--color-state-active-text, #111827);
   background: var(--color-state-active-bg);
   border-color: var(--color-state-active-border);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-medium, 500);
 }
 
 .library-docs-bridge .sphinxsidebar .this-page-menu a {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xs, 12px);
 }
 
 .library-docs-bridge #searchbox {
@@ -257,243 +252,97 @@ body {
 }
 
 /* ============================================================
-   Main Content
+   Hugo-style Content Surface
    ============================================================ */
-.library-docs-bridge .body h1,
-.library-docs-bridge .body h2,
-.library-docs-bridge .body h3,
-.library-docs-bridge .body h4,
-.library-docs-bridge .body h5,
-.library-docs-bridge .body h6 {
-  margin: 0 0 var(--space-3);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-text, #111827) !important;
-  font-weight: var(--font-weight-semi);
-  line-height: var(--line-height-tight);
+.library-docs-bridge .docs-hugo-shell.talk-detail {
+  max-width: var(--max-width-narrow);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-20);
 }
 
-.library-docs-bridge .body h1 {
-  font-size: clamp(1.55rem, 2.6vw, 2rem);
-  margin-top: 0;
-}
-
-.library-docs-bridge .body h2 {
-  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
-  margin-top: var(--space-8);
-}
-
-.library-docs-bridge .body h3 {
-  font-size: clamp(1.2rem, 1.9vw, 1.4rem);
-  margin-top: var(--space-6);
-}
-
-.library-docs-bridge .body h4,
-.library-docs-bridge .body h5,
-.library-docs-bridge .body h6 {
-  font-size: var(--font-size-md);
-  margin-top: var(--space-4);
-}
-
-.library-docs-bridge .body p,
-.library-docs-bridge .body li,
-.library-docs-bridge .body dt,
-.library-docs-bridge .body dd {
-  color: var(--color-text);
-}
-
-.library-docs-bridge .body p {
-  margin: 0 0 var(--space-3);
-}
-
-.library-docs-bridge .body a,
-.library-docs-bridge .body a.reference {
-  color: var(--color-accent);
-  text-decoration: none;
-}
-
-.library-docs-bridge .body a:visited,
-.library-docs-bridge .body a.reference:visited {
-  color: var(--color-accent);
-}
-
-.library-docs-bridge .body a:hover,
-.library-docs-bridge .body a.reference:hover {
-  color: var(--color-accent-hover);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.library-docs-bridge .body a.headerlink {
-  color: var(--color-text-subtle) !important;
-  margin-left: 4px;
-  border-radius: var(--radius-sm);
-  padding: 0 4px;
-}
-
-.library-docs-bridge div.body h1 a,
-.library-docs-bridge div.body h2 a,
-.library-docs-bridge div.body h3 a,
-.library-docs-bridge div.body h4 a,
-.library-docs-bridge div.body h5 a,
-.library-docs-bridge div.body h6 a {
+.library-docs-bridge .docs-hugo-shell .talk-title,
+.library-docs-bridge .docs-hugo-shell .talk-title a,
+.library-docs-bridge .docs-hugo-content h1,
+.library-docs-bridge .docs-hugo-content h2,
+.library-docs-bridge .docs-hugo-content h3,
+.library-docs-bridge .docs-hugo-content h4,
+.library-docs-bridge .docs-hugo-content h5,
+.library-docs-bridge .docs-hugo-content h6,
+.library-docs-bridge .docs-hugo-content h1 a,
+.library-docs-bridge .docs-hugo-content h2 a,
+.library-docs-bridge .docs-hugo-content h3 a,
+.library-docs-bridge .docs-hugo-content h4 a,
+.library-docs-bridge .docs-hugo-content h5 a,
+.library-docs-bridge .docs-hugo-content h6 a,
+.library-docs-bridge .docs-hugo-content h1 a:visited,
+.library-docs-bridge .docs-hugo-content h2 a:visited,
+.library-docs-bridge .docs-hugo-content h3 a:visited,
+.library-docs-bridge .docs-hugo-content h4 a:visited,
+.library-docs-bridge .docs-hugo-content h5 a:visited,
+.library-docs-bridge .docs-hugo-content h6 a:visited {
   color: var(--color-text, #111827) !important;
 }
 
-.library-docs-bridge div.body h1 *,
-.library-docs-bridge div.body h2 *,
-.library-docs-bridge div.body h3 *,
-.library-docs-bridge div.body h4 *,
-.library-docs-bridge div.body h5 *,
-.library-docs-bridge div.body h6 * {
+.library-docs-bridge .docs-hugo-content h1 *,
+.library-docs-bridge .docs-hugo-content h2 *,
+.library-docs-bridge .docs-hugo-content h3 *,
+.library-docs-bridge .docs-hugo-content h4 *,
+.library-docs-bridge .docs-hugo-content h5 *,
+.library-docs-bridge .docs-hugo-content h6 * {
   color: inherit !important;
 }
 
-.library-docs-bridge div.body h1 a.headerlink,
-.library-docs-bridge div.body h2 a.headerlink,
-.library-docs-bridge div.body h3 a.headerlink,
-.library-docs-bridge div.body h4 a.headerlink,
-.library-docs-bridge div.body h5 a.headerlink,
-.library-docs-bridge div.body h6 a.headerlink {
+.library-docs-bridge .docs-hugo-content a,
+.library-docs-bridge .docs-hugo-content a.reference,
+.library-docs-bridge .docs-hugo-content a:visited,
+.library-docs-bridge .docs-hugo-content a.reference:visited {
+  color: var(--color-accent) !important;
+}
+
+.library-docs-bridge .docs-hugo-content a.headerlink,
+.library-docs-bridge .docs-hugo-content a.headerlink:visited {
   color: var(--color-text-subtle) !important;
+  text-decoration: none !important;
 }
 
-.library-docs-bridge .body a.headerlink:hover {
-  background: var(--color-surface-hover);
+.library-docs-bridge .docs-hugo-content a.headerlink:hover {
   color: var(--color-text) !important;
-  text-decoration: none;
 }
 
-.library-docs-bridge .body ul,
-.library-docs-bridge .body ol {
-  margin: 0 0 var(--space-4) 1.1rem;
-  padding-left: 1.15rem;
-}
-
-.library-docs-bridge .body ul {
-  list-style: disc;
-}
-
-.library-docs-bridge .body ul ul {
-  margin-top: var(--space-2);
-  list-style: circle;
-}
-
-.library-docs-bridge .body ol {
-  list-style: decimal;
-}
-
-.library-docs-bridge .body li + li {
-  margin-top: var(--space-2);
-}
-
-.library-docs-bridge .body dl {
-  margin: 0 0 var(--space-4);
-}
-
-.library-docs-bridge .body dt {
-  margin-top: var(--space-3);
-  font-weight: var(--font-weight-semi);
-}
-
-.library-docs-bridge .body dd {
-  margin: var(--space-1) 0 0 1.2rem;
-}
-
-.library-docs-bridge .body code,
-.library-docs-bridge .body tt,
-.library-docs-bridge .body kbd,
-.library-docs-bridge .body samp {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  background: var(--color-surface-subtle);
+.library-docs-bridge .docs-hugo-content p,
+.library-docs-bridge .docs-hugo-content li,
+.library-docs-bridge .docs-hugo-content dt,
+.library-docs-bridge .docs-hugo-content dd {
   color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: 0.08rem 0.32rem;
 }
 
-.library-docs-bridge .body pre {
-  margin: 0 0 var(--space-4);
-  padding: var(--space-3) var(--space-4);
+.library-docs-bridge .docs-hugo-content div.highlight {
+  margin: var(--space-4) 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface-subtle);
-  color: var(--color-text);
+  overflow: auto;
+}
+
+.library-docs-bridge .docs-hugo-content div.highlight pre {
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+
+.library-docs-bridge .docs-hugo-content pre {
   line-height: 1.45;
   overflow: auto;
 }
 
-.library-docs-bridge .body pre code,
-.library-docs-bridge .body pre tt {
-  border: 0;
-  background: transparent;
-  padding: 0;
-  font-size: 0.9em;
-}
-
-.library-docs-bridge .body div.highlight {
-  margin: 0 0 var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-subtle);
-  overflow: auto;
-}
-
-.library-docs-bridge .body div.highlight pre {
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-
-.library-docs-bridge .body table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0 0 var(--space-4);
-}
-
-.library-docs-bridge .body table th,
-.library-docs-bridge .body table td {
-  border: 1px solid var(--color-border);
-  padding: 0.45rem 0.65rem;
-  text-align: left;
-  vertical-align: top;
-}
-
-.library-docs-bridge .body table th {
-  background: var(--color-surface-subtle);
-  font-weight: var(--font-weight-semi);
-}
-
-.library-docs-bridge .body blockquote {
-  margin: 0 0 var(--space-4);
-  padding: var(--space-2) var(--space-3);
-  border-left: 3px solid var(--color-border-strong);
-  background: var(--color-surface-subtle);
-  color: var(--color-text-muted);
-}
-
-.library-docs-bridge .body img {
-  max-width: 100%;
-  height: auto;
-}
-
-.library-docs-bridge .body hr {
-  margin: var(--space-6) 0;
-  border: 0;
-  border-top: 1px solid var(--color-divider);
-}
-
-.library-docs-bridge .body .admonition,
-.library-docs-bridge .body .warning,
-.library-docs-bridge .body .note,
-.library-docs-bridge .body .important,
-.library-docs-bridge .body .hint,
-.library-docs-bridge .body .tip,
-.library-docs-bridge .body .caution {
-  margin: 0 0 var(--space-4);
+.library-docs-bridge .docs-hugo-content .admonition,
+.library-docs-bridge .docs-hugo-content .warning,
+.library-docs-bridge .docs-hugo-content .note,
+.library-docs-bridge .docs-hugo-content .important,
+.library-docs-bridge .docs-hugo-content .hint,
+.library-docs-bridge .docs-hugo-content .tip,
+.library-docs-bridge .docs-hugo-content .caution {
+  margin: var(--space-4) 0;
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-border);
   border-left: 4px solid var(--color-border-strong);
@@ -501,65 +350,19 @@ body {
   background: var(--color-surface-subtle);
 }
 
-.library-docs-bridge .body .warning,
-.library-docs-bridge .body .caution {
+.library-docs-bridge .docs-hugo-content .warning,
+.library-docs-bridge .docs-hugo-content .caution {
   border-left-color: #d97706;
 }
 
-.library-docs-bridge .body .note,
-.library-docs-bridge .body .important {
+.library-docs-bridge .docs-hugo-content .note,
+.library-docs-bridge .docs-hugo-content .important {
   border-left-color: #2563eb;
 }
 
-.library-docs-bridge .body .tip,
-.library-docs-bridge .body .hint {
+.library-docs-bridge .docs-hugo-content .tip,
+.library-docs-bridge .docs-hugo-content .hint {
   border-left-color: #0f766e;
-}
-
-.library-docs-bridge .body .admonition-title {
-  margin: 0 0 var(--space-2);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semi);
-}
-
-.library-docs-bridge .body .toctree-wrapper ul {
-  margin-left: 0.75rem;
-}
-
-.library-docs-bridge .body.abstract-body.blog-content {
-  line-height: 1.75;
-}
-
-.library-docs-bridge .body.abstract-body.blog-content h1,
-.library-docs-bridge .body.abstract-body.blog-content h2,
-.library-docs-bridge .body.abstract-body.blog-content h3,
-.library-docs-bridge .body.abstract-body.blog-content h4,
-.library-docs-bridge .body.abstract-body.blog-content h5,
-.library-docs-bridge .body.abstract-body.blog-content h6 {
-  margin-top: var(--space-5);
-  margin-bottom: var(--space-2);
-  line-height: 1.25;
-  color: var(--color-text, #111827) !important;
-}
-
-.library-docs-bridge .body.abstract-body.blog-content h1 {
-  margin-top: 0;
-  font-size: clamp(1.55rem, 2.6vw, 2rem);
-}
-
-.library-docs-bridge .body.abstract-body.blog-content h2 {
-  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
-}
-
-.library-docs-bridge .body.abstract-body.blog-content h3 {
-  font-size: clamp(1.2rem, 1.9vw, 1.4rem);
-}
-
-.library-docs-bridge .body.abstract-body.blog-content a,
-.library-docs-bridge .body.abstract-body.blog-content a:visited {
-  color: var(--color-accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .library-docs-bridge #docs-content:focus {
@@ -580,7 +383,8 @@ body {
   font-size: var(--font-size-xs);
 }
 
-.library-docs-bridge .footer a {
+.library-docs-bridge .footer a,
+.library-docs-bridge .footer a:visited {
   color: var(--color-text-muted) !important;
   text-decoration: underline;
 }
@@ -614,8 +418,8 @@ body {
 }
 
 @media (max-width: 768px) {
-  .library-docs-bridge .body {
-    padding: var(--space-4);
+  .library-docs-bridge .docs-hugo-shell.talk-detail {
+    padding: var(--space-5) var(--space-3) var(--space-10);
   }
 
   .library-docs-bridge .sphinxsidebar a {
