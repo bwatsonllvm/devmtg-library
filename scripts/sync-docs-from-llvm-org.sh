@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SOURCE_URL="https://llvm.org/docs/"
+DOCS_DIR="$ROOT/docs"
+REGENERATE_BOOK_INDEX=1
+
+KEEP_PATHS=(
+  "_static/documentation_options.js"
+  "_static/docs-book-index.js"
+)
+
+fail() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/sync-docs-from-llvm-org.sh [options]
+
+Mirror docs from llvm.org into local docs/ and regenerate the book index.
+
+Options:
+  --source-url URL        Source docs root URL (default: https://llvm.org/docs/)
+  --docs-dir PATH         Destination docs directory (default: docs)
+  --skip-book-index       Skip book-index regeneration step
+  -h, --help              Show help
+EOF
+}
+
+while (($#)); do
+  case "$1" in
+    --source-url)
+      [[ $# -ge 2 ]] || fail "--source-url requires a value"
+      SOURCE_URL="$2"
+      shift 2
+      ;;
+    --docs-dir)
+      [[ $# -ge 2 ]] || fail "--docs-dir requires a value"
+      DOCS_DIR="$2"
+      shift 2
+      ;;
+    --skip-book-index)
+      REGENERATE_BOOK_INDEX=0
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      usage
+      fail "Unknown option: $1"
+      ;;
+  esac
+done
+
+if [[ "$DOCS_DIR" != /* ]]; then
+  DOCS_DIR="$ROOT/$DOCS_DIR"
+fi
+[[ -d "$DOCS_DIR" ]] || fail "Missing docs directory: $DOCS_DIR"
+
+command -v wget >/dev/null 2>&1 || fail "wget is required"
+command -v rsync >/dev/null 2>&1 || fail "rsync is required"
+command -v python3 >/dev/null 2>&1 || fail "python3 is required"
+
+SOURCE_URL="$(python3 - "$SOURCE_URL" <<'PY'
+import sys
+import urllib.parse
+
+raw = sys.argv[1].strip()
+if not raw:
+    raise SystemExit("empty --source-url")
+
+parsed = urllib.parse.urlparse(raw)
+if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+    raise SystemExit("source URL must be an absolute http/https URL")
+
+path = parsed.path or "/"
+if not path.endswith("/"):
+    path += "/"
+
+print(urllib.parse.urlunparse((parsed.scheme, parsed.netloc, path, "", "", "")))
+PY
+)" || fail "Invalid --source-url: $SOURCE_URL"
+
+SOURCE_PATH="$(python3 - "$SOURCE_URL" <<'PY'
+import sys
+import urllib.parse
+
+parsed = urllib.parse.urlparse(sys.argv[1])
+print((parsed.path or "/").strip("/"))
+PY
+)"
+
+TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/llvm-docs-sync.XXXXXX")"
+cleanup() {
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
+
+echo "Syncing docs mirror from $SOURCE_URL"
+wget \
+  --mirror \
+  --no-verbose \
+  --no-host-directories \
+  --directory-prefix "$TMP_DIR" \
+  --no-parent \
+  --execute robots=off \
+  --retry-connrefused \
+  --waitretry=5 \
+  --tries=4 \
+  --timeout=30 \
+  --read-timeout=30 \
+  "$SOURCE_URL"
+
+MIRROR_ROOT="$TMP_DIR"
+if [[ -n "$SOURCE_PATH" ]]; then
+  MIRROR_ROOT="$TMP_DIR/$SOURCE_PATH"
+fi
+[[ -d "$MIRROR_ROOT" ]] || fail "Downloaded mirror root not found: $MIRROR_ROOT"
+[[ -f "$MIRROR_ROOT/index.html" ]] || fail "Downloaded mirror missing index.html: $MIRROR_ROOT/index.html"
+
+RSYNC_ARGS=(-a --delete --exclude ".DS_Store")
+for keep_path in "${KEEP_PATHS[@]}"; do
+  RSYNC_ARGS+=(--exclude "$keep_path")
+done
+
+rsync "${RSYNC_ARGS[@]}" "$MIRROR_ROOT/" "$DOCS_DIR/"
+
+if [[ "$REGENERATE_BOOK_INDEX" -eq 1 ]]; then
+  python3 "$ROOT/scripts/generate-docs-book-index.py" \
+    --source-root "$DOCS_DIR/_sources" \
+    --output "$DOCS_DIR/_static/docs-book-index.js"
+fi
+
+echo "Docs mirror sync complete."

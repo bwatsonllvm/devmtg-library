@@ -223,11 +223,12 @@ Automation stages:
 1. Sync talks/slides/videos from `llvm-www/devmtg`
 2. Refresh OpenAlex-discovered papers
 3. Sync LLVM blog posts from `llvm-blog-www`
-4. Rebuild the single canonical papers database (OpenAlex + llvm.org/pubs + blog)
-5. Backfill direct paper PDF links via OpenAlex + Unpaywall
-6. Rebuild the updates log
-7. Run code-quality checks (Python lint/static checks, shell syntax, JS search regression tests)
-8. Validate bundle integrity
+4. Sync mirrored docs from `llvm.org/docs` and regenerate `docs/_static/docs-book-index.js`
+5. Rebuild the single canonical papers database (OpenAlex + llvm.org/pubs + blog)
+6. Backfill direct paper PDF links via OpenAlex + Unpaywall
+7. Rebuild the updates log
+8. Run code-quality checks (Python lint/static checks, shell syntax, JS search regression tests)
+9. Validate bundle integrity
 
 ## Validation And Test Gates
 
@@ -251,6 +252,7 @@ These checks run in:
 ## Repository Layout
 
 - `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes
+- `docs/`: mirrored LLVM documentation site content plus bridge customizations
 - `css/`, `js/`, `images/`: shared site assets
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version

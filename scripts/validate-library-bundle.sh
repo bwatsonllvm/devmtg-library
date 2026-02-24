@@ -26,6 +26,8 @@ for f in \
   people/index.html \
   about/index.html \
   docs/index.html \
+  docs/_static/docs-book-index.js \
+  docs/_static/documentation_options.js \
   updates/index.html \
   updates/index.json \
   css/style.css \

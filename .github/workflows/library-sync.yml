@@ -63,6 +63,12 @@ jobs:
             --blog-base-url "https://blog.llvm.org/" \
             --github-token "${GITHUB_TOKEN}"
 
+      - name: Sync LLVM docs mirror from llvm.org/docs
+        run: |
+          bash scripts/sync-docs-from-llvm-org.sh \
+            --source-url "https://llvm.org/docs/" \
+            --docs-dir docs
+
       - name: Build single canonical papers database
         run: |
           python3 scripts/build-single-papers-db.py \
@@ -108,13 +114,14 @@ jobs:
           base: main
           branch: library/automated-sync
           delete-branch: true
-          commit-message: "Library update bot sync (OpenAlex + llvm-www + llvm-blog)"
-          title: "Library update bot sync (OpenAlex + llvm-www + llvm-blog)"
+          commit-message: "Library update bot sync (OpenAlex + llvm-www + llvm-blog + llvm-docs)"
+          title: "Library update bot sync (OpenAlex + llvm-www + llvm-blog + llvm-docs)"
           body: |
             Automated weekly sync:
             - adds/updates talks/slides/videos from `llvm-www/devmtg`
             - refreshes OpenAlex-discovered papers
             - syncs LLVM blog posts from `llvm-blog-www`
+            - syncs mirrored docs from `llvm.org/docs` and regenerates the docs book index
             - rebuilds the single canonical papers database from OpenAlex + llvm.org/pubs
             - backfills direct paper PDF links using OpenAlex + Unpaywall
             - records newly added talks/slides/videos/papers/blogs in `updates/index.json`
