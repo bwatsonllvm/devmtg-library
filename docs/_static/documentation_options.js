@@ -238,6 +238,8 @@ const DOCUMENTATION_OPTIONS = {
     if (!node) return;
     node.textContent = [
       'div.related,div.logo,div.clearer,body>div.header,body>div.topnav,body>div.bottomnav{display:none!important;}',
+      '.library-docs-bridge body{margin:0!important;min-width:0!important;max-width:none!important;width:100%!important;padding:0!important;border:0!important;}',
+      '.library-docs-bridge #llvm-docs-bridge-header{width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;box-sizing:border-box!important;}',
       '.library-docs-bridge .site-header a:visited{color:inherit!important;}',
       '.library-docs-bridge .sphinxsidebar a:visited{color:var(--color-text-muted,#6b7280)!important;}',
       '.library-docs-bridge .docs-hugo-content a:visited{color:var(--color-accent)!important;}',

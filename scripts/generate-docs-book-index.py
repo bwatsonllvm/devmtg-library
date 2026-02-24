@@ -265,6 +265,96 @@ def parse_toctree_edges(source_docs: Dict[str, SourceDoc]) -> Dict[str, List[str
     return edges
 
 
+def parse_clang_section_chapters(
+    source_docs: Dict[str, SourceDoc],
+    titles: Dict[str, str],
+) -> List[tuple[str, List[str]]]:
+    index_doc = source_docs.get("index")
+    if not index_doc:
+        return []
+
+    lines = index_doc.path.read_text(encoding="utf-8", errors="ignore").splitlines()
+    chapters: List[tuple[str, List[str]]] = []
+    current_section: Optional[str] = None
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+
+        if i + 1 < len(lines):
+            title_line = lines[i].rstrip()
+            underline = lines[i + 1].rstrip()
+            if title_line and underline:
+                marker = underline.strip()
+                if (
+                    len(marker) >= max(3, len(title_line.strip()))
+                    and len(set(marker)) == 1
+                    and marker[0] == "="
+                ):
+                    current_section = title_line.strip()
+                    i += 2
+                    continue
+
+        if not stripped.startswith(".. toctree::"):
+            i += 1
+            continue
+
+        directive_indent = len(line) - len(line.lstrip(" "))
+        i += 1
+        use_glob = False
+        roots: List[str] = []
+        seen_roots: set[str] = set()
+        while i < len(lines):
+            row = lines[i]
+            row_stripped = row.strip()
+            if not row_stripped:
+                i += 1
+                continue
+
+            indent = len(row) - len(row.lstrip(" "))
+            if indent <= directive_indent:
+                break
+
+            if row_stripped.startswith(":"):
+                if row_stripped.startswith(":glob:"):
+                    use_glob = True
+                i += 1
+                continue
+
+            if row_stripped.startswith(".. "):
+                i += 1
+                continue
+
+            target = parse_explicit_target(row_stripped)
+            expanded: Sequence[str]
+            if use_glob and any(ch in target for ch in "*?[]"):
+                expanded = expand_glob_entries(target, "index", source_docs)
+            else:
+                resolved = resolve_target_slug(target, "index", source_docs)
+                expanded = [resolved] if resolved else []
+
+            for root_slug in expanded:
+                if root_slug in seen_roots:
+                    continue
+                seen_roots.add(root_slug)
+                roots.append(root_slug)
+            i += 1
+
+        if roots:
+            if current_section:
+                chapter_title = current_section
+            elif roots == ["ReleaseNotes"]:
+                chapter_title = "Release Notes"
+            elif len(roots) == 1:
+                chapter_title = titles.get(roots[0], roots[0])
+            else:
+                chapter_title = "Overview"
+            chapters.append((chapter_title, roots))
+        continue
+
+    return chapters
+
+
 def build_tree_node(
     slug: str,
     edges: Dict[str, List[str]],
@@ -295,9 +385,7 @@ def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict
     docs_variant = detect_docs_variant(source_docs, docs_root)
 
     if docs_variant == "clang":
-        # Clang's index.rst already exposes the canonical information architecture.
-        # Keep chapter roots empty so the "Overview" tree can represent that structure directly.
-        chapter_defs: List[tuple[str, List[str]]] = []
+        chapter_defs = parse_clang_section_chapters(source_docs, titles)
     else:
         chapter_defs = [
             ("Foundations", ["FAQ", "Lexicon"]),
@@ -309,6 +397,16 @@ def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict
 
     assigned: set[str] = set()
     chapters: List[Dict[str, object]] = []
+
+    # Ensure the docs landing page is always present without making it the sole root.
+    if docs_variant == "clang" and "index" in titles:
+        chapters.append(
+            {
+                "title": "Overview",
+                "entries": [{"slug": "index", "title": titles.get("index", "index"), "children": []}],
+            }
+        )
+        assigned.add("index")
 
     for chapter_title, roots in chapter_defs:
         entries: List[Dict[str, object]] = []
