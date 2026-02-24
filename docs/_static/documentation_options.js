@@ -11,3 +11,192 @@ const DOCUMENTATION_OPTIONS = {
     SHOW_SEARCH_SUMMARY: true,
     ENABLE_SEARCH_SHORTCUTS: true,
 };
+
+// LLVM Library bridge: make mirrored docs inherit the main site shell and display settings.
+(function () {
+  document.documentElement.classList.add('library-docs-bridge');
+
+  function resolveRootPath() {
+    const pathname = String(window.location.pathname || '/');
+    const marker = '/docs/';
+    const markerIndex = pathname.indexOf(marker);
+    if (markerIndex >= 0) return pathname.slice(0, markerIndex + 1);
+    return '/';
+  }
+
+  function ensureHeadTag(tagName, attrs) {
+    const head = document.head || document.getElementsByTagName('head')[0];
+    if (!head) return null;
+    const selectorParts = [tagName];
+    Object.entries(attrs).forEach(([key, value]) => {
+      if (value == null || value === '') return;
+      selectorParts.push(`[${key}="${String(value).replace(/"/g, '\\"')}"]`);
+    });
+    const selector = selectorParts.join('');
+    let node = head.querySelector(selector);
+    if (!node) {
+      node = document.createElement(tagName);
+      Object.entries(attrs).forEach(([key, value]) => {
+        if (value == null || value === '') return;
+        node.setAttribute(key, value);
+      });
+      head.appendChild(node);
+    }
+    return node;
+  }
+
+  function ensureStyles(rootPath) {
+    ensureHeadTag('meta', { name: 'color-scheme', content: 'light dark' });
+    ensureHeadTag('link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' });
+    ensureHeadTag('link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' });
+    ensureHeadTag('link', {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+    });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-02` });
+  }
+
+  function applyStoredDisplayPreferences() {
+    try {
+      const storedTheme = localStorage.getItem('llvm-hub-theme-preference');
+      const themePreference = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+        ? storedTheme
+        : 'system';
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const resolvedTheme = themePreference === 'system' ? (prefersDark ? 'dark' : 'light') : themePreference;
+      const storedTextSize = localStorage.getItem('llvm-hub-text-size');
+      const textSize = (storedTextSize === 'small' || storedTextSize === 'large') ? storedTextSize : 'default';
+
+      document.documentElement.setAttribute('data-theme', resolvedTheme);
+      document.documentElement.setAttribute('data-theme-preference', themePreference);
+      if (textSize === 'default') {
+        document.documentElement.removeAttribute('data-text-size');
+      } else {
+        document.documentElement.setAttribute('data-text-size', textSize);
+      }
+      document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f5f5f5';
+    } catch (_) {
+      const fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const fallbackTheme = fallbackDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', fallbackTheme);
+      document.documentElement.setAttribute('data-theme-preference', 'system');
+      document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#000000' : '#f5f5f5';
+    }
+  }
+
+  function buildHeader(rootPath) {
+    return `
+      <nav class="skip-links" aria-label="Skip links">
+        <a href="#docs-content" class="skip-link">Skip to main content</a>
+      </nav>
+      <header class="site-header" id="llvm-docs-bridge-header">
+        <a href="${rootPath}index.html" class="site-logo" aria-label="LLVM Research Library home">
+          <img src="${rootPath}images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
+          <span>LLVM Research Library</span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a href="${rootPath}talks/" class="nav-link" aria-label="Talks"><span aria-hidden="true">Talks</span></a>
+          <a href="${rootPath}talks/events.html" class="nav-link" aria-label="Events"><span aria-hidden="true">Events</span></a>
+          <a href="${rootPath}papers/" class="nav-link" aria-label="Papers"><span aria-hidden="true">Papers</span></a>
+          <a href="${rootPath}blogs/" class="nav-link" aria-label="Blogs"><span aria-hidden="true">Blogs</span></a>
+          <a href="${rootPath}people/" class="nav-link" aria-label="People"><span aria-hidden="true">People</span></a>
+          <a href="${rootPath}about/" class="nav-link" aria-label="About this site"><span aria-hidden="true">About</span></a>
+          <a href="${rootPath}docs/" class="nav-link active" aria-current="page" aria-label="Documentation"><span aria-hidden="true">Docs</span></a>
+          <a href="${rootPath}updates/" class="nav-link" aria-label="Update log"><span aria-hidden="true">Updates</span></a>
+        </nav>
+        <div class="mobile-nav-menu" id="mobile-nav-menu">
+          <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
+            Browse
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+            <a href="${rootPath}talks/" class="mobile-nav-link">Talks</a>
+            <a href="${rootPath}talks/events.html" class="mobile-nav-link">Events</a>
+            <a href="${rootPath}papers/" class="mobile-nav-link">Papers</a>
+            <a href="${rootPath}blogs/" class="mobile-nav-link">Blogs</a>
+            <a href="${rootPath}people/" class="mobile-nav-link">People</a>
+            <a href="${rootPath}about/" class="mobile-nav-link">About</a>
+            <a href="${rootPath}docs/" class="mobile-nav-link active" aria-current="page">Docs</a>
+            <a href="${rootPath}updates/" class="mobile-nav-link">Updates</a>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="share-menu" id="share-menu">
+            <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this page" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
+              Share
+            </button>
+            <div class="share-panel" id="share-panel" hidden>
+              <button class="share-option" id="share-native-share" type="button" hidden>Share via device</button>
+              <button class="share-option" id="share-copy-link" type="button">Copy link</button>
+              <a class="share-option" id="share-email-link" href="#">Email</a>
+              <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+              <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+            </div>
+          </div>
+          <div class="customization-menu" id="customization-menu">
+            <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+              <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="2" y1="14" x2="6" y2="14"></line><line x1="10" y1="8" x2="14" y2="8"></line><line x1="18" y1="16" x2="22" y2="16"></line>
+              </svg>
+            </button>
+            <div class="customization-panel" id="customization-panel" hidden>
+              <div class="customization-group">
+                <label class="customization-label" for="custom-theme-select">Theme</label>
+                <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+                  <option value="system">System</option>
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+              <div class="customization-group">
+                <label class="customization-label" for="custom-text-size-select">Text Size</label>
+                <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+                  <option value="small">Small</option>
+                  <option value="default">Default</option>
+                  <option value="large">Large</option>
+                </select>
+              </div>
+              <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
+            </div>
+          </div>
+        </div>
+      </header>`;
+  }
+
+  function ensureHomeScript(rootPath) {
+    const src = `${rootPath}js/home.js?v=20260222-02`;
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) return;
+    const script = document.createElement('script');
+    script.src = src;
+    document.body.appendChild(script);
+  }
+
+  const rootPath = resolveRootPath();
+  ensureStyles(rootPath);
+  applyStoredDisplayPreferences();
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (document.body) document.body.classList.add('library-docs-bridge');
+    document.documentElement.classList.add('library-docs-bridge-ready');
+
+    const existingHeader = document.getElementById('llvm-docs-bridge-header');
+    if (!existingHeader && document.body) {
+      document.body.insertAdjacentHTML('afterbegin', buildHeader(rootPath));
+    }
+
+    const documentRoot = document.querySelector('.document');
+    if (documentRoot && !documentRoot.id) {
+      documentRoot.id = 'docs-content';
+      documentRoot.setAttribute('tabindex', '-1');
+    }
+
+    ensureHomeScript(rootPath);
+  });
+})();
