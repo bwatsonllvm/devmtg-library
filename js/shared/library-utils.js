@@ -764,7 +764,13 @@
     clangg: 'clang',
     clangd: 'clang',
     mlirs: 'mlir',
+    clangtoolsextra: 'clang-tools-extra',
     libomp: 'openmp',
+    libclc: 'libclc',
+    libcxx: 'libc++',
+    libcxxabi: 'libc++abi',
+    llvmlibgcc: 'llvm-libgcc',
+    orcrt: 'orc-rt',
     sanitiser: 'sanitizer',
     sanitisers: 'sanitizer',
     sanitizers: 'sanitizer',
@@ -847,6 +853,43 @@
     if (dedup.length) SEARCH_TOKEN_SYNONYMS[source] = dedup;
   }
 
+  const SEARCH_QUERY_FIELD_ALIASES = {
+    title: 'title',
+    abstract: 'abstract',
+    author: 'authors',
+    authors: 'authors',
+    speaker: 'authors',
+    speakers: 'authors',
+    person: 'authors',
+    people: 'authors',
+    topic: 'topics',
+    topics: 'topics',
+    tag: 'topics',
+    tags: 'topics',
+    keyword: 'topics',
+    keywords: 'topics',
+    subproject: 'topics',
+    project: 'topics',
+    component: 'topics',
+    venue: 'venue',
+    publication: 'venue',
+    journal: 'venue',
+    conference: 'venue',
+    source: 'venue',
+    type: 'type',
+    kind: 'type',
+    doctype: 'type',
+    doc: 'type',
+    year: 'year',
+    since: 'since',
+    after: 'since',
+    from: 'since',
+    before: 'before',
+    until: 'before',
+    to: 'before',
+  };
+  const SEARCH_QUERY_MODEL_FIELDS = ['title', 'abstract', 'authors', 'topics', 'venue', 'type'];
+
   const TALK_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const PAPER_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
 
@@ -886,27 +929,279 @@
       .filter((part) => part && part.length >= minLength);
   }
 
+  function normalizeSearchFieldKey(value) {
+    const key = String(value || '').trim().toLowerCase();
+    if (!key) return '';
+    return SEARCH_QUERY_FIELD_ALIASES[key] || '';
+  }
+
+  function createEmptyFieldTermMap() {
+    return {
+      title: [],
+      abstract: [],
+      authors: [],
+      topics: [],
+      venue: [],
+      type: [],
+    };
+  }
+
+  function appendUniqueValue(list, value) {
+    const source = Array.isArray(list) ? list : [];
+    const normalized = collapseWhitespace(String(value || ''));
+    if (!normalized) return;
+    if (!source.includes(normalized)) source.push(normalized);
+  }
+
+  function appendUniqueToken(list, value) {
+    const source = Array.isArray(list) ? list : [];
+    const normalized = normalizeSearchToken(value);
+    if (!normalized || normalized.length < 2) return;
+    if (!source.includes(normalized)) source.push(normalized);
+  }
+
+  function parseYearTerm(value) {
+    const match = String(value || '').match(/\b(19|20)\d{2}\b/);
+    if (!match) return 0;
+    const year = parseInt(match[0], 10);
+    return Number.isFinite(year) ? year : 0;
+  }
+
+  function normalizeYearRange(range) {
+    if (!range || typeof range !== 'object') return { from: 0, to: 0 };
+    const from = Number.isFinite(range.from) ? Math.floor(range.from) : 0;
+    const to = Number.isFinite(range.to) ? Math.floor(range.to) : 0;
+    if (from > 0 && to > 0) {
+      if (from <= to) return { from, to };
+      return { from: to, to: from };
+    }
+    return { from: from > 0 ? from : 0, to: to > 0 ? to : 0 };
+  }
+
+  function mergeYearRange(range, nextFrom = 0, nextTo = 0) {
+    const normalized = normalizeYearRange(range);
+    const sourceFrom = Number.isFinite(nextFrom) ? Math.floor(nextFrom) : 0;
+    const sourceTo = Number.isFinite(nextTo) ? Math.floor(nextTo) : 0;
+    if (sourceFrom > 0) {
+      normalized.from = normalized.from > 0 ? Math.max(normalized.from, sourceFrom) : sourceFrom;
+    }
+    if (sourceTo > 0) {
+      normalized.to = normalized.to > 0 ? Math.min(normalized.to, sourceTo) : sourceTo;
+    }
+    if (normalized.from > 0 && normalized.to > 0 && normalized.from > normalized.to) {
+      normalized.from = 0;
+      normalized.to = 0;
+    }
+    return normalized;
+  }
+
+  function parseYearRangeExpression(value) {
+    const input = collapseWhitespace(String(value || ''));
+    if (!input) return { from: 0, to: 0 };
+
+    const rangeMatch = input.match(/\b((?:19|20)\d{2})\s*(?:-|to|:|\/)\s*((?:19|20)\d{2})\b/i);
+    if (rangeMatch) {
+      const from = parseInt(rangeMatch[1], 10);
+      const to = parseInt(rangeMatch[2], 10);
+      return normalizeYearRange({ from, to });
+    }
+
+    const single = parseYearTerm(input);
+    if (single > 0) return { from: single, to: single };
+    return { from: 0, to: 0 };
+  }
+
+  function buildFieldClauseMap(fieldTokens) {
+    const out = {};
+    const source = fieldTokens && typeof fieldTokens === 'object' ? fieldTokens : {};
+    for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+      const clauses = buildQueryClauses(source[field]);
+      if (clauses.length) out[field] = clauses;
+    }
+    return out;
+  }
+
+  function buildFieldPhraseMap(fieldPhrases) {
+    const out = {};
+    const source = fieldPhrases && typeof fieldPhrases === 'object' ? fieldPhrases : {};
+    for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+      const values = [];
+      const seen = new Set();
+      for (const rawPhrase of (source[field] || [])) {
+        const phrase = normalizeSearchText(rawPhrase);
+        if (!phrase || phrase.length < 2 || seen.has(phrase)) continue;
+        seen.add(phrase);
+        values.push({ value: phrase, weight: 1.0 });
+      }
+      if (values.length) out[field] = values;
+    }
+    return out;
+  }
+
+  function hasFieldConstraints(fieldMap) {
+    if (!fieldMap || typeof fieldMap !== 'object') return false;
+    for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+      const clauses = fieldMap[field];
+      if (Array.isArray(clauses) && clauses.length) return true;
+    }
+    return false;
+  }
+
+  function hasFieldPhraseConstraints(fieldMap) {
+    if (!fieldMap || typeof fieldMap !== 'object') return false;
+    for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+      const phrases = fieldMap[field];
+      if (Array.isArray(phrases) && phrases.length) return true;
+    }
+    return false;
+  }
+
+  function modelHasSearchConstraints(model) {
+    if (!model || typeof model !== 'object') return false;
+    if (Array.isArray(model.clauses) && model.clauses.length) return true;
+    if (Array.isArray(model.excludeClauses) && model.excludeClauses.length) return true;
+    if (Array.isArray(model.phrases) && model.phrases.length) return true;
+    if (Array.isArray(model.excludePhrases) && model.excludePhrases.length) return true;
+    if (hasFieldConstraints(model.fieldClauses)) return true;
+    if (hasFieldConstraints(model.excludeFieldClauses)) return true;
+    if (hasFieldPhraseConstraints(model.fieldPhrases)) return true;
+    if (hasFieldPhraseConstraints(model.excludeFieldPhrases)) return true;
+    if (model.yearRange && (model.yearRange.from > 0 || model.yearRange.to > 0)) return true;
+    return false;
+  }
+
   function parseQuerySegments(query) {
     const raw = String(query || '');
     const tokens = [];
+    const excludeTokens = [];
     const phrases = [];
-    const re = /"([^"]+)"|(\S+)/g;
+    const excludePhrases = [];
+    const includeFieldTerms = createEmptyFieldTermMap();
+    const excludeFieldTerms = createEmptyFieldTermMap();
+    const includeFieldPhrases = createEmptyFieldTermMap();
+    const excludeFieldPhrases = createEmptyFieldTermMap();
+    let yearRange = { from: 0, to: 0 };
+    const re = /([+-]?[A-Za-z][A-Za-z0-9_-]*:)"([^"]+)"|([+-])"([^"]+)"|"([^"]+)"|(\S+)/g;
     let match;
 
+    const addGeneral = (value, excluded = false) => {
+      const normalizedPhrase = normalizeSearchText(value);
+      if (normalizedPhrase.length >= 3) {
+        if (excluded) appendUniqueValue(excludePhrases, normalizedPhrase);
+        else appendUniqueValue(phrases, normalizedPhrase);
+      }
+      const target = excluded ? excludeTokens : tokens;
+      for (const token of tokenizeSearchText(value, 2)) appendUniqueToken(target, token);
+    };
+
+    const addField = (fieldKey, value, excluded = false, phraseMode = false) => {
+      if (!fieldKey || !value) return;
+      const normalizedField = normalizeSearchFieldKey(fieldKey);
+      if (!normalizedField) return;
+
+      if (normalizedField === 'since' || normalizedField === 'before' || normalizedField === 'year') {
+        if (excluded) return;
+        if (normalizedField === 'year') {
+          const range = parseYearRangeExpression(value);
+          yearRange = mergeYearRange(yearRange, range.from, range.to);
+          return;
+        }
+        const year = parseYearTerm(value);
+        if (!year) return;
+        if (normalizedField === 'since') yearRange = mergeYearRange(yearRange, year, 0);
+        else if (normalizedField === 'before') yearRange = mergeYearRange(yearRange, 0, year);
+        return;
+      }
+
+      const termBucket = excluded ? excludeFieldTerms : includeFieldTerms;
+      const phraseBucket = excluded ? excludeFieldPhrases : includeFieldPhrases;
+
+      if (phraseMode) {
+        const normalizedPhrase = normalizeSearchText(value);
+        if (normalizedPhrase.length >= 3) appendUniqueValue(phraseBucket[normalizedField], normalizedPhrase);
+      }
+
+      for (const token of tokenizeSearchText(value, 2)) {
+        appendUniqueToken(termBucket[normalizedField], token);
+        if (!excluded) appendUniqueToken(tokens, token);
+      }
+    };
+
     while ((match = re.exec(raw)) !== null) {
-      const phraseSource = match[1];
-      const chunkSource = match[2];
-      if (phraseSource) {
-        const normalizedPhrase = normalizeSearchText(phraseSource);
-        if (normalizedPhrase.length >= 3) phrases.push(normalizedPhrase);
-        for (const token of tokenizeSearchText(phraseSource, 2)) tokens.push(token);
-      } else if (chunkSource) {
-        const normalizedToken = normalizeSearchToken(chunkSource);
-        if (normalizedToken.length >= 2) tokens.push(normalizedToken);
+      const fieldPrefix = match[1];
+      const fieldPhraseSource = match[2];
+      const signedPhrasePrefix = match[3];
+      const signedPhraseSource = match[4];
+      const plainPhraseSource = match[5];
+      const chunkSource = match[6];
+
+      if (fieldPrefix) {
+        let rawPrefix = String(fieldPrefix || '').trim();
+        let excluded = false;
+        if (rawPrefix.startsWith('-')) {
+          excluded = true;
+          rawPrefix = rawPrefix.slice(1);
+        } else if (rawPrefix.startsWith('+')) {
+          rawPrefix = rawPrefix.slice(1);
+        }
+        const fieldKey = rawPrefix.endsWith(':') ? rawPrefix.slice(0, -1) : rawPrefix;
+        addField(fieldKey, fieldPhraseSource, excluded, true);
+        continue;
+      }
+
+      if (signedPhraseSource) {
+        addGeneral(signedPhraseSource, signedPhrasePrefix === '-');
+        continue;
+      }
+
+      if (plainPhraseSource) {
+        addGeneral(plainPhraseSource, false);
+        continue;
+      }
+
+      if (chunkSource) {
+        let chunk = String(chunkSource || '').trim();
+        if (!chunk) continue;
+
+        let excluded = false;
+        if (chunk.startsWith('-')) {
+          excluded = true;
+          chunk = chunk.slice(1);
+        } else if (chunk.startsWith('+')) {
+          chunk = chunk.slice(1);
+        }
+        if (!chunk) continue;
+
+        const fieldMatch = chunk.match(/^([A-Za-z][A-Za-z0-9_-]*):(.*)$/);
+        if (fieldMatch) {
+          const fieldKey = fieldMatch[1];
+          const fieldValue = collapseWhitespace(fieldMatch[2]);
+          if (fieldValue) {
+            addField(fieldKey, fieldValue, excluded, fieldValue.includes(' '));
+            continue;
+          }
+        }
+
+        const normalizedToken = normalizeSearchToken(chunk);
+        if (normalizedToken.length >= 2) {
+          if (excluded) appendUniqueToken(excludeTokens, normalizedToken);
+          else appendUniqueToken(tokens, normalizedToken);
+        }
       }
     }
 
-    return { tokens, phrases };
+    yearRange = normalizeYearRange(yearRange);
+    return {
+      tokens,
+      excludeTokens,
+      phrases,
+      excludePhrases,
+      includeFieldTerms,
+      excludeFieldTerms,
+      includeFieldPhrases,
+      excludeFieldPhrases,
+      yearRange,
+    };
   }
 
   function tokenizeQuery(query) {
@@ -975,17 +1270,41 @@
     const fromArrayTokens = isArrayInput
       ? input.map((value) => normalizeSearchToken(value)).filter((value) => value.length >= 2)
       : [];
-    const parsed = isArrayInput ? { tokens: fromArrayTokens, phrases: [] } : parseQuerySegments(input);
+    const parsed = isArrayInput
+      ? {
+        tokens: fromArrayTokens,
+        excludeTokens: [],
+        phrases: [],
+        excludePhrases: [],
+        includeFieldTerms: createEmptyFieldTermMap(),
+        excludeFieldTerms: createEmptyFieldTermMap(),
+        includeFieldPhrases: createEmptyFieldTermMap(),
+        excludeFieldPhrases: createEmptyFieldTermMap(),
+        yearRange: { from: 0, to: 0 },
+      }
+      : parseQuerySegments(input);
     const tokens = parsed.tokens;
     const clauses = buildQueryClauses(tokens);
+    const excludeClauses = buildQueryClauses(parsed.excludeTokens || []);
+    const fieldClauses = buildFieldClauseMap(parsed.includeFieldTerms);
+    const excludeFieldClauses = buildFieldClauseMap(parsed.excludeFieldTerms);
+    const fieldPhrases = buildFieldPhraseMap(parsed.includeFieldPhrases);
+    const excludeFieldPhrases = buildFieldPhraseMap(parsed.excludeFieldPhrases);
     const normalizedQuery = normalizeSearchText(isArrayInput ? fromArrayTokens.join(' ') : String(input || ''));
     const phrases = [];
+    const excludePhrases = [];
     const phraseSeen = new Set();
+    const excludePhraseSeen = new Set();
 
     for (const phrase of parsed.phrases || []) {
       if (!phrase || phraseSeen.has(phrase)) continue;
       phraseSeen.add(phrase);
       phrases.push({ value: phrase, weight: 1.0 });
+    }
+    for (const phrase of parsed.excludePhrases || []) {
+      if (!phrase || excludePhraseSeen.has(phrase)) continue;
+      excludePhraseSeen.add(phrase);
+      excludePhrases.push(phrase);
     }
 
     if (normalizedQuery && normalizedQuery.includes(' ') && normalizedQuery.length <= 80 && !phraseSeen.has(normalizedQuery)) {
@@ -999,14 +1318,30 @@
       ? clauses.filter((clause) => !clause.isBroad).length
       : clauses.length;
 
-    return {
+    const queryModel = {
       rawTokens: tokens,
       clauses,
+      excludeClauses,
+      fieldClauses,
+      excludeFieldClauses,
+      fieldPhrases,
+      excludeFieldPhrases,
+      excludePhrases,
       requiredClauseCount,
       phrases,
       normalizedQuery,
       beginnerIntent,
+      yearRange: normalizeYearRange(parsed.yearRange || {}),
+      hasFilters: hasFieldConstraints(fieldClauses)
+        || hasFieldConstraints(excludeFieldClauses)
+        || hasFieldPhraseConstraints(fieldPhrases)
+        || hasFieldPhraseConstraints(excludeFieldPhrases)
+        || excludeClauses.length > 0
+        || excludePhrases.length > 0
+        || (parsed.yearRange && (parsed.yearRange.from > 0 || parsed.yearRange.to > 0)),
     };
+    queryModel.hasSearchConstraints = modelHasSearchConstraints(queryModel);
+    return queryModel;
   }
 
   function stripSearchSnippetSource(value) {
@@ -1263,6 +1598,242 @@
     return bestClauseScore;
   }
 
+  function scorePhraseEntriesAgainstFields(phraseEntries, fields, fieldConfig) {
+    const source = Array.isArray(phraseEntries) ? phraseEntries : [];
+    if (!source.length) return 0;
+    let total = 0;
+
+    for (const phraseEntry of source) {
+      const phrase = phraseEntry && phraseEntry.value ? phraseEntry.value : '';
+      const weight = phraseEntry && Number.isFinite(phraseEntry.weight) ? phraseEntry.weight : 1;
+      if (!phrase || !weight) continue;
+
+      let bestPhraseField = 0;
+      for (const config of (fieldConfig || [])) {
+        const field = fields[config.key];
+        if (!field || !field.text) continue;
+        const phraseScore = scorePhraseAgainstField(phrase, field) * (config.weight || 1);
+        if (phraseScore > bestPhraseField) bestPhraseField = phraseScore;
+      }
+      total += bestPhraseField * weight;
+    }
+
+    return total;
+  }
+
+  function uniqueFieldKeys(values) {
+    const out = [];
+    const seen = new Set();
+    for (const value of (values || [])) {
+      const key = String(value || '').trim();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(key);
+    }
+    return out;
+  }
+
+  function matchClauseCollection(clauses, fields, fieldKeys, options = {}) {
+    const source = Array.isArray(clauses) ? clauses : [];
+    if (!source.length) return { matchedCount: 0, clauseCount: 0, anyMatch: false };
+    const keys = uniqueFieldKeys(fieldKeys);
+    if (!keys.length) return { matchedCount: 0, clauseCount: source.length, anyMatch: false };
+
+    const fieldConfig = keys.map((key) => ({
+      key,
+      weight: 1.0,
+      fuzzy: options.fuzzy !== false,
+    }));
+    const threshold = Number.isFinite(options.threshold) ? options.threshold : 0.9;
+    let matchedCount = 0;
+    let anyMatch = false;
+
+    for (const clause of source) {
+      const score = scoreClauseAgainstFields(clause, fields, fieldConfig);
+      if (score >= threshold) {
+        matchedCount += 1;
+        anyMatch = true;
+      }
+    }
+
+    return {
+      matchedCount,
+      clauseCount: source.length,
+      anyMatch,
+    };
+  }
+
+  function matchPhraseCollection(phrases, fields, fieldKeys, options = {}) {
+    const source = Array.isArray(phrases) ? phrases : [];
+    if (!source.length) return { matchedCount: 0, phraseCount: 0, anyMatch: false };
+    const keys = uniqueFieldKeys(fieldKeys);
+    if (!keys.length) return { matchedCount: 0, phraseCount: source.length, anyMatch: false };
+
+    const fieldConfig = keys.map((key) => ({ key, weight: 1.0 }));
+    const threshold = Number.isFinite(options.threshold) ? options.threshold : 0.84;
+    let matchedCount = 0;
+    let anyMatch = false;
+
+    for (const entry of source) {
+      const phrase = entry && entry.value ? entry.value : '';
+      if (!phrase) continue;
+      const score = scorePhraseEntriesAgainstFields([entry], fields, fieldConfig);
+      if (score >= threshold) {
+        matchedCount += 1;
+        anyMatch = true;
+      }
+    }
+
+    return {
+      matchedCount,
+      phraseCount: source.length,
+      anyMatch,
+    };
+  }
+
+  function hasEntriesForFieldMap(fieldMap) {
+    if (!fieldMap || typeof fieldMap !== 'object') return false;
+    for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+      const entries = fieldMap[field];
+      if (Array.isArray(entries) && entries.length) return true;
+    }
+    return false;
+  }
+
+  function evaluateFieldConstraintMap(fieldMap, fields, fieldTargets, options = {}) {
+    if (!fieldMap || typeof fieldMap !== 'object') return true;
+    const relaxed = options.relaxed === true;
+    const threshold = Number.isFinite(options.threshold)
+      ? options.threshold
+      : (relaxed ? 0.72 : 0.94);
+    const fuzzy = options.fuzzy !== false;
+
+    for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+      const clauses = fieldMap[field];
+      if (!Array.isArray(clauses) || !clauses.length) continue;
+      const targets = uniqueFieldKeys((fieldTargets && fieldTargets[field]) || []);
+      if (!targets.length) return false;
+
+      const result = matchClauseCollection(clauses, fields, targets, {
+        threshold,
+        fuzzy,
+      });
+      if (!result.clauseCount) continue;
+      const coverage = result.matchedCount / result.clauseCount;
+      if (!relaxed) {
+        if (coverage < 1) return false;
+      } else {
+        if (result.clauseCount >= 3 && coverage < 0.67) return false;
+        if (result.clauseCount === 2 && coverage < 0.5) return false;
+        if (result.clauseCount === 1 && coverage < 1) return false;
+      }
+    }
+    return true;
+  }
+
+  function evaluateFieldPhraseMap(fieldMap, fields, fieldTargets, options = {}) {
+    if (!fieldMap || typeof fieldMap !== 'object') return true;
+    const relaxed = options.relaxed === true;
+    const threshold = Number.isFinite(options.threshold)
+      ? options.threshold
+      : (relaxed ? 0.64 : 0.86);
+
+    for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+      const phrases = fieldMap[field];
+      if (!Array.isArray(phrases) || !phrases.length) continue;
+      const targets = uniqueFieldKeys((fieldTargets && fieldTargets[field]) || []);
+      if (!targets.length) return false;
+
+      const result = matchPhraseCollection(phrases, fields, targets, { threshold });
+      if (!result.phraseCount) continue;
+      if (!relaxed && result.matchedCount < result.phraseCount) return false;
+      if (relaxed && result.phraseCount >= 2 && result.matchedCount < 1) return false;
+      if (relaxed && result.phraseCount === 1 && result.matchedCount < 1) return false;
+    }
+    return true;
+  }
+
+  function evaluateExcludeConstraints(model, doc, options = {}) {
+    const fields = doc && doc.fields ? doc.fields : null;
+    if (!fields) return true;
+    const relaxed = options.relaxed === true;
+    const fieldTargets = options.fieldTargets || {};
+    const allFieldKeys = uniqueFieldKeys(Object.keys(fields));
+
+    if (Array.isArray(model.excludeClauses) && model.excludeClauses.length) {
+      const clauseResult = matchClauseCollection(model.excludeClauses, fields, allFieldKeys, {
+        threshold: relaxed ? 0.74 : 0.92,
+        fuzzy: true,
+      });
+      if (clauseResult.anyMatch) return false;
+    }
+
+    if (hasEntriesForFieldMap(model.excludeFieldClauses)) {
+      for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+        const clauses = model.excludeFieldClauses[field];
+        if (!Array.isArray(clauses) || !clauses.length) continue;
+        const targets = uniqueFieldKeys((fieldTargets && fieldTargets[field]) || []);
+        if (!targets.length) continue;
+        const clauseResult = matchClauseCollection(clauses, fields, targets, {
+          threshold: relaxed ? 0.74 : 0.92,
+          fuzzy: true,
+        });
+        if (clauseResult.anyMatch) return false;
+      }
+    }
+
+    if (Array.isArray(model.excludePhrases) && model.excludePhrases.length) {
+      for (const rawPhrase of model.excludePhrases) {
+        const phrase = normalizeSearchText(rawPhrase);
+        if (!phrase) continue;
+        for (const key of allFieldKeys) {
+          const field = fields[key];
+          if (!field || !field.text) continue;
+          if (field.text.includes(phrase)) return false;
+        }
+      }
+    }
+
+    if (hasEntriesForFieldMap(model.excludeFieldPhrases)) {
+      for (const field of SEARCH_QUERY_MODEL_FIELDS) {
+        const phrases = model.excludeFieldPhrases[field];
+        if (!Array.isArray(phrases) || !phrases.length) continue;
+        const targets = uniqueFieldKeys((fieldTargets && fieldTargets[field]) || []);
+        if (!targets.length) continue;
+        for (const phraseEntry of phrases) {
+          const phrase = normalizeSearchText(phraseEntry && phraseEntry.value);
+          if (!phrase) continue;
+          for (const key of targets) {
+            const targetField = fields[key];
+            if (!targetField || !targetField.text) continue;
+            if (targetField.text.includes(phrase)) return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  function evaluateQueryModelFilters(model, doc, options = {}) {
+    if (!model || !doc || !doc.fields) return true;
+    const relaxed = options.relaxed === true;
+    const fieldTargets = options.fieldTargets || {};
+    const year = Number.isFinite(doc.year) ? doc.year : 0;
+    const yearRange = normalizeYearRange(model.yearRange || {});
+
+    if (yearRange.from > 0 || yearRange.to > 0) {
+      if (!year) return false;
+      if (yearRange.from > 0 && year < yearRange.from) return false;
+      if (yearRange.to > 0 && year > yearRange.to) return false;
+    }
+
+    if (!evaluateExcludeConstraints(model, doc, { relaxed, fieldTargets })) return false;
+    if (!evaluateFieldConstraintMap(model.fieldClauses, doc.fields, fieldTargets, { relaxed, threshold: relaxed ? 0.72 : 0.94, fuzzy: true })) return false;
+    if (!evaluateFieldPhraseMap(model.fieldPhrases, doc.fields, fieldTargets, { relaxed, threshold: relaxed ? 0.64 : 0.86 })) return false;
+    return true;
+  }
+
   function scoreQueryModelAgainstDoc(model, doc, options = {}) {
     if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
     if (!doc || !doc.fields) return 0;
@@ -1364,6 +1935,7 @@
       fields.title && fields.title.text,
       fields.tags && fields.tags.text,
       fields.topics && fields.topics.text,
+      fields.type && fields.type.text,
       fields.abstract && fields.abstract.text,
       fields.content && fields.content.text,
       fields.category && fields.category.text,
@@ -1377,31 +1949,46 @@
   function scoreTalkWithModel(indexedTalk, model, relaxed = false) {
     const doc = buildTalkSearchDoc(indexedTalk);
     if (!doc) return 0;
-
-    const base = scoreQueryModelAgainstDoc(model, doc, {
+    if (!evaluateQueryModelFilters(model, doc, {
       relaxed,
-      fieldConfig: [
-        { key: 'title', weight: 15.0, fuzzy: true },
-        { key: 'speakers', weight: 12.0, fuzzy: true },
-        { key: 'tags', weight: 10.5, fuzzy: true },
-        { key: 'meeting', weight: 4.6, fuzzy: true },
-        { key: 'abstract', weight: 3.1, fuzzy: false },
-        { key: 'category', weight: 2.4, fuzzy: false },
-        { key: 'year', weight: 1.6, fuzzy: false },
-      ],
-      phraseFieldConfig: [
-        { key: 'title', weight: 6.2 },
-        { key: 'speakers', weight: 4.8 },
-        { key: 'tags', weight: 4.5 },
-        { key: 'meeting', weight: 2.3 },
-        { key: 'abstract', weight: 1.4 },
-      ],
-    });
+      fieldTargets: {
+        title: ['title'],
+        abstract: ['abstract'],
+        authors: ['speakers'],
+        topics: ['tags'],
+        venue: ['meeting'],
+        type: ['category'],
+      },
+    })) return 0;
+
+    const hasClauses = Array.isArray(model.clauses) && model.clauses.length > 0;
+
+    const base = hasClauses
+      ? scoreQueryModelAgainstDoc(model, doc, {
+        relaxed,
+        fieldConfig: [
+          { key: 'title', weight: 15.0, fuzzy: true },
+          { key: 'speakers', weight: 12.0, fuzzy: true },
+          { key: 'tags', weight: 10.5, fuzzy: true },
+          { key: 'meeting', weight: 4.6, fuzzy: true },
+          { key: 'abstract', weight: 3.1, fuzzy: false },
+          { key: 'category', weight: 2.4, fuzzy: false },
+          { key: 'year', weight: 1.6, fuzzy: false },
+        ],
+        phraseFieldConfig: [
+          { key: 'title', weight: 6.2 },
+          { key: 'speakers', weight: 4.8 },
+          { key: 'tags', weight: 4.5 },
+          { key: 'meeting', weight: 2.3 },
+          { key: 'abstract', weight: 1.4 },
+        ],
+      })
+      : 1;
     if (base <= 0) return 0;
 
     let total = base;
     const beginnerSignal = model.beginnerIntent ? hasBeginnerSignal(doc) : false;
-    if (model.beginnerIntent && !beginnerSignal && !relaxed) return 0;
+    if (model.beginnerIntent && !beginnerSignal) return 0;
     if (doc.year) {
       total += Math.max(0, doc.year - 2006) * 0.14;
     }
@@ -1415,19 +2002,19 @@
 
   function scoreMatch(indexedTalk, tokensOrQuery) {
     const model = buildSearchQueryModel(tokensOrQuery);
-    if (!model.clauses.length) return 0;
+    if (!modelHasSearchConstraints(model)) return 0;
     return scoreTalkWithModel(indexedTalk, model, false);
   }
 
   function scoreTalkRecordByModel(indexedTalk, model, options = {}) {
-    if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
+    if (!modelHasSearchConstraints(model)) return 0;
     const relaxed = options && options.relaxed === true;
     return scoreTalkWithModel(indexedTalk, model, relaxed);
   }
 
   function scoreTalkRecordByQuery(indexedTalk, query, options = {}) {
     const model = buildSearchQueryModel(query);
-    if (!model.clauses.length) return 0;
+    if (!modelHasSearchConstraints(model)) return 0;
     let score = scoreTalkWithModel(indexedTalk, model, false);
     if (score > 0 || !(options && options.relaxed === true)) return score;
     return scoreTalkWithModel(indexedTalk, model, true);
@@ -1452,11 +2039,42 @@
     return aTitle.localeCompare(bTitle);
   }
 
+  function pruneScoredEntries(scoredEntries, model, options = {}) {
+    const scored = Array.isArray(scoredEntries) ? scoredEntries : [];
+    if (!scored.length) return [];
+    if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return scored;
+
+    const topScore = Number(scored[0].score || 0);
+    if (!(topScore > 0)) return scored;
+
+    const maxResults = Number.isFinite(options.maxResults) && options.maxResults > 0
+      ? Math.floor(options.maxResults)
+      : 1600;
+    const minTail = Number.isFinite(options.minTail) && options.minTail > 0
+      ? Math.floor(options.minTail)
+      : 120;
+    const relativeFloor = Number.isFinite(options.relativeFloor)
+      ? options.relativeFloor
+      : (
+        model.beginnerIntent
+          ? 0.44
+          : (model.clauses.length <= 2 ? 0.34 : 0.24)
+      );
+    const absoluteFloor = Number.isFinite(options.absoluteFloor)
+      ? options.absoluteFloor
+      : (model.beginnerIntent ? 14 : 8);
+
+    const threshold = Math.max(absoluteFloor, topScore * Math.max(0.08, relativeFloor));
+    const filtered = scored.filter((entry) => Number(entry.score || 0) >= threshold);
+    if (filtered.length) return filtered.slice(0, maxResults);
+    return scored.slice(0, Math.min(maxResults, minTail));
+  }
+
   function rankTalksByQuery(indexedTalks, query) {
     const talks = Array.isArray(indexedTalks) ? indexedTalks : [];
     const model = buildSearchQueryModel(query);
 
-    if (!model.clauses.length) {
+    if (!modelHasSearchConstraints(model)) {
       return [...talks].sort((a, b) => String(b.meeting || '').localeCompare(String(a.meeting || '')));
     }
 
@@ -1466,7 +2084,7 @@
       if (score > 0) scored.push({ talk, score });
     }
 
-    if (!scored.length && model.clauses.length >= 2) {
+    if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const talk of talks) {
         const score = scoreTalkWithModel(talk, model, true);
         if (score > 0) scored.push({ talk, score });
@@ -1474,7 +2092,13 @@
     }
 
     scored.sort(compareRankedEntries);
-    return scored.map((entry) => entry.talk);
+    const pruned = pruneScoredEntries(scored, model, {
+      maxResults: 1600,
+      minTail: 120,
+      relativeFloor: model.beginnerIntent ? 0.46 : (model.clauses.length <= 2 ? 0.34 : 0.24),
+      absoluteFloor: model.beginnerIntent ? 14 : 8,
+    });
+    return pruned.map((entry) => entry.talk);
   }
 
   function parseCitationCount(value) {
@@ -1505,12 +2129,22 @@
     const publication = paper._publicationLower || paper.publication || '';
     const venue = paper._venueLower || paper.venue || '';
     const yearField = paper._yearLower || paper._year || paper.year || '';
+    const reviewSignal = /\b(review|survey|systematic review|literature review|meta analysis|meta-analysis)\b/i
+      .test(`${paper.title || ''} ${paper.abstract || ''} ${paper.type || ''}`);
+    const tutorialSignal = /\btutorial(?:s)?\b/i.test(`${paper.title || ''} ${paper.abstract || ''} ${paper.type || ''}`);
+    const typeField = [
+      paper.type || '',
+      paper._isBlog ? 'blog' : 'paper',
+      reviewSignal ? 'review' : '',
+      tutorialSignal ? 'tutorial' : '',
+    ].filter(Boolean).join(' ');
 
     const doc = {
       fields: {
         title: makeSearchField(title),
         authors: makeSearchField(authors),
         topics: makeSearchField(topics),
+        type: makeSearchField(typeField),
         abstract: makeSearchField(abstractText),
         content: makeSearchField(content),
         publication: makeSearchField(publication),
@@ -1528,34 +2162,51 @@
   function scorePaperWithModel(paper, model, relaxed = false) {
     const doc = buildPaperSearchDoc(paper);
     if (!doc) return 0;
-
-    const base = scoreQueryModelAgainstDoc(model, doc, {
+    if (!evaluateQueryModelFilters(model, doc, {
       relaxed,
-      fieldConfig: [
-        { key: 'title', weight: 15.4, fuzzy: true },
-        { key: 'authors', weight: 11.1, fuzzy: true },
-        { key: 'topics', weight: 10.2, fuzzy: true },
-        { key: 'publication', weight: 4.7, fuzzy: true },
-        { key: 'venue', weight: 4.2, fuzzy: true },
-        { key: 'abstract', weight: 3.3, fuzzy: false },
-        { key: 'content', weight: 2.1, fuzzy: false },
-        { key: 'year', weight: 1.7, fuzzy: false },
-      ],
-      phraseFieldConfig: [
-        { key: 'title', weight: 6.4 },
-        { key: 'authors', weight: 4.7 },
-        { key: 'topics', weight: 4.5 },
-        { key: 'publication', weight: 2.3 },
-        { key: 'venue', weight: 2.0 },
-        { key: 'abstract', weight: 1.2 },
-        { key: 'content', weight: 0.9 },
-      ],
-    });
+      fieldTargets: {
+        title: ['title'],
+        abstract: ['abstract', 'content'],
+        authors: ['authors'],
+        topics: ['topics'],
+        venue: ['publication', 'venue'],
+        type: ['type', 'topics'],
+      },
+    })) return 0;
+
+    const hasClauses = Array.isArray(model.clauses) && model.clauses.length > 0;
+
+    const base = hasClauses
+      ? scoreQueryModelAgainstDoc(model, doc, {
+        relaxed,
+        fieldConfig: [
+          { key: 'title', weight: 15.4, fuzzy: true },
+          { key: 'authors', weight: 11.1, fuzzy: true },
+          { key: 'topics', weight: 10.2, fuzzy: true },
+          { key: 'type', weight: 7.6, fuzzy: true },
+          { key: 'publication', weight: 4.7, fuzzy: true },
+          { key: 'venue', weight: 4.2, fuzzy: true },
+          { key: 'abstract', weight: 3.3, fuzzy: false },
+          { key: 'content', weight: 2.1, fuzzy: false },
+          { key: 'year', weight: 1.7, fuzzy: false },
+        ],
+        phraseFieldConfig: [
+          { key: 'title', weight: 6.4 },
+          { key: 'authors', weight: 4.7 },
+          { key: 'topics', weight: 4.5 },
+          { key: 'type', weight: 3.1 },
+          { key: 'publication', weight: 2.3 },
+          { key: 'venue', weight: 2.0 },
+          { key: 'abstract', weight: 1.2 },
+          { key: 'content', weight: 0.9 },
+        ],
+      })
+      : 1;
     if (base <= 0) return 0;
 
     let total = base;
     const beginnerSignal = model.beginnerIntent ? hasBeginnerSignal(doc) : false;
-    if (model.beginnerIntent && !beginnerSignal && !relaxed) return 0;
+    if (model.beginnerIntent && !beginnerSignal) return 0;
     if (doc.year) total += Math.max(0, doc.year - 2000) * 0.12;
     if (doc.citationCount > 0) total += Math.min(8, Math.log1p(doc.citationCount) * 1.3);
     if (model.beginnerIntent && doc.fields.topics.text.includes('beginner')) total += 8;
@@ -1584,7 +2235,7 @@
     const records = Array.isArray(papers) ? papers : [];
     const model = buildSearchQueryModel(query);
 
-    if (!model.clauses.length) {
+    if (!modelHasSearchConstraints(model)) {
       return [...records].sort((a, b) => {
         const aYear = parseYearNumber((a && (a._year || a.year)) || '');
         const bYear = parseYearNumber((b && (b._year || b.year)) || '');
@@ -1601,7 +2252,7 @@
       if (score > 0) scored.push({ paper, score });
     }
 
-    if (!scored.length && model.clauses.length >= 2) {
+    if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const paper of records) {
         const score = scorePaperWithModel(paper, model, true);
         if (score > 0) scored.push({ paper, score });
@@ -1609,18 +2260,24 @@
     }
 
     scored.sort(compareRankedPaperEntries);
-    return scored.map((entry) => entry.paper);
+    const pruned = pruneScoredEntries(scored, model, {
+      maxResults: 1800,
+      minTail: 140,
+      relativeFloor: model.beginnerIntent ? 0.44 : (model.clauses.length <= 2 ? 0.32 : 0.22),
+      absoluteFloor: model.beginnerIntent ? 14 : 7,
+    });
+    return pruned.map((entry) => entry.paper);
   }
 
   function scorePaperRecordByModel(paper, model, options = {}) {
-    if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
+    if (!modelHasSearchConstraints(model)) return 0;
     const relaxed = options && options.relaxed === true;
     return scorePaperWithModel(paper, model, relaxed);
   }
 
   function scorePaperRecordByQuery(paper, query, options = {}) {
     const model = buildSearchQueryModel(query);
-    if (!model.clauses.length) return 0;
+    if (!modelHasSearchConstraints(model)) return 0;
     let score = scorePaperWithModel(paper, model, false);
     if (score > 0 || !(options && options.relaxed === true)) return score;
     return scorePaperWithModel(paper, model, true);
@@ -1779,18 +2436,30 @@
 
   const KEY_TOPIC_CANONICAL = [
     'LLVM',
+    'llvm-libgcc',
     'Clang',
+    'clang-tools-extra',
     'MLIR',
     'Flang',
+    'flang-rt',
     'LLD',
     'LLDB',
     'CIRCT',
     'Polly',
+    'cmake',
+    'cross-project-tests',
     'OpenMP',
+    'offload',
     'compiler-rt',
+    'runtimes',
     'libc++',
+    'libc++abi',
     'libc',
+    'libclc',
+    'libsycl',
+    'libunwind',
     'BOLT',
+    'orc-rt',
     'ORC JIT',
     'IR',
     'ClangIR',
@@ -1856,24 +2525,45 @@
 
   const KEY_TOPIC_ALIAS_MAP_RAW = {
     llvm: 'LLVM',
+    llvmlibgcc: 'llvm-libgcc',
+    'llvm-libgcc': 'llvm-libgcc',
     clang: 'Clang',
     clangd: 'Clang',
+    clangtoolsextra: 'clang-tools-extra',
+    'clang-tools-extra': 'clang-tools-extra',
+    clangtools: 'clang-tools-extra',
     clangir: 'ClangIR',
     mlir: 'MLIR',
     flang: 'Flang',
+    flangrt: 'flang-rt',
+    'flang-rt': 'flang-rt',
     lld: 'LLD',
     lldb: 'LLDB',
     circt: 'CIRCT',
     polly: 'Polly',
+    cmake: 'cmake',
+    crossprojecttests: 'cross-project-tests',
+    'cross-project-tests': 'cross-project-tests',
     openmp: 'OpenMP',
+    offload: 'offload',
+    offloading: 'offload',
     libomp: 'OpenMP',
     compilerrt: 'compiler-rt',
     'compiler-rt': 'compiler-rt',
     libfuzzer: 'compiler-rt',
+    runtimes: 'runtimes',
+    runtime: 'runtimes',
     libcxx: 'libc++',
     'libc++': 'libc++',
+    libcxxabi: 'libc++abi',
+    'libc++abi': 'libc++abi',
     libc: 'libc',
+    libclc: 'libclc',
+    libsycl: 'libsycl',
+    libunwind: 'libunwind',
     bolt: 'BOLT',
+    orcrt: 'orc-rt',
+    'orc-rt': 'orc-rt',
     orc: 'ORC JIT',
     orcjit: 'ORC JIT',
     ir: 'IR',
@@ -1972,18 +2662,30 @@
 
   const KEY_TOPIC_TEXT_RULES = [
     { topic: 'LLVM', pattern: /\bllvm\b/i },
+    { topic: 'llvm-libgcc', pattern: /\bllvm[- ]?libgcc\b/i },
     { topic: 'Clang', pattern: /\bclang(?:d)?\b/i },
+    { topic: 'clang-tools-extra', pattern: /\bclang[- ]tools[- ]extra\b|\bclang[- ](?:tidy|format|query)\b/i },
     { topic: 'MLIR', pattern: /\bmlir\b|\bmulti[- ]level intermediate representation\b/i },
     { topic: 'Flang', pattern: /\bflang\b/i },
+    { topic: 'flang-rt', pattern: /\bflang[- ]?rt\b/i },
     { topic: 'LLD', pattern: /\blld\b/i },
     { topic: 'LLDB', pattern: /\blldb\b/i },
     { topic: 'CIRCT', pattern: /\bcirct\b/i },
     { topic: 'Polly', pattern: /\bpolly\b/i },
+    { topic: 'cmake', pattern: /\bcmake\b/i },
+    { topic: 'cross-project-tests', pattern: /\bcross[- ]project[- ]tests?\b/i },
     { topic: 'OpenMP', pattern: /\bopenmp\b|\blibomp\b/i },
+    { topic: 'offload', pattern: /\boffload(?:ing|ed)?\b|\blibomptarget\b/i },
     { topic: 'compiler-rt', pattern: /\bcompiler[- ]?rt\b|\blibfuzzer\b/i },
+    { topic: 'runtimes', pattern: /\bllvm[- ]runtimes?\b|\bruntime (?:libraries|library)\b/i },
     { topic: 'libc++', pattern: /\blibc\+\+\b/i },
+    { topic: 'libc++abi', pattern: /\blibc\+\+abi\b|\blibcxxabi\b/i },
     { topic: 'libc', pattern: /\blibc\b/i },
+    { topic: 'libclc', pattern: /\blibclc\b/i },
+    { topic: 'libsycl', pattern: /\blibsycl\b|\bsycl\b/i },
+    { topic: 'libunwind', pattern: /\blibunwind\b/i },
     { topic: 'BOLT', pattern: /\bbolt\b/i },
+    { topic: 'orc-rt', pattern: /\borc[- ]?rt\b|\borc runtime\b/i },
     { topic: 'ORC JIT', pattern: /\borc(?:\s*jit)?\b/i },
     { topic: 'ClangIR', pattern: /\bclangir\b|\bclang\s+ir\b/i },
     { topic: 'IR', pattern: /\bllvm\s+ir\b|\bintermediate representation\b|\bssa\b/i },
@@ -2071,12 +2773,15 @@
     const seed = [
       ...((paper && paper.tags) || []),
       ...((paper && paper.keywords) || []),
+      ...((paper && paper.matchedSubprojects) || []),
     ];
     const text = [
       collapseWhitespace(paper && paper.title),
       collapseWhitespace(paper && paper.abstract),
       collapseWhitespace(paper && paper.publication),
       collapseWhitespace(paper && paper.venue),
+      collapseWhitespace(paper && paper.sourceName),
+      collapseWhitespace(paper && paper.source),
     ].filter(Boolean).join(' ');
     return collectCanonicalTopics(seed, text);
   }

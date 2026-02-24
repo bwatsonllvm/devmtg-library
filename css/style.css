@@ -1555,6 +1555,28 @@ body.filter-collapsed .filter-collapse-btn svg {
   min-width: 0;
 }
 
+.work-custom-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.work-custom-range.hidden {
+  display: none !important;
+}
+
+.work-year-input {
+  width: 84px;
+  min-width: 84px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.work-custom-range-sep {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
 .results-count {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
@@ -3494,12 +3516,25 @@ mark {
     -webkit-overflow-scrolling: touch;
   }
 
-  .results-sort-select {
+  #work-time-select {
     order: 2;
   }
 
-  .view-toggle {
+  #work-custom-range {
     order: 3;
+    width: 100%;
+  }
+
+  #work-type-select {
+    order: 4;
+  }
+
+  #work-sort-select {
+    order: 5;
+  }
+
+  .view-toggle {
+    order: 6;
   }
 
   .results-sort-label {
@@ -3514,6 +3549,13 @@ mark {
     padding-left: 10px;
     padding-right: 30px;
     font-size: var(--font-size-sm);
+  }
+
+  .work-year-input {
+    height: 36px;
+    min-width: 82px;
+    width: min(32vw, 116px);
+    max-width: 116px;
   }
 
   .view-btn {

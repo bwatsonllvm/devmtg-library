@@ -3,18 +3,30 @@
 #   canonical-name
 #   canonical-name:alias one,alias two
 
+llvm
+llvm-libgcc
 clang:clang,clangd,libclang
+clang-tools-extra:clang-tools-extra,clang tools extra,clang-tidy,clang-format,clang-query
 mlir
 lldb
 lld
 flang
+flang-rt:flang-rt,flang rt
+cmake
+cross-project-tests:cross-project-tests,cross project tests
 compiler-rt
+runtimes:runtimes,runtime libraries,llvm runtimes
 libc:libc,llvm libc,llvm-libc,llvmlibc,llbclc
-libc++
+libclc
+libcxx:libc++,libcxx
+libcxxabi:libc++abi,libcxxabi
+libsycl:libsycl,sycl
 libunwind
-openmp
+openmp:openmp,libomp
+offload:offload,offloading,libomptarget
 polly
 bolt
+orc-rt:orc-rt,orc rt,orc runtime
 circt
 libfuzzer
 addresssanitizer

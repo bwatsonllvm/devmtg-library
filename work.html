@@ -64,7 +64,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260223-02">
+  <link rel="stylesheet" href="css/style.css?v=20260224-01">
 </head>
 <body>
 
@@ -173,6 +173,10 @@
       <form class="search-box global-search-form work-hero-search" action="work.html" method="get" role="search" aria-label="Search talks, papers, blogs, and people">
         <input type="hidden" name="mode" value="search">
         <input type="hidden" id="work-search-scope-input" name="scope" value="all">
+        <input type="hidden" id="work-search-time-input" name="time" value="any">
+        <input type="hidden" id="work-search-type-input" name="type" value="any">
+        <input type="hidden" id="work-search-year-from-input" name="yearFrom" value="">
+        <input type="hidden" id="work-search-year-to-input" name="yearTo" value="">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -222,6 +226,24 @@
               <span class="work-scope-count" id="work-scope-count-blogs">0</span>
             </button>
           </div>
+          <label for="work-time-select" class="results-sort-label">Time</label>
+          <select id="work-time-select" class="results-sort-select" aria-label="Filter by time">
+            <option value="any">Any time</option>
+            <option value="since-2026">Since 2026</option>
+            <option value="since-2025">Since 2025</option>
+            <option value="since-2022">Since 2022</option>
+            <option value="custom">Custom range...</option>
+          </select>
+          <div class="work-custom-range hidden" id="work-custom-range" aria-label="Custom year range">
+            <input type="number" id="work-year-from" class="results-sort-select work-year-input" min="1990" max="2100" step="1" inputmode="numeric" placeholder="From" aria-label="From year">
+            <span class="work-custom-range-sep" aria-hidden="true">to</span>
+            <input type="number" id="work-year-to" class="results-sort-select work-year-input" min="1990" max="2100" step="1" inputmode="numeric" placeholder="To" aria-label="To year">
+          </div>
+          <label for="work-type-select" class="results-sort-label">Type</label>
+          <select id="work-type-select" class="results-sort-select" aria-label="Filter by type">
+            <option value="any">Any type</option>
+            <option value="review">Review articles</option>
+          </select>
           <label for="work-sort-select" class="results-sort-label">Sort by</label>
           <select id="work-sort-select" class="results-sort-select" aria-label="Sort work results">
             <option value="relevance">Relevance</option>
@@ -308,8 +330,8 @@
 
   <script src="js/events-data.js?v=20260223-01"></script>
   <script src="js/papers-data.js?v=20260223-01"></script>
-  <script src="js/shared/library-utils.js?v=20260223-04"></script>
+  <script src="js/shared/library-utils.js?v=20260224-01"></script>
   <script src="js/shared/global-search.js?v=20260223-02"></script>
-  <script src="js/work.js?v=20260223-04"></script>
+  <script src="js/work.js?v=20260224-01"></script>
 </body>
 </html>

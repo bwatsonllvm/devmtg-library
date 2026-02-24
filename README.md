@@ -14,7 +14,7 @@ The library is a searchable index of:
 
 It is designed as a public, online reference site.
 
-## Search And Discovery Experience (Updated February 23, 2026)
+## Search And Discovery Experience (Updated February 24, 2026)
 
 Search now uses a shared, relevance-first stack intended to work for both LLVM newcomers and advanced researchers.
 
@@ -42,6 +42,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - token aliasing and synonym expansion
   - stopword handling and lightweight stemming
   - quoted phrase parsing
+  - advanced operators: `author:`, `topic:`, `venue:`, `type:`, `year:`, `since:`, `before:`, and `-exclude`
 - Fuzzy robustness:
   - subsequence matching
   - bounded Levenshtein distance for typo tolerance
@@ -56,7 +57,23 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - low-signal expansions are filtered
   - beginner-intent expansions prioritize `intro/introduction/tutorial` over generic terms
 - Tie-break and quality boosts for recency, citations (papers/blogs), and beginner-intent queries.
+- Constraint-aware filtering:
+  - positive/negative field constraints are enforced during scoring (not only soft-boosted)
+  - year-range constraints can be expressed in-query and from UI controls
+  - low-confidence tails are pruned so broad queries do not collapse to near-catalog results
 - Shared rankers (`rankTalksByQuery`, `rankPaperRecordsByQuery`) are now used consistently across talks, papers/blogs, and global work search surfaces.
+
+### Advanced query syntax
+
+- Supported patterns:
+  - exact phrase: `"MLIR-based code generation for GPU tensor cores"`
+  - author constraint: `author:chris lattner`
+  - topic constraint: `topic:mlir`
+  - venue constraint: `venue:arxiv`
+  - type constraint: `type:review`
+  - year filters: `since:2025`, `before:2022`, `year:2024`, `year:2022-2025`
+  - exclusion: `mlir -cuda`, `topic:mlir -topic:openmp`
+- These operators work in Global Search (`work.html?mode=search`) for talks, papers, blogs, and cross-type `All` mode.
 
 ### Context-aware result previews
 
@@ -72,11 +89,13 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 - `papers/` and `blogs/`: sort (`relevance`, `year`, `citations`) + `grid/list` view toggle.
 - `work.html` (global/entity combined results):
   - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs` (default `All`)
+  - time filter in Global Search mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
+  - type filter in Global Search mode: `Any type`, `Review articles`
   - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
   - in Global Search mode (`mode=search`), results are interleaved across talks/papers/blogs by cross-type relevance (not fixed by content type)
   - exact/prefix title intent gets additional boost so precise queries surface the best matching item first, regardless of type
   - `expanded/compact` view toggle across talks, papers, and blogs sections
-  - URL-state support for `sort` and `view`, with mode-aware defaults
+  - URL-state support for `sort`, `view`, `scope`, `time`, `type`, `yearFrom`, and `yearTo`, with mode-aware defaults
 - `people/`:
   - sort (`works`, `citations`, `alpha`, `alpha-desc`)
   - `expanded/compact` view toggle
@@ -86,6 +105,9 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 - `work.html` supports:
   - `mode=search&q=...` for global query mode
   - optional `scope=all|talks|papers|blogs` in search mode to focus results by content type
+  - optional `time=any|since-2026|since-2025|since-2022|custom` in search mode
+  - optional `type=any|review` in search mode
+  - optional `yearFrom=YYYY&yearTo=YYYY` for custom ranges (`time=custom`)
   - `mode=entity&kind=speaker|topic&value=...` for entity mode (All Work)
   - `from=talks|papers|blogs|people|work` for back-link context
   - `sort=...` and `view=expanded|compact`
@@ -121,6 +143,11 @@ The canonical papers database combines three public sources:
 - LLVM Project Blog posts from `llvm/llvm-blog-www`
 
 OpenAlex discovery is constrained by LLVM-focused keyword and subproject matching, then filtered against known library contributors derived from existing talk/paper records.
+
+Subproject parsing and seed aliases now include deeper LLVM project coverage, including:
+- `bolt`, `clang-tools-extra`, `clang`, `cmake`, `compiler-rt`, `cross-project-tests`
+- `flang-rt`, `flang`, `libc`, `libclc`, `libcxx`, `libcxxabi`, `libsycl`, `libunwind`
+- `lld`, `lldb`, `llvm-libgcc`, `llvm`, `mlir`, `offload`, `openmp`, `orc-rt`, `polly`, `runtimes`
 
 The automated pipeline does not rely on a repository-maintained direct-name seed list.
 During the final merge, OpenAlex metadata is refreshed for titles, abstracts, authors, affiliations, citation counts, and URLs. For non-English or missing text, the pipeline also probes deeper landing-page metadata layers to recover English title/abstract when available.

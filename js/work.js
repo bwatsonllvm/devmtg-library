@@ -14,6 +14,10 @@ const WORK_SORT_MODES = new Set(['relevance', 'newest', 'oldest', 'title', 'cita
 const WORK_VIEW_MODES = new Set(['expanded', 'compact']);
 const WORK_VIEW_STORAGE_KEY = 'llvm-hub-work-view';
 const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs']);
+const WORK_TIME_FILTERS = new Set(['any', 'since-2026', 'since-2025', 'since-2022', 'custom']);
+const WORK_TYPE_FILTERS = new Set(['any', 'review']);
+const WORK_YEAR_MIN = 1990;
+const WORK_YEAR_MAX = 2100;
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
@@ -24,6 +28,10 @@ const state = {
   from: 'talks', // 'talks' | 'papers' | 'blogs' | 'people' | 'work'
   sortBy: 'relevance',
   viewMode: 'expanded',
+  timeFilter: 'any', // search mode only
+  typeFilter: 'any', // search mode only
+  yearFrom: 0, // search mode only
+  yearTo: 0, // search mode only
 };
 
 const CATEGORY_META = {
@@ -102,6 +110,44 @@ function normalizeViewMode(value) {
 function normalizeSearchScope(value) {
   const normalized = normalizeValue(value);
   return WORK_SEARCH_SCOPES.has(normalized) ? normalized : 'all';
+}
+
+function normalizeTimeFilter(value) {
+  const normalized = normalizeValue(value);
+  if (normalized === 'since2026') return 'since-2026';
+  if (normalized === 'since2025') return 'since-2025';
+  if (normalized === 'since2022') return 'since-2022';
+  return WORK_TIME_FILTERS.has(normalized) ? normalized : 'any';
+}
+
+function normalizeTypeFilter(value) {
+  const normalized = normalizeValue(value);
+  if (normalized === 'review-article' || normalized === 'reviewarticles') return 'review';
+  return WORK_TYPE_FILTERS.has(normalized) ? normalized : 'any';
+}
+
+function parseYearFilterInput(value) {
+  const year = Number.parseInt(String(value || '').trim(), 10);
+  if (!Number.isFinite(year)) return 0;
+  if (year < WORK_YEAR_MIN || year > WORK_YEAR_MAX) return 0;
+  return year;
+}
+
+function normalizeYearRange(from, to) {
+  const yearFrom = parseYearFilterInput(from);
+  const yearTo = parseYearFilterInput(to);
+  if (yearFrom > 0 && yearTo > 0 && yearFrom > yearTo) {
+    return { from: yearTo, to: yearFrom };
+  }
+  return { from: yearFrom, to: yearTo };
+}
+
+function resolveTimeFilterWindow() {
+  if (state.timeFilter === 'since-2026') return { from: 2026, to: 0 };
+  if (state.timeFilter === 'since-2025') return { from: 2025, to: 0 };
+  if (state.timeFilter === 'since-2022') return { from: 2022, to: 0 };
+  if (state.timeFilter === 'custom') return normalizeYearRange(state.yearFrom, state.yearTo);
+  return { from: 0, to: 0 };
 }
 
 function defaultSortMode() {
@@ -353,6 +399,10 @@ function parseStateFromUrl() {
   const valueParam = String(params.get('value') || '').trim();
   const queryParam = String(params.get('q') || '').trim();
   const scopeParam = normalizeSearchScope(params.get('scope'));
+  const timeParam = normalizeTimeFilter(params.get('time'));
+  const typeParam = normalizeTypeFilter(params.get('type'));
+  const yearFromParam = parseYearFilterInput(params.get('yearFrom'));
+  const yearToParam = parseYearFilterInput(params.get('yearTo'));
   const modeParam = normalizeValue(params.get('mode'));
   const fromParam = normalizeValue(params.get('from'));
   const FROM_VALUES = new Set(['talks', 'papers', 'blogs', 'people', 'work']);
@@ -366,6 +416,15 @@ function parseStateFromUrl() {
   state.scope = isSearchMode ? scopeParam : 'all';
   state.query = isSearchMode ? queryParam : '';
   state.value = isSearchMode ? '' : String(valueParam || queryParam || '').trim();
+  state.timeFilter = isSearchMode ? timeParam : 'any';
+  state.typeFilter = isSearchMode ? typeParam : 'any';
+  const normalizedYears = normalizeYearRange(yearFromParam, yearToParam);
+  state.yearFrom = isSearchMode ? normalizedYears.from : 0;
+  state.yearTo = isSearchMode ? normalizedYears.to : 0;
+  if (state.timeFilter !== 'custom') {
+    state.yearFrom = 0;
+    state.yearTo = 0;
+  }
   state.from = from;
   state.sortBy = normalizeSortMode(params.get('sort'));
 
@@ -387,6 +446,13 @@ function syncUrlState() {
     params.set('mode', 'search');
     if (state.query) params.set('q', state.query);
     if (state.scope !== 'all') params.set('scope', state.scope);
+    if (state.timeFilter !== 'any') params.set('time', state.timeFilter);
+    if (state.typeFilter !== 'any') params.set('type', state.typeFilter);
+    if (state.timeFilter === 'custom') {
+      const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
+      if (normalizedYears.from > 0) params.set('yearFrom', String(normalizedYears.from));
+      if (normalizedYears.to > 0) params.set('yearTo', String(normalizedYears.to));
+    }
   } else {
     params.set('mode', 'entity');
     params.set('kind', state.kind === 'speaker' ? 'speaker' : 'topic');
@@ -445,6 +511,26 @@ function getSearchScopeLabel(scope) {
   return 'All';
 }
 
+function getActiveFilterLabels() {
+  if (state.mode !== 'search') return [];
+  const labels = [];
+  if (state.timeFilter === 'since-2026') labels.push('Since 2026');
+  else if (state.timeFilter === 'since-2025') labels.push('Since 2025');
+  else if (state.timeFilter === 'since-2022') labels.push('Since 2022');
+  else if (state.timeFilter === 'custom') {
+    const years = normalizeYearRange(state.yearFrom, state.yearTo);
+    if (years.from > 0 || years.to > 0) {
+      if (years.from > 0 && years.to > 0) labels.push(`Years ${years.from}-${years.to}`);
+      else if (years.from > 0) labels.push(`Since ${years.from}`);
+      else labels.push(`Up to ${years.to}`);
+    } else {
+      labels.push('Custom range');
+    }
+  }
+  if (state.typeFilter === 'review') labels.push('Review articles');
+  return labels;
+}
+
 function syncScopeControlVisibility() {
   const scopeToggle = document.getElementById('work-scope-toggle');
   if (!scopeToggle) return;
@@ -465,7 +551,20 @@ function syncScopeControlCounts() {
 function syncScopeControls() {
   const scopeToggle = document.getElementById('work-scope-toggle');
   const scopeInput = document.getElementById('work-search-scope-input');
+  const timeInput = document.getElementById('work-search-time-input');
+  const typeInput = document.getElementById('work-search-type-input');
+  const yearFromInput = document.getElementById('work-search-year-from-input');
+  const yearToInput = document.getElementById('work-search-year-to-input');
   if (scopeInput) scopeInput.value = normalizeSearchScope(state.scope);
+  if (timeInput) timeInput.value = state.mode === 'search' ? normalizeTimeFilter(state.timeFilter) : 'any';
+  if (typeInput) typeInput.value = state.mode === 'search' ? normalizeTypeFilter(state.typeFilter) : 'any';
+  const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
+  if (yearFromInput) yearFromInput.value = state.mode === 'search' && state.timeFilter === 'custom' && normalizedYears.from > 0
+    ? String(normalizedYears.from)
+    : '';
+  if (yearToInput) yearToInput.value = state.mode === 'search' && state.timeFilter === 'custom' && normalizedYears.to > 0
+    ? String(normalizedYears.to)
+    : '';
   if (!scopeToggle) return;
   const buttons = [...scopeToggle.querySelectorAll('.work-scope-btn[data-work-scope]')];
   for (const button of buttons) {
@@ -487,8 +586,12 @@ function initScopeControl() {
       const nextScope = normalizeSearchScope(button.getAttribute('data-work-scope'));
       if (nextScope === state.scope) return;
       state.scope = nextScope;
+      if (state.scope === 'talks' && state.typeFilter !== 'any') {
+        state.typeFilter = 'any';
+      }
       state.sortBy = normalizeSortMode(state.sortBy);
       syncScopeControls();
+      syncAdvancedFilterControls();
       syncSortControl();
       rerenderWorkSections();
       syncUrlState();
@@ -497,6 +600,111 @@ function initScopeControl() {
 
   syncScopeControlVisibility();
   syncScopeControls();
+}
+
+function syncAdvancedFilterControlVisibility() {
+  const searchMode = state.mode === 'search';
+  const timeSelect = document.getElementById('work-time-select');
+  const typeSelect = document.getElementById('work-type-select');
+  const timeLabel = document.querySelector('label[for="work-time-select"]');
+  const typeLabel = document.querySelector('label[for="work-type-select"]');
+  const customRange = document.getElementById('work-custom-range');
+  const customVisible = searchMode && state.timeFilter === 'custom';
+  const typeEnabled = searchMode && state.scope !== 'talks';
+
+  if (timeLabel) timeLabel.hidden = !searchMode;
+  if (timeSelect) {
+    timeSelect.hidden = !searchMode;
+    timeSelect.disabled = !searchMode;
+  }
+  if (typeLabel) typeLabel.hidden = !searchMode;
+  if (typeSelect) {
+    typeSelect.hidden = !searchMode;
+    typeSelect.disabled = !typeEnabled;
+  }
+  if (customRange) customRange.classList.toggle('hidden', !customVisible);
+}
+
+function syncAdvancedFilterControls() {
+  const timeSelect = document.getElementById('work-time-select');
+  const typeSelect = document.getElementById('work-type-select');
+  const yearFromInput = document.getElementById('work-year-from');
+  const yearToInput = document.getElementById('work-year-to');
+  const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
+  if (timeSelect) timeSelect.value = normalizeTimeFilter(state.timeFilter);
+  if (typeSelect) {
+    const nextType = state.scope === 'talks' ? 'any' : normalizeTypeFilter(state.typeFilter);
+    typeSelect.value = nextType;
+  }
+  if (yearFromInput) yearFromInput.value = normalizedYears.from > 0 ? String(normalizedYears.from) : '';
+  if (yearToInput) yearToInput.value = normalizedYears.to > 0 ? String(normalizedYears.to) : '';
+  syncAdvancedFilterControlVisibility();
+  syncScopeControls();
+}
+
+function applySearchFilterControls(options = {}) {
+  if (state.mode !== 'search') return;
+  const normalizeOnly = options.normalizeOnly === true;
+
+  state.timeFilter = normalizeTimeFilter(state.timeFilter);
+  state.typeFilter = normalizeTypeFilter(state.typeFilter);
+  if (state.scope === 'talks') state.typeFilter = 'any';
+
+  const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
+  if (state.timeFilter === 'custom') {
+    state.yearFrom = normalizedYears.from;
+    state.yearTo = normalizedYears.to;
+  } else {
+    state.yearFrom = 0;
+    state.yearTo = 0;
+  }
+
+  syncAdvancedFilterControls();
+  if (normalizeOnly) return;
+  recomputeFilteredResults();
+  rerenderWorkSections();
+  syncUrlState();
+}
+
+function initAdvancedFilterControls() {
+  const timeSelect = document.getElementById('work-time-select');
+  const typeSelect = document.getElementById('work-type-select');
+  const yearFromInput = document.getElementById('work-year-from');
+  const yearToInput = document.getElementById('work-year-to');
+
+  if (timeSelect) {
+    timeSelect.addEventListener('change', () => {
+      state.timeFilter = normalizeTimeFilter(timeSelect.value);
+      applySearchFilterControls();
+    });
+  }
+
+  if (typeSelect) {
+    typeSelect.addEventListener('change', () => {
+      state.typeFilter = normalizeTypeFilter(typeSelect.value);
+      applySearchFilterControls();
+    });
+  }
+
+  const bindYearInput = (inputEl, key) => {
+    if (!inputEl) return;
+    const apply = () => {
+      state[key] = parseYearFilterInput(inputEl.value);
+      if (state.timeFilter !== 'custom') state.timeFilter = 'custom';
+      applySearchFilterControls();
+    };
+    inputEl.addEventListener('change', apply);
+    inputEl.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        apply();
+      }
+    });
+  };
+
+  bindYearInput(yearFromInput, 'yearFrom');
+  bindYearInput(yearToInput, 'yearTo');
+  syncAdvancedFilterControls();
 }
 
 function normalizePaperRecord(rawPaper) {
@@ -707,6 +915,51 @@ function parseYearValue(value) {
   return Number.isFinite(year) ? year : 0;
 }
 
+function getTalkYear(talk) {
+  if (!talk || typeof talk !== 'object') return 0;
+  return parseYearValue(talk.meeting || talk.meetingDate || talk._year || '');
+}
+
+function getPaperYear(paper) {
+  if (!paper || typeof paper !== 'object') return 0;
+  return parseYearValue(paper._year || paper.year || paper.publishDate || paper.publishedDate || paper.date || '');
+}
+
+function paperHasReviewSignal(paper) {
+  if (!paper || typeof paper !== 'object') return false;
+  const type = String(paper.type || '').toLowerCase();
+  if (/\breview\b|\bsurvey\b/.test(type)) return true;
+  const text = [
+    paper.title,
+    paper.abstract,
+    Array.isArray(paper.tags) ? paper.tags.join(' ') : '',
+    Array.isArray(paper.keywords) ? paper.keywords.join(' ') : '',
+  ].join(' ').toLowerCase();
+  return /\b(systematic review|literature review|review article|review|survey|meta-analysis|meta analysis)\b/.test(text);
+}
+
+function yearInWindow(year, window) {
+  if (!window || typeof window !== 'object') return true;
+  const from = Number.isFinite(window.from) ? Number(window.from) : 0;
+  const to = Number.isFinite(window.to) ? Number(window.to) : 0;
+  if (from <= 0 && to <= 0) return true;
+  if (!year || !Number.isFinite(year)) return false;
+  if (from > 0 && year < from) return false;
+  if (to > 0 && year > to) return false;
+  return true;
+}
+
+function matchesTalkSearchFilters(talk, filterWindow) {
+  if (state.typeFilter === 'review') return false;
+  return yearInWindow(getTalkYear(talk), filterWindow);
+}
+
+function matchesPaperSearchFilters(paper, filterWindow) {
+  if (!yearInWindow(getPaperYear(paper), filterWindow)) return false;
+  if (state.typeFilter === 'review') return paperHasReviewSignal(paper);
+  return true;
+}
+
 function computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens) {
   const normalizedTitle = normalizeSearchText(title);
   if (!normalizedTitle || !normalizedQuery) return 0;
@@ -860,6 +1113,21 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, query) {
   else if (relaxed.length > 0) entries = relaxed;
   else entries = fallback;
 
+  const rankedByScore = [...entries].sort((a, b) => (b.score || 0) - (a.score || 0));
+  if (hasModel && Array.isArray(model.clauses) && model.clauses.length && rankedByScore.length) {
+    const topScore = Number(rankedByScore[0].score || 0);
+    if (topScore > 0) {
+      const relativeFloor = model.beginnerIntent
+        ? 0.46
+        : (model.clauses.length <= 2 ? 0.34 : 0.24);
+      const absoluteFloor = model.beginnerIntent ? 18 : 9;
+      const threshold = Math.max(absoluteFloor, topScore * relativeFloor);
+      const filtered = rankedByScore.filter((entry) => Number(entry.score || 0) >= threshold);
+      if (filtered.length) entries = filtered;
+      else entries = rankedByScore.slice(0, Math.min(180, rankedByScore.length));
+    }
+  }
+
   return entries.sort(compareUniversalEntries);
 }
 
@@ -951,13 +1219,17 @@ function rankPapersForQuery(papers, query) {
 
 function recomputeFilteredResults() {
   if (state.mode === 'search') {
+    const filterWindow = resolveTimeFilterWindow();
     const rankedTalks = rankTalksForQuery(allTalkRecords, state.query);
     const rankedPapers = rankPapersForQuery(allPaperRecords, state.query);
     const rankedBlogs = rankPapersForQuery(allBlogRecords, state.query);
-    filteredTalks = sortTalkResults(rankedTalks);
-    filteredPapers = sortPaperResults(rankedPapers);
-    filteredBlogs = sortPaperResults(rankedBlogs);
-    const universalEntries = buildUniversalResultsFromRankedLists(rankedTalks, rankedPapers, rankedBlogs, state.query);
+    const scopedTalks = rankedTalks.filter((talk) => matchesTalkSearchFilters(talk, filterWindow));
+    const scopedPapers = rankedPapers.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
+    const scopedBlogs = rankedBlogs.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
+    filteredTalks = sortTalkResults(scopedTalks);
+    filteredPapers = sortPaperResults(scopedPapers);
+    filteredBlogs = sortPaperResults(scopedBlogs);
+    const universalEntries = buildUniversalResultsFromRankedLists(scopedTalks, scopedPapers, scopedBlogs, state.query);
     filteredUniversal = state.scope === 'all' ? universalEntries : [];
     searchResultCounts = {
       all: universalEntries.length,
@@ -1405,14 +1677,16 @@ function applyHeaderState() {
             ? 'citations'
             : 'newest';
     const densityLabel = state.viewMode === 'compact' ? 'compact' : 'expanded';
+    const filterLabels = getActiveFilterLabels();
+    const filterSuffix = filterLabels.length ? ` · Filters: ${filterLabels.join(', ')}` : '';
     if (state.mode === 'search') {
       const scopeTotal = getActiveSearchScopeCount();
       const allTotal = getSearchScopeCount('all');
       if (state.scope === 'all') {
-        summaryEl.innerHTML = `<strong>${allTotal.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · Sorted by ${sortLabel} · ${densityLabel} view`;
+        summaryEl.innerHTML = `<strong>${allTotal.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
       } else {
         const scopeLabel = getSearchScopeLabel(state.scope).toLowerCase();
-        summaryEl.innerHTML = `<strong>${scopeTotal.toLocaleString()}</strong> ${scopeLabel} results · ${allTotal.toLocaleString()} total across all types · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · Sorted by ${sortLabel} · ${densityLabel} view`;
+        summaryEl.innerHTML = `<strong>${scopeTotal.toLocaleString()}</strong> ${scopeLabel} results · ${allTotal.toLocaleString()} total across all types · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
       }
     } else {
       const total = filteredTalks.length + filteredPapers.length + filteredBlogs.length;
@@ -1485,6 +1759,7 @@ function applyViewMode(mode, persist = true, refreshHeader = true) {
 function rerenderWorkSections() {
   syncScopeControlVisibility();
   syncScopeControls();
+  syncAdvancedFilterControls();
   syncSearchSectionVisibility();
   applyHeaderState();
   if (state.mode === 'search') {
@@ -1927,9 +2202,12 @@ async function init() {
   initWorkHeroSearch();
   parseStateFromUrl();
   initScopeControl();
+  initAdvancedFilterControls();
+  applySearchFilterControls({ normalizeOnly: true });
   initSortControl();
   initViewControls();
   syncScopeControlVisibility();
+  syncAdvancedFilterControlVisibility();
   syncSearchSectionVisibility();
   updateIssueContextForWork();
   syncGlobalSearchInput();
