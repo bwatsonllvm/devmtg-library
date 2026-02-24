@@ -246,9 +246,17 @@ ruby -e '
       end
       next if ref.start_with?("http://", "https://", "#", "mailto:")
       next if ref.start_with?("?")
-      clean = ref.split("?").first
+      clean = ref.split("#", 2).first.split("?", 2).first
       next if clean.empty?
-      path = File.expand_path(clean, base_dir)
+      if clean.start_with?("/library/")
+        clean = clean.sub(%r{\A/library/}, "")
+        path = File.expand_path(clean, site_root)
+      elsif clean.start_with?("/")
+        clean = clean.sub(%r{\A/}, "")
+        path = File.expand_path(clean, site_root)
+      else
+        path = File.expand_path(clean, base_dir)
+      end
       bad << "#{File.basename(html)} -> #{ref}" unless File.exist?(path)
     end
   end

@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AMDGPU Asynchronous Operations &#8212; LLVM 23.0.0git documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/llvm-theme.css?v=96924833" />
+    <script src="_static/documentation_options.js?v=d9eb5899"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Benchmarking tips" href="Benchmarking.html" />
+    <link rel="prev" title="Allow Location Descriptions on the DWARF Expression Stack" href="AMDGPUDwarfExtensionAllowLocationDescriptionOnTheDwarfExpressionStack/AMDGPUDwarfExtensionAllowLocationDescriptionOnTheDwarfExpressionStack.html" />
+<style type="text/css">
+  table.right { float: right; margin-left: 20px; }
+  table.right td { border: 1px solid #ccc; }
+</style>
+
+  </head><body>
+<div class="logo">
+  <a href="index.html">
+    <img src="_static/logo.png"
+         alt="LLVM Logo" width="250" height="88"/></a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Benchmarking.html" title="Benchmarking tips"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="AMDGPUDwarfExtensionAllowLocationDescriptionOnTheDwarfExpressionStack/AMDGPUDwarfExtensionAllowLocationDescriptionOnTheDwarfExpressionStack.html" title="Allow Location Descriptions on the DWARF Expression Stack"
+             accesskey="P">previous</a> |</li>
+  <li><a href="https://llvm.org/">LLVM Home</a>&nbsp;|&nbsp;</li>
+  <li><a href="index.html">Documentation</a>&raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="UserGuides.html" accesskey="U">User Guides</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AMDGPU Asynchronous Operations</a></li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+<h3>Documentation</h3>
+
+<ul class="want-points">
+    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
+    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
+    <li><a href="/library/docs/Reference.html">Reference</a></li>
+</ul>
+
+<h3>Getting Involved</h3>
+
+<ul class="want-points">
+    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
+    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
+    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
+    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
+    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
+</ul>
+
+<h3>Additional Links</h3>
+
+<ul class="want-points">
+    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
+    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
+    <li><a href="https://llvm.org/pubs">Publications</a></li>
+    <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
+</ul>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/AMDGPUAsyncOperations.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="amdgpu-asynchronous-operations">
+<span id="amdgpu-async-operations"></span><h1>AMDGPU Asynchronous Operations<a class="headerlink" href="#amdgpu-asynchronous-operations" title="Link to this heading">¶</a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#introduction" id="id1">Introduction</a></p></li>
+<li><p><a class="reference internal" href="#operations" id="id2">Operations</a></p>
+<ul>
+<li><p><a class="reference internal" href="#memory-accesses" id="id3">Memory Accesses</a></p>
+<ul>
+<li><p><a class="reference internal" href="#lds-dma-operations" id="id4">LDS DMA Operations</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#async-mark-operations" id="id5">Async Mark Operations</a></p>
+<ul>
+<li><p><a class="reference internal" href="#llvm-amdgcn-asyncmark" id="id6"><code class="docutils literal notranslate"><span class="pre">&#64;llvm.amdgcn.asyncmark()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#llvm-amdgcn-wait-asyncmark-i16-n" id="id7"><code class="docutils literal notranslate"><span class="pre">&#64;llvm.amdgcn.wait.asyncmark(i16</span> <span class="pre">%N)</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#memory-consistency-model" id="id8">Memory Consistency Model</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id9">Examples</a></p>
+<ul>
+<li><p><a class="reference internal" href="#uneven-blocks-of-async-transfers" id="id10">Uneven blocks of async transfers</a></p></li>
+<li><p><a class="reference internal" href="#software-pipeline" id="id11">Software pipeline</a></p></li>
+<li><p><a class="reference internal" href="#ordinary-function-call" id="id12">Ordinary function call</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#implementation-notes" id="id13">Implementation notes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#optimization" id="id14">Optimization</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="introduction">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Introduction</a><a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>Asynchronous operations are memory transfers (usually between the global memory
+and LDS) that are completed independently at an unspecified scope. A thread that
+requests one or more asynchronous transfers can use <em>async marks</em> to track
+their completion. The thread waits for each mark to be <em>completed</em>, which
+indicates that requests initiated in program order before this mark have also
+completed.</p>
+</section>
+<section id="operations">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Operations</a><a class="headerlink" href="#operations" title="Link to this heading">¶</a></h2>
+<section id="memory-accesses">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Memory Accesses</a><a class="headerlink" href="#memory-accesses" title="Link to this heading">¶</a></h3>
+<section id="lds-dma-operations">
+<h4><a class="toc-backref" href="#id4" role="doc-backlink">LDS DMA Operations</a><a class="headerlink" href="#lds-dma-operations" title="Link to this heading">¶</a></h4>
+<div class="highlight-llvm notranslate"><div class="highlight"><pre><span></span><span class="c">; &quot;Legacy&quot; LDS DMA operations</span>
+<span class="k">void</span><span class="w"> </span><span class="vg">@llvm.amdgcn.load.async.to.lds</span><span class="p">(</span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%src</span><span class="p">,</span><span class="w"> </span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%dst</span><span class="p">)</span>
+<span class="k">void</span><span class="w"> </span><span class="vg">@llvm.amdgcn.global.load.async.lds</span><span class="p">(</span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%src</span><span class="p">,</span><span class="w"> </span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%dst</span><span class="p">)</span>
+<span class="k">void</span><span class="w"> </span><span class="vg">@llvm.amdgcn.raw.buffer.load.async.lds</span><span class="p">(</span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%src</span><span class="p">,</span><span class="w"> </span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%dst</span><span class="p">)</span>
+<span class="k">void</span><span class="w"> </span><span class="vg">@llvm.amdgcn.raw.ptr.buffer.load.async.lds</span><span class="p">(</span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%src</span><span class="p">,</span><span class="w"> </span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%dst</span><span class="p">)</span>
+<span class="k">void</span><span class="w"> </span><span class="vg">@llvm.amdgcn.struct.buffer.load.async.lds</span><span class="p">(</span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%src</span><span class="p">,</span><span class="w"> </span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%dst</span><span class="p">)</span>
+<span class="k">void</span><span class="w"> </span><span class="vg">@llvm.amdgcn.struct.ptr.buffer.load.async.lds</span><span class="p">(</span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%src</span><span class="p">,</span><span class="w"> </span><span class="kt">ptr</span><span class="w"> </span><span class="nv">%dst</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Request an async operation that copies the specified number of bytes from the
+global/buffer pointer <code class="docutils literal notranslate"><span class="pre">%src</span></code> to the LDS pointer <code class="docutils literal notranslate"><span class="pre">%dst</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The above listing is <em>merely representative</em>. The actual function signatures
+are identical to their non-async variants, and supported only on the
+corresponding architectures (GFX9 and GFX10).</p>
+</div>
+</section>
+</section>
+<section id="async-mark-operations">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Async Mark Operations</a><a class="headerlink" href="#async-mark-operations" title="Link to this heading">¶</a></h3>
+<p>An <em>async mark</em> in the abstract machine tracks all the async operations that
+are program ordered before that mark. A mark M is said to be <em>completed</em>
+only when all async operations program ordered before M are reported by the
+implementation as having finished, and it is said to be <em>outstanding</em> otherwise.</p>
+<p>Thus we have the following sufficient condition:</p>
+<blockquote>
+<div><p>An async operation X is <em>completed</em> at a program point P if there exists a
+mark M such that X is program ordered before M, M is program ordered before
+P, and M is completed. X is said to be <em>outstanding</em> at P otherwise.</p>
+</div></blockquote>
+<p>The abstract machine maintains a sequence of <em>async marks</em> during the
+execution of a function body, which excludes any marks produced by calls to
+other functions encountered in the currently executing function.</p>
+<section id="llvm-amdgcn-asyncmark">
+<h4><a class="toc-backref" href="#id6" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">&#64;llvm.amdgcn.asyncmark()</span></code></a><a class="headerlink" href="#llvm-amdgcn-asyncmark" title="Link to this heading">¶</a></h4>
+<p>When executed, inserts an async mark in the sequence associated with the
+currently executing function body.</p>
+</section>
+<section id="llvm-amdgcn-wait-asyncmark-i16-n">
+<h4><a class="toc-backref" href="#id7" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">&#64;llvm.amdgcn.wait.asyncmark(i16</span> <span class="pre">%N)</span></code></a><a class="headerlink" href="#llvm-amdgcn-wait-asyncmark-i16-n" title="Link to this heading">¶</a></h4>
+<p>Waits until there are at most N outstanding marks in the sequence associated
+with the currently executing function body.</p>
+</section>
+</section>
+</section>
+<section id="memory-consistency-model">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Memory Consistency Model</a><a class="headerlink" href="#memory-consistency-model" title="Link to this heading">¶</a></h2>
+<p>Each asynchronous operation consists of a non-atomic read on the source and a
+non-atomic write on the destination. Async “LDS DMA” intrinsics result in async
+accesses that guarantee visibility relative to other memory operations as
+follows:</p>
+<blockquote>
+<div><p>An asynchronous operation <cite>A</cite> program ordered before an overlapping memory
+operation <cite>X</cite> happens-before <cite>X</cite> only if <cite>A</cite> is completed before <cite>X</cite>.</p>
+<p>A memory operation <cite>X</cite> program ordered before an overlapping asynchronous
+operation <cite>A</cite> happens-before <cite>A</cite>.</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <em>only if</em> in the above wording implies that unlike the default LLVM
+memory model, certain program order edges are not automatically included in
+<code class="docutils literal notranslate"><span class="pre">happens-before</span></code>.</p>
+</div>
+</section>
+<section id="examples">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<section id="uneven-blocks-of-async-transfers">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Uneven blocks of async transfers</a><a class="headerlink" href="#uneven-blocks-of-async-transfers" title="Link to this heading">¶</a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">global</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">local</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// first block</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// second block; longer</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// third block; shorter</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">async_load_to_lds</span><span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">);</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// Wait for first block</span>
+<span class="w">  </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="software-pipeline">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Software pipeline</a><a class="headerlink" href="#software-pipeline" title="Link to this heading">¶</a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">global</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">local</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// first block</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// second block</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// third block</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(;;)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// use data</span>
+
+<span class="w">    </span><span class="c1">// next block</span>
+<span class="w">    </span><span class="n">asyncmark</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// flush one block</span>
+<span class="w">  </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// flush one more block</span>
+<span class="w">  </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// flush last block</span>
+<span class="w">  </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ordinary-function-call">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Ordinary function call</a><a class="headerlink" href="#ordinary-function-call" title="Link to this heading">¶</a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">extern</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">bar</span><span class="p">();</span><span class="w"> </span><span class="c1">// may or may not make async calls</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">global</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">local</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// first block</span>
+<span class="w">    </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// second block</span>
+<span class="w">    </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// function call</span>
+<span class="w">    </span><span class="n">bar</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// third block</span>
+<span class="w">    </span><span class="n">asyncmark</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// will wait for at least the second block, possibly including bar()</span>
+<span class="w">    </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">// will wait for third block, including bar()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="implementation-notes">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Implementation notes</a><a class="headerlink" href="#implementation-notes" title="Link to this heading">¶</a></h2>
+<p>[This section is informational.]</p>
+<section id="optimization">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Optimization</a><a class="headerlink" href="#optimization" title="Link to this heading">¶</a></h3>
+<p>The implementation may eliminate async mark/wait intrinsics in the following cases:</p>
+<ol class="arabic simple">
+<li><p>An <code class="docutils literal notranslate"><span class="pre">asyncmark</span></code> operation which is not included in the wait count of a later
+wait operation in the current function. In particular, an <code class="docutils literal notranslate"><span class="pre">asyncmark</span></code> which
+is not post-dominated by any <code class="docutils literal notranslate"><span class="pre">wait.asyncmark</span></code>.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">wait.asyncmark</span></code> whose wait count is more than the outstanding async
+marks at that point. In particular, a <code class="docutils literal notranslate"><span class="pre">wait.asyncmark</span></code> that is not
+dominated by any <code class="docutils literal notranslate"><span class="pre">asyncmark</span></code>.</p></li>
+</ol>
+<p>In general, at a function call, if the caller uses sufficient waits to track
+its own async operations, the actions performed by the callee cannot affect
+correctness. But inlining such a call may result in redundant waits.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span><span class="w"> </span><span class="c1">// A</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">bar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span><span class="w"> </span><span class="c1">// B</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span><span class="w"> </span><span class="c1">// C</span>
+<span class="w">  </span><span class="n">foo</span><span class="p">();</span>
+<span class="w">  </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Before inlining, the <code class="docutils literal notranslate"><span class="pre">wait.asyncmark</span></code> waits for mark B to be completed.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">bar</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span><span class="w"> </span><span class="c1">// B</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span><span class="w"> </span><span class="c1">// C</span>
+<span class="w">  </span><span class="n">asyncmark</span><span class="p">();</span><span class="w"> </span><span class="c1">// A from call to foo()</span>
+<span class="w">  </span><span class="n">wait</span><span class="p">.</span><span class="n">asyncmark</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After inlining, the asyncmark-wait now waits for mark C to complete, which is
+longer than necessary. Ideally, the optimizer should have eliminated mark A in
+the body of foo() itself.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Benchmarking.html" title="Benchmarking tips"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="AMDGPUDwarfExtensionAllowLocationDescriptionOnTheDwarfExpressionStack/AMDGPUDwarfExtensionAllowLocationDescriptionOnTheDwarfExpressionStack.html" title="Allow Location Descriptions on the DWARF Expression Stack"
+             >previous</a> |</li>
+  <li><a href="https://llvm.org/">LLVM Home</a>&nbsp;|&nbsp;</li>
+  <li><a href="index.html">Documentation</a>&raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="UserGuides.html" >User Guides</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AMDGPU Asynchronous Operations</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2003-2026, LLVM Project.
+      Last updated on 2026-02-23.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>
