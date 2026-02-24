@@ -116,7 +116,7 @@
   --radius-md:   6px;
   --radius-lg:   8px;
   --radius-xl:   12px;
-  --radius-full: 9999px;
+  --radius-full: 4px;
 
   /* Shadows */
   --shadow-xs:    0 1px 1px rgba(0, 0, 0, 0.04);
@@ -1528,7 +1528,7 @@ body.filter-collapsed .filter-collapse-btn svg {
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   font-size: 10px;
   color: var(--color-text-muted);
   background: var(--color-bg);
