@@ -5,10 +5,12 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SOURCE_URL="https://llvm.org/docs/"
 DOCS_DIR="$ROOT/docs"
 REGENERATE_BOOK_INDEX=1
+REGENERATE_UNIVERSAL_SEARCH_INDEX=1
 
 KEEP_PATHS=(
   "_static/documentation_options.js"
   "_static/docs-book-index.js"
+  "_static/docs-universal-search-index.js"
   "_static/docs-known-broken-links.txt"
   "_static/docs-sync-meta.json"
 )
@@ -22,12 +24,14 @@ usage() {
   cat <<'EOF'
 Usage: scripts/sync-docs-from-llvm-org.sh [options]
 
-Mirror docs from llvm.org into local docs/ and regenerate the book index.
+Mirror docs from llvm.org into local docs/ and regenerate search/index artifacts.
 
 Options:
   --source-url URL        Source docs root URL (default: https://llvm.org/docs/)
   --docs-dir PATH         Destination docs directory (default: docs)
   --skip-book-index       Skip book-index regeneration step
+  --skip-universal-search-index
+                          Skip universal-search-index regeneration step
   -h, --help              Show help
 EOF
 }
@@ -46,6 +50,10 @@ while (($#)); do
       ;;
     --skip-book-index)
       REGENERATE_BOOK_INDEX=0
+      shift
+      ;;
+    --skip-universal-search-index)
+      REGENERATE_UNIVERSAL_SEARCH_INDEX=0
       shift
       ;;
     -h|--help)
@@ -137,6 +145,13 @@ if [[ "$REGENERATE_BOOK_INDEX" -eq 1 ]]; then
   python3 "$ROOT/scripts/generate-docs-book-index.py" \
     --source-root "$DOCS_DIR/_sources" \
     --output "$DOCS_DIR/_static/docs-book-index.js"
+fi
+
+if [[ "$REGENERATE_UNIVERSAL_SEARCH_INDEX" -eq 1 ]]; then
+  python3 "$ROOT/scripts/generate-docs-universal-search-index.py" \
+    --docs-root "$DOCS_DIR" \
+    --book-index "$DOCS_DIR/_static/docs-book-index.js" \
+    --output "$DOCS_DIR/_static/docs-universal-search-index.js"
 fi
 
 LATEST_RELEASE_JSON="$(curl -fsSL \

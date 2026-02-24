@@ -21,6 +21,7 @@ from pathlib import Path
 REQUIRED_BRIDGE_FILES = [
     Path("docs/_static/documentation_options.js"),
     Path("docs/_static/docs-book-index.js"),
+    Path("docs/_static/docs-universal-search-index.js"),
     Path("docs/_static/docs-sync-meta.json"),
     Path("css/docs-bridge.css"),
 ]
@@ -29,6 +30,7 @@ REQUIRED_BRIDGE_MARKERS = [
     "buildDocsTrustStrip",
     "buildInlinePageToc",
     "enhanceSearchPageExperience",
+    "initDocsUniversalSearch",
     "initSearchShortcut",
     "buildSidebarRelationBar",
 ]
@@ -87,6 +89,22 @@ def verify_bridge_assets(repo_root: Path) -> None:
     for marker in REQUIRED_BRIDGE_MARKERS:
         if marker not in docs_js:
             fail(f"Bridge marker missing in docs/_static/documentation_options.js: {marker}")
+
+    universal_js = (repo_root / "docs/_static/docs-universal-search-index.js").read_text(encoding="utf-8")
+    match = re.search(
+        r"window\.LLVMDocsUniversalSearchIndex\s*=\s*(\{.*\})\s*;\s*$",
+        universal_js,
+        flags=re.DOTALL,
+    )
+    if not match:
+        fail("docs/_static/docs-universal-search-index.js missing expected payload wrapper")
+    try:
+        payload = json.loads(match.group(1))
+    except Exception as exc:  # noqa: BLE001
+        fail(f"Failed to parse docs universal search payload: {exc}")
+    entries = payload.get("entries") if isinstance(payload, dict) else None
+    if not isinstance(entries, list) or not entries:
+        fail("docs universal search payload has no entries")
 
 
 def parse_synced_at(raw: str) -> dt.datetime:

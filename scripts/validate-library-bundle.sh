@@ -27,6 +27,7 @@ for f in \
   about/index.html \
   docs/index.html \
   docs/_static/docs-book-index.js \
+  docs/_static/docs-universal-search-index.js \
   docs/_static/docs-known-broken-links.txt \
   docs/_static/docs-sync-meta.json \
   docs/_static/documentation_options.js \

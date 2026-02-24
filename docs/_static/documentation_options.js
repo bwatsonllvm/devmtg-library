@@ -20,6 +20,18 @@ const DOCUMENTATION_OPTIONS = {
   const DOCS_SYNC_META_FILENAME = 'docs-sync-meta.json';
   const DOCS_REPORT_ISSUE_BASE = 'https://github.com/bwatsonllvm/library/issues/new';
   const DOCS_GITHUB_RELEASES_URL = 'https://github.com/llvm/llvm-project/releases';
+  const DOCS_UNIVERSAL_SEARCH_FILENAME = 'docs-universal-search-index.js';
+  const DOCS_UNIVERSAL_SEARCH_VERSION = '20260224-01';
+  const DOCS_UNIVERSAL_SEARCH_MAX_SIDEBAR_RESULTS = 7;
+  const DOCS_UNIVERSAL_SEARCH_MAX_PAGE_RESULTS = 80;
+  const DOCS_SEARCH_STOP_WORDS = new Set([
+    'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'how', 'in', 'into',
+    'is', 'it', 'of', 'on', 'or', 'that', 'the', 'this', 'to', 'with',
+  ]);
+  const docsUniversalSearchLoadState = {
+    state: 'idle',
+    callbacks: [],
+  };
   const DOCS_SEARCH_ALIASES = [
     { token: 'langref', label: 'LLVM Language Reference', slug: 'LangRef' },
     { token: 'llvm ir', label: 'LLVM Language Reference', slug: 'LangRef' },
@@ -155,7 +167,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-19` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-20` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -858,10 +870,293 @@ const DOCUMENTATION_OPTIONS = {
     return DOCS_SEARCH_ALIASES.slice(0, 3);
   }
 
-  function installSearchNoResultsPanel(rootPath, searchInput) {
-    const resultsRoot = document.getElementById('search-results');
-    if (!resultsRoot) return;
+  function flushUniversalSearchCallbacks(success) {
+    const callbacks = docsUniversalSearchLoadState.callbacks.slice();
+    docsUniversalSearchLoadState.callbacks = [];
+    callbacks.forEach((callback) => {
+      try {
+        callback(!!success);
+      } catch (_) {
+        // Avoid callback failures breaking search setup.
+      }
+    });
+  }
 
+  function buildDocsSearchUrl(rootPath, query) {
+    const base = `${rootPath}docs/search.html`;
+    const value = String(query || '').trim();
+    if (!value) return base;
+    return `${base}?q=${encodeURIComponent(value)}`;
+  }
+
+  function getUniversalSearchPayload() {
+    const payload = window.LLVMDocsUniversalSearchIndex;
+    if (!payload || typeof payload !== 'object') return null;
+    if (!Array.isArray(payload.entries)) return null;
+    return payload;
+  }
+
+  function ensureUniversalSearchIndexData(rootPath, onReady) {
+    if (typeof onReady !== 'function') return;
+    const payload = getUniversalSearchPayload();
+    if (payload) {
+      onReady(true);
+      return;
+    }
+
+    if (docsUniversalSearchLoadState.state === 'failed') {
+      onReady(false);
+      return;
+    }
+
+    docsUniversalSearchLoadState.callbacks.push(onReady);
+    if (docsUniversalSearchLoadState.state === 'loading') {
+      return;
+    }
+
+    docsUniversalSearchLoadState.state = 'loading';
+    const scriptId = 'llvm-docs-universal-search-index-script';
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.src = `${rootPath}docs/_static/${DOCS_UNIVERSAL_SEARCH_FILENAME}?v=${DOCS_UNIVERSAL_SEARCH_VERSION}`;
+      script.async = true;
+      script.addEventListener('load', function () {
+        docsUniversalSearchLoadState.state = getUniversalSearchPayload() ? 'ready' : 'failed';
+        flushUniversalSearchCallbacks(docsUniversalSearchLoadState.state === 'ready');
+      }, { once: true });
+      script.addEventListener('error', function () {
+        docsUniversalSearchLoadState.state = 'failed';
+        flushUniversalSearchCallbacks(false);
+      }, { once: true });
+      document.head.appendChild(script);
+      return;
+    }
+
+    script.addEventListener('load', function () {
+      docsUniversalSearchLoadState.state = getUniversalSearchPayload() ? 'ready' : 'failed';
+      flushUniversalSearchCallbacks(docsUniversalSearchLoadState.state === 'ready');
+    }, { once: true });
+    script.addEventListener('error', function () {
+      docsUniversalSearchLoadState.state = 'failed';
+      flushUniversalSearchCallbacks(false);
+    }, { once: true });
+  }
+
+  function normalizeUniversalSearchQuery(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function tokenizeUniversalSearchQuery(value) {
+    const normalized = normalizeUniversalSearchQuery(value).toLowerCase();
+    if (!normalized) return [];
+    return normalized
+      .replace(/[^a-z0-9+#._/\-\s]/g, ' ')
+      .split(/\s+/)
+      .filter((token) => token.length > 1 && !DOCS_SEARCH_STOP_WORDS.has(token))
+      .slice(0, 12);
+  }
+
+  function prepareUniversalSearchEntry(entry) {
+    if (!entry || entry._preparedForSearch === 1) return;
+    entry._preparedForSearch = 1;
+
+    const title = String(entry.title || '');
+    const slug = String(entry.slug || '');
+    const headings = Array.isArray(entry.headings) ? entry.headings : [];
+    const headingText = headings
+      .map((item) => (item && typeof item === 'object' ? String(item.text || '') : String(item || '')))
+      .join(' ');
+    const summary = String(entry.summary || '');
+    const search = String(entry.search || '');
+
+    entry._titleLower = title.toLowerCase();
+    entry._slugLower = slug.toLowerCase();
+    entry._headingsLower = headingText.toLowerCase();
+    entry._searchLower = (search || `${title} ${headingText} ${summary}`).toLowerCase();
+  }
+
+  function scoreUniversalSearchEntry(entry, queryLower, tokens) {
+    prepareUniversalSearchEntry(entry);
+    const title = String(entry._titleLower || '');
+    const slug = String(entry._slugLower || '');
+    const headings = String(entry._headingsLower || '');
+    const search = String(entry._searchLower || '');
+    if (!title && !search && !slug) return null;
+
+    let score = 0;
+
+    if (queryLower) {
+      if (title === queryLower) score += 460;
+      else if (title.includes(queryLower)) score += 300;
+      if (slug === queryLower) score += 240;
+      else if (slug.includes(queryLower)) score += 110;
+      if (headings.includes(queryLower)) score += 180;
+      if (search.includes(queryLower)) score += 130;
+    }
+
+    let matchedTokens = 0;
+    tokens.forEach((token) => {
+      let tokenScore = 0;
+      if (title.includes(token)) tokenScore += 70;
+      if (headings.includes(token)) tokenScore += 40;
+      if (slug.includes(token)) tokenScore += 26;
+      if (search.includes(token)) tokenScore += 14;
+      if (tokenScore > 0) matchedTokens += 1;
+      score += tokenScore;
+    });
+
+    const tokenCount = tokens.length;
+    const coverage = tokenCount > 0 ? matchedTokens / tokenCount : (score > 0 ? 1 : 0);
+
+    if (tokenCount >= 2 && coverage < 0.45) return null;
+    if (tokenCount > 0) {
+      score += Math.round(coverage * 175);
+      if (matchedTokens === tokenCount) score += 95;
+    }
+
+    if (score <= 0) return null;
+    return { score, coverage, matchedTokens };
+  }
+
+  function runUniversalDocsSearch(query, limit) {
+    const payload = getUniversalSearchPayload();
+    if (!payload) return [];
+
+    const normalized = normalizeUniversalSearchQuery(query);
+    if (!normalized) return [];
+    const queryLower = normalized.toLowerCase();
+    const tokens = tokenizeUniversalSearchQuery(normalized);
+
+    const entries = Array.isArray(payload.entries) ? payload.entries : [];
+    const ranked = [];
+    entries.forEach((entry, index) => {
+      const rank = scoreUniversalSearchEntry(entry, queryLower, tokens);
+      if (!rank) return;
+      ranked.push({
+        entry,
+        score: rank.score,
+        coverage: rank.coverage,
+        matchedTokens: rank.matchedTokens,
+        index,
+      });
+    });
+
+    ranked.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.coverage !== a.coverage) return b.coverage - a.coverage;
+      if (b.matchedTokens !== a.matchedTokens) return b.matchedTokens - a.matchedTokens;
+      return a.index - b.index;
+    });
+
+    const cap = Number.isFinite(limit) ? Math.max(1, Math.floor(limit)) : 12;
+    return ranked.slice(0, cap);
+  }
+
+  function truncateSnippetText(value, maxChars) {
+    const text = String(value || '').replace(/\s+/g, ' ').trim();
+    if (text.length <= maxChars) return text;
+    const clipped = text.slice(0, maxChars).trim();
+    const safe = clipped.lastIndexOf(' ');
+    if (safe > 48) {
+      return `${clipped.slice(0, safe)}...`;
+    }
+    return `${clipped}...`;
+  }
+
+  function buildUniversalResultSnippet(entry, query) {
+    const text = String(entry.search || entry.summary || '').replace(/\s+/g, ' ').trim();
+    if (!text) return '';
+    const lowered = text.toLowerCase();
+    const queryLower = normalizeUniversalSearchQuery(query).toLowerCase();
+    const tokens = tokenizeUniversalSearchQuery(query);
+
+    let matchAt = queryLower ? lowered.indexOf(queryLower) : -1;
+    if (matchAt < 0) {
+      for (let idx = 0; idx < tokens.length; idx += 1) {
+        matchAt = lowered.indexOf(tokens[idx]);
+        if (matchAt >= 0) break;
+      }
+    }
+
+    if (matchAt < 0) {
+      return truncateSnippetText(text, 170);
+    }
+
+    const radius = 86;
+    const start = Math.max(0, matchAt - radius);
+    const end = Math.min(text.length, start + 180);
+    let snippet = text.slice(start, end).trim();
+    if (start > 0) snippet = `...${snippet}`;
+    if (end < text.length) snippet = `${snippet}...`;
+    return snippet;
+  }
+
+  function buildUniversalResultContext(entry) {
+    const parts = [];
+    const outline = String(entry.outline || '').trim();
+    const chapter = String(entry.chapter || '').trim();
+    const slug = String(entry.slug || '').trim();
+    if (outline) parts.push(outline);
+    if (chapter) parts.push(chapter);
+    if (slug) parts.push(slug === 'index' ? 'docs/' : slug);
+    return parts.join(' | ');
+  }
+
+  function buildUniversalResultHref(entry, rootPath) {
+    if (!entry || typeof entry !== 'object') return `${rootPath}docs/`;
+    const direct = String(entry.href || '').trim();
+    if (direct) {
+      if (/^https?:\/\//i.test(direct)) return direct;
+      if (direct.startsWith('/')) return direct;
+      return `${rootPath}docs/${direct}`.replace(/([^:]\/)\/+/g, '$1');
+    }
+    return slugToDocsHref(entry.slug, rootPath);
+  }
+
+  function renderUniversalSearchResultList(targetList, results, rootPath, query, mode) {
+    if (!targetList) return;
+    targetList.innerHTML = '';
+    const compact = mode === 'sidebar';
+    results.forEach((result) => {
+      const entry = result && result.entry ? result.entry : null;
+      if (!entry) return;
+
+      const item = document.createElement('li');
+      item.className = compact ? 'docs-universal-search-item is-compact' : 'docs-universal-search-item';
+
+      const link = document.createElement('a');
+      link.className = 'docs-universal-search-result';
+      link.href = buildUniversalResultHref(entry, rootPath);
+
+      const title = document.createElement('span');
+      title.className = 'docs-universal-search-result-title';
+      title.textContent = String(entry.title || 'Untitled');
+      link.appendChild(title);
+
+      const contextText = buildUniversalResultContext(entry);
+      if (contextText) {
+        const context = document.createElement('span');
+        context.className = 'docs-universal-search-result-context';
+        context.textContent = contextText;
+        link.appendChild(context);
+      }
+
+      const snippetText = buildUniversalResultSnippet(entry, query);
+      if (snippetText) {
+        const snippet = document.createElement('span');
+        snippet.className = 'docs-universal-search-result-snippet';
+        snippet.textContent = snippetText;
+        link.appendChild(snippet);
+      }
+
+      item.appendChild(link);
+      targetList.appendChild(item);
+    });
+  }
+
+  function buildUniversalSearchNoResultsPanel(rootPath, query) {
     const panel = document.createElement('aside');
     panel.className = 'docs-search-no-results';
     panel.hidden = true;
@@ -874,37 +1169,241 @@ const DOCUMENTATION_OPTIONS = {
     const links = document.createElement('div');
     links.className = 'docs-search-no-results-links';
     panel.appendChild(links);
-    resultsRoot.parentElement.insertBefore(panel, resultsRoot);
 
-    const renderSuggestions = function () {
-      links.innerHTML = '';
-      const q = String((searchInput && searchInput.value) || '').trim();
-      const suggestions = resolveNoResultsSuggestions(q);
-      suggestions.forEach((entry) => {
-        const link = document.createElement('a');
-        link.className = 'docs-search-no-results-link';
-        link.href = slugToDocsHref(entry.slug, rootPath);
-        link.textContent = entry.label;
-        links.appendChild(link);
+    const suggestions = resolveNoResultsSuggestions(query);
+    suggestions.forEach((entry) => {
+      const link = document.createElement('a');
+      link.className = 'docs-search-no-results-link';
+      link.href = slugToDocsHref(entry.slug, rootPath);
+      link.textContent = entry.label;
+      links.appendChild(link);
+    });
+
+    return panel;
+  }
+
+  function initSidebarUniversalSearchForm(rootPath, searchForm) {
+    if (!searchForm || searchForm.dataset.docsUniversalSidebarInit === '1') return;
+    const searchInput = searchForm.querySelector('input[name="q"]');
+    if (!searchInput) return;
+    searchForm.dataset.docsUniversalSidebarInit = '1';
+
+    const host = searchForm.closest('.searchformwrapper') || searchForm.parentElement || searchForm;
+    const panel = document.createElement('div');
+    panel.className = 'docs-universal-search-dropdown';
+    panel.hidden = true;
+
+    const status = document.createElement('p');
+    status.className = 'docs-universal-search-dropdown-status';
+    panel.appendChild(status);
+
+    const list = document.createElement('ol');
+    list.className = 'docs-universal-search-dropdown-list';
+    panel.appendChild(list);
+
+    const moreLink = document.createElement('a');
+    moreLink.className = 'docs-universal-search-dropdown-more';
+    moreLink.href = buildDocsSearchUrl(rootPath, '');
+    moreLink.textContent = 'View full search results';
+    panel.appendChild(moreLink);
+
+    host.appendChild(panel);
+
+    let debounceTimer = 0;
+    let requestId = 0;
+
+    const closePanel = function () {
+      panel.hidden = true;
+      status.textContent = '';
+      list.innerHTML = '';
+      moreLink.hidden = true;
+    };
+
+    const renderForQuery = function () {
+      const query = normalizeUniversalSearchQuery(searchInput.value);
+      if (query.length < 2) {
+        closePanel();
+        return;
+      }
+
+      const localRequestId = requestId + 1;
+      requestId = localRequestId;
+      panel.hidden = false;
+      moreLink.hidden = false;
+      moreLink.href = buildDocsSearchUrl(rootPath, query);
+      moreLink.textContent = `View all results for \"${query}\"`;
+      status.textContent = 'Searching docs index...';
+      list.innerHTML = '';
+
+      ensureUniversalSearchIndexData(rootPath, function (ok) {
+        if (localRequestId !== requestId) return;
+        if (!ok) {
+          status.textContent = 'Universal index unavailable. Press Enter for docs search.';
+          return;
+        }
+        const results = runUniversalDocsSearch(query, DOCS_UNIVERSAL_SEARCH_MAX_SIDEBAR_RESULTS);
+        if (!results.length) {
+          status.textContent = 'No direct matches.';
+          return;
+        }
+        status.textContent = `${results.length} quick result${results.length === 1 ? '' : 's'}`;
+        renderUniversalSearchResultList(list, results, rootPath, query, 'sidebar');
       });
     };
 
-    const updateVisibility = function () {
-      const queryText = String((searchInput && searchInput.value) || '').trim();
-      const resultItems = resultsRoot.querySelectorAll('li').length;
-      const rawText = String(resultsRoot.textContent || '').trim();
-      const hasExplicitNoMatches = /no matches found/i.test(rawText);
-      const shouldShow = !!queryText && (hasExplicitNoMatches || (rawText && resultItems === 0));
-      panel.hidden = !shouldShow;
-      if (shouldShow) renderSuggestions();
+    const scheduleRender = function () {
+      if (debounceTimer) window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(renderForQuery, 110);
     };
 
-    const observer = new MutationObserver(updateVisibility);
-    observer.observe(resultsRoot, { childList: true, subtree: true, characterData: true });
-    if (searchInput) {
-      searchInput.addEventListener('input', updateVisibility);
+    searchInput.addEventListener('focus', function () {
+      ensureUniversalSearchIndexData(rootPath, function () {});
+      if (normalizeUniversalSearchQuery(searchInput.value).length >= 2) {
+        scheduleRender();
+      }
+    });
+    searchInput.addEventListener('input', scheduleRender);
+    searchInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closePanel();
+    });
+
+    document.addEventListener('pointerdown', function (event) {
+      if (!host.contains(event.target)) closePanel();
+    });
+
+    searchForm.addEventListener('submit', function (event) {
+      const query = normalizeUniversalSearchQuery(searchInput.value);
+      if (!query) return;
+      event.preventDefault();
+      window.location.assign(buildDocsSearchUrl(rootPath, query));
+    });
+  }
+
+  function initSearchPageUniversalResults(rootPath, searchForm, searchInput) {
+    if (!searchForm || !searchInput || searchForm.dataset.docsUniversalPageInit === '1') return;
+    const resultsRoot = document.getElementById('search-results');
+    if (!resultsRoot || !resultsRoot.parentElement) return;
+    searchForm.dataset.docsUniversalPageInit = '1';
+
+    resultsRoot.hidden = true;
+    resultsRoot.setAttribute('aria-hidden', 'true');
+
+    const panel = document.createElement('section');
+    panel.className = 'docs-universal-search-page';
+
+    const status = document.createElement('p');
+    status.className = 'docs-universal-search-page-status';
+    panel.appendChild(status);
+
+    const list = document.createElement('ol');
+    list.className = 'docs-universal-search-page-list';
+    panel.appendChild(list);
+
+    let noResultsPanel = null;
+    const setNoResultsPanel = function (query) {
+      if (noResultsPanel && noResultsPanel.parentNode) {
+        noResultsPanel.parentNode.removeChild(noResultsPanel);
+      }
+      noResultsPanel = buildUniversalSearchNoResultsPanel(rootPath, query);
+      noResultsPanel.hidden = false;
+      panel.appendChild(noResultsPanel);
+    };
+
+    resultsRoot.parentElement.insertBefore(panel, resultsRoot);
+
+    const syncUrl = function (query, mode) {
+      if (!window.history || !window.history.pushState) return;
+      const nextUrl = buildDocsSearchUrl(rootPath, query);
+      const current = `${window.location.pathname}${window.location.search}`;
+      if (current === nextUrl) return;
+      try {
+        if (mode === 'push') window.history.pushState({}, '', nextUrl);
+        else if (mode === 'replace') window.history.replaceState({}, '', nextUrl);
+      } catch (_) {
+        // Ignore URL sync failures (restricted browser environments).
+      }
+    };
+
+    let pendingToken = 0;
+    const renderQuery = function (rawQuery, urlMode) {
+      const query = normalizeUniversalSearchQuery(rawQuery);
+      if (urlMode) syncUrl(query, urlMode);
+      if (noResultsPanel && noResultsPanel.parentNode) {
+        noResultsPanel.parentNode.removeChild(noResultsPanel);
+        noResultsPanel = null;
+      }
+
+      if (!query) {
+        status.textContent = 'Type a query to search all mirrored LLVM docs.';
+        list.innerHTML = '';
+        return;
+      }
+
+      const token = pendingToken + 1;
+      pendingToken = token;
+      status.textContent = 'Searching docs index...';
+      list.innerHTML = '';
+
+      ensureUniversalSearchIndexData(rootPath, function (ok) {
+        if (token !== pendingToken) return;
+        if (!ok) {
+          status.textContent = 'Universal docs index is unavailable right now.';
+          setNoResultsPanel(query);
+          return;
+        }
+
+        const results = runUniversalDocsSearch(query, DOCS_UNIVERSAL_SEARCH_MAX_PAGE_RESULTS);
+        if (!results.length) {
+          status.textContent = `No direct matches for \"${query}\".`;
+          setNoResultsPanel(query);
+          return;
+        }
+
+        status.textContent = `${results.length} result${results.length === 1 ? '' : 's'} for \"${query}\"`;
+        renderUniversalSearchResultList(list, results, rootPath, query, 'page');
+      });
+    };
+
+    let inputDebounce = 0;
+    searchInput.addEventListener('input', function () {
+      if (inputDebounce) window.clearTimeout(inputDebounce);
+      inputDebounce = window.setTimeout(function () {
+        renderQuery(searchInput.value, 'replace');
+      }, 110);
+    });
+
+    searchForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      renderQuery(searchInput.value, 'push');
+    });
+
+    window.addEventListener('popstate', function () {
+      const params = new URLSearchParams(window.location.search || '');
+      const query = normalizeUniversalSearchQuery(params.get('q') || '');
+      searchInput.value = query;
+      renderQuery(query, null);
+    });
+
+    const params = new URLSearchParams(window.location.search || '');
+    const initialQuery = normalizeUniversalSearchQuery(params.get('q') || searchInput.value || '');
+    if (initialQuery && !searchInput.value) {
+      searchInput.value = initialQuery;
     }
-    updateVisibility();
+    renderQuery(initialQuery, null);
+  }
+
+  function initDocsUniversalSearch(rootPath) {
+    const sidebarForms = document.querySelectorAll('.sphinxsidebar form.search');
+    sidebarForms.forEach((form) => initSidebarUniversalSearchForm(rootPath, form));
+
+    const currentSlug = resolveCurrentDocSlug(rootPath);
+    if (currentSlug !== 'search') return;
+
+    const searchForm = document.querySelector('.document .body form[action=""], .document .body form[action="search.html"]');
+    if (!searchForm) return;
+    const searchInput = searchForm.querySelector('input[name="q"]');
+    if (!searchInput) return;
+    initSearchPageUniversalResults(rootPath, searchForm, searchInput);
   }
 
   function enhanceSearchPageExperience(rootPath) {
@@ -921,11 +1420,13 @@ const DOCUMENTATION_OPTIONS = {
       if (query && !searchInput.value) searchInput.value = query;
     }
 
-    if (searchInput && !searchForm.querySelector('.docs-search-alias-panel')) {
+    if (searchInput && !document.querySelector('.document .body .docs-search-alias-panel')) {
       searchForm.insertAdjacentElement('afterend', buildSearchAliasPanel(rootPath, searchInput));
     }
 
-    installSearchNoResultsPanel(rootPath, searchInput);
+    if (searchInput) {
+      initSearchPageUniversalResults(rootPath, searchForm, searchInput);
+    }
   }
 
   function slugifyHeadingText(value) {
@@ -1441,11 +1942,13 @@ const DOCUMENTATION_OPTIONS = {
 
     normalizeSearchInputPresentation(document);
     enhanceSearchPageExperience(rootPath);
+    initDocsUniversalSearch(rootPath);
     initSearchShortcut();
 
     ensureBookIndexData(rootPath, function () {
       installGeneratedBookIndexSidebar(rootPath, 60);
       normalizeSearchInputPresentation(document.querySelector('.sphinxsidebarwrapper') || document);
+      initDocsUniversalSearch(rootPath);
     });
 
     ensureHomeScript(rootPath);
