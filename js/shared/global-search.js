@@ -25,12 +25,13 @@
   ];
   const ADVANCED_FIELD_SET = new Set(ADVANCED_FIELDS);
   const ADVANCED_WHERE_VALUES = new Set(['anywhere', 'title', 'abstract']);
-  const SEARCH_SCOPE_VALUES = new Set(['all', 'talks', 'papers', 'blogs', 'people']);
+  const SEARCH_SCOPE_VALUES = new Set(['all', 'talks', 'papers', 'blogs', 'docs', 'people']);
   const ADVANCED_FIELDS_BY_CONTEXT = {
     all: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'publication', 'yearFrom', 'yearTo'],
     talks: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'yearFrom', 'yearTo'],
     papers: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'publication', 'yearFrom', 'yearTo'],
     blogs: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'yearFrom', 'yearTo'],
+    docs: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where'],
     people: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'author', 'publication', 'yearFrom', 'yearTo'],
   };
   const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
@@ -87,6 +88,7 @@
     if (scope === 'talks') return 'Talks';
     if (scope === 'papers') return 'Papers';
     if (scope === 'blogs') return 'Blogs';
+    if (scope === 'docs') return 'Docs';
     if (scope === 'people') return 'People';
     return 'All';
   }
@@ -95,6 +97,7 @@
     if (scope === 'talks') return 'Tailored for talks, speakers, and event content';
     if (scope === 'papers') return 'Tailored for papers, authors, venues, and abstracts';
     if (scope === 'blogs') return 'Tailored for blog posts, authors, and post content';
+    if (scope === 'docs') return 'Tailored for LLVM docs pages, headings, and guide content';
     if (scope === 'people') return 'Tailored for people, expertise, affiliations, and publications';
     return 'Cross-type search across talks, papers, blogs, docs, and people';
   }
@@ -104,6 +107,7 @@
     if (normalized === 'talks') return 'talks';
     if (normalized === 'papers') return 'papers';
     if (normalized === 'blogs') return 'blogs';
+    if (normalized === 'docs') return 'docs';
     if (normalized === 'people') return 'people';
     return 'all';
   }
@@ -119,12 +123,14 @@
       .toLowerCase();
     if (bodyScope === 'paper') return 'papers';
     if (bodyScope === 'blog') return 'blogs';
+    if (bodyScope === 'docs' || bodyScope === 'doc') return 'docs';
 
     const path = String(window.location.pathname || '').toLowerCase();
     if (path.includes('/people/')) return 'people';
     if (path.includes('/blogs/')) return 'blogs';
     if (path.includes('/papers/')) return 'papers';
     if (path.includes('/talks/')) return 'talks';
+    if (path.includes('/docs/')) return 'docs';
     return 'all';
   }
 
@@ -185,6 +191,12 @@
         <option value="anywhere">Anywhere in blogs</option>
         <option value="title">Post title</option>
         <option value="abstract">Post content</option>`;
+    }
+    if (contextScope === 'docs') {
+      return `
+        <option value="anywhere">Anywhere in docs</option>
+        <option value="title">Doc/page title</option>
+        <option value="abstract">Headings/content</option>`;
     }
     return `
       <option value="anywhere">Anywhere</option>
@@ -1460,6 +1472,7 @@
     if (scope === 'talks') return 'Search talks (titles, speakers, summaries)...';
     if (scope === 'papers') return 'Search papers (titles, authors, abstracts)...';
     if (scope === 'blogs') return 'Search blogs (titles, authors, content)...';
+    if (scope === 'docs') return 'Search docs (titles, headings, content)...';
     if (scope === 'people') return 'Search people (names, expertise, affiliations)...';
     return GLOBAL_SEARCH_PLACEHOLDER;
   }

@@ -7,6 +7,7 @@ const HubUtils = window.LLVMHubUtils || {};
 const TALK_BATCH_SIZE = 24;
 const PAPER_BATCH_SIZE = 24;
 const BLOG_BATCH_SIZE = 24;
+const DOCS_BATCH_SIZE = 24;
 const PEOPLE_BATCH_SIZE = 24;
 const UNIVERSAL_BATCH_SIZE = 36;
 const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
@@ -14,7 +15,7 @@ const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|o
 const WORK_SORT_MODES = new Set(['relevance', 'newest', 'oldest', 'title', 'citations']);
 const WORK_VIEW_MODES = new Set(['expanded', 'compact']);
 const WORK_VIEW_STORAGE_KEY = 'llvm-hub-work-view';
-const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs', 'people']);
+const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs', 'docs', 'people']);
 const WORK_TIME_FILTERS = new Set(['any', 'since-2026', 'since-2025', 'since-2022', 'custom']);
 const WORK_ADVANCED_WHERE_MODES = new Set(['anywhere', 'title', 'abstract']);
 const WORK_YEAR_MIN = 1990;
@@ -26,7 +27,7 @@ const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
-  scope: 'all', // 'all' | 'talks' | 'papers' | 'blogs' | 'people' (search mode only)
+  scope: 'all', // 'all' | 'talks' | 'papers' | 'blogs' | 'docs' | 'people' (search mode only)
   kind: 'topic', // 'speaker' | 'topic'
   value: '',
   query: '',
@@ -71,6 +72,7 @@ let filteredUniversal = [];
 let renderedTalkCount = 0;
 let renderedPaperCount = 0;
 let renderedBlogCount = 0;
+let renderedDocsCount = 0;
 let renderedPeopleCount = 0;
 let renderedUniversalCount = 0;
 let allTalkRecords = [];
@@ -84,6 +86,7 @@ let searchResultCounts = {
   talks: 0,
   papers: 0,
   blogs: 0,
+  docs: 0,
   people: 0,
 };
 let docsDataLoadPromise = null;
@@ -727,6 +730,7 @@ function getSearchScopeCount(scope) {
   if (scope === 'talks') return Number(searchResultCounts.talks || 0);
   if (scope === 'papers') return Number(searchResultCounts.papers || 0);
   if (scope === 'blogs') return Number(searchResultCounts.blogs || 0);
+  if (scope === 'docs') return Number(searchResultCounts.docs || 0);
   if (scope === 'people') return Number(searchResultCounts.people || 0);
   return Number(searchResultCounts.all || 0);
 }
@@ -739,6 +743,7 @@ function getSearchScopeLabel(scope) {
   if (scope === 'talks') return 'Talks';
   if (scope === 'papers') return 'Papers';
   if (scope === 'blogs') return 'Blogs';
+  if (scope === 'docs') return 'Docs';
   if (scope === 'people') return 'People';
   return 'All';
 }
@@ -782,11 +787,13 @@ function syncScopeControlCounts() {
   const countTalks = document.getElementById('work-scope-count-talks');
   const countPapers = document.getElementById('work-scope-count-papers');
   const countBlogs = document.getElementById('work-scope-count-blogs');
+  const countDocs = document.getElementById('work-scope-count-docs');
   const countPeople = document.getElementById('work-scope-count-people');
   if (countAll) countAll.textContent = getSearchScopeCount('all').toLocaleString();
   if (countTalks) countTalks.textContent = getSearchScopeCount('talks').toLocaleString();
   if (countPapers) countPapers.textContent = getSearchScopeCount('papers').toLocaleString();
   if (countBlogs) countBlogs.textContent = getSearchScopeCount('blogs').toLocaleString();
+  if (countDocs) countDocs.textContent = getSearchScopeCount('docs').toLocaleString();
   if (countPeople) countPeople.textContent = getSearchScopeCount('people').toLocaleString();
 }
 
@@ -2384,6 +2391,7 @@ function recomputeFilteredResults() {
         talks: 0,
         papers: 0,
         blogs: 0,
+        docs: 0,
         people: 0,
       };
       syncScopeControlCounts();
@@ -2422,6 +2430,7 @@ function recomputeFilteredResults() {
       talks: filteredTalks.length,
       papers: filteredPapers.length,
       blogs: filteredBlogs.length,
+      docs: filteredDocs.length,
       people: filteredPeople.length,
     };
     syncScopeControlCounts();
@@ -2433,6 +2442,7 @@ function recomputeFilteredResults() {
     talks: 0,
     papers: 0,
     blogs: 0,
+    docs: 0,
     people: 0,
   };
   filteredDocs = [];
@@ -2879,6 +2889,37 @@ function renderBlogBatch(reset = false) {
   }
 }
 
+function renderDocsBatch(reset = false) {
+  const grid = document.getElementById('work-docs-grid');
+  const moreBtn = document.getElementById('work-docs-more');
+  if (!grid || !moreBtn) return;
+
+  if (reset) {
+    grid.innerHTML = '';
+    renderedDocsCount = 0;
+  }
+
+  if (!filteredDocs.length) {
+    moreBtn.classList.add('hidden');
+    setEmptyState('work-docs-grid', 'docs');
+    return;
+  }
+
+  const nextCount = Math.min(renderedDocsCount + DOCS_BATCH_SIZE, filteredDocs.length);
+  const html = filteredDocs.slice(renderedDocsCount, nextCount).map(renderDocsCard).join('');
+  grid.insertAdjacentHTML('beforeend', html);
+  grid.setAttribute('aria-busy', 'false');
+  renderedDocsCount = nextCount;
+
+  const remaining = filteredDocs.length - renderedDocsCount;
+  if (remaining > 0) {
+    moreBtn.textContent = `Show more docs (${remaining.toLocaleString()} left)`;
+    moreBtn.classList.remove('hidden');
+  } else {
+    moreBtn.classList.add('hidden');
+  }
+}
+
 function renderPeopleBatch(reset = false) {
   const grid = document.getElementById('work-people-grid');
   const moreBtn = document.getElementById('work-people-more');
@@ -2923,6 +2964,7 @@ function applyHeaderState() {
   const talksCountEl = document.getElementById('work-talks-count');
   const papersCountEl = document.getElementById('work-papers-count');
   const blogsCountEl = document.getElementById('work-blogs-count');
+  const docsCountEl = document.getElementById('work-docs-count');
   const peopleCountEl = document.getElementById('work-people-count');
   const backLink = document.getElementById('work-back-link');
 
@@ -2955,6 +2997,7 @@ function applyHeaderState() {
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
       if (blogsCountEl) blogsCountEl.textContent = '';
+      if (docsCountEl) docsCountEl.textContent = '';
       if (peopleCountEl) peopleCountEl.textContent = '';
       setWorkDocumentTitle('Global Search');
       return;
@@ -2978,6 +3021,7 @@ function applyHeaderState() {
       if (talksCountEl) talksCountEl.textContent = '';
       if (papersCountEl) papersCountEl.textContent = '';
       if (blogsCountEl) blogsCountEl.textContent = '';
+      if (docsCountEl) docsCountEl.textContent = '';
       if (peopleCountEl) peopleCountEl.textContent = '';
       setWorkDocumentTitle('All Work');
       return;
@@ -3012,6 +3056,10 @@ function applyHeaderState() {
 
   if (blogsCountEl) {
     blogsCountEl.textContent = `${filteredBlogs.length.toLocaleString()} blog${filteredBlogs.length === 1 ? '' : 's'}`;
+  }
+
+  if (docsCountEl) {
+    docsCountEl.textContent = `${filteredDocs.length.toLocaleString()} doc${filteredDocs.length === 1 ? '' : 's'}`;
   }
 
   if (peopleCountEl) {
@@ -3079,6 +3127,7 @@ function syncSearchSectionVisibility() {
   const talksSection = document.getElementById('work-talks-section');
   const papersSection = document.getElementById('work-papers-section');
   const blogsSection = document.getElementById('work-blogs-section');
+  const docsSection = document.getElementById('work-docs-section');
   const peopleSection = document.getElementById('work-people-section');
 
   if (!searchMode) {
@@ -3086,6 +3135,7 @@ function syncSearchSectionVisibility() {
     if (talksSection) talksSection.classList.remove('hidden');
     if (papersSection) papersSection.classList.remove('hidden');
     if (blogsSection) blogsSection.classList.remove('hidden');
+    if (docsSection) docsSection.classList.add('hidden');
     if (peopleSection) peopleSection.classList.remove('hidden');
     return;
   }
@@ -3094,13 +3144,14 @@ function syncSearchSectionVisibility() {
   if (talksSection) talksSection.classList.toggle('hidden', state.scope !== 'talks');
   if (papersSection) papersSection.classList.toggle('hidden', state.scope !== 'papers');
   if (blogsSection) blogsSection.classList.toggle('hidden', state.scope !== 'blogs');
+  if (docsSection) docsSection.classList.toggle('hidden', state.scope !== 'docs');
   if (peopleSection) peopleSection.classList.toggle('hidden', state.scope !== 'people');
 }
 
 function applyViewMode(mode, persist = true, refreshHeader = true) {
   state.viewMode = mode === 'compact' ? 'compact' : 'expanded';
   const gridClass = state.viewMode === 'compact' ? 'talks-list' : 'talks-grid';
-  ['work-universal-grid', 'work-talks-grid', 'work-papers-grid', 'work-blogs-grid'].forEach((id) => {
+  ['work-universal-grid', 'work-talks-grid', 'work-papers-grid', 'work-blogs-grid', 'work-docs-grid'].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.className = gridClass;
   });
@@ -3133,6 +3184,10 @@ function rerenderWorkSections() {
     }
     if (state.scope === 'blogs') {
       renderBlogBatch(true);
+      return;
+    }
+    if (state.scope === 'docs') {
+      renderDocsBatch(true);
       return;
     }
     if (state.scope === 'people') {
@@ -3189,6 +3244,7 @@ function renderError(message) {
   const talksGrid = document.getElementById('work-talks-grid');
   const papersGrid = document.getElementById('work-papers-grid');
   const blogsGrid = document.getElementById('work-blogs-grid');
+  const docsGrid = document.getElementById('work-docs-grid');
   const peopleGrid = document.getElementById('work-people-grid');
   const summaryEl = document.getElementById('work-results-summary');
 
@@ -3214,6 +3270,11 @@ function renderError(message) {
   if (blogsGrid) {
     blogsGrid.setAttribute('aria-busy', 'false');
     blogsGrid.innerHTML = html;
+  }
+
+  if (docsGrid) {
+    docsGrid.setAttribute('aria-busy', 'false');
+    docsGrid.innerHTML = html;
   }
 
   if (peopleGrid) {
@@ -3669,6 +3730,7 @@ async function init() {
     setEmptyState('work-talks-grid', 'talks');
     setEmptyState('work-papers-grid', 'papers');
     setEmptyState('work-blogs-grid', 'blogs');
+    setEmptyState('work-docs-grid', 'docs');
     setEmptyState('work-people-grid', 'people');
     return;
   }
@@ -3679,6 +3741,7 @@ async function init() {
     setEmptyState('work-talks-grid', 'talks');
     setEmptyState('work-papers-grid', 'papers');
     setEmptyState('work-blogs-grid', 'blogs');
+    setEmptyState('work-docs-grid', 'docs');
     setEmptyState('work-people-grid', 'people');
     return;
   }
@@ -3715,6 +3778,7 @@ async function init() {
     const talksMoreBtn = document.getElementById('work-talks-more');
     const papersMoreBtn = document.getElementById('work-papers-more');
     const blogsMoreBtn = document.getElementById('work-blogs-more');
+    const docsMoreBtn = document.getElementById('work-docs-more');
     const peopleMoreBtn = document.getElementById('work-people-more');
     const universalMoreBtn = document.getElementById('work-universal-more');
 
@@ -3722,6 +3786,7 @@ async function init() {
     if (talksMoreBtn) talksMoreBtn.addEventListener('click', () => renderTalkBatch(false));
     if (papersMoreBtn) papersMoreBtn.addEventListener('click', () => renderPaperBatch(false));
     if (blogsMoreBtn) blogsMoreBtn.addEventListener('click', () => renderBlogBatch(false));
+    if (docsMoreBtn) docsMoreBtn.addEventListener('click', () => renderDocsBatch(false));
     if (peopleMoreBtn) peopleMoreBtn.addEventListener('click', () => renderPeopleBatch(false));
   } catch (error) {
     renderError(`Could not load data: ${String(error && error.message ? error.message : error)}`);
