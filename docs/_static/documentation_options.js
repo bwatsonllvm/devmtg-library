@@ -53,7 +53,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-03` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-04` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -194,6 +194,11 @@ const DOCUMENTATION_OPTIONS = {
     if (documentRoot && !documentRoot.id) {
       documentRoot.id = 'docs-content';
       documentRoot.setAttribute('tabindex', '-1');
+    }
+
+    const docsBody = document.querySelector('.document .body');
+    if (docsBody) {
+      docsBody.classList.add('abstract-body', 'blog-content');
     }
 
     ensureHomeScript(rootPath);

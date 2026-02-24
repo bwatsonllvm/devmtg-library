@@ -42,6 +42,13 @@ body {
   background-image: none !important;
 }
 
+.library-docs-bridge .site-header a,
+.library-docs-bridge .site-header a:link,
+.library-docs-bridge .site-header a:visited {
+  color: inherit !important;
+  text-decoration: none;
+}
+
 .library-docs-bridge .site-logo,
 .library-docs-bridge .site-logo:visited {
   color: var(--color-text, #111827) !important;
@@ -55,6 +62,17 @@ body {
 .library-docs-bridge .site-nav .nav-link:hover,
 .library-docs-bridge .site-nav .nav-link.active,
 .library-docs-bridge .site-nav .nav-link[aria-current="page"] {
+  color: var(--color-text, #111827) !important;
+}
+
+.library-docs-bridge .mobile-nav-link,
+.library-docs-bridge .mobile-nav-link:visited {
+  color: var(--color-text-muted, #6b7280) !important;
+}
+
+.library-docs-bridge .mobile-nav-link:hover,
+.library-docs-bridge .mobile-nav-link.active,
+.library-docs-bridge .mobile-nav-link[aria-current="page"] {
   color: var(--color-text, #111827) !important;
 }
 
@@ -161,6 +179,10 @@ body {
   transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
 }
 
+.library-docs-bridge .sphinxsidebar a:visited {
+  color: var(--color-text-muted, #6b7280);
+}
+
 .library-docs-bridge .sphinxsidebar a:hover {
   color: var(--color-text, #111827);
   background: var(--color-surface-hover);
@@ -168,7 +190,9 @@ body {
 }
 
 .library-docs-bridge .sphinxsidebar li.current > a,
-.library-docs-bridge .sphinxsidebar a.current {
+.library-docs-bridge .sphinxsidebar a.current,
+.library-docs-bridge .sphinxsidebar li.current > a:visited,
+.library-docs-bridge .sphinxsidebar a.current:visited {
   color: var(--color-state-active-text, #111827);
   background: var(--color-state-active-bg);
   border-color: var(--color-state-active-border);
@@ -289,6 +313,11 @@ body {
   text-decoration: none;
 }
 
+.library-docs-bridge .body a:visited,
+.library-docs-bridge .body a.reference:visited {
+  color: var(--color-accent);
+}
+
 .library-docs-bridge .body a:hover,
 .library-docs-bridge .body a.reference:hover {
   color: var(--color-accent-hover);
@@ -310,6 +339,15 @@ body {
 .library-docs-bridge div.body h5 a,
 .library-docs-bridge div.body h6 a {
   color: var(--color-text, #111827) !important;
+}
+
+.library-docs-bridge div.body h1 *,
+.library-docs-bridge div.body h2 *,
+.library-docs-bridge div.body h3 *,
+.library-docs-bridge div.body h4 *,
+.library-docs-bridge div.body h5 *,
+.library-docs-bridge div.body h6 * {
+  color: inherit !important;
 }
 
 .library-docs-bridge div.body h1 a.headerlink,
@@ -486,6 +524,42 @@ body {
 
 .library-docs-bridge .body .toctree-wrapper ul {
   margin-left: 0.75rem;
+}
+
+.library-docs-bridge .body.abstract-body.blog-content {
+  line-height: 1.75;
+}
+
+.library-docs-bridge .body.abstract-body.blog-content h1,
+.library-docs-bridge .body.abstract-body.blog-content h2,
+.library-docs-bridge .body.abstract-body.blog-content h3,
+.library-docs-bridge .body.abstract-body.blog-content h4,
+.library-docs-bridge .body.abstract-body.blog-content h5,
+.library-docs-bridge .body.abstract-body.blog-content h6 {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+  line-height: 1.25;
+  color: var(--color-text, #111827) !important;
+}
+
+.library-docs-bridge .body.abstract-body.blog-content h1 {
+  margin-top: 0;
+  font-size: clamp(1.55rem, 2.6vw, 2rem);
+}
+
+.library-docs-bridge .body.abstract-body.blog-content h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+}
+
+.library-docs-bridge .body.abstract-body.blog-content h3 {
+  font-size: clamp(1.2rem, 1.9vw, 1.4rem);
+}
+
+.library-docs-bridge .body.abstract-body.blog-content a,
+.library-docs-bridge .body.abstract-body.blog-content a:visited {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .library-docs-bridge #docs-content:focus {
