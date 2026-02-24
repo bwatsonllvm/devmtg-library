@@ -1196,18 +1196,7 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 }
 
 .global-search-advanced-count {
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  border-radius: 0;
-  background: var(--color-border-strong);
-  color: var(--color-text);
-  font-size: 10px;
-  font-weight: var(--font-weight-semibold);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
+  display: none !important;
 }
 
 .search-box.global-search-form .global-search-advanced-toggle {
@@ -2092,16 +2081,7 @@ body.filter-collapsed .filter-collapse-btn svg {
 }
 
 .work-advanced-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: var(--radius-sm);
-  font-size: 10px;
-  color: var(--color-text);
-  background: var(--color-bg);
+  display: none !important;
 }
 
 .work-advanced-panel {

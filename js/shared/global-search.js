@@ -432,7 +432,6 @@
     const toggle = advanced.toggle;
     if (!toggle) return;
 
-    const badge = toggle.querySelector('[data-advanced-count]');
     const panelOpen = !!(advanced.panel && !advanced.panel.classList.contains('hidden'));
     let count = 0;
     for (const field of ADVANCED_FIELDS) {
@@ -454,10 +453,6 @@
     toggle.setAttribute('data-advanced-open', panelOpen ? 'true' : 'false');
     toggle.setAttribute('aria-label', 'Advanced search');
     toggle.setAttribute('aria-pressed', panelOpen ? 'true' : 'false');
-    if (badge) {
-      badge.hidden = !hasOverrides;
-      badge.textContent = hasOverrides ? String(count) : '';
-    }
     updateScopeButtonsState(form);
   }
 
@@ -596,7 +591,7 @@
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-pressed', 'false');
     const toggleLabel = form.classList.contains('search-box') ? 'Advanced' : 'Adv';
-    toggle.innerHTML = `<span class="global-search-advanced-toggle-label">${toggleLabel}</span><span class="global-search-advanced-switch" aria-hidden="true"><span class="global-search-advanced-switch-knob"></span></span><span class="global-search-advanced-count" data-advanced-count hidden></span>`;
+    toggle.innerHTML = `<span class="global-search-advanced-toggle-label">${toggleLabel}</span><span class="global-search-advanced-switch" aria-hidden="true"><span class="global-search-advanced-switch-knob"></span></span>`;
 
     const panel = document.createElement('div');
     panel.className = 'global-search-advanced-panel hidden';

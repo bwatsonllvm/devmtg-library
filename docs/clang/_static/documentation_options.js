@@ -257,7 +257,7 @@ const DOCUMENTATION_OPTIONS = {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-10` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-11` });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-28` });
   }
 

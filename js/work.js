@@ -908,7 +908,6 @@ function syncAdvancedFilterControlVisibility() {
   const customRange = document.getElementById('work-custom-range');
   const advancedToggle = document.getElementById('work-advanced-toggle');
   const advancedPanel = document.getElementById('work-advanced-panel');
-  const advancedCount = document.getElementById('work-advanced-count');
   const customVisible = searchMode && state.timeFilter === 'custom';
   const activeAdvancedCount = countActiveAdvancedFields();
   const advancedActive = activeAdvancedCount > 0;
@@ -928,10 +927,6 @@ function syncAdvancedFilterControlVisibility() {
     advancedToggle.setAttribute('aria-expanded', searchMode && state.advancedOpen ? 'true' : 'false');
     advancedToggle.setAttribute('aria-pressed', searchMode && state.advancedOpen ? 'true' : 'false');
     advancedToggle.setAttribute('aria-label', 'Advanced search tools');
-  }
-  if (advancedCount) {
-    advancedCount.textContent = advancedActive ? String(activeAdvancedCount) : '';
-    advancedCount.hidden = !advancedActive;
   }
   if (advancedPanel) {
     const showPanel = searchMode && state.advancedOpen;
