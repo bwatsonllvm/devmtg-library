@@ -282,6 +282,165 @@
     ['ucsc', 'Santa Cruz'],
   ]);
 
+  const CORPORATE_REGIONAL_BASES = new Set([
+    'intel',
+    'google',
+    'microsoft',
+    'meta',
+    'facebook',
+    'amazon',
+    'apple',
+    'nvidia',
+    'amd',
+    'arm',
+    'qualcomm',
+    'ibm',
+    'oracle',
+    'samsung',
+    'huawei',
+    'xilinx',
+    'broadcom',
+  ]);
+
+  const CORPORATE_AFFILIATION_HINT_RE = /\b(inc|corp|corporation|company|llc|ltd|gmbh|technologies|technology|systems|labs?)\b/i;
+  const ACADEMIC_AFFILIATION_HINT_RE = /\b(university|college|institute|school|department|faculty|laboratory|centre|center|hospital|clinic|academy)\b/i;
+  const COUNTRY_REGION_QUALIFIER_KEYS = new Set([
+    'argentina',
+    'australia',
+    'austria',
+    'belgium',
+    'brazil',
+    'canada',
+    'chile',
+    'china',
+    'colombia',
+    'croatia',
+    'czechrepublic',
+    'denmark',
+    'estonia',
+    'finland',
+    'france',
+    'germany',
+    'greece',
+    'hungary',
+    'iceland',
+    'india',
+    'indonesia',
+    'ireland',
+    'israel',
+    'italy',
+    'japan',
+    'latvia',
+    'lithuania',
+    'luxembourg',
+    'malaysia',
+    'mexico',
+    'netherlands',
+    'newzealand',
+    'norway',
+    'philippines',
+    'poland',
+    'portugal',
+    'romania',
+    'saudiarabia',
+    'singapore',
+    'slovakia',
+    'slovenia',
+    'southafrica',
+    'southkorea',
+    'spain',
+    'sweden',
+    'switzerland',
+    'taiwan',
+    'thailand',
+    'turkey',
+    'uae',
+    'uk',
+    'ukraine',
+    'unitedarabemirates',
+    'unitedkingdom',
+    'unitedstates',
+    'usa',
+    'vietnam',
+  ]);
+  const MISSING_METADATA_TOKENS = new Set(['', 'none', 'null', 'nan', 'n/a', 'na', 'unknown']);
+  const PUBLICATION_ACRONYM_BLOCKLIST = new Set([
+    'acm',
+    'ieee',
+    'ifip',
+    'usenix',
+    'sigplan',
+    'sigsoft',
+    'sigbed',
+    'sigops',
+    'proc',
+    'vol',
+    'issue',
+    'the',
+    'and',
+    'for',
+    'of',
+    'in',
+    'on',
+  ]);
+  const PUBLICATION_STOPWORDS = new Set([
+    'a',
+    'an',
+    'and',
+    'for',
+    'from',
+    'in',
+    'of',
+    'on',
+    'the',
+    'to',
+    'proceedings',
+    'proceeding',
+    'proc',
+    'conference',
+    'conferences',
+    'symposium',
+    'symposia',
+    'workshop',
+    'workshops',
+    'international',
+    'annual',
+    'volume',
+    'vol',
+    'issue',
+    'acm',
+    'ieee',
+    'ifip',
+    'usenix',
+    'sigplan',
+    'sigsoft',
+    'sigbed',
+    'sigops',
+    'edition',
+  ]);
+
+  function isCorporateAffiliationBase(base) {
+    const cleaned = collapseWhitespace(base);
+    if (!cleaned) return false;
+
+    const lowered = cleaned.toLowerCase();
+    const aliasKey = toAffiliationAliasKey(cleaned);
+    if (CORPORATE_REGIONAL_BASES.has(aliasKey) || CORPORATE_REGIONAL_BASES.has(lowered)) {
+      return true;
+    }
+    if (CORPORATE_AFFILIATION_HINT_RE.test(cleaned)) {
+      return true;
+    }
+    if (ACADEMIC_AFFILIATION_HINT_RE.test(cleaned)) {
+      return false;
+    }
+    if (cleaned.includes(',')) {
+      return false;
+    }
+    const tokenCount = (cleaned.match(/[A-Za-z0-9][A-Za-z0-9&'./-]*/g) || []).length;
+    return tokenCount >= 1 && tokenCount <= 5;
+  }
+
   function normalizeUcCampusName(value) {
     const cleaned = collapseWhitespace(value)
       .replace(/^(?:campus|at|the)\s+/i, '')
@@ -320,6 +479,28 @@
     return `University of California, ${campus}`;
   }
 
+  function collapseCorporateRegionalQualifier(value) {
+    const text = collapseWhitespace(value);
+    if (!text) return '';
+
+    const match = text.match(/^([^()]{2,120})\s*\(([^()]{2,80})\)$/);
+    if (!match) return text;
+
+    const base = collapseWhitespace(match[1]).replace(/^[,.;:\-]+|[,.;:\-]+$/g, '');
+    const qualifier = collapseWhitespace(match[2]);
+    if (!base || !qualifier) return text;
+    if (!/^[A-Za-z][A-Za-z .,'-]{1,79}$/.test(qualifier)) return text;
+    if (COUNTRY_REGION_QUALIFIER_KEYS.has(toAffiliationAliasKey(qualifier))) {
+      return base;
+    }
+
+    if (!isCorporateAffiliationBase(base)) {
+      return text;
+    }
+
+    return base;
+  }
+
   function normalizeAffiliation(value) {
     let text = collapseWhitespace(value);
     if (!text) return '';
@@ -345,6 +526,8 @@
       .replace(/\(\s*UK\s*\)$/i, '')
       .replace(/\bMassachussetts\b/gi, 'Massachusetts')
       .replace(/\bInsitute\b/gi, 'Institute');
+
+    text = collapseCorporateRegionalQualifier(text);
 
     const ucCanonical = canonicalizeUniversityOfCaliforniaAffiliation(text);
     if (ucCanonical) {
@@ -394,6 +577,149 @@
   function normalizeAffiliationKey(value) {
     return stripDiacritics(normalizeAffiliation(value).toLowerCase())
       .replace(/[^a-z0-9]+/g, '');
+  }
+
+  function cleanMetadataValue(value) {
+    const clean = collapseWhitespace(String(value || '').replace(/&amp;/gi, '&'));
+    if (!clean) return '';
+    if (MISSING_METADATA_TOKENS.has(clean.toLowerCase())) return '';
+    return clean;
+  }
+
+  function normalizePublication(value) {
+    let text = cleanMetadataValue(value);
+    if (!text) return '';
+
+    text = text
+      .replace(/\s+,/g, ',')
+      .replace(/\s+([):;,.])/g, '$1')
+      .replace(/([(:])\s+/g, '$1')
+      .replace(/^\s*['"`]+|['"`]+\s*$/g, '');
+
+    text = text
+      .replace(/^proceedings of eedings(?: of)?(?:\s+|\/)+/i, 'Proceedings of ')
+      .replace(/^proceedings of proceedings of\s+/i, 'Proceedings of ');
+
+    if (/^arxiv(?:\.org)?(?:\s*\(cornell university\))?$/i.test(text)) {
+      return 'arXiv';
+    }
+    if (/^llvm project blog$/i.test(text)) {
+      return 'LLVM Project Blog';
+    }
+    if (/^(?:m\.?\s*s\.?|masters?)\s+thesis$/i.test(text)) {
+      return 'Masters Thesis';
+    }
+    if (/^(?:ph\.?\s*d\.?|doctoral)\s+thesis$/i.test(text)) {
+      return 'Ph.D. Thesis';
+    }
+    if (/^(?:b\.?\s*s?c\.?|bachelor(?:'s)?|undergraduate)\s+thesis$/i.test(text)) {
+      return 'Bachelor Thesis';
+    }
+
+    const procPrefixRe = /^proc(?:\.|\b)\s*(?:of\s+)?(?:the\s+)?/i;
+    if (procPrefixRe.test(text)) {
+      const tail = collapseWhitespace(text.replace(procPrefixRe, ''));
+      if (tail) text = `Proceedings of ${tail}`;
+    } else {
+      text = text.replace(/^proceedings\s+of\s+the\s+/i, 'Proceedings of ');
+    }
+
+    if (/^proceedings of acm on programming languages$/i.test(text)) {
+      text = 'Proceedings of the ACM on Programming Languages';
+    } else if (/^proceedings of (?:the )?institute for system programming of (?:the )?ras$/i.test(text)) {
+      text = 'Proceedings of the Institute for System Programming of the RAS';
+    }
+
+    return collapseWhitespace(text);
+  }
+
+  function getPaperPrimaryPublication(paper) {
+    if (!paper || typeof paper !== 'object') return '';
+
+    const explicitPublication = normalizePublication(paper.publication);
+    if (explicitPublication) return explicitPublication;
+
+    const venue = cleanMetadataValue(paper.venue);
+    if (!venue) return '';
+
+    const venueParts = String(venue)
+      .split('|')
+      .map((part) => normalizePublication(part))
+      .filter(Boolean);
+
+    for (const part of venueParts) {
+      if (/^vol\./i.test(part) || /^issue\b/i.test(part)) continue;
+      return part;
+    }
+    return '';
+  }
+
+  function extractPublicationAcronym(value) {
+    const text = normalizePublication(value);
+    if (!text) return '';
+
+    const parenMatches = text.match(/\(([^()]{2,30})\)/g) || [];
+    for (const raw of parenMatches) {
+      const inner = raw.replace(/^\(|\)$/g, '');
+      const candidate = stripDiacritics(inner)
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, '')
+        .replace(/\d+$/g, '');
+      if (!candidate) continue;
+      if (!/[A-Z]/.test(candidate)) continue;
+      if (candidate.length < 2 || candidate.length > 10) continue;
+      if (PUBLICATION_ACRONYM_BLOCKLIST.has(candidate.toLowerCase())) continue;
+      return candidate;
+    }
+
+    const upperTokens = text.match(/\b[A-Z][A-Z0-9-]{1,9}\b/g) || [];
+    for (const token of upperTokens) {
+      const candidate = token.replace(/[^A-Z0-9]/g, '').replace(/\d+$/g, '');
+      if (!candidate) continue;
+      if (candidate.length < 2 || candidate.length > 10) continue;
+      if (PUBLICATION_ACRONYM_BLOCKLIST.has(candidate.toLowerCase())) continue;
+      return candidate;
+    }
+
+    return '';
+  }
+
+  function normalizePublicationKey(value) {
+    const publication = normalizePublication(value);
+    if (!publication) return '';
+
+    const explicitAcronym = extractPublicationAcronym(publication);
+    if (explicitAcronym) return `acro:${explicitAcronym.toLowerCase()}`;
+
+    let text = stripDiacritics(publication).toLowerCase();
+    text = text
+      .replace(/^proceedings\s+of\s+(?:the\s+)?/i, '')
+      .replace(/^proc\.?\s*(?:of\s+)?(?:the\s+)?/i, '')
+      .replace(/\(([^)]*)\)/g, ' $1 ')
+      .replace(/&/g, ' and ')
+      .replace(/[^a-z0-9 ]+/g, ' ');
+
+    const tokens = text
+      .split(/\s+/)
+      .map((token) => token.trim())
+      .filter(Boolean)
+      .filter((token) => !/^\d{2,4}$/.test(token))
+      .filter((token) => !/^\d+(?:st|nd|rd|th)$/.test(token))
+      .filter((token) => !PUBLICATION_STOPWORDS.has(token));
+
+    if (!tokens.length) return '';
+
+    const acronymTokens = tokens.filter((token) => token.length >= 3);
+    const derivedAcronym = acronymTokens.map((token) => token[0]).join('');
+    if (
+      derivedAcronym.length >= 3
+      && derivedAcronym.length <= 8
+      && !PUBLICATION_ACRONYM_BLOCKLIST.has(derivedAcronym.toLowerCase())
+    ) {
+      return `acro:${derivedAcronym.toLowerCase()}`;
+    }
+
+    return `text:${tokens.join('')}`;
   }
 
   function buildPersonSignature(value) {
@@ -483,6 +809,9 @@
     for (const [topic, count] of source.topicCounts.entries()) {
       target.topicCounts.set(topic, (target.topicCounts.get(topic) || 0) + count);
     }
+    for (const [publication, count] of source.publicationCounts.entries()) {
+      target.publicationCounts.set(publication, (target.publicationCounts.get(publication) || 0) + count);
+    }
   }
 
   function shouldMergePeopleBuckets(a, b) {
@@ -559,6 +888,7 @@
           paperNameCounts: new Map(),
           blogNameCounts: new Map(),
           topicCounts: new Map(),
+          publicationCounts: new Map(),
         });
       }
       return buckets.get(key);
@@ -627,6 +957,15 @@
             affiliation,
             (bucket.paperAffiliationCounts.get(affiliation) || 0) + 1
           );
+        }
+        if (!isBlog) {
+          const publication = getPaperPrimaryPublication(paper);
+          if (publication) {
+            bucket.publicationCounts.set(
+              publication,
+              (bucket.publicationCounts.get(publication) || 0) + 1
+            );
+          }
         }
       }
     }
@@ -743,6 +1082,51 @@
           .filter((entry) => entry.name && entry.count > 0)
           .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 
+        const publicationBuckets = new Map();
+        for (const [rawPublication, rawCount] of bucket.publicationCounts.entries()) {
+          const publication = normalizePublication(rawPublication);
+          const count = Number(rawCount);
+          if (!publication || !Number.isFinite(count) || count <= 0) continue;
+          const key = normalizePublicationKey(publication);
+          if (!key) continue;
+          if (!publicationBuckets.has(key)) {
+            publicationBuckets.set(key, { count: 0, labels: new Map() });
+          }
+          const publicationBucket = publicationBuckets.get(key);
+          publicationBucket.count += count;
+          publicationBucket.labels.set(
+            publication,
+            (publicationBucket.labels.get(publication) || 0) + count
+          );
+        }
+
+        const scorePublicationLabel = (label, count) => {
+          const clean = normalizePublication(label);
+          const lower = clean.toLowerCase();
+          let score = count * 100;
+          if (/^proc\./i.test(clean) || /^proceedings of /i.test(clean)) score -= 5;
+          if (/\btechnical report\b/i.test(lower)) score -= 4;
+          if (/^masters thesis$/i.test(clean) || /^ph\.d\. thesis$/i.test(clean) || /^bachelor thesis$/i.test(clean)) score -= 2;
+          score -= Math.max(0, clean.length - 100) * 0.03;
+          return score;
+        };
+
+        const publications = [...publicationBuckets.values()]
+          .map((entry) => {
+            const label = [...entry.labels.entries()]
+              .sort((a, b) =>
+                scorePublicationLabel(b[0], b[1]) - scorePublicationLabel(a[0], a[1])
+                || b[1] - a[1]
+                || a[0].localeCompare(b[0])
+              )[0]?.[0] || '';
+            return {
+              name: label,
+              count: Math.round(entry.count),
+            };
+          })
+          .filter((entry) => entry.name && entry.count > 0)
+          .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
         return {
           id: normalizePersonKey(displayName) || normalizePersonKey(variantNames[0] || ''),
           name: displayName || variantNames[0] || '',
@@ -759,6 +1143,8 @@
           primaryTopic: topics[0]?.name || '',
           affiliations,
           primaryAffiliation: affiliations[0]?.name || '',
+          publications,
+          primaryPublication: publications[0]?.name || '',
         };
       })
       .filter((person) => person.name)
@@ -3027,6 +3413,8 @@
     isYouTubeVideoId,
     normalizeAffiliation,
     normalizeAffiliationKey,
+    normalizePublication,
+    normalizePublicationKey,
     normalizePersonDisplayName,
     normalizePersonName,
     normalizePersonRecord,
@@ -3048,6 +3436,7 @@
     scoreTalkRecordByQuery,
     sortCategoryEntries,
     tokenizeQuery,
+    getPaperPrimaryPublication,
   };
 
   root.LLVMHubUtils = api;

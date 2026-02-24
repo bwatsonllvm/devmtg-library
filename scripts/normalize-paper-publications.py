@@ -10,12 +10,21 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import html
 import json
 import re
 from pathlib import Path
 
 
 MISSING_TOKENS = {"", "none", "null", "nan", "n/a"}
+PUBLICATION_ALIAS_MAP: dict[str, str] = {
+    "proceedingsofacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
+    "proceedingsoftheacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
+    "proceedingsofinstituteforsystemprogrammingoftheras": "Proceedings of the Institute for System Programming of the RAS",
+    "proceedingsofinstituteforsystemprogrammingofras": "Proceedings of the Institute for System Programming of the RAS",
+    "proceedingsoftheinstituteforsystemprogrammingoftheras": "Proceedings of the Institute for System Programming of the RAS",
+    "proceedingsoftheinstituteforsystemprogrammingofras": "Proceedings of the Institute for System Programming of the RAS",
+}
 
 
 def collapse_ws(value: str) -> str:
@@ -29,13 +38,56 @@ def clean_token(value: str) -> str:
     return clean
 
 
+def publication_alias_key(value: str) -> str:
+    text = collapse_ws(value).lower().replace("&", " and ")
+    text = re.sub(r"""['".,()/-]""", "", text)
+    text = re.sub(r"[^a-z0-9]+", "", text)
+    return text
+
+
 def canonicalize_publication_label(value: str) -> str:
-    clean = clean_token(value)
+    clean = clean_token(html.unescape(value))
     if not clean:
         return ""
+
+    clean = (
+        clean
+        .replace("\u2019", "'")
+        .replace("\u2018", "'")
+        .replace("\u201c", '"')
+        .replace("\u201d", '"')
+    )
+    clean = re.sub(r"\s+,", ",", clean)
+    clean = re.sub(r"\s+([):;,.])", r"\1", clean)
+    clean = re.sub(r"([(:])\s+", r"\1", clean)
+    clean = clean.strip(" '\"")
+
+    clean = re.sub(r"^proceedings of eedings(?: of)?(?:\s+|/)+", "Proceedings of ", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"^proceedings of proceedings of\s+", "Proceedings of ", clean, flags=re.IGNORECASE)
+
+    proc_prefix_re = r"^proc(?:\.|\b)\s*(?:of\s+)?(?:the\s+)?"
+    if re.match(proc_prefix_re, clean, flags=re.IGNORECASE):
+        tail = collapse_ws(re.sub(proc_prefix_re, "", clean, flags=re.IGNORECASE))
+        if tail:
+            clean = f"Proceedings of {tail}"
+    else:
+        clean = re.sub(r"^proceedings\s+of\s+the\s+", "Proceedings of ", clean, flags=re.IGNORECASE)
+
+    if re.fullmatch(r"(?:m\.?\s*s\.?|masters?)\s+thesis", clean, flags=re.IGNORECASE):
+        clean = "Masters Thesis"
+    elif re.fullmatch(r"(?:ph\.?\s*d\.?|doctoral)\s+thesis", clean, flags=re.IGNORECASE):
+        clean = "Ph.D. Thesis"
+    elif re.fullmatch(r"(?:b\.?\s*s?c\.?|bachelor(?:'s)?)\s+thesis", clean, flags=re.IGNORECASE):
+        clean = "Bachelor Thesis"
+
     if re.fullmatch(r"arxiv(?:\.org)?(?:\s*\(cornell university\))?", clean, flags=re.IGNORECASE):
         return "arXiv"
-    return clean
+
+    alias = PUBLICATION_ALIAS_MAP.get(publication_alias_key(clean))
+    if alias:
+        clean = alias
+
+    return collapse_ws(clean)
 
 
 def split_venue_parts(venue: str) -> list[str]:

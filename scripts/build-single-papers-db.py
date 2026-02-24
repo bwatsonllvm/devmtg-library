@@ -48,6 +48,139 @@ MISSING_AFFILIATION_TOKENS = {
     "no affiliation",
     "not available",
 }
+CORPORATE_AFFILIATION_HINT_RE = re.compile(
+    r"\b(inc|corp|corporation|company|llc|ltd|gmbh|technologies|technology|systems|labs?)\b",
+    re.IGNORECASE,
+)
+ACADEMIC_AFFILIATION_HINT_RE = re.compile(
+    r"\b(university|college|institute|school|department|faculty|laboratory|centre|center|hospital|clinic|academy)\b",
+    re.IGNORECASE,
+)
+CORPORATE_REGIONAL_BASES = {
+    "intel",
+    "google",
+    "microsoft",
+    "meta",
+    "facebook",
+    "amazon",
+    "apple",
+    "nvidia",
+    "amd",
+    "arm",
+    "qualcomm",
+    "ibm",
+    "oracle",
+    "samsung",
+    "huawei",
+    "xilinx",
+    "broadcom",
+}
+COUNTRY_REGION_QUALIFIER_KEYS = {
+    "argentina",
+    "australia",
+    "austria",
+    "belgium",
+    "brazil",
+    "canada",
+    "chile",
+    "china",
+    "colombia",
+    "croatia",
+    "czechrepublic",
+    "denmark",
+    "estonia",
+    "finland",
+    "france",
+    "germany",
+    "greece",
+    "hungary",
+    "iceland",
+    "india",
+    "indonesia",
+    "ireland",
+    "israel",
+    "italy",
+    "japan",
+    "latvia",
+    "lithuania",
+    "luxembourg",
+    "malaysia",
+    "mexico",
+    "netherlands",
+    "newzealand",
+    "norway",
+    "philippines",
+    "poland",
+    "portugal",
+    "romania",
+    "saudiarabia",
+    "singapore",
+    "slovakia",
+    "slovenia",
+    "southafrica",
+    "southkorea",
+    "spain",
+    "sweden",
+    "switzerland",
+    "taiwan",
+    "thailand",
+    "turkey",
+    "uae",
+    "uk",
+    "ukraine",
+    "unitedarabemirates",
+    "unitedkingdom",
+    "unitedstates",
+    "usa",
+    "vietnam",
+}
+AFFILIATION_ALIAS_MAP: dict[str, str] = {
+    "mit": "Massachusetts Institute of Technology",
+    "massachusettsinstituteoftechnology": "Massachusetts Institute of Technology",
+    "massachussettsinstituteoftechnology": "Massachusetts Institute of Technology",
+    "massachusettsinsituteoftechnology": "Massachusetts Institute of Technology",
+    "massachussettsinsituteoftechnology": "Massachusetts Institute of Technology",
+    "massachusettsinstoftechnology": "Massachusetts Institute of Technology",
+    "massachussettsinstoftechnology": "Massachusetts Institute of Technology",
+    "carnegiemellon": "Carnegie Mellon University",
+    "carnegiemellonuniversity": "Carnegie Mellon University",
+    "cmu": "Carnegie Mellon University",
+    "caltech": "California Institute of Technology",
+    "uiuc": "University of Illinois Urbana-Champaign",
+    "universityofillinoisaturbanachampaign": "University of Illinois Urbana-Champaign",
+    "universityofillinoisurbanachampaign": "University of Illinois Urbana-Champaign",
+    "ethzurich": "ETH Zurich",
+    "eidgenossischetechnischehochschulezurich": "ETH Zurich",
+    "epfl": "EPFL",
+    "ecolepolytechniquefederaledelausanne": "EPFL",
+}
+UC_CAMPUS_ALIAS_MAP: dict[str, str] = {
+    "berkeley": "Berkeley",
+    "ucb": "Berkeley",
+    "davis": "Davis",
+    "ucd": "Davis",
+    "irvine": "Irvine",
+    "uci": "Irvine",
+    "losangeles": "Los Angeles",
+    "la": "Los Angeles",
+    "ucla": "Los Angeles",
+    "merced": "Merced",
+    "ucm": "Merced",
+    "riverside": "Riverside",
+    "ucr": "Riverside",
+    "sandiego": "San Diego",
+    "sd": "San Diego",
+    "ucsd": "San Diego",
+    "sanfrancisco": "San Francisco",
+    "sf": "San Francisco",
+    "ucsf": "San Francisco",
+    "santabarbara": "Santa Barbara",
+    "sb": "Santa Barbara",
+    "ucsb": "Santa Barbara",
+    "santacruz": "Santa Cruz",
+    "sc": "Santa Cruz",
+    "ucsc": "Santa Cruz",
+}
 LOW_QUALITY_TITLE_KEYS = {
     "404",
     "404 not found",
@@ -67,6 +200,14 @@ SOURCE_PRIORITY = {
     "openalex-llvm-query": 250,
     "llvm-blog-www": 200,
     "llvm-org-pubs": 150,
+}
+PUBLICATION_ALIAS_MAP: dict[str, str] = {
+    "proceedingsofacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
+    "proceedingsoftheacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
+    "proceedingsofinstituteforsystemprogrammingoftheras": "Proceedings of the Institute for System Programming of the RAS",
+    "proceedingsofinstituteforsystemprogrammingofras": "Proceedings of the Institute for System Programming of the RAS",
+    "proceedingsoftheinstituteforsystemprogrammingoftheras": "Proceedings of the Institute for System Programming of the RAS",
+    "proceedingsoftheinstituteforsystemprogrammingofras": "Proceedings of the Institute for System Programming of the RAS",
 }
 
 
@@ -232,14 +373,99 @@ def load_excluded_identity_keys(exclude_file: Path | None) -> tuple[set[str], se
     return excluded_openalex_keys, excluded_doi_keys, excluded_title_keys
 
 
+def affiliation_alias_key(value: str) -> str:
+    text = strip_diacritics(collapse_ws(value).lower())
+    text = text.replace("&", " and ")
+    text = re.sub(r"""['".,()]""", "", text)
+    text = re.sub(r"[^a-z0-9]+", "", text)
+    return text
+
+
+def is_corporate_affiliation_base(base: str) -> bool:
+    cleaned = collapse_ws(base)
+    if not cleaned:
+        return False
+    lowered = cleaned.casefold()
+    alias_key = affiliation_alias_key(cleaned)
+    if alias_key in CORPORATE_REGIONAL_BASES:
+        return True
+    if lowered in CORPORATE_REGIONAL_BASES:
+        return True
+    if CORPORATE_AFFILIATION_HINT_RE.search(cleaned):
+        return True
+    if ACADEMIC_AFFILIATION_HINT_RE.search(cleaned):
+        return False
+    if "," in cleaned:
+        return False
+    token_count = len(re.findall(r"[A-Za-z0-9][A-Za-z0-9&'./-]*", cleaned))
+    return 1 <= token_count <= 5
+
+
 def normalize_affiliation(value: str) -> str:
     clean = strip_markup(value).strip(" ,;|")
     clean = re.sub(r"\s+,", ",", clean)
     clean = re.sub(r"\(\s+", "(", clean)
     clean = re.sub(r"\s+\)", ")", clean)
+    clean = re.sub(r"\bUniv\.\b", "University", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bUniv\b", "University", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bInst\.\b", "Institute", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bInst\b", "Institute", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bDept\.\b", "Department", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bDept\b", "Department", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bMassachussetts\b", "Massachusetts", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bInsitute\b", "Institute", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\s*&\s*", " & ", clean)
+    clean = re.sub(r"\(\s*United States\s*\)$", "", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\(\s*USA\s*\)$", "", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\(\s*United Kingdom\s*\)$", "", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\(\s*UK\s*\)$", "", clean, flags=re.IGNORECASE)
+
+    # Collapse region qualifiers for companies/organizations (e.g., "Intel (Germany)" -> "Intel").
+    regional_match = re.match(r"^(?P<base>[^()]{2,120})\((?P<suffix>[^()]{2,80})\)$", clean)
+    if regional_match:
+        base = collapse_ws(regional_match.group("base")).strip(" ,;-")
+        suffix = collapse_ws(regional_match.group("suffix"))
+        if (
+            base
+            and suffix
+            and re.fullmatch(r"[A-Za-z][A-Za-z .,'-]{1,79}", suffix)
+        ):
+            suffix_key = affiliation_alias_key(suffix)
+            if suffix_key in COUNTRY_REGION_QUALIFIER_KEYS or is_corporate_affiliation_base(base):
+                clean = base
+
+    uc_match = re.match(
+        r"^(?:university\s+of\s+california(?:\s*,\s*|\s+at\s+|\s+-\s+|\s+)|u\.?\s*c\.?\s*(?:,\s*|\s+-\s+|\s+)?)"
+        r"(?P<campus>.+)$",
+        clean,
+        flags=re.IGNORECASE,
+    )
+    if re.fullmatch(r"university of california", clean, flags=re.IGNORECASE):
+        clean = "University of California"
+    elif uc_match:
+        campus_raw = collapse_ws(uc_match.group("campus"))
+        campus_raw = re.sub(r"^(?:campus|at|the)\s+", "", campus_raw, flags=re.IGNORECASE).strip(" ,.;:-")
+        campus_key = re.sub(r"[^a-z0-9]+", "", campus_raw.casefold())
+        campus = UC_CAMPUS_ALIAS_MAP.get(campus_key)
+        if not campus:
+            parts = []
+            for part in campus_raw.split():
+                if not part:
+                    continue
+                if len(part) <= 2:
+                    parts.append(part.upper())
+                else:
+                    parts.append(part[0].upper() + part[1:].lower())
+            campus = " ".join(parts)
+        clean = f"University of California, {campus}" if campus else "University of California"
+
+    alias_key = affiliation_alias_key(clean)
+    if alias_key in AFFILIATION_ALIAS_MAP:
+        clean = AFFILIATION_ALIAS_MAP[alias_key]
+
     if clean.casefold() in MISSING_AFFILIATION_TOKENS:
         return ""
-    return clean
+    return collapse_ws(clean)
 
 
 def normalize_affiliation_key(value: str) -> str:
@@ -318,13 +544,56 @@ def _clean_meta_value(value: str) -> str:
     return clean
 
 
+def _publication_alias_key(value: str) -> str:
+    text = strip_diacritics(collapse_ws(value).lower())
+    text = text.replace("&", " and ")
+    text = re.sub(r"""['".,()/-]""", "", text)
+    text = re.sub(r"[^a-z0-9]+", "", text)
+    return text
+
+
 def _canonicalize_publication_label(value: str) -> str:
-    clean = _clean_meta_value(value)
+    clean = _clean_meta_value(full_unescape(value))
     if not clean:
         return ""
+
+    clean = (
+        clean
+        .replace("\u2019", "'")
+        .replace("\u2018", "'")
+        .replace("\u201c", '"')
+        .replace("\u201d", '"')
+    )
+    clean = re.sub(r"\s+,", ",", clean)
+    clean = re.sub(r"\s+([):;,.])", r"\1", clean)
+    clean = re.sub(r"([(:])\s+", r"\1", clean)
+    clean = clean.strip(" '\"")
+
+    clean = re.sub(r"^proceedings of eedings(?: of)?(?:\s+|/)+", "Proceedings of ", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"^proceedings of proceedings of\s+", "Proceedings of ", clean, flags=re.IGNORECASE)
+
+    proc_prefix_re = r"^proc(?:\.|\b)\s*(?:of\s+)?(?:the\s+)?"
+    if re.match(proc_prefix_re, clean, flags=re.IGNORECASE):
+        tail = collapse_ws(re.sub(proc_prefix_re, "", clean, flags=re.IGNORECASE))
+        if tail:
+            clean = f"Proceedings of {tail}"
+    else:
+        clean = re.sub(r"^proceedings\s+of\s+the\s+", "Proceedings of ", clean, flags=re.IGNORECASE)
+
+    if re.fullmatch(r"(?:m\.?\s*s\.?|masters?)\s+thesis", clean, flags=re.IGNORECASE):
+        clean = "Masters Thesis"
+    elif re.fullmatch(r"(?:ph\.?\s*d\.?|doctoral)\s+thesis", clean, flags=re.IGNORECASE):
+        clean = "Ph.D. Thesis"
+    elif re.fullmatch(r"(?:b\.?\s*s?c\.?|bachelor(?:'s)?)\s+thesis", clean, flags=re.IGNORECASE):
+        clean = "Bachelor Thesis"
+
     if re.fullmatch(r"arxiv(?:\.org)?(?:\s*\(cornell university\))?", clean, flags=re.IGNORECASE):
         return "arXiv"
-    return clean
+
+    alias = PUBLICATION_ALIAS_MAP.get(_publication_alias_key(clean))
+    if alias:
+        clean = alias
+    return collapse_ws(clean)
 
 
 def _publication_candidate_from_location(location: dict, allow_repository: bool) -> str:

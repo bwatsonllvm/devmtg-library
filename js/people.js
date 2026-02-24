@@ -18,6 +18,7 @@ const state = {
   filter: 'all', // all | talks | papers | blogs | merged
   topic: '',
   affiliation: '',
+  publication: '',
   sortBy: 'works',
   viewMode: 'expanded',
 };
@@ -27,6 +28,7 @@ let allTalks = [];
 let allPapers = [];
 let allTopics = [];
 let allAffiliations = [];
+let allPublications = [];
 let autocompleteIndex = {
   topics: [],
   people: [],
@@ -126,6 +128,13 @@ function normalizeAffiliationKey(value) {
   return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
 }
 
+function normalizePublicationKey(value) {
+  if (typeof HubUtils.normalizePublicationKey === 'function') {
+    return HubUtils.normalizePublicationKey(value);
+  }
+  return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
+}
+
 function normalizeTopicKey(value) {
   return String(value || '')
     .toLowerCase()
@@ -153,6 +162,7 @@ function getPersonSearchBlob(person) {
     ...(person.variantNames || []),
     ...(person.topics || []).map((entry) => String((entry && entry.name) || '').trim()),
     ...(person.affiliations || []).map((entry) => String((entry && entry.name) || '').trim()),
+    ...(person.publications || []).map((entry) => String((entry && entry.name) || '').trim()),
   ].join(' ').toLowerCase();
 }
 
@@ -420,12 +430,101 @@ function getSelectedAffiliationLabel() {
   return allAffiliations.find((item) => item.key === state.affiliation)?.name || '';
 }
 
+function getPersonPublications(person) {
+  if (!person || !Array.isArray(person.publications)) return [];
+  return person.publications
+    .map((entry) => {
+      const name = String((entry && entry.name) || '').trim();
+      const count = Number(entry && entry.count);
+      if (!name || !Number.isFinite(count) || count <= 0) return null;
+      return {
+        name,
+        count: Math.max(1, Math.round(count)),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+function buildPublicationIndex() {
+  const counts = new Map();
+  for (const person of allPeople) {
+    const seenForPerson = new Set();
+    for (const publication of getPersonPublications(person)) {
+      const key = normalizePublicationKey(publication.name);
+      if (!key) continue;
+      if (!counts.has(key)) {
+        counts.set(key, {
+          key,
+          name: publication.name,
+          mentionCount: 0,
+          peopleCount: 0,
+        });
+      }
+      const bucket = counts.get(key);
+      bucket.mentionCount += publication.count;
+      if (!seenForPerson.has(key)) {
+        bucket.peopleCount += 1;
+        seenForPerson.add(key);
+      }
+      if (
+        publication.name.length > bucket.name.length
+        && publication.name.toLowerCase() !== 'proceedings'
+      ) {
+        bucket.name = publication.name;
+      }
+    }
+  }
+
+  allPublications = [...counts.values()]
+    .sort((a, b) =>
+      b.peopleCount - a.peopleCount
+      || b.mentionCount - a.mentionCount
+      || a.name.localeCompare(b.name));
+}
+
+function syncPublicationFilterControl() {
+  const select = document.getElementById('people-publication-select');
+  if (!select) return;
+  select.value = state.publication || '';
+}
+
+function refreshPublicationFilterOptions() {
+  const select = document.getElementById('people-publication-select');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'All publications';
+  select.appendChild(defaultOption);
+
+  for (const publication of allPublications) {
+    const option = document.createElement('option');
+    option.value = publication.key;
+    option.textContent = `${publication.name} (${publication.peopleCount.toLocaleString()})`;
+    select.appendChild(option);
+  }
+
+  if (state.publication && !allPublications.some((item) => item.key === state.publication)) {
+    state.publication = '';
+  }
+  syncPublicationFilterControl();
+}
+
+function getSelectedPublicationLabel() {
+  if (!state.publication) return '';
+  return allPublications.find((item) => item.key === state.publication)?.name || '';
+}
+
 function buildActiveFilterSummary() {
   const parts = [];
   const topicLabel = getSelectedTopicLabel();
   const affiliationLabel = getSelectedAffiliationLabel();
+  const publicationLabel = getSelectedPublicationLabel();
   if (topicLabel) parts.push(`key topic <strong>${escapeHtml(topicLabel)}</strong>`);
   if (affiliationLabel) parts.push(`affiliation <strong>${escapeHtml(affiliationLabel)}</strong>`);
+  if (publicationLabel) parts.push(`publication <strong>${escapeHtml(publicationLabel)}</strong>`);
   if (!parts.length) return '';
   if (parts.length === 1) return parts[0];
   return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`;
@@ -761,6 +860,7 @@ function filterPeople() {
   const tokens = tokenizeQuery(state.query);
   const selectedTopicKey = normalizeTopicKey(state.topic);
   const selectedAffiliationKey = normalizeAffiliationKey(state.affiliation);
+  const selectedPublicationKey = normalizePublicationKey(state.publication);
 
   return allPeople.filter((person) => {
     if (state.filter === 'talks' && person.talkCount === 0) return false;
@@ -772,6 +872,11 @@ function filterPeople() {
       const hasAffiliation = getPersonAffiliations(person)
         .some((entry) => normalizeAffiliationKey(entry.name) === selectedAffiliationKey);
       if (!hasAffiliation) return false;
+    }
+    if (selectedPublicationKey) {
+      const hasPublication = getPersonPublications(person)
+        .some((entry) => normalizePublicationKey(entry.name) === selectedPublicationKey);
+      if (!hasPublication) return false;
     }
 
     if (!tokens.length) return true;
@@ -1163,6 +1268,19 @@ function initAffiliationFilter() {
   });
 
   refreshAffiliationFilterOptions();
+}
+
+function initPublicationFilter() {
+  const select = document.getElementById('people-publication-select');
+  if (!select) return;
+
+  select.addEventListener('change', () => {
+    state.publication = normalizePublicationKey(select.value);
+    syncPublicationFilterControl();
+    render();
+  });
+
+  refreshPublicationFilterOptions();
 }
 
 function initTopicFilter() {
@@ -1668,6 +1786,8 @@ async function init() {
   initTopicFilter();
   buildAffiliationIndex();
   initAffiliationFilter();
+  buildPublicationIndex();
+  initPublicationFilter();
   initSearch();
   render();
 }
