@@ -21,7 +21,7 @@ const DOCUMENTATION_OPTIONS = {
   const DOCS_REPORT_ISSUE_BASE = 'https://github.com/bwatsonllvm/library/issues/new';
   const DOCS_GITHUB_RELEASES_URL = 'https://github.com/llvm/llvm-project/releases';
   const DOCS_UNIVERSAL_SEARCH_FILENAME = 'docs-universal-search-index.js';
-  const DOCS_UNIVERSAL_SEARCH_VERSION = '20260224-03';
+  const DOCS_UNIVERSAL_SEARCH_VERSION = '20260224-04';
   const DOCS_UNIVERSAL_SEARCH_MAX_SIDEBAR_RESULTS = 7;
   const DOCS_UNIVERSAL_SEARCH_MAX_PAGE_RESULTS = 80;
   const DOCS_UNIVERSAL_HIGHLIGHT_MAX_TERMS = 10;
@@ -237,7 +237,7 @@ const DOCUMENTATION_OPTIONS = {
     const node = ensureHeadTag('style', { id: 'llvm-docs-bridge-critical' });
     if (!node) return;
     node.textContent = [
-      'div.related,div.logo,div.clearer{display:none!important;}',
+      'div.related,div.logo,div.clearer,body>div.header,body>div.topnav,body>div.bottomnav{display:none!important;}',
       '.library-docs-bridge .site-header a:visited{color:inherit!important;}',
       '.library-docs-bridge .sphinxsidebar a:visited{color:var(--color-text-muted,#6b7280)!important;}',
       '.library-docs-bridge .docs-hugo-content a:visited{color:var(--color-accent)!important;}',
@@ -255,7 +255,74 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-09` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-22` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-23` });
+  }
+
+  function removeLegacySphinxChrome() {
+    const selectors = ['body > .header', 'body > .topnav', 'body > .bottomnav'];
+    selectors.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((node) => {
+        if (node && node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      });
+    });
+  }
+
+  function ensureSphinxLayoutScaffold() {
+    if (!document.body || document.body.dataset.docsSphinxLayoutNormalized === '1') return;
+
+    const hasNativeLayout = !!(
+      document.querySelector('.document .body')
+      && document.querySelector('.sphinxsidebar .sphinxsidebarwrapper')
+    );
+    if (hasNativeLayout) {
+      removeLegacySphinxChrome();
+      document.body.dataset.docsSphinxLayoutNormalized = '1';
+      return;
+    }
+
+    const legacyContent = document.querySelector('body > .content[role="main"], body > .content');
+    if (!legacyContent) return;
+
+    const parent = legacyContent.parentNode;
+    if (!parent) return;
+
+    const sidebar = document.createElement('div');
+    sidebar.className = 'sphinxsidebar';
+    sidebar.setAttribute('role', 'navigation');
+    sidebar.setAttribute('aria-label', 'main navigation');
+    const sidebarWrapper = document.createElement('div');
+    sidebarWrapper.className = 'sphinxsidebarwrapper';
+    sidebar.appendChild(sidebarWrapper);
+
+    const documentRoot = document.createElement('div');
+    documentRoot.className = 'document';
+
+    const documentWrapper = document.createElement('div');
+    documentWrapper.className = 'documentwrapper';
+
+    const bodyWrapper = document.createElement('div');
+    bodyWrapper.className = 'bodywrapper';
+
+    const bodyMain = document.createElement('div');
+    bodyMain.className = 'body';
+    bodyMain.setAttribute('role', String(legacyContent.getAttribute('role') || 'main'));
+
+    while (legacyContent.firstChild) {
+      bodyMain.appendChild(legacyContent.firstChild);
+    }
+
+    bodyWrapper.appendChild(bodyMain);
+    documentWrapper.appendChild(bodyWrapper);
+    documentRoot.appendChild(documentWrapper);
+
+    parent.insertBefore(sidebar, legacyContent);
+    parent.insertBefore(documentRoot, legacyContent);
+    parent.removeChild(legacyContent);
+
+    removeLegacySphinxChrome();
+    document.body.dataset.docsSphinxLayoutNormalized = '1';
   }
 
   function applyStoredDisplayPreferences() {
@@ -2264,7 +2331,7 @@ const DOCUMENTATION_OPTIONS = {
       script = document.createElement('script');
       script.id = scriptId;
       const docsBase = String(ACTIVE_DOCS_BASE_PATH || 'docs').replace(/^\/+|\/+$/g, '');
-      script.src = `${rootPath}${docsBase}/_static/docs-book-index.js?v=20260224-02`;
+      script.src = `${rootPath}${docsBase}/_static/docs-book-index.js?v=20260224-03`;
       script.async = true;
       script.addEventListener('load', onReady, { once: true });
       script.addEventListener('error', () => {
@@ -2481,6 +2548,7 @@ const DOCUMENTATION_OPTIONS = {
 
   document.addEventListener('DOMContentLoaded', function () {
     if (document.body) document.body.classList.add('library-docs-bridge');
+    ensureSphinxLayoutScaffold();
     document.documentElement.classList.add('library-docs-bridge-ready');
 
     const existingHeader = document.getElementById('llvm-docs-bridge-header');

@@ -22,8 +22,8 @@ const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
 const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
 const UNIVERSAL_MAX_RESULTS = 1200;
-const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-03';
-const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-03';
+const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-04';
+const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-04';
 const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
 
 const state = {

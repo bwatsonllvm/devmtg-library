@@ -87,11 +87,21 @@ def extract_html_title(html_path: Path) -> Optional[str]:
     if not match:
         return None
     title = html.unescape(match.group(1)).strip()
-    title = re.sub(r"\s+[–—-]\s+LLVM.*$", "", title, flags=re.IGNORECASE).strip()
+    title = re.sub(r"\s+[–—-]\s+(?:LLVM|Clang)\s+.*$", "", title, flags=re.IGNORECASE).strip()
+    title = re.sub(r"\s+[–—-]\s+[^–—-]*\bdocumentation$", "", title, flags=re.IGNORECASE).strip()
     title = re.sub(r"\s+documentation$", "", title, flags=re.IGNORECASE).strip()
     if not title or title == "..":
         return None
     return title
+
+
+def detect_docs_variant(source_docs: Dict[str, SourceDoc], docs_root: Path) -> str:
+    root_name = docs_root.name.lower()
+    if root_name == "clang":
+        return "clang"
+    if "UsersManual" in source_docs and "GettingStartedTutorials" not in source_docs:
+        return "clang"
+    return "llvm-core"
 
 
 def extract_title(path: Path, docs_root: Path, fallback_slug: str) -> str:
@@ -282,14 +292,20 @@ def build_tree_node(
 def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict[str, object]:
     titles = {slug: extract_title(doc.path, docs_root, slug) for slug, doc in source_docs.items()}
     edges = parse_toctree_edges(source_docs)
+    docs_variant = detect_docs_variant(source_docs, docs_root)
 
-    chapter_defs = [
-        ("Foundations", ["FAQ", "Lexicon"]),
-        ("Getting Started and Tutorials", ["GettingStartedTutorials"]),
-        ("User Guides", ["UserGuides"]),
-        ("Reference", ["Reference"]),
-        ("Community and Governance", ["GettingInvolved", "RFCProcess", "DiscourseMigrationGuide"]),
-    ]
+    if docs_variant == "clang":
+        # Clang's index.rst already exposes the canonical information architecture.
+        # Keep chapter roots empty so the "Overview" tree can represent that structure directly.
+        chapter_defs: List[tuple[str, List[str]]] = []
+    else:
+        chapter_defs = [
+            ("Foundations", ["FAQ", "Lexicon"]),
+            ("Getting Started and Tutorials", ["GettingStartedTutorials"]),
+            ("User Guides", ["UserGuides"]),
+            ("Reference", ["Reference"]),
+            ("Community and Governance", ["GettingInvolved", "RFCProcess", "DiscourseMigrationGuide"]),
+        ]
 
     assigned: set[str] = set()
     chapters: List[Dict[str, object]] = []

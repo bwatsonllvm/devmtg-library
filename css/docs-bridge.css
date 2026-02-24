@@ -13,7 +13,10 @@
 /* Hide legacy Sphinx chrome even before bridge JS finishes. */
 div.logo,
 div.related,
-div.clearer {
+div.clearer,
+body > div.header,
+body > div.topnav,
+body > div.bottomnav {
   display: none !important;
 }
 
