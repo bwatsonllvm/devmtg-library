@@ -67,10 +67,6 @@ const DOCUMENTATION_OPTIONS = {
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-07` });
-    ensureHeadTag('script', {
-      src: `${rootPath}docs/_static/docs-book-index.js?v=20260224-01`,
-      defer: 'defer',
-    });
   }
 
   function applyStoredDisplayPreferences() {
@@ -331,6 +327,30 @@ const DOCUMENTATION_OPTIONS = {
     window.setTimeout(() => installGeneratedBookIndexSidebar(rootPath, remaining - 1), 80);
   }
 
+  function ensureBookIndexData(rootPath, onReady) {
+    if (window.LLVMDocsBookIndex && Array.isArray(window.LLVMDocsBookIndex.chapters)) {
+      onReady();
+      return;
+    }
+
+    const scriptId = 'llvm-docs-book-index-script';
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.src = `${rootPath}docs/_static/docs-book-index.js?v=20260224-01`;
+      script.async = true;
+      script.addEventListener('load', onReady, { once: true });
+      script.addEventListener('error', () => {
+        // If this fails, keep default sidebar rather than breaking docs navigation.
+      }, { once: true });
+      document.head.appendChild(script);
+      return;
+    }
+
+    script.addEventListener('load', onReady, { once: true });
+  }
+
   function deriveFallbackTitle() {
     const title = String(document.title || '').trim();
     const cleaned = title
@@ -413,7 +433,9 @@ const DOCUMENTATION_OPTIONS = {
     }
 
     bridgeSphinxBodyToHugoLayout();
-    installGeneratedBookIndexSidebar(rootPath, 40);
+    ensureBookIndexData(rootPath, function () {
+      installGeneratedBookIndexSidebar(rootPath, 60);
+    });
 
     ensureHomeScript(rootPath);
   });
