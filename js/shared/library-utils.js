@@ -1472,6 +1472,24 @@
     to: 'before',
   };
   const SEARCH_QUERY_MODEL_FIELDS = ['title', 'abstract', 'authors', 'topics', 'venue', 'type'];
+  const SEARCH_QUERY_WHERE_SCOPE_ALIASES = {
+    any: 'anywhere',
+    anywhere: 'anywhere',
+    all: 'anywhere',
+    anyfield: 'anywhere',
+    anyfields: 'anywhere',
+    anylocation: 'anywhere',
+    title: 'title',
+    titles: 'title',
+    intitle: 'title',
+    headline: 'title',
+    abstract: 'abstract',
+    abstracts: 'abstract',
+    inabstract: 'abstract',
+    content: 'abstract',
+    body: 'abstract',
+    fulltext: 'abstract',
+  };
 
   const TALK_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const PAPER_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
@@ -1518,6 +1536,12 @@
     return SEARCH_QUERY_FIELD_ALIASES[key] || '';
   }
 
+  function normalizeSearchWhereScope(value) {
+    const key = String(value || '').trim().toLowerCase();
+    if (!key) return 'anywhere';
+    return SEARCH_QUERY_WHERE_SCOPE_ALIASES[key] || 'anywhere';
+  }
+
   function createEmptyFieldTermMap() {
     return {
       title: [],
@@ -1541,6 +1565,25 @@
     const normalized = normalizeSearchToken(value);
     if (!normalized || normalized.length < 2) return;
     if (!source.includes(normalized)) source.push(normalized);
+  }
+
+  function parseAdvancedTermInput(value) {
+    const tokens = [];
+    const phrases = [];
+    const input = String(value || '');
+    if (!input.trim()) return { tokens, phrases };
+
+    const re = /"([^"]+)"|(\S+)/g;
+    let match;
+    while ((match = re.exec(input)) !== null) {
+      if (match[1]) {
+        const phrase = normalizeSearchText(match[1]);
+        if (phrase.length >= 3) appendUniqueValue(phrases, phrase);
+        continue;
+      }
+      if (match[2]) appendUniqueToken(tokens, match[2]);
+    }
+    return { tokens, phrases };
   }
 
   function parseYearTerm(value) {
@@ -1642,8 +1685,11 @@
   function modelHasSearchConstraints(model) {
     if (!model || typeof model !== 'object') return false;
     if (Array.isArray(model.clauses) && model.clauses.length) return true;
+    if (Array.isArray(model.anyClauses) && model.anyClauses.length) return true;
     if (Array.isArray(model.excludeClauses) && model.excludeClauses.length) return true;
     if (Array.isArray(model.phrases) && model.phrases.length) return true;
+    if (Array.isArray(model.requiredPhrases) && model.requiredPhrases.length) return true;
+    if (Array.isArray(model.anyPhrases) && model.anyPhrases.length) return true;
     if (Array.isArray(model.excludePhrases) && model.excludePhrases.length) return true;
     if (hasFieldConstraints(model.fieldClauses)) return true;
     if (hasFieldConstraints(model.excludeFieldClauses)) return true;
@@ -1848,7 +1894,7 @@
     });
   }
 
-  function buildSearchQueryModel(input) {
+  function buildSearchQueryModel(input, options = {}) {
     const isArrayInput = Array.isArray(input);
     const fromArrayTokens = isArrayInput
       ? input.map((value) => normalizeSearchToken(value)).filter((value) => value.length >= 2)
@@ -1866,8 +1912,67 @@
         yearRange: { from: 0, to: 0 },
       }
       : parseQuerySegments(input);
+    const advanced = options && typeof options === 'object' ? options : {};
+    const requiredPhrases = [];
+    const anyTokens = [];
+    const anyPhrases = [];
+
+    const appendTermsAsRequired = (value) => {
+      const parsedTerms = parseAdvancedTermInput(value);
+      for (const token of parsedTerms.tokens) appendUniqueToken(parsed.tokens, token);
+      for (const phrase of parsedTerms.phrases) {
+        appendUniqueValue(parsed.phrases, phrase);
+        appendUniqueValue(requiredPhrases, phrase);
+      }
+    };
+
+    const appendTermsAsAny = (value) => {
+      const parsedTerms = parseAdvancedTermInput(value);
+      for (const token of parsedTerms.tokens) appendUniqueToken(anyTokens, token);
+      for (const phrase of parsedTerms.phrases) appendUniqueValue(anyPhrases, phrase);
+    };
+
+    const appendTermsAsExcluded = (value) => {
+      const parsedTerms = parseAdvancedTermInput(value);
+      for (const token of parsedTerms.tokens) appendUniqueToken(parsed.excludeTokens, token);
+      for (const phrase of parsedTerms.phrases) appendUniqueValue(parsed.excludePhrases, phrase);
+    };
+
+    const appendFieldConstraint = (fieldKey, value) => {
+      const normalizedField = normalizeSearchFieldKey(fieldKey);
+      if (!normalizedField || normalizedField === 'since' || normalizedField === 'before' || normalizedField === 'year') {
+        return;
+      }
+      const raw = collapseWhitespace(value);
+      if (!raw) return;
+      for (const token of tokenizeSearchText(raw, 2)) {
+        appendUniqueToken(parsed.includeFieldTerms[normalizedField], token);
+      }
+      const phrase = normalizeSearchText(raw);
+      if (phrase.length >= 3) appendUniqueValue(parsed.includeFieldPhrases[normalizedField], phrase);
+    };
+
+    appendTermsAsRequired(advanced.allWords);
+    appendTermsAsAny(advanced.anyWords);
+    appendTermsAsExcluded(advanced.withoutWords);
+
+    const exactPhrase = normalizeSearchText(advanced.exactPhrase || '');
+    if (exactPhrase.length >= 3) {
+      appendUniqueValue(parsed.phrases, exactPhrase);
+      appendUniqueValue(requiredPhrases, exactPhrase);
+    }
+
+    appendFieldConstraint('authors', advanced.author);
+    appendFieldConstraint('venue', advanced.publication);
+
+    const advancedYearFrom = parseYearTerm(advanced.yearFrom);
+    const advancedYearTo = parseYearTerm(advanced.yearTo);
+    parsed.yearRange = mergeYearRange(parsed.yearRange, advancedYearFrom, advancedYearTo);
+
+    const whereScope = normalizeSearchWhereScope(advanced.where);
     const tokens = parsed.tokens;
     const clauses = buildQueryClauses(tokens);
+    const anyClauses = buildQueryClauses(anyTokens);
     const excludeClauses = buildQueryClauses(parsed.excludeTokens || []);
     const fieldClauses = buildFieldClauseMap(parsed.includeFieldTerms);
     const excludeFieldClauses = buildFieldClauseMap(parsed.excludeFieldTerms);
@@ -1890,12 +1995,30 @@
       excludePhrases.push(phrase);
     }
 
+    const requiredPhraseValues = [];
+    const requiredPhraseSeen = new Set();
+    for (const phrase of requiredPhrases) {
+      const normalizedPhrase = normalizeSearchText(phrase);
+      if (!normalizedPhrase || normalizedPhrase.length < 3 || requiredPhraseSeen.has(normalizedPhrase)) continue;
+      requiredPhraseSeen.add(normalizedPhrase);
+      requiredPhraseValues.push(normalizedPhrase);
+    }
+
+    const anyPhraseValues = [];
+    const anyPhraseSeen = new Set();
+    for (const phrase of anyPhrases) {
+      const normalizedPhrase = normalizeSearchText(phrase);
+      if (!normalizedPhrase || normalizedPhrase.length < 3 || anyPhraseSeen.has(normalizedPhrase)) continue;
+      anyPhraseSeen.add(normalizedPhrase);
+      anyPhraseValues.push(normalizedPhrase);
+    }
+
     if (normalizedQuery && normalizedQuery.includes(' ') && normalizedQuery.length <= 80 && !phraseSeen.has(normalizedQuery)) {
       phrases.push({ value: normalizedQuery, weight: 0.52 });
       phraseSeen.add(normalizedQuery);
     }
 
-    const beginnerIntent = tokens.some((token) => BEGINNER_INTENT_TOKENS.has(token));
+    const beginnerIntent = [...tokens, ...anyTokens].some((token) => BEGINNER_INTENT_TOKENS.has(token));
     const hasNarrowClauses = clauses.some((clause) => !clause.isBroad);
     const requiredClauseCount = hasNarrowClauses
       ? clauses.filter((clause) => !clause.isBroad).length
@@ -1904,23 +2027,31 @@
     const queryModel = {
       rawTokens: tokens,
       clauses,
+      anyClauses,
       excludeClauses,
       fieldClauses,
       excludeFieldClauses,
       fieldPhrases,
       excludeFieldPhrases,
+      requiredPhrases: requiredPhraseValues,
+      anyPhrases: anyPhraseValues,
       excludePhrases,
       requiredClauseCount,
       phrases,
       normalizedQuery,
       beginnerIntent,
+      whereScope,
       yearRange: normalizeYearRange(parsed.yearRange || {}),
       hasFilters: hasFieldConstraints(fieldClauses)
         || hasFieldConstraints(excludeFieldClauses)
         || hasFieldPhraseConstraints(fieldPhrases)
         || hasFieldPhraseConstraints(excludeFieldPhrases)
+        || anyClauses.length > 0
+        || anyPhraseValues.length > 0
+        || requiredPhraseValues.length > 0
         || excludeClauses.length > 0
         || excludePhrases.length > 0
+        || whereScope !== 'anywhere'
         || (parsed.yearRange && (parsed.yearRange.from > 0 || parsed.yearRange.to > 0)),
     };
     queryModel.hasSearchConstraints = modelHasSearchConstraints(queryModel);
@@ -2004,6 +2135,18 @@
       considerNeedle(phrase, 34 + (phraseWeight * 8));
     }
 
+    for (const phrase of (model.requiredPhrases || [])) {
+      const normalizedPhrase = normalizeSearchText(phrase);
+      if (!normalizedPhrase || normalizedPhrase.length < 2) continue;
+      considerNeedle(normalizedPhrase, 40);
+    }
+
+    for (const phrase of (model.anyPhrases || [])) {
+      const normalizedPhrase = normalizeSearchText(phrase);
+      if (!normalizedPhrase || normalizedPhrase.length < 2) continue;
+      considerNeedle(normalizedPhrase, 30);
+    }
+
     for (const clause of (model.clauses || [])) {
       if (!clause || !clause.token) continue;
       considerNeedle(clause.token, 23 + ((clause.specificity || 1) * 2));
@@ -2014,6 +2157,11 @@
         const synonymPenalty = variantWeight < 0.7 ? 6 : 0;
         considerNeedle(variant.term, 16 + (variantWeight * 6) - synonymPenalty);
       }
+    }
+
+    for (const clause of (model.anyClauses || [])) {
+      if (!clause || !clause.token) continue;
+      considerNeedle(clause.token, 18 + ((clause.specificity || 1) * 1.4));
     }
 
     if (bestIndex < 0) {
@@ -2216,6 +2364,42 @@
     return out;
   }
 
+  function resolveWhereScopeFieldKeys(whereScope, fields, whereScopeTargets) {
+    const sourceFields = fields && typeof fields === 'object' ? fields : {};
+    const allFieldKeys = uniqueFieldKeys(Object.keys(sourceFields));
+    if (!allFieldKeys.length) return [];
+
+    const scope = normalizeSearchWhereScope(whereScope);
+    if (scope === 'anywhere') return allFieldKeys;
+
+    const configured = uniqueFieldKeys((whereScopeTargets && whereScopeTargets[scope]) || []);
+    if (!configured.length) return allFieldKeys;
+
+    const allowed = new Set(configured);
+    const scoped = allFieldKeys.filter((key) => allowed.has(key));
+    return scoped.length ? scoped : allFieldKeys;
+  }
+
+  function filterFieldConfigByKeys(fieldConfig, allowedKeys) {
+    const keys = new Set(uniqueFieldKeys(allowedKeys));
+    const source = Array.isArray(fieldConfig) ? fieldConfig : [];
+    if (!keys.size) return [];
+    return source.filter((config) => config && keys.has(String(config.key || '').trim()));
+  }
+
+  function toPhraseEntries(values, defaultWeight = 1) {
+    const source = Array.isArray(values) ? values : [];
+    const entries = [];
+    const seen = new Set();
+    for (const raw of source) {
+      const phrase = normalizeSearchText(raw);
+      if (!phrase || phrase.length < 2 || seen.has(phrase)) continue;
+      seen.add(phrase);
+      entries.push({ value: phrase, weight: defaultWeight });
+    }
+    return entries;
+  }
+
   function matchClauseCollection(clauses, fields, fieldKeys, options = {}) {
     const source = Array.isArray(clauses) ? clauses : [];
     if (!source.length) return { matchedCount: 0, clauseCount: 0, anyMatch: false };
@@ -2402,6 +2586,7 @@
     if (!model || !doc || !doc.fields) return true;
     const relaxed = options.relaxed === true;
     const fieldTargets = options.fieldTargets || {};
+    const whereFieldKeys = resolveWhereScopeFieldKeys(model.whereScope, doc.fields, options.whereScopeTargets || {});
     const year = Number.isFinite(doc.year) ? doc.year : 0;
     const yearRange = normalizeYearRange(model.yearRange || {});
 
@@ -2414,60 +2599,126 @@
     if (!evaluateExcludeConstraints(model, doc, { relaxed, fieldTargets })) return false;
     if (!evaluateFieldConstraintMap(model.fieldClauses, doc.fields, fieldTargets, { relaxed, threshold: relaxed ? 0.72 : 0.94, fuzzy: true })) return false;
     if (!evaluateFieldPhraseMap(model.fieldPhrases, doc.fields, fieldTargets, { relaxed, threshold: relaxed ? 0.64 : 0.86 })) return false;
+
+    const requiredPhraseEntries = toPhraseEntries(model.requiredPhrases || []);
+    if (requiredPhraseEntries.length) {
+      const requiredPhraseResult = matchPhraseCollection(
+        requiredPhraseEntries,
+        doc.fields,
+        whereFieldKeys,
+        { threshold: relaxed ? 0.68 : 0.86 }
+      );
+      if (requiredPhraseResult.matchedCount < requiredPhraseResult.phraseCount) return false;
+    }
+
+    const anyClauses = Array.isArray(model.anyClauses) ? model.anyClauses : [];
+    const anyPhraseEntries = toPhraseEntries(model.anyPhrases || []);
+    if (anyClauses.length || anyPhraseEntries.length) {
+      let matchedAny = false;
+      if (anyClauses.length) {
+        const anyClauseResult = matchClauseCollection(anyClauses, doc.fields, whereFieldKeys, {
+          threshold: relaxed ? 0.72 : 0.92,
+          fuzzy: true,
+        });
+        matchedAny = matchedAny || anyClauseResult.anyMatch;
+      }
+      if (!matchedAny && anyPhraseEntries.length) {
+        const anyPhraseResult = matchPhraseCollection(anyPhraseEntries, doc.fields, whereFieldKeys, {
+          threshold: relaxed ? 0.68 : 0.86,
+        });
+        matchedAny = matchedAny || anyPhraseResult.anyMatch;
+      }
+      if (!matchedAny) return false;
+    }
+
     return true;
   }
 
   function scoreQueryModelAgainstDoc(model, doc, options = {}) {
-    if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
+    if (!model) return 0;
     if (!doc || !doc.fields) return 0;
-
-    const fieldConfig = options.fieldConfig || [];
-    const phraseFieldConfig = options.phraseFieldConfig || fieldConfig;
+    const allFieldConfig = Array.isArray(options.fieldConfig) ? options.fieldConfig : [];
+    const allPhraseFieldConfig = Array.isArray(options.phraseFieldConfig) ? options.phraseFieldConfig : allFieldConfig;
+    const allowedWhereKeys = resolveWhereScopeFieldKeys(model.whereScope, doc.fields, options.whereScopeTargets || {});
+    const fieldConfig = filterFieldConfigByKeys(allFieldConfig, allowedWhereKeys);
+    const phraseFieldConfig = filterFieldConfigByKeys(allPhraseFieldConfig, allowedWhereKeys);
     const relaxed = options.relaxed === true;
+    const hasClauses = Array.isArray(model.clauses) && model.clauses.length > 0;
+    const hasAnyClauses = Array.isArray(model.anyClauses) && model.anyClauses.length > 0;
+    const hasSoftPhrases = Array.isArray(model.phrases) && model.phrases.length > 0;
+    const requiredPhraseEntries = toPhraseEntries(model.requiredPhrases || []);
+    const anyPhraseEntries = toPhraseEntries(model.anyPhrases || []);
+    const hasAnyPhrases = anyPhraseEntries.length > 0;
+    const hasRequiredPhrases = requiredPhraseEntries.length > 0;
+
+    if (!hasClauses && !hasAnyClauses && !hasSoftPhrases && !hasAnyPhrases && !hasRequiredPhrases) return 0;
+    if (!fieldConfig.length && !phraseFieldConfig.length) return 0;
 
     let total = 0;
     let matchedClauses = 0;
     let matchedRequiredClauses = 0;
-    const clauseCount = model.clauses.length;
-    const requiredClauseCount = Number.isFinite(model.requiredClauseCount) && model.requiredClauseCount > 0
-      ? Math.min(clauseCount, Math.floor(model.requiredClauseCount))
-      : clauseCount;
-    const treatAllClausesAsRequired = requiredClauseCount === clauseCount;
-    const clauseCoverageThreshold = relaxed ? 0.9 : 1.35;
+    if (hasClauses) {
+      const clauseCount = model.clauses.length;
+      const requiredClauseCount = Number.isFinite(model.requiredClauseCount) && model.requiredClauseCount > 0
+        ? Math.min(clauseCount, Math.floor(model.requiredClauseCount))
+        : clauseCount;
+      const treatAllClausesAsRequired = requiredClauseCount === clauseCount;
+      const clauseCoverageThreshold = relaxed ? 0.9 : 1.35;
 
-    for (const clause of model.clauses) {
-      const clauseScore = scoreClauseAgainstFields(clause, doc.fields, fieldConfig);
-      if (clauseScore >= clauseCoverageThreshold) {
-        matchedClauses += 1;
-        if (treatAllClausesAsRequired || !clause.isBroad) matchedRequiredClauses += 1;
+      for (const clause of model.clauses) {
+        const clauseScore = scoreClauseAgainstFields(clause, doc.fields, fieldConfig);
+        if (clauseScore >= clauseCoverageThreshold) {
+          matchedClauses += 1;
+          if (treatAllClausesAsRequired || !clause.isBroad) matchedRequiredClauses += 1;
+        }
+        total += clauseScore * (clause.specificity || 1);
       }
-      total += clauseScore * (clause.specificity || 1);
-    }
+      if (matchedClauses === 0) return 0;
 
-    if (matchedClauses === 0) return 0;
+      const coverage = matchedClauses / clauseCount;
+      const requiredCoverage = matchedRequiredClauses / requiredClauseCount;
+      if (!relaxed) {
+        if (requiredClauseCount >= 5 && requiredCoverage < 0.8) return 0;
+        if (requiredClauseCount === 4 && requiredCoverage < 0.75) return 0;
+        if (requiredClauseCount === 3 && requiredCoverage < 0.67) return 0;
+        if (requiredClauseCount === 2 && requiredCoverage < 1) return 0;
+        if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
+      } else {
+        if (requiredClauseCount >= 4 && requiredCoverage < 0.5) return 0;
+        if (requiredClauseCount === 3 && requiredCoverage < 0.34) return 0;
+        if (requiredClauseCount === 2 && requiredCoverage < 0.5) return 0;
+        if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
+      }
 
-    const coverage = matchedClauses / clauseCount;
-    const requiredCoverage = matchedRequiredClauses / requiredClauseCount;
-    if (!relaxed) {
-      if (requiredClauseCount >= 5 && requiredCoverage < 0.8) return 0;
-      if (requiredClauseCount === 4 && requiredCoverage < 0.75) return 0;
-      if (requiredClauseCount === 3 && requiredCoverage < 0.67) return 0;
-      if (requiredClauseCount === 2 && requiredCoverage < 1) return 0;
-      if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
+      const effectiveCoverage = (requiredCoverage * 0.72) + (coverage * 0.28);
+      const coverageMultiplier = relaxed
+        ? (0.52 + (effectiveCoverage * 1.02))
+        : (0.28 + (Math.pow(effectiveCoverage, 1.5) * 1.16));
+      total *= coverageMultiplier;
     } else {
-      if (requiredClauseCount >= 4 && requiredCoverage < 0.5) return 0;
-      if (requiredClauseCount === 3 && requiredCoverage < 0.34) return 0;
-      if (requiredClauseCount === 2 && requiredCoverage < 0.5) return 0;
-      if (requiredClauseCount === 1 && requiredCoverage < 1) return 0;
+      total += 1;
     }
 
-    const effectiveCoverage = (requiredCoverage * 0.72) + (coverage * 0.28);
-    const coverageMultiplier = relaxed
-      ? (0.52 + (effectiveCoverage * 1.02))
-      : (0.28 + (Math.pow(effectiveCoverage, 1.5) * 1.16));
-    total *= coverageMultiplier;
+    if (hasRequiredPhrases) {
+      total += scorePhraseEntriesAgainstFields(requiredPhraseEntries, doc.fields, phraseFieldConfig) * 2.45;
+    }
 
-    if (Array.isArray(model.phrases) && model.phrases.length) {
+    if (hasAnyClauses || hasAnyPhrases) {
+      let anyBonus = 0;
+      if (hasAnyClauses) {
+        for (const clause of model.anyClauses) {
+          const score = scoreClauseAgainstFields(clause, doc.fields, fieldConfig);
+          if (score > anyBonus) anyBonus = score;
+        }
+      }
+      if (hasAnyPhrases) {
+        const phraseScore = scorePhraseEntriesAgainstFields(anyPhraseEntries, doc.fields, phraseFieldConfig);
+        if (phraseScore > anyBonus) anyBonus = phraseScore;
+      }
+      total += anyBonus * 0.95;
+    }
+
+    if (hasSoftPhrases) {
       let phraseBonus = 0;
       for (const phraseEntry of model.phrases) {
         const phrase = phraseEntry.value;
@@ -2542,11 +2793,22 @@
         venue: ['meeting'],
         type: ['category'],
       },
+      whereScopeTargets: {
+        anywhere: ['title', 'speakers', 'tags', 'meeting', 'abstract', 'category', 'year'],
+        title: ['title'],
+        abstract: ['abstract'],
+      },
     })) return 0;
 
-    const hasClauses = Array.isArray(model.clauses) && model.clauses.length > 0;
+    const hasCoreTerms = (
+      (Array.isArray(model.clauses) && model.clauses.length > 0)
+      || (Array.isArray(model.anyClauses) && model.anyClauses.length > 0)
+      || (Array.isArray(model.requiredPhrases) && model.requiredPhrases.length > 0)
+      || (Array.isArray(model.anyPhrases) && model.anyPhrases.length > 0)
+      || (Array.isArray(model.phrases) && model.phrases.length > 0)
+    );
 
-    const base = hasClauses
+    const base = hasCoreTerms
       ? scoreQueryModelAgainstDoc(model, doc, {
         relaxed,
         fieldConfig: [
@@ -2565,6 +2827,11 @@
           { key: 'meeting', weight: 2.3 },
           { key: 'abstract', weight: 1.4 },
         ],
+        whereScopeTargets: {
+          anywhere: ['title', 'speakers', 'tags', 'meeting', 'abstract', 'category', 'year'],
+          title: ['title'],
+          abstract: ['abstract'],
+        },
       })
       : 1;
     if (base <= 0) return 0;
@@ -2596,7 +2863,7 @@
   }
 
   function scoreTalkRecordByQuery(indexedTalk, query, options = {}) {
-    const model = buildSearchQueryModel(query);
+    const model = buildSearchQueryModel(query, options && options.advanced ? options.advanced : undefined);
     if (!modelHasSearchConstraints(model)) return 0;
     let score = scoreTalkWithModel(indexedTalk, model, false);
     if (score > 0 || !(options && options.relaxed === true)) return score;
@@ -2625,7 +2892,16 @@
   function pruneScoredEntries(scoredEntries, model, options = {}) {
     const scored = Array.isArray(scoredEntries) ? scoredEntries : [];
     if (!scored.length) return [];
-    if (!model || !Array.isArray(model.clauses) || !model.clauses.length) return scored;
+    const hasSignal = !!(
+      model
+      && (
+        (Array.isArray(model.clauses) && model.clauses.length)
+        || (Array.isArray(model.anyClauses) && model.anyClauses.length)
+        || (Array.isArray(model.requiredPhrases) && model.requiredPhrases.length)
+        || (Array.isArray(model.anyPhrases) && model.anyPhrases.length)
+      )
+    );
+    if (!hasSignal) return scored;
 
     const topScore = Number(scored[0].score || 0);
     if (!(topScore > 0)) return scored;
@@ -2653,9 +2929,9 @@
     return scored.slice(0, Math.min(maxResults, minTail));
   }
 
-  function rankTalksByQuery(indexedTalks, query) {
+  function rankTalksByQuery(indexedTalks, query, options = {}) {
     const talks = Array.isArray(indexedTalks) ? indexedTalks : [];
-    const model = buildSearchQueryModel(query);
+    const model = buildSearchQueryModel(query, options && options.advanced ? options.advanced : undefined);
 
     if (!modelHasSearchConstraints(model)) {
       return [...talks].sort((a, b) => String(b.meeting || '').localeCompare(String(a.meeting || '')));
@@ -2755,11 +3031,22 @@
         venue: ['publication', 'venue'],
         type: ['type', 'topics'],
       },
+      whereScopeTargets: {
+        anywhere: ['title', 'authors', 'topics', 'type', 'publication', 'venue', 'abstract', 'content', 'year'],
+        title: ['title'],
+        abstract: ['abstract', 'content'],
+      },
     })) return 0;
 
-    const hasClauses = Array.isArray(model.clauses) && model.clauses.length > 0;
+    const hasCoreTerms = (
+      (Array.isArray(model.clauses) && model.clauses.length > 0)
+      || (Array.isArray(model.anyClauses) && model.anyClauses.length > 0)
+      || (Array.isArray(model.requiredPhrases) && model.requiredPhrases.length > 0)
+      || (Array.isArray(model.anyPhrases) && model.anyPhrases.length > 0)
+      || (Array.isArray(model.phrases) && model.phrases.length > 0)
+    );
 
-    const base = hasClauses
+    const base = hasCoreTerms
       ? scoreQueryModelAgainstDoc(model, doc, {
         relaxed,
         fieldConfig: [
@@ -2783,6 +3070,11 @@
           { key: 'abstract', weight: 1.2 },
           { key: 'content', weight: 0.9 },
         ],
+        whereScopeTargets: {
+          anywhere: ['title', 'authors', 'topics', 'type', 'publication', 'venue', 'abstract', 'content', 'year'],
+          title: ['title'],
+          abstract: ['abstract', 'content'],
+        },
       })
       : 1;
     if (base <= 0) return 0;
@@ -2814,9 +3106,9 @@
     return aTitle.localeCompare(bTitle);
   }
 
-  function rankPaperRecordsByQuery(papers, query) {
+  function rankPaperRecordsByQuery(papers, query, options = {}) {
     const records = Array.isArray(papers) ? papers : [];
-    const model = buildSearchQueryModel(query);
+    const model = buildSearchQueryModel(query, options && options.advanced ? options.advanced : undefined);
 
     if (!modelHasSearchConstraints(model)) {
       return [...records].sort((a, b) => {
@@ -2859,7 +3151,7 @@
   }
 
   function scorePaperRecordByQuery(paper, query, options = {}) {
-    const model = buildSearchQueryModel(query);
+    const model = buildSearchQueryModel(query, options && options.advanced ? options.advanced : undefined);
     if (!modelHasSearchConstraints(model)) return 0;
     let score = scorePaperWithModel(paper, model, false);
     if (score > 0 || !(options && options.relaxed === true)) return score;

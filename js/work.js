@@ -17,6 +17,7 @@ const WORK_VIEW_STORAGE_KEY = 'llvm-hub-work-view';
 const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs', 'people']);
 const WORK_TIME_FILTERS = new Set(['any', 'since-2026', 'since-2025', 'since-2022', 'custom']);
 const WORK_TYPE_FILTERS = new Set(['any', 'review']);
+const WORK_ADVANCED_WHERE_MODES = new Set(['anywhere', 'title', 'abstract']);
 const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
 
@@ -33,6 +34,16 @@ const state = {
   typeFilter: 'any', // search mode only
   yearFrom: 0, // search mode only
   yearTo: 0, // search mode only
+  advancedOpen: false,
+  advanced: {
+    allWords: '',
+    exactPhrase: '',
+    anyWords: '',
+    withoutWords: '',
+    where: 'anywhere',
+    author: '',
+    publication: '',
+  },
 };
 
 const CATEGORY_META = {
@@ -131,6 +142,22 @@ function normalizeTypeFilter(value) {
   return WORK_TYPE_FILTERS.has(normalized) ? normalized : 'any';
 }
 
+function normalizeAdvancedText(value, maxLength = 220) {
+  const cleaned = String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!cleaned) return '';
+  return cleaned.slice(0, maxLength);
+}
+
+function normalizeAdvancedWhere(value) {
+  const normalized = normalizeValue(value);
+  if (normalized === 'any' || normalized === 'all') return 'anywhere';
+  if (normalized === 'intitle') return 'title';
+  if (normalized === 'inabstract' || normalized === 'content') return 'abstract';
+  return WORK_ADVANCED_WHERE_MODES.has(normalized) ? normalized : 'anywhere';
+}
+
 function parseYearFilterInput(value) {
   const year = Number.parseInt(String(value || '').trim(), 10);
   if (!Number.isFinite(year)) return 0;
@@ -153,6 +180,67 @@ function resolveTimeFilterWindow() {
   if (state.timeFilter === 'since-2022') return { from: 2022, to: 0 };
   if (state.timeFilter === 'custom') return normalizeYearRange(state.yearFrom, state.yearTo);
   return { from: 0, to: 0 };
+}
+
+function hasAdvancedSearchTerms() {
+  return !!(
+    state.advanced.allWords
+    || state.advanced.exactPhrase
+    || state.advanced.anyWords
+    || state.advanced.withoutWords
+    || state.advanced.author
+    || state.advanced.publication
+  );
+}
+
+function hasActiveSearchCriteria() {
+  if (state.mode !== 'search') return false;
+  if (state.query) return true;
+  if (hasAdvancedSearchTerms()) return true;
+  if (state.typeFilter !== 'any') return true;
+  if (state.timeFilter !== 'any') return true;
+  return false;
+}
+
+function buildAdvancedSearchOptions() {
+  const timeWindow = resolveTimeFilterWindow();
+  return {
+    allWords: state.advanced.allWords,
+    exactPhrase: state.advanced.exactPhrase,
+    anyWords: state.advanced.anyWords,
+    withoutWords: state.advanced.withoutWords,
+    where: state.advanced.where,
+    author: state.advanced.author,
+    publication: state.advanced.publication,
+    yearFrom: timeWindow.from,
+    yearTo: timeWindow.to,
+  };
+}
+
+function hasAdvancedSearchOptions(options) {
+  const source = options && typeof options === 'object' ? options : {};
+  return !!(
+    source.allWords
+    || source.exactPhrase
+    || source.anyWords
+    || source.withoutWords
+    || source.author
+    || source.publication
+    || parseYearFilterInput(source.yearFrom) > 0
+    || parseYearFilterInput(source.yearTo) > 0
+  );
+}
+
+function buildSearchDisplayValue() {
+  const parts = [];
+  const query = String(state.query || '').trim();
+  if (query) parts.push(query);
+  if (state.advanced.exactPhrase) parts.push(`"${state.advanced.exactPhrase}"`);
+  if (state.advanced.allWords) parts.push(`all: ${state.advanced.allWords}`);
+  if (state.advanced.anyWords) parts.push(`any: ${state.advanced.anyWords}`);
+  if (state.advanced.author) parts.push(`author: ${state.advanced.author}`);
+  if (state.advanced.publication) parts.push(`publication: ${state.advanced.publication}`);
+  return parts.join(' · ');
 }
 
 function defaultSortMode() {
@@ -442,13 +530,33 @@ function parseStateFromUrl() {
   const typeParam = normalizeTypeFilter(params.get('type'));
   const yearFromParam = parseYearFilterInput(params.get('yearFrom'));
   const yearToParam = parseYearFilterInput(params.get('yearTo'));
+  const allWordsParam = normalizeAdvancedText(params.get('allWords'));
+  const exactPhraseParam = normalizeAdvancedText(params.get('exactPhrase'));
+  const anyWordsParam = normalizeAdvancedText(params.get('anyWords'));
+  const withoutWordsParam = normalizeAdvancedText(params.get('withoutWords'));
+  const whereParam = normalizeAdvancedWhere(params.get('where'));
+  const authorParam = normalizeAdvancedText(params.get('author'));
+  const publicationParam = normalizeAdvancedText(params.get('publication'));
   const modeParam = normalizeValue(params.get('mode'));
   const fromParam = normalizeValue(params.get('from'));
   const FROM_VALUES = new Set(['talks', 'papers', 'blogs', 'people', 'work']);
   const from = FROM_VALUES.has(fromParam) ? fromParam : 'talks';
   const hasEntityContext = Boolean(valueParam || kindParam);
   const explicitEntityMode = modeParam === 'entity';
-  const isSearchMode = modeParam === 'search' || (!explicitEntityMode && !hasEntityContext && !!queryParam);
+  const hasAdvancedQueryContext = !!(
+    allWordsParam
+    || exactPhraseParam
+    || anyWordsParam
+    || withoutWordsParam
+    || authorParam
+    || publicationParam
+    || timeParam !== 'any'
+    || typeParam !== 'any'
+    || yearFromParam > 0
+    || yearToParam > 0
+  );
+  const isSearchMode = modeParam === 'search'
+    || (!explicitEntityMode && !hasEntityContext && (!!queryParam || hasAdvancedQueryContext));
 
   state.kind = kind;
   state.mode = isSearchMode ? 'search' : 'entity';
@@ -457,7 +565,38 @@ function parseStateFromUrl() {
   state.value = isSearchMode ? '' : String(valueParam || queryParam || '').trim();
   state.timeFilter = isSearchMode ? timeParam : 'any';
   state.typeFilter = isSearchMode ? typeParam : 'any';
+  state.advanced = isSearchMode
+    ? {
+      allWords: allWordsParam,
+      exactPhrase: exactPhraseParam,
+      anyWords: anyWordsParam,
+      withoutWords: withoutWordsParam,
+      where: whereParam,
+      author: authorParam,
+      publication: publicationParam,
+    }
+    : {
+      allWords: '',
+      exactPhrase: '',
+      anyWords: '',
+      withoutWords: '',
+      where: 'anywhere',
+      author: '',
+      publication: '',
+    };
+  state.advancedOpen = isSearchMode && (
+    state.advanced.allWords
+    || state.advanced.exactPhrase
+    || state.advanced.anyWords
+    || state.advanced.withoutWords
+    || state.advanced.author
+    || state.advanced.publication
+    || state.advanced.where !== 'anywhere'
+  );
   const normalizedYears = normalizeYearRange(yearFromParam, yearToParam);
+  if (isSearchMode && state.timeFilter !== 'custom' && (normalizedYears.from > 0 || normalizedYears.to > 0)) {
+    state.timeFilter = 'custom';
+  }
   state.yearFrom = isSearchMode ? normalizedYears.from : 0;
   state.yearTo = isSearchMode ? normalizedYears.to : 0;
   if (state.timeFilter !== 'custom') {
@@ -492,6 +631,13 @@ function syncUrlState() {
       if (normalizedYears.from > 0) params.set('yearFrom', String(normalizedYears.from));
       if (normalizedYears.to > 0) params.set('yearTo', String(normalizedYears.to));
     }
+    if (state.advanced.allWords) params.set('allWords', state.advanced.allWords);
+    if (state.advanced.exactPhrase) params.set('exactPhrase', state.advanced.exactPhrase);
+    if (state.advanced.anyWords) params.set('anyWords', state.advanced.anyWords);
+    if (state.advanced.withoutWords) params.set('withoutWords', state.advanced.withoutWords);
+    if (state.advanced.where !== 'anywhere') params.set('where', state.advanced.where);
+    if (state.advanced.author) params.set('author', state.advanced.author);
+    if (state.advanced.publication) params.set('publication', state.advanced.publication);
   } else {
     params.set('mode', 'entity');
     params.set('kind', state.kind === 'speaker' ? 'speaker' : 'topic');
@@ -515,7 +661,7 @@ function updateIssueContextForWork() {
   const itemType = isSearch
     ? 'Search'
     : (state.kind === 'speaker' ? 'Person' : 'Topic');
-  const itemTitle = isSearch ? state.query : state.value;
+  const itemTitle = isSearch ? (buildSearchDisplayValue() || state.query) : state.value;
 
   setIssueContext({
     pageType: 'Work',
@@ -569,6 +715,15 @@ function getActiveFilterLabels() {
     }
   }
   if (state.typeFilter === 'review') labels.push('Review articles');
+  if (state.advanced.allWords) labels.push(`All words: ${state.advanced.allWords}`);
+  if (state.advanced.exactPhrase) labels.push(`Exact phrase: "${state.advanced.exactPhrase}"`);
+  if (state.advanced.anyWords) labels.push(`Any words: ${state.advanced.anyWords}`);
+  if (state.advanced.withoutWords) labels.push(`Without: ${state.advanced.withoutWords}`);
+  if (state.advanced.where !== 'anywhere') {
+    labels.push(state.advanced.where === 'title' ? 'Words in title' : 'Words in abstract/content');
+  }
+  if (state.advanced.author) labels.push(`Author: ${state.advanced.author}`);
+  if (state.advanced.publication) labels.push(`Publication: ${state.advanced.publication}`);
   return labels;
 }
 
@@ -598,6 +753,13 @@ function syncScopeControls() {
   const typeInput = document.getElementById('work-search-type-input');
   const yearFromInput = document.getElementById('work-search-year-from-input');
   const yearToInput = document.getElementById('work-search-year-to-input');
+  const allWordsInput = document.getElementById('work-search-all-words-input');
+  const exactPhraseInput = document.getElementById('work-search-exact-phrase-input');
+  const anyWordsInput = document.getElementById('work-search-any-words-input');
+  const withoutWordsInput = document.getElementById('work-search-without-words-input');
+  const whereInput = document.getElementById('work-search-where-input');
+  const authorInput = document.getElementById('work-search-author-input');
+  const publicationInput = document.getElementById('work-search-publication-input');
   if (scopeInput) scopeInput.value = normalizeSearchScope(state.scope);
   if (timeInput) timeInput.value = state.mode === 'search' ? normalizeTimeFilter(state.timeFilter) : 'any';
   if (typeInput) typeInput.value = state.mode === 'search' ? normalizeTypeFilter(state.typeFilter) : 'any';
@@ -608,6 +770,13 @@ function syncScopeControls() {
   if (yearToInput) yearToInput.value = state.mode === 'search' && state.timeFilter === 'custom' && normalizedYears.to > 0
     ? String(normalizedYears.to)
     : '';
+  if (allWordsInput) allWordsInput.value = state.mode === 'search' ? state.advanced.allWords : '';
+  if (exactPhraseInput) exactPhraseInput.value = state.mode === 'search' ? state.advanced.exactPhrase : '';
+  if (anyWordsInput) anyWordsInput.value = state.mode === 'search' ? state.advanced.anyWords : '';
+  if (withoutWordsInput) withoutWordsInput.value = state.mode === 'search' ? state.advanced.withoutWords : '';
+  if (whereInput) whereInput.value = state.mode === 'search' ? normalizeAdvancedWhere(state.advanced.where) : 'anywhere';
+  if (authorInput) authorInput.value = state.mode === 'search' ? state.advanced.author : '';
+  if (publicationInput) publicationInput.value = state.mode === 'search' ? state.advanced.publication : '';
   if (!scopeToggle) return;
   const buttons = [...scopeToggle.querySelectorAll('.work-scope-btn[data-work-scope]')];
   for (const button of buttons) {
@@ -645,6 +814,19 @@ function initScopeControl() {
   syncScopeControls();
 }
 
+function countActiveAdvancedFields() {
+  let count = 0;
+  if (state.advanced.allWords) count += 1;
+  if (state.advanced.exactPhrase) count += 1;
+  if (state.advanced.anyWords) count += 1;
+  if (state.advanced.withoutWords) count += 1;
+  if (state.advanced.where !== 'anywhere') count += 1;
+  if (state.advanced.author) count += 1;
+  if (state.advanced.publication) count += 1;
+  if (state.timeFilter === 'custom' && (state.yearFrom > 0 || state.yearTo > 0)) count += 1;
+  return count;
+}
+
 function syncAdvancedFilterControlVisibility() {
   const searchMode = state.mode === 'search';
   const timeSelect = document.getElementById('work-time-select');
@@ -652,8 +834,12 @@ function syncAdvancedFilterControlVisibility() {
   const timeLabel = document.querySelector('label[for="work-time-select"]');
   const typeLabel = document.querySelector('label[for="work-type-select"]');
   const customRange = document.getElementById('work-custom-range');
+  const advancedToggle = document.getElementById('work-advanced-toggle');
+  const advancedPanel = document.getElementById('work-advanced-panel');
+  const advancedCount = document.getElementById('work-advanced-count');
   const customVisible = searchMode && state.timeFilter === 'custom';
   const typeEnabled = searchMode && state.scope !== 'talks' && state.scope !== 'people';
+  const activeAdvancedCount = countActiveAdvancedFields();
 
   if (timeLabel) timeLabel.hidden = !searchMode;
   if (timeSelect) {
@@ -666,6 +852,20 @@ function syncAdvancedFilterControlVisibility() {
     typeSelect.disabled = !typeEnabled;
   }
   if (customRange) customRange.classList.toggle('hidden', !customVisible);
+  if (advancedToggle) {
+    advancedToggle.hidden = !searchMode;
+    advancedToggle.classList.toggle('active', activeAdvancedCount > 0);
+    advancedToggle.setAttribute('aria-expanded', searchMode && state.advancedOpen ? 'true' : 'false');
+    advancedToggle.setAttribute('aria-pressed', searchMode && state.advancedOpen ? 'true' : 'false');
+  }
+  if (advancedCount) {
+    advancedCount.textContent = activeAdvancedCount > 0 ? String(activeAdvancedCount) : '';
+    advancedCount.hidden = activeAdvancedCount <= 0;
+  }
+  if (advancedPanel) {
+    const showPanel = searchMode && state.advancedOpen;
+    advancedPanel.classList.toggle('hidden', !showPanel);
+  }
 }
 
 function syncAdvancedFilterControls() {
@@ -673,6 +873,15 @@ function syncAdvancedFilterControls() {
   const typeSelect = document.getElementById('work-type-select');
   const yearFromInput = document.getElementById('work-year-from');
   const yearToInput = document.getElementById('work-year-to');
+  const advancedAllWordsInput = document.getElementById('work-advanced-all-words');
+  const advancedExactPhraseInput = document.getElementById('work-advanced-exact-phrase');
+  const advancedAnyWordsInput = document.getElementById('work-advanced-any-words');
+  const advancedWithoutWordsInput = document.getElementById('work-advanced-without-words');
+  const advancedWhereInput = document.getElementById('work-advanced-where');
+  const advancedAuthorInput = document.getElementById('work-advanced-author');
+  const advancedPublicationInput = document.getElementById('work-advanced-publication');
+  const advancedYearFromInput = document.getElementById('work-advanced-year-from');
+  const advancedYearToInput = document.getElementById('work-advanced-year-to');
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
   if (timeSelect) timeSelect.value = normalizeTimeFilter(state.timeFilter);
   if (typeSelect) {
@@ -681,6 +890,15 @@ function syncAdvancedFilterControls() {
   }
   if (yearFromInput) yearFromInput.value = normalizedYears.from > 0 ? String(normalizedYears.from) : '';
   if (yearToInput) yearToInput.value = normalizedYears.to > 0 ? String(normalizedYears.to) : '';
+  if (advancedAllWordsInput) advancedAllWordsInput.value = state.advanced.allWords;
+  if (advancedExactPhraseInput) advancedExactPhraseInput.value = state.advanced.exactPhrase;
+  if (advancedAnyWordsInput) advancedAnyWordsInput.value = state.advanced.anyWords;
+  if (advancedWithoutWordsInput) advancedWithoutWordsInput.value = state.advanced.withoutWords;
+  if (advancedWhereInput) advancedWhereInput.value = normalizeAdvancedWhere(state.advanced.where);
+  if (advancedAuthorInput) advancedAuthorInput.value = state.advanced.author;
+  if (advancedPublicationInput) advancedPublicationInput.value = state.advanced.publication;
+  if (advancedYearFromInput) advancedYearFromInput.value = normalizedYears.from > 0 ? String(normalizedYears.from) : '';
+  if (advancedYearToInput) advancedYearToInput.value = normalizedYears.to > 0 ? String(normalizedYears.to) : '';
   syncAdvancedFilterControlVisibility();
   syncScopeControls();
 }
@@ -691,6 +909,13 @@ function applySearchFilterControls(options = {}) {
 
   state.timeFilter = normalizeTimeFilter(state.timeFilter);
   state.typeFilter = normalizeTypeFilter(state.typeFilter);
+  state.advanced.allWords = normalizeAdvancedText(state.advanced.allWords);
+  state.advanced.exactPhrase = normalizeAdvancedText(state.advanced.exactPhrase);
+  state.advanced.anyWords = normalizeAdvancedText(state.advanced.anyWords);
+  state.advanced.withoutWords = normalizeAdvancedText(state.advanced.withoutWords);
+  state.advanced.where = normalizeAdvancedWhere(state.advanced.where);
+  state.advanced.author = normalizeAdvancedText(state.advanced.author);
+  state.advanced.publication = normalizeAdvancedText(state.advanced.publication);
   if (state.scope === 'talks' || state.scope === 'people') state.typeFilter = 'any';
 
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
@@ -714,6 +939,18 @@ function initAdvancedFilterControls() {
   const typeSelect = document.getElementById('work-type-select');
   const yearFromInput = document.getElementById('work-year-from');
   const yearToInput = document.getElementById('work-year-to');
+  const advancedToggle = document.getElementById('work-advanced-toggle');
+  const advancedAllWordsInput = document.getElementById('work-advanced-all-words');
+  const advancedExactPhraseInput = document.getElementById('work-advanced-exact-phrase');
+  const advancedAnyWordsInput = document.getElementById('work-advanced-any-words');
+  const advancedWithoutWordsInput = document.getElementById('work-advanced-without-words');
+  const advancedWhereInput = document.getElementById('work-advanced-where');
+  const advancedAuthorInput = document.getElementById('work-advanced-author');
+  const advancedPublicationInput = document.getElementById('work-advanced-publication');
+  const advancedYearFromInput = document.getElementById('work-advanced-year-from');
+  const advancedYearToInput = document.getElementById('work-advanced-year-to');
+  const advancedApplyBtn = document.getElementById('work-advanced-apply');
+  const advancedClearBtn = document.getElementById('work-advanced-clear');
 
   if (timeSelect) {
     timeSelect.addEventListener('change', () => {
@@ -729,11 +966,14 @@ function initAdvancedFilterControls() {
     });
   }
 
-  const bindYearInput = (inputEl, key) => {
+  const bindYearInput = (inputEl, key, source = 'basic') => {
     if (!inputEl) return;
     const apply = () => {
       state[key] = parseYearFilterInput(inputEl.value);
       if (state.timeFilter !== 'custom') state.timeFilter = 'custom';
+      if (source === 'advanced' && !state.yearFrom && !state.yearTo) {
+        state.timeFilter = 'any';
+      }
       applySearchFilterControls();
     };
     inputEl.addEventListener('change', apply);
@@ -747,6 +987,84 @@ function initAdvancedFilterControls() {
 
   bindYearInput(yearFromInput, 'yearFrom');
   bindYearInput(yearToInput, 'yearTo');
+  bindYearInput(advancedYearFromInput, 'yearFrom', 'advanced');
+  bindYearInput(advancedYearToInput, 'yearTo', 'advanced');
+
+  if (advancedToggle) {
+    advancedToggle.addEventListener('click', () => {
+      state.advancedOpen = !state.advancedOpen;
+      syncAdvancedFilterControls();
+    });
+  }
+
+  const applyAdvancedFields = () => {
+    state.advanced.allWords = normalizeAdvancedText(advancedAllWordsInput ? advancedAllWordsInput.value : state.advanced.allWords);
+    state.advanced.exactPhrase = normalizeAdvancedText(advancedExactPhraseInput ? advancedExactPhraseInput.value : state.advanced.exactPhrase);
+    state.advanced.anyWords = normalizeAdvancedText(advancedAnyWordsInput ? advancedAnyWordsInput.value : state.advanced.anyWords);
+    state.advanced.withoutWords = normalizeAdvancedText(advancedWithoutWordsInput ? advancedWithoutWordsInput.value : state.advanced.withoutWords);
+    state.advanced.where = normalizeAdvancedWhere(advancedWhereInput ? advancedWhereInput.value : state.advanced.where);
+    state.advanced.author = normalizeAdvancedText(advancedAuthorInput ? advancedAuthorInput.value : state.advanced.author);
+    state.advanced.publication = normalizeAdvancedText(advancedPublicationInput ? advancedPublicationInput.value : state.advanced.publication);
+
+    if (advancedYearFromInput || advancedYearToInput) {
+      const nextFrom = parseYearFilterInput(advancedYearFromInput ? advancedYearFromInput.value : '');
+      const nextTo = parseYearFilterInput(advancedYearToInput ? advancedYearToInput.value : '');
+      state.yearFrom = nextFrom;
+      state.yearTo = nextTo;
+      if (nextFrom > 0 || nextTo > 0) state.timeFilter = 'custom';
+      else if (state.timeFilter === 'custom') state.timeFilter = 'any';
+    }
+
+    state.advancedOpen = true;
+    applySearchFilterControls();
+  };
+
+  if (advancedApplyBtn) {
+    advancedApplyBtn.addEventListener('click', () => applyAdvancedFields());
+  }
+
+  if (advancedWhereInput) {
+    advancedWhereInput.addEventListener('change', () => {
+      state.advanced.where = normalizeAdvancedWhere(advancedWhereInput.value);
+      applySearchFilterControls();
+    });
+  }
+
+  if (advancedClearBtn) {
+    advancedClearBtn.addEventListener('click', () => {
+      state.advanced = {
+        allWords: '',
+        exactPhrase: '',
+        anyWords: '',
+        withoutWords: '',
+        where: 'anywhere',
+        author: '',
+        publication: '',
+      };
+      state.yearFrom = 0;
+      state.yearTo = 0;
+      if (state.timeFilter === 'custom') state.timeFilter = 'any';
+      applySearchFilterControls();
+    });
+  }
+
+  const advancedTextInputs = [
+    advancedAllWordsInput,
+    advancedExactPhraseInput,
+    advancedAnyWordsInput,
+    advancedWithoutWordsInput,
+    advancedAuthorInput,
+    advancedPublicationInput,
+  ].filter(Boolean);
+
+  for (const input of advancedTextInputs) {
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      applyAdvancedFields();
+    });
+  }
+
   syncAdvancedFilterControls();
 }
 
@@ -1191,14 +1509,55 @@ function getPersonSearchBlob(person) {
 }
 
 function scorePersonRecordByModel(person, model, options = {}) {
-  if (!person || !model || !Array.isArray(model.clauses) || !model.clauses.length) return 0;
+  if (!person || !model) return 0;
 
   const relaxed = options.relaxed === true;
   const name = normalizeSearchText(person.name || '');
   const variants = getPersonVariantNames(person).map((value) => normalizeSearchText(value)).filter(Boolean);
   const blob = getPersonSearchBlob(person);
+  const publicationBlob = normalizeSearchText(
+    (Array.isArray(person.publications) ? person.publications : [])
+      .map((entry) => entry && entry.name)
+      .filter(Boolean)
+      .join(' ')
+  );
+  const where = normalizeAdvancedWhere(model.whereScope || 'anywhere');
+  const scopedText = where === 'title'
+    ? [name, ...variants].join(' ').trim()
+    : (where === 'abstract' ? blob : [name, ...variants, blob].join(' ').trim());
+  const hasCoreTerms = !!(
+    (Array.isArray(model.clauses) && model.clauses.length)
+    || (Array.isArray(model.anyClauses) && model.anyClauses.length)
+    || (Array.isArray(model.requiredPhrases) && model.requiredPhrases.length)
+    || (Array.isArray(model.anyPhrases) && model.anyPhrases.length)
+    || (Array.isArray(model.phrases) && model.phrases.length)
+  );
 
-  if (!blob) return 0;
+  if (!blob && !scopedText) return 0;
+  if (!hasCoreTerms && !model.hasFilters) return 0;
+
+  const clauseScoreInText = (clause, textValue, specificity = 1) => {
+    if (!clause || !Array.isArray(clause.variants) || !clause.variants.length) return 0;
+    const text = normalizeSearchText(textValue || '');
+    if (!text) return 0;
+    let best = 0;
+    for (const variant of clause.variants) {
+      const term = normalizeSearchText(variant && variant.term);
+      const weight = Number(variant && variant.weight || 0);
+      if (!term || weight <= 0) continue;
+      if (!text.includes(term)) continue;
+      const score = weight * (Number(specificity || 1) || 1);
+      if (score > best) best = score;
+    }
+    return best;
+  };
+
+  const phraseInText = (phrase, textValue) => {
+    const value = normalizeSearchText(phrase);
+    const text = normalizeSearchText(textValue);
+    if (!value || !text) return false;
+    return text.includes(value);
+  };
 
   for (const excluded of (model.excludeClauses || [])) {
     if (!excluded || !Array.isArray(excluded.variants)) continue;
@@ -1212,9 +1571,76 @@ function scorePersonRecordByModel(person, model, options = {}) {
     if (phrase && blob.includes(phrase)) return 0;
   }
 
+  const authorFieldClauses = model.fieldClauses && Array.isArray(model.fieldClauses.authors)
+    ? model.fieldClauses.authors
+    : [];
+  for (const clause of authorFieldClauses) {
+    if (clauseScoreInText(clause, `${name} ${variants.join(' ')}`, clause && clause.specificity || 1) <= 0) return 0;
+  }
+
+  const venueFieldClauses = model.fieldClauses && Array.isArray(model.fieldClauses.venue)
+    ? model.fieldClauses.venue
+    : [];
+  for (const clause of venueFieldClauses) {
+    if (clauseScoreInText(clause, publicationBlob, clause && clause.specificity || 1) <= 0) return 0;
+  }
+
+  const authorFieldPhrases = model.fieldPhrases && Array.isArray(model.fieldPhrases.authors)
+    ? model.fieldPhrases.authors
+    : [];
+  for (const entry of authorFieldPhrases) {
+    const phrase = normalizeSearchText(entry && entry.value);
+    if (!phrase) continue;
+    if (!phraseInText(phrase, `${name} ${variants.join(' ')}`)) return 0;
+  }
+
+  const venueFieldPhrases = model.fieldPhrases && Array.isArray(model.fieldPhrases.venue)
+    ? model.fieldPhrases.venue
+    : [];
+  for (const entry of venueFieldPhrases) {
+    const phrase = normalizeSearchText(entry && entry.value);
+    if (!phrase) continue;
+    if (!phraseInText(phrase, publicationBlob)) return 0;
+  }
+
+  for (const phrase of (model.requiredPhrases || [])) {
+    if (!phraseInText(phrase, scopedText)) return 0;
+  }
+
+  if (Array.isArray(model.anyClauses) && model.anyClauses.length) {
+    let matchedAnyClause = false;
+    for (const clause of model.anyClauses) {
+      if (clauseScoreInText(clause, scopedText, clause && clause.specificity || 1) > 0) {
+        matchedAnyClause = true;
+        break;
+      }
+    }
+    if (!matchedAnyClause && !(Array.isArray(model.anyPhrases) && model.anyPhrases.length)) return 0;
+    if (!matchedAnyClause && Array.isArray(model.anyPhrases) && model.anyPhrases.length) {
+      let matchedAnyPhrase = false;
+      for (const phrase of model.anyPhrases) {
+        if (phraseInText(phrase, scopedText)) {
+          matchedAnyPhrase = true;
+          break;
+        }
+      }
+      if (!matchedAnyPhrase) return 0;
+    }
+  } else if (Array.isArray(model.anyPhrases) && model.anyPhrases.length) {
+    let matchedAnyPhrase = false;
+    for (const phrase of model.anyPhrases) {
+      if (phraseInText(phrase, scopedText)) {
+        matchedAnyPhrase = true;
+        break;
+      }
+    }
+    if (!matchedAnyPhrase) return 0;
+  }
+
   let total = 0;
   let matchedClauses = 0;
-  for (const clause of model.clauses) {
+  const clauses = Array.isArray(model.clauses) ? model.clauses : [];
+  for (const clause of clauses) {
     if (!clause || !Array.isArray(clause.variants) || !clause.variants.length) continue;
     let bestClauseScore = 0;
     for (const variant of clause.variants) {
@@ -1223,17 +1649,19 @@ function scorePersonRecordByModel(person, model, options = {}) {
       if (!term || weight <= 0) continue;
 
       let termScore = 0;
-      if (name === term) termScore = Math.max(termScore, 18);
-      else if (name.startsWith(`${term} `) || name.startsWith(term)) termScore = Math.max(termScore, 13);
-      else if (name.includes(term)) termScore = Math.max(termScore, 9);
+      if (where !== 'abstract') {
+        if (name === term) termScore = Math.max(termScore, 18);
+        else if (name.startsWith(`${term} `) || name.startsWith(term)) termScore = Math.max(termScore, 13);
+        else if (name.includes(term)) termScore = Math.max(termScore, 9);
 
-      for (const candidate of variants) {
-        if (candidate === term) termScore = Math.max(termScore, 12);
-        else if (candidate.startsWith(`${term} `) || candidate.startsWith(term)) termScore = Math.max(termScore, 9);
-        else if (candidate.includes(term)) termScore = Math.max(termScore, 7);
+        for (const candidate of variants) {
+          if (candidate === term) termScore = Math.max(termScore, 12);
+          else if (candidate.startsWith(`${term} `) || candidate.startsWith(term)) termScore = Math.max(termScore, 9);
+          else if (candidate.includes(term)) termScore = Math.max(termScore, 7);
+        }
       }
 
-      if (blob.includes(term)) termScore = Math.max(termScore, 4);
+      if (where !== 'title' && blob.includes(term)) termScore = Math.max(termScore, where === 'abstract' ? 8 : 4);
       if (termScore <= 0) continue;
 
       const weightedScore = termScore * weight * (Number(clause.specificity || 1));
@@ -1244,22 +1672,47 @@ function scorePersonRecordByModel(person, model, options = {}) {
     total += bestClauseScore;
   }
 
-  if (!matchedClauses || total <= 0) return 0;
-
-  const clauseCount = Math.max(1, model.clauses.length);
-  const coverage = matchedClauses / clauseCount;
-  if (!relaxed && coverage < 1) return 0;
-  if (relaxed && clauseCount >= 3 && coverage < 0.5) return 0;
-  if (relaxed && clauseCount < 3 && coverage < 1) return 0;
+  let coverage = 1;
+  if (clauses.length) {
+    if (!matchedClauses || total <= 0) return 0;
+    const clauseCount = Math.max(1, clauses.length);
+    coverage = matchedClauses / clauseCount;
+    if (!relaxed && coverage < 1) return 0;
+    if (relaxed && clauseCount >= 3 && coverage < 0.5) return 0;
+    if (relaxed && clauseCount < 3 && coverage < 1) return 0;
+  } else {
+    total = 1;
+  }
 
   let phraseBonus = 0;
   for (const phraseEntry of (model.phrases || [])) {
     const phrase = normalizeSearchText(phraseEntry && phraseEntry.value);
     const phraseWeight = Number(phraseEntry && phraseEntry.weight || 1);
     if (!phrase || phraseWeight <= 0) continue;
-    if (name === phrase) phraseBonus += 20 * phraseWeight;
-    else if (name.startsWith(`${phrase} `) || name.startsWith(phrase)) phraseBonus += 14 * phraseWeight;
-    else if (blob.includes(phrase)) phraseBonus += 8 * phraseWeight;
+    if (where !== 'abstract') {
+      if (name === phrase) phraseBonus += 20 * phraseWeight;
+      else if (name.startsWith(`${phrase} `) || name.startsWith(phrase)) phraseBonus += 14 * phraseWeight;
+      else if (variants.some((candidate) => candidate.includes(phrase))) phraseBonus += 10 * phraseWeight;
+    }
+    if (where !== 'title' && blob.includes(phrase)) phraseBonus += 8 * phraseWeight;
+  }
+
+  let requiredPhraseBonus = 0;
+  for (const phrase of (model.requiredPhrases || [])) {
+    if (!phrase) continue;
+    if (phraseInText(phrase, scopedText)) requiredPhraseBonus += 9;
+  }
+
+  let anyBonus = 0;
+  for (const clause of (model.anyClauses || [])) {
+    const score = clauseScoreInText(clause, scopedText, clause && clause.specificity || 1);
+    if (score > anyBonus) anyBonus = score;
+  }
+  for (const phrase of (model.anyPhrases || [])) {
+    if (phraseInText(phrase, scopedText)) {
+      anyBonus = Math.max(anyBonus, 4.2);
+      break;
+    }
   }
 
   const countBoost = Math.log1p(Number(person.totalCount || 0)) * 2.4;
@@ -1268,7 +1721,7 @@ function scorePersonRecordByModel(person, model, options = {}) {
     ? Math.max(0, Number(person._latestYear || 0) - 2006) * 0.05
     : 0;
 
-  return (total * (0.52 + coverage)) + phraseBonus + countBoost + citationBoost + yearBoost;
+  return (total * (0.52 + coverage)) + phraseBonus + requiredPhraseBonus + anyBonus + countBoost + citationBoost + yearBoost;
 }
 
 function computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens) {
@@ -1366,17 +1819,32 @@ function compareUniversalEntries(a, b) {
   return getUniversalEntryTitle(a).localeCompare(getUniversalEntryTitle(b));
 }
 
-function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, query) {
+function buildSearchRankingText(query, advancedOptions = {}) {
+  const parts = [];
+  const baseQuery = normalizeAdvancedText(query, 300);
+  if (baseQuery) parts.push(baseQuery);
+  if (advancedOptions && typeof advancedOptions === 'object') {
+    if (advancedOptions.allWords) parts.push(normalizeAdvancedText(advancedOptions.allWords, 220));
+    if (advancedOptions.exactPhrase) parts.push(normalizeAdvancedText(advancedOptions.exactPhrase, 220));
+    if (advancedOptions.anyWords) parts.push(normalizeAdvancedText(advancedOptions.anyWords, 220));
+    if (advancedOptions.author) parts.push(normalizeAdvancedText(advancedOptions.author, 180));
+    if (advancedOptions.publication) parts.push(normalizeAdvancedText(advancedOptions.publication, 180));
+  }
+  return parts.filter(Boolean).join(' ');
+}
+
+function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, query, advancedOptions = null) {
   const rankedTalks = Array.isArray(talks) ? talks : [];
   const rankedPapers = Array.isArray(papers) ? papers : [];
   const rankedBlogs = Array.isArray(blogs) ? blogs : [];
   const rankedPeople = Array.isArray(people) ? people : [];
-  const normalizedQuery = normalizeSearchText(query);
-  const normalizedTokens = tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
+  const rankingQuery = buildSearchRankingText(query, advancedOptions || {});
+  const normalizedQuery = normalizeSearchText(rankingQuery);
+  const normalizedTokens = tokenizeQuery(rankingQuery).map((token) => normalizeSearchText(token)).filter(Boolean);
   const model = typeof HubUtils.buildSearchQueryModel === 'function'
-    ? HubUtils.buildSearchQueryModel(query)
+    ? HubUtils.buildSearchQueryModel(query, advancedOptions || undefined)
     : null;
-  const hasModel = !!(model && Array.isArray(model.clauses) && model.clauses.length > 0);
+  const hasModel = !!(model && model.hasSearchConstraints);
   const canScoreTalkByModel = hasModel && typeof HubUtils.scoreTalkRecordByModel === 'function';
   const canScorePaperByModel = hasModel && typeof HubUtils.scorePaperRecordByModel === 'function';
   const canScorePeopleByModel = hasModel;
@@ -1505,13 +1973,14 @@ function scorePaperForQuery(paper, tokens) {
   return total;
 }
 
-function rankTalksForQuery(talks, query) {
+function rankTalksForQuery(talks, query, advancedOptions = null) {
   const indexedTalks = (talks || []).map(indexTalkForSearch);
   const tokens = tokenizeQuery(query);
-  if (!tokens.length) return indexedTalks.sort(compareTalksNewestFirst);
+  const hasAdvanced = hasAdvancedSearchOptions(advancedOptions || {});
+  if (!tokens.length && !hasAdvanced) return indexedTalks.sort(compareTalksNewestFirst);
 
   if (typeof HubUtils.rankTalksByQuery === 'function') {
-    return HubUtils.rankTalksByQuery(indexedTalks, query);
+    return HubUtils.rankTalksByQuery(indexedTalks, query, { advanced: advancedOptions || undefined });
   }
 
   if (typeof HubUtils.scoreMatch === 'function') {
@@ -1527,13 +1996,14 @@ function rankTalksForQuery(talks, query) {
   return indexedTalks.sort(compareTalksNewestFirst);
 }
 
-function rankPapersForQuery(papers, query) {
+function rankPapersForQuery(papers, query, advancedOptions = null) {
   if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-    return HubUtils.rankPaperRecordsByQuery(papers, query);
+    return HubUtils.rankPaperRecordsByQuery(papers, query, { advanced: advancedOptions || undefined });
   }
 
   const tokens = tokenizeQuery(query);
-  if (!tokens.length) return [...papers].sort(comparePapersNewestFirst);
+  const hasAdvanced = hasAdvancedSearchOptions(advancedOptions || {});
+  if (!tokens.length && !hasAdvanced) return [...papers].sort(comparePapersNewestFirst);
 
   const scored = [];
   for (const paper of papers) {
@@ -1545,12 +2015,12 @@ function rankPapersForQuery(papers, query) {
   return scored.map((entry) => entry.paper);
 }
 
-function rankPeopleForQuery(people, query) {
+function rankPeopleForQuery(people, query, advancedOptions = null) {
   const records = Array.isArray(people) ? [...people] : [];
   const model = typeof HubUtils.buildSearchQueryModel === 'function'
-    ? HubUtils.buildSearchQueryModel(query)
+    ? HubUtils.buildSearchQueryModel(query, advancedOptions || undefined)
     : null;
-  const hasModel = !!(model && Array.isArray(model.clauses) && model.clauses.length > 0);
+  const hasModel = !!(model && model.hasSearchConstraints);
   const compareScored = (a, b) =>
     (Number(b.score || 0) - Number(a.score || 0))
     || comparePeopleWorks(a.person, b.person);
@@ -1587,7 +2057,8 @@ function rankPeopleForQuery(people, query) {
   }
 
   const tokens = tokenizeQuery(query);
-  if (!tokens.length) return records.sort(comparePeopleWorks);
+  const hasAdvanced = hasAdvancedSearchOptions(advancedOptions || {});
+  if (!tokens.length && !hasAdvanced) return records.sort(comparePeopleWorks);
 
   const scored = [];
   for (const person of records) {
@@ -1632,11 +2103,29 @@ function rankPeopleForQuery(people, query) {
 
 function recomputeFilteredResults() {
   if (state.mode === 'search') {
+    if (!hasActiveSearchCriteria()) {
+      filteredTalks = [];
+      filteredPapers = [];
+      filteredBlogs = [];
+      filteredPeople = [];
+      filteredUniversal = [];
+      searchResultCounts = {
+        all: 0,
+        talks: 0,
+        papers: 0,
+        blogs: 0,
+        people: 0,
+      };
+      syncScopeControlCounts();
+      return;
+    }
+
     const filterWindow = resolveTimeFilterWindow();
-    const rankedTalks = rankTalksForQuery(allTalkRecords, state.query);
-    const rankedPapers = rankPapersForQuery(allPaperRecords, state.query);
-    const rankedBlogs = rankPapersForQuery(allBlogRecords, state.query);
-    const rankedPeople = rankPeopleForQuery(allPeopleRecords, state.query);
+    const advancedOptions = buildAdvancedSearchOptions();
+    const rankedTalks = rankTalksForQuery(allTalkRecords, state.query, advancedOptions);
+    const rankedPapers = rankPapersForQuery(allPaperRecords, state.query, advancedOptions);
+    const rankedBlogs = rankPapersForQuery(allBlogRecords, state.query, advancedOptions);
+    const rankedPeople = rankPeopleForQuery(allPeopleRecords, state.query, advancedOptions);
     const scopedTalks = rankedTalks.filter((talk) => matchesTalkSearchFilters(talk, filterWindow));
     const scopedPapers = rankedPapers.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
     const scopedBlogs = rankedBlogs.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
@@ -1651,7 +2140,8 @@ function recomputeFilteredResults() {
       scopedPapers,
       scopedBlogs,
       scopedPeople,
-      state.query
+      state.query,
+      advancedOptions
     );
     filteredUniversal = state.scope === 'all' ? universalEntries : [];
     searchResultCounts = {
@@ -1947,7 +2437,9 @@ function setEmptyState(gridId, label) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
   grid.setAttribute('aria-busy', 'false');
-  const scopeValue = state.mode === 'search' ? state.query : state.value;
+  const scopeValue = state.mode === 'search'
+    ? (buildSearchDisplayValue() || state.query)
+    : state.value;
   const scope = scopeValue ? ` for "${escapeHtml(scopeValue)}"` : '';
   grid.innerHTML = `<div class="work-empty-state">No ${escapeHtml(label)} found${scope}.</div>`;
 }
@@ -2143,7 +2635,8 @@ function applyHeaderState() {
   }
 
   if (state.mode === 'search') {
-    if (!state.query) {
+    const searchLabel = buildSearchDisplayValue() || state.query;
+    if (!hasActiveSearchCriteria()) {
       if (titleEl) titleEl.textContent = 'Global Search';
       if (subtitleEl) subtitleEl.textContent = 'Use Global Search across talks, papers, blogs, and people from one place.';
       if (summaryEl) summaryEl.textContent = 'No search query provided';
@@ -2159,12 +2652,12 @@ function applyHeaderState() {
     if (titleEl) titleEl.textContent = 'Global Search';
     if (subtitleEl) {
       if (state.scope === 'all') {
-        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong>, ranked across talks, papers, blogs, and people`;
+        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(searchLabel || 'advanced search')}</strong>, ranked across talks, papers, blogs, and people`;
       } else {
-        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong> in <strong>${escapeHtml(getSearchScopeLabel(state.scope))}</strong>`;
+        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(searchLabel || 'advanced search')}</strong> in <strong>${escapeHtml(getSearchScopeLabel(state.scope))}</strong>`;
       }
     }
-    setWorkDocumentTitle(`Global Search: ${state.query}${state.scope === 'all' ? '' : ` (${getSearchScopeLabel(state.scope)})`}`);
+    setWorkDocumentTitle(`Global Search: ${searchLabel || 'Advanced search'}${state.scope === 'all' ? '' : ` (${getSearchScopeLabel(state.scope)})`}`);
   } else {
     if (!state.value) {
       if (titleEl) titleEl.textContent = 'All Work';
@@ -2834,7 +3327,7 @@ async function init() {
   updateIssueContextForWork();
   syncGlobalSearchInput();
 
-  if (state.mode === 'search' && !state.query) {
+  if (state.mode === 'search' && !hasActiveSearchCriteria()) {
     applyHeaderState();
     setEmptyState('work-universal-grid', 'results');
     setEmptyState('work-talks-grid', 'talks');

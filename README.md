@@ -80,6 +80,16 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - year filters: `since:2025`, `before:2022`, `year:2024`, `year:2022-2025`
   - exclusion: `mlir -cuda`, `topic:mlir -topic:openmp`
 - These operators work in Global Search (`work.html?mode=search`) for talks, papers, blogs, and cross-type `All` mode.
+- `work.html` now also exposes a Google-style **Advanced** search panel with explicit fields:
+  - Find articles with all of the words
+  - With the exact phrase
+  - With at least one of the words
+  - Without the words
+  - Where my words occur (`Anywhere`, `In title`, `In abstract/content`)
+  - Return articles authored by
+  - Return articles published in
+  - Return articles dated between (`From year` / `To year`)
+- Advanced panel values are translated into the shared ranking/filter model (not UI-only post-filters), so the same constraints drive talk, paper/blog, people, and universal relevance ordering.
 
 ### Context-aware result previews
 
@@ -97,6 +107,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs`, `People` (default `All`)
   - time filter in Global Search mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
   - type filter in Global Search mode: `Any type`, `Review articles`
+  - `Advanced` panel for structured Google-style constraints (all/exact/any/without words, where words occur, author, publication, dated between)
   - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
   - in Global Search mode (`mode=search`), results are interleaved across talks/papers/blogs/people by cross-type relevance (not fixed by content type)
   - exact/prefix title intent gets additional boost so precise queries surface the best matching item first, regardless of type
@@ -115,6 +126,14 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - optional `time=any|since-2026|since-2025|since-2022|custom` in search mode
   - optional `type=any|review` in search mode
   - optional `yearFrom=YYYY&yearTo=YYYY` for custom ranges (`time=custom`)
+  - optional advanced-search params in search mode:
+    - `allWords=...`
+    - `exactPhrase=...`
+    - `anyWords=...`
+    - `withoutWords=...`
+    - `where=anywhere|title|abstract`
+    - `author=...`
+    - `publication=...`
   - `mode=entity&kind=speaker|topic&value=...` for entity mode (All Work)
   - `from=talks|papers|blogs|people|work` for back-link context
   - `sort=...` and `view=expanded|compact`
