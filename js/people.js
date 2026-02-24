@@ -16,6 +16,7 @@ const ISSUE_DEFAULT_DETAILS = 'Describe what should be corrected or added.';
 const state = {
   query: '',
   filter: 'all', // all | talks | papers | blogs | merged
+  topic: '',
   affiliation: '',
   sortBy: 'works',
   viewMode: 'expanded',
@@ -24,6 +25,7 @@ const state = {
 let allPeople = [];
 let allTalks = [];
 let allPapers = [];
+let allTopics = [];
 let allAffiliations = [];
 let autocompleteIndex = {
   topics: [],
@@ -124,6 +126,12 @@ function normalizeAffiliationKey(value) {
   return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
 }
 
+function normalizeTopicKey(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9+]+/g, '');
+}
+
 function normalizeViewMode(value) {
   const normalized = String(value || '').trim().toLowerCase();
   if (normalized === 'compact' || normalized === 'list') return 'compact';
@@ -143,6 +151,7 @@ function getPersonSearchBlob(person) {
   return [
     person.name,
     ...(person.variantNames || []),
+    ...(person.topics || []).map((entry) => String((entry && entry.name) || '').trim()),
     ...(person.affiliations || []).map((entry) => String((entry && entry.name) || '').trim()),
   ].join(' ').toLowerCase();
 }
@@ -232,6 +241,101 @@ function mapToSortedEntries(map) {
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 }
 
+function getPersonTopics(person) {
+  if (!person || !Array.isArray(person.topics)) return [];
+  return person.topics
+    .map((entry) => {
+      const name = String((entry && entry.name) || '').trim();
+      const count = Number(entry && entry.count);
+      if (!name || !Number.isFinite(count) || count <= 0) return null;
+      return {
+        name,
+        count: Math.max(1, Math.round(count)),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+function getPersonTopicCountByKey(person, selectedTopicKey) {
+  const key = normalizeTopicKey(selectedTopicKey);
+  if (!key) return 0;
+  for (const topic of getPersonTopics(person)) {
+    if (normalizeTopicKey(topic.name) === key) {
+      return topic.count;
+    }
+  }
+  return 0;
+}
+
+function buildTopicIndex() {
+  const counts = new Map();
+  for (const person of allPeople) {
+    const seenForPerson = new Set();
+    for (const topic of getPersonTopics(person)) {
+      const key = normalizeTopicKey(topic.name);
+      if (!key) continue;
+      if (!counts.has(key)) {
+        counts.set(key, {
+          key,
+          name: topic.name,
+          mentionCount: 0,
+          peopleCount: 0,
+        });
+      }
+      const bucket = counts.get(key);
+      bucket.mentionCount += topic.count;
+      if (!seenForPerson.has(key)) {
+        bucket.peopleCount += 1;
+        seenForPerson.add(key);
+      }
+      if (topic.name.length > bucket.name.length) {
+        bucket.name = topic.name;
+      }
+    }
+  }
+
+  allTopics = [...counts.values()]
+    .sort((a, b) =>
+      b.peopleCount - a.peopleCount
+      || b.mentionCount - a.mentionCount
+      || a.name.localeCompare(b.name));
+}
+
+function syncTopicFilterControl() {
+  const select = document.getElementById('people-topic-select');
+  if (!select) return;
+  select.value = state.topic || '';
+}
+
+function refreshTopicFilterOptions() {
+  const select = document.getElementById('people-topic-select');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'All key topics';
+  select.appendChild(defaultOption);
+
+  for (const topic of allTopics) {
+    const option = document.createElement('option');
+    option.value = topic.key;
+    option.textContent = `${topic.name} (${topic.peopleCount.toLocaleString()})`;
+    select.appendChild(option);
+  }
+
+  if (state.topic && !allTopics.some((item) => item.key === state.topic)) {
+    state.topic = '';
+  }
+  syncTopicFilterControl();
+}
+
+function getSelectedTopicLabel() {
+  if (!state.topic) return '';
+  return allTopics.find((item) => item.key === state.topic)?.name || '';
+}
+
 function getPersonAffiliations(person) {
   if (!person || !Array.isArray(person.affiliations)) return [];
   return person.affiliations
@@ -314,6 +418,17 @@ function refreshAffiliationFilterOptions() {
 function getSelectedAffiliationLabel() {
   if (!state.affiliation) return '';
   return allAffiliations.find((item) => item.key === state.affiliation)?.name || '';
+}
+
+function buildActiveFilterSummary() {
+  const parts = [];
+  const topicLabel = getSelectedTopicLabel();
+  const affiliationLabel = getSelectedAffiliationLabel();
+  if (topicLabel) parts.push(`key topic <strong>${escapeHtml(topicLabel)}</strong>`);
+  if (affiliationLabel) parts.push(`affiliation <strong>${escapeHtml(affiliationLabel)}</strong>`);
+  if (!parts.length) return '';
+  if (parts.length === 1) return parts[0];
+  return `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`;
 }
 
 function buildAutocompleteIndex() {
@@ -644,6 +759,7 @@ function commitSearchValue(rawValue, allowGlobalRouting = true) {
 
 function filterPeople() {
   const tokens = tokenizeQuery(state.query);
+  const selectedTopicKey = normalizeTopicKey(state.topic);
   const selectedAffiliationKey = normalizeAffiliationKey(state.affiliation);
 
   return allPeople.filter((person) => {
@@ -651,6 +767,7 @@ function filterPeople() {
     if (state.filter === 'papers' && person.paperCount === 0) return false;
     if (state.filter === 'blogs' && (person.blogCount || 0) === 0) return false;
     if (state.filter === 'merged' && (person.variantNames || []).length < 2) return false;
+    if (selectedTopicKey && getPersonTopicCountByKey(person, selectedTopicKey) <= 0) return false;
     if (selectedAffiliationKey) {
       const hasAffiliation = getPersonAffiliations(person)
         .some((entry) => normalizeAffiliationKey(entry.name) === selectedAffiliationKey);
@@ -665,10 +782,13 @@ function filterPeople() {
 
 function sortPeople(people) {
   const entries = [...(people || [])];
+  const selectedTopicKey = normalizeTopicKey(state.topic);
+  const topicScore = (person) => selectedTopicKey ? getPersonTopicCountByKey(person, selectedTopicKey) : 0;
 
   if (state.sortBy === 'citations') {
     entries.sort((a, b) =>
       (b.citationCount || 0) - (a.citationCount || 0) ||
+      topicScore(b) - topicScore(a) ||
       b.totalCount - a.totalCount ||
       a.name.localeCompare(b.name));
     return entries;
@@ -684,6 +804,15 @@ function sortPeople(people) {
     return entries;
   }
 
+  if (selectedTopicKey) {
+    entries.sort((a, b) =>
+      topicScore(b) - topicScore(a) ||
+      (b.citationCount || 0) - (a.citationCount || 0) ||
+      b.totalCount - a.totalCount ||
+      a.name.localeCompare(b.name));
+    return entries;
+  }
+
   entries.sort((a, b) =>
     b.totalCount - a.totalCount ||
     (b.citationCount || 0) - (a.citationCount || 0) ||
@@ -693,7 +822,22 @@ function sortPeople(people) {
 
 function renderPersonCard(person, tokens) {
   const nameHtml = highlightText(person.name, tokens);
+  const topics = getPersonTopics(person);
   const affiliations = getPersonAffiliations(person);
+  const selectedTopicKey = normalizeTopicKey(state.topic);
+  const selectedTopicCount = selectedTopicKey ? getPersonTopicCountByKey(person, selectedTopicKey) : 0;
+  const topicExpertiseHtml = selectedTopicCount > 0
+    ? `<span class="meeting-label">${selectedTopicCount.toLocaleString()} topic hits</span>`
+    : '';
+  const topicsHtml = topics.length
+    ? `<div class="person-topics" aria-label="Top key topics">
+        ${topics.slice(0, 4).map((topic) => `
+          <span class="person-topic-pill">
+            <span class="person-topic-name">${highlightText(topic.name, tokens)}</span>
+            <span class="person-topic-count" aria-label="${topic.count.toLocaleString()} topic matches">${topic.count.toLocaleString()}</span>
+          </span>`).join('')}
+      </div>`
+    : '';
   const citationHtml = Number(person.citationCount || 0) > 0
     ? `<span class="meeting-label">${Number(person.citationCount || 0).toLocaleString()} citations</span>`
     : '';
@@ -767,8 +911,10 @@ function renderPersonCard(person, tokens) {
           <div class="card-meta">
             <span class="meeting-label">${person.totalCount.toLocaleString()} works</span>
             ${citationHtml}
+            ${topicExpertiseHtml}
           </div>
           <p class="card-title">${nameHtml}</p>
+          ${topicsHtml}
           ${affiliationsHtml}
         </div>
       </a>
@@ -889,15 +1035,15 @@ function render() {
 
   const tokens = tokenizeQuery(state.query);
   count.innerHTML = `<strong>${people.length.toLocaleString()}</strong> people`;
-  const selectedAffiliationLabel = getSelectedAffiliationLabel();
+  const filterSummary = buildActiveFilterSummary();
 
   if (state.query) {
-    subtitle.innerHTML = selectedAffiliationLabel
-      ? `Results for <strong>${escapeHtml(state.query)}</strong> filtered by <strong>${escapeHtml(selectedAffiliationLabel)}</strong>`
+    subtitle.innerHTML = filterSummary
+      ? `Results for <strong>${escapeHtml(state.query)}</strong> filtered by ${filterSummary}`
       : `Results for <strong>${escapeHtml(state.query)}</strong>`;
   } else {
-    subtitle.innerHTML = selectedAffiliationLabel
-      ? `Browsing <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles filtered by <strong>${escapeHtml(selectedAffiliationLabel)}</strong>.`
+    subtitle.innerHTML = filterSummary
+      ? `Browsing <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles filtered by ${filterSummary}.`
       : `Global Search is primary. Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
   }
 
@@ -1017,6 +1163,19 @@ function initAffiliationFilter() {
   });
 
   refreshAffiliationFilterOptions();
+}
+
+function initTopicFilter() {
+  const select = document.getElementById('people-topic-select');
+  if (!select) return;
+
+  select.addEventListener('change', () => {
+    state.topic = normalizeTopicKey(select.value);
+    syncTopicFilterControl();
+    render();
+  });
+
+  refreshTopicFilterOptions();
 }
 
 function initSearch() {
@@ -1505,6 +1664,8 @@ async function init() {
   }
 
   buildAutocompleteIndex();
+  buildTopicIndex();
+  initTopicFilter();
   buildAffiliationIndex();
   initAffiliationFilter();
   initSearch();

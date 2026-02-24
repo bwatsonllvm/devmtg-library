@@ -480,6 +480,9 @@
     for (const [name, count] of source.blogNameCounts.entries()) {
       target.blogNameCounts.set(name, (target.blogNameCounts.get(name) || 0) + count);
     }
+    for (const [topic, count] of source.topicCounts.entries()) {
+      target.topicCounts.set(topic, (target.topicCounts.get(topic) || 0) + count);
+    }
   }
 
   function shouldMergePeopleBuckets(a, b) {
@@ -555,12 +558,25 @@
           talkNameCounts: new Map(),
           paperNameCounts: new Map(),
           blogNameCounts: new Map(),
+          topicCounts: new Map(),
         });
       }
       return buckets.get(key);
     };
 
+    const addTopicCounts = (bucket, rawTopics) => {
+      for (const rawTopic of (rawTopics || [])) {
+        const canonicalTopic = canonicalizeKeyTopic(rawTopic) || collapseWhitespace(rawTopic);
+        if (!canonicalTopic) continue;
+        bucket.topicCounts.set(
+          canonicalTopic,
+          (bucket.topicCounts.get(canonicalTopic) || 0) + 1
+        );
+      }
+    };
+
     for (const talk of (Array.isArray(talks) ? talks : [])) {
+      const talkTopics = getTalkKeyTopics(talk, Infinity);
       for (const rawSpeaker of (talk.speakers || [])) {
         const speaker = normalizePersonRecord(rawSpeaker);
         if (!speaker.name) continue;
@@ -569,6 +585,7 @@
         bucket.talkCount += 1;
         bucket.nameCounts.set(speaker.name, (bucket.nameCounts.get(speaker.name) || 0) + 1);
         bucket.talkNameCounts.set(speaker.name, (bucket.talkNameCounts.get(speaker.name) || 0) + 1);
+        addTopicCounts(bucket, talkTopics);
         if (speaker.affiliation) {
           const affiliation = normalizeAffiliation(speaker.affiliation);
           if (!affiliation) continue;
@@ -583,6 +600,7 @@
     for (const paper of (Array.isArray(papers) ? papers : [])) {
       const paperCitationCount = parsePaperCitationCount(paper);
       const isBlog = isBlogPaperRecord(paper);
+      const paperTopics = getPaperKeyTopics(paper, Infinity);
       for (const rawAuthor of (paper.authors || [])) {
         const author = normalizePersonRecord(rawAuthor);
         if (!author.name) continue;
@@ -597,6 +615,7 @@
         } else {
           bucket.paperNameCounts.set(author.name, (bucket.paperNameCounts.get(author.name) || 0) + 1);
         }
+        addTopicCounts(bucket, paperTopics);
         if (author.affiliation) {
           const affiliation = normalizeAffiliation(author.affiliation);
           if (!affiliation) continue;
@@ -667,6 +686,33 @@
         const talkFilterName = chooseBestDisplayName(bucket.talkNameCounts) || displayName;
         const paperFilterName = chooseBestDisplayName(bucket.paperNameCounts) || displayName;
         const blogFilterName = chooseBestDisplayName(bucket.blogNameCounts) || displayName;
+        const topicBuckets = new Map();
+        for (const [rawTopic, rawCount] of bucket.topicCounts.entries()) {
+          const topic = canonicalizeKeyTopic(rawTopic) || collapseWhitespace(rawTopic);
+          const count = Number(rawCount);
+          if (!topic || !Number.isFinite(count) || count <= 0) continue;
+          const key = normalizeTopicKey(topic);
+          if (!key) continue;
+          if (!topicBuckets.has(key)) {
+            topicBuckets.set(key, { count: 0, labels: new Map() });
+          }
+          const topicBucket = topicBuckets.get(key);
+          topicBucket.count += count;
+          topicBucket.labels.set(topic, (topicBucket.labels.get(topic) || 0) + count);
+        }
+
+        const topics = [...topicBuckets.values()]
+          .map((entry) => {
+            const label = [...entry.labels.entries()]
+              .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || '';
+            return {
+              name: label,
+              count: Math.round(entry.count),
+            };
+          })
+          .filter((entry) => entry.name && entry.count > 0)
+          .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
         const affiliationBuckets = new Map();
         for (const [rawAffiliation, rawCount] of bucket.paperAffiliationCounts.entries()) {
           const affiliation = normalizeAffiliation(rawAffiliation);
@@ -709,6 +755,8 @@
           blogCount: bucket.blogCount,
           citationCount: bucket.citationCount || 0,
           totalCount: bucket.talkCount + bucket.paperCount + bucket.blogCount,
+          topics,
+          primaryTopic: topics[0]?.name || '',
           affiliations,
           primaryAffiliation: affiliations[0]?.name || '',
         };
