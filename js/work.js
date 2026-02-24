@@ -1929,6 +1929,8 @@ function compareUniversalEntries(a, b) {
 
   const scoreDiff = (b.score || 0) - (a.score || 0);
   if (scoreDiff !== 0) return scoreDiff;
+  const rawDiff = (b.rawScore || 0) - (a.rawScore || 0);
+  if (rawDiff !== 0) return rawDiff;
   const yearDiff = getUniversalEntryYear(b) - getUniversalEntryYear(a);
   if (yearDiff !== 0) return yearDiff;
   return getUniversalEntryTitle(a).localeCompare(getUniversalEntryTitle(b));
@@ -1961,21 +1963,29 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
   const relaxed = [];
   const fallback = [];
 
-  const pushEntry = (bucket, kind, record, score, rankIndex) => {
-    if (!(score > 0)) return;
+  const pushEntry = (bucket, tier, kind, record, rawScore, rankIndex) => {
+    const numericScore = Number(rawScore);
+    if (!(numericScore > 0)) return;
+    const entry = {
+      kind,
+      rawScore: numericScore,
+      score: numericScore,
+      rankIndex,
+      tier,
+    };
     if (kind === 'talk') {
-      bucket.push({ kind, talk: record, score, rankIndex });
+      bucket.push({ ...entry, talk: record });
       return;
     }
     if (kind === 'person') {
-      bucket.push({ kind, person: record, score, rankIndex });
+      bucket.push({ ...entry, person: record });
       return;
     }
     if (kind === 'docs') {
-      bucket.push({ kind, doc: record, score, rankIndex });
+      bucket.push({ ...entry, doc: record });
       return;
     }
-    bucket.push({ kind, paper: record, score, rankIndex });
+    bucket.push({ ...entry, paper: record });
   };
 
   const pushForKind = (records, kind) => {
@@ -1997,7 +2007,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
       if (kind === 'docs') {
         const docsScore = Number(record && record._workSearchScore || 0);
         if (docsScore > 0) {
-          pushEntry(strict, kind, record, docsScore + titleBoost, index);
+          pushEntry(strict, 'strict', kind, record, docsScore + titleBoost, index);
           return;
         }
       }
@@ -2009,7 +2019,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
             ? scorePersonRecordByModel(record, model, { relaxed: false })
             : HubUtils.scorePaperRecordByModel(record, model, { relaxed: false }));
         if (strictScore > 0) {
-          pushEntry(strict, kind, record, strictScore + titleBoost, index);
+          pushEntry(strict, 'strict', kind, record, strictScore + titleBoost, index);
           return;
         }
 
@@ -2019,7 +2029,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
             ? scorePersonRecordByModel(record, model, { relaxed: true })
             : HubUtils.scorePaperRecordByModel(record, model, { relaxed: true }));
         if (relaxedScore > 0) {
-          pushEntry(relaxed, kind, record, relaxedScore + (titleBoost * 0.9), index);
+          pushEntry(relaxed, 'relaxed', kind, record, relaxedScore + (titleBoost * 0.9), index);
           return;
         }
       }
@@ -2027,7 +2037,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
       if (index >= UNIVERSAL_FALLBACK_PER_KIND_LIMIT) return;
       const fallbackBase = kind === 'person' ? 210 : (kind === 'docs' ? 235 : 230);
       const fallbackScore = (fallbackBase / (index + 2)) + titleBoost;
-      pushEntry(fallback, kind, record, fallbackScore, index);
+      pushEntry(fallback, 'fallback', kind, record, fallbackScore, index);
     });
   };
 
@@ -2050,6 +2060,40 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
     entries = [...relaxed];
   } else {
     entries = fallback;
+  }
+
+  if (entries.length) {
+    const topByKind = new Map();
+    let globalTopScore = 0;
+
+    for (const entry of entries) {
+      const raw = Number(entry && entry.rawScore || 0);
+      if (!(raw > 0)) continue;
+      if (raw > globalTopScore) globalTopScore = raw;
+      const prev = Number(topByKind.get(entry.kind) || 0);
+      if (raw > prev) topByKind.set(entry.kind, raw);
+    }
+
+    entries = entries.map((entry) => {
+      const raw = Number(entry && entry.rawScore || 0);
+      if (!(raw > 0)) return { ...entry, score: 0 };
+
+      const kindTopScore = Number(topByKind.get(entry.kind) || 0) || globalTopScore || raw;
+      const blendedScore = typeof HubUtils.composeCrossTypeRelevance === 'function'
+        ? HubUtils.composeCrossTypeRelevance(raw, {
+          kindTopScore,
+          globalTopScore: globalTopScore || raw,
+          rankIndex: Number(entry.rankIndex || 0),
+          tier: entry.tier || 'strict',
+          kind: entry.kind || '',
+        })
+        : raw;
+
+      return {
+        ...entry,
+        score: blendedScore > 0 ? blendedScore : raw,
+      };
+    });
   }
 
   const sorted = entries.sort(compareUniversalEntries);

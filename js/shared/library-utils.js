@@ -3140,6 +3140,63 @@
     return aTitle.localeCompare(bTitle);
   }
 
+  const CROSS_TYPE_KIND_PRIOR = Object.freeze({
+    talk: 1.02,
+    paper: 1.0,
+    blog: 0.98,
+    docs: 0.94,
+    person: 0.92,
+  });
+
+  const CROSS_TYPE_TIER_MULTIPLIER = Object.freeze({
+    strict: 1.0,
+    relaxed: 0.84,
+    fallback: 0.62,
+  });
+
+  function boundCrossTypeValue(value, min, max) {
+    if (!Number.isFinite(value)) return min;
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+  }
+
+  function composeCrossTypeRelevance(rawScore, options = {}) {
+    const raw = Number(rawScore);
+    if (!Number.isFinite(raw) || raw <= 0) return 0;
+
+    const opts = options && typeof options === 'object' ? options : {};
+    const kindTopCandidate = Number(opts.kindTopScore);
+    const kindTopScore = Number.isFinite(kindTopCandidate) && kindTopCandidate > 0
+      ? kindTopCandidate
+      : raw;
+    const globalTopCandidate = Number(opts.globalTopScore);
+    const globalTopScore = Number.isFinite(globalTopCandidate) && globalTopCandidate > 0
+      ? globalTopCandidate
+      : raw;
+
+    const rankRaw = Number(opts.rankIndex);
+    const rankIndex = Number.isFinite(rankRaw) && rankRaw >= 0 ? Math.floor(rankRaw) : 0;
+    const kind = normalizeSearchText(opts.kind || '');
+    const tier = normalizeSearchText(opts.tier || 'strict');
+
+    const kindPrior = CROSS_TYPE_KIND_PRIOR[kind] || 1;
+    const tierMultiplier = CROSS_TYPE_TIER_MULTIPLIER[tier] || 1;
+
+    const kindRatio = boundCrossTypeValue(raw / kindTopScore, 0.06, 1.8);
+    const globalRatio = boundCrossTypeValue(raw / globalTopScore, 0.04, 1.4);
+    const rankSignal = 1 / Math.log2(rankIndex + 2);
+
+    const rawSignal = Math.log1p(raw) * 34;
+    const ratioSignal = (kindRatio * 96) + (globalRatio * 72);
+    const rankBonus = rankSignal * 26;
+
+    let score = (rawSignal + ratioSignal + rankBonus) * tierMultiplier * kindPrior;
+    if (globalRatio < 0.15) score *= 0.84;
+    if (globalRatio < 0.08) score *= 0.72;
+    return score > 0 ? score : 0;
+  }
+
   function rankPaperRecordsByQuery(papers, query, options = {}) {
     const records = Array.isArray(papers) ? papers : [];
     const model = buildSearchQueryModel(query, options && options.advanced ? options.advanced : undefined);
@@ -3753,6 +3810,7 @@
     parseNavigationState,
     parseUrlState,
     rankAutocompleteEntries,
+    composeCrossTypeRelevance,
     rankPaperRecordsByQuery,
     rankTalksByQuery,
     scorePaperRecordByModel,

@@ -263,3 +263,64 @@ test('parseUrlState tolerates malformed URL encoding', () => {
     assert.equal(typeof parsed.query, 'string');
   });
 });
+
+test('composeCrossTypeRelevance rewards strict top-ranked matches', () => {
+  const strictTop = utils.composeCrossTypeRelevance(180, {
+    kindTopScore: 180,
+    globalTopScore: 220,
+    rankIndex: 0,
+    tier: 'strict',
+    kind: 'paper',
+  });
+  const relaxedTop = utils.composeCrossTypeRelevance(180, {
+    kindTopScore: 180,
+    globalTopScore: 220,
+    rankIndex: 0,
+    tier: 'relaxed',
+    kind: 'paper',
+  });
+  const strictDeep = utils.composeCrossTypeRelevance(180, {
+    kindTopScore: 180,
+    globalTopScore: 220,
+    rankIndex: 24,
+    tier: 'strict',
+    kind: 'paper',
+  });
+
+  assert.ok(strictTop > relaxedTop);
+  assert.ok(strictTop > strictDeep);
+});
+
+test('composeCrossTypeRelevance applies kind priors and global-ratio penalty', () => {
+  const talkTop = utils.composeCrossTypeRelevance(100, {
+    kindTopScore: 100,
+    globalTopScore: 100,
+    rankIndex: 0,
+    tier: 'strict',
+    kind: 'talk',
+  });
+  const docsTop = utils.composeCrossTypeRelevance(100, {
+    kindTopScore: 100,
+    globalTopScore: 100,
+    rankIndex: 0,
+    tier: 'strict',
+    kind: 'docs',
+  });
+  const highGlobal = utils.composeCrossTypeRelevance(120, {
+    kindTopScore: 120,
+    globalTopScore: 220,
+    rankIndex: 0,
+    tier: 'strict',
+    kind: 'talk',
+  });
+  const lowGlobal = utils.composeCrossTypeRelevance(20, {
+    kindTopScore: 120,
+    globalTopScore: 220,
+    rankIndex: 0,
+    tier: 'strict',
+    kind: 'talk',
+  });
+
+  assert.ok(talkTop > docsTop);
+  assert.ok(highGlobal > lowGlobal);
+});
