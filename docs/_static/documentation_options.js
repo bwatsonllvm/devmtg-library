@@ -15,6 +15,7 @@ const DOCUMENTATION_OPTIONS = {
 // LLVM Library bridge: make mirrored docs inherit the main site shell and display settings.
 (function () {
   document.documentElement.classList.add('library-docs-bridge');
+  const DOCS_SIDEBAR_COLLAPSE_KEY = 'llvm-docs-book-sidebar-collapsed';
 
   function resolveRootPath() {
     const pathname = String(window.location.pathname || '/');
@@ -44,6 +45,30 @@ const DOCUMENTATION_OPTIONS = {
     return node;
   }
 
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (_) {
+      // Ignore storage failures (private mode, quota, etc).
+    }
+  }
+
+  function safeStorageRemove(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (_) {
+      // Ignore storage failures.
+    }
+  }
+
   function ensureCriticalBridgeStyles() {
     const node = ensureHeadTag('style', { id: 'llvm-docs-bridge-critical' });
     if (!node) return;
@@ -66,7 +91,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-07` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-08` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -224,6 +249,65 @@ const DOCUMENTATION_OPTIONS = {
     return children.some((child) => nodeContainsSlug(child, slug));
   }
 
+  function getSidebarCollapsedPreference() {
+    return safeStorageGet(DOCS_SIDEBAR_COLLAPSE_KEY) === '1';
+  }
+
+  function setSidebarCollapsedPreference(collapsed) {
+    if (collapsed) safeStorageSet(DOCS_SIDEBAR_COLLAPSE_KEY, '1');
+    else safeStorageRemove(DOCS_SIDEBAR_COLLAPSE_KEY);
+  }
+
+  function isMobileSidebarLayout() {
+    return !!(window.matchMedia && window.matchMedia('(max-width: 1024px)').matches);
+  }
+
+  function applySidebarCollapsedState(collapsed, persist) {
+    const shouldCollapse = !isMobileSidebarLayout() && !!collapsed;
+    if (document.body) {
+      document.body.classList.toggle('docs-book-sidebar-collapsed', shouldCollapse);
+    }
+
+    const toggle = document.getElementById('docs-book-sidebar-toggle');
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', shouldCollapse ? 'true' : 'false');
+      toggle.setAttribute('aria-label', shouldCollapse ? 'Expand sidebar' : 'Collapse sidebar');
+      toggle.title = shouldCollapse ? 'Expand sidebar' : 'Collapse sidebar';
+    }
+
+    if (persist) {
+      setSidebarCollapsedPreference(!!collapsed);
+    }
+  }
+
+  function initSidebarCollapseControl() {
+    if (!document.body) return;
+    if (document.body.dataset.docsSidebarCollapseInit === '1') {
+      applySidebarCollapsedState(getSidebarCollapsedPreference(), false);
+      return;
+    }
+
+    const toggle = document.getElementById('docs-book-sidebar-toggle');
+    if (!toggle) return;
+    document.body.dataset.docsSidebarCollapseInit = '1';
+
+    applySidebarCollapsedState(getSidebarCollapsedPreference(), false);
+
+    toggle.addEventListener('click', function () {
+      const next = !document.body.classList.contains('docs-book-sidebar-collapsed');
+      applySidebarCollapsedState(next, true);
+    });
+
+    if (window.matchMedia) {
+      const mq = window.matchMedia('(max-width: 1024px)');
+      const onChange = function () {
+        applySidebarCollapsedState(getSidebarCollapsedPreference(), false);
+      };
+      if (typeof mq.addEventListener === 'function') mq.addEventListener('change', onChange);
+      else if (typeof mq.addListener === 'function') mq.addListener(onChange);
+    }
+  }
+
   function buildBookEntriesList(entries, chapterPrefix, rootPath, currentSlug, depth) {
     const list = document.createElement('ol');
     list.className = depth === 0 ? 'docs-book-list' : 'docs-book-sublist';
@@ -289,10 +373,28 @@ const DOCUMENTATION_OPTIONS = {
     nav.className = 'docs-book-index';
     nav.setAttribute('aria-label', 'Book-style table of contents');
 
+    const navHead = document.createElement('div');
+    navHead.className = 'docs-book-index-head';
+
     const navTitle = document.createElement('h3');
     navTitle.className = 'docs-book-index-title';
     navTitle.textContent = 'Book Index';
-    nav.appendChild(navTitle);
+    navHead.appendChild(navTitle);
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'docs-book-sidebar-toggle';
+    toggleBtn.id = 'docs-book-sidebar-toggle';
+    toggleBtn.type = 'button';
+    toggleBtn.setAttribute('aria-pressed', 'false');
+    toggleBtn.setAttribute('aria-label', 'Collapse sidebar');
+    toggleBtn.title = 'Collapse sidebar';
+    toggleBtn.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    `;
+    navHead.appendChild(toggleBtn);
+    nav.appendChild(navHead);
 
     payload.chapters.forEach((chapter, chapterIdx) => {
       const entries = Array.isArray(chapter && chapter.entries) ? chapter.entries : [];
@@ -317,6 +419,8 @@ const DOCUMENTATION_OPTIONS = {
       quickSearchClone.style.display = 'block';
       wrapper.appendChild(quickSearchClone);
     }
+
+    initSidebarCollapseControl();
     return true;
   }
 

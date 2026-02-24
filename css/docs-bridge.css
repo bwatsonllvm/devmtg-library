@@ -6,6 +6,7 @@
 
 :root {
   --docs-sidebar-width: var(--sidebar-width, clamp(236px, 21vw, 308px));
+  --docs-sidebar-collapsed-width: var(--sidebar-collapsed-width, clamp(48px, 4.2vw, 56px));
   --docs-content-max: var(--max-width, 1280px);
 }
 
@@ -259,6 +260,13 @@ body {
   gap: var(--space-3);
 }
 
+.library-docs-bridge .docs-book-index-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
 .library-docs-bridge .docs-book-index-title {
   margin: 0;
   padding: 0;
@@ -268,6 +276,29 @@ body {
   font-size: 11px;
   font-weight: var(--font-weight-semi, 600);
   line-height: 1.3;
+}
+
+.library-docs-bridge .docs-book-sidebar-toggle {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted, #6b7280);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.library-docs-bridge .docs-book-sidebar-toggle:hover {
+  color: var(--color-text, #111827);
+  border-color: var(--color-border-focus);
+  background: var(--color-surface-hover);
+}
+
+.library-docs-bridge .docs-book-sidebar-toggle svg {
+  transition: transform var(--transition-fast);
 }
 
 .library-docs-bridge .docs-book-chapter {
@@ -352,6 +383,47 @@ body {
 
 .library-docs-bridge .docs-book-item.is-active-path > .docs-book-link {
   border-color: var(--color-divider);
+}
+
+@media (min-width: 1025px) {
+  .library-docs-bridge.docs-book-sidebar-collapsed .document {
+    padding-left: calc(var(--docs-sidebar-collapsed-width) + (var(--layout-edge) * 2));
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .body {
+    width: min(var(--docs-content-max), calc(100vw - var(--docs-sidebar-collapsed-width) - (var(--layout-edge) * 3)));
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .sphinxsidebar {
+    width: var(--docs-sidebar-collapsed-width);
+    padding: var(--space-2) !important;
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .sphinxsidebarwrapper {
+    gap: 0;
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-index {
+    gap: 0;
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-index-head {
+    justify-content: center;
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-index-title,
+  .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-chapter,
+  .library-docs-bridge.docs-book-sidebar-collapsed #searchbox {
+    display: none !important;
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-sidebar-toggle svg {
+    transform: rotate(180deg);
+  }
+
+  .library-docs-bridge.docs-book-sidebar-collapsed .footer {
+    margin-left: calc(var(--docs-sidebar-collapsed-width) + (var(--layout-edge) * 2));
+  }
 }
 
 /* ============================================================
