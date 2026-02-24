@@ -829,6 +829,40 @@ const DOCUMENTATION_OPTIONS = {
     });
   }
 
+  function buildSidebarSearchBox(rootPath) {
+    const box = document.createElement('div');
+    box.id = 'searchbox';
+    box.setAttribute('role', 'search');
+
+    const formWrap = document.createElement('div');
+    formWrap.className = 'searchformwrapper';
+
+    const form = document.createElement('form');
+    form.className = 'search';
+    form.action = buildDocsSearchUrl(rootPath, '');
+    form.method = 'get';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'q';
+    input.autocomplete = 'off';
+    input.autocorrect = 'off';
+    input.autocapitalize = 'off';
+    input.spellcheck = false;
+
+    const submit = document.createElement('input');
+    submit.type = 'submit';
+    submit.value = 'Go';
+
+    form.appendChild(input);
+    form.appendChild(submit);
+    formWrap.appendChild(form);
+    box.appendChild(formWrap);
+
+    normalizeSearchInputPresentation(box);
+    return box;
+  }
+
   function buildSearchAliasPanel(rootPath, searchInput) {
     const panel = document.createElement('div');
     panel.className = 'docs-search-alias-panel';
@@ -1694,10 +1728,14 @@ const DOCUMENTATION_OPTIONS = {
     sidebarTop.appendChild(toggleBtn);
     wrapper.appendChild(sidebarTop);
 
-    if (quickSearchClone) {
-      normalizeSearchInputPresentation(quickSearchClone);
-      quickSearchClone.style.display = 'block';
-      wrapper.appendChild(quickSearchClone);
+    let sidebarSearch = quickSearchClone;
+    if (!sidebarSearch) {
+      sidebarSearch = buildSidebarSearchBox(rootPath);
+    }
+    if (sidebarSearch) {
+      normalizeSearchInputPresentation(sidebarSearch);
+      sidebarSearch.style.display = 'block';
+      wrapper.appendChild(sidebarSearch);
     }
 
     wrapper.appendChild(buildSidebarReleasePanel(rootPath));
