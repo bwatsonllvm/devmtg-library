@@ -29,6 +29,38 @@ const DOCUMENTATION_OPTIONS = {
     { token: 'pass manager', label: 'Using the New Pass Manager', slug: 'NewPassManager' },
     { token: 'passes', label: 'LLVM Analysis and Transform Passes', slug: 'Passes' },
   ];
+  const DOCS_STANDARD_SIDEBAR_GROUPS = [
+    {
+      id: 'documentation',
+      title: 'Documentation',
+      links: [
+        { label: 'Getting Started/Tutorials', slug: 'GettingStartedTutorials' },
+        { label: 'User Guides', slug: 'UserGuides' },
+        { label: 'Reference', slug: 'Reference' },
+      ],
+    },
+    {
+      id: 'getting-involved',
+      title: 'Getting Involved',
+      links: [
+        { label: 'Contributing to LLVM', slug: 'Contributing' },
+        { label: 'Submitting Bug Reports', slug: 'HowToSubmitABug' },
+        { label: 'Mailing Lists', slug: 'GettingInvolved', hash: 'mailing-lists' },
+        { label: 'Discord', slug: 'GettingInvolved', hash: 'discord' },
+        { label: 'Meetups and Social Events', slug: 'GettingInvolved', hash: 'meetups-and-social-events' },
+      ],
+    },
+    {
+      id: 'additional-links',
+      title: 'Additional Links',
+      links: [
+        { label: 'FAQ', slug: 'FAQ' },
+        { label: 'Glossary', slug: 'Lexicon' },
+        { label: 'Publications', href: 'https://llvm.org/pubs' },
+        { label: 'Github Repository', href: 'https://github.com/llvm/llvm-project/' },
+      ],
+    },
+  ];
 
   function resolveRootPath() {
     const pathname = String(window.location.pathname || '/');
@@ -123,7 +155,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-17` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-18` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -620,26 +652,22 @@ const DOCUMENTATION_OPTIONS = {
     };
   }
 
-  function buildReleaseRail(rootPath) {
+  function buildSidebarReleasePanel(rootPath) {
     const release = getLatestReleaseModel(rootPath);
 
-    const rail = document.createElement('aside');
-    rail.id = 'docs-release-rail';
-    rail.className = 'docs-release-rail';
-    rail.setAttribute('aria-label', 'LLVM release and downloads');
-
-    const card = document.createElement('section');
-    card.className = 'docs-release-rail-card';
+    const panel = document.createElement('section');
+    panel.className = 'docs-book-release';
+    panel.setAttribute('aria-label', 'LLVM release and downloads');
 
     const title = document.createElement('h3');
-    title.className = 'docs-release-rail-title';
+    title.className = 'docs-book-release-title';
     title.textContent = 'Release';
-    card.appendChild(title);
+    panel.appendChild(title);
 
     const version = document.createElement('p');
     version.className = 'docs-release-version';
     version.textContent = release.versionLabel;
-    card.appendChild(version);
+    panel.appendChild(version);
 
     const links = document.createElement('div');
     links.className = 'docs-release-links';
@@ -658,20 +686,118 @@ const DOCUMENTATION_OPTIONS = {
     download.textContent = 'Download via GitHub';
     links.appendChild(download);
 
-    card.appendChild(links);
-    rail.appendChild(card);
-    return rail;
+    panel.appendChild(links);
+    return panel;
   }
 
-  function renderReleaseRail(rootPath) {
-    if (!document.body) return;
-    const nextRail = buildReleaseRail(rootPath);
-    const existing = document.getElementById('docs-release-rail');
+  function refreshSidebarReleasePanel(rootPath) {
+    const existing = document.querySelector('.sphinxsidebarwrapper .docs-book-release');
+    if (!existing) return;
+    const next = buildSidebarReleasePanel(rootPath);
     if (existing && existing.parentNode) {
-      existing.parentNode.replaceChild(nextRail, existing);
-    } else {
-      document.body.appendChild(nextRail);
+      existing.parentNode.replaceChild(next, existing);
     }
+  }
+
+  function resolveSidebarGroupHref(link, rootPath) {
+    if (!link || typeof link !== 'object') return `${rootPath}docs/`;
+    const directHref = String(link.href || '').trim();
+    if (directHref) return directHref;
+    const slug = String(link.slug || '').trim();
+    const base = slug ? slugToDocsHref(slug, rootPath) : `${rootPath}docs/`;
+    const hash = String(link.hash || '').trim();
+    if (!hash) return base;
+    return `${base}#${hash}`;
+  }
+
+  function buildStandardSidebarGroups(rootPath) {
+    const container = document.createElement('section');
+    container.className = 'docs-standard-groups';
+    container.setAttribute('aria-label', 'Standard LLVM docs links');
+
+    DOCS_STANDARD_SIDEBAR_GROUPS.forEach((group) => {
+      const stateId = `sidebar-group-${String(group.id || '').trim()}`;
+      const storedCollapsed = getStoredNodeCollapseState(stateId);
+      const expanded = storedCollapsed === null ? false : !storedCollapsed;
+
+      const section = document.createElement('section');
+      section.className = 'docs-book-chapter docs-standard-group';
+      if (!expanded) section.classList.add('is-collapsed');
+
+      const head = document.createElement('div');
+      head.className = 'docs-book-chapter-head';
+      head.setAttribute('role', 'button');
+      head.setAttribute('tabindex', '0');
+
+      const toggle = document.createElement('button');
+      toggle.className = 'docs-book-chapter-toggle';
+      toggle.type = 'button';
+      toggle.innerHTML = buildDisclosureChevron();
+      const bodyId = `docs-standard-group-${String(group.id || '').trim()}`;
+      toggle.setAttribute('aria-controls', bodyId);
+      setNodeToggleState(toggle, expanded, String(group.title || 'Section'));
+      head.appendChild(toggle);
+      head.setAttribute('aria-controls', bodyId);
+      head.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+      const title = document.createElement('h4');
+      title.className = 'docs-book-chapter-title';
+      title.textContent = String(group.title || 'Section');
+      head.appendChild(title);
+      section.appendChild(head);
+
+      const body = document.createElement('div');
+      body.className = 'docs-book-chapter-body';
+      body.id = bodyId;
+      body.hidden = !expanded;
+
+      const list = document.createElement('ul');
+      list.className = 'docs-standard-link-list';
+      const links = Array.isArray(group.links) ? group.links : [];
+      links.forEach((entry) => {
+        const li = document.createElement('li');
+        li.className = 'docs-standard-link-item';
+
+        const link = document.createElement('a');
+        link.className = 'docs-standard-link';
+        link.href = resolveSidebarGroupHref(entry, rootPath);
+        link.textContent = String(entry.label || 'Untitled');
+        li.appendChild(link);
+        list.appendChild(li);
+      });
+      body.appendChild(list);
+      section.appendChild(body);
+
+      const toggleGroup = function () {
+        const collapsed = section.classList.toggle('is-collapsed');
+        body.hidden = collapsed;
+        setStoredNodeCollapseState(stateId, collapsed);
+        setNodeToggleState(toggle, !collapsed, String(group.title || 'Section'));
+        head.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      };
+
+      toggle.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleGroup();
+      });
+
+      head.addEventListener('click', function (event) {
+        if (event.target && event.target.closest('.docs-book-chapter-toggle')) return;
+        toggleGroup();
+      });
+
+      head.addEventListener('keydown', function (event) {
+        if (event.target && event.target.closest('.docs-book-chapter-toggle')) return;
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggleGroup();
+      });
+
+      container.appendChild(section);
+    });
+
+    return container;
   }
 
   function normalizeSearchInputPresentation(scope) {
@@ -1073,16 +1199,19 @@ const DOCUMENTATION_OPTIONS = {
       wrapper.appendChild(quickSearchClone);
     }
 
+    wrapper.appendChild(buildSidebarReleasePanel(rootPath));
+    wrapper.appendChild(buildStandardSidebarGroups(rootPath));
+
     const nav = document.createElement('nav');
     nav.className = 'docs-book-index';
-    nav.setAttribute('aria-label', 'Book-style table of contents');
+    nav.setAttribute('aria-label', 'Documentation table of contents');
 
     const navHead = document.createElement('div');
     navHead.className = 'docs-book-index-head';
 
     const navTitle = document.createElement('h3');
     navTitle.className = 'docs-book-index-title';
-    navTitle.textContent = 'Book Index';
+    navTitle.textContent = 'Index';
     navHead.appendChild(navTitle);
     nav.appendChild(navHead);
 
@@ -1163,7 +1292,6 @@ const DOCUMENTATION_OPTIONS = {
     });
 
     wrapper.appendChild(nav);
-    renderReleaseRail(rootPath);
 
     initSidebarCollapseControl();
     return true;
@@ -1295,7 +1423,7 @@ const DOCUMENTATION_OPTIONS = {
     bridgeSphinxBodyToHugoLayout(rootPath);
     ensureSyncMetaData(rootPath, function () {
       refreshDocsSyncLabels();
-      renderReleaseRail(rootPath);
+      refreshSidebarReleasePanel(rootPath);
     });
 
     normalizeSearchInputPresentation(document);

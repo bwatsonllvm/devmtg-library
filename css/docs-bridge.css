@@ -7,7 +7,6 @@
 :root {
   --docs-sidebar-width: var(--sidebar-width, clamp(236px, 21vw, 308px));
   --docs-sidebar-collapsed-width: var(--sidebar-collapsed-width, clamp(48px, 4.2vw, 56px));
-  --docs-right-rail-width: clamp(220px, 18vw, 278px);
   --docs-content-max: var(--max-width, 1280px);
 }
 
@@ -43,8 +42,7 @@ body {
 .library-docs-bridge .sphinxsidebarwrapper,
 .library-docs-bridge .docs-hugo-shell,
 .library-docs-bridge .docs-hugo-content,
-.library-docs-bridge .docs-book-index,
-.library-docs-bridge .docs-release-rail {
+.library-docs-bridge .docs-book-index {
   font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji') !important;
 }
 
@@ -98,7 +96,6 @@ body {
   margin: 0 !important;
   padding: var(--space-3) var(--layout-edge) var(--space-12);
   padding-left: calc(var(--docs-sidebar-width) + (var(--layout-edge) * 2));
-  padding-right: calc(var(--docs-right-rail-width) + (var(--layout-edge) * 2));
   background: transparent !important;
   text-align: left !important;
 }
@@ -113,7 +110,7 @@ body {
 .library-docs-bridge .body {
   width: min(
     var(--docs-content-max),
-    calc(100vw - var(--docs-sidebar-width) - var(--docs-right-rail-width) - (var(--layout-edge) * 4))
+    calc(100vw - var(--docs-sidebar-width) - (var(--layout-edge) * 3))
   );
   max-width: 100%;
   margin: 0 auto !important;
@@ -336,27 +333,16 @@ body {
   gap: var(--space-3);
 }
 
-.library-docs-bridge .docs-release-rail {
-  position: fixed;
-  top: calc(var(--header-height) + var(--layout-edge));
-  right: var(--layout-edge);
-  width: var(--docs-right-rail-width);
-  margin: 0;
-  max-height: calc(100vh - var(--header-height) - (var(--layout-edge) * 2));
-  overflow-y: auto;
-  z-index: calc(var(--z-sticky) - 1);
-}
-
-.library-docs-bridge .docs-release-rail-card {
+.library-docs-bridge .docs-book-release {
   display: grid;
   gap: 8px;
   padding: 10px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
 }
 
-.library-docs-bridge .docs-release-rail-title {
+.library-docs-bridge .docs-book-release-title {
   margin: 0;
   color: var(--color-text-muted, #6b7280);
   font-size: 11px;
@@ -388,6 +374,38 @@ body {
 .library-docs-bridge .docs-release-link:hover {
   color: var(--color-text, #111827);
   text-decoration: underline;
+}
+
+.library-docs-bridge .docs-standard-groups {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.library-docs-bridge .docs-standard-link-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+
+.library-docs-bridge .docs-standard-link {
+  display: block;
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted, #6b7280);
+  font-size: var(--font-size-sm, 13px);
+  line-height: 1.35;
+  text-decoration: none;
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.library-docs-bridge .docs-standard-link:hover {
+  color: var(--color-text, #111827);
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
 }
 
 .library-docs-bridge .docs-book-sidebar-top {
@@ -787,7 +805,7 @@ body {
   .library-docs-bridge.docs-book-sidebar-collapsed .body {
     width: min(
       var(--docs-content-max),
-      calc(100vw - var(--docs-sidebar-collapsed-width) - var(--docs-right-rail-width) - (var(--layout-edge) * 4))
+      calc(100vw - var(--docs-sidebar-collapsed-width) - (var(--layout-edge) * 3))
     );
   }
 
@@ -805,6 +823,8 @@ body {
   }
 
   .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-relbar,
+  .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-release,
+  .library-docs-bridge.docs-book-sidebar-collapsed .docs-standard-groups,
   .library-docs-bridge.docs-book-sidebar-collapsed .docs-book-index,
   .library-docs-bridge.docs-book-sidebar-collapsed #searchbox {
     display: none !important;
@@ -988,7 +1008,6 @@ body {
 .library-docs-bridge .footer {
   margin: 0 var(--layout-edge) var(--space-8);
   margin-left: calc(var(--docs-sidebar-width) + (var(--layout-edge) * 2));
-  margin-right: calc(var(--docs-right-rail-width) + (var(--layout-edge) * 2));
   padding: var(--space-3) var(--space-4) 0;
   border-top: 1px solid var(--color-divider);
   background: transparent !important;
@@ -1007,10 +1026,6 @@ body {
    Responsive
    ============================================================ */
 @media (max-width: 1024px) {
-  .library-docs-bridge .docs-release-rail {
-    display: none;
-  }
-
   .library-docs-bridge .sphinxsidebar {
     position: static !important;
     top: auto;
