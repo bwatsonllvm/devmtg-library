@@ -1,5 +1,5 @@
 /**
- * global-search.js — Header Global Search hydration + autocomplete.
+ * global-search.js — Header Global Search hydration + autocomplete (talks/papers/blogs/docs/people).
  */
 
 (function () {
@@ -7,9 +7,11 @@
 
   let dataLoadPromise = null;
   let indexBuildPromise = null;
+  let docsIndexLoadPromise = null;
   const formStateMap = new WeakMap();
-  const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, people, and key topics';
+  const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, docs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
+  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-01';
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
@@ -38,6 +40,7 @@
     'Global search across talks, papers, people, and key topics',
     'Global search across talks, papers, blogs, and people',
     'Global search across talks, papers, blogs, people, and key topics',
+    'Global Search across talks, papers, blogs, people, and key topics',
   ]);
 
   const autocompleteIndex = {
@@ -45,6 +48,7 @@
     people: [],
     talks: [],
     papers: [],
+    docs: [],
   };
 
   function normalizeText(value, maxLength = 240) {
@@ -92,7 +96,7 @@
     if (scope === 'papers') return 'Tailored for papers, authors, venues, and abstracts';
     if (scope === 'blogs') return 'Tailored for blog posts, authors, and post content';
     if (scope === 'people') return 'Tailored for people, expertise, affiliations, and publications';
-    return 'Cross-type search across talks, papers, blogs, and people';
+    return 'Cross-type search across talks, papers, blogs, docs, and people';
   }
 
   function resolveAdvancedContextScope(defaultScope) {
@@ -891,6 +895,20 @@
     });
   }
 
+  async function ensureDocsIndexLoader() {
+    if (docsIndexLoadPromise) return docsIndexLoadPromise;
+
+    docsIndexLoadPromise = (async () => {
+      if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+        return true;
+      }
+      await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
+      return !!(window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries));
+    })().catch(() => false);
+
+    return docsIndexLoadPromise;
+  }
+
   async function ensureDataLoaders() {
     if (dataLoadPromise) return dataLoadPromise;
 
@@ -902,6 +920,7 @@
       if (typeof window.loadPaperData !== 'function') {
         tasks.push(ensureScript('js/papers-data.js'));
       }
+      tasks.push(ensureDocsIndexLoader());
       if (tasks.length) {
         await Promise.allSettled(tasks);
       }
@@ -920,6 +939,7 @@
       const peopleBuckets = new Map();
       const talkTitleCounts = new Map();
       const paperTitleCounts = new Map();
+      const docsTitleBuckets = new Map();
 
       const addPerson = (name) => {
         const label = normalizePersonLabel(name);
@@ -929,6 +949,27 @@
         const bucket = peopleBuckets.get(key);
         bucket.count += 1;
         bucket.labels.set(label, (bucket.labels.get(label) || 0) + 1);
+      };
+
+      const addDocTitle = (title, href) => {
+        const label = normalizeText(title, 220);
+        if (!label) return;
+        const rawHref = normalizeText(href, 400);
+        let url = '';
+        if (rawHref) {
+          if (/^https?:\/\//i.test(rawHref)) url = rawHref;
+          else if (rawHref.startsWith('/')) url = rawHref;
+          else if (rawHref.startsWith('docs/')) url = rawHref;
+          else url = `docs/${rawHref}`.replace(/\/{2,}/g, '/');
+        }
+        if (!url) {
+          url = 'docs/';
+        }
+        if (!docsTitleBuckets.has(label)) {
+          docsTitleBuckets.set(label, { count: 0, url });
+        }
+        const bucket = docsTitleBuckets.get(label);
+        bucket.count += 1;
       };
 
       if (typeof window.loadEventData === 'function') {
@@ -961,6 +1002,17 @@
         }
       }
 
+      if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+        try {
+          for (const entry of window.LLVMDocsUniversalSearchIndex.entries) {
+            if (!entry || typeof entry !== 'object') continue;
+            addDocTitle(entry.title, entry.href);
+          }
+        } catch {
+          // Ignore docs index parse failures; other autocomplete buckets remain available.
+        }
+      }
+
       autocompleteIndex.topics = mapToSortedEntries(topicCounts);
       autocompleteIndex.people = [...peopleBuckets.values()]
         .map((bucket) => {
@@ -971,6 +1023,13 @@
         .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
       autocompleteIndex.talks = mapToAlphaEntries(talkTitleCounts);
       autocompleteIndex.papers = mapToAlphaEntries(paperTitleCounts);
+      autocompleteIndex.docs = [...docsTitleBuckets.entries()]
+        .map(([label, info]) => ({
+          label,
+          count: Number(info && info.count || 0),
+          url: String(info && info.url || 'docs/'),
+        }))
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
       return autocompleteIndex;
     })();
 
@@ -1074,7 +1133,7 @@
   function collectMatches(query) {
     const rawQuery = String(query || '').trim();
     if (!rawQuery) {
-      return { topics: [], people: [], talks: [], papers: [] };
+      return { topics: [], people: [], talks: [], papers: [], docs: [] };
     }
 
     return {
@@ -1082,6 +1141,7 @@
       people: rankAutocompleteMatches(autocompleteIndex.people, rawQuery, 6),
       talks: rankAutocompleteMatches(autocompleteIndex.talks, rawQuery, 4),
       papers: rankAutocompleteMatches(autocompleteIndex.papers, rawQuery, 4),
+      docs: rankAutocompleteMatches(autocompleteIndex.docs, rawQuery, 5),
     };
   }
 
@@ -1093,7 +1153,8 @@
       matches.topics.length > 0 ||
       matches.people.length > 0 ||
       matches.talks.length > 0 ||
-      matches.papers.length > 0;
+      matches.papers.length > 0 ||
+      matches.docs.length > 0;
 
     if (!hasAny) {
       closeDropdown(form);
@@ -1104,6 +1165,7 @@
     const personIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
     const talkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
     const paperIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+    const docsIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
     const searchIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`;
 
     const sections = [`
@@ -1177,6 +1239,22 @@
         </div>`);
     }
 
+    if (matches.docs.length) {
+      sections.push(`
+        <div class="search-dropdown-section">
+          <div class="search-dropdown-label" aria-hidden="true">Docs Pages</div>
+          ${matches.docs.map((item) => `
+            <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
+                    data-autocomplete-type="doc"
+                    data-autocomplete-value="${escapeHtml(item.label)}"
+                    data-autocomplete-doc-url="${escapeHtml(String(item.url || 'docs/'))}">
+              <span class="search-dropdown-item-icon">${docsIcon}</span>
+              <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
+              <span class="search-dropdown-item-count">Docs</span>
+            </button>`).join('')}
+        </div>`);
+    }
+
     dropdown.innerHTML = sections.join('<div class="search-dropdown-divider"></div>');
     dropdown.classList.remove('hidden');
     state.activeItemIndex = -1;
@@ -1190,6 +1268,13 @@
         event.preventDefault();
         event.stopPropagation();
         const requestedType = String(item.dataset.autocompleteType || 'query').trim().toLowerCase();
+        if (requestedType === 'doc') {
+          const directUrl = String(item.dataset.autocompleteDocUrl || '').trim();
+          if (!directUrl) return;
+          closeDropdown(form);
+          window.location.assign(directUrl);
+          return;
+        }
         const submitType = resolveSubmitType(form, requestedType);
         form.dataset.searchSubmitType = submitType;
         if (submitType === 'global') normalizeScopeForGlobalSubmit(form);
@@ -1325,6 +1410,13 @@
 
         event.preventDefault();
         const requestedType = String(activeItem.dataset.autocompleteType || 'query').trim().toLowerCase();
+        if (requestedType === 'doc') {
+          const directUrl = String(activeItem.dataset.autocompleteDocUrl || '').trim();
+          if (!directUrl) return;
+          closeDropdown(form);
+          window.location.assign(directUrl);
+          return;
+        }
         const submitType = resolveSubmitType(form, requestedType);
         form.dataset.searchSubmitType = submitType;
         if (submitType === 'global') normalizeScopeForGlobalSubmit(form);

@@ -1,5 +1,5 @@
 /**
- * work.js — Unified talks + papers + blogs + people view for search/entity pages.
+ * work.js — Unified talks + papers + blogs + docs + people view for search/entity pages.
  */
 
 const HubUtils = window.LLVMHubUtils || {};
@@ -21,6 +21,8 @@ const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
 const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
 const UNIVERSAL_MAX_RESULTS = 1200;
+const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-01';
+const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
@@ -75,6 +77,8 @@ let allTalkRecords = [];
 let allPaperRecords = [];
 let allBlogRecords = [];
 let allPeopleRecords = [];
+let allDocsRecords = [];
+let filteredDocs = [];
 let searchResultCounts = {
   all: 0,
   talks: 0,
@@ -82,6 +86,55 @@ let searchResultCounts = {
   blogs: 0,
   people: 0,
 };
+let docsDataLoadPromise = null;
+
+function ensureScript(src) {
+  return new Promise((resolve, reject) => {
+    const existing = [...document.querySelectorAll('script[src]')]
+      .find((script) => {
+        const scriptSrc = script.getAttribute('src') || '';
+        return scriptSrc === src || scriptSrc.startsWith(`${src.split('?')[0]}?`);
+      });
+    if (existing) {
+      if (existing.dataset.loaded === 'true') {
+        resolve();
+        return;
+      }
+      existing.addEventListener('load', () => resolve(), { once: true });
+      existing.addEventListener('error', () => reject(new Error(`Could not load ${src}`)), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.addEventListener('load', () => {
+      script.dataset.loaded = 'true';
+      resolve();
+    }, { once: true });
+    script.addEventListener('error', () => reject(new Error(`Could not load ${src}`)), { once: true });
+    document.body.appendChild(script);
+  });
+}
+
+async function loadDocsUniversalRecords() {
+  if (docsDataLoadPromise) return docsDataLoadPromise;
+
+  docsDataLoadPromise = (async () => {
+    if (!(window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries))) {
+      await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
+    }
+
+    const payload = window.LLVMDocsUniversalSearchIndex;
+    if (!payload || !Array.isArray(payload.entries)) return [];
+
+    return payload.entries
+      .map((entry, index) => normalizeDocsRecord(entry, index))
+      .filter(Boolean);
+  })().catch(() => []);
+
+  return docsDataLoadPromise;
+}
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -1115,6 +1168,60 @@ function isBlogPaper(paper) {
   return !!(paper && paper._isBlog);
 }
 
+function resolveDocsRecordHref(rawHref, rawSlug) {
+  const href = String(rawHref || '').trim();
+  const slug = String(rawSlug || '').trim();
+  if (href) {
+    if (/^https?:\/\//i.test(href)) return href;
+    if (href.startsWith('/')) return href;
+    if (href.startsWith('docs/')) return href;
+    return `docs/${href}`.replace(/\/{2,}/g, '/');
+  }
+  if (!slug || slug === 'index') return 'docs/';
+  if (slug.endsWith('/index')) return `docs/${slug.slice(0, -6)}/`.replace(/\/{2,}/g, '/');
+  return `docs/${slug}.html`.replace(/\/{2,}/g, '/');
+}
+
+function normalizeDocsRecord(rawEntry, fallbackIndex = 0) {
+  if (!rawEntry || typeof rawEntry !== 'object') return null;
+
+  const title = normalizeAdvancedText(rawEntry.title, 320);
+  const slug = normalizeAdvancedText(rawEntry.slug, 320);
+  const summary = normalizeAdvancedText(rawEntry.summary, 420);
+  const chapter = normalizeAdvancedText(rawEntry.chapter, 200);
+  const outline = normalizeAdvancedText(rawEntry.outline, 80);
+  const headingTexts = Array.isArray(rawEntry.headings)
+    ? rawEntry.headings
+      .map((item) => normalizeAdvancedText(item && item.text, 180))
+      .filter(Boolean)
+      .slice(0, 10)
+    : [];
+  const searchText = normalizeAdvancedText(rawEntry.search, 2200);
+  const href = resolveDocsRecordHref(rawEntry.href, slug);
+  const id = slug || `doc-${fallbackIndex + 1}`;
+
+  if (!title || !href) return null;
+
+  return {
+    id,
+    slug,
+    title,
+    href,
+    summary,
+    chapter,
+    outline,
+    headings: headingTexts,
+    search: searchText,
+    _titleLower: normalizeSearchText(title),
+    _slugLower: normalizeSearchText(slug),
+    _chapterLower: normalizeSearchText(chapter),
+    _outlineLower: normalizeSearchText(outline),
+    _headingsLower: normalizeSearchText(headingTexts.join(' ')),
+    _summaryLower: normalizeSearchText(summary),
+    _searchLower: normalizeSearchText(searchText || `${title} ${headingTexts.join(' ')} ${summary} ${slug}`),
+  };
+}
+
 function parseCitationCount(rawPaper) {
   if (!rawPaper || typeof rawPaper !== 'object') return 0;
 
@@ -1721,6 +1828,7 @@ function getUniversalEntryTitle(entry) {
   if (!entry || typeof entry !== 'object') return '';
   if (entry.kind === 'talk') return String((entry.talk && entry.talk.title) || '');
   if (entry.kind === 'person') return String((entry.person && entry.person.name) || '');
+  if (entry.kind === 'docs') return String((entry.doc && entry.doc.title) || '');
   return String((entry.paper && entry.paper.title) || '');
 }
 
@@ -1734,6 +1842,7 @@ function getUniversalEntryYear(entry) {
     const person = entry.person || {};
     return Number(person._latestYear || 0);
   }
+  if (entry.kind === 'docs') return 0;
   const paper = entry.paper || {};
   return parseYearValue(paper._year || paper.year || paper.publishedDate || paper.publishDate || paper.date);
 }
@@ -1746,6 +1855,7 @@ function getUniversalEntryCitations(entry) {
     const citations = Number(person.citationCount || 0);
     return Number.isFinite(citations) && citations > 0 ? citations : 0;
   }
+  if (entry.kind === 'docs') return 0;
   const paper = entry.paper || {};
   const citations = Number(paper._citationCount || paper.citationCount || 0);
   return Number.isFinite(citations) && citations > 0 ? citations : 0;
@@ -1785,11 +1895,12 @@ function compareUniversalEntries(a, b) {
   return getUniversalEntryTitle(a).localeCompare(getUniversalEntryTitle(b));
 }
 
-function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, query, advancedOptions = null) {
+function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs, query, advancedOptions = null) {
   const rankedTalks = Array.isArray(talks) ? talks : [];
   const rankedPapers = Array.isArray(papers) ? papers : [];
   const rankedBlogs = Array.isArray(blogs) ? blogs : [];
   const rankedPeople = Array.isArray(people) ? people : [];
+  const rankedDocs = Array.isArray(docs) ? docs : [];
   const normalizedQuery = normalizeSearchText(query);
   const normalizedTokens = tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
   const model = typeof HubUtils.buildSearchQueryModel === 'function'
@@ -1821,6 +1932,10 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
       bucket.push({ kind, person: record, score, rankIndex });
       return;
     }
+    if (kind === 'docs') {
+      bucket.push({ kind, doc: record, score, rankIndex });
+      return;
+    }
     bucket.push({ kind, paper: record, score, rankIndex });
   };
 
@@ -1828,15 +1943,25 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
     const values = Array.isArray(records) ? records : [];
     const canScoreByModel = kind === 'talk'
       ? canScoreTalkByModel
-      : (kind === 'person' ? canScorePeopleByModel : canScorePaperByModel);
+      : (kind === 'person' ? canScorePeopleByModel : (kind === 'docs' ? false : canScorePaperByModel));
 
     values.forEach((record, index) => {
       const title = getUniversalEntryTitle(
         kind === 'talk'
           ? { kind, talk: record }
-          : (kind === 'person' ? { kind, person: record } : { kind, paper: record })
+          : (kind === 'person'
+            ? { kind, person: record }
+            : (kind === 'docs' ? { kind, doc: record } : { kind, paper: record }))
       );
       const titleBoost = computeUniversalTitleBoost(title, normalizedQuery, normalizedTokens);
+
+      if (kind === 'docs') {
+        const docsScore = Number(record && record._workSearchScore || 0);
+        if (docsScore > 0) {
+          pushEntry(strict, kind, record, docsScore + titleBoost, index);
+          return;
+        }
+      }
 
       if (canScoreByModel) {
         const strictScore = kind === 'talk'
@@ -1861,7 +1986,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
       }
 
       if (index >= UNIVERSAL_FALLBACK_PER_KIND_LIMIT) return;
-      const fallbackBase = kind === 'person' ? 210 : 230;
+      const fallbackBase = kind === 'person' ? 210 : (kind === 'docs' ? 235 : 230);
       const fallbackScore = (fallbackBase / (index + 2)) + titleBoost;
       pushEntry(fallback, kind, record, fallbackScore, index);
     });
@@ -1871,6 +1996,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
   pushForKind(rankedPapers, 'paper');
   pushForKind(rankedBlogs, 'blog');
   pushForKind(rankedPeople, 'person');
+  pushForKind(rankedDocs, 'docs');
 
   let entries = [];
   if (strict.length > 0) {
@@ -2091,6 +2217,159 @@ function rankPeopleForQuery(people, query, advancedOptions = null) {
   return scored.map((entry) => entry.person);
 }
 
+function docsFiltersSupported(advancedOptions) {
+  const options = advancedOptions && typeof advancedOptions === 'object' ? advancedOptions : {};
+  const hasAuthorFilter = normalizeAdvancedText(options.author).length > 0;
+  const hasPublicationFilter = normalizeAdvancedText(options.publication).length > 0;
+  const hasYearFrom = parseYearFilterInput(options.yearFrom) > 0;
+  const hasYearTo = parseYearFilterInput(options.yearTo) > 0;
+  return !(hasAuthorFilter || hasPublicationFilter || hasYearFrom || hasYearTo);
+}
+
+function docsScopedBlob(doc, whereMode) {
+  const where = normalizeAdvancedWhere(whereMode);
+  if (where === 'title') {
+    return [doc._titleLower, doc._headingsLower].join(' ').trim();
+  }
+  if (where === 'abstract') {
+    return [doc._summaryLower, doc._headingsLower, doc._chapterLower, doc._searchLower].join(' ').trim();
+  }
+  return [doc._titleLower, doc._headingsLower, doc._summaryLower, doc._chapterLower, doc._searchLower].join(' ').trim();
+}
+
+function countMatchedQueryTokens(tokens, blob) {
+  if (!Array.isArray(tokens) || !tokens.length || !blob) return 0;
+  let matched = 0;
+  for (const token of tokens) {
+    if (!token) continue;
+    if (blob.includes(token)) matched += 1;
+  }
+  return matched;
+}
+
+function matchesAdvancedTextConstraint(value, blob, mode = 'all') {
+  const normalized = normalizeSearchText(value);
+  if (!normalized) return true;
+  const terms = tokenizeQuery(normalized).map((token) => normalizeSearchText(token)).filter(Boolean);
+  if (!terms.length) return true;
+  if (!blob) return false;
+  if (mode === 'any') return terms.some((term) => blob.includes(term));
+  if (mode === 'none') return terms.every((term) => !blob.includes(term));
+  return terms.every((term) => blob.includes(term));
+}
+
+function scoreDocsRecordByQuery(doc, query, advancedOptions = null) {
+  if (!doc || typeof doc !== 'object') return 0;
+  if (!docsFiltersSupported(advancedOptions)) return 0;
+
+  const options = advancedOptions && typeof advancedOptions === 'object' ? advancedOptions : {};
+  const where = normalizeAdvancedWhere(options.where || 'anywhere');
+  const blob = docsScopedBlob(doc, where);
+  if (!blob) return 0;
+
+  if (!matchesAdvancedTextConstraint(options.allWords, blob, 'all')) return 0;
+  if (!matchesAdvancedTextConstraint(options.anyWords, blob, 'any')) return 0;
+  if (!matchesAdvancedTextConstraint(options.withoutWords, blob, 'none')) return 0;
+
+  const exactPhrase = normalizeSearchText(options.exactPhrase);
+  if (exactPhrase && !blob.includes(exactPhrase)) return 0;
+
+  const normalizedQuery = normalizeSearchText(query);
+  const queryTokens = tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
+  const hasTextIntent = !!(normalizedQuery || queryTokens.length || exactPhrase || normalizeSearchText(options.allWords));
+  if (!hasTextIntent) return 0;
+
+  const matchedTokens = countMatchedQueryTokens(queryTokens, blob);
+  if (queryTokens.length) {
+    const coverage = matchedTokens / queryTokens.length;
+    if (matchedTokens <= 0) return 0;
+    if (queryTokens.length >= 3 && coverage < 0.55) return 0;
+    if (queryTokens.length <= 2 && coverage < 1) return 0;
+  }
+
+  let score = 0;
+  const title = String(doc._titleLower || '');
+  const headings = String(doc._headingsLower || '');
+  const summary = String(doc._summaryLower || '');
+  const chapter = String(doc._chapterLower || '');
+  const slug = String(doc._slugLower || '');
+
+  if (normalizedQuery) {
+    if (title === normalizedQuery) score += 240;
+    else if (title.startsWith(`${normalizedQuery} `) || title.startsWith(normalizedQuery)) score += 148;
+    else if (title.includes(normalizedQuery)) score += 110;
+
+    if (headings.includes(normalizedQuery)) score += 78;
+    if (summary.includes(normalizedQuery)) score += 54;
+    if (slug.includes(normalizedQuery)) score += 42;
+    if (chapter.includes(normalizedQuery)) score += 26;
+  }
+
+  let scoredTokens = 0;
+  for (const token of queryTokens) {
+    let tokenScore = 0;
+    if (title.includes(token)) tokenScore += 48;
+    if (headings.includes(token)) tokenScore += 32;
+    if (summary.includes(token)) tokenScore += 18;
+    if (slug.includes(token)) tokenScore += 12;
+    if (chapter.includes(token)) tokenScore += 10;
+    if (tokenScore <= 0) continue;
+    scoredTokens += 1;
+    score += tokenScore;
+  }
+
+  if (queryTokens.length && scoredTokens > 0) {
+    const coverageBoost = (scoredTokens / queryTokens.length) * 56;
+    score += coverageBoost;
+  }
+
+  if (exactPhrase) {
+    if (title.includes(exactPhrase)) score += 76;
+    else if (blob.includes(exactPhrase)) score += 42;
+  }
+
+  const headingCountBoost = Math.min(16, (Array.isArray(doc.headings) ? doc.headings.length : 0) * 2);
+  score += headingCountBoost;
+  return score;
+}
+
+function rankDocsForQuery(docs, query, advancedOptions = null) {
+  const entries = Array.isArray(docs) ? docs : [];
+  if (!entries.length) return [];
+  if (!docsFiltersSupported(advancedOptions)) return [];
+
+  const normalizedQuery = normalizeSearchText(query);
+  const hasAdvanced = hasAdvancedSearchOptions(advancedOptions || {});
+  const hasTextAdvanced = !!(
+    normalizeAdvancedText(advancedOptions && advancedOptions.allWords)
+    || normalizeAdvancedText(advancedOptions && advancedOptions.exactPhrase)
+    || normalizeAdvancedText(advancedOptions && advancedOptions.anyWords)
+    || normalizeAdvancedText(advancedOptions && advancedOptions.withoutWords)
+  );
+
+  if (!normalizedQuery && !hasTextAdvanced && !hasAdvanced) {
+    return [...entries].sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+  }
+
+  const scored = [];
+  for (const doc of entries) {
+    const score = scoreDocsRecordByQuery(doc, query, advancedOptions);
+    if (score > 0) scored.push({ doc, score });
+  }
+
+  scored.sort((a, b) =>
+    (Number(b.score || 0) - Number(a.score || 0))
+    || String((a.doc && a.doc.title) || '').localeCompare(String((b.doc && b.doc.title) || ''))
+  );
+
+  return scored
+    .slice(0, DOCS_UNIVERSAL_SEARCH_LIMIT)
+    .map((entry) => ({
+      ...entry.doc,
+      _workSearchScore: Number(entry.score || 0),
+    }));
+}
+
 function recomputeFilteredResults() {
   if (state.mode === 'search') {
     if (!hasActiveSearchCriteria()) {
@@ -2098,6 +2377,7 @@ function recomputeFilteredResults() {
       filteredPapers = [];
       filteredBlogs = [];
       filteredPeople = [];
+      filteredDocs = [];
       filteredUniversal = [];
       searchResultCounts = {
         all: 0,
@@ -2116,6 +2396,7 @@ function recomputeFilteredResults() {
     const rankedPapers = rankPapersForQuery(allPaperRecords, state.query, advancedOptions);
     const rankedBlogs = rankPapersForQuery(allBlogRecords, state.query, advancedOptions);
     const rankedPeople = rankPeopleForQuery(allPeopleRecords, state.query, advancedOptions);
+    const rankedDocs = rankDocsForQuery(allDocsRecords, state.query, advancedOptions);
     const scopedTalks = rankedTalks.filter((talk) => matchesTalkSearchFilters(talk, filterWindow));
     const scopedPapers = rankedPapers.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
     const scopedBlogs = rankedBlogs.filter((paper) => matchesPaperSearchFilters(paper, filterWindow));
@@ -2125,11 +2406,13 @@ function recomputeFilteredResults() {
     filteredPapers = sortPaperResults(scopedPapers);
     filteredBlogs = sortPaperResults(scopedBlogs);
     filteredPeople = sortPeopleResults(scopedPeople);
+    filteredDocs = rankedDocs;
     const universalEntries = buildUniversalResultsFromRankedLists(
       scopedTalks,
       scopedPapers,
       scopedBlogs,
       scopedPeople,
+      rankedDocs,
       state.query,
       advancedOptions
     );
@@ -2152,6 +2435,7 @@ function recomputeFilteredResults() {
     blogs: 0,
     people: 0,
   };
+  filteredDocs = [];
   filteredUniversal = [];
   const normalizedNeedle = normalizeValue(state.value);
   const normalizedTopicNeedle = normalizeTopicKey(state.value);
@@ -2415,10 +2699,47 @@ function renderPersonCard(person) {
     </article>`;
 }
 
+function renderDocsCard(doc) {
+  const query = state.mode === 'search' ? state.query : '';
+  const tokens = query ? tokenizeQuery(query) : [];
+  const titleEsc = escapeHtml(doc.title || 'Documentation');
+  const chapter = String(doc.chapter || '').trim();
+  const outline = String(doc.outline || '').trim();
+  const slugLabel = String(doc.slug || '').trim() || 'index';
+  const summary = buildContextSnippet(doc.summary || doc.search || '', query, 320);
+  const headingPreview = Array.isArray(doc.headings)
+    ? doc.headings.slice(0, 2).filter(Boolean).join(' · ')
+    : '';
+  const href = String(doc.href || '').trim() || 'docs/';
+
+  return `
+    <article class="talk-card paper-card docs-card">
+      <a href="${escapeHtml(href)}" class="card-link-wrap" aria-label="Open docs page: ${titleEsc}">
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="badge badge-blog">Docs</span>
+            ${chapter ? `<span class="meeting-label">${escapeHtml(chapter)}</span>` : ''}
+            ${outline ? `<span class="meeting-label">${escapeHtml(outline)}</span>` : ''}
+          </div>
+          <p class="card-title">${highlightText(doc.title || 'Documentation', tokens)}</p>
+          ${summary ? `<p class="card-abstract">${highlightText(summary, tokens)}</p>` : ''}
+          <p class="card-speakers paper-authors">${escapeHtml(slugLabel)}</p>
+          ${headingPreview ? `<p class="card-speakers paper-authors">${highlightText(headingPreview, tokens)}</p>` : ''}
+        </div>
+      </a>
+      <div class="card-footer">
+        <a href="${escapeHtml(href)}" class="card-link-btn card-link-btn--video" aria-label="Open docs page: ${titleEsc}">
+          <span aria-hidden="true">Open Doc</span>
+        </a>
+      </div>
+    </article>`;
+}
+
 function renderUniversalCard(entry) {
   if (!entry || typeof entry !== 'object') return '';
   if (entry.kind === 'talk' && entry.talk) return renderTalkCard(entry.talk);
   if (entry.kind === 'person' && entry.person) return renderPersonCard(entry.person);
+  if (entry.kind === 'docs' && entry.doc) return renderDocsCard(entry.doc);
   if ((entry.kind === 'paper' || entry.kind === 'blog') && entry.paper) return renderPaperCard(entry.paper);
   return '';
 }
@@ -2628,7 +2949,7 @@ function applyHeaderState() {
     const searchLabel = buildSearchDisplayValue() || state.query;
     if (!hasActiveSearchCriteria()) {
       if (titleEl) titleEl.textContent = 'Global Search';
-      if (subtitleEl) subtitleEl.textContent = 'Use Global Search across talks, papers, blogs, and people from one place.';
+      if (subtitleEl) subtitleEl.textContent = 'Use Global Search across talks, papers, blogs, docs, and people from one place.';
       if (summaryEl) summaryEl.textContent = 'No search query provided';
       if (universalCountEl) universalCountEl.textContent = '';
       if (talksCountEl) talksCountEl.textContent = '';
@@ -2642,7 +2963,7 @@ function applyHeaderState() {
     if (titleEl) titleEl.textContent = 'Global Search';
     if (subtitleEl) {
       if (state.scope === 'all') {
-        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(searchLabel || 'advanced search')}</strong>, ranked across talks, papers, blogs, and people`;
+        subtitleEl.innerHTML = `Results for <strong>${escapeHtml(searchLabel || 'advanced search')}</strong>, ranked across talks, papers, blogs, docs, and people`;
       } else {
         subtitleEl.innerHTML = `Results for <strong>${escapeHtml(searchLabel || 'advanced search')}</strong> in <strong>${escapeHtml(getSearchScopeLabel(state.scope))}</strong>`;
       }
@@ -2651,7 +2972,7 @@ function applyHeaderState() {
   } else {
     if (!state.value) {
       if (titleEl) titleEl.textContent = 'All Work';
-      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or key topic to view related talks, papers, blogs, and people.';
+      if (subtitleEl) subtitleEl.textContent = 'Choose a speaker or key topic to view related talks, papers, blogs, docs, and people.';
       if (summaryEl) summaryEl.textContent = 'No speaker/key topic selected';
       if (universalCountEl) universalCountEl.textContent = '';
       if (talksCountEl) talksCountEl.textContent = '';
@@ -2665,9 +2986,9 @@ function applyHeaderState() {
     if (titleEl) titleEl.textContent = `${entityLabel}: ${state.value}`;
     if (subtitleEl) {
       if (state.kind === 'speaker') {
-        subtitleEl.innerHTML = `All Work for <strong>${escapeHtml(state.value)}</strong> across talks, papers, blogs, and people`;
+        subtitleEl.innerHTML = `All Work for <strong>${escapeHtml(state.value)}</strong> across talks, papers, blogs, docs, and people`;
       } else {
-        subtitleEl.innerHTML = `All Work for key topic <strong>${escapeHtml(state.value)}</strong> across talks, papers, blogs, and people`;
+        subtitleEl.innerHTML = `All Work for key topic <strong>${escapeHtml(state.value)}</strong> across talks, papers, blogs, docs, and people`;
       }
     }
     setWorkDocumentTitle(`All Work: ${entityLabel} ${state.value}`);
@@ -3368,9 +3689,10 @@ async function init() {
   }
 
   try {
-    const [eventPayload, paperPayload] = await Promise.all([
+    const [eventPayload, paperPayload, docsPayload] = await Promise.all([
       window.loadEventData(),
       window.loadPaperData(),
+      loadDocsUniversalRecords(),
     ]);
 
     const talks = typeof HubUtils.normalizeTalks === 'function'
@@ -3386,6 +3708,7 @@ async function init() {
     allPaperRecords = paperOnly;
     allBlogRecords = blogsOnly;
     allPeopleRecords = buildPeopleRecordsWithMetadata(talks, paperOnly, blogsOnly);
+    allDocsRecords = Array.isArray(docsPayload) ? docsPayload : [];
     recomputeFilteredResults();
     rerenderWorkSections();
 
