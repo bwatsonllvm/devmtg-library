@@ -255,7 +255,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-09` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-23` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-24` });
   }
 
   function removeLegacySphinxChrome() {
@@ -2164,6 +2164,129 @@ const DOCUMENTATION_OPTIONS = {
     return list;
   }
 
+  function flattenBookEntries(entries, chapterPrefix, depth, out) {
+    const list = Array.isArray(entries) ? entries : [];
+    list.forEach((entry, index) => {
+      const node = entry && typeof entry === 'object' ? entry : {};
+      const number = `${chapterPrefix}.${index + 1}`;
+      const slug = String(node.slug || '').trim();
+      if (slug) {
+        out.push({
+          slug,
+          title: String(node.title || 'Untitled'),
+          number,
+          depth,
+        });
+      }
+      const children = Array.isArray(node.children) ? node.children : [];
+      if (children.length) {
+        flattenBookEntries(children, number, depth + 1, out);
+      }
+    });
+  }
+
+  function buildCompleteSequentialIndexSection(rootPath, payload, currentSlug) {
+    const chapters = Array.isArray(payload && payload.chapters) ? payload.chapters : [];
+    if (!chapters.length) return null;
+
+    const flatEntries = [];
+    chapters.forEach((chapter, chapterIdx) => {
+      const entries = Array.isArray(chapter && chapter.entries) ? chapter.entries : [];
+      if (!entries.length) return;
+      flattenBookEntries(entries, String(chapterIdx + 1), 0, flatEntries);
+    });
+    if (!flatEntries.length) return null;
+
+    const sectionStateId = 'complete-index';
+    const storedCollapsed = getStoredNodeCollapseState(sectionStateId);
+    const defaultExpanded = currentSlug === 'index';
+    const expanded = storedCollapsed === null ? defaultExpanded : !storedCollapsed;
+
+    const section = document.createElement('section');
+    section.className = 'docs-book-chapter docs-standard-group docs-complete-index';
+    if (!expanded) section.classList.add('is-collapsed');
+
+    const head = document.createElement('div');
+    head.className = 'docs-book-chapter-head';
+    head.setAttribute('role', 'button');
+    head.setAttribute('tabindex', '0');
+
+    const toggle = document.createElement('button');
+    toggle.className = 'docs-book-chapter-toggle';
+    toggle.type = 'button';
+    toggle.innerHTML = buildDisclosureChevron();
+    const bodyId = 'docs-complete-index-body';
+    toggle.setAttribute('aria-controls', bodyId);
+    setNodeToggleState(toggle, expanded, 'Complete Index');
+    head.appendChild(toggle);
+    head.setAttribute('aria-controls', bodyId);
+    head.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+    const title = document.createElement('h4');
+    title.className = 'docs-book-chapter-title';
+    title.textContent = `Complete Index (${flatEntries.length})`;
+    head.appendChild(title);
+    section.appendChild(head);
+
+    const body = document.createElement('div');
+    body.className = 'docs-book-chapter-body';
+    body.id = bodyId;
+    body.hidden = !expanded;
+
+    const list = document.createElement('ol');
+    list.className = 'docs-standard-link-list docs-complete-index-list';
+    flatEntries.forEach((entry) => {
+      const li = document.createElement('li');
+      li.className = 'docs-standard-link-item';
+
+      const link = document.createElement('a');
+      link.className = 'docs-standard-link docs-complete-index-link';
+      link.href = slugToDocsHref(entry.slug, rootPath);
+      if (entry.slug === currentSlug) {
+        link.classList.add('current');
+        link.setAttribute('aria-current', 'page');
+      }
+
+      const indent = Math.min(40, Math.max(0, Number(entry.depth || 0)) * 10);
+      link.style.paddingLeft = `${8 + indent}px`;
+      link.textContent = `${entry.number} ${entry.title}`;
+
+      li.appendChild(link);
+      list.appendChild(li);
+    });
+
+    body.appendChild(list);
+    section.appendChild(body);
+
+    const toggleSection = function () {
+      const collapsed = section.classList.toggle('is-collapsed');
+      body.hidden = collapsed;
+      setStoredNodeCollapseState(sectionStateId, collapsed);
+      setNodeToggleState(toggle, !collapsed, 'Complete Index');
+      head.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    };
+
+    toggle.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleSection();
+    });
+
+    head.addEventListener('click', function (event) {
+      if (event.target && event.target.closest('.docs-book-chapter-toggle')) return;
+      toggleSection();
+    });
+
+    head.addEventListener('keydown', function (event) {
+      if (event.target && event.target.closest('.docs-book-chapter-toggle')) return;
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      toggleSection();
+    });
+
+    return section;
+  }
+
   function renderGeneratedBookIndexSidebar(rootPath) {
     const payload = window.LLVMDocsBookIndex;
     if (!payload || !Array.isArray(payload.chapters)) return false;
@@ -2307,6 +2430,10 @@ const DOCUMENTATION_OPTIONS = {
     });
 
     wrapper.appendChild(nav);
+    const completeIndexSection = buildCompleteSequentialIndexSection(rootPath, payload, currentSlug);
+    if (completeIndexSection) {
+      wrapper.appendChild(completeIndexSection);
+    }
 
     initSidebarCollapseControl();
     return true;

@@ -519,6 +519,20 @@ body {
   border-color: var(--color-border);
 }
 
+.library-docs-bridge .docs-standard-link.current,
+.library-docs-bridge .docs-standard-link[aria-current="page"] {
+  color: var(--color-state-active-text, #111827);
+  background: var(--color-state-active-bg);
+  border-color: var(--color-state-active-border);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.library-docs-bridge .docs-complete-index-list {
+  max-height: min(58vh, 420px);
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
 .library-docs-bridge .docs-book-sidebar-top {
   display: flex;
   align-items: center;
