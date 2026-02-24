@@ -407,7 +407,7 @@ ul, ol {
 .nav-dropdown-menu {
   position: absolute;
   left: 0;
-  top: calc(100% + 6px);
+  top: calc(100% - 1px);
   min-width: 170px;
   padding: var(--space-1);
   border: 1px solid var(--color-border);
