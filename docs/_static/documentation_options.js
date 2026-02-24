@@ -1494,7 +1494,14 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function initSidebarUniversalSearchForm(rootPath, searchForm) {
-    if (!searchForm || searchForm.dataset.docsUniversalSidebarInit === '1') return;
+    if (!searchForm) return;
+    if (searchForm.dataset.docsUniversalSidebarInit === '1') {
+      const existingHost = searchForm.closest('.searchformwrapper') || searchForm.parentElement || searchForm;
+      if (existingHost && existingHost.querySelector('.docs-universal-search-dropdown')) {
+        return;
+      }
+      searchForm.removeAttribute('data-docs-universal-sidebar-init');
+    }
     const searchInput = searchForm.querySelector('input[name="q"]');
     if (!searchInput) return;
     searchForm.dataset.docsUniversalSidebarInit = '1';
@@ -2002,6 +2009,14 @@ const DOCUMENTATION_OPTIONS = {
 
     const quickSearch = wrapper.querySelector('#searchbox');
     const quickSearchClone = quickSearch ? quickSearch.cloneNode(true) : null;
+    if (quickSearchClone) {
+      quickSearchClone.querySelectorAll('.docs-universal-search-dropdown').forEach((node) => {
+        if (node && node.parentNode) node.parentNode.removeChild(node);
+      });
+      quickSearchClone.querySelectorAll('form.search').forEach((form) => {
+        form.removeAttribute('data-docs-universal-sidebar-init');
+      });
+    }
     const currentSlug = resolveCurrentDocSlug(rootPath);
 
     wrapper.innerHTML = '';
@@ -2173,6 +2188,114 @@ const DOCUMENTATION_OPTIONS = {
     return cleaned || 'LLVM Documentation';
   }
 
+  function resolveHashTargetElement() {
+    const rawHash = String(window.location.hash || '').replace(/^#/, '').trim();
+    if (!rawHash) return null;
+    const decodedHash = (function () {
+      try {
+        return decodeURIComponent(rawHash);
+      } catch (_) {
+        return rawHash;
+      }
+    })();
+
+    const byId = document.getElementById(decodedHash) || document.getElementById(rawHash);
+    if (byId) return byId;
+
+    const nameSelector = `[name="${decodedHash.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"]`;
+    return document.querySelector(nameSelector);
+  }
+
+  function parseDestinationHighlightTerms() {
+    const params = new URLSearchParams(window.location.search || '');
+    const highlightRaw = normalizeUniversalSearchQuery(params.get('highlight') || '');
+    const queryRaw = normalizeUniversalSearchQuery(params.get('q') || '');
+    const source = highlightRaw || queryRaw;
+    if (!source) return [];
+    return tokenizeUniversalSearchHighlightTerms(source);
+  }
+
+  function applySearchResultLandingBehavior(rootPath) {
+    const currentSlug = resolveCurrentDocSlug(rootPath);
+    if (currentSlug === 'search') return;
+
+    const terms = parseDestinationHighlightTerms();
+    if (!terms.length) return;
+    const joinedTerms = terms.join(' ');
+    if (joinedTerms) {
+      safeStorageSet('sphinx_highlight_terms', joinedTerms);
+    }
+
+    const contentRoot = document.querySelector('.docs-hugo-content')
+      || document.querySelector('.document .body')
+      || document.body;
+    if (!contentRoot) return;
+
+    const findHighlightTarget = function () {
+      const scopedHighlight = contentRoot.querySelector('span.highlighted, dt:target');
+      if (scopedHighlight) return scopedHighlight;
+      return null;
+    };
+
+    const ensureFallbackHighlights = function () {
+      if (contentRoot.querySelector('span.highlighted')) return;
+      if (typeof _highlightText === 'function') {
+        terms.forEach((term) => {
+          try {
+            _highlightText(contentRoot, term, 'highlighted');
+          } catch (_) {
+            // Ignore fallback highlight failures.
+          }
+        });
+      }
+    };
+
+    const scrollTargetIntoView = function (target) {
+      if (!target || typeof target.scrollIntoView !== 'function') return;
+      target.scrollIntoView({ block: 'center', inline: 'nearest' });
+    };
+
+    const runAttempt = function (attempt) {
+      const hashTarget = resolveHashTargetElement();
+      const highlighted = findHighlightTarget();
+
+      if (hashTarget && highlighted && hashTarget.contains(highlighted)) {
+        scrollTargetIntoView(hashTarget);
+        return true;
+      }
+      if (highlighted) {
+        scrollTargetIntoView(highlighted);
+        return true;
+      }
+      if (hashTarget) {
+        scrollTargetIntoView(hashTarget);
+        return true;
+      }
+
+      if (attempt >= 2) {
+        ensureFallbackHighlights();
+        const fallbackHighlighted = findHighlightTarget();
+        if (fallbackHighlighted) {
+          scrollTargetIntoView(fallbackHighlighted);
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    const delays = [0, 40, 130, 280, 560];
+    let attemptIndex = 0;
+    const tryScroll = function () {
+      const done = runAttempt(attemptIndex);
+      if (done) return;
+      attemptIndex += 1;
+      if (attemptIndex >= delays.length) return;
+      window.setTimeout(tryScroll, delays[attemptIndex]);
+    };
+    tryScroll();
+  }
+
   function ensureFooterContentAlignment() {
     const footer = document.querySelector('.footer');
     if (!footer) return;
@@ -2279,6 +2402,7 @@ const DOCUMENTATION_OPTIONS = {
     enhanceSearchPageExperience(rootPath);
     initDocsUniversalSearch(rootPath);
     initSearchShortcut();
+    applySearchResultLandingBehavior(rootPath);
 
     ensureBookIndexData(rootPath, function () {
       installGeneratedBookIndexSidebar(rootPath, 60);
