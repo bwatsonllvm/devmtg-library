@@ -52,7 +52,7 @@ const DOCUMENTATION_OPTIONS = {
       '.library-docs-bridge .site-header a:visited{color:inherit!important;}',
       '.library-docs-bridge .sphinxsidebar a:visited{color:var(--color-text-muted,#6b7280)!important;}',
       '.library-docs-bridge .docs-hugo-content a:visited{color:var(--color-accent)!important;}',
-      '.library-docs-bridge .docs-hugo-content h1,.library-docs-bridge .docs-hugo-content h2,.library-docs-bridge .docs-hugo-content h3,.library-docs-bridge .docs-hugo-content h4,.library-docs-bridge .docs-hugo-content h5,.library-docs-bridge .docs-hugo-content h6{color:var(--color-text,#111827)!important;}',
+      '.library-docs-bridge .docs-hugo-content h1,.library-docs-bridge .docs-hugo-content h2,.library-docs-bridge .docs-hugo-content h3,.library-docs-bridge .docs-hugo-content h4,.library-docs-bridge .docs-hugo-content h5,.library-docs-bridge .docs-hugo-content h6{color:var(--color-text,#111827)!important;background:transparent!important;border:0!important;padding:0!important;margin-left:0!important;margin-right:0!important;}',
     ].join('');
   }
 
@@ -66,7 +66,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-05` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-06` });
   }
 
   function applyStoredDisplayPreferences() {

@@ -281,6 +281,11 @@ body {
 .library-docs-bridge .docs-hugo-content h5 a:visited,
 .library-docs-bridge .docs-hugo-content h6 a:visited {
   color: var(--color-text, #111827) !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .library-docs-bridge .docs-hugo-content h1 *,
@@ -290,6 +295,11 @@ body {
 .library-docs-bridge .docs-hugo-content h5 *,
 .library-docs-bridge .docs-hugo-content h6 * {
   color: inherit !important;
+}
+
+.library-docs-bridge .docs-hugo-content {
+  color: var(--color-text, #111827);
+  max-width: 100%;
 }
 
 .library-docs-bridge .docs-hugo-content a,
@@ -314,6 +324,7 @@ body {
 .library-docs-bridge .docs-hugo-content dt,
 .library-docs-bridge .docs-hugo-content dd {
   color: var(--color-text);
+  overflow-wrap: anywhere;
 }
 
 .library-docs-bridge .docs-hugo-content div.highlight {
@@ -333,6 +344,21 @@ body {
 .library-docs-bridge .docs-hugo-content pre {
   line-height: 1.45;
   overflow: auto;
+}
+
+.library-docs-bridge .docs-hugo-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-4) 0;
+  display: block;
+  overflow-x: auto;
+}
+
+.library-docs-bridge .docs-hugo-content th,
+.library-docs-bridge .docs-hugo-content td {
+  border: 1px solid var(--color-border);
+  padding: 0.45rem 0.6rem;
+  vertical-align: top;
 }
 
 .library-docs-bridge .docs-hugo-content .admonition,
