@@ -123,7 +123,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-14` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-15` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -856,9 +856,13 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function buildInlinePageToc(articleBody) {
+    const hasNativeSphinxContents = !!articleBody.querySelector('nav.contents, aside.topic.contents, div.topic.contents');
+    if (hasNativeSphinxContents) return null;
+
     const headings = Array.from(articleBody.querySelectorAll('h2, h3, h4'))
       .filter((heading) => String(heading.textContent || '').trim().length > 0);
     if (headings.length < 2) return null;
+    if (headings.length > 32) return null;
 
     const usedIds = new Set(Array.from(articleBody.querySelectorAll('[id]')).map((el) => el.id));
     const nav = document.createElement('nav');
