@@ -2709,7 +2709,7 @@ function applyHeaderState() {
 
   if (summaryEl) {
     const sortLabel = state.sortBy === 'relevance'
-      ? ((state.mode === 'search' && state.scope === 'all') ? 'cross-type relevance' : 'relevance')
+      ? 'relevance'
       : state.sortBy === 'oldest'
         ? 'oldest'
         : state.sortBy === 'title'
@@ -2717,21 +2717,22 @@ function applyHeaderState() {
           : state.sortBy === 'citations'
             ? 'citations'
             : 'newest';
-    const densityLabel = state.viewMode === 'compact' ? 'compact' : 'expanded';
-    const filterLabels = getActiveFilterLabels();
-    const filterSuffix = filterLabels.length ? ` · Filters: ${filterLabels.join(', ')}` : '';
+    const activeFilterCount = getActiveFilterLabels().length;
+    const filterSuffix = activeFilterCount
+      ? ` · ${activeFilterCount} filter${activeFilterCount === 1 ? '' : 's'} active`
+      : '';
     if (state.mode === 'search') {
       const scopeTotal = getActiveSearchScopeCount();
       const allTotal = getSearchScopeCount('all');
       if (state.scope === 'all') {
-        summaryEl.innerHTML = `<strong>${allTotal.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · ${filteredPeople.length.toLocaleString()} people · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
+        summaryEl.innerHTML = `<strong>${allTotal.toLocaleString()}</strong> results · Sorted by ${sortLabel}${filterSuffix}`;
       } else {
         const scopeLabel = getSearchScopeLabel(state.scope).toLowerCase();
-        summaryEl.innerHTML = `<strong>${scopeTotal.toLocaleString()}</strong> ${scopeLabel} results · ${allTotal.toLocaleString()} total across all types · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · ${filteredPeople.length.toLocaleString()} people · Sorted by ${sortLabel} · ${densityLabel} view${filterSuffix}`;
+        summaryEl.innerHTML = `<strong>${scopeTotal.toLocaleString()}</strong> ${scopeLabel} results · Sorted by ${sortLabel}${filterSuffix}`;
       }
     } else {
       const total = filteredTalks.length + filteredPapers.length + filteredBlogs.length + filteredPeople.length;
-      summaryEl.innerHTML = `<strong>${total.toLocaleString()}</strong> total results · ${filteredTalks.length.toLocaleString()} talks · ${filteredPapers.length.toLocaleString()} papers · ${filteredBlogs.length.toLocaleString()} blogs · ${filteredPeople.length.toLocaleString()} people · Sorted by ${sortLabel} · ${densityLabel} view`;
+      summaryEl.innerHTML = `<strong>${total.toLocaleString()}</strong> results · Sorted by ${sortLabel}`;
     }
   }
 }
