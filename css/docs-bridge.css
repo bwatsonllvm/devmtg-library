@@ -286,6 +286,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   color: var(--color-text-muted, #6b7280);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -322,6 +323,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   color: var(--color-text-subtle, #6b7280);
   background: transparent;
   transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
@@ -348,6 +350,11 @@ body {
 
 .library-docs-bridge .docs-book-chapter-body {
   display: grid;
+}
+
+.library-docs-bridge .docs-book-chapter-body[hidden],
+.library-docs-bridge .docs-book-sublist[hidden] {
+  display: none !important;
 }
 
 .library-docs-bridge .docs-book-chapter.is-collapsed > .docs-book-chapter-head .docs-book-chapter-toggle svg {
@@ -394,6 +401,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   color: var(--color-text-subtle, #6b7280);
   background: transparent;
   transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);

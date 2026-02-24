@@ -91,7 +91,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-09` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-10` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -343,7 +343,7 @@ const DOCUMENTATION_OPTIONS = {
       const slug = entry && entry.slug ? String(entry.slug) : '';
       const children = Array.isArray(entry && entry.children) ? entry.children : [];
       const hasChildren = children.length > 0;
-      const startExpanded = !hasChildren || isActivePath;
+      const startExpanded = !hasChildren;
 
       if (hasChildren && !startExpanded) {
         item.classList.add('is-collapsed');
@@ -462,8 +462,7 @@ const DOCUMENTATION_OPTIONS = {
       if (!entries.length) return;
       const chapterNumber = chapterIdx + 1;
       const chapterLabel = `${chapterNumber}. ${String(chapter.title || `Chapter ${chapterNumber}`)}`;
-      const chapterContainsCurrent = entries.some((entry) => nodeContainsSlug(entry, currentSlug));
-      const chapterExpanded = !!chapterContainsCurrent;
+      const chapterExpanded = false;
 
       const chapterSection = document.createElement('section');
       chapterSection.className = 'docs-book-chapter';
