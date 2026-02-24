@@ -1058,6 +1058,38 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
   color: var(--color-text);
 }
 
+.global-search-advanced-switch {
+  width: 30px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-border);
+  border: 1px solid transparent;
+  padding: 1px;
+  display: inline-flex;
+  align-items: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.global-search-advanced-switch-knob {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+  transform: translateX(0);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.global-search-advanced-toggle.active .global-search-advanced-switch {
+  background: var(--color-border-focus);
+  border-color: var(--color-border-focus);
+}
+
+.global-search-advanced-toggle.active .global-search-advanced-switch-knob {
+  transform: translateX(12px);
+  background: var(--color-text-inverse);
+}
+
 .global-search-advanced-state {
   font-size: 10px;
   font-weight: var(--font-weight-semibold);
@@ -1088,7 +1120,7 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 .search-box.global-search-form .global-search-advanced-toggle {
   position: static;
   height: 30px;
-  min-width: 132px;
+  min-width: 168px;
   padding: 0 10px;
   z-index: auto;
   flex-shrink: 0;
@@ -1928,6 +1960,38 @@ body.filter-collapsed .filter-collapse-btn svg {
   border-color: var(--color-border-focus);
   color: var(--color-text);
   background: var(--color-surface-hover);
+}
+
+.work-advanced-switch {
+  width: 30px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-border);
+  border: 1px solid transparent;
+  padding: 1px;
+  display: inline-flex;
+  align-items: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.work-advanced-switch-knob {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+  transform: translateX(0);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.work-advanced-toggle.active .work-advanced-switch {
+  background: var(--color-border-focus);
+  border-color: var(--color-border-focus);
+}
+
+.work-advanced-toggle.active .work-advanced-switch-knob {
+  transform: translateX(12px);
+  background: var(--color-text-inverse);
 }
 
 .work-advanced-toggle.active .work-advanced-state {

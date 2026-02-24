@@ -417,6 +417,7 @@
 
     const badge = toggle.querySelector('[data-advanced-count]');
     const stateLabel = toggle.querySelector('[data-advanced-state]');
+    const panelOpen = !!(advanced.panel && !advanced.panel.classList.contains('hidden'));
     let count = 0;
     for (const field of ADVANCED_FIELDS) {
       if (!isAdvancedFieldSupported(form, field)) continue;
@@ -429,14 +430,18 @@
     }
     if (getEffectiveScopeValue(form) !== normalizeScope(advanced.defaultScope, 'all')) count += 1;
 
-    const isActive = count > 0;
-    toggle.classList.toggle('active', isActive);
-    if (stateLabel) stateLabel.textContent = isActive ? 'On' : 'Off';
-    toggle.setAttribute('data-advanced-active', isActive ? 'true' : 'false');
-    toggle.setAttribute('aria-label', `Advanced search (${isActive ? 'On' : 'Off'})`);
+    const hasOverrides = count > 0;
+    const isOn = hasOverrides || panelOpen;
+    toggle.classList.toggle('active', isOn);
+    toggle.classList.toggle('has-overrides', hasOverrides);
+    if (stateLabel) stateLabel.textContent = isOn ? 'On' : 'Off';
+    toggle.setAttribute('data-advanced-active', hasOverrides ? 'true' : 'false');
+    toggle.setAttribute('data-advanced-open', panelOpen ? 'true' : 'false');
+    toggle.setAttribute('aria-label', `Advanced search (${isOn ? 'On' : 'Off'})`);
+    toggle.setAttribute('aria-pressed', panelOpen ? 'true' : 'false');
     if (badge) {
-      badge.hidden = !isActive;
-      badge.textContent = isActive ? String(count) : '';
+      badge.hidden = !hasOverrides;
+      badge.textContent = hasOverrides ? String(count) : '';
     }
     updateScopeButtonsState(form);
   }
@@ -448,7 +453,9 @@
     if (!panel || !toggle) return;
     panel.classList.add('hidden');
     toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-pressed', 'false');
     form.classList.remove('advanced-open');
+    updateAdvancedToggleState(form);
   }
 
   function openAdvancedPanel(form) {
@@ -458,7 +465,9 @@
     if (!panel || !toggle) return;
     panel.classList.remove('hidden');
     toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-pressed', 'true');
     form.classList.add('advanced-open');
+    updateAdvancedToggleState(form);
   }
 
   function syncHiddenFromAdvancedPanel(form) {
@@ -570,8 +579,9 @@
     toggle.className = 'global-search-advanced-toggle';
     toggle.setAttribute('aria-label', 'Advanced search');
     toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-pressed', 'false');
     const toggleLabel = form.classList.contains('search-box') ? 'Advanced' : 'Adv';
-    toggle.innerHTML = `<span class="global-search-advanced-toggle-label">${toggleLabel}</span><span class="global-search-advanced-state" data-advanced-state>Off</span><span class="global-search-advanced-count" data-advanced-count hidden></span>`;
+    toggle.innerHTML = `<span class="global-search-advanced-toggle-label">${toggleLabel}</span><span class="global-search-advanced-switch" aria-hidden="true"><span class="global-search-advanced-switch-knob"></span></span><span class="global-search-advanced-state" data-advanced-state>Off</span><span class="global-search-advanced-count" data-advanced-count hidden></span>`;
 
     const panel = document.createElement('div');
     panel.className = 'global-search-advanced-panel hidden';

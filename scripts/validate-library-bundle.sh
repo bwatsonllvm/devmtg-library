@@ -25,6 +25,7 @@ for f in \
   blogs/index.html \
   people/index.html \
   about/index.html \
+  docs/index.html \
   updates/index.html \
   updates/index.json \
   css/style.css \
@@ -36,6 +37,7 @@ for f in \
   js/papers-data.js \
   js/papers.js \
   js/updates.js \
+  js/docs.js \
   js/shared/library-utils.js \
   images/llvm-logo.png \
   images/llvm-favicon.png \
@@ -224,6 +226,7 @@ ruby -e '
     blogs/index.html
     people/index.html
     about/index.html
+    docs/index.html
     updates/index.html
   ].map { |f| File.join(site_root, f) }
 

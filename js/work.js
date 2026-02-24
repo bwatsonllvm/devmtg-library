@@ -826,6 +826,7 @@ function syncAdvancedFilterControlVisibility() {
   const customVisible = searchMode && state.timeFilter === 'custom';
   const activeAdvancedCount = countActiveAdvancedFields();
   const advancedActive = activeAdvancedCount > 0;
+  const advancedVisualOn = searchMode && (advancedActive || state.advancedOpen);
 
   if (timeLabel) timeLabel.hidden = !searchMode;
   if (timeSelect) {
@@ -835,13 +836,14 @@ function syncAdvancedFilterControlVisibility() {
   if (customRange) customRange.classList.toggle('hidden', !customVisible);
   if (advancedToggle) {
     advancedToggle.hidden = !searchMode;
-    advancedToggle.classList.toggle('active', advancedActive);
+    advancedToggle.classList.toggle('active', advancedVisualOn);
     advancedToggle.setAttribute('data-advanced-active', advancedActive ? 'true' : 'false');
+    advancedToggle.setAttribute('data-advanced-open', searchMode && state.advancedOpen ? 'true' : 'false');
     advancedToggle.setAttribute('aria-expanded', searchMode && state.advancedOpen ? 'true' : 'false');
     advancedToggle.setAttribute('aria-pressed', searchMode && state.advancedOpen ? 'true' : 'false');
-    advancedToggle.setAttribute('aria-label', `Advanced search tools (${advancedActive ? 'On' : 'Off'})`);
+    advancedToggle.setAttribute('aria-label', `Advanced search tools (${advancedVisualOn ? 'On' : 'Off'})`);
   }
-  if (advancedState) advancedState.textContent = advancedActive ? 'On' : 'Off';
+  if (advancedState) advancedState.textContent = advancedVisualOn ? 'On' : 'Off';
   if (advancedCount) {
     advancedCount.textContent = advancedActive ? String(activeAdvancedCount) : '';
     advancedCount.hidden = !advancedActive;
