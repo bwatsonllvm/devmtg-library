@@ -556,6 +556,9 @@
     ensureAdvancedHiddenInputs(form, defaultScope);
     applyAdvancedFieldsFromUrl(form, params);
     sanitizeAdvancedFieldsForContext(form);
+    const searchBoxMainRow = form.classList.contains('search-box')
+      ? ensureSearchBoxLayout(form)
+      : null;
 
     const toggle = document.createElement('button');
     toggle.type = 'button';
@@ -626,7 +629,11 @@
 
       toolsRow.appendChild(leftTools);
       toolsRow.appendChild(toggle);
-      form.appendChild(toolsRow);
+      if (searchBoxMainRow && searchBoxMainRow.parentNode === form) {
+        searchBoxMainRow.insertAdjacentElement('afterend', toolsRow);
+      } else {
+        form.appendChild(toolsRow);
+      }
     } else {
       const submitButton = form.querySelector('.global-search-submit');
       if (submitButton) form.insertBefore(toggle, submitButton);
@@ -955,15 +962,64 @@
     return indexBuildPromise;
   }
 
+  function ensureSearchBoxLayout(form) {
+    if (!form || !form.classList.contains('search-box')) return null;
+    if (form.classList.contains('work-hero-search')) return null;
+    if (form.querySelector('#work-search-input')) return null;
+    let mainRow = form.querySelector('.global-search-main-row');
+    if (mainRow) return mainRow;
+
+    mainRow = document.createElement('div');
+    mainRow.className = 'global-search-main-row';
+
+    const hiddenInputs = [...form.querySelectorAll('input[type="hidden"]')];
+    const anchor = hiddenInputs.length ? hiddenInputs[hiddenInputs.length - 1] : null;
+
+    const icon = form.querySelector('.search-icon');
+    const input = form.querySelector('.global-search-input');
+    const clearButton = form.querySelector('.search-clear');
+    const submitButton = form.querySelector('.global-search-submit');
+
+    if (anchor && anchor.parentNode === form) {
+      anchor.insertAdjacentElement('afterend', mainRow);
+    } else {
+      form.prepend(mainRow);
+    }
+
+    const orderedNodes = [icon, input, clearButton, submitButton];
+    for (const node of orderedNodes) {
+      if (!node || node.parentNode !== form) continue;
+      mainRow.appendChild(node);
+    }
+
+    const existingDropdowns = [...form.querySelectorAll('.search-dropdown')]
+      .filter((node) => node && node.parentNode === form);
+    for (const dropdown of existingDropdowns) {
+      mainRow.appendChild(dropdown);
+    }
+
+    return mainRow;
+  }
+
   function ensureDropdown(form) {
     let dropdown = form.querySelector('.global-search-dropdown');
-    if (dropdown) return dropdown;
+    const mainRow = form.classList.contains('search-box')
+      ? ensureSearchBoxLayout(form)
+      : null;
+    const dropdownParent = mainRow || form;
+
+    if (dropdown) {
+      if (dropdown.parentNode !== dropdownParent) {
+        dropdownParent.appendChild(dropdown);
+      }
+      return dropdown;
+    }
 
     dropdown = document.createElement('div');
     dropdown.className = 'search-dropdown global-search-dropdown hidden';
     dropdown.setAttribute('role', 'listbox');
     dropdown.setAttribute('aria-label', 'Global Search suggestions');
-    form.appendChild(dropdown);
+    dropdownParent.appendChild(dropdown);
     return dropdown;
   }
 
@@ -1198,8 +1254,8 @@
     }
     input.setAttribute('placeholder', resolveSectionSearchPlaceholder(form));
 
-    ensureDropdown(form);
     injectAdvancedSearchUi(form, params);
+    ensureDropdown(form);
 
     input.addEventListener('focus', () => {
       const value = String(input.value || '').trim();
