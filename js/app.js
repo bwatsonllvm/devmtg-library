@@ -1168,7 +1168,7 @@ function setFilterSidebarCollapsed(collapsed, persist = true) {
   collapseBtn.setAttribute('title', collapsed ? 'Expand filters' : 'Collapse filters');
 
   if (persist) {
-    sessionStorage.setItem('llvm-hub-filter-sidebar-collapsed', collapsed ? '1' : '0');
+    safeSessionSet('llvm-hub-filter-sidebar-collapsed', collapsed ? '1' : '0');
   }
 }
 
@@ -1219,7 +1219,7 @@ function initFilterSidebarCollapse() {
     }
 
     // Always start expanded so filters remain discoverable and fully scrollable.
-    sessionStorage.removeItem('llvm-hub-filter-sidebar-collapsed');
+    safeSessionRemove('llvm-hub-filter-sidebar-collapsed');
     setFilterSidebarCollapsed(false, false);
     setMobileDrawerOpen(false);
   };
@@ -1427,7 +1427,7 @@ function applyUrlFilters() {
 // ============================================================
 
 function saveNavigationState() {
-  sessionStorage.setItem('llvm-hub-search-state', JSON.stringify({
+  safeSessionSet('llvm-hub-search-state', JSON.stringify({
     query: state.query,
     speaker: state.speaker,
     categories: [...state.categories],
@@ -1440,13 +1440,20 @@ function saveNavigationState() {
 }
 
 function restoreNavigationState() {
-  const saved = sessionStorage.getItem('llvm-hub-search-state');
+  const saved = safeSessionGet('llvm-hub-search-state');
   if (!saved) return;
-  sessionStorage.removeItem('llvm-hub-search-state');
+  safeSessionRemove('llvm-hub-search-state');
 
-  const s = typeof HubUtils.parseNavigationState === 'function'
-    ? HubUtils.parseNavigationState(saved)
-    : JSON.parse(saved);
+  let s = null;
+  if (typeof HubUtils.parseNavigationState === 'function') {
+    s = HubUtils.parseNavigationState(saved);
+  } else {
+    try {
+      s = JSON.parse(saved);
+    } catch {
+      s = null;
+    }
+  }
   if (!s) return;
 
   if (s.query) {
@@ -1540,6 +1547,30 @@ function safeStorageSet(key, value) {
 function safeStorageRemove(key) {
   try {
     localStorage.removeItem(key);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
+function safeSessionGet(key) {
+  try {
+    return sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSessionSet(key, value) {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
+function safeSessionRemove(key) {
+  try {
+    sessionStorage.removeItem(key);
   } catch {
     // Ignore storage quota/security errors.
   }
@@ -3137,14 +3168,14 @@ async function init() {
     urlParams.has('meeting') || urlParams.has('category') || urlParams.has('year') ||
     urlParams.has('video') || urlParams.has('slides') || urlParams.has('sort');
 
-  const hasBackState = sessionStorage.getItem('llvm-hub-search-state');
+  const hasBackState = safeSessionGet('llvm-hub-search-state');
 
   if (hasBackState && !hasUrlState) {
     // Back-button from talk detail: restore saved search state
     restoreNavigationState();
   } else {
     // Direct navigation or speaker/tag/meeting link: honour URL params
-    if (hasBackState) sessionStorage.removeItem('llvm-hub-search-state');
+    if (hasBackState) safeSessionRemove('llvm-hub-search-state');
     loadStateFromUrl();
     applyUrlFilters();
     render();

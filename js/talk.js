@@ -789,7 +789,7 @@ function renderTalkDetail(talk, allTalks) {
 
   // Wire up back button — restore search state if available
   document.getElementById('back-btn').addEventListener('click', e => {
-    const saved = sessionStorage.getItem('llvm-hub-search-state');
+    const saved = safeSessionGet('llvm-hub-search-state');
     if (saved) {
       // Let the navigation happen; app.js will restore state
       return;
@@ -854,6 +854,14 @@ function safeStorageRemove(key) {
     localStorage.removeItem(key);
   } catch {
     // Ignore storage quota/security errors.
+  }
+}
+
+function safeSessionGet(key) {
+  try {
+    return sessionStorage.getItem(key);
+  } catch {
+    return null;
   }
 }
 

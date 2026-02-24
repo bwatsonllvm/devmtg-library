@@ -2100,7 +2100,7 @@ function setFilterSidebarCollapsed(collapsed, persist = true) {
   collapseBtn.setAttribute('title', collapsed ? 'Expand filters' : 'Collapse filters');
 
   if (persist) {
-    sessionStorage.setItem('llvm-hub-filter-sidebar-collapsed', collapsed ? '1' : '0');
+    safeSessionSet('llvm-hub-filter-sidebar-collapsed', collapsed ? '1' : '0');
   }
 }
 
@@ -2153,7 +2153,7 @@ function initFilterSidebarCollapse() {
       return;
     }
 
-    sessionStorage.removeItem('llvm-hub-filter-sidebar-collapsed');
+    safeSessionRemove('llvm-hub-filter-sidebar-collapsed');
     setFilterSidebarCollapsed(false, false);
     setMobileDrawerOpen(false);
   };
@@ -3340,6 +3340,22 @@ function safeStorageSet(key, value) {
 function safeStorageRemove(key) {
   try {
     localStorage.removeItem(key);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
+function safeSessionSet(key, value) {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch {
+    // Ignore storage quota/security errors.
+  }
+}
+
+function safeSessionRemove(key) {
+  try {
+    sessionStorage.removeItem(key);
   } catch {
     // Ignore storage quota/security errors.
   }

@@ -1216,6 +1216,14 @@
       .filter(Boolean);
   }
 
+  function safeDecodeURIComponent(value) {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return String(value || '');
+    }
+  }
+
   function parseQueryString(search) {
     const query = String(search || '').replace(/^\?/, '');
     if (!query) return {};
@@ -1224,10 +1232,10 @@
     for (const pair of query.split('&')) {
       if (!pair) continue;
       const parts = pair.split('=');
-      const key = decodeURIComponent(parts[0] || '').trim();
+      const key = safeDecodeURIComponent(parts[0] || '').trim();
       if (!key) continue;
       const encodedValue = parts.slice(1).join('=');
-      const decodedValue = decodeURIComponent(encodedValue.replace(/\+/g, ' '));
+      const decodedValue = safeDecodeURIComponent(encodedValue.replace(/\+/g, ' '));
       out[key] = decodedValue;
     }
     return out;

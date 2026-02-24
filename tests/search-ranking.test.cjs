@@ -185,3 +185,11 @@ test('buildSearchSnippet centers snippet on matched query text', () => {
   assert.ok(snippet.length <= 113); // Includes optional leading/trailing ellipsis.
   assert.match(snippet.toLowerCase(), /mlir|tensor|cores/);
 });
+
+test('parseUrlState tolerates malformed URL encoding', () => {
+  assert.doesNotThrow(() => {
+    const parsed = utils.parseUrlState('?q=%E0%A4%A&speaker=Alice%20Smith', []);
+    assert.equal(parsed.speaker, 'Alice Smith');
+    assert.equal(typeof parsed.query, 'string');
+  });
+});
