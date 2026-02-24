@@ -135,6 +135,13 @@ function normalizePublicationKey(value) {
   return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
 }
 
+function normalizePublicationFilterKey(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (/^(?:acro|text):[a-z0-9]+$/i.test(raw)) return raw.toLowerCase();
+  return normalizePublicationKey(raw);
+}
+
 function normalizeTopicKey(value) {
   return String(value || '')
     .toLowerCase()
@@ -506,6 +513,7 @@ function refreshPublicationFilterOptions() {
     select.appendChild(option);
   }
 
+  state.publication = normalizePublicationFilterKey(state.publication);
   if (state.publication && !allPublications.some((item) => item.key === state.publication)) {
     state.publication = '';
   }
@@ -860,7 +868,7 @@ function filterPeople() {
   const tokens = tokenizeQuery(state.query);
   const selectedTopicKey = normalizeTopicKey(state.topic);
   const selectedAffiliationKey = normalizeAffiliationKey(state.affiliation);
-  const selectedPublicationKey = normalizePublicationKey(state.publication);
+  const selectedPublicationKey = normalizePublicationFilterKey(state.publication);
 
   return allPeople.filter((person) => {
     if (state.filter === 'talks' && person.talkCount === 0) return false;
@@ -1275,7 +1283,7 @@ function initPublicationFilter() {
   if (!select) return;
 
   select.addEventListener('change', () => {
-    state.publication = normalizePublicationKey(select.value);
+    state.publication = normalizePublicationFilterKey(select.value);
     syncPublicationFilterControl();
     render();
   });
