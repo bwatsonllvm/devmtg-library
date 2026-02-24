@@ -333,6 +333,7 @@
     const sections = [`
       <div class="search-dropdown-section search-dropdown-section--action">
         <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
+                data-autocomplete-type="global"
                 data-autocomplete-value="${escapeHtml(String(query || '').trim())}">
           <span class="search-dropdown-item-icon">${searchIcon}</span>
           <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(String(query || '').trim())}"</span>
@@ -346,6 +347,7 @@
           <div class="search-dropdown-label" aria-hidden="true">Key Topics</div>
           ${matches.topics.map((item) => `
             <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
+                    data-autocomplete-type="topic"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${tagIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -360,6 +362,7 @@
           <div class="search-dropdown-label" aria-hidden="true">Speakers + Authors</div>
           ${matches.people.map((item) => `
             <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
+                    data-autocomplete-type="person"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${personIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -374,6 +377,7 @@
           <div class="search-dropdown-label" aria-hidden="true">Talk Titles</div>
           ${matches.talks.map((item) => `
             <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
+                    data-autocomplete-type="talk"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${talkIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -388,6 +392,7 @@
           <div class="search-dropdown-label" aria-hidden="true">Paper + Blog Titles</div>
           ${matches.papers.map((item) => `
             <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
+                    data-autocomplete-type="paper"
                     data-autocomplete-value="${escapeHtml(item.label)}">
               <span class="search-dropdown-item-icon">${paperIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -408,6 +413,8 @@
         window.setTimeout(() => { handled = false; }, 0);
         event.preventDefault();
         event.stopPropagation();
+        form.dataset.searchSubmitType = String(item.dataset.autocompleteType || 'query').trim().toLowerCase();
+        form.dataset.searchSubmitSource = 'autocomplete';
         const value = String(item.dataset.autocompleteValue || '').trim();
         if (!value) return;
         input.value = value;
@@ -517,6 +524,8 @@
         if (!dropdown || dropdown.classList.contains('hidden')) return;
         if (state.activeItemIndex < 0) {
           event.preventDefault();
+          form.dataset.searchSubmitType = 'query';
+          form.dataset.searchSubmitSource = 'enter';
           closeDropdown(form);
           if (typeof form.requestSubmit === 'function') {
             form.requestSubmit();
@@ -530,6 +539,8 @@
         if (!activeItem) return;
 
         event.preventDefault();
+        form.dataset.searchSubmitType = String(activeItem.dataset.autocompleteType || 'query').trim().toLowerCase();
+        form.dataset.searchSubmitSource = 'enter';
         const value = String(activeItem.dataset.autocompleteValue || '').trim();
         if (!value) return;
         input.value = value;

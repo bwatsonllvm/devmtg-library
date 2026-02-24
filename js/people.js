@@ -484,6 +484,8 @@ function routeToGlobalSearch(query) {
     input.value = value;
     const queryInput = form.querySelector('input[name="q"]');
     if (queryInput && queryInput !== input) queryInput.value = value;
+    form.dataset.searchSubmitType = 'global';
+    form.dataset.searchSubmitSource = 'programmatic';
     if (typeof form.requestSubmit === 'function') form.requestSubmit();
     else form.submit();
     return true;
@@ -508,8 +510,9 @@ function shouldRouteToGlobalSearch(query) {
 }
 
 function applyAutocompleteSelection(type, value) {
+  const effectiveType = String(type || '').trim().toLowerCase();
   const query = String(value || '').trim();
-  if (query) {
+  if (effectiveType === 'global' && query) {
     closeDropdown();
     routeToGlobalSearch(query);
     return 'global';
@@ -904,13 +907,30 @@ function initSearch() {
 
   if (useUniversalSearch) {
     input.addEventListener('input', () => {
+      state.query = input.value.trim();
       syncClearButton();
-      closeDropdown();
+      render();
     });
 
     input.addEventListener('focus', syncClearButton);
     input.addEventListener('blur', () => {
       setTimeout(syncClearButton, 150);
+    });
+
+    searchForm.addEventListener('submit', (event) => {
+      const submitType = String(searchForm.dataset.searchSubmitType || 'query').trim().toLowerCase();
+      searchForm.dataset.searchSubmitType = '';
+      searchForm.dataset.searchSubmitSource = '';
+      if (submitType === 'global') return;
+
+      event.preventDefault();
+      const value = String(input.value || '').trim();
+      if (submitType === 'topic' || submitType === 'person' || submitType === 'talk' || submitType === 'paper') {
+        applyAutocompleteSelection(submitType, value);
+      } else {
+        commitSearchValue(value, false);
+      }
+      syncClearButton();
     });
 
     clearBtn.addEventListener('click', (event) => {
@@ -964,7 +984,7 @@ function initSearch() {
       }
 
       event.preventDefault();
-      const mode = commitSearchValue(input.value, true);
+      const mode = commitSearchValue(input.value, false);
       syncClearButton();
       if (mode !== 'global') input.blur();
       return;

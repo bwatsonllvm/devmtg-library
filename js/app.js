@@ -2065,16 +2065,6 @@ function applyTopicSearchFilter(tag) {
 function applyAutocompleteSelection(type, value, source = 'search') {
   const input = document.getElementById('search-input');
   let effectiveType = String(type || '').trim();
-  const selectionSource = normalizeValue(source || 'search');
-
-  if (selectionSource === 'search') {
-    const query = String(value || '').trim();
-    if (query) {
-      closeDropdown();
-      routeToGlobalSearch(query);
-      return;
-    }
-  }
 
   if (effectiveType === 'person') {
     effectiveType = 'speaker';
@@ -2767,6 +2757,8 @@ function routeToGlobalSearch(query) {
     input.value = value;
     const queryInput = form.querySelector('input[name="q"]');
     if (queryInput && queryInput !== input) queryInput.value = value;
+    form.dataset.searchSubmitType = 'global';
+    form.dataset.searchSubmitSource = 'programmatic';
     if (typeof form.requestSubmit === 'function') form.requestSubmit();
     else form.submit();
     return true;
@@ -2881,13 +2873,45 @@ function initSearch() {
         syncTopicChipState();
       }
       if (rawValue.trim() && state.speaker) state.speaker = '';
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        state.query = rawValue.trim();
+        updateClearBtn();
+        syncUrl();
+        render();
+      }, 150);
       syncClearBtn();
-      closeDropdown();
     });
 
     input.addEventListener('focus', syncClearBtn);
     input.addEventListener('blur', () => {
       setTimeout(syncClearBtn, 150);
+    });
+
+    searchForm.addEventListener('submit', (event) => {
+      const submitType = normalizeValue(searchForm.dataset.searchSubmitType || 'query');
+      searchForm.dataset.searchSubmitType = '';
+      searchForm.dataset.searchSubmitSource = '';
+      if (submitType === 'global') return;
+
+      event.preventDefault();
+      clearTimeout(debounceTimer);
+      const value = String(input.value || '').trim();
+
+      if (submitType === 'topic') {
+        applyAutocompleteSelection('topic', value, 'search');
+        return;
+      }
+      if (submitType === 'person') {
+        applyAutocompleteSelection('person', value, 'search');
+        return;
+      }
+      if (submitType === 'talk' || submitType === 'paper') {
+        applyAutocompleteSelection(submitType, value, 'search');
+        return;
+      }
+
+      commitSearchValue(value, false);
     });
 
     clearBtn.addEventListener('click', (event) => {
@@ -2946,7 +2970,7 @@ function initSearch() {
       } else {
         e.preventDefault();
         clearTimeout(debounceTimer);
-        const mode = commitSearchValue(input.value, true);
+        const mode = commitSearchValue(input.value, false);
         if (mode !== 'global') input.blur();
       }
     } else if (e.key === 'Escape') {

@@ -22,7 +22,10 @@ Search now uses a shared, relevance-first stack intended to work for both LLVM n
 
 - All `.global-search-form` inputs use a shared autocomplete index sourced from talks, papers/blogs, people, and key topics.
 - Home, section pages (`talks/`, `papers/`, `blogs/`, `people/`), detail pages, `about/`, and `work.html` now all use the shared `js/shared/global-search.js` component for a unified search-bar UX.
-- Search boxes across home, talks, papers, blogs, people, about, and detail pages now default to **Global Search** routing (`work.html?mode=search&q=...`) for typed queries and autocomplete selections.
+- Search behavior is route-aware:
+  - home/about/detail/work routes default to **Global Search** (`work.html?mode=search&q=...`)
+  - section index pages (`talks/`, `papers/`, `blogs/`, `people/`) default to contextual local filtering
+  - section pages still expose explicit **Run Global Search** action in the shared dropdown to jump to cross-library results
 - Browsing remains available as secondary behavior through section filters/chips/card actions (for example, topic chips and sidebar facets).
 - Suggestions are grouped into:
   - Key Topics
@@ -126,7 +129,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 ### Terminology: All Work vs Global Search
 
 - **Global Search**: free-text, cross-library ranking mode (`work.html?mode=search&q=...`).
-- Global Search is the default search path from section search boxes; browsing/filtering is secondary.
+- Section pages search locally by default; Global Search is invoked explicitly from the shared search-dropdown action.
 - **All Work**: entity aggregation mode for a speaker or key topic (`work.html?mode=entity&kind=...&value=...`).
 
 ## How The Database Is Constructed
