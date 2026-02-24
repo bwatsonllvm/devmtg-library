@@ -3782,6 +3782,455 @@
     return cached.slice(0, Math.max(0, Math.floor(limit)));
   }
 
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      // Ignore storage quota/security errors.
+    }
+  }
+
+  function safeStorageRemove(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // Ignore storage quota/security errors.
+    }
+  }
+
+  function safeSessionSet(key, value) {
+    try {
+      sessionStorage.setItem(key, value);
+    } catch {
+      // Ignore storage quota/security errors.
+    }
+  }
+
+  function safeSessionGet(key) {
+    try {
+      return sessionStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  function safeSessionRemove(key) {
+    try {
+      sessionStorage.removeItem(key);
+    } catch {
+      // Ignore storage quota/security errors.
+    }
+  }
+
+  async function copyTextToClipboard(text) {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        // Fall through to legacy copy strategy.
+      }
+    }
+
+    try {
+      const input = document.createElement('input');
+      input.value = text;
+      input.setAttribute('readonly', 'readonly');
+      input.style.position = 'absolute';
+      input.style.left = '-9999px';
+      document.body.appendChild(input);
+      input.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(input);
+      return !!ok;
+    } catch {
+      return false;
+    }
+  }
+
+  function getClosestTarget(event, selector) {
+    const target = event && event.target;
+    if (!target || typeof target.closest !== 'function') return null;
+    return target.closest(selector);
+  }
+
+  const DISCLOSURE_MENU_CONTROLLERS = new WeakMap();
+
+  function ensureDisclosureMenu({ menu, toggle, panel, closeOnPanelSelector = 'a,button', onPanelClick = null }) {
+    if (!menu || !toggle || !panel) return null;
+
+    let controller = DISCLOSURE_MENU_CONTROLLERS.get(menu);
+    if (!controller) {
+      controller = {
+        menu,
+        toggle,
+        panel,
+        closeOnPanelSelector,
+        onPanelClick,
+      };
+
+      controller.open = () => {
+        controller.menu.classList.add('open');
+        controller.panel.hidden = false;
+        controller.toggle.setAttribute('aria-expanded', 'true');
+      };
+
+      controller.close = () => {
+        controller.menu.classList.remove('open');
+        controller.panel.hidden = true;
+        controller.toggle.setAttribute('aria-expanded', 'false');
+      };
+
+      controller.isInside = (target) => !!target && controller.menu.contains(target);
+
+      controller.handleToggleClick = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (controller.menu.classList.contains('open')) controller.close();
+        else controller.open();
+      };
+
+      controller.handlePanelClick = (event) => {
+        if (typeof controller.onPanelClick === 'function') {
+          const handled = controller.onPanelClick(event, controller);
+          if (handled) return;
+        }
+        const target = controller.closeOnPanelSelector
+          ? getClosestTarget(event, controller.closeOnPanelSelector)
+          : null;
+        if (target) controller.close();
+      };
+
+      controller.handlePointerDown = (event) => {
+        if (!controller.isInside(event.target)) controller.close();
+      };
+
+      controller.handleFocusIn = (event) => {
+        if (!controller.isInside(event.target)) controller.close();
+      };
+
+      controller.handleKeyDown = (event) => {
+        if (event.key === 'Escape' && controller.menu.classList.contains('open')) {
+          controller.close();
+          controller.toggle.focus();
+        }
+      };
+
+      controller.toggle.addEventListener('click', controller.handleToggleClick);
+      controller.panel.addEventListener('click', controller.handlePanelClick);
+      document.addEventListener('pointerdown', controller.handlePointerDown);
+      document.addEventListener('focusin', controller.handleFocusIn);
+      document.addEventListener('keydown', controller.handleKeyDown);
+
+      DISCLOSURE_MENU_CONTROLLERS.set(menu, controller);
+    } else {
+      controller.menu = menu;
+      controller.toggle = toggle;
+      controller.panel = panel;
+      controller.closeOnPanelSelector = closeOnPanelSelector;
+      controller.onPanelClick = onPanelClick;
+    }
+
+    controller.close();
+    return controller;
+  }
+
+  function createPageShell(options = {}) {
+    const themePrefKey = String(options.themePrefKey || 'llvm-hub-theme-preference');
+    const textSizeKey = String(options.textSizeKey || 'llvm-hub-text-size');
+    const themePrefValues = new Set(Array.isArray(options.themePrefValues) && options.themePrefValues.length
+      ? options.themePrefValues
+      : ['system', 'light', 'dark']);
+    const textSizeValues = new Set(Array.isArray(options.textSizeValues) && options.textSizeValues.length
+      ? options.textSizeValues
+      : ['small', 'default', 'large']);
+    const mobileHeaderActionMap = (options.mobileHeaderActionMap && typeof options.mobileHeaderActionMap === 'object')
+      ? options.mobileHeaderActionMap
+      : null;
+    const popoverTargets = Array.isArray(options.mobileHeaderPopoverTargets) && options.mobileHeaderPopoverTargets.length
+      ? options.mobileHeaderPopoverTargets
+      : [
+        { menuId: 'share-menu', panelId: 'share-panel', toggleId: 'share-btn' },
+        { menuId: 'customization-menu', panelId: 'customization-panel', toggleId: 'customization-toggle' },
+      ];
+
+    let systemThemeQuery = null;
+
+    function getThemePreference() {
+      const saved = safeStorageGet(themePrefKey);
+      return themePrefValues.has(saved) ? saved : 'system';
+    }
+
+    function resolveTheme(preference) {
+      if (preference === 'light' || preference === 'dark') return preference;
+      if (typeof window.matchMedia !== 'function') return 'light';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function applyTheme(preference, persist = false) {
+      const pref = themePrefValues.has(preference) ? preference : 'system';
+      const resolved = resolveTheme(pref);
+      document.documentElement.setAttribute('data-theme', resolved);
+      document.documentElement.setAttribute('data-theme-preference', pref);
+      document.documentElement.style.backgroundColor = resolved === 'dark' ? '#000000' : '#f5f5f5';
+      if (persist) safeStorageSet(themePrefKey, pref);
+    }
+
+    function getTextSizePreference() {
+      const saved = safeStorageGet(textSizeKey);
+      return textSizeValues.has(saved) ? saved : 'default';
+    }
+
+    function applyTextSize(size, persist = false) {
+      const textSize = textSizeValues.has(size) ? size : 'default';
+      if (textSize === 'default') {
+        document.documentElement.removeAttribute('data-text-size');
+      } else {
+        document.documentElement.setAttribute('data-text-size', textSize);
+      }
+      if (persist) safeStorageSet(textSizeKey, textSize);
+    }
+
+    function syncCustomizationMenuControls() {
+      const themeSelect = document.getElementById('custom-theme-select');
+      const textSizeSelect = document.getElementById('custom-text-size-select');
+      if (themeSelect) themeSelect.value = getThemePreference();
+      if (textSizeSelect) textSizeSelect.value = getTextSizePreference();
+    }
+
+    function handleSystemThemeChange() {
+      if (getThemePreference() === 'system') {
+        applyTheme('system');
+        syncCustomizationMenuControls();
+      }
+    }
+
+    function initTheme() {
+      applyTheme(getThemePreference());
+      if (systemThemeQuery || typeof window.matchMedia !== 'function') return;
+
+      systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      if (typeof systemThemeQuery.addEventListener === 'function') {
+        systemThemeQuery.addEventListener('change', handleSystemThemeChange);
+      } else if (typeof systemThemeQuery.addListener === 'function') {
+        systemThemeQuery.addListener(handleSystemThemeChange);
+      }
+    }
+
+    function initTextSize() {
+      applyTextSize(getTextSizePreference());
+    }
+
+    function initCustomizationMenu() {
+      const menu = document.getElementById('customization-menu');
+      const toggle = document.getElementById('customization-toggle');
+      const panel = document.getElementById('customization-panel');
+      const themeSelect = document.getElementById('custom-theme-select');
+      const textSizeSelect = document.getElementById('custom-text-size-select');
+      const resetBtn = document.getElementById('custom-reset-display');
+      if (!menu || !toggle || !panel || !themeSelect || !textSizeSelect || !resetBtn) return;
+
+      syncCustomizationMenuControls();
+      ensureDisclosureMenu({ menu, toggle, panel });
+
+      if (menu.dataset.pageShellBound === '1') return;
+      menu.dataset.pageShellBound = '1';
+
+      themeSelect.addEventListener('change', () => {
+        const preference = themePrefValues.has(themeSelect.value) ? themeSelect.value : 'system';
+        applyTheme(preference, true);
+        syncCustomizationMenuControls();
+      });
+
+      textSizeSelect.addEventListener('change', () => {
+        const size = textSizeValues.has(textSizeSelect.value) ? textSizeSelect.value : 'default';
+        applyTextSize(size, true);
+        syncCustomizationMenuControls();
+      });
+
+      resetBtn.addEventListener('click', () => {
+        safeStorageRemove(themePrefKey);
+        safeStorageRemove(textSizeKey);
+        applyTheme('system');
+        applyTextSize('default');
+        syncCustomizationMenuControls();
+      });
+    }
+
+    function closeHeaderPopover(menuId, panelId, toggleId) {
+      const menu = document.getElementById(menuId);
+      const panel = document.getElementById(panelId);
+      const toggle = document.getElementById(toggleId);
+      if (menu) menu.classList.remove('open');
+      if (panel) panel.hidden = true;
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function closeHeaderPopovers() {
+      for (const target of popoverTargets) {
+        closeHeaderPopover(target.menuId, target.panelId, target.toggleId);
+      }
+    }
+
+    function initMobileNavMenu() {
+      const menu = document.getElementById('mobile-nav-menu');
+      const toggle = document.getElementById('mobile-nav-toggle');
+      const panel = document.getElementById('mobile-nav-panel');
+      if (!menu || !toggle || !panel) return;
+
+      const disclosure = ensureDisclosureMenu({
+        menu,
+        toggle,
+        panel,
+        onPanelClick: (event, controller) => {
+          const actionTarget = getClosestTarget(event, '[data-mobile-header-action]');
+          if (!actionTarget || !mobileHeaderActionMap) return false;
+
+          const action = String(actionTarget.getAttribute('data-mobile-header-action') || '').trim();
+          const targetId = mobileHeaderActionMap[action];
+          if (!targetId) return false;
+
+          event.preventDefault();
+          event.stopPropagation();
+          controller.close();
+          closeHeaderPopovers();
+          window.requestAnimationFrame(() => {
+            const targetToggle = document.getElementById(targetId);
+            if (targetToggle) targetToggle.click();
+          });
+          return true;
+        },
+      });
+
+      if (
+        disclosure
+        && mobileHeaderActionMap
+        && !disclosure.mobilePopoverCloseWrapped
+      ) {
+        const baseOpen = disclosure.open;
+        disclosure.open = () => {
+          closeHeaderPopovers();
+          baseOpen();
+        };
+        disclosure.mobilePopoverCloseWrapped = true;
+      }
+    }
+
+    function initShareMenu() {
+      const menu = document.getElementById('share-menu');
+      const toggle = document.getElementById('share-btn');
+      const panel = document.getElementById('share-panel');
+      const copyBtn = document.getElementById('share-copy-link');
+      const nativeShareBtn = document.getElementById('share-native-share');
+      const emailLink = document.getElementById('share-email-link');
+      const xLink = document.getElementById('share-x-link');
+      const linkedInLink = document.getElementById('share-linkedin-link');
+      if (!menu || !toggle || !panel || !copyBtn || !emailLink || !xLink || !linkedInLink) return;
+
+      const disclosure = ensureDisclosureMenu({
+        menu,
+        toggle,
+        panel,
+        closeOnPanelSelector: null,
+      });
+      if (!disclosure) return;
+
+      const shareUrl = window.location.href;
+      const shareTitle = document.title || 'LLVM Research Library';
+
+      emailLink.href = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(`${shareTitle} - ${shareUrl}`)}`;
+      xLink.href = `https://x.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`;
+      linkedInLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+
+      if (!disclosure.shareState) {
+        disclosure.shareState = {
+          defaultLabel: toggle.textContent.trim() || 'Share',
+          resetTimer: null,
+          shareUrl,
+          shareTitle,
+        };
+      } else {
+        disclosure.shareState.shareUrl = shareUrl;
+        disclosure.shareState.shareTitle = shareTitle;
+      }
+
+      const setButtonState = (label, success = false) => {
+        toggle.textContent = label;
+        toggle.classList.toggle('is-success', success);
+        if (disclosure.shareState.resetTimer) {
+          window.clearTimeout(disclosure.shareState.resetTimer);
+        }
+        disclosure.shareState.resetTimer = window.setTimeout(() => {
+          toggle.textContent = disclosure.shareState.defaultLabel;
+          toggle.classList.remove('is-success');
+        }, 1500);
+      };
+
+      const supportsNativeShare = typeof navigator.share === 'function';
+      if (nativeShareBtn) nativeShareBtn.hidden = !supportsNativeShare;
+
+      if (menu.dataset.pageShellBound === '1') return;
+      menu.dataset.pageShellBound = '1';
+
+      if (nativeShareBtn && supportsNativeShare) {
+        nativeShareBtn.addEventListener('click', async (event) => {
+          event.preventDefault();
+          try {
+            await navigator.share({
+              title: disclosure.shareState.shareTitle,
+              url: disclosure.shareState.shareUrl,
+            });
+            setButtonState('Shared', true);
+          } catch (error) {
+            if (error && error.name === 'AbortError') return;
+            setButtonState('Share failed', false);
+          }
+          disclosure.close();
+        });
+      }
+
+      copyBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const copied = await copyTextToClipboard(disclosure.shareState.shareUrl);
+        setButtonState(copied ? 'Link copied' : 'Copy failed', copied);
+        if (copied) disclosure.close();
+      });
+
+      [emailLink, xLink, linkedInLink].forEach((link) => {
+        link.addEventListener('click', () => {
+          disclosure.close();
+        });
+      });
+    }
+
+    return {
+      applyTextSize,
+      applyTheme,
+      copyTextToClipboard,
+      getTextSizePreference,
+      getThemePreference,
+      initCustomizationMenu,
+      initMobileNavMenu,
+      initShareMenu,
+      initTextSize,
+      initTheme,
+      safeSessionGet,
+      safeSessionRemove,
+      safeSessionSet,
+      safeStorageGet,
+      safeStorageRemove,
+      safeStorageSet,
+    };
+  }
+
   const api = {
     arePersonMiddleVariants,
     buildPeopleIndex,
@@ -3816,6 +4265,7 @@
     scorePaperRecordByModel,
     scorePaperRecordByQuery,
     scoreMatch,
+    createPageShell,
     scoreTalkRecordByModel,
     scoreTalkRecordByQuery,
     sortCategoryEntries,
