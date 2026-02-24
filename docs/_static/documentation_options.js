@@ -24,6 +24,7 @@ const DOCUMENTATION_OPTIONS = {
   const DOCS_UNIVERSAL_SEARCH_VERSION = '20260224-02';
   const DOCS_UNIVERSAL_SEARCH_MAX_SIDEBAR_RESULTS = 7;
   const DOCS_UNIVERSAL_SEARCH_MAX_PAGE_RESULTS = 80;
+  const DOCS_UNIVERSAL_HIGHLIGHT_MAX_TERMS = 10;
   const DOCS_SEARCH_STOP_WORDS = new Set([
     'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'how', 'in', 'into',
     'is', 'it', 'of', 'on', 'or', 'that', 'the', 'this', 'to', 'with',
@@ -181,7 +182,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-20` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-21` });
   }
 
   function applyStoredDisplayPreferences() {
@@ -1037,6 +1038,32 @@ const DOCUMENTATION_OPTIONS = {
     return tokens;
   }
 
+  function tokenizeUniversalSearchHighlightTerms(value) {
+    const normalized = normalizeUniversalSearchQuery(value).toLowerCase();
+    if (!normalized) return [];
+
+    const terms = [];
+    const seen = new Set();
+    const matches = normalized.match(/[a-z0-9+#.]{2,}/g) || [];
+    matches.forEach((candidate) => {
+      if (terms.length >= DOCS_UNIVERSAL_HIGHLIGHT_MAX_TERMS) return;
+      const token = normalizeUniversalSearchToken(candidate);
+      if (!token || token.length < 2 || DOCS_SEARCH_STOP_WORDS.has(token) || seen.has(token)) return;
+      seen.add(token);
+      terms.push(token);
+    });
+
+    if (terms.length) return terms;
+
+    const fallback = normalizeUniversalSearchText(normalized).split(' ').filter((token) => token.length >= 2);
+    fallback.forEach((token) => {
+      if (terms.length >= DOCS_UNIVERSAL_HIGHLIGHT_MAX_TERMS || DOCS_SEARCH_STOP_WORDS.has(token) || seen.has(token)) return;
+      seen.add(token);
+      terms.push(token);
+    });
+    return terms;
+  }
+
   function buildUniversalSearchClauses(tokens) {
     const source = Array.isArray(tokens) ? tokens : [];
     const clauses = [];
@@ -1267,21 +1294,131 @@ const DOCUMENTATION_OPTIONS = {
     return parts.join(' | ');
   }
 
-  function buildUniversalResultHref(entry, rootPath) {
+  function resolveUniversalResultAnchor(entry, queryLower, highlightTerms) {
+    if (!entry || typeof entry !== 'object') return '';
+    const headings = Array.isArray(entry.headings) ? entry.headings : [];
+    if (!headings.length) return '';
+
+    const terms = Array.isArray(highlightTerms) ? highlightTerms : [];
+    let fallbackAnchor = '';
+    let bestAnchor = '';
+    let bestScore = 0;
+    let bestIndex = Number.POSITIVE_INFINITY;
+
+    headings.forEach((heading, index) => {
+      if (!heading || typeof heading !== 'object') return;
+      const anchor = String(heading.anchor || '').replace(/^#/, '').trim();
+      if (!anchor) return;
+      if (!fallbackAnchor) fallbackAnchor = anchor;
+
+      const headingText = normalizeUniversalSearchText(heading.text || '');
+      if (!headingText) return;
+
+      let score = 0;
+      let matches = 0;
+      if (queryLower) {
+        if (headingText === queryLower) {
+          score += 180;
+          matches += 3;
+        } else if (headingText.startsWith(`${queryLower} `) || headingText.startsWith(queryLower)) {
+          score += 132;
+          matches += 2;
+        } else if (headingText.includes(queryLower)) {
+          score += 96;
+          matches += 1;
+        }
+      }
+
+      terms.forEach((term) => {
+        const token = normalizeUniversalSearchToken(term);
+        if (!token || token.length < 2) return;
+        if (headingText.includes(token)) {
+          score += 34;
+          matches += 1;
+          return;
+        }
+        const stem = stemUniversalSearchToken(token);
+        if (stem && stem.length >= 3 && headingText.includes(stem)) {
+          score += 24;
+          matches += 1;
+        }
+      });
+
+      if (!matches) return;
+
+      const level = Number(heading.level || 2);
+      if (level === 2) score += 10;
+      else if (level === 3) score += 8;
+      else if (level >= 4) score += 6;
+      else score += 7;
+      score += Math.max(0, 6 - index);
+
+      if (score > bestScore || (score === bestScore && index < bestIndex)) {
+        bestScore = score;
+        bestIndex = index;
+        bestAnchor = anchor;
+      }
+    });
+
+    return bestAnchor || fallbackAnchor;
+  }
+
+  function appendUniversalResultNavigation(href, highlightValue, anchorValue) {
+    const source = String(href || '').trim();
+    if (!source) return '';
+
+    const highlight = String(highlightValue || '').trim();
+    const anchor = String(anchorValue || '').replace(/^#/, '').trim();
+    if (!highlight && !anchor) return source;
+
+    let resolved;
+    try {
+      resolved = new URL(source, window.location.href);
+    } catch (_) {
+      return source;
+    }
+
+    const isDocsHref = /\/docs(?:\/|$)/.test(String(resolved.pathname || ''));
+    if (isDocsHref && highlight) {
+      resolved.searchParams.set('highlight', highlight);
+    }
+    if (anchor) {
+      resolved.hash = `#${anchor}`;
+    }
+
+    if (/^https?:\/\//i.test(source)) {
+      if (resolved.origin !== window.location.origin) return source;
+      return resolved.toString();
+    }
+    return `${resolved.pathname}${resolved.search}${resolved.hash}`;
+  }
+
+  function buildUniversalResultHref(entry, rootPath, options) {
     if (!entry || typeof entry !== 'object') return `${rootPath}docs/`;
+    const opts = options && typeof options === 'object' ? options : {};
+
+    let href = `${rootPath}docs/`;
     const direct = String(entry.href || '').trim();
     if (direct) {
-      if (/^https?:\/\//i.test(direct)) return direct;
-      if (direct.startsWith('/')) return direct;
-      return `${rootPath}docs/${direct}`.replace(/([^:]\/)\/+/g, '$1');
+      if (/^https?:\/\//i.test(direct)) href = direct;
+      else if (direct.startsWith('/')) href = direct;
+      else href = `${rootPath}docs/${direct}`.replace(/([^:]\/)\/+/g, '$1');
+    } else {
+      href = slugToDocsHref(entry.slug, rootPath);
     }
-    return slugToDocsHref(entry.slug, rootPath);
+
+    return appendUniversalResultNavigation(href, opts.highlight, opts.anchor);
   }
 
   function renderUniversalSearchResultList(targetList, results, rootPath, query, mode) {
     if (!targetList) return;
     targetList.innerHTML = '';
     const compact = mode === 'sidebar';
+    const normalizedQuery = normalizeUniversalSearchQuery(query);
+    const queryLower = normalizeUniversalSearchText(normalizedQuery);
+    const highlightTerms = tokenizeUniversalSearchHighlightTerms(normalizedQuery);
+    const highlightValue = highlightTerms.join(' ');
+
     results.forEach((result) => {
       const entry = result && result.entry ? result.entry : null;
       if (!entry) return;
@@ -1291,7 +1428,18 @@ const DOCUMENTATION_OPTIONS = {
 
       const link = document.createElement('a');
       link.className = 'docs-universal-search-result';
-      link.href = buildUniversalResultHref(entry, rootPath);
+      const targetAnchor = resolveUniversalResultAnchor(entry, queryLower, highlightTerms);
+      link.href = buildUniversalResultHref(entry, rootPath, {
+        anchor: targetAnchor,
+        highlight: highlightValue,
+      });
+      if (highlightValue) {
+        const setHighlightTerms = function () {
+          safeStorageSet('sphinx_highlight_terms', highlightValue);
+        };
+        link.addEventListener('click', setHighlightTerms);
+        link.addEventListener('auxclick', setHighlightTerms);
+      }
 
       const title = document.createElement('span');
       title.className = 'docs-universal-search-result-title';

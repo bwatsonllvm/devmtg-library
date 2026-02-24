@@ -1020,6 +1020,19 @@ body {
   overflow-wrap: anywhere;
 }
 
+.library-docs-bridge .docs-hugo-content span.highlighted,
+.library-docs-bridge .docs-hugo-content dt:target {
+  background: var(--color-state-active-bg);
+  color: var(--color-text, #111827);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 1px var(--color-state-active-border);
+  padding: 0 2px;
+}
+
+.library-docs-bridge .docs-hugo-content rect.highlighted {
+  fill: var(--color-state-active-border);
+}
+
 .library-docs-bridge .docs-hugo-content div.highlight {
   margin: var(--space-4) 0;
   border: 1px solid var(--color-border);
