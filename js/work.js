@@ -16,7 +16,6 @@ const WORK_VIEW_MODES = new Set(['expanded', 'compact']);
 const WORK_VIEW_STORAGE_KEY = 'llvm-hub-work-view';
 const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs', 'people']);
 const WORK_TIME_FILTERS = new Set(['any', 'since-2026', 'since-2025', 'since-2022', 'custom']);
-const WORK_TYPE_FILTERS = new Set(['any', 'review']);
 const WORK_ADVANCED_WHERE_MODES = new Set(['anywhere', 'title', 'abstract']);
 const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
@@ -33,7 +32,6 @@ const state = {
   sortBy: 'relevance',
   viewMode: 'expanded',
   timeFilter: 'any', // search mode only
-  typeFilter: 'any', // search mode only
   yearFrom: 0, // search mode only
   yearTo: 0, // search mode only
   advancedOpen: false,
@@ -138,12 +136,6 @@ function normalizeTimeFilter(value) {
   return WORK_TIME_FILTERS.has(normalized) ? normalized : 'any';
 }
 
-function normalizeTypeFilter(value) {
-  const normalized = normalizeValue(value);
-  if (normalized === 'review-article' || normalized === 'reviewarticles') return 'review';
-  return WORK_TYPE_FILTERS.has(normalized) ? normalized : 'any';
-}
-
 function normalizeAdvancedText(value, maxLength = 220) {
   const cleaned = String(value || '')
     .replace(/\s+/g, ' ')
@@ -199,7 +191,6 @@ function hasActiveSearchCriteria() {
   if (state.mode !== 'search') return false;
   if (state.query) return true;
   if (hasAdvancedSearchTerms()) return true;
-  if (state.typeFilter !== 'any') return true;
   if (state.timeFilter !== 'any') return true;
   return false;
 }
@@ -532,7 +523,6 @@ function parseStateFromUrl() {
   const queryParam = String(params.get('q') || '').trim();
   const scopeParam = normalizeSearchScope(params.get('scope'));
   const timeParam = normalizeTimeFilter(params.get('time'));
-  const typeParam = normalizeTypeFilter(params.get('type'));
   const yearFromParam = parseYearFilterInput(params.get('yearFrom'));
   const yearToParam = parseYearFilterInput(params.get('yearTo'));
   const allWordsParam = normalizeAdvancedText(params.get('allWords'));
@@ -556,7 +546,6 @@ function parseStateFromUrl() {
     || authorParam
     || publicationParam
     || timeParam !== 'any'
-    || typeParam !== 'any'
     || yearFromParam > 0
     || yearToParam > 0
   );
@@ -569,7 +558,6 @@ function parseStateFromUrl() {
   state.query = isSearchMode ? queryParam : '';
   state.value = isSearchMode ? '' : String(valueParam || queryParam || '').trim();
   state.timeFilter = isSearchMode ? timeParam : 'any';
-  state.typeFilter = isSearchMode ? typeParam : 'any';
   state.advanced = isSearchMode
     ? {
       allWords: allWordsParam,
@@ -630,7 +618,6 @@ function syncUrlState() {
     if (state.query) params.set('q', state.query);
     if (state.scope !== 'all') params.set('scope', state.scope);
     if (state.timeFilter !== 'any') params.set('time', state.timeFilter);
-    if (state.typeFilter !== 'any') params.set('type', state.typeFilter);
     if (state.timeFilter === 'custom') {
       const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
       if (normalizedYears.from > 0) params.set('yearFrom', String(normalizedYears.from));
@@ -719,7 +706,6 @@ function getActiveFilterLabels() {
       labels.push('Custom range');
     }
   }
-  if (state.typeFilter === 'review') labels.push('Review articles');
   if (state.advanced.allWords) labels.push(`All words: ${state.advanced.allWords}`);
   if (state.advanced.exactPhrase) labels.push(`Exact phrase: "${state.advanced.exactPhrase}"`);
   if (state.advanced.anyWords) labels.push(`Any words: ${state.advanced.anyWords}`);
@@ -755,7 +741,6 @@ function syncScopeControls() {
   const scopeToggle = document.getElementById('work-scope-toggle');
   const scopeInput = document.getElementById('work-search-scope-input');
   const timeInput = document.getElementById('work-search-time-input');
-  const typeInput = document.getElementById('work-search-type-input');
   const yearFromInput = document.getElementById('work-search-year-from-input');
   const yearToInput = document.getElementById('work-search-year-to-input');
   const allWordsInput = document.getElementById('work-search-all-words-input');
@@ -767,7 +752,6 @@ function syncScopeControls() {
   const publicationInput = document.getElementById('work-search-publication-input');
   if (scopeInput) scopeInput.value = normalizeSearchScope(state.scope);
   if (timeInput) timeInput.value = state.mode === 'search' ? normalizeTimeFilter(state.timeFilter) : 'any';
-  if (typeInput) typeInput.value = state.mode === 'search' ? normalizeTypeFilter(state.typeFilter) : 'any';
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
   if (yearFromInput) yearFromInput.value = state.mode === 'search' && state.timeFilter === 'custom' && normalizedYears.from > 0
     ? String(normalizedYears.from)
@@ -803,9 +787,6 @@ function initScopeControl() {
       const nextScope = normalizeSearchScope(button.getAttribute('data-work-scope'));
       if (nextScope === state.scope) return;
       state.scope = nextScope;
-      if ((state.scope === 'talks' || state.scope === 'people') && state.typeFilter !== 'any') {
-        state.typeFilter = 'any';
-      }
       state.sortBy = normalizeSortMode(state.sortBy);
       recomputeFilteredResults();
       syncScopeControls();
@@ -836,37 +817,34 @@ function countActiveAdvancedFields() {
 function syncAdvancedFilterControlVisibility() {
   const searchMode = state.mode === 'search';
   const timeSelect = document.getElementById('work-time-select');
-  const typeSelect = document.getElementById('work-type-select');
   const timeLabel = document.querySelector('label[for="work-time-select"]');
-  const typeLabel = document.querySelector('label[for="work-type-select"]');
   const customRange = document.getElementById('work-custom-range');
   const advancedToggle = document.getElementById('work-advanced-toggle');
+  const advancedState = document.getElementById('work-advanced-state');
   const advancedPanel = document.getElementById('work-advanced-panel');
   const advancedCount = document.getElementById('work-advanced-count');
   const customVisible = searchMode && state.timeFilter === 'custom';
-  const typeEnabled = searchMode && state.scope !== 'talks' && state.scope !== 'people';
   const activeAdvancedCount = countActiveAdvancedFields();
+  const advancedActive = activeAdvancedCount > 0;
 
   if (timeLabel) timeLabel.hidden = !searchMode;
   if (timeSelect) {
     timeSelect.hidden = !searchMode;
     timeSelect.disabled = !searchMode;
   }
-  if (typeLabel) typeLabel.hidden = !searchMode;
-  if (typeSelect) {
-    typeSelect.hidden = !searchMode;
-    typeSelect.disabled = !typeEnabled;
-  }
   if (customRange) customRange.classList.toggle('hidden', !customVisible);
   if (advancedToggle) {
     advancedToggle.hidden = !searchMode;
-    advancedToggle.classList.toggle('active', activeAdvancedCount > 0);
+    advancedToggle.classList.toggle('active', advancedActive);
+    advancedToggle.setAttribute('data-advanced-active', advancedActive ? 'true' : 'false');
     advancedToggle.setAttribute('aria-expanded', searchMode && state.advancedOpen ? 'true' : 'false');
     advancedToggle.setAttribute('aria-pressed', searchMode && state.advancedOpen ? 'true' : 'false');
+    advancedToggle.setAttribute('aria-label', `Advanced search tools (${advancedActive ? 'On' : 'Off'})`);
   }
+  if (advancedState) advancedState.textContent = advancedActive ? 'On' : 'Off';
   if (advancedCount) {
-    advancedCount.textContent = activeAdvancedCount > 0 ? String(activeAdvancedCount) : '';
-    advancedCount.hidden = activeAdvancedCount <= 0;
+    advancedCount.textContent = advancedActive ? String(activeAdvancedCount) : '';
+    advancedCount.hidden = !advancedActive;
   }
   if (advancedPanel) {
     const showPanel = searchMode && state.advancedOpen;
@@ -876,7 +854,6 @@ function syncAdvancedFilterControlVisibility() {
 
 function syncAdvancedFilterControls() {
   const timeSelect = document.getElementById('work-time-select');
-  const typeSelect = document.getElementById('work-type-select');
   const yearFromInput = document.getElementById('work-year-from');
   const yearToInput = document.getElementById('work-year-to');
   const advancedAllWordsInput = document.getElementById('work-advanced-all-words');
@@ -890,10 +867,6 @@ function syncAdvancedFilterControls() {
   const advancedYearToInput = document.getElementById('work-advanced-year-to');
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
   if (timeSelect) timeSelect.value = normalizeTimeFilter(state.timeFilter);
-  if (typeSelect) {
-    const nextType = (state.scope === 'talks' || state.scope === 'people') ? 'any' : normalizeTypeFilter(state.typeFilter);
-    typeSelect.value = nextType;
-  }
   if (yearFromInput) yearFromInput.value = normalizedYears.from > 0 ? String(normalizedYears.from) : '';
   if (yearToInput) yearToInput.value = normalizedYears.to > 0 ? String(normalizedYears.to) : '';
   if (advancedAllWordsInput) advancedAllWordsInput.value = state.advanced.allWords;
@@ -914,7 +887,6 @@ function applySearchFilterControls(options = {}) {
   const normalizeOnly = options.normalizeOnly === true;
 
   state.timeFilter = normalizeTimeFilter(state.timeFilter);
-  state.typeFilter = normalizeTypeFilter(state.typeFilter);
   state.advanced.allWords = normalizeAdvancedText(state.advanced.allWords);
   state.advanced.exactPhrase = normalizeAdvancedText(state.advanced.exactPhrase);
   state.advanced.anyWords = normalizeAdvancedText(state.advanced.anyWords);
@@ -922,7 +894,6 @@ function applySearchFilterControls(options = {}) {
   state.advanced.where = normalizeAdvancedWhere(state.advanced.where);
   state.advanced.author = normalizeAdvancedText(state.advanced.author);
   state.advanced.publication = normalizeAdvancedText(state.advanced.publication);
-  if (state.scope === 'talks' || state.scope === 'people') state.typeFilter = 'any';
 
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
   if (state.timeFilter === 'custom') {
@@ -942,7 +913,6 @@ function applySearchFilterControls(options = {}) {
 
 function initAdvancedFilterControls() {
   const timeSelect = document.getElementById('work-time-select');
-  const typeSelect = document.getElementById('work-type-select');
   const yearFromInput = document.getElementById('work-year-from');
   const yearToInput = document.getElementById('work-year-to');
   const advancedToggle = document.getElementById('work-advanced-toggle');
@@ -961,13 +931,6 @@ function initAdvancedFilterControls() {
   if (timeSelect) {
     timeSelect.addEventListener('change', () => {
       state.timeFilter = normalizeTimeFilter(timeSelect.value);
-      applySearchFilterControls();
-    });
-  }
-
-  if (typeSelect) {
-    typeSelect.addEventListener('change', () => {
-      state.typeFilter = normalizeTypeFilter(typeSelect.value);
       applySearchFilterControls();
     });
   }
@@ -1336,19 +1299,6 @@ function getPaperYear(paper) {
   return parseYearValue(paper._year || paper.year || paper.publishDate || paper.publishedDate || paper.date || '');
 }
 
-function paperHasReviewSignal(paper) {
-  if (!paper || typeof paper !== 'object') return false;
-  const type = String(paper.type || '').toLowerCase();
-  if (/\breview\b|\bsurvey\b/.test(type)) return true;
-  const text = [
-    paper.title,
-    paper.abstract,
-    Array.isArray(paper.tags) ? paper.tags.join(' ') : '',
-    Array.isArray(paper.keywords) ? paper.keywords.join(' ') : '',
-  ].join(' ').toLowerCase();
-  return /\b(systematic review|literature review|review article|review|survey|meta-analysis|meta analysis)\b/.test(text);
-}
-
 function yearInWindow(year, window) {
   if (!window || typeof window !== 'object') return true;
   const from = Number.isFinite(window.from) ? Number(window.from) : 0;
@@ -1361,14 +1311,11 @@ function yearInWindow(year, window) {
 }
 
 function matchesTalkSearchFilters(talk, filterWindow) {
-  if (state.typeFilter === 'review') return false;
   return yearInWindow(getTalkYear(talk), filterWindow);
 }
 
 function matchesPaperSearchFilters(paper, filterWindow) {
-  if (!yearInWindow(getPaperYear(paper), filterWindow)) return false;
-  if (state.typeFilter === 'review') return paperHasReviewSignal(paper);
-  return true;
+  return yearInWindow(getPaperYear(paper), filterWindow);
 }
 
 function matchesPersonSearchFilters(person, filterWindow) {

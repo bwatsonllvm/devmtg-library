@@ -174,7 +174,6 @@
         <input type="hidden" name="mode" value="search">
         <input type="hidden" id="work-search-scope-input" name="scope" value="all">
         <input type="hidden" id="work-search-time-input" name="time" value="any">
-        <input type="hidden" id="work-search-type-input" name="type" value="any">
         <input type="hidden" id="work-search-year-from-input" name="yearFrom" value="">
         <input type="hidden" id="work-search-year-to-input" name="yearTo" value="">
         <input type="hidden" id="work-search-all-words-input" name="allWords" value="">
@@ -247,13 +246,9 @@
             <span class="work-custom-range-sep" aria-hidden="true">to</span>
             <input type="number" id="work-year-to" class="results-sort-select work-year-input" min="1990" max="2100" step="1" inputmode="numeric" placeholder="To" aria-label="To year">
           </div>
-          <label for="work-type-select" class="results-sort-label">Type</label>
-          <select id="work-type-select" class="results-sort-select" aria-label="Filter by type">
-            <option value="any">Any type</option>
-            <option value="review">Review articles</option>
-          </select>
           <button type="button" class="results-sort-select work-advanced-toggle" id="work-advanced-toggle" aria-label="Advanced search tools" aria-expanded="false" aria-pressed="false">
             <span>Advanced</span>
+            <span class="work-advanced-state" id="work-advanced-state">Off</span>
             <span class="work-advanced-count" id="work-advanced-count" hidden></span>
           </button>
           <label for="work-sort-select" class="results-sort-label">Sort by</label>

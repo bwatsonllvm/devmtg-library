@@ -1058,6 +1058,18 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
   color: var(--color-text);
 }
 
+.global-search-advanced-state {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.global-search-advanced-toggle.active .global-search-advanced-state {
+  color: var(--color-text);
+}
+
 .global-search-advanced-count {
   min-width: 18px;
   height: 18px;
@@ -1076,7 +1088,7 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 .search-box.global-search-form .global-search-advanced-toggle {
   position: static;
   height: 30px;
-  min-width: 104px;
+  min-width: 132px;
   padding: 0 10px;
   z-index: auto;
   flex-shrink: 0;
@@ -1094,12 +1106,14 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 }
 
 .global-search-form:not(.search-box) .global-search-advanced-toggle {
-  width: 62px;
+  width: auto;
+  min-width: 88px;
   height: 38px;
   border-top: 0;
   border-right: 0;
   border-bottom: 0;
   border-left: 1px solid var(--color-border);
+  padding: 0 8px;
   flex-shrink: 0;
 }
 
@@ -1902,10 +1916,22 @@ body.filter-collapsed .filter-collapse-btn svg {
   cursor: pointer;
 }
 
+.work-advanced-state {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
 .work-advanced-toggle.active {
   border-color: var(--color-border-focus);
   color: var(--color-text);
   background: var(--color-surface-hover);
+}
+
+.work-advanced-toggle.active .work-advanced-state {
+  color: var(--color-text);
 }
 
 .work-advanced-count {
@@ -4015,7 +4041,9 @@ mark {
   }
 
   .global-search-form:not(.search-box) .global-search-advanced-toggle {
-    width: 56px;
+    width: auto;
+    min-width: 84px;
+    padding: 0 6px;
     font-size: 10px;
     gap: 4px;
   }
@@ -4115,20 +4143,16 @@ mark {
     width: 100%;
   }
 
-  #work-type-select {
+  #work-advanced-toggle {
     order: 4;
   }
 
-  #work-advanced-toggle {
+  #work-sort-select {
     order: 5;
   }
 
-  #work-sort-select {
-    order: 6;
-  }
-
   .view-toggle {
-    order: 7;
+    order: 6;
   }
 
   .results-sort-label {

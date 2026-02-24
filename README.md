@@ -52,7 +52,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - token aliasing and synonym expansion
   - stopword handling and lightweight stemming
   - quoted phrase parsing
-  - advanced operators: `author:`, `topic:`, `venue:`, `type:`, `year:`, `since:`, `before:`, and `-exclude`
+  - advanced operators: `author:`, `topic:`, `venue:`, `year:`, `since:`, `before:`, and `-exclude`
 - Fuzzy robustness:
   - subsequence matching
   - bounded Levenshtein distance for typo tolerance
@@ -80,7 +80,6 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - author constraint: `author:chris lattner`
   - topic constraint: `topic:mlir`
   - venue constraint: `venue:arxiv`
-  - type constraint: `type:review`
   - year filters: `since:2025`, `before:2022`, `year:2024`, `year:2022-2025`
   - exclusion: `mlir -cuda`, `topic:mlir -topic:openmp`
 - These operators work in Global Search (`work.html?mode=search`) for talks, papers, blogs, and cross-type `All` mode.
@@ -115,14 +114,14 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 - `work.html` (global/entity combined results):
   - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs`, `People` (default `All`)
   - time filter in Global Search mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
-  - type filter in Global Search mode: `Any type`, `Review articles`
   - `Advanced` panel for structured Google-style constraints (all/exact/any/without words, where words occur, author, publication, dated between)
+  - advanced toggle always shows explicit state (`Advanced On` / `Advanced Off`)
   - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
   - in Global Search mode (`mode=search`), results are interleaved across talks/papers/blogs/people by cross-type relevance (not fixed by content type)
   - exact/prefix title intent gets additional boost so precise queries surface the best matching item first, regardless of type
   - people ranking combines direct query-name matching with cross-reference context from matched talks/papers/blogs so relevant people surface for both name and topic queries
   - `expanded/compact` view toggle across talks, papers, blogs, and people sections
-  - URL-state support for `sort`, `view`, `scope`, `time`, `type`, `yearFrom`, and `yearTo`, with mode-aware defaults
+  - URL-state support for `sort`, `view`, `scope`, `time`, `yearFrom`, and `yearTo`, with mode-aware defaults
 - `people/`:
   - sort (`works`, `citations`, `alpha`, `alpha-desc`)
   - `expanded/compact` view toggle
@@ -133,7 +132,6 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - `mode=search&q=...` for global query mode
   - optional `scope=all|talks|papers|blogs|people` in search mode to focus results by content type
   - optional `time=any|since-2026|since-2025|since-2022|custom` in search mode
-  - optional `type=any|review` in search mode
   - optional `yearFrom=YYYY&yearTo=YYYY` for custom ranges (`time=custom`)
   - optional advanced-search params in search mode:
     - `allWords=...`
