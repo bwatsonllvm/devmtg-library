@@ -41,6 +41,20 @@ const DOCUMENTATION_OPTIONS = {
     { token: 'pass manager', label: 'Using the New Pass Manager', slug: 'NewPassManager' },
     { token: 'passes', label: 'LLVM Analysis and Transform Passes', slug: 'Passes' },
   ];
+  const DOCS_SEARCH_TOKEN_SYNONYMS = {
+    beginner: ['beginners', 'intro', 'introduction', 'tutorial', 'tutorials', 'getting started', 'quickstart', 'quick start', 'basics'],
+    beginners: ['beginner', 'intro', 'introduction', 'tutorial', 'tutorials', 'getting started', 'quickstart', 'quick start', 'basics'],
+    intro: ['introduction', 'beginner', 'tutorial', 'getting started'],
+    introduction: ['intro', 'beginner', 'tutorial', 'getting started'],
+    tutorial: ['tutorials', 'beginner', 'intro', 'introduction', 'getting started'],
+    tutorials: ['tutorial', 'beginner', 'intro', 'introduction', 'getting started'],
+    basics: ['basic', 'beginner', 'intro', 'tutorial'],
+    basic: ['basics', 'beginner', 'intro', 'tutorial'],
+    quickstart: ['quick start', 'getting started', 'intro'],
+  };
+  const DOCS_BEGINNER_INTENT_RE = /\bbeginner(?:s)?\b|\bintro(?:duction)?\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasic(?:s)?\b/;
+  const DOCS_BEGINNER_SIGNAL_RE = /\bbeginner(?:s)?\b|\btutorial(?:s)?\b|\bgetting started\b|\bquick\s?start\b|\bbasic(?:s)?\b/;
+  const DOCS_BEGINNER_INTENT_TOKENS = new Set(['beginner', 'beginners', 'intro', 'introduction', 'tutorial', 'tutorials', 'basic', 'basics', 'quickstart']);
   const DOCS_STANDARD_SIDEBAR_GROUPS = [
     {
       id: 'documentation',
@@ -982,14 +996,81 @@ const DOCUMENTATION_OPTIONS = {
     return String(value || '').replace(/\s+/g, ' ').trim();
   }
 
+  function normalizeUniversalSearchText(value) {
+    return String(value || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9+#.]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function normalizeUniversalSearchToken(value) {
+    return normalizeUniversalSearchText(value).replace(/\s+/g, '');
+  }
+
+  function stemUniversalSearchToken(token) {
+    const value = normalizeUniversalSearchToken(token);
+    if (value.length <= 3) return value;
+    if (value.endsWith('ies') && value.length > 4) return `${value.slice(0, -3)}y`;
+    if (value.endsWith('ing') && value.length > 5) return value.slice(0, -3);
+    if (value.endsWith('ed') && value.length > 4) return value.slice(0, -2);
+    if (value.endsWith('es') && value.length > 4) return value.slice(0, -2);
+    if (value.endsWith('s') && value.length > 3 && !value.endsWith('ss')) return value.slice(0, -1);
+    return value;
+  }
+
   function tokenizeUniversalSearchQuery(value) {
-    const normalized = normalizeUniversalSearchQuery(value).toLowerCase();
+    const normalized = normalizeUniversalSearchQuery(value);
     if (!normalized) return [];
-    return normalized
-      .replace(/[^a-z0-9+#._/\-\s]/g, ' ')
-      .split(/\s+/)
-      .filter((token) => token.length > 1 && !DOCS_SEARCH_STOP_WORDS.has(token))
-      .slice(0, 12);
+    const tokens = [];
+    const seen = new Set();
+    const re = /"([^"]+)"|(\S+)/g;
+    let match;
+    while ((match = re.exec(normalized)) !== null) {
+      const raw = match[1] || match[2] || '';
+      const token = normalizeUniversalSearchToken(raw);
+      if (token.length < 2 || DOCS_SEARCH_STOP_WORDS.has(token) || seen.has(token)) continue;
+      seen.add(token);
+      tokens.push(token);
+      if (tokens.length >= 12) break;
+    }
+    return tokens;
+  }
+
+  function buildUniversalSearchClauses(tokens) {
+    const source = Array.isArray(tokens) ? tokens : [];
+    const clauses = [];
+    source.forEach((token) => {
+      const baseToken = normalizeUniversalSearchToken(token);
+      if (!baseToken || baseToken.length < 2) return;
+      const variantMap = new Map();
+      const addVariant = function (term, weight) {
+        const normalized = normalizeUniversalSearchText(term);
+        if (!normalized) return;
+        const compact = normalized.replace(/\s+/g, '');
+        if (compact.length < 2) return;
+        const prev = Number(variantMap.get(normalized) || 0);
+        if (weight > prev) variantMap.set(normalized, weight);
+      };
+
+      addVariant(baseToken, 1.0);
+      const stem = stemUniversalSearchToken(baseToken);
+      if (stem && stem !== baseToken) addVariant(stem, 0.88);
+
+      const synonyms = DOCS_SEARCH_TOKEN_SYNONYMS[baseToken] || [];
+      synonyms.forEach((synonym) => addVariant(synonym, 0.72));
+
+      const variants = Array.from(variantMap.entries()).map(function (entry) {
+        return { term: entry[0], weight: Number(entry[1] || 0) };
+      });
+      if (!variants.length) return;
+      clauses.push({
+        token: baseToken,
+        variants,
+        strict: DOCS_BEGINNER_INTENT_TOKENS.has(baseToken),
+      });
+    });
+    return clauses;
   }
 
   function prepareUniversalSearchEntry(entry) {
@@ -1008,46 +1089,72 @@ const DOCUMENTATION_OPTIONS = {
     entry._titleLower = title.toLowerCase();
     entry._slugLower = slug.toLowerCase();
     entry._headingsLower = headingText.toLowerCase();
+    entry._summaryLower = summary.toLowerCase();
     entry._searchLower = (search || `${title} ${headingText} ${summary}`).toLowerCase();
+    entry._blobLower = normalizeUniversalSearchText([title, headingText, summary, search, slug].join(' '));
   }
 
-  function scoreUniversalSearchEntry(entry, queryLower, tokens) {
+  function scoreUniversalSearchEntry(entry, queryLower, queryModel) {
     prepareUniversalSearchEntry(entry);
     const title = String(entry._titleLower || '');
     const slug = String(entry._slugLower || '');
     const headings = String(entry._headingsLower || '');
+    const summary = String(entry._summaryLower || '');
     const search = String(entry._searchLower || '');
-    if (!title && !search && !slug) return null;
+    const blob = String(entry._blobLower || '');
+    if (!title && !search && !slug && !blob) return null;
+
+    const model = queryModel && typeof queryModel === 'object' ? queryModel : {};
+    const clauses = Array.isArray(model.clauses) ? model.clauses : [];
+    const beginnerIntent = model.beginnerIntent === true;
 
     let score = 0;
 
     if (queryLower) {
-      if (title === queryLower) score += 460;
-      else if (title.includes(queryLower)) score += 300;
-      if (slug === queryLower) score += 240;
-      else if (slug.includes(queryLower)) score += 110;
-      if (headings.includes(queryLower)) score += 180;
-      if (search.includes(queryLower)) score += 130;
+      if (title === queryLower) score += 260;
+      else if (title.startsWith(`${queryLower} `) || title.startsWith(queryLower)) score += 172;
+      else if (title.includes(queryLower)) score += 128;
+
+      if (headings.includes(queryLower)) score += 98;
+      if (summary.includes(queryLower)) score += 72;
+      if (slug === queryLower) score += 58;
+      else if (slug.includes(queryLower)) score += 36;
+      if (search.includes(queryLower)) score += 28;
     }
 
     let matchedTokens = 0;
-    tokens.forEach((token) => {
-      let tokenScore = 0;
-      if (title.includes(token)) tokenScore += 70;
-      if (headings.includes(token)) tokenScore += 40;
-      if (slug.includes(token)) tokenScore += 26;
-      if (search.includes(token)) tokenScore += 14;
-      if (tokenScore > 0) matchedTokens += 1;
-      score += tokenScore;
+    clauses.forEach((clause) => {
+      let bestClauseScore = 0;
+      (Array.isArray(clause.variants) ? clause.variants : []).forEach((variant) => {
+        const term = normalizeUniversalSearchText(variant && variant.term);
+        const weight = Number(variant && variant.weight || 0);
+        if (!term || weight <= 0) return;
+        let tokenScore = 0;
+        if (title.includes(term)) tokenScore = Math.max(tokenScore, 56 * weight);
+        if (headings.includes(term)) tokenScore = Math.max(tokenScore, 34 * weight);
+        if (summary.includes(term)) tokenScore = Math.max(tokenScore, 22 * weight);
+        if (slug.includes(term)) tokenScore = Math.max(tokenScore, 16 * weight);
+        if (!(clause && clause.strict) && search.includes(term)) tokenScore = Math.max(tokenScore, 12 * weight);
+        if (tokenScore > bestClauseScore) bestClauseScore = tokenScore;
+      });
+      if (bestClauseScore > 0) matchedTokens += 1;
+      score += bestClauseScore;
     });
 
-    const tokenCount = tokens.length;
+    const tokenCount = clauses.length;
     const coverage = tokenCount > 0 ? matchedTokens / tokenCount : (score > 0 ? 1 : 0);
 
-    if (tokenCount >= 2 && coverage < 0.45) return null;
+    if (tokenCount >= 3 && coverage < 0.55) return null;
+    if (tokenCount <= 2 && tokenCount > 0 && coverage < 1) return null;
     if (tokenCount > 0) {
-      score += Math.round(coverage * 175);
-      if (matchedTokens === tokenCount) score += 95;
+      score += Math.round(coverage * 76);
+      if (matchedTokens === tokenCount) score += 44;
+    }
+
+    if (beginnerIntent) {
+      const beginnerSignal = DOCS_BEGINNER_SIGNAL_RE.test(blob);
+      if (!beginnerSignal && tokenCount >= 2) return null;
+      if (beginnerSignal) score += 30;
     }
 
     if (score <= 0) return null;
@@ -1060,13 +1167,18 @@ const DOCUMENTATION_OPTIONS = {
 
     const normalized = normalizeUniversalSearchQuery(query);
     if (!normalized) return [];
-    const queryLower = normalized.toLowerCase();
+    const queryLower = normalizeUniversalSearchText(normalized);
     const tokens = tokenizeUniversalSearchQuery(normalized);
+    const queryModel = {
+      tokens,
+      clauses: buildUniversalSearchClauses(tokens),
+      beginnerIntent: DOCS_BEGINNER_INTENT_RE.test(queryLower),
+    };
 
     const entries = Array.isArray(payload.entries) ? payload.entries : [];
     const ranked = [];
     entries.forEach((entry, index) => {
-      const rank = scoreUniversalSearchEntry(entry, queryLower, tokens);
+      const rank = scoreUniversalSearchEntry(entry, queryLower, queryModel);
       if (!rank) return;
       ranked.push({
         entry,
@@ -1084,8 +1196,25 @@ const DOCUMENTATION_OPTIONS = {
       return a.index - b.index;
     });
 
-    const cap = Number.isFinite(limit) ? Math.max(1, Math.floor(limit)) : 12;
-    return ranked.slice(0, cap);
+    let cap = Number.isFinite(limit) ? Math.max(1, Math.floor(limit)) : 12;
+    if (queryModel.beginnerIntent) {
+      cap = Math.min(cap, 36);
+    }
+    if (!ranked.length) return [];
+
+    const clauseCount = queryModel.clauses.length;
+    let relativeFloor = clauseCount <= 1 ? 0.2 : (clauseCount === 2 ? 0.36 : 0.24);
+    let absoluteFloor = clauseCount <= 1 ? 8 : (clauseCount === 2 ? 13 : 9);
+    if (queryModel.beginnerIntent) {
+      relativeFloor = Math.max(relativeFloor, clauseCount <= 2 ? 0.9 : 0.72);
+      absoluteFloor = Math.max(absoluteFloor, clauseCount <= 2 ? 24 : 18);
+    }
+
+    const topScore = Number(ranked[0].score || 0);
+    const minScore = Math.max(absoluteFloor, topScore * relativeFloor);
+    const filtered = ranked.filter((item) => Number(item.score || 0) >= minScore);
+    const finalRanked = filtered.length ? filtered : ranked.slice(0, Math.min(cap, 10));
+    return finalRanked.slice(0, cap);
   }
 
   function truncateSnippetText(value, maxChars) {
@@ -1317,7 +1446,20 @@ const DOCUMENTATION_OPTIONS = {
     if (!searchForm || !searchInput || searchForm.dataset.docsUniversalPageInit === '1') return;
     const resultsRoot = document.getElementById('search-results');
     if (!resultsRoot || !resultsRoot.parentElement) return;
+    const resultsHost = resultsRoot.parentElement;
     searchForm.dataset.docsUniversalPageInit = '1';
+
+    const sphinxDetails = document.createElement('details');
+    sphinxDetails.className = 'docs-sphinx-results-toggle';
+    sphinxDetails.open = false;
+
+    const sphinxSummary = document.createElement('summary');
+    sphinxSummary.className = 'docs-sphinx-results-toggle-summary';
+    sphinxSummary.textContent = 'Show exhaustive Sphinx matches';
+    sphinxDetails.appendChild(sphinxSummary);
+
+    resultsHost.insertBefore(sphinxDetails, resultsRoot);
+    sphinxDetails.appendChild(resultsRoot);
 
     const panel = document.createElement('section');
     panel.className = 'docs-universal-search-page';
@@ -1340,7 +1482,7 @@ const DOCUMENTATION_OPTIONS = {
       panel.appendChild(noResultsPanel);
     };
 
-    resultsRoot.parentElement.insertBefore(panel, resultsRoot);
+    resultsHost.insertBefore(panel, sphinxDetails);
 
     const syncUrl = function (query, mode) {
       if (!window.history || !window.history.pushState) return;
@@ -1355,10 +1497,21 @@ const DOCUMENTATION_OPTIONS = {
       }
     };
 
+    const syncSphinxToggleLabel = function (query) {
+      if (!sphinxSummary) return;
+      const value = normalizeUniversalSearchQuery(query);
+      if (!value) {
+        sphinxSummary.textContent = 'Show exhaustive Sphinx matches';
+        return;
+      }
+      sphinxSummary.textContent = `Show exhaustive Sphinx matches for "${value}"`;
+    };
+
     let pendingToken = 0;
     const renderQuery = function (rawQuery, urlMode) {
       const query = normalizeUniversalSearchQuery(rawQuery);
       if (urlMode) syncUrl(query, urlMode);
+      syncSphinxToggleLabel(query);
       if (noResultsPanel && noResultsPanel.parentNode) {
         noResultsPanel.parentNode.removeChild(noResultsPanel);
         noResultsPanel = null;
@@ -1367,6 +1520,7 @@ const DOCUMENTATION_OPTIONS = {
       if (!query) {
         status.textContent = 'Quick results appear here as you type. Full Sphinx results are shown below.';
         list.innerHTML = '';
+        sphinxDetails.open = false;
         return;
       }
 
@@ -1380,6 +1534,7 @@ const DOCUMENTATION_OPTIONS = {
         if (!ok) {
           status.textContent = 'Quick index unavailable. Full Sphinx search results are shown below.';
           setNoResultsPanel(query);
+          sphinxDetails.open = true;
           return;
         }
 
@@ -1387,11 +1542,13 @@ const DOCUMENTATION_OPTIONS = {
         if (!results.length) {
           status.textContent = `No quick matches for \"${query}\". Check full Sphinx results below.`;
           setNoResultsPanel(query);
+          sphinxDetails.open = true;
           return;
         }
 
         status.textContent = `${results.length} result${results.length === 1 ? '' : 's'} for \"${query}\"`;
         renderUniversalSearchResultList(list, results, rootPath, query, 'page');
+        sphinxDetails.open = false;
       });
     };
 
