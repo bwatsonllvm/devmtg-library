@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <base href="../">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      try {
+        var storedTheme = localStorage.getItem('llvm-hub-theme-preference');
+        var themePreference = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+          ? storedTheme
+          : 'system';
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var resolvedTheme = themePreference === 'system' ? (prefersDark ? 'dark' : 'light') : themePreference;
+        var storedTextSize = localStorage.getItem('llvm-hub-text-size');
+        var textSize = (storedTextSize === 'small' || storedTextSize === 'large') ? storedTextSize : 'default';
+
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
+        document.documentElement.setAttribute('data-theme-preference', themePreference);
+        if (textSize === 'default') {
+          document.documentElement.removeAttribute('data-text-size');
+        } else {
+          document.documentElement.setAttribute('data-text-size', textSize);
+        }
+        document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f5f5f5';
+      } catch (_) {
+        var fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var fallbackTheme = fallbackDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', fallbackTheme);
+        document.documentElement.setAttribute('data-theme-preference', 'system');
+        document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#000000' : '#f5f5f5';
+      }
+    })();
+  </script>
+  <style>
+    html { background: #f5f5f5; }
+    html[data-theme="dark"] { background: #000000; }
+    body { background: transparent; }
+
+    .docs-hero-shell {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .docs-hero-search.global-search-form {
+      width: min(860px, 100%) !important;
+      margin-inline: auto;
+      margin-top: 0.45rem;
+    }
+
+    .docs-main {
+      width: min(1720px, calc(100vw - 2rem));
+      margin: 0 auto 2rem;
+      color: var(--color-text);
+    }
+
+    .docs-layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+      gap: 1.15rem;
+      align-items: start;
+    }
+
+    .docs-sidebar-shell {
+      position: sticky;
+      top: calc(var(--header-height) + 0.75rem);
+      max-height: calc(100vh - var(--header-height) - 1.25rem);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--color-border);
+      border-radius: 18px;
+      background: var(--color-surface);
+      box-shadow: var(--shadow-xs);
+      overflow: hidden;
+    }
+
+    .docs-sidebar-head {
+      padding: 0.95rem 0.95rem 0.8rem;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface-subtle);
+    }
+
+    .docs-sidebar-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.55rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .docs-sidebar-title-row h2 {
+      margin: 0;
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-tight);
+      color: var(--color-text);
+    }
+
+    .docs-sidebar-title-row p {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-tight);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      white-space: nowrap;
+    }
+
+    .docs-sidebar-search {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.55rem;
+    }
+
+    .docs-sidebar-search input {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-size: var(--font-size-sm);
+      padding: 0.47rem 0.65rem 0.47rem 2rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .docs-sidebar-search input:focus {
+      outline: none;
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 3px var(--color-field-focus-ring);
+    }
+
+    .docs-sidebar-search svg {
+      position: absolute;
+      left: 0.62rem;
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+
+    .docs-sidebar-actions {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .docs-sidebar-action {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      padding: 0.3rem 0.55rem;
+      cursor: pointer;
+      transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+    }
+
+    .docs-sidebar-action:hover {
+      border-color: var(--color-border-focus);
+      color: var(--color-text);
+      background: var(--color-surface-hover);
+    }
+
+    .docs-toc {
+      overflow: auto;
+      padding: 0.5rem 0.6rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.42rem;
+    }
+
+    .docs-toc-chapter {
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface);
+    }
+
+    .docs-toc-chapter summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.62rem;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semi);
+      color: var(--color-text);
+      line-height: var(--line-height-snug);
+      border-radius: 10px;
+    }
+
+    .docs-toc-chapter summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .docs-toc-chapter[open] summary {
+      border-bottom: 1px solid var(--color-border);
+      border-radius: 10px 10px 0 0;
+      background: var(--color-surface-subtle);
+    }
+
+    .docs-toc-part {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.9;
+      flex-shrink: 0;
+    }
+
+    .docs-toc-list {
+      list-style: none;
+      margin: 0;
+      padding: 0.38rem 0.45rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.22rem;
+    }
+
+    .docs-toc-list li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .docs-toc-link {
+      display: block;
+      text-decoration: none;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-snug);
+      border-radius: 7px;
+      padding: 0.38rem 0.45rem;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .docs-toc-link:hover {
+      background: var(--color-surface-hover);
+      color: var(--color-text);
+      transform: translateX(1px);
+    }
+
+    .docs-toc-link.active {
+      background: var(--color-state-active-bg);
+      color: var(--color-state-active-text);
+      border: 1px solid var(--color-state-active-border);
+      padding: calc(0.38rem - 1px) calc(0.45rem - 1px);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .docs-toc-link.hidden,
+    .docs-toc-list li.hidden,
+    .docs-toc-chapter.hidden {
+      display: none;
+    }
+
+    .docs-content {
+      border: 1px solid var(--color-border);
+      border-radius: 18px;
+      background: var(--color-surface);
+      padding: 1.15rem clamp(1rem, 2.3vw, 2rem) 1.5rem;
+    }
+
+    .docs-prologue {
+      display: grid;
+      gap: 0.95rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .docs-prologue p {
+      margin: 0;
+      color: var(--color-text);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+    }
+
+    .docs-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .docs-stat-card {
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      background: var(--color-surface-subtle);
+      padding: 0.72rem 0.75rem;
+    }
+
+    .docs-stat-label {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.86;
+    }
+
+    .docs-stat-value {
+      margin: 0.2rem 0 0;
+      color: var(--color-text);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+    }
+
+    .doc-section {
+      scroll-margin-top: calc(var(--header-height) + 0.75rem);
+      margin-bottom: 1.15rem;
+      border-top: 1px solid var(--color-divider);
+      padding-top: 1.05rem;
+    }
+
+    .doc-section:first-of-type {
+      margin-top: 0;
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .doc-section h2 {
+      margin: 0 0 0.45rem;
+      font-size: clamp(1.22rem, 1.55vw, 1.6rem);
+      line-height: var(--line-height-snug);
+      color: var(--color-text);
+      letter-spacing: -0.01em;
+    }
+
+    .doc-section h3 {
+      margin: 0 0 0.38rem;
+      font-size: clamp(1.04rem, 1.1vw, 1.22rem);
+      line-height: var(--line-height-snug);
+      color: var(--color-text);
+    }
+
+    .doc-section p {
+      margin: 0 0 0.58rem;
+      color: var(--color-text);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+    }
+
+    .doc-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .doc-section ul,
+    .doc-section ol {
+      margin: 0;
+      padding-left: 1.2rem;
+      color: var(--color-text);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+    }
+
+    .doc-section li {
+      margin-bottom: 0.34rem;
+    }
+
+    .doc-section code {
+      font-family: var(--font-mono);
+      font-size: calc(var(--font-size-sm) * 0.95);
+      background: var(--color-accent-bg);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: 5px;
+      padding: 0.08rem 0.32rem;
+    }
+
+    .doc-note {
+      border-left: 3px solid var(--color-border-strong);
+      background: var(--color-surface-subtle);
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      margin: 0.72rem 0;
+    }
+
+    .doc-note p {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-base);
+    }
+
+    .doc-grid-two {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.65rem;
+      margin-top: 0.35rem;
+    }
+
+    .doc-mini-card {
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      background: var(--color-surface-subtle);
+      padding: 0.72rem 0.75rem;
+    }
+
+    .doc-mini-card h4 {
+      margin: 0 0 0.3rem;
+      color: var(--color-text);
+      font-size: var(--font-size-sm);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .doc-mini-card p {
+      margin: 0;
+      color: var(--color-text);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-base);
+    }
+
+    .doc-snippet {
+      margin-top: 0.55rem;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface-subtle);
+      padding: 0.62rem 0.72rem;
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      line-height: 1.55;
+      overflow-x: auto;
+      color: var(--color-text);
+      white-space: pre;
+    }
+
+    .doc-kicker {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-subtle);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.24rem 0.5rem;
+      margin-bottom: 0.48rem;
+    }
+
+    @media (max-width: 1180px) {
+      .docs-main {
+        width: min(1380px, calc(100vw - 1.4rem));
+      }
+
+      .docs-layout {
+        grid-template-columns: minmax(250px, 330px) minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .docs-sidebar-shell {
+        position: static;
+        max-height: none;
+      }
+
+      .docs-toc {
+        max-height: 50vh;
+      }
+
+      .docs-content {
+        padding-inline: 0.95rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .docs-main {
+        width: calc(100vw - 1rem);
+      }
+
+      .docs-sidebar-head {
+        padding-inline: 0.75rem;
+      }
+
+      .docs-content {
+        border-radius: 14px;
+      }
+
+      .doc-section {
+        margin-bottom: 0.95rem;
+        padding-top: 0.85rem;
+      }
+    }
+  </style>
+  <title>Docs — LLVM Research Library</title>
+  <meta name="description" content="Documentation for the LLVM Research Library architecture, search model, data pipelines, and operations.">
+  <link rel="icon" type="image/png" href="images/llvm-favicon.png">
+  <link rel="shortcut icon" href="images/llvm-favicon.png">
+  <link rel="apple-touch-icon" href="images/llvm-favicon.png">
+  <link rel="stylesheet" href="css/style.css?v=20260224-08">
+</head>
+<body>
+
+  <nav class="skip-links" aria-label="Skip links">
+    <a href="#docs-main" class="skip-link">Skip to main content</a>
+  </nav>
+
+  <header class="site-header">
+    <a href="index.html" class="site-logo" aria-label="LLVM Research Library home">
+      <img src="images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
+      <span>LLVM Research Library</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="talks/" class="nav-link" aria-label="Talks">
+        <span aria-hidden="true">Talks</span>
+      </a>
+      <a href="talks/events.html" class="nav-link" aria-label="Events">
+        <span aria-hidden="true">Events</span>
+      </a>
+      <a href="papers/" class="nav-link" aria-label="Papers">
+        <span aria-hidden="true">Papers</span>
+      </a>
+      <a href="blogs/" class="nav-link" aria-label="Blogs">
+        <span aria-hidden="true">Blogs</span>
+      </a>
+      <a href="people/" class="nav-link" aria-label="People">
+        <span aria-hidden="true">People</span>
+      </a>
+      <a href="about/" class="nav-link" aria-label="About this site">
+        <span aria-hidden="true">About</span>
+      </a>
+      <a href="docs/" class="nav-link active" aria-current="page" aria-label="Documentation">
+        <span aria-hidden="true">Docs</span>
+      </a>
+      <a href="updates/" class="nav-link" aria-label="Update log">
+        <span aria-hidden="true">Updates</span>
+      </a>
+    </nav>
+
+    <div class="mobile-nav-menu" id="mobile-nav-menu">
+      <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
+        Browse
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+        <a href="talks/" class="mobile-nav-link">Talks</a>
+        <a href="talks/events.html" class="mobile-nav-link">Events</a>
+        <a href="papers/" class="mobile-nav-link">Papers</a>
+        <a href="blogs/" class="mobile-nav-link">Blogs</a>
+        <a href="people/" class="mobile-nav-link">People</a>
+        <a href="about/" class="mobile-nav-link">About</a>
+        <a href="docs/" class="mobile-nav-link active" aria-current="page">Docs</a>
+        <a href="updates/" class="mobile-nav-link">Updates</a>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="share-menu" id="share-menu">
+        <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this page" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
+          Share
+        </button>
+        <div class="share-panel" id="share-panel" hidden>
+          <button class="share-option" id="share-native-share" type="button" hidden>Share via device</button>
+          <button class="share-option" id="share-copy-link" type="button">Copy link</button>
+          <a class="share-option" id="share-email-link" href="#">Email</a>
+          <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+          <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+        </div>
+      </div>
+      <div class="customization-menu" id="customization-menu">
+        <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+          <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
+          </svg>
+        </button>
+        <div class="customization-panel" id="customization-panel" hidden>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-theme-select">Theme</label>
+            <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-text-size-select">Text Size</label>
+            <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+              <option value="small">Small</option>
+              <option value="default">Default</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="search-hero search-hero--compact" aria-label="Documentation">
+    <div class="search-hero-shell docs-hero-shell">
+      <h1>Research Library Documentation</h1>
+      <p class="subtitle">A book-style guide to architecture, search behavior, data pipelines, and operations.</p>
+      <form class="search-box global-search-form docs-hero-search" action="work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, people, and key topics">
+        <input type="hidden" name="mode" value="search">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          class="search-input global-search-input"
+          id="docs-search-input"
+          name="q"
+          placeholder="Search the full library..."
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Global Search across talks, papers, blogs, people, and key topics"
+        >
+        <button type="button" class="search-clear" id="docs-search-clear" aria-label="Clear search" title="Clear">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <main class="docs-main" id="docs-main" tabindex="-1">
+    <div class="docs-layout">
+      <aside class="docs-sidebar" aria-label="Documentation table of contents">
+        <div class="docs-sidebar-shell">
+          <div class="docs-sidebar-head">
+            <div class="docs-sidebar-title-row">
+              <h2>Table of Contents</h2>
+              <p>Book index</p>
+            </div>
+            <label class="docs-sidebar-search" for="docs-toc-filter">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="search" id="docs-toc-filter" placeholder="Find chapter or section" autocomplete="off" spellcheck="false" aria-label="Filter table of contents">
+            </label>
+            <div class="docs-sidebar-actions" role="group" aria-label="Table of contents controls">
+              <button type="button" class="docs-sidebar-action" id="docs-expand-all">Expand all</button>
+              <button type="button" class="docs-sidebar-action" id="docs-collapse-all">Collapse all</button>
+            </div>
+          </div>
+
+          <nav class="docs-toc" id="docs-toc" aria-label="Documentation chapters">
+            <details class="docs-toc-chapter" open>
+              <summary>
+                <span>Prologue</span>
+                <span class="docs-toc-part">Part 0</span>
+              </summary>
+              <ol class="docs-toc-list">
+                <li><a class="docs-toc-link" href="#doc-foreword">Foreword</a></li>
+                <li><a class="docs-toc-link" href="#doc-mission">Mission and Scope</a></li>
+                <li><a class="docs-toc-link" href="#doc-audience">Audience and Reading Paths</a></li>
+                <li><a class="docs-toc-link" href="#doc-reading-map">How to Use This Book</a></li>
+              </ol>
+            </details>
+
+            <details class="docs-toc-chapter" open>
+              <summary>
+                <span>Search and Discovery</span>
+                <span class="docs-toc-part">Part I</span>
+              </summary>
+              <ol class="docs-toc-list">
+                <li><a class="docs-toc-link" href="#doc-search-architecture">Search Architecture</a></li>
+                <li><a class="docs-toc-link" href="#doc-autocomplete-routing">Autocomplete and Routing</a></li>
+                <li><a class="docs-toc-link" href="#doc-relevance-model">Relevance Model</a></li>
+                <li><a class="docs-toc-link" href="#doc-query-syntax">Advanced Query Syntax</a></li>
+                <li><a class="docs-toc-link" href="#doc-result-controls">Result Controls and Views</a></li>
+                <li><a class="docs-toc-link" href="#doc-url-state">URL State Contract</a></li>
+              </ol>
+            </details>
+
+            <details class="docs-toc-chapter" open>
+              <summary>
+                <span>Data Foundation</span>
+                <span class="docs-toc-part">Part II</span>
+              </summary>
+              <ol class="docs-toc-list">
+                <li><a class="docs-toc-link" href="#doc-talks-dataset">Talks Dataset</a></li>
+                <li><a class="docs-toc-link" href="#doc-papers-dataset">Papers and Blogs Dataset</a></li>
+                <li><a class="docs-toc-link" href="#doc-people-index">People Index</a></li>
+                <li><a class="docs-toc-link" href="#doc-update-log">Update Log</a></li>
+                <li><a class="docs-toc-link" href="#doc-scope-limits">Scope and Limits</a></li>
+              </ol>
+            </details>
+
+            <details class="docs-toc-chapter" open>
+              <summary>
+                <span>Operations</span>
+                <span class="docs-toc-part">Part III</span>
+              </summary>
+              <ol class="docs-toc-list">
+                <li><a class="docs-toc-link" href="#doc-automation">Automation Workflow</a></li>
+                <li><a class="docs-toc-link" href="#doc-validation">Validation Gates</a></li>
+                <li><a class="docs-toc-link" href="#doc-release-flow">Release and Publish Flow</a></li>
+              </ol>
+            </details>
+
+            <details class="docs-toc-chapter" open>
+              <summary>
+                <span>Engineering Guide</span>
+                <span class="docs-toc-part">Part IV</span>
+              </summary>
+              <ol class="docs-toc-list">
+                <li><a class="docs-toc-link" href="#doc-layout">Repository Layout</a></li>
+                <li><a class="docs-toc-link" href="#doc-scripts">Script Catalog</a></li>
+                <li><a class="docs-toc-link" href="#doc-testing">Testing and Quality</a></li>
+                <li><a class="docs-toc-link" href="#doc-extension-playbook">Extension Playbook</a></li>
+              </ol>
+            </details>
+
+            <details class="docs-toc-chapter" open>
+              <summary>
+                <span>Appendix</span>
+                <span class="docs-toc-part">Reference</span>
+              </summary>
+              <ol class="docs-toc-list">
+                <li><a class="docs-toc-link" href="#doc-reference-urls">Canonical Routes</a></li>
+                <li><a class="docs-toc-link" href="#doc-glossary">Glossary</a></li>
+              </ol>
+            </details>
+          </nav>
+        </div>
+      </aside>
+
+      <article class="docs-content" aria-label="Documentation body">
+        <section class="docs-prologue" aria-label="Library summary">
+          <p>
+            This documentation captures the entire operating model of the LLVM Research Library: what content is indexed,
+            how search relevance is produced, how data pipelines refresh the corpus, and how validation gates keep the site stable.
+          </p>
+          <div class="docs-stat-grid" aria-label="Live library counts">
+            <article class="docs-stat-card">
+              <p class="docs-stat-label">Talks</p>
+              <p class="docs-stat-value" id="docs-stat-talks">...</p>
+            </article>
+            <article class="docs-stat-card">
+              <p class="docs-stat-label">Papers</p>
+              <p class="docs-stat-value" id="docs-stat-papers">...</p>
+            </article>
+            <article class="docs-stat-card">
+              <p class="docs-stat-label">People</p>
+              <p class="docs-stat-value" id="docs-stat-people">...</p>
+            </article>
+            <article class="docs-stat-card">
+              <p class="docs-stat-label">Meetings</p>
+              <p class="docs-stat-value" id="docs-stat-meetings">...</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-foreword">
+          <span class="doc-kicker">Prologue</span>
+          <h2>Foreword</h2>
+          <p>
+            The LLVM Research Library is a static, public research index that unifies talks, papers, blog posts, and people records
+            into one search surface. It is intentionally designed for two reading styles: quick lookup for newcomers and deep retrieval
+            for advanced LLVM contributors.
+          </p>
+          <p>
+            This page is intentionally structured like a book table of contents: you can read sequentially, jump chapter-by-chapter,
+            or filter the sidebar to jump straight to a specific subsystem.
+          </p>
+        </section>
+
+        <section class="doc-section" id="doc-mission">
+          <h2>Mission and Scope</h2>
+          <p>
+            The library indexes four public content families: LLVM Developers' Meeting talks, LLVM-related papers, LLVM blog posts,
+            and derived people records (speakers plus authors). It is not a replacement for canonical event schedules,
+            but a fast research layer over trusted public sources.
+          </p>
+          <div class="doc-grid-two" aria-label="Mission dimensions">
+            <article class="doc-mini-card">
+              <h4>Core Objective</h4>
+              <p>Make LLVM knowledge retrievable by topic, person, venue, year, and phrase-level search intent.</p>
+            </article>
+            <article class="doc-mini-card">
+              <h4>Primary User Modes</h4>
+              <p>Global query discovery (<code>work.html?mode=search</code>) and entity rollups (<code>mode=entity</code>).</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-audience">
+          <h2>Audience and Reading Paths</h2>
+          <ul>
+            <li><strong>First-time contributors:</strong> read Prologue, Search Architecture, and Query Syntax.</li>
+            <li><strong>Data pipeline maintainers:</strong> start at Talks Dataset, Papers Dataset, and Operations.</li>
+            <li><strong>Frontend maintainers:</strong> start at Result Controls, URL State, and Engineering Guide.</li>
+            <li><strong>Release owners:</strong> focus on Validation Gates and Release Flow.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-reading-map">
+          <h2>How to Use This Book</h2>
+          <p>
+            The left sidebar mirrors a book TOC with chapters and sub-sections. Use <strong>Expand all</strong> to open every chapter,
+            <strong>Collapse all</strong> to focus, and the TOC filter to narrow down section titles.
+          </p>
+          <div class="doc-note">
+            <p>
+              The active section in the right column is tracked automatically while you scroll; the matching TOC entry stays highlighted.
+            </p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-search-architecture">
+          <span class="doc-kicker">Part I</span>
+          <h2>Search Architecture</h2>
+          <p>
+            Search is route-aware and relevance-first. Section pages default to local filtering for browsing, while global free-text intent routes
+            to <code>work.html?mode=search</code>. Shared ranking helpers in <code>js/shared/library-utils.js</code> provide cross-type consistency.
+          </p>
+          <ul>
+            <li>Home/About/Detail pages default to Global Search routing.</li>
+            <li>Talks/Papers/Blogs/People section pages default to local scoped behavior.</li>
+            <li>A global-search action is still available from every section search bar.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-autocomplete-routing">
+          <h2>Autocomplete and Routing</h2>
+          <p>
+            Every <code>.global-search-form</code> is hydrated by shared autocomplete logic from <code>js/shared/global-search.js</code>.
+            Suggestions are grouped by key topics, people, talk titles, and paper/blog titles.
+          </p>
+          <div class="doc-snippet" aria-label="Autocomplete groups">
+Key Topics
+Speakers + Authors
+Talk Titles
+Paper + Blog Titles
+Run global search action
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-relevance-model">
+          <h2>Relevance Model</h2>
+          <p>
+            Relevance ranking applies normalization, synonym handling, phrase parsing, fuzzy tolerance, and field-weighted scoring.
+            Broad terms are de-emphasized when narrower terms are present, and low-confidence tails are pruned on broad queries.
+          </p>
+          <ul>
+            <li>Weighted fields vary by content type (talks vs papers/blogs vs people).</li>
+            <li>Tie-breaking includes recency and citation-aware boosts where appropriate.</li>
+            <li>Positive and negative constraints are applied during scoring, not only in post filters.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-query-syntax">
+          <h2>Advanced Query Syntax</h2>
+          <p>
+            Global Search supports explicit operators for authorship, topic matching, venues, year ranges, and exclusion tokens.
+            This syntax works both from manual query input and the Advanced panel controls.
+          </p>
+          <div class="doc-snippet" aria-label="Query examples">
+"MLIR-based code generation"
+author:chris lattner
+venue:arxiv year:2022-2025
+since:2025 topic:mlir -cuda
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-result-controls">
+          <h2>Result Controls and Views</h2>
+          <p>
+            Each route exposes mode-specific controls while preserving common semantics. Talks uses relevance/newest/oldest/title;
+            papers and blogs add citation-aware sorting; Global Search supports cross-type scope toggles and time windows.
+          </p>
+          <ul>
+            <li>Section pages support <code>grid/list</code> density switching.</li>
+            <li>Global Search supports <code>expanded/compact</code> result density.</li>
+            <li>Advanced panel state is explicit (<code>Advanced On/Off</code>) and URL-persistent.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-url-state">
+          <h2>URL State Contract</h2>
+          <p>
+            Search and filter state is URL-backed so shared links are reproducible. Global Search routes preserve query, scope,
+            time window, year bounds, and structured advanced fields.
+          </p>
+          <div class="doc-snippet" aria-label="Global search URL contract">
+work.html?mode=search&q=mlir&scope=all&time=since-2025&sort=relevance&view=expanded
+work.html?mode=entity&kind=speaker&value=Chris%20Lattner
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-talks-dataset">
+          <span class="doc-kicker">Part II</span>
+          <h2>Talks Dataset</h2>
+          <p>
+            Talk records are synchronized from <code>llvm-www/devmtg</code> into <code>devmtg/events/*.json</code> and normalized to
+            preserve consistent fields: IDs, meeting metadata, speakers, slides/video URLs, categories, and key tags.
+          </p>
+          <ul>
+            <li>Event manifest and versioning live in <code>devmtg/events/index.json</code>.</li>
+            <li>Canceled meetings are preserved as metadata but excluded from active meeting counts.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-papers-dataset">
+          <h2>Papers and Blogs Dataset</h2>
+          <p>
+            The canonical papers database merges LLVM publications, OpenAlex discovery, and LLVM blog sources.
+            Final build output is published to <code>papers/index.json</code> with a versioned source file.
+          </p>
+          <ul>
+            <li>OpenAlex metadata refresh includes title, abstract, authors, affiliations, citations, and URLs.</li>
+            <li>Blog entries are tagged and remain queryable alongside papers across all search surfaces.</li>
+            <li>The final merge stage is the authoritative source for on-site paper/blog records.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-people-index">
+          <h2>People Index</h2>
+          <p>
+            People records are runtime-derived from talks and papers, then merged by normalized name keys and middle-name variant handling.
+            This keeps the people catalog connected to fresh source content without requiring a separate hand-maintained database.
+          </p>
+        </section>
+
+        <section class="doc-section" id="doc-update-log">
+          <h2>Update Log</h2>
+          <p>
+            <code>updates/index.json</code> tracks new records and metadata deltas: newly added talks, slides/video additions,
+            new paper entries, and blog additions. Entries are presented newest-first for release visibility.
+          </p>
+        </section>
+
+        <section class="doc-section" id="doc-scope-limits">
+          <h2>Scope and Limits</h2>
+          <p>
+            All indexed material is public. The site is a research index, not a replacement for canonical schedules or source platforms.
+            External URLs can change, disappear, or redirect; downstream metadata completeness varies by source.
+          </p>
+          <div class="doc-note">
+            <p>
+              For canonical meeting schedule details and announcements, use the official LLVM Developers' Meeting archive.
+            </p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-automation">
+          <span class="doc-kicker">Part III</span>
+          <h2>Automation Workflow</h2>
+          <p>
+            Scheduled sync runs through <code>.github/workflows/library-sync.yml</code> and opens refresh PRs when source data changes.
+            Automation stages include talks sync, OpenAlex refresh, blog sync, canonical merge, PDF backfill, and update-log generation.
+          </p>
+        </section>
+
+        <section class="doc-section" id="doc-validation">
+          <h2>Validation Gates</h2>
+          <p>
+            Two validation layers run before deployment: code-quality checks and bundle/data checks.
+            Search behavior regressions are covered by deterministic Node tests.
+          </p>
+          <div class="doc-snippet" aria-label="Validation commands">
+python3 -m compileall -q scripts
+ruff check scripts
+bash -n scripts/*.sh
+node --test tests
+scripts/validate-library-bundle.sh
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-release-flow">
+          <h2>Release and Publish Flow</h2>
+          <p>
+            Validation and deployment are split across PR checks and the pages publish workflow. A data-refresh PR is expected
+            to pass quality gates before merge; publish jobs then serve static assets and datasets.
+          </p>
+        </section>
+
+        <section class="doc-section" id="doc-layout">
+          <span class="doc-kicker">Part IV</span>
+          <h2>Repository Layout</h2>
+          <p>
+            Route files live as static HTML entries at root and section directories. Shared assets are organized by purpose:
+            <code>css/</code> for design system, <code>js/</code> for route behavior, <code>scripts/</code> for ingestion, and JSON bundles under data folders.
+          </p>
+          <ul>
+            <li><code>index.html</code>, <code>work.html</code>, <code>talks/</code>, <code>papers/</code>, <code>blogs/</code>, <code>people/</code>, <code>about/</code>, <code>docs/</code>, <code>updates/</code></li>
+            <li><code>devmtg/events/*.json</code> for talks and meetings</li>
+            <li><code>papers/*.json</code> for source/derived paper bundles</li>
+            <li><code>tests/</code> for search regression checks</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-scripts">
+          <h2>Script Catalog</h2>
+          <p>
+            Operational scripts cover synchronization, enrichment, validation, and normalization.
+            Typical entry points include <code>sync-*</code>, <code>build-*</code>, <code>backfill-*</code>, and <code>validate-*</code> families.
+          </p>
+          <div class="doc-grid-two" aria-label="Script families">
+            <article class="doc-mini-card">
+              <h4>Sync + Build</h4>
+              <p><code>sync-devmtg-from-llvm-www.py</code>, <code>sync-blog-from-llvm-www-blog.py</code>, <code>build-single-papers-db.py</code></p>
+            </article>
+            <article class="doc-mini-card">
+              <h4>Validation + Quality</h4>
+              <p><code>validate-code-quality.sh</code>, <code>validate-library-bundle.sh</code>, deterministic search ranking tests</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="doc-section" id="doc-testing">
+          <h2>Testing and Quality</h2>
+          <p>
+            Search relevance coverage is treated as deterministic behavior. Tests in <code>tests/search-ranking.test.cjs</code> verify
+            ranking and query-handling invariants so relevance tuning remains intentional and reviewable.
+          </p>
+        </section>
+
+        <section class="doc-section" id="doc-extension-playbook">
+          <h2>Extension Playbook</h2>
+          <ol>
+            <li>Update source ingestion scripts and dataset manifests first.</li>
+            <li>Regenerate canonical JSON bundles and update index manifests.</li>
+            <li>Wire new fields through shared rankers in <code>js/shared/library-utils.js</code>.</li>
+            <li>Add regression coverage in <code>tests/</code> before tuning UI behavior.</li>
+            <li>Verify route-level URL state and shareable links.</li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="doc-reference-urls">
+          <span class="doc-kicker">Appendix</span>
+          <h2>Canonical Routes</h2>
+          <ul>
+            <li><code>index.html</code> — Home</li>
+            <li><code>work.html?mode=search&q=...</code> — Global Search</li>
+            <li><code>work.html?mode=entity&kind=speaker&value=...</code> — Entity rollup</li>
+            <li><code>talks/</code>, <code>papers/</code>, <code>blogs/</code>, <code>people/</code> — section indexes</li>
+            <li><code>about/</code>, <code>docs/</code>, <code>updates/</code> — support/reference routes</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="doc-glossary">
+          <h2>Glossary</h2>
+          <ul>
+            <li><strong>Global Search:</strong> cross-type relevance mode on <code>work.html?mode=search</code>.</li>
+            <li><strong>All Work:</strong> entity aggregation mode on <code>work.html?mode=entity</code>.</li>
+            <li><strong>Scope:</strong> content-type focus within search mode (<code>all</code>, <code>talks</code>, <code>papers</code>, <code>blogs</code>, <code>people</code>).</li>
+            <li><strong>Coverage-aware gating:</strong> logic that lowers broad-term dominance when narrow terms exist.</li>
+            <li><strong>Canonical merge:</strong> final build stage that produces the site’s authoritative papers/blogs bundle.</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <script src="js/events-data.js?v=20260223-01"></script>
+  <script src="js/papers-data.js?v=20260223-01"></script>
+  <script src="js/shared/library-utils.js?v=20260224-05"></script>
+  <script src="js/shared/global-search.js?v=20260224-08"></script>
+  <script src="js/docs.js?v=20260224-01"></script>
+</body>
+</html>
