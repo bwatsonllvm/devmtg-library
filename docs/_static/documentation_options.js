@@ -66,7 +66,11 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-08` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-06` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-07` });
+    ensureHeadTag('script', {
+      src: `${rootPath}docs/_static/docs-book-index.js?v=20260224-01`,
+      defer: 'defer',
+    });
   }
 
   function applyStoredDisplayPreferences() {
@@ -190,6 +194,143 @@ const DOCUMENTATION_OPTIONS = {
     document.body.appendChild(script);
   }
 
+  function slugToDocsHref(slug, rootPath) {
+    const normalized = String(slug || '').trim();
+    if (!normalized || normalized === 'index') return `${rootPath}docs/`;
+    if (normalized.endsWith('/index')) return `${rootPath}docs/${normalized.slice(0, -6)}/`;
+    return `${rootPath}docs/${normalized}.html`;
+  }
+
+  function resolveCurrentDocSlug(rootPath) {
+    const pathname = String(window.location.pathname || '');
+    const docsRoot = `${rootPath}docs`;
+    if (pathname === docsRoot || pathname === `${docsRoot}/`) return 'index';
+    if (!pathname.startsWith(`${docsRoot}/`)) return 'index';
+    const isDirectoryPath = pathname.endsWith('/');
+    let relative = pathname.slice(docsRoot.length + 1).replace(/^\/+|\/+$/g, '');
+    if (!relative) return 'index';
+    if (relative.endsWith('.html')) {
+      relative = relative.slice(0, -5);
+    } else if (isDirectoryPath && !relative.endsWith('/index')) {
+      relative = `${relative}/index`;
+    }
+    try {
+      return decodeURIComponent(relative) || 'index';
+    } catch (_) {
+      return relative || 'index';
+    }
+  }
+
+  function nodeContainsSlug(node, slug) {
+    if (!node || !slug) return false;
+    if (node.slug === slug) return true;
+    const children = Array.isArray(node.children) ? node.children : [];
+    return children.some((child) => nodeContainsSlug(child, slug));
+  }
+
+  function buildBookEntriesList(entries, chapterPrefix, rootPath, currentSlug, depth) {
+    const list = document.createElement('ol');
+    list.className = depth === 0 ? 'docs-book-list' : 'docs-book-sublist';
+
+    entries.forEach((entry, index) => {
+      const number = `${chapterPrefix}.${index + 1}`;
+      const item = document.createElement('li');
+      item.className = 'docs-book-item';
+
+      if (nodeContainsSlug(entry, currentSlug)) {
+        item.classList.add('is-active-path');
+      }
+
+      const title = String(entry && entry.title ? entry.title : 'Untitled');
+      const slug = entry && entry.slug ? String(entry.slug) : '';
+      const link = document.createElement('a');
+      link.className = 'docs-book-link';
+      link.href = slugToDocsHref(slug, rootPath);
+      link.setAttribute('aria-label', `${number} ${title}`);
+
+      if (slug === currentSlug) {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      }
+
+      const numberSpan = document.createElement('span');
+      numberSpan.className = 'docs-book-number';
+      numberSpan.textContent = number;
+      link.appendChild(numberSpan);
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'docs-book-text';
+      textSpan.textContent = title;
+      link.appendChild(textSpan);
+
+      item.appendChild(link);
+
+      const children = Array.isArray(entry && entry.children) ? entry.children : [];
+      if (children.length) {
+        item.appendChild(buildBookEntriesList(children, number, rootPath, currentSlug, depth + 1));
+      }
+
+      list.appendChild(item);
+    });
+
+    return list;
+  }
+
+  function renderGeneratedBookIndexSidebar(rootPath) {
+    const payload = window.LLVMDocsBookIndex;
+    if (!payload || !Array.isArray(payload.chapters)) return false;
+
+    const wrapper = document.querySelector('.sphinxsidebarwrapper');
+    if (!wrapper) return false;
+
+    const quickSearch = wrapper.querySelector('#searchbox');
+    const quickSearchClone = quickSearch ? quickSearch.cloneNode(true) : null;
+    const currentSlug = resolveCurrentDocSlug(rootPath);
+
+    wrapper.innerHTML = '';
+
+    const nav = document.createElement('nav');
+    nav.className = 'docs-book-index';
+    nav.setAttribute('aria-label', 'Book-style table of contents');
+
+    const navTitle = document.createElement('h3');
+    navTitle.className = 'docs-book-index-title';
+    navTitle.textContent = 'Book Index';
+    nav.appendChild(navTitle);
+
+    payload.chapters.forEach((chapter, chapterIdx) => {
+      const entries = Array.isArray(chapter && chapter.entries) ? chapter.entries : [];
+      if (!entries.length) return;
+
+      const chapterSection = document.createElement('section');
+      chapterSection.className = 'docs-book-chapter';
+
+      const chapterTitle = document.createElement('h4');
+      chapterTitle.className = 'docs-book-chapter-title';
+      chapterTitle.textContent = `${chapterIdx + 1}. ${String(chapter.title || `Chapter ${chapterIdx + 1}`)}`;
+      chapterSection.appendChild(chapterTitle);
+
+      chapterSection.appendChild(
+        buildBookEntriesList(entries, String(chapterIdx + 1), rootPath, currentSlug, 0),
+      );
+      nav.appendChild(chapterSection);
+    });
+
+    wrapper.appendChild(nav);
+    if (quickSearchClone) {
+      quickSearchClone.style.display = 'block';
+      wrapper.appendChild(quickSearchClone);
+    }
+    return true;
+  }
+
+  function installGeneratedBookIndexSidebar(rootPath, attempts) {
+    if (renderGeneratedBookIndexSidebar(rootPath)) return;
+    const remaining = Number.isFinite(attempts) ? attempts : 40;
+    if (remaining <= 0) return;
+    window.setTimeout(() => installGeneratedBookIndexSidebar(rootPath, remaining - 1), 80);
+  }
+
   function deriveFallbackTitle() {
     const title = String(document.title || '').trim();
     const cleaned = title
@@ -272,6 +413,7 @@ const DOCUMENTATION_OPTIONS = {
     }
 
     bridgeSphinxBodyToHugoLayout();
+    installGeneratedBookIndexSidebar(rootPath, 40);
 
     ensureHomeScript(rootPath);
   });
