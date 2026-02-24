@@ -100,7 +100,7 @@
     if (scope === 'blogs') return 'Tailored for blog posts, authors, and post content';
     if (scope === 'docs') return 'Tailored for LLVM Core and Clang docs pages, headings, and guide content';
     if (scope === 'people') return 'Tailored for people, expertise, affiliations, and publications';
-    return 'Cross-type search across talks, papers, blogs, docs, and people';
+    return 'Search across talks, papers, blogs, docs, and people';
   }
 
   function resolveAdvancedContextScope(defaultScope) {
@@ -648,7 +648,7 @@
       } else {
         const contextPill = document.createElement('span');
         contextPill.className = 'global-search-context-pill';
-        contextPill.textContent = 'Cross-type search';
+        contextPill.textContent = 'All content';
         leftTools.appendChild(contextPill);
       }
 

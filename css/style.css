@@ -2025,8 +2025,12 @@ body.filter-collapsed .filter-collapse-btn svg {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 0 10px;
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
+  height: 30px;
+  gap: 0;
+  padding: 0;
   cursor: pointer;
 }
 
@@ -2045,35 +2049,36 @@ body.filter-collapsed .filter-collapse-btn svg {
 }
 
 .work-advanced-switch {
-  width: 30px;
-  height: 16px;
-  border-radius: 999px;
-  background: var(--color-border);
-  border: 1px solid transparent;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid var(--color-border);
   padding: 1px;
   display: inline-flex;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .work-advanced-switch-knob {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-xs);
-  transform: translateX(0);
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--color-text-muted);
+  box-shadow: none;
+  transform: translate(0, 0);
   transition: transform var(--transition-fast), background var(--transition-fast);
 }
 
 .work-advanced-toggle.active .work-advanced-switch {
-  background: var(--color-border-focus);
+  background: var(--color-accent-bg);
   border-color: var(--color-border-focus);
 }
 
 .work-advanced-toggle.active .work-advanced-switch-knob {
-  transform: translateX(12px);
-  background: var(--color-text-inverse);
+  transform: translate(6px, 6px);
+  background: var(--color-border-focus);
 }
 
 .work-advanced-toggle.active .work-advanced-state {
@@ -4284,6 +4289,11 @@ mark {
 
   #work-advanced-toggle {
     order: 4;
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
+    height: 36px;
+    padding: 0;
   }
 
   #work-sort-select {
