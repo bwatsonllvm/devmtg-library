@@ -226,6 +226,100 @@
     return text.trim();
   }
 
+  function toAffiliationAliasKey(value) {
+    return stripDiacritics(collapseWhitespace(value).toLowerCase())
+      .replace(/&/g, ' and ')
+      .replace(/['".,()]/g, '')
+      .replace(/[^a-z0-9]+/g, '');
+  }
+
+  const AFFILIATION_ALIAS_MAP = new Map([
+    ['mit', 'Massachusetts Institute of Technology'],
+    ['massachusettsinstituteoftechnology', 'Massachusetts Institute of Technology'],
+    ['massachussettsinstituteoftechnology', 'Massachusetts Institute of Technology'],
+    ['massachusettsinsituteoftechnology', 'Massachusetts Institute of Technology'],
+    ['massachussettsinsituteoftechnology', 'Massachusetts Institute of Technology'],
+    ['massachusettsinstoftechnology', 'Massachusetts Institute of Technology'],
+    ['massachussettsinstoftechnology', 'Massachusetts Institute of Technology'],
+    ['carnegiemellon', 'Carnegie Mellon University'],
+    ['carnegiemellonuniversity', 'Carnegie Mellon University'],
+    ['cmu', 'Carnegie Mellon University'],
+    ['caltech', 'California Institute of Technology'],
+    ['uiuc', 'University of Illinois Urbana-Champaign'],
+    ['universityofillinoisaturbanachampaign', 'University of Illinois Urbana-Champaign'],
+    ['universityofillinoisurbanachampaign', 'University of Illinois Urbana-Champaign'],
+    ['ethzurich', 'ETH Zurich'],
+    ['eidgenossischetechnischehochschulezurich', 'ETH Zurich'],
+    ['epfl', 'EPFL'],
+    ['ecolepolytechniquefederaledelausanne', 'EPFL'],
+  ]);
+
+  const UC_CAMPUS_ALIAS_MAP = new Map([
+    ['berkeley', 'Berkeley'],
+    ['ucb', 'Berkeley'],
+    ['davis', 'Davis'],
+    ['ucd', 'Davis'],
+    ['irvine', 'Irvine'],
+    ['uci', 'Irvine'],
+    ['losangeles', 'Los Angeles'],
+    ['la', 'Los Angeles'],
+    ['ucla', 'Los Angeles'],
+    ['merced', 'Merced'],
+    ['ucm', 'Merced'],
+    ['riverside', 'Riverside'],
+    ['ucr', 'Riverside'],
+    ['sandiego', 'San Diego'],
+    ['sd', 'San Diego'],
+    ['ucsd', 'San Diego'],
+    ['sanfrancisco', 'San Francisco'],
+    ['sf', 'San Francisco'],
+    ['ucsf', 'San Francisco'],
+    ['santabarbara', 'Santa Barbara'],
+    ['sb', 'Santa Barbara'],
+    ['ucsb', 'Santa Barbara'],
+    ['santacruz', 'Santa Cruz'],
+    ['sc', 'Santa Cruz'],
+    ['ucsc', 'Santa Cruz'],
+  ]);
+
+  function normalizeUcCampusName(value) {
+    const cleaned = collapseWhitespace(value)
+      .replace(/^(?:campus|at|the)\s+/i, '')
+      .replace(/^[,.;:\-]+|[,.;:\-]+$/g, '');
+    if (!cleaned) return '';
+
+    const key = toAffiliationAliasKey(cleaned);
+    const mapped = UC_CAMPUS_ALIAS_MAP.get(key);
+    if (mapped) return mapped;
+
+    return cleaned
+      .split(/\s+/)
+      .map((part) => {
+        if (!part) return '';
+        if (part.length <= 2) return part.toUpperCase();
+        return part[0].toUpperCase() + part.slice(1).toLowerCase();
+      })
+      .join(' ');
+  }
+
+  function canonicalizeUniversityOfCaliforniaAffiliation(value) {
+    const text = collapseWhitespace(value);
+    if (!text) return '';
+
+    if (/^university\s+of\s+california$/i.test(text)) {
+      return 'University of California';
+    }
+
+    const match = text.match(
+      /^(?:university\s+of\s+california(?:\s*,\s*|\s+at\s+|\s+-\s+|\s+)|u\.?\s*c\.?\s*(?:,\s*|\s+-\s+|\s+)?)(.+)$/i
+    );
+    if (!match) return '';
+
+    const campus = normalizeUcCampusName(match[1]);
+    if (!campus) return 'University of California';
+    return `University of California, ${campus}`;
+  }
+
   function normalizeAffiliation(value) {
     let text = collapseWhitespace(value);
     if (!text) return '';
@@ -248,7 +342,19 @@
       .replace(/\(\s*United States\s*\)$/i, '')
       .replace(/\(\s*USA\s*\)$/i, '')
       .replace(/\(\s*United Kingdom\s*\)$/i, '')
-      .replace(/\(\s*UK\s*\)$/i, '');
+      .replace(/\(\s*UK\s*\)$/i, '')
+      .replace(/\bMassachussetts\b/gi, 'Massachusetts')
+      .replace(/\bInsitute\b/gi, 'Institute');
+
+    const ucCanonical = canonicalizeUniversityOfCaliforniaAffiliation(text);
+    if (ucCanonical) {
+      return collapseWhitespace(ucCanonical);
+    }
+
+    const aliasKey = toAffiliationAliasKey(text);
+    if (AFFILIATION_ALIAS_MAP.has(aliasKey)) {
+      return AFFILIATION_ALIAS_MAP.get(aliasKey) || '';
+    }
 
     return collapseWhitespace(text);
   }
@@ -362,6 +468,9 @@
     for (const [aff, count] of source.affiliationCounts.entries()) {
       target.affiliationCounts.set(aff, (target.affiliationCounts.get(aff) || 0) + count);
     }
+    for (const [aff, count] of source.paperAffiliationCounts.entries()) {
+      target.paperAffiliationCounts.set(aff, (target.paperAffiliationCounts.get(aff) || 0) + count);
+    }
     for (const [name, count] of source.talkNameCounts.entries()) {
       target.talkNameCounts.set(name, (target.talkNameCounts.get(name) || 0) + count);
     }
@@ -442,6 +551,7 @@
           citationCount: 0,
           nameCounts: new Map(),
           affiliationCounts: new Map(),
+          paperAffiliationCounts: new Map(),
           talkNameCounts: new Map(),
           paperNameCounts: new Map(),
           blogNameCounts: new Map(),
@@ -460,9 +570,11 @@
         bucket.nameCounts.set(speaker.name, (bucket.nameCounts.get(speaker.name) || 0) + 1);
         bucket.talkNameCounts.set(speaker.name, (bucket.talkNameCounts.get(speaker.name) || 0) + 1);
         if (speaker.affiliation) {
+          const affiliation = normalizeAffiliation(speaker.affiliation);
+          if (!affiliation) continue;
           bucket.affiliationCounts.set(
-            speaker.affiliation,
-            (bucket.affiliationCounts.get(speaker.affiliation) || 0) + 1
+            affiliation,
+            (bucket.affiliationCounts.get(affiliation) || 0) + 1
           );
         }
       }
@@ -486,9 +598,15 @@
           bucket.paperNameCounts.set(author.name, (bucket.paperNameCounts.get(author.name) || 0) + 1);
         }
         if (author.affiliation) {
+          const affiliation = normalizeAffiliation(author.affiliation);
+          if (!affiliation) continue;
           bucket.affiliationCounts.set(
-            author.affiliation,
-            (bucket.affiliationCounts.get(author.affiliation) || 0) + 1
+            affiliation,
+            (bucket.affiliationCounts.get(affiliation) || 0) + 1
+          );
+          bucket.paperAffiliationCounts.set(
+            affiliation,
+            (bucket.paperAffiliationCounts.get(affiliation) || 0) + 1
           );
         }
       }
@@ -549,6 +667,35 @@
         const talkFilterName = chooseBestDisplayName(bucket.talkNameCounts) || displayName;
         const paperFilterName = chooseBestDisplayName(bucket.paperNameCounts) || displayName;
         const blogFilterName = chooseBestDisplayName(bucket.blogNameCounts) || displayName;
+        const affiliationBuckets = new Map();
+        for (const [rawAffiliation, rawCount] of bucket.paperAffiliationCounts.entries()) {
+          const affiliation = normalizeAffiliation(rawAffiliation);
+          const count = Number(rawCount);
+          if (!affiliation || !Number.isFinite(count) || count <= 0) continue;
+          const key = normalizeAffiliationKey(affiliation);
+          if (!key) continue;
+          if (!affiliationBuckets.has(key)) {
+            affiliationBuckets.set(key, { count: 0, labels: new Map() });
+          }
+          const affiliationBucket = affiliationBuckets.get(key);
+          affiliationBucket.count += count;
+          affiliationBucket.labels.set(
+            affiliation,
+            (affiliationBucket.labels.get(affiliation) || 0) + count
+          );
+        }
+
+        const affiliations = [...affiliationBuckets.values()]
+          .map((entry) => {
+            const label = [...entry.labels.entries()]
+              .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || '';
+            return {
+              name: label,
+              count: Math.round(entry.count),
+            };
+          })
+          .filter((entry) => entry.name && entry.count > 0)
+          .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 
         return {
           id: normalizePersonKey(displayName) || normalizePersonKey(variantNames[0] || ''),
@@ -562,6 +709,8 @@
           blogCount: bucket.blogCount,
           citationCount: bucket.citationCount || 0,
           totalCount: bucket.talkCount + bucket.paperCount + bucket.blogCount,
+          affiliations,
+          primaryAffiliation: affiliations[0]?.name || '',
         };
       })
       .filter((person) => person.name)

@@ -16,6 +16,7 @@ const ISSUE_DEFAULT_DETAILS = 'Describe what should be corrected or added.';
 const state = {
   query: '',
   filter: 'all', // all | talks | papers | blogs | merged
+  affiliation: '',
   sortBy: 'works',
   viewMode: 'expanded',
 };
@@ -23,6 +24,7 @@ const state = {
 let allPeople = [];
 let allTalks = [];
 let allPapers = [];
+let allAffiliations = [];
 let autocompleteIndex = {
   topics: [],
   people: [],
@@ -115,6 +117,13 @@ function normalizeFilterValue(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function normalizeAffiliationKey(value) {
+  if (typeof HubUtils.normalizeAffiliationKey === 'function') {
+    return HubUtils.normalizeAffiliationKey(value);
+  }
+  return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
+}
+
 function normalizeViewMode(value) {
   const normalized = String(value || '').trim().toLowerCase();
   if (normalized === 'compact' || normalized === 'list') return 'compact';
@@ -134,6 +143,7 @@ function getPersonSearchBlob(person) {
   return [
     person.name,
     ...(person.variantNames || []),
+    ...(person.affiliations || []).map((entry) => String((entry && entry.name) || '').trim()),
   ].join(' ').toLowerCase();
 }
 
@@ -220,6 +230,90 @@ function mapToSortedEntries(map) {
   return [...map.entries()]
     .map(([label, count]) => ({ label, count }))
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function getPersonAffiliations(person) {
+  if (!person || !Array.isArray(person.affiliations)) return [];
+  return person.affiliations
+    .map((entry) => {
+      const name = String((entry && entry.name) || '').trim();
+      const count = Number(entry && entry.count);
+      if (!name || !Number.isFinite(count) || count <= 0) return null;
+      return {
+        name,
+        count: Math.max(1, Math.round(count)),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+function buildAffiliationIndex() {
+  const counts = new Map();
+  for (const person of allPeople) {
+    const seenForPerson = new Set();
+    for (const affiliation of getPersonAffiliations(person)) {
+      const key = normalizeAffiliationKey(affiliation.name);
+      if (!key) continue;
+      if (!counts.has(key)) {
+        counts.set(key, {
+          key,
+          name: affiliation.name,
+          mentionCount: 0,
+          peopleCount: 0,
+        });
+      }
+      const bucket = counts.get(key);
+      bucket.mentionCount += affiliation.count;
+      if (!seenForPerson.has(key)) {
+        bucket.peopleCount += 1;
+        seenForPerson.add(key);
+      }
+      if (affiliation.name.length > bucket.name.length) {
+        bucket.name = affiliation.name;
+      }
+    }
+  }
+
+  allAffiliations = [...counts.values()]
+    .sort((a, b) =>
+      b.peopleCount - a.peopleCount
+      || b.mentionCount - a.mentionCount
+      || a.name.localeCompare(b.name));
+}
+
+function syncAffiliationFilterControl() {
+  const select = document.getElementById('people-affiliation-select');
+  if (!select) return;
+  select.value = state.affiliation || '';
+}
+
+function refreshAffiliationFilterOptions() {
+  const select = document.getElementById('people-affiliation-select');
+  if (!select) return;
+
+  select.innerHTML = '';
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'All affiliations';
+  select.appendChild(defaultOption);
+
+  for (const affiliation of allAffiliations) {
+    const option = document.createElement('option');
+    option.value = affiliation.key;
+    option.textContent = `${affiliation.name} (${affiliation.peopleCount.toLocaleString()})`;
+    select.appendChild(option);
+  }
+
+  if (state.affiliation && !allAffiliations.some((item) => item.key === state.affiliation)) {
+    state.affiliation = '';
+  }
+  syncAffiliationFilterControl();
+}
+
+function getSelectedAffiliationLabel() {
+  if (!state.affiliation) return '';
+  return allAffiliations.find((item) => item.key === state.affiliation)?.name || '';
 }
 
 function buildAutocompleteIndex() {
@@ -550,12 +644,18 @@ function commitSearchValue(rawValue, allowGlobalRouting = true) {
 
 function filterPeople() {
   const tokens = tokenizeQuery(state.query);
+  const selectedAffiliationKey = normalizeAffiliationKey(state.affiliation);
 
   return allPeople.filter((person) => {
     if (state.filter === 'talks' && person.talkCount === 0) return false;
     if (state.filter === 'papers' && person.paperCount === 0) return false;
     if (state.filter === 'blogs' && (person.blogCount || 0) === 0) return false;
     if (state.filter === 'merged' && (person.variantNames || []).length < 2) return false;
+    if (selectedAffiliationKey) {
+      const hasAffiliation = getPersonAffiliations(person)
+        .some((entry) => normalizeAffiliationKey(entry.name) === selectedAffiliationKey);
+      if (!hasAffiliation) return false;
+    }
 
     if (!tokens.length) return true;
     const blob = getPersonSearchBlob(person);
@@ -593,9 +693,19 @@ function sortPeople(people) {
 
 function renderPersonCard(person, tokens) {
   const nameHtml = highlightText(person.name, tokens);
+  const affiliations = getPersonAffiliations(person);
   const citationHtml = Number(person.citationCount || 0) > 0
     ? `<span class="meeting-label">${Number(person.citationCount || 0).toLocaleString()} citations</span>`
     : '';
+  const affiliationsHtml = affiliations.length
+    ? `<div class="person-affiliation-list" aria-label="Affiliations from paper records">
+        ${affiliations.map((affiliation) => `
+          <span class="person-affiliation-row">
+            <span class="person-affiliation-name">${highlightText(affiliation.name, tokens)}</span>
+            <span class="person-affiliation-count" aria-label="${affiliation.count.toLocaleString()} affiliations">${affiliation.count.toLocaleString()}</span>
+          </span>`).join('')}
+      </div>`
+    : '<p class="card-speakers person-affiliation person-affiliation--empty">No paper affiliation data</p>';
 
   const normalizeNameKey = (name) => {
     if (typeof HubUtils.normalizePersonKey === 'function') return HubUtils.normalizePersonKey(name);
@@ -659,6 +769,7 @@ function renderPersonCard(person, tokens) {
             ${citationHtml}
           </div>
           <p class="card-title">${nameHtml}</p>
+          ${affiliationsHtml}
         </div>
       </a>
       ${variantsHtml}
@@ -778,11 +889,16 @@ function render() {
 
   const tokens = tokenizeQuery(state.query);
   count.innerHTML = `<strong>${people.length.toLocaleString()}</strong> people`;
+  const selectedAffiliationLabel = getSelectedAffiliationLabel();
 
   if (state.query) {
-    subtitle.innerHTML = `Results for <strong>${escapeHtml(state.query)}</strong>`;
+    subtitle.innerHTML = selectedAffiliationLabel
+      ? `Results for <strong>${escapeHtml(state.query)}</strong> filtered by <strong>${escapeHtml(selectedAffiliationLabel)}</strong>`
+      : `Results for <strong>${escapeHtml(state.query)}</strong>`;
   } else {
-    subtitle.innerHTML = `Global Search is primary. Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
+    subtitle.innerHTML = selectedAffiliationLabel
+      ? `Browsing <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles filtered by <strong>${escapeHtml(selectedAffiliationLabel)}</strong>.`
+      : `Global Search is primary. Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
   }
 
   if (!people.length) {
@@ -888,6 +1004,19 @@ function initFilterChips() {
     });
   });
   syncFilterChips();
+}
+
+function initAffiliationFilter() {
+  const select = document.getElementById('people-affiliation-select');
+  if (!select) return;
+
+  select.addEventListener('change', () => {
+    state.affiliation = normalizeAffiliationKey(select.value);
+    syncAffiliationFilterControl();
+    render();
+  });
+
+  refreshAffiliationFilterOptions();
 }
 
 function initSearch() {
@@ -1376,6 +1505,8 @@ async function init() {
   }
 
   buildAutocompleteIndex();
+  buildAffiliationIndex();
+  initAffiliationFilter();
   initSearch();
   render();
 }

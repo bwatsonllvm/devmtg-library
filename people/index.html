@@ -47,7 +47,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260224-02">
+  <link rel="stylesheet" href="css/style.css?v=20260224-03">
 </head>
 <body>
 
@@ -181,6 +181,10 @@
         <button class="filter-chip" data-people-filter="papers" type="button">With papers</button>
         <button class="filter-chip" data-people-filter="blogs" type="button">With blogs</button>
         <button class="filter-chip" data-people-filter="merged" type="button">Merged variants</button>
+        <label for="people-affiliation-select" class="sr-only">Filter people by affiliation</label>
+        <select id="people-affiliation-select" class="results-sort-select people-affiliation-select" aria-label="Filter people by affiliation">
+          <option value="">All affiliations</option>
+        </select>
       </div>
     </div>
   </section>
@@ -230,9 +234,9 @@
 
   <script src="js/events-data.js?v=20260223-01"></script>
   <script src="js/papers-data.js?v=20260223-01"></script>
-  <script src="js/shared/library-utils.js?v=20260224-01"></script>
+  <script src="js/shared/library-utils.js?v=20260224-02"></script>
   <script src="js/shared/report-issue.js?v=20260222-06"></script>
   <script src="js/shared/global-search.js?v=20260224-05"></script>
-  <script src="js/people.js?v=20260224-07"></script>
+  <script src="js/people.js?v=20260224-08"></script>
 </body>
 </html>
