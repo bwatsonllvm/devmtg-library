@@ -401,8 +401,13 @@
     state.activeItemIndex = -1;
 
     dropdown.querySelectorAll('.search-dropdown-item').forEach((item) => {
-      item.addEventListener('mousedown', (event) => {
+      let handled = false;
+      const activate = (event) => {
+        if (handled) return;
+        handled = true;
+        window.setTimeout(() => { handled = false; }, 0);
         event.preventDefault();
+        event.stopPropagation();
         const value = String(item.dataset.autocompleteValue || '').trim();
         if (!value) return;
         input.value = value;
@@ -412,7 +417,10 @@
         } else {
           form.submit();
         }
-      });
+      };
+      item.addEventListener('mousedown', activate);
+      item.addEventListener('click', activate);
+      item.addEventListener('touchstart', activate, { passive: false });
     });
   }
 

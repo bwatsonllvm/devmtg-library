@@ -21,6 +21,7 @@ Search now uses a shared, relevance-first stack intended to work for both LLVM n
 ### Global Search autocomplete and query routing
 
 - All `.global-search-form` inputs use a shared autocomplete index sourced from talks, papers/blogs, people, and key topics.
+- Home, section pages (`talks/`, `papers/`, `blogs/`, `people/`), detail pages, `about/`, and `work.html` now all use the shared `js/shared/global-search.js` component for a unified search-bar UX.
 - Search boxes across home, talks, papers, blogs, people, about, and detail pages now default to **Global Search** routing (`work.html?mode=search&q=...`) for typed queries and autocomplete selections.
 - Browsing remains available as secondary behavior through section filters/chips/card actions (for example, topic chips and sidebar facets).
 - Suggestions are grouped into:

@@ -311,7 +311,7 @@ function renderDropdown(query) {
         <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
                 data-autocomplete-type="global" data-autocomplete-value="${escapeHtml(query)}">
           <span class="search-dropdown-item-icon">${searchIcon}</span>
-          <span class="search-dropdown-item-label">Search entire library for "${escapeHtml(query)}"</span>
+          <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(query)}"</span>
           <span class="search-dropdown-item-count">All</span>
         </button>
       </div>`];
@@ -377,10 +377,18 @@ function renderDropdown(query) {
   dropdownActiveIdx = -1;
 
   dropdown.querySelectorAll('.search-dropdown-item').forEach((item) => {
-    item.addEventListener('mousedown', (event) => {
+    let handled = false;
+    const activate = (event) => {
+      if (handled) return;
+      handled = true;
+      window.setTimeout(() => { handled = false; }, 0);
       event.preventDefault();
+      event.stopPropagation();
       selectAutocompleteItem(item);
-    });
+    };
+    item.addEventListener('mousedown', activate);
+    item.addEventListener('click', activate);
+    item.addEventListener('touchstart', activate, { passive: false });
   });
 }
 
@@ -470,6 +478,16 @@ function buildGlobalSearchUrl(query) {
 function routeToGlobalSearch(query) {
   const value = String(query || '').trim();
   if (!value) return false;
+  const form = document.querySelector('form.global-search-form');
+  const input = form ? form.querySelector('.global-search-input') : null;
+  if (form && input) {
+    input.value = value;
+    const queryInput = form.querySelector('input[name="q"]');
+    if (queryInput && queryInput !== input) queryInput.value = value;
+    if (typeof form.requestSubmit === 'function') form.requestSubmit();
+    else form.submit();
+    return true;
+  }
   window.location.href = buildGlobalSearchUrl(value);
   return true;
 }
@@ -874,9 +892,47 @@ function initSearch() {
   const clearBtn = document.getElementById('people-search-clear');
   if (!input || !clearBtn) return;
 
+  const searchForm = input.closest('form');
+  const useUniversalSearch = !!(searchForm && searchForm.classList.contains('global-search-form'));
+
   const syncClearButton = () => {
-    clearBtn.classList.toggle('visible', state.query.length > 0);
+    const hasText = useUniversalSearch
+      ? String(input.value || '').trim().length > 0
+      : state.query.length > 0;
+    clearBtn.classList.toggle('visible', hasText);
   };
+
+  if (useUniversalSearch) {
+    input.addEventListener('input', () => {
+      syncClearButton();
+      closeDropdown();
+    });
+
+    input.addEventListener('focus', syncClearButton);
+    input.addEventListener('blur', () => {
+      setTimeout(syncClearButton, 150);
+    });
+
+    clearBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      syncClearButton();
+      closeDropdown();
+      input.focus();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === '/' && document.activeElement !== input) {
+        event.preventDefault();
+        input.focus();
+        input.select();
+      }
+    });
+
+    syncClearButton();
+    return;
+  }
 
   input.addEventListener('input', () => {
     state.query = input.value.trim();

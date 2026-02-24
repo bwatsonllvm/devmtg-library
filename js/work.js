@@ -1446,25 +1446,14 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, quer
 
   let entries = [];
   if (strict.length > 0) {
-    const softenedRelaxed = relaxed.map((entry) => ({ ...entry, score: entry.score * 0.55 }));
-    entries = [...strict, ...softenedRelaxed];
-  }
-  else if (relaxed.length > 0) entries = relaxed;
-  else entries = fallback;
-
-  const rankedByScore = [...entries].sort((a, b) => (b.score || 0) - (a.score || 0));
-  if (hasModel && Array.isArray(model.clauses) && model.clauses.length && rankedByScore.length) {
-    const topScore = Number(rankedByScore[0].score || 0);
-    if (topScore > 0) {
-      const relativeFloor = model.beginnerIntent
-        ? 0.46
-        : (model.clauses.length <= 2 ? 0.34 : 0.24);
-      const absoluteFloor = model.beginnerIntent ? 18 : 9;
-      const threshold = Math.max(absoluteFloor, topScore * relativeFloor);
-      const filtered = rankedByScore.filter((entry) => Number(entry.score || 0) >= threshold);
-      if (filtered.length) entries = filtered;
-      else entries = rankedByScore.slice(0, Math.min(180, rankedByScore.length));
-    }
+    const softenedRelaxed = relaxed.map((entry) => ({ ...entry, score: entry.score * 0.62 }));
+    const softenedFallback = fallback.map((entry) => ({ ...entry, score: entry.score * 0.38 }));
+    entries = [...strict, ...softenedRelaxed, ...softenedFallback];
+  } else if (relaxed.length > 0) {
+    const softenedFallback = fallback.map((entry) => ({ ...entry, score: entry.score * 0.55 }));
+    entries = [...relaxed, ...softenedFallback];
+  } else {
+    entries = fallback;
   }
 
   return entries.sort(compareUniversalEntries);

@@ -2553,6 +2553,7 @@ function rankAutocompleteMatches(entries, query, limit) {
 
 function renderDropdown(query) {
   const dropdown = document.getElementById('search-dropdown');
+  if (!dropdown) return;
   if (!query || query.length < 1) {
     dropdown.classList.add('hidden');
     dropdownActiveIdx = -1;
@@ -2574,7 +2575,7 @@ function renderDropdown(query) {
       <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
               data-autocomplete-type="global" data-autocomplete-value="${escapeHtml(query)}">
         <span class="search-dropdown-item-icon">${searchIcon}</span>
-        <span class="search-dropdown-item-label">Search entire library for "${escapeHtml(query)}"</span>
+        <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(query)}"</span>
         <span class="search-dropdown-item-count">All</span>
       </button>
     </div>`;
@@ -2641,10 +2642,18 @@ function renderDropdown(query) {
 
   // Wire up item clicks
   dropdown.querySelectorAll('.search-dropdown-item').forEach(item => {
-    item.addEventListener('mousedown', e => {
-      e.preventDefault(); // prevent blur before click
+    let handled = false;
+    const activate = (event) => {
+      if (handled) return;
+      handled = true;
+      window.setTimeout(() => { handled = false; }, 0);
+      event.preventDefault();
+      event.stopPropagation();
       selectAutocompleteItem(item);
-    });
+    };
+    item.addEventListener('mousedown', activate);
+    item.addEventListener('click', activate);
+    item.addEventListener('touchstart', activate, { passive: false });
   });
 }
 
@@ -2752,6 +2761,16 @@ function buildGlobalSearchUrl(query) {
 function routeToGlobalSearch(query) {
   const value = String(query || '').trim();
   if (!value) return false;
+  const form = document.querySelector('form.global-search-form');
+  const input = form ? form.querySelector('.global-search-input') : null;
+  if (form && input) {
+    input.value = value;
+    const queryInput = form.querySelector('input[name="q"]');
+    if (queryInput && queryInput !== input) queryInput.value = value;
+    if (typeof form.requestSubmit === 'function') form.requestSubmit();
+    else form.submit();
+    return true;
+  }
   window.location.href = buildGlobalSearchUrl(value);
   return true;
 }
@@ -2813,12 +2832,15 @@ function selectAutocompleteItem(item) {
 }
 
 function closeDropdown() {
-  document.getElementById('search-dropdown').classList.add('hidden');
+  const dropdown = document.getElementById('search-dropdown');
+  if (!dropdown) return;
+  dropdown.classList.add('hidden');
   dropdownActiveIdx = -1;
 }
 
 function navigateDropdown(direction) {
   const dropdown = document.getElementById('search-dropdown');
+  if (!dropdown) return false;
   if (dropdown.classList.contains('hidden')) return false;
   const items = Array.from(dropdown.querySelectorAll('.search-dropdown-item'));
   if (items.length === 0) return false;
@@ -2840,8 +2862,53 @@ function navigateDropdown(direction) {
 function initSearch() {
   const input = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
-
+  if (!input || !clearBtn) return;
   buildAutocompleteIndex();
+
+  const searchForm = input.closest('form');
+  const useUniversalSearch = !!(searchForm && searchForm.classList.contains('global-search-form'));
+
+  if (useUniversalSearch) {
+    const syncClearBtn = () => {
+      clearBtn.classList.toggle('visible', String(input.value || '').trim().length > 0);
+    };
+
+    input.addEventListener('input', () => {
+      const rawValue = input.value;
+      if (rawValue.trim() !== state.activeSpeaker) state.activeSpeaker = '';
+      if (rawValue.trim() !== state.activeTag) {
+        state.activeTag = '';
+        syncTopicChipState();
+      }
+      if (rawValue.trim() && state.speaker) state.speaker = '';
+      syncClearBtn();
+      closeDropdown();
+    });
+
+    input.addEventListener('focus', syncClearBtn);
+    input.addEventListener('blur', () => {
+      setTimeout(syncClearBtn, 150);
+    });
+
+    clearBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      clearQuery();
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      syncClearBtn();
+      input.focus();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === '/' && document.activeElement !== input) {
+        event.preventDefault();
+        input.focus();
+        input.select();
+      }
+    });
+
+    syncClearBtn();
+    return;
+  }
 
   input.addEventListener('input', () => {
     const rawValue = input.value;
