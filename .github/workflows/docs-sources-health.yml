@@ -1,4 +1,6 @@
-name: Docs Sources Health
+name: Health Check - Docs Source Endpoints
+
+run-name: Check docs source endpoint health (llvm.org/clang/lldb)
 
 on:
   workflow_dispatch:
@@ -10,6 +12,7 @@ permissions:
 
 jobs:
   health:
+    name: Validate docs source URLs and search endpoints
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

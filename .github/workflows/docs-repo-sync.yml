@@ -1,4 +1,6 @@
-name: Docs Repo Sync Bot (LLVM + Clang)
+name: Auto Sync - llvm-project Docs (LLVM Core + Clang)
+
+run-name: Sync llvm-project docs for LLVM Core + Clang
 
 on:
   workflow_dispatch:
@@ -15,6 +17,7 @@ concurrency:
 
 jobs:
   sync:
+    name: Sync LLVM Core + Clang docs from llvm/llvm-project
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:

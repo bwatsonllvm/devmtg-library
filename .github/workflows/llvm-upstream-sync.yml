@@ -1,4 +1,6 @@
-name: LLVM Upstream Sync Bot
+name: Auto Sync - llvm-www Talks + llvm-blog-www Posts
+
+run-name: Sync llvm-www talks/slides/videos + llvm-blog posts
 
 on:
   workflow_dispatch:
@@ -15,6 +17,7 @@ concurrency:
 
 jobs:
   sync:
+    name: Sync talks + blogs from llvm repos
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:

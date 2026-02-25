@@ -1,4 +1,6 @@
-name: Docs LLDB Sync Bot
+name: Auto Sync - llvm-project Docs (LLDB)
+
+run-name: Sync llvm-project docs for LLDB
 
 on:
   workflow_dispatch:
@@ -15,6 +17,7 @@ concurrency:
 
 jobs:
   sync:
+    name: Sync LLDB docs from llvm/llvm-project
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
