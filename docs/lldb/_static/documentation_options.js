@@ -181,6 +181,13 @@ const DOCUMENTATION_OPTIONS = {
   let ACTIVE_DOCS_KIND = 'llvm-core';
   let ACTIVE_DOCS_BASE_PATH = 'docs';
   let ACTIVE_DOCS_SOURCE_BASE_URL = 'https://llvm.org/docs/';
+  const HUB_THEME_PREF_KEY = 'llvm-hub-theme-preference';
+  const HUB_TEXT_SIZE_KEY = 'llvm-hub-text-size';
+  const HEADER_MENU_CONFIG = {
+    mobile: { key: 'mobile', menuId: 'mobile-nav-menu', toggleId: 'mobile-nav-toggle', panelId: 'mobile-nav-panel' },
+    share: { key: 'share', menuId: 'share-menu', toggleId: 'share-btn', panelId: 'share-panel' },
+    display: { key: 'display', menuId: 'customization-menu', toggleId: 'customization-toggle', panelId: 'customization-panel' },
+  };
 
   function getDocsCorpusLabel(docsKind) {
     return DOCS_CORPUS_LABELS[String(docsKind || '').trim()] || DOCS_CORPUS_LABELS['llvm-core'];
@@ -468,32 +475,345 @@ const DOCUMENTATION_OPTIONS = {
     document.body.dataset.docsSphinxLayoutNormalized = '1';
   }
 
+  function getStoredThemePreference() {
+    const storedTheme = safeStorageGet(HUB_THEME_PREF_KEY);
+    return (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+      ? storedTheme
+      : 'system';
+  }
+
+  function getStoredTextSizePreference() {
+    const storedTextSize = safeStorageGet(HUB_TEXT_SIZE_KEY);
+    return (storedTextSize === 'small' || storedTextSize === 'large')
+      ? storedTextSize
+      : 'default';
+  }
+
+  function resolveThemePreference(themePreference) {
+    const pref = (themePreference === 'light' || themePreference === 'dark' || themePreference === 'system')
+      ? themePreference
+      : 'system';
+    if (pref === 'light' || pref === 'dark') return pref;
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return prefersDark ? 'dark' : 'light';
+  }
+
+  function applyDisplayPreferences(themePreference, textSize, persist) {
+    const pref = (themePreference === 'light' || themePreference === 'dark' || themePreference === 'system')
+      ? themePreference
+      : 'system';
+    const resolvedTheme = resolveThemePreference(pref);
+    const resolvedTextSize = (textSize === 'small' || textSize === 'large') ? textSize : 'default';
+
+    document.documentElement.setAttribute('data-theme', resolvedTheme);
+    document.documentElement.setAttribute('data-theme-preference', pref);
+    if (resolvedTextSize === 'default') {
+      document.documentElement.removeAttribute('data-text-size');
+    } else {
+      document.documentElement.setAttribute('data-text-size', resolvedTextSize);
+    }
+    document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f5f5f5';
+
+    if (persist) {
+      safeStorageSet(HUB_THEME_PREF_KEY, pref);
+      safeStorageSet(HUB_TEXT_SIZE_KEY, resolvedTextSize);
+    }
+  }
+
   function applyStoredDisplayPreferences() {
     try {
-      const storedTheme = localStorage.getItem('llvm-hub-theme-preference');
-      const themePreference = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
-        ? storedTheme
-        : 'system';
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const resolvedTheme = themePreference === 'system' ? (prefersDark ? 'dark' : 'light') : themePreference;
-      const storedTextSize = localStorage.getItem('llvm-hub-text-size');
-      const textSize = (storedTextSize === 'small' || storedTextSize === 'large') ? storedTextSize : 'default';
-
-      document.documentElement.setAttribute('data-theme', resolvedTheme);
-      document.documentElement.setAttribute('data-theme-preference', themePreference);
-      if (textSize === 'default') {
-        document.documentElement.removeAttribute('data-text-size');
-      } else {
-        document.documentElement.setAttribute('data-text-size', textSize);
-      }
-      document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f5f5f5';
+      applyDisplayPreferences(getStoredThemePreference(), getStoredTextSizePreference(), false);
     } catch (_) {
-      const fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const fallbackTheme = fallbackDark ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', fallbackTheme);
-      document.documentElement.setAttribute('data-theme-preference', 'system');
-      document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#000000' : '#f5f5f5';
+      applyDisplayPreferences('system', 'default', false);
     }
+  }
+
+  function syncHeaderDisplayControls() {
+    const themeSelect = document.getElementById('custom-theme-select');
+    const textSizeSelect = document.getElementById('custom-text-size-select');
+    if (themeSelect) themeSelect.value = getStoredThemePreference();
+    if (textSizeSelect) textSizeSelect.value = getStoredTextSizePreference();
+  }
+
+  function getHeaderMenuNodes(config) {
+    if (!config) return null;
+    const menu = document.getElementById(config.menuId);
+    const toggle = document.getElementById(config.toggleId);
+    const panel = document.getElementById(config.panelId);
+    if (!menu || !toggle || !panel) return null;
+    return { menu, toggle, panel, config };
+  }
+
+  function setHeaderMenuOpen(config, shouldOpen) {
+    const nodes = getHeaderMenuNodes(config);
+    if (!nodes) return;
+    const isOpen = !!shouldOpen;
+    nodes.menu.classList.toggle('open', isOpen);
+    nodes.panel.hidden = !isOpen;
+    nodes.toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  function closeHeaderMenus(exceptKey) {
+    Object.values(HEADER_MENU_CONFIG).forEach((config) => {
+      if (exceptKey && config.key === exceptKey) return;
+      setHeaderMenuOpen(config, false);
+    });
+  }
+
+  function toggleHeaderMenu(config) {
+    const nodes = getHeaderMenuNodes(config);
+    if (!nodes) return;
+    const nextOpen = !nodes.menu.classList.contains('open');
+    if (nextOpen) {
+      closeHeaderMenus(config.key);
+    }
+    setHeaderMenuOpen(config, nextOpen);
+  }
+
+  function nodeWithinHeaderMenu(target) {
+    if (!target || !target.closest) return false;
+    return !!target.closest('#mobile-nav-menu, #share-menu, #customization-menu');
+  }
+
+  function copyTextToClipboard(text) {
+    const value = String(text || '');
+    if (!value) return Promise.resolve(false);
+    const fallbackCopy = function () {
+      const probe = document.createElement('textarea');
+      probe.value = value;
+      probe.setAttribute('readonly', '');
+      probe.style.position = 'fixed';
+      probe.style.top = '-1000px';
+      probe.style.left = '-1000px';
+      document.body.appendChild(probe);
+      probe.select();
+      probe.setSelectionRange(0, probe.value.length);
+      const copied = !!document.execCommand && document.execCommand('copy');
+      document.body.removeChild(probe);
+      return copied;
+    };
+
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      return navigator.clipboard.writeText(value)
+        .then(() => true)
+        .catch(() => {
+          try {
+            return fallbackCopy();
+          } catch (_) {
+            return false;
+          }
+        });
+    }
+    try {
+      return Promise.resolve(fallbackCopy());
+    } catch (_) {
+      return Promise.resolve(false);
+    }
+  }
+
+  function initSystemThemeWatcher() {
+    if (!document.body || document.body.dataset.docsSystemThemeWatcherInit === '1') return;
+    document.body.dataset.docsSystemThemeWatcherInit = '1';
+    if (!window.matchMedia) return;
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = function () {
+      if (getStoredThemePreference() === 'system') {
+        applyDisplayPreferences('system', getStoredTextSizePreference(), false);
+      }
+    };
+    if (typeof media.addEventListener === 'function') media.addEventListener('change', onChange);
+    else if (typeof media.addListener === 'function') media.addListener(onChange);
+  }
+
+  function initMobileNavMenu() {
+    const nodes = getHeaderMenuNodes(HEADER_MENU_CONFIG.mobile);
+    if (!nodes) return;
+    if (nodes.menu.dataset.docsBridgeBound === '1') return;
+    nodes.menu.dataset.docsBridgeBound = '1';
+    setHeaderMenuOpen(HEADER_MENU_CONFIG.mobile, false);
+
+    nodes.toggle.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleHeaderMenu(HEADER_MENU_CONFIG.mobile);
+    });
+
+    nodes.panel.addEventListener('click', function (event) {
+      const target = event.target && event.target.closest
+        ? event.target.closest('[data-mobile-header-action], a.mobile-nav-link')
+        : null;
+      if (!target) return;
+
+      if (target.matches('a.mobile-nav-link')) {
+        setHeaderMenuOpen(HEADER_MENU_CONFIG.mobile, false);
+        return;
+      }
+
+      const action = String(target.getAttribute('data-mobile-header-action') || '').trim();
+      if (!action) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      setHeaderMenuOpen(HEADER_MENU_CONFIG.mobile, false);
+      if (action === 'share') {
+        toggleHeaderMenu(HEADER_MENU_CONFIG.share);
+      } else if (action === 'display') {
+        toggleHeaderMenu(HEADER_MENU_CONFIG.display);
+      }
+    });
+  }
+
+  function initShareMenu() {
+    const nodes = getHeaderMenuNodes(HEADER_MENU_CONFIG.share);
+    if (!nodes) return;
+    const copyBtn = document.getElementById('share-copy-link');
+    const nativeShareBtn = document.getElementById('share-native-share');
+    const emailLink = document.getElementById('share-email-link');
+    const xLink = document.getElementById('share-x-link');
+    const linkedInLink = document.getElementById('share-linkedin-link');
+    if (!copyBtn || !emailLink || !xLink || !linkedInLink) return;
+
+    const shareUrl = window.location.href;
+    const shareTitle = document.title || deriveFallbackTitle() || 'LLVM Research Library';
+    emailLink.href = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(`${shareTitle} - ${shareUrl}`)}`;
+    xLink.href = `https://x.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`;
+    linkedInLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+
+    const supportsNativeShare = typeof navigator.share === 'function';
+    if (nativeShareBtn) nativeShareBtn.hidden = !supportsNativeShare;
+
+    if (nodes.menu.dataset.docsBridgeBound === '1') return;
+    nodes.menu.dataset.docsBridgeBound = '1';
+    setHeaderMenuOpen(HEADER_MENU_CONFIG.share, false);
+    nodes.menu.dataset.shareDefaultLabel = nodes.toggle.textContent.trim() || 'Share';
+
+    const setShareButtonState = function (label, success) {
+      nodes.toggle.textContent = String(label || nodes.menu.dataset.shareDefaultLabel || 'Share');
+      nodes.toggle.classList.toggle('is-success', !!success);
+      const existingTimer = Number(nodes.menu.dataset.shareResetTimer || 0);
+      if (existingTimer) {
+        window.clearTimeout(existingTimer);
+      }
+      const timer = window.setTimeout(function () {
+        nodes.toggle.textContent = nodes.menu.dataset.shareDefaultLabel || 'Share';
+        nodes.toggle.classList.remove('is-success');
+        nodes.menu.dataset.shareResetTimer = '';
+      }, 1500);
+      nodes.menu.dataset.shareResetTimer = String(timer);
+    };
+
+    nodes.toggle.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleHeaderMenu(HEADER_MENU_CONFIG.share);
+    });
+
+    if (nativeShareBtn && supportsNativeShare) {
+      nativeShareBtn.addEventListener('click', async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        try {
+          await navigator.share({ title: shareTitle, url: shareUrl });
+          setShareButtonState('Shared', true);
+        } catch (error) {
+          if (!(error && error.name === 'AbortError')) {
+            setShareButtonState('Share failed', false);
+          }
+        }
+        setHeaderMenuOpen(HEADER_MENU_CONFIG.share, false);
+      });
+    }
+
+    copyBtn.addEventListener('click', async function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const copied = await copyTextToClipboard(shareUrl);
+      setShareButtonState(copied ? 'Link copied' : 'Copy failed', copied);
+      if (copied) {
+        setHeaderMenuOpen(HEADER_MENU_CONFIG.share, false);
+      }
+    });
+
+    [emailLink, xLink, linkedInLink].forEach((link) => {
+      link.addEventListener('click', function () {
+        setHeaderMenuOpen(HEADER_MENU_CONFIG.share, false);
+      });
+    });
+  }
+
+  function initCustomizationMenu() {
+    const nodes = getHeaderMenuNodes(HEADER_MENU_CONFIG.display);
+    if (!nodes) return;
+    const themeSelect = document.getElementById('custom-theme-select');
+    const textSizeSelect = document.getElementById('custom-text-size-select');
+    const resetBtn = document.getElementById('custom-reset-display');
+    if (!themeSelect || !textSizeSelect || !resetBtn) return;
+
+    syncHeaderDisplayControls();
+    if (nodes.menu.dataset.docsBridgeBound === '1') return;
+    nodes.menu.dataset.docsBridgeBound = '1';
+    setHeaderMenuOpen(HEADER_MENU_CONFIG.display, false);
+
+    nodes.toggle.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleHeaderMenu(HEADER_MENU_CONFIG.display);
+    });
+
+    themeSelect.addEventListener('change', function () {
+      const pref = String(themeSelect.value || '').trim();
+      const nextTheme = (pref === 'light' || pref === 'dark' || pref === 'system') ? pref : 'system';
+      applyDisplayPreferences(nextTheme, getStoredTextSizePreference(), true);
+      syncHeaderDisplayControls();
+    });
+
+    textSizeSelect.addEventListener('change', function () {
+      const rawSize = String(textSizeSelect.value || '').trim();
+      const nextSize = (rawSize === 'small' || rawSize === 'large') ? rawSize : 'default';
+      applyDisplayPreferences(getStoredThemePreference(), nextSize, true);
+      syncHeaderDisplayControls();
+    });
+
+    resetBtn.addEventListener('click', function () {
+      safeStorageRemove(HUB_THEME_PREF_KEY);
+      safeStorageRemove(HUB_TEXT_SIZE_KEY);
+      applyDisplayPreferences('system', 'default', false);
+      syncHeaderDisplayControls();
+    });
+  }
+
+  function initHeaderDismissHandlers() {
+    if (!document.body || document.body.dataset.docsHeaderDismissInit === '1') return;
+    document.body.dataset.docsHeaderDismissInit = '1';
+
+    document.addEventListener('pointerdown', function (event) {
+      const target = event.target && event.target.nodeType === 1
+        ? event.target
+        : (event.target && event.target.parentElement ? event.target.parentElement : null);
+      if (nodeWithinHeaderMenu(target)) return;
+      closeHeaderMenus('');
+    });
+
+    document.addEventListener('focusin', function (event) {
+      const target = event.target && event.target.nodeType === 1
+        ? event.target
+        : null;
+      if (nodeWithinHeaderMenu(target)) return;
+      closeHeaderMenus('');
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      closeHeaderMenus('');
+    });
+  }
+
+  function initHeaderControls() {
+    initSystemThemeWatcher();
+    initMobileNavMenu();
+    initShareMenu();
+    initCustomizationMenu();
+    initHeaderDismissHandlers();
   }
 
   function buildHeader(rootPath) {
@@ -1010,6 +1330,18 @@ const DOCUMENTATION_OPTIONS = {
     return value.trim();
   }
 
+  function normalizeDocsTrackValue(raw) {
+    const source = String(raw || '').trim();
+    if (!source) return '';
+    if (/^mainline$/i.test(source) || /git$/i.test(source)) return 'mainline';
+    const normalized = normalizeReleaseVersionValue(source);
+    return normalized || source;
+  }
+
+  function isExternalHttpUrl(href) {
+    return /^https?:\/\//i.test(String(href || '').trim());
+  }
+
   function getLatestReleaseModel(rootPath) {
     const metaRoot = (window.LLVMDocsSyncMeta && typeof window.LLVMDocsSyncMeta === 'object')
       ? window.LLVMDocsSyncMeta
@@ -1025,13 +1357,28 @@ const DOCUMENTATION_OPTIONS = {
       ? DOCUMENTATION_OPTIONS.VERSION
       : '';
 
-    const normalizedVersion = normalizeReleaseVersionValue(fromMeta)
+    const releaseVersion = normalizeReleaseVersionValue(fromMeta);
+    const docsTrack = normalizeDocsTrackValue(fromDocs);
+    const normalizedVersion = releaseVersion
       || normalizeReleaseVersionValue(fromDocs)
       || 'Unknown';
 
     const githubHref = latestRelease && String(latestRelease.githubUrl || '').trim()
       ? String(latestRelease.githubUrl).trim()
       : DOCS_GITHUB_RELEASES_URL;
+
+    if (ACTIVE_DOCS_KIND === 'lldb') {
+      const docsTrackLabel = docsTrack || 'mainline';
+      const llvmReleaseLabel = releaseVersion ? `LLVM ${releaseVersion}` : 'Unknown';
+      return {
+        versionLabel: `Docs track: ${docsTrackLabel}; latest LLVM project release: ${llvmReleaseLabel}`,
+        releaseNotesHref: DOCS_GITHUB_RELEASES_URL,
+        releaseNotesLabel: 'LLVM project releases (includes LLDB)',
+        githubHref,
+        githubLabel: 'Latest LLVM release assets',
+      };
+    }
+
     const releasePrefix = getDocsCorpusLabel(ACTIVE_DOCS_KIND);
     const releaseNotesSlug = getDocsReleaseNotesSlug(ACTIVE_DOCS_KIND);
     const releaseNotesHref = releaseNotesSlug
@@ -1041,7 +1388,9 @@ const DOCUMENTATION_OPTIONS = {
     return {
       versionLabel: `Latest release: ${releasePrefix} ${normalizedVersion}`,
       releaseNotesHref,
+      releaseNotesLabel: 'Latest release notes',
       githubHref,
+      githubLabel: 'Download via GitHub',
     };
   }
 
@@ -1068,7 +1417,11 @@ const DOCUMENTATION_OPTIONS = {
     const notes = document.createElement('a');
     notes.className = 'docs-release-link';
     notes.href = release.releaseNotesHref;
-    notes.textContent = 'Latest release notes';
+    notes.textContent = release.releaseNotesLabel || 'Latest release notes';
+    if (isExternalHttpUrl(release.releaseNotesHref)) {
+      notes.target = '_blank';
+      notes.rel = 'noopener noreferrer';
+    }
     links.appendChild(notes);
 
     const download = document.createElement('a');
@@ -1076,7 +1429,7 @@ const DOCUMENTATION_OPTIONS = {
     download.href = release.githubHref;
     download.target = '_blank';
     download.rel = 'noopener noreferrer';
-    download.textContent = 'Download via GitHub';
+    download.textContent = release.githubLabel || 'Download via GitHub';
     links.appendChild(download);
 
     panel.appendChild(links);
@@ -2293,7 +2646,7 @@ const DOCUMENTATION_OPTIONS = {
         item.classList.add('is-active-path');
       }
 
-      const title = String(entry && entry.title ? entry.title : 'Untitled');
+      const title = normalizeDocsDisplayLabel(entry && entry.title ? entry.title : '', 'Untitled');
       const slug = entry && entry.slug ? String(entry.slug) : '';
       const children = Array.isArray(entry && entry.children) ? entry.children : [];
       const hasChildren = children.length > 0;
@@ -2414,7 +2767,7 @@ const DOCUMENTATION_OPTIONS = {
       if (slug) {
         out.push({
           slug,
-          title: String(node.title || 'Untitled'),
+          title: normalizeDocsDisplayLabel(node.title || '', 'Untitled'),
           number,
           depth,
         });
@@ -2609,7 +2962,8 @@ const DOCUMENTATION_OPTIONS = {
       const entries = Array.isArray(chapter && chapter.entries) ? chapter.entries : [];
       if (!entries.length) return;
       const chapterNumber = chapterIdx + 1;
-      const chapterLabel = `${chapterNumber}. ${String(chapter.title || `Chapter ${chapterNumber}`)}`;
+      const chapterTitleText = normalizeDocsDisplayLabel(chapter && chapter.title ? chapter.title : '', `Chapter ${chapterNumber}`);
+      const chapterLabel = `${chapterNumber}. ${chapterTitleText}`;
       const chapterStateId = `chapter-${chapterNumber}`;
       const storedChapterCollapsed = getStoredNodeCollapseState(chapterStateId);
       const chapterExpanded = storedChapterCollapsed === null ? false : !storedChapterCollapsed;
@@ -2730,6 +3084,16 @@ const DOCUMENTATION_OPTIONS = {
       .replace(/\s+[\u2013\u2014-]\s+documentation$/i, '')
       .trim();
     return cleaned || `${getDocsCorpusLabel(ACTIVE_DOCS_KIND)} Documentation`;
+  }
+
+  function normalizeDocsDisplayLabel(value, fallback) {
+    const fallbackText = String(fallback || '').trim();
+    const raw = String(value || '').trim();
+    const resolved = raw || fallbackText;
+    if (ACTIVE_DOCS_KIND === 'lldb') {
+      return stripLldbBugGlyph(resolved, fallbackText || 'LLDB');
+    }
+    return resolved || fallbackText;
   }
 
   function stripLldbBugGlyph(value, fallback) {
@@ -2960,6 +3324,7 @@ const DOCUMENTATION_OPTIONS = {
     if (!existingHeader && document.body) {
       document.body.insertAdjacentHTML('afterbegin', buildHeader(rootPath));
     }
+    initHeaderControls();
 
     const documentRoot = document.querySelector('.document');
     if (documentRoot && !documentRoot.id) {
