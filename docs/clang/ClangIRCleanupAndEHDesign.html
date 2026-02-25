@@ -332,7 +332,7 @@ for cleanup block sharing.</p>
   } cleanup eh {
     %3 = cir.base_class_addr %1 : !cir.ptr&lt;!rec_Derived&gt; nonnull [0] -&gt; !cir.ptr&lt;!rec_Base&gt;
     cir.call @_ZN4BaseD2Ev(%3) : (!cir.ptr&lt;!rec_Base&gt;) -&gt; ()
-    cir.resume
+    cir.yield
   }
   cir.return
 }
@@ -379,7 +379,7 @@ with the <code class="docutils literal notranslate"><span class="pre">cir.end_ca
   }
   cir.yield
 } unwind (%eh_token : !cir.eh_token) {
-  cir.resume
+  cir.resume %eh_token : !cir.eh_token
 }
 </pre></div>
 </div>
@@ -418,7 +418,7 @@ exceptions.</p>
       }
       cir.yield
     } unwind (%eh_token : !cir.eh_token) {
-      cir.resume
+      cir.resume %eh_token : !cir.eh_token
     }
   }
   cir.return
@@ -571,7 +571,7 @@ catch handler.</p>
         }
         cir.yield
       } unwind (%eh_token : !cir.eh_token) {
-        cir.resume
+        cir.resume %eh_token : !cir.eh_token
       }
     }
     cir.yield
@@ -882,7 +882,7 @@ dispatch block (<code class="docutils literal notranslate"><span class="pre">^bb
   %2 = cir.begin_cleanup(%eh_token : !cir.eh_token) : !cir.cleanup_token
   cir.call @_ZN9SomeClassD1Ev(%0) : (!cir.ptr&lt;!rec_SomeClass&gt;) -&gt; ()
   cir.end_cleanup(%2 : !cir.cleanup_token)
-  cir.resume // Unwind to caller
+  cir.resume %eh_token : !cir.eh_token // Unwind to caller
 ^bb4 // Normal continue (from ^bb1)
   cir.return
 }
