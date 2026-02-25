@@ -31,9 +31,9 @@ test('docs sources catalog exists and contains valid entries', () => {
 
 test('global-search.js uses local docs universal index files for formatted docs search', () => {
   const raw = fs.readFileSync(GLOBAL_SEARCH_JS, 'utf8');
-  assert.match(raw, /const DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local LLVM docs universal index');
-  assert.match(raw, /const CLANG_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/clang\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local Clang docs universal index');
-  assert.match(raw, /const LLDB_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/lldb\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local LLDB docs universal index');
+  assert.match(raw, /const DOCS_UNIVERSAL_INDEX_SRC\s*=\s*(?:resolveAssetUrl\(\s*)?['"]docs\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local LLVM docs universal index');
+  assert.match(raw, /const CLANG_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*(?:resolveAssetUrl\(\s*)?['"]docs\/clang\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local Clang docs universal index');
+  assert.match(raw, /const LLDB_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*(?:resolveAssetUrl\(\s*)?['"]docs\/lldb\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local LLDB docs universal index');
   assert.match(raw, /ensureDocsIndexLoader\(/, 'global-search.js must load docs search data via ensureDocsIndexLoader');
 });
 
