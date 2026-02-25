@@ -105,7 +105,7 @@ ruby -rjson -e '
 ' "$UPDATES_ROOT"
 
 # Validate docs sources catalog JSON.
-ruby -rjson -e '
+ruby -rjson -ruri -e '
   path = ARGV.fetch(0)
   payload = JSON.parse(File.read(path))
   abort("docs/sources.json must contain an object") unless payload.is_a?(Hash)
