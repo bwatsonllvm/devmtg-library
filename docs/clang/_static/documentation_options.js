@@ -329,7 +329,7 @@ const DOCUMENTATION_OPTIONS = {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-11` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260225-12` });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260225-02` });
   }
 
@@ -1009,7 +1009,7 @@ const DOCUMENTATION_OPTIONS = {
   function ensureHomeScript(rootPath) {
     const normalizedRoot = String(rootPath || '/');
     window.LLVMLibraryRootPath = normalizedRoot;
-    loadScriptOnce(`${normalizedRoot}js/shared/library-utils.js?v=20260225-06`, 'llvm-library-utils-script', function () {
+    loadScriptOnce(`${normalizedRoot}js/shared/library-utils.js?v=20260225-07`, 'llvm-library-utils-script', function () {
       loadScriptOnce(`${normalizedRoot}js/shared/global-search.js?v=20260225-14`, 'llvm-global-search-script');
     });
   }

@@ -4089,12 +4089,118 @@
       }
     }
 
+    function ensureMobileToggleIcon(toggle) {
+      if (!toggle || toggle.dataset.mobileToggleNormalized === '1') return;
+      const iconMarkup = `
+        <span class="mobile-nav-toggle-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </span>
+        <span>Menu</span>`;
+      toggle.innerHTML = iconMarkup;
+      toggle.dataset.mobileToggleNormalized = '1';
+    }
+
+    function readMobilePanelLinkEntries(panel) {
+      const nodes = [...panel.querySelectorAll('a.mobile-nav-link[href]')];
+      const seen = new Set();
+      const browseLinks = [];
+      const docsLinks = [];
+
+      nodes.forEach((node) => {
+        const href = String(node.getAttribute('href') || '').trim();
+        const label = String(node.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!href || !label) return;
+
+        const key = `${href}|${label.toLowerCase()}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+
+        const isDocsHref = /(^|\/)docs(?:\/|$)/i.test(href);
+        const isDocsLabel = /^docs\b/i.test(label);
+        const entry = {
+          href,
+          label: label.replace(/^docs:\s*/i, ''),
+          active: node.classList.contains('active') || node.getAttribute('aria-current') === 'page',
+          current: node.getAttribute('aria-current') === 'page',
+        };
+        if (isDocsHref || isDocsLabel) docsLinks.push(entry);
+        else browseLinks.push(entry);
+      });
+
+      if (!docsLinks.length) {
+        docsLinks.push(
+          { href: 'docs/', label: 'LLVM Core', active: false, current: false },
+          { href: 'docs/clang/', label: 'Clang', active: false, current: false },
+          { href: 'docs/lldb/', label: 'LLDB', active: false, current: false },
+        );
+      }
+
+      return { browseLinks, docsLinks };
+    }
+
+    function buildMobileNavGroup(groupLabel, groupAriaLabel, links) {
+      const group = document.createElement('div');
+      group.className = 'mobile-nav-group';
+      group.setAttribute('role', 'group');
+      group.setAttribute('aria-label', groupAriaLabel);
+
+      const label = document.createElement('p');
+      label.className = 'mobile-nav-group-label';
+      label.textContent = groupLabel;
+      group.appendChild(label);
+
+      links.forEach((entry) => {
+        const link = document.createElement('a');
+        link.className = 'mobile-nav-link';
+        link.href = entry.href;
+        link.textContent = entry.label;
+        if (entry.active) link.classList.add('active');
+        if (entry.current) link.setAttribute('aria-current', 'page');
+        group.appendChild(link);
+      });
+
+      return group;
+    }
+
+    function normalizeMobileNavPanelGroups(panel) {
+      if (!panel) return;
+      const hasGroupNodes = !!panel.querySelector('.mobile-nav-group');
+      const hasTopLevelLinks = [...panel.children].some((node) => (
+        node
+        && node.nodeType === 1
+        && node.matches
+        && node.matches('a.mobile-nav-link')
+      ));
+
+      if (hasGroupNodes && !hasTopLevelLinks) {
+        ensureMobileSettingsGroup(panel);
+        return;
+      }
+
+      const { browseLinks, docsLinks } = readMobilePanelLinkEntries(panel);
+      panel.innerHTML = '';
+      if (browseLinks.length) {
+        panel.appendChild(buildMobileNavGroup('Browse', 'Browse', browseLinks));
+      }
+      if (docsLinks.length) {
+        panel.appendChild(buildMobileNavGroup('Docs', 'Documentation sources', docsLinks));
+      }
+      ensureMobileSettingsGroup(panel);
+    }
+
     function ensureMobileSettingsGroup(panel) {
       if (!panel) return;
-      panel.querySelectorAll('.mobile-nav-group[data-mobile-group="tools"], .mobile-nav-group').forEach((node) => {
-        if (!node || !node.querySelector) return;
-        if (!node.querySelector('[data-mobile-header-action]')) return;
+      panel.querySelectorAll('.mobile-nav-group[data-mobile-group="tools"]').forEach((node) => {
         if (node && node.parentNode) node.parentNode.removeChild(node);
+      });
+      panel.querySelectorAll('[data-mobile-header-action]').forEach((node) => {
+        const group = node.closest('.mobile-nav-group');
+        if (group && group.parentNode) group.parentNode.removeChild(group);
+        else if (node && node.parentNode) node.parentNode.removeChild(node);
       });
 
       if (panel.querySelector('.mobile-nav-group[data-mobile-group="settings"]')) return;
@@ -4131,7 +4237,8 @@
       const panel = document.getElementById('mobile-nav-panel');
       if (!menu || !toggle || !panel) return;
 
-      ensureMobileSettingsGroup(panel);
+      ensureMobileToggleIcon(toggle);
+      normalizeMobileNavPanelGroups(panel);
       syncCustomizationMenuControls();
 
       const disclosure = ensureDisclosureMenu({
