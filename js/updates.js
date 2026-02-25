@@ -1,5 +1,5 @@
 /**
- * updates.js — Render update log (talks/slides/videos/papers/blogs additions).
+ * updates.js — Render update log (talks/slides/videos/papers/blogs/docs additions).
  */
 
 const UPDATE_LOG_PATH = 'updates/index.json';
@@ -145,6 +145,7 @@ function topicFilterHref(kind, topic) {
   if (!label) return '#';
   if (kind === 'talk') return `talks/?tag=${encodeURIComponent(label)}`;
   if (kind === 'blog') return `blogs/?tag=${encodeURIComponent(label)}`;
+  if (kind === 'docs') return `work.html?mode=search&scope=docs&q=${encodeURIComponent(label)}`;
   return `papers/?tag=${encodeURIComponent(label)}`;
 }
 
@@ -197,11 +198,13 @@ function formatIncludedParts(entry, kind) {
     else if (part === 'video') add(videoLinkLabel(entry.videoUrl));
     else if (part === 'paper') add(isDirectPdfUrl(entry.paperUrl) ? 'PDF' : 'Paper');
     else if (part === 'blog') add('Post');
+    else if (part === 'docs') add('Docs');
   }
 
   if (!out.length) {
     if (kind === 'talk') add('Talk');
     else if (kind === 'blog') add('Post');
+    else if (kind === 'docs') add('Docs');
     else add(isDirectPdfUrl(entry.paperUrl) ? 'PDF' : 'Paper');
   }
   return out;
@@ -210,6 +213,7 @@ function formatIncludedParts(entry, kind) {
 function detailLinkLabel(kind) {
   if (kind === 'talk') return 'Talk Details';
   if (kind === 'blog') return 'Blog Details';
+  if (kind === 'docs') return 'Docs Home';
   return 'Paper Details';
 }
 
@@ -224,15 +228,19 @@ function renderLinkTag(url, label, external = false) {
 
 function renderEntry(entry) {
   const kindKey = collapseWs(entry.kind).toLowerCase();
-  const kind = kindKey === 'blog' ? 'blog' : (kindKey === 'paper' ? 'paper' : 'talk');
-  const kindLabel = kind === 'talk' ? 'Talk' : (kind === 'blog' ? 'Blog' : 'Paper');
+  const kind = kindKey === 'blog'
+    ? 'blog'
+    : (kindKey === 'paper'
+      ? 'paper'
+      : (kindKey === 'docs' ? 'docs' : 'talk'));
+  const kindLabel = kind === 'talk' ? 'Talk' : (kind === 'blog' ? 'Blog' : (kind === 'docs' ? 'Docs' : 'Paper'));
   const title = collapseWs(entry.title) || '(Untitled)';
   const url = normalizeLibraryUrl(entry.url);
   const loggedAtLabel = formatLoggedAt(entry.loggedAt);
   const includedLabels = formatIncludedParts(entry, kind);
   const keyTopics = formatKeyTopics(entry.keyTopics).filter((topic) => {
     const lower = collapseWs(topic).toLowerCase();
-    return lower !== 'paper' && lower !== 'blog';
+    return lower !== 'paper' && lower !== 'blog' && lower !== 'docs';
   });
 
   let context = '';
@@ -241,6 +249,16 @@ function renderEntry(entry) {
       collapseWs(entry.meetingName),
       collapseWs(entry.meetingDate),
       collapseWs(entry.meetingSlug),
+    ].filter(Boolean);
+    context = pieces.join(' · ');
+  } else if (kind === 'docs') {
+    const revision = collapseWs(entry.sourceRevision) || collapseWs(entry.sourceHeadRevision);
+    const revisionLabel = revision ? `rev ${revision.slice(0, 12)}` : '';
+    const pieces = [
+      collapseWs(entry.docsSourceName),
+      collapseWs(entry.releaseName) || collapseWs(entry.releaseTag),
+      revisionLabel,
+      collapseWs(entry.source),
     ].filter(Boolean);
     context = pieces.join(' · ');
   } else {
@@ -269,6 +287,10 @@ function renderEntry(entry) {
     } else if (!blogUrl && repoUrl) {
       addLink(repoUrl, 'Post', true);
     }
+  } else if (kind === 'docs') {
+    addLink(entry.sourceUrl, 'Upstream Docs', true);
+    addLink(entry.sourceCommitUrl, 'Source Commit', true);
+    addLink(entry.releaseUrl, 'Release', true);
   } else {
     const paperHref = sanitizeExternalUrl(entry.paperUrl);
     const sourceHref = sanitizeExternalUrl(entry.sourceUrl);
@@ -296,7 +318,8 @@ function renderEntry(entry) {
   const topicHtml = keyTopics
     .map((topic) => {
       const href = topicFilterHref(kind, topic);
-      return `<a class="card-tag" href="${escapeHtml(href)}" aria-label="Browse ${kind === 'talk' ? 'talks' : (kind === 'blog' ? 'blogs' : 'papers')} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`;
+      const browseScope = kind === 'talk' ? 'talks' : (kind === 'blog' ? 'blogs' : (kind === 'docs' ? 'docs pages' : 'papers'));
+      return `<a class="card-tag" href="${escapeHtml(href)}" aria-label="Browse ${browseScope} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`;
     })
     .join('');
 
@@ -479,7 +502,7 @@ function renderEntries(entries) {
 
   if (!entries.length) {
     setLoadStatus('');
-    root.innerHTML = '<section class="updates-empty"><h2>No updates yet</h2><p>Newly added talks, slides, videos, papers, and blogs will appear here after sync runs.</p></section>';
+    root.innerHTML = '<section class="updates-empty"><h2>No updates yet</h2><p>Newly added talks, slides, videos, papers, blogs, and docs updates will appear here after sync runs.</p></section>';
     return;
   }
 

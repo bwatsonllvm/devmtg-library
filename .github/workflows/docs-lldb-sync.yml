@@ -43,6 +43,12 @@ jobs:
             --github-token "${GITHUB_TOKEN}" \
             --install-requirements
 
+      - name: Build updates log
+        run: |
+          python3 scripts/build-update-log.py \
+            --repo-root . \
+            --log-json updates/index.json
+
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh
 
@@ -69,3 +75,4 @@ jobs:
             - rebuilds local LLDB docs artifacts from `llvm/llvm-project` sources
             - refreshes local LLDB docs search indexes
             - updates LLDB docs sync metadata
+            - rebuilds `updates/index.json` so docs sync entries appear in Updates

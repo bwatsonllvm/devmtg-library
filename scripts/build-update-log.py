@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build/update website update log entries for newly added talks/resources/papers/blogs.
+"""Build/update website update log entries for newly added talks/resources/papers/blogs/docs.
 
 Default mode:
   - compares current working tree JSON bundles against HEAD versions in git
@@ -8,6 +8,7 @@ Default mode:
       * slides added to an existing talk
       * videos added to an existing talk
       * papers/blogs newly added to any papers/*.json bundle
+      * docs metadata updates newly added to docs/*/_static/docs-sync-meta.json
   - collates talk + slides + video into one entry when they appear together
 
 Retroactive mode:
@@ -30,7 +31,32 @@ PART_ORDER = {
     "video": 2,
     "paper": 3,
     "blog": 4,
+    "docs": 5,
 }
+
+DOCS_META_CONFIG_BY_PATH: dict[str, dict[str, str]] = {
+    "docs/_static/docs-sync-meta.json": {
+        "variantId": "llvm-core",
+        "sourceName": "LLVM Core",
+        "localUrl": "docs/",
+    },
+    "docs/clang/_static/docs-sync-meta.json": {
+        "variantId": "clang",
+        "sourceName": "Clang",
+        "localUrl": "docs/clang/",
+    },
+    "docs/lldb/_static/docs-sync-meta.json": {
+        "variantId": "lldb",
+        "sourceName": "LLDB",
+        "localUrl": "docs/lldb/",
+    },
+}
+
+TRACKED_CHANGE_PATHS = [
+    "devmtg/events",
+    "papers",
+    *DOCS_META_CONFIG_BY_PATH.keys(),
+]
 
 MAX_KEY_TOPICS_PER_ENTRY = 8
 DEFAULT_KEY_TOPIC_CANONICAL = [
@@ -509,6 +535,24 @@ def entry_key_topics(
                     collapse_ws(str(paper.get("venue", ""))),
                 ]
             )
+    elif kind == "docs":
+        seed_values.extend(
+            [
+                collapse_ws(str(entry.get("docsSourceName", ""))),
+                collapse_ws(str(entry.get("docsVariant", ""))),
+            ]
+        )
+        text_parts.extend(
+            [
+                collapse_ws(str(entry.get("docsSourceName", ""))),
+                collapse_ws(str(entry.get("docsVariant", ""))),
+                collapse_ws(str(entry.get("sourceRepo", ""))),
+                collapse_ws(str(entry.get("sourcePath", ""))),
+                collapse_ws(str(entry.get("sourceUrl", ""))),
+                collapse_ws(str(entry.get("releaseName", ""))),
+                collapse_ws(str(entry.get("releaseTag", ""))),
+            ]
+        )
 
     return collect_key_topics(seed_values, " ".join(part for part in text_parts if part), topic_by_key)
 
@@ -568,21 +612,25 @@ def git_show_file_at_revision(repo_root: Path, revision: str, rel_path: str) -> 
     raise RuntimeError(f"git show {revision}:{rel_path} failed: {collapse_ws(proc.stderr)}")
 
 
+def normalize_git_path(rel_path: str) -> str:
+    return collapse_ws(rel_path).replace("\\", "/")
+
+
 def list_changed_json_paths(repo_root: Path) -> set[str]:
     changed: set[str] = set()
 
-    diff_text = run_git(repo_root, ["diff", "--name-only", "HEAD", "--", "devmtg/events", "papers"])
+    diff_text = run_git(repo_root, ["diff", "--name-only", "HEAD", "--", *TRACKED_CHANGE_PATHS])
     for line in diff_text.splitlines():
-        rel = collapse_ws(line)
+        rel = normalize_git_path(line)
         if rel:
             changed.add(rel)
 
     untracked_text = run_git(
         repo_root,
-        ["ls-files", "--others", "--exclude-standard", "--", "devmtg/events", "papers"],
+        ["ls-files", "--others", "--exclude-standard", "--", *TRACKED_CHANGE_PATHS],
     )
     for line in untracked_text.splitlines():
-        rel = collapse_ws(line)
+        rel = normalize_git_path(line)
         if rel:
             changed.add(rel)
 
@@ -590,11 +638,17 @@ def list_changed_json_paths(repo_root: Path) -> set[str]:
 
 
 def is_event_json_path(rel_path: str) -> bool:
-    return rel_path.startswith("devmtg/events/") and rel_path.endswith(".json") and not rel_path.endswith("index.json")
+    path = normalize_git_path(rel_path)
+    return path.startswith("devmtg/events/") and path.endswith(".json") and not path.endswith("index.json")
 
 
 def is_paper_json_path(rel_path: str) -> bool:
-    return rel_path.startswith("papers/") and rel_path.endswith(".json") and rel_path != "papers/index.json"
+    path = normalize_git_path(rel_path)
+    return path.startswith("papers/") and path.endswith(".json") and path != "papers/index.json"
+
+
+def is_docs_meta_json_path(rel_path: str) -> bool:
+    return normalize_git_path(rel_path) in DOCS_META_CONFIG_BY_PATH
 
 
 def talk_has_slides(talk: dict) -> bool:
@@ -670,6 +724,17 @@ def normalize_site_base(raw_site_base: str) -> str:
 def build_detail_url(site_base: str, page_name: str, item_id: str) -> str:
     encoded_id = urllib.parse.quote(item_id, safe="")
     target = f"{page_name}?id={encoded_id}"
+    if not site_base:
+        return target
+    if site_base == "/":
+        return f"/{target}"
+    return f"{site_base.rstrip('/')}/{target}"
+
+
+def build_local_url(site_base: str, raw_path: str) -> str:
+    target = collapse_ws(raw_path).lstrip("/")
+    if not target:
+        target = "updates/"
     if not site_base:
         return target
     if site_base == "/":
@@ -755,7 +820,7 @@ def sanitize_update_entry_urls(entry: dict, site_base: str) -> None:
     normalized_url = normalize_internal_library_url(raw_url, site_base)
     entry["url"] = normalized_url or "updates/"
 
-    for field in ("videoUrl", "slidesUrl", "paperUrl", "sourceUrl", "blogUrl"):
+    for field in ("videoUrl", "slidesUrl", "paperUrl", "sourceUrl", "blogUrl", "sourceCommitUrl", "releaseUrl"):
         safe = sanitize_http_url(str(entry.get(field, "")))
         if safe:
             entry[field] = safe
@@ -872,6 +937,197 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str, topic_by_key: d
     return entry
 
 
+def normalize_iso_utc(raw_value: str) -> str:
+    value = collapse_ws(raw_value)
+    if not value:
+        return ""
+    try:
+        parsed = _dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return ""
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=_dt.timezone.utc)
+    return parsed.astimezone(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def docs_sort_hint(value: str) -> str:
+    match = re.match(r"^(\d{4})-(\d{2})-(\d{2})", collapse_ws(value))
+    if not match:
+        return "0000-00-00"
+    return f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
+
+
+def docs_release_payload(meta: dict | None) -> dict:
+    if not isinstance(meta, dict):
+        return {}
+    raw_release = meta.get("latestRelease")
+    if isinstance(raw_release, dict):
+        return raw_release
+    return {}
+
+
+def docs_change_signature(meta: dict | None) -> tuple[str, ...]:
+    if not isinstance(meta, dict):
+        return ("", "", "", "", "", "", "", "")
+
+    source_revision = collapse_ws(str(meta.get("sourceRevision", "")))
+    source_head_revision = collapse_ws(str(meta.get("sourceHeadRevision", "")))
+    source_repo = collapse_ws(str(meta.get("sourceRepo", "")))
+    source_path = collapse_ws(str(meta.get("sourcePath", "")))
+    source_url = sanitize_http_url(str(meta.get("sourceUrl", "")))
+    release = docs_release_payload(meta)
+    release_tag = collapse_ws(str(release.get("tag", "")))
+    release_version = collapse_ws(str(release.get("version", "")))
+    synced_at = normalize_iso_utc(str(meta.get("syncedAt", "")))
+
+    # If upstream revision fields are present, ignore syncedAt-only churn.
+    if source_revision or source_head_revision:
+        synced_at = ""
+
+    return (
+        source_revision,
+        source_head_revision,
+        source_repo,
+        source_path,
+        source_url,
+        release_tag,
+        release_version,
+        synced_at,
+    )
+
+
+def docs_source_commit_url(source_repo: str, source_revision: str) -> str:
+    repo = collapse_ws(source_repo)
+    revision = collapse_ws(source_revision)
+    if not repo or not revision:
+        return ""
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
+        return ""
+    if not re.fullmatch(r"[0-9a-fA-F]{7,64}", revision):
+        return ""
+    return f"https://github.com/{repo}/commit/{revision}"
+
+
+def docs_entry(
+    current_meta: dict,
+    rel_path: str,
+    logged_at_iso: str,
+    site_base: str,
+    topic_by_key: dict[str, str],
+) -> dict:
+    config = DOCS_META_CONFIG_BY_PATH.get(normalize_git_path(rel_path), {})
+    variant_id = collapse_ws(str(config.get("variantId", ""))) or "docs"
+    source_name = collapse_ws(str(config.get("sourceName", ""))) or "LLVM Docs"
+    local_url = collapse_ws(str(config.get("localUrl", ""))) or "docs/"
+
+    source_repo = collapse_ws(str(current_meta.get("sourceRepo", "")))
+    source_path = collapse_ws(str(current_meta.get("sourcePath", "")))
+    source_url = sanitize_http_url(str(current_meta.get("sourceUrl", "")))
+    source_revision = collapse_ws(str(current_meta.get("sourceRevision", "")))
+    source_head_revision = collapse_ws(str(current_meta.get("sourceHeadRevision", "")))
+    effective_revision = source_revision or source_head_revision
+    synced_at = normalize_iso_utc(str(current_meta.get("syncedAt", "")))
+    entry_logged_at = synced_at or logged_at_iso
+    release = docs_release_payload(current_meta)
+    release_name = collapse_ws(str(release.get("name", "")))
+    release_tag = collapse_ws(str(release.get("tag", "")))
+    release_version = collapse_ws(str(release.get("version", "")))
+    release_url = sanitize_http_url(str(release.get("githubUrl", "")))
+    source_commit_url = docs_source_commit_url(source_repo, effective_revision)
+    source_label = source_repo or "llvm/llvm-project"
+
+    fingerprint_token = (
+        effective_revision
+        or release_tag
+        or synced_at
+        or logged_at_iso
+    )
+    fingerprint_token = re.sub(r"[^A-Za-z0-9._:-]+", "-", collapse_ws(fingerprint_token)).strip("-") or "snapshot"
+
+    title = f"{source_name} documentation update"
+    if release_name:
+        title = f"{title} ({release_name})"
+
+    key_topic_seed = [source_name]
+    if variant_id == "llvm-core":
+        key_topic_seed.append("LLVM")
+    elif variant_id == "clang":
+        key_topic_seed.append("Clang")
+    elif variant_id == "lldb":
+        key_topic_seed.append("LLDB")
+
+    key_topics = collect_key_topics(
+        key_topic_seed,
+        " ".join(
+            value
+            for value in [
+                source_name,
+                variant_id,
+                source_label,
+                source_path,
+                source_url,
+                release_name,
+                release_tag,
+                release_version,
+            ]
+            if value
+        ),
+        topic_by_key,
+    )
+
+    entry = {
+        "kind": "docs",
+        "loggedAt": entry_logged_at,
+        "sortHint": docs_sort_hint(entry_logged_at),
+        "fingerprint": f"docs:{variant_id}:{fingerprint_token}",
+        "parts": ["docs"],
+        "title": title,
+        "url": build_local_url(site_base, local_url),
+        "docsVariant": variant_id,
+        "docsSourceName": source_name,
+        "source": source_label,
+        "keyTopics": key_topics,
+    }
+    if synced_at:
+        entry["syncedAt"] = synced_at
+    if source_repo:
+        entry["sourceRepo"] = source_repo
+    if source_path:
+        entry["sourcePath"] = source_path
+    if source_url:
+        entry["sourceUrl"] = source_url
+    if source_revision:
+        entry["sourceRevision"] = source_revision
+    if source_head_revision:
+        entry["sourceHeadRevision"] = source_head_revision
+    if source_commit_url:
+        entry["sourceCommitUrl"] = source_commit_url
+    if release_name:
+        entry["releaseName"] = release_name
+    if release_tag:
+        entry["releaseTag"] = release_tag
+    if release_version:
+        entry["releaseVersion"] = release_version
+    if release_url:
+        entry["releaseUrl"] = release_url
+    return entry
+
+
+def diff_docs_entries(
+    current_payload: dict | None,
+    prev_payload: dict | None,
+    rel_path: str,
+    logged_at_iso: str,
+    site_base: str,
+    topic_by_key: dict[str, str],
+) -> list[dict]:
+    if not isinstance(current_payload, dict):
+        return []
+    if docs_change_signature(current_payload) == docs_change_signature(prev_payload):
+        return []
+    return [docs_entry(current_payload, rel_path, logged_at_iso, site_base, topic_by_key)]
+
+
 def diff_talk_entries(
     current_payload: dict | None,
     prev_payload: dict | None,
@@ -952,6 +1208,17 @@ def entry_fingerprint_aliases(entry: dict) -> set[str]:
     if paper_id and kind in {"paper", "blog"}:
         aliases.add(f"paper:{paper_id}")
         aliases.add(f"blog:{paper_id}")
+
+    if kind == "docs":
+        docs_variant = collapse_ws(str(entry.get("docsVariant", "")))
+        docs_revision = (
+            collapse_ws(str(entry.get("sourceRevision", "")))
+            or collapse_ws(str(entry.get("sourceHeadRevision", "")))
+            or collapse_ws(str(entry.get("releaseTag", "")))
+            or collapse_ws(str(entry.get("syncedAt", "")))
+        )
+        if docs_variant and docs_revision:
+            aliases.add(f"docs:{docs_variant}:{docs_revision}")
     return aliases
 
 
@@ -983,13 +1250,13 @@ def first_parent_of_commit(repo_root: Path, commit: str) -> str:
 
 def changed_json_paths_for_commit(repo_root: Path, commit: str, parent: str) -> set[str]:
     if parent:
-        diff_text = run_git(repo_root, ["diff", "--name-only", parent, commit, "--", "devmtg/events", "papers"])
+        diff_text = run_git(repo_root, ["diff", "--name-only", parent, commit, "--", *TRACKED_CHANGE_PATHS])
     else:
-        diff_text = run_git(repo_root, ["show", "--pretty=format:", "--name-only", commit, "--", "devmtg/events", "papers"])
+        diff_text = run_git(repo_root, ["show", "--pretty=format:", "--name-only", commit, "--", *TRACKED_CHANGE_PATHS])
 
     changed: set[str] = set()
     for line in diff_text.splitlines():
-        rel = collapse_ws(line)
+        rel = normalize_git_path(line)
         if rel and rel.endswith(".json"):
             changed.add(rel)
     return changed
@@ -1000,10 +1267,11 @@ def build_entries_from_working_tree_delta(
     site_base: str,
     logged_at_iso: str,
     topic_by_key: dict[str, str],
-) -> tuple[list[dict], int, int]:
+) -> tuple[list[dict], int, int, int]:
     changed_json_paths = list_changed_json_paths(repo_root)
     changed_event_paths = sorted(path for path in changed_json_paths if is_event_json_path(path))
     changed_paper_paths = sorted(path for path in changed_json_paths if is_paper_json_path(path))
+    changed_docs_meta_paths = sorted(path for path in changed_json_paths if is_docs_meta_json_path(path))
 
     entries: list[dict] = []
 
@@ -1025,7 +1293,16 @@ def build_entries_from_working_tree_delta(
         prev_payload = parse_json_text(prev_raw) if prev_raw else None
         entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
 
-    return entries, len(changed_event_paths), len(changed_paper_paths)
+    for rel_path in changed_docs_meta_paths:
+        abs_path = repo_root / rel_path
+        if not abs_path.exists():
+            continue
+        current_payload = load_json_file(abs_path)
+        prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
+        prev_payload = parse_json_text(prev_raw) if prev_raw else None
+        entries.extend(diff_docs_entries(current_payload, prev_payload, rel_path, logged_at_iso, site_base, topic_by_key))
+
+    return entries, len(changed_event_paths), len(changed_paper_paths), len(changed_docs_meta_paths)
 
 
 def build_entries_from_history(
@@ -1033,10 +1310,11 @@ def build_entries_from_history(
     commits: list[str],
     site_base: str,
     topic_by_key: dict[str, str],
-) -> tuple[list[dict], int, int]:
+) -> tuple[list[dict], int, int, int]:
     entries: list[dict] = []
     changed_event_count = 0
     changed_paper_count = 0
+    changed_docs_meta_count = 0
 
     for commit in commits:
         logged_at_iso = collapse_ws(run_git(repo_root, ["show", "-s", "--format=%cI", commit]))
@@ -1063,7 +1341,17 @@ def build_entries_from_history(
             entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
             changed_paper_count += 1
 
-    return entries, changed_event_count, changed_paper_count
+        for rel_path in sorted(path for path in changed_paths if is_docs_meta_json_path(path)):
+            current_raw = git_show_file_at_revision(repo_root, commit, rel_path)
+            if not current_raw:
+                continue
+            prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
+            current_payload = parse_json_text(current_raw)
+            prev_payload = parse_json_text(prev_raw) if prev_raw else None
+            entries.extend(diff_docs_entries(current_payload, prev_payload, rel_path, logged_at_iso, site_base, topic_by_key))
+            changed_docs_meta_count += 1
+
+    return entries, changed_event_count, changed_paper_count, changed_docs_meta_count
 
 
 def main() -> int:
@@ -1090,14 +1378,14 @@ def main() -> int:
     logged_at_iso = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     if args.retroactive_history:
         commits = list_history_commits(repo_root, history_to=args.history_to, history_from=args.history_from)
-        new_entries, changed_event_count, changed_paper_count = build_entries_from_history(
+        new_entries, changed_event_count, changed_paper_count, changed_docs_meta_count = build_entries_from_history(
             repo_root=repo_root,
             commits=commits,
             site_base=site_base,
             topic_by_key=topic_by_key,
         )
     else:
-        new_entries, changed_event_count, changed_paper_count = build_entries_from_working_tree_delta(
+        new_entries, changed_event_count, changed_paper_count, changed_docs_meta_count = build_entries_from_working_tree_delta(
             repo_root=repo_root,
             site_base=site_base,
             logged_at_iso=logged_at_iso,
@@ -1168,6 +1456,7 @@ def main() -> int:
             print("Mode: working-tree-delta")
         print(f"Changed event bundles considered: {changed_event_count}")
         print(f"Changed paper bundles considered: {changed_paper_count}")
+        print(f"Changed docs metadata files considered: {changed_docs_meta_count}")
         print(f"Raw newly detected entries: {len(new_entries)}")
     print(f"Update log entries appended: {appended}")
     print(f"Update log total entries: {len(merged_entries)}")
