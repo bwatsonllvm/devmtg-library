@@ -1,0 +1,115 @@
+name: LLVM Upstream Sync Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 9 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: llvm-upstream-sync-bot
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sync events talks/slides/videos from llvm-www
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/sync-devmtg-from-llvm-www.py \
+            --events-dir devmtg/events \
+            --manifest devmtg/events/index.json \
+            --github-token "${GITHUB_TOKEN}"
+
+      - name: Sync LLVM blog posts from llvm-blog-www
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/sync-blog-from-llvm-www-blog.py \
+            --repo llvm/llvm-blog-www \
+            --ref main \
+            --output papers/llvm-blog-posts.json \
+            --cache-dir papers/.cache/llvm-blog \
+            --blog-base-url "https://blog.llvm.org/" \
+            --github-token "${GITHUB_TOKEN}"
+
+      - name: Sync LLVM docs mirror from llvm.org/docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/sync-docs-from-llvm-org.sh \
+            --source-url "https://llvm.org/docs/" \
+            --docs-dir docs \
+            --github-token "${GITHUB_TOKEN}"
+
+      - name: Sync Clang docs mirror from clang.llvm.org/docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p docs/clang
+          bash scripts/sync-docs-from-llvm-org.sh \
+            --source-url "https://clang.llvm.org/docs/" \
+            --docs-dir docs/clang \
+            --bridge-doc-options docs/_static/documentation_options.js \
+            --github-token "${GITHUB_TOKEN}"
+          touch docs/clang/_static/docs-known-broken-links.txt
+
+      - name: Sync LLDB docs mirror from lldb.llvm.org
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p docs/lldb
+          bash scripts/sync-docs-from-llvm-org.sh \
+            --source-url "https://lldb.llvm.org/" \
+            --docs-dir docs/lldb \
+            --bridge-doc-options docs/_static/documentation_options.js \
+            --skip-source-companions \
+            --github-token "${GITHUB_TOKEN}"
+          touch docs/lldb/_static/docs-known-broken-links.txt
+
+      - name: Sanitize URL-bearing fields
+        run: |
+          python3 scripts/sanitize-library-urls.py --repo-root .
+
+      - name: Build updates log
+        run: |
+          python3 scripts/build-update-log.py \
+            --repo-root . \
+            --log-json updates/index.json
+
+      - name: Validate bundle
+        run: scripts/validate-library-bundle.sh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: library/automated-sync-llvm-upstream
+          delete-branch: true
+          commit-message: "LLVM upstream sync (llvm-www + llvm-blog + docs mirrors)"
+          title: "LLVM upstream sync (llvm-www + llvm-blog + docs mirrors)"
+          body: |
+            Automated LLVM upstream sync:
+            - syncs talks/slides/videos from `llvm-www/devmtg`
+            - syncs LLVM blog posts from `llvm-blog-www`
+            - syncs mirrored docs from `llvm.org/docs`, `clang.llvm.org/docs`, and `lldb.llvm.org`
+            - sanitizes URL-bearing fields and rebuilds `updates/index.json`

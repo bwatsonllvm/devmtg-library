@@ -217,19 +217,20 @@ For canonical meeting schedules and announcements, use the official archive: htt
 
 ## Automation
 
-A scheduled GitHub Actions workflow (`.github/workflows/library-sync.yml`) runs weekly and opens a PR with refreshed data when changes are found.
+Automation is split into two scheduled PR workflows:
 
-Automation stages:
-1. Sync talks/slides/videos from `llvm-www/devmtg`
-2. Refresh OpenAlex-discovered papers
-3. Sync LLVM blog posts from `llvm-blog-www`
-4. Sync mirrored docs from `llvm.org/docs`, `clang.llvm.org/docs`, and `lldb.llvm.org`, regenerating docs book/search indexes
-5. Rebuild the single canonical papers database (OpenAlex + llvm.org/pubs + blog)
-6. Backfill direct paper PDF links via OpenAlex + Unpaywall
-7. Rebuild the updates log
-8. Run code-quality checks (Python lint/static checks, shell syntax, JS search regression tests)
-9. Validate bundle integrity
-10. Validate docs mirror health (freshness + local link integrity + bridge asset checks)
+1. LLVM upstream sync (`.github/workflows/llvm-upstream-sync.yml`)
+   - syncs talks/slides/videos from `llvm-www/devmtg`
+   - syncs LLVM blog posts from `llvm-blog-www`
+   - syncs mirrored docs from `llvm.org/docs`, `clang.llvm.org/docs`, and `lldb.llvm.org`
+   - rebuilds the updates log
+2. Papers/library sync (`.github/workflows/library-papers-sync.yml`)
+   - refreshes OpenAlex-discovered papers
+   - rebuilds the canonical papers database (OpenAlex + llvm.org/pubs + blog)
+   - backfills direct paper PDF links via OpenAlex + Unpaywall
+   - rebuilds the updates log
+
+The split keeps LLVM-repo/content mirror merges independent from papers ingestion/enrichment so upstream mirror updates can be proposed quickly without waiting on OpenAlex/papers processing.
 
 ## Docs Mirror Boundaries
 
@@ -261,7 +262,8 @@ Search relevance behavior is covered by deterministic regression tests in:
 These checks run in:
 - `.github/workflows/library-validate.yml` (PR validation)
 - `.github/workflows/pages.yml` (deploy gate)
-- `.github/workflows/library-sync.yml` (automation PR gate)
+- `.github/workflows/llvm-upstream-sync.yml` (LLVM upstream automation PRs)
+- `.github/workflows/library-papers-sync.yml` (papers automation PRs)
 
 Mirror health is also checked on a daily schedule in:
 - `.github/workflows/docs-mirror-health.yml`

@@ -1,0 +1,94 @@
+name: Library Papers Sync Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "47 9 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: library-papers-sync-bot
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Refresh OpenAlex discovered papers
+        run: |
+          python3 scripts/build-openalex-discovery.py \
+            --events-dir devmtg/events \
+            --papers-dir papers \
+            --index-json papers/index.json \
+            --app-js js/app.js \
+            --subprojects-file papers/subproject-seeds.txt \
+            --skip-author-queries \
+            --max-pages-per-keyword 5 \
+            --per-page 200 \
+            --mailto "llvm-library-bot@users.noreply.github.com"
+
+      - name: Build single canonical papers database
+        run: |
+          python3 scripts/build-single-papers-db.py \
+            --output papers/combined-all-papers-deduped.json \
+            --manifest papers/index.json \
+            --cache-dir papers/.cache/openalex \
+            --landing-cache papers/.cache/openalex-landing-enrichment.json \
+            --batch-size 40 \
+            --landing-timeout 5 \
+            --landing-max-probes 120 \
+            --landing-miss-recheck-days 30 \
+            --mailto "llvm-library-bot@users.noreply.github.com"
+
+      - name: Backfill direct PDF links via OpenAlex + Unpaywall
+        run: |
+          python3 scripts/backfill-openalex-unpaywall-pdfs.py \
+            --bundle papers/combined-all-papers-deduped.json \
+            --manifest papers/index.json \
+            --cache papers/.cache/unpaywall-pdf-links.json \
+            --mailto "llvm-library-bot@users.noreply.github.com"
+
+      - name: Sanitize URL-bearing fields
+        run: |
+          python3 scripts/sanitize-library-urls.py --repo-root .
+
+      - name: Build updates log
+        run: |
+          python3 scripts/build-update-log.py \
+            --repo-root . \
+            --log-json updates/index.json
+
+      - name: Validate bundle
+        run: scripts/validate-library-bundle.sh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: library/automated-sync-papers
+          delete-branch: true
+          commit-message: "Library papers sync (OpenAlex + canonical papers DB)"
+          title: "Library papers sync (OpenAlex + canonical papers DB)"
+          body: |
+            Automated papers/library sync:
+            - refreshes OpenAlex-discovered papers
+            - rebuilds the canonical papers database (OpenAlex + llvm.org/pubs + blog)
+            - backfills direct paper PDF links via OpenAlex + Unpaywall
+            - sanitizes URL-bearing fields and rebuilds `updates/index.json`
