@@ -4000,10 +4000,19 @@
     }
 
     function syncCustomizationMenuControls() {
-      const themeSelect = document.getElementById('custom-theme-select');
-      const textSizeSelect = document.getElementById('custom-text-size-select');
-      if (themeSelect) themeSelect.value = getThemePreference();
-      if (textSizeSelect) textSizeSelect.value = getTextSizePreference();
+      const themePreference = getThemePreference();
+      const textSizePreference = getTextSizePreference();
+      const themeSelectIds = ['custom-theme-select', 'mobile-theme-select'];
+      const textSizeSelectIds = ['custom-text-size-select', 'mobile-text-size-select'];
+
+      themeSelectIds.forEach((id) => {
+        const select = document.getElementById(id);
+        if (select) select.value = themePreference;
+      });
+      textSizeSelectIds.forEach((id) => {
+        const select = document.getElementById(id);
+        if (select) select.value = textSizePreference;
+      });
     }
 
     function handleSystemThemeChange() {
@@ -4080,17 +4089,169 @@
       }
     }
 
+    function ensureMobileToggleIcon(toggle) {
+      if (!toggle || toggle.dataset.mobileToggleNormalized === '1') return;
+      const iconMarkup = `
+        <span class="mobile-nav-toggle-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </span>
+        <span>Menu</span>`;
+      toggle.innerHTML = iconMarkup;
+      toggle.dataset.mobileToggleNormalized = '1';
+    }
+
+    function readMobilePanelLinkEntries(panel) {
+      const nodes = [...panel.querySelectorAll('a.mobile-nav-link[href]')];
+      const seen = new Set();
+      const browseLinks = [];
+      const docsLinks = [];
+
+      nodes.forEach((node) => {
+        const href = String(node.getAttribute('href') || '').trim();
+        const label = String(node.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!href || !label) return;
+
+        const key = `${href}|${label.toLowerCase()}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+
+        const isDocsHref = /(^|\/)docs(?:\/|$)/i.test(href);
+        const isDocsLabel = /^docs\b/i.test(label);
+        const entry = {
+          href,
+          label: label.replace(/^docs:\s*/i, ''),
+          active: node.classList.contains('active') || node.getAttribute('aria-current') === 'page',
+          current: node.getAttribute('aria-current') === 'page',
+        };
+        if (isDocsHref || isDocsLabel) docsLinks.push(entry);
+        else browseLinks.push(entry);
+      });
+
+      if (!docsLinks.length) {
+        docsLinks.push(
+          { href: 'docs/', label: 'LLVM Core', active: false, current: false },
+          { href: 'docs/clang/', label: 'Clang', active: false, current: false },
+          { href: 'docs/lldb/', label: 'LLDB', active: false, current: false },
+        );
+      }
+
+      return { browseLinks, docsLinks };
+    }
+
+    function buildMobileNavGroup(groupLabel, groupAriaLabel, links) {
+      const group = document.createElement('div');
+      group.className = 'mobile-nav-group';
+      group.setAttribute('role', 'group');
+      group.setAttribute('aria-label', groupAriaLabel);
+
+      const label = document.createElement('p');
+      label.className = 'mobile-nav-group-label';
+      label.textContent = groupLabel;
+      group.appendChild(label);
+
+      links.forEach((entry) => {
+        const link = document.createElement('a');
+        link.className = 'mobile-nav-link';
+        link.href = entry.href;
+        link.textContent = entry.label;
+        if (entry.active) link.classList.add('active');
+        if (entry.current) link.setAttribute('aria-current', 'page');
+        group.appendChild(link);
+      });
+
+      return group;
+    }
+
+    function normalizeMobileNavPanelGroups(panel) {
+      if (!panel) return;
+      const hasGroupNodes = !!panel.querySelector('.mobile-nav-group');
+      const hasTopLevelLinks = [...panel.children].some((node) => (
+        node
+        && node.nodeType === 1
+        && node.matches
+        && node.matches('a.mobile-nav-link')
+      ));
+
+      if (hasGroupNodes && !hasTopLevelLinks) {
+        ensureMobileSettingsGroup(panel);
+        return;
+      }
+
+      const { browseLinks, docsLinks } = readMobilePanelLinkEntries(panel);
+      panel.innerHTML = '';
+      if (browseLinks.length) {
+        panel.appendChild(buildMobileNavGroup('Browse', 'Browse', browseLinks));
+      }
+      if (docsLinks.length) {
+        panel.appendChild(buildMobileNavGroup('Docs', 'Documentation sources', docsLinks));
+      }
+      ensureMobileSettingsGroup(panel);
+    }
+
+    function ensureMobileSettingsGroup(panel) {
+      if (!panel) return;
+      panel.querySelectorAll('.mobile-nav-group[data-mobile-group="tools"]').forEach((node) => {
+        if (node && node.parentNode) node.parentNode.removeChild(node);
+      });
+      panel.querySelectorAll('[data-mobile-header-action]').forEach((node) => {
+        const group = node.closest('.mobile-nav-group');
+        if (group && group.parentNode) group.parentNode.removeChild(group);
+        else if (node && node.parentNode) node.parentNode.removeChild(node);
+      });
+
+      if (panel.querySelector('.mobile-nav-group[data-mobile-group="settings"]')) return;
+
+      const group = document.createElement('div');
+      group.className = 'mobile-nav-group mobile-nav-group-settings';
+      group.setAttribute('role', 'group');
+      group.setAttribute('aria-label', 'Display settings');
+      group.setAttribute('data-mobile-group', 'settings');
+      group.innerHTML = `
+        <p class="mobile-nav-group-label">Settings</p>
+        <label class="mobile-nav-setting" for="mobile-theme-select">
+          <span class="mobile-nav-setting-label">Theme</span>
+          <select class="customization-select mobile-nav-setting-select" id="mobile-theme-select" aria-label="Theme preference">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label class="mobile-nav-setting" for="mobile-text-size-select">
+          <span class="mobile-nav-setting-label">Text Size</span>
+          <select class="customization-select mobile-nav-setting-select" id="mobile-text-size-select" aria-label="Text size">
+            <option value="small">Small</option>
+            <option value="default">Default</option>
+            <option value="large">Large</option>
+          </select>
+        </label>`;
+      panel.appendChild(group);
+    }
+
     function initMobileNavMenu() {
       const menu = document.getElementById('mobile-nav-menu');
       const toggle = document.getElementById('mobile-nav-toggle');
       const panel = document.getElementById('mobile-nav-panel');
       if (!menu || !toggle || !panel) return;
 
+      ensureMobileToggleIcon(toggle);
+      normalizeMobileNavPanelGroups(panel);
+      syncCustomizationMenuControls();
+
       const disclosure = ensureDisclosureMenu({
         menu,
         toggle,
         panel,
         onPanelClick: (event, controller) => {
+          const linkTarget = getClosestTarget(event, 'a.mobile-nav-link');
+          if (linkTarget) {
+            controller.close();
+            return true;
+          }
+
           const actionTarget = getClosestTarget(event, '[data-mobile-header-action]');
           if (!actionTarget || !mobileHeaderActionMap) return false;
 
@@ -4109,6 +4270,24 @@
           return true;
         },
       });
+
+      const mobileThemeSelect = document.getElementById('mobile-theme-select');
+      const mobileTextSizeSelect = document.getElementById('mobile-text-size-select');
+      if (mobileThemeSelect && mobileTextSizeSelect && panel.dataset.mobileSettingsBound !== '1') {
+        panel.dataset.mobileSettingsBound = '1';
+
+        mobileThemeSelect.addEventListener('change', () => {
+          const preference = themePrefValues.has(mobileThemeSelect.value) ? mobileThemeSelect.value : 'system';
+          applyTheme(preference, true);
+          syncCustomizationMenuControls();
+        });
+
+        mobileTextSizeSelect.addEventListener('change', () => {
+          const size = textSizeValues.has(mobileTextSizeSelect.value) ? mobileTextSizeSelect.value : 'default';
+          applyTextSize(size, true);
+          syncCustomizationMenuControls();
+        });
+      }
 
       if (
         disclosure
