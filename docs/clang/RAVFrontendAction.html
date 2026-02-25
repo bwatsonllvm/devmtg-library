@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>How to write RecursiveASTVisitor based ASTFrontendActions. &#8212; Clang 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <title>How to write RecursiveASTVisitor based ASTFrontendActions. &#8212; Clang  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=e491ac2d" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
-    <script src="_static/documentation_options.js?v=20260224-19"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -18,7 +18,7 @@
     <link rel="prev" title="Clang Plugins" href="ClangPlugins.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>Clang 23.0.0git documentation</span></a></h1>
+          <span>Clang  documentation</span></a></h1>
         <h2 class="heading"><span>How to write RecursiveASTVisitor based ASTFrontendActions.</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -53,7 +53,7 @@ provides the convenience interface ASTFrontendAction, which takes care
 of executing the action. The only part left is to implement the
 CreateASTConsumer method that returns an ASTConsumer per translation
 unit.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FindNamedClassAction</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTFrontendAction</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FindNamedClassAction</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTFrontendAction</span> <span class="p">{</span>
 <span class="n">public</span><span class="p">:</span>
   <span class="n">virtual</span> <span class="n">std</span><span class="p">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">clang</span><span class="p">::</span><span class="n">ASTConsumer</span><span class="o">&gt;</span> <span class="n">CreateASTConsumer</span><span class="p">(</span>
     <span class="n">clang</span><span class="p">::</span><span class="n">CompilerInstance</span> <span class="o">&amp;</span><span class="n">Compiler</span><span class="p">,</span> <span class="n">llvm</span><span class="p">::</span><span class="n">StringRef</span> <span class="n">InFile</span><span class="p">)</span> <span class="p">{</span>
@@ -70,7 +70,7 @@ regardless of how the AST was produced. ASTConsumer provides many
 different entry points, but for our use case the only one needed is
 HandleTranslationUnit, which is called with the ASTContext for the
 translation unit.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FindNamedClassConsumer</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTConsumer</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FindNamedClassConsumer</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTConsumer</span> <span class="p">{</span>
 <span class="n">public</span><span class="p">:</span>
   <span class="n">virtual</span> <span class="n">void</span> <span class="n">HandleTranslationUnit</span><span class="p">(</span><span class="n">clang</span><span class="p">::</span><span class="n">ASTContext</span> <span class="o">&amp;</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
     <span class="o">//</span> <span class="n">Traversing</span> <span class="n">the</span> <span class="n">translation</span> <span class="n">unit</span> <span class="n">decl</span> <span class="n">via</span> <span class="n">a</span> <span class="n">RecursiveASTVisitor</span>
@@ -94,7 +94,7 @@ nodes, which are passed by-value. We only need to implement the methods
 for the relevant node types.</p>
 <p>Let’s start by writing a RecursiveASTVisitor that visits all
 CXXRecordDecl’s.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FindNamedClassVisitor</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FindNamedClassVisitor</span>
   <span class="p">:</span> <span class="n">public</span> <span class="n">RecursiveASTVisitor</span><span class="o">&lt;</span><span class="n">FindNamedClassVisitor</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="n">public</span><span class="p">:</span>
   <span class="nb">bool</span> <span class="n">VisitCXXRecordDecl</span><span class="p">(</span><span class="n">CXXRecordDecl</span> <span class="o">*</span><span class="n">Declaration</span><span class="p">)</span> <span class="p">{</span>
@@ -165,7 +165,7 @@ locations:</p>
 
 <span class="n">using</span> <span class="n">namespace</span> <span class="n">clang</span><span class="p">;</span>
 
-<span class="k">class</span> <span class="nc">FindNamedClassVisitor</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FindNamedClassVisitor</span>
   <span class="p">:</span> <span class="n">public</span> <span class="n">RecursiveASTVisitor</span><span class="o">&lt;</span><span class="n">FindNamedClassVisitor</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="n">public</span><span class="p">:</span>
   <span class="n">explicit</span> <span class="n">FindNamedClassVisitor</span><span class="p">(</span><span class="n">ASTContext</span> <span class="o">*</span><span class="n">Context</span><span class="p">)</span>
@@ -186,7 +186,7 @@ locations:</p>
   <span class="n">ASTContext</span> <span class="o">*</span><span class="n">Context</span><span class="p">;</span>
 <span class="p">};</span>
 
-<span class="k">class</span> <span class="nc">FindNamedClassConsumer</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTConsumer</span> <span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FindNamedClassConsumer</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTConsumer</span> <span class="p">{</span>
 <span class="n">public</span><span class="p">:</span>
   <span class="n">explicit</span> <span class="n">FindNamedClassConsumer</span><span class="p">(</span><span class="n">ASTContext</span> <span class="o">*</span><span class="n">Context</span><span class="p">)</span>
     <span class="p">:</span> <span class="n">Visitor</span><span class="p">(</span><span class="n">Context</span><span class="p">)</span> <span class="p">{}</span>
@@ -198,7 +198,7 @@ locations:</p>
   <span class="n">FindNamedClassVisitor</span> <span class="n">Visitor</span><span class="p">;</span>
 <span class="p">};</span>
 
-<span class="k">class</span> <span class="nc">FindNamedClassAction</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTFrontendAction</span> <span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FindNamedClassAction</span> <span class="p">:</span> <span class="n">public</span> <span class="n">clang</span><span class="p">::</span><span class="n">ASTFrontendAction</span> <span class="p">{</span>
 <span class="n">public</span><span class="p">:</span>
   <span class="n">virtual</span> <span class="n">std</span><span class="p">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">clang</span><span class="p">::</span><span class="n">ASTConsumer</span><span class="o">&gt;</span> <span class="n">CreateASTConsumer</span><span class="p">(</span>
     <span class="n">clang</span><span class="p">::</span><span class="n">CompilerInstance</span> <span class="o">&amp;</span><span class="n">Compiler</span><span class="p">,</span> <span class="n">llvm</span><span class="p">::</span><span class="n">StringRef</span> <span class="n">InFile</span><span class="p">)</span> <span class="p">{</span>

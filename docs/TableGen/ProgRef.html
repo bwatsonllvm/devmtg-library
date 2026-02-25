@@ -6,10 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>1 TableGen Programmer’s Reference &#8212; LLVM 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <title>1 TableGen Programmer’s Reference &#8212; LLVM  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../_static/llvm-theme.css?v=96924833" />
-    <script src="../_static/documentation_options.js?v=20260224-16"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -55,26 +55,26 @@
 <h3>Documentation</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
-    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
-    <li><a href="/library/docs/Reference.html">Reference</a></li>
+    <li><a href="https://llvm.org/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
+    <li><a href="https://llvm.org/docs/UserGuides.html">User Guides</a></li>
+    <li><a href="https://llvm.org/docs/Reference.html">Reference</a></li>
 </ul>
 
 <h3>Getting Involved</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
-    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
+    <li><a href="https://llvm.org/docs/Contributing.html">Contributing to LLVM</a></li>
+    <li><a href="https://llvm.org/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#discord">Discord</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
 </ul>
 
 <h3>Additional Links</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
-    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
+    <li><a href="https://llvm.org/docs/FAQ.html">FAQ</a></li>
+    <li><a href="https://llvm.org/docs/Lexicon.html">Glossary</a></li>
     <li><a href="https://llvm.org/pubs">Publications</a></li>
     <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
 </ul>
@@ -324,8 +324,8 @@ begin with an integer. In case of ambiguity, a token is interpreted as a
 numeric literal rather than an identifier.</p>
 <p>TableGen has the following reserved keywords, which cannot be used as
 identifiers:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span>     <span class="n">bit</span>           <span class="n">bits</span>          <span class="k">class</span>         <span class="nc">code</span>
-<span class="n">dag</span>        <span class="k">def</span>           <span class="nf">dump</span>          <span class="k">else</span>          <span class="n">false</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span>     <span class="n">bit</span>           <span class="n">bits</span>          <span class="k">class</span><span class="w">         </span><span class="nc">code</span>
+<span class="n">dag</span>        <span class="k">def</span><span class="w">           </span><span class="nf">dump</span>          <span class="k">else</span>          <span class="n">false</span>
 <span class="n">foreach</span>    <span class="n">defm</span>          <span class="n">defset</span>        <span class="n">defvar</span>        <span class="n">field</span>
 <span class="k">if</span>         <span class="ow">in</span>            <span class="n">include</span>       <span class="nb">int</span>           <span class="n">let</span>
 <span class="nb">list</span>       <span class="n">multiclass</span>    <span class="n">string</span>        <span class="n">then</span>          <span class="n">true</span>
@@ -540,7 +540,7 @@ possible identifiers are described here, but the descriptions will make more
 sense after reading the remainder of this guide.</p>
 <ul>
 <li><p>A template argument of a <code class="docutils literal notranslate"><span class="pre">class</span></code>, such as the use of <code class="docutils literal notranslate"><span class="pre">Bar</span></code> in:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Foo</span> <span class="o">&lt;</span><span class="nb">int</span> <span class="n">Bar</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Foo</span> <span class="o">&lt;</span><span class="nb">int</span> <span class="n">Bar</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="nb">int</span> <span class="n">Baz</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
@@ -549,7 +549,7 @@ sense after reading the remainder of this guide.</p>
 <li><p>The implicit template argument <code class="docutils literal notranslate"><span class="pre">NAME</span></code> in a <code class="docutils literal notranslate"><span class="pre">class</span></code> or <code class="docutils literal notranslate"><span class="pre">multiclass</span></code>
 definition (see <a class="reference internal" href="#name">NAME</a>).</p></li>
 <li><p>A field local to a <code class="docutils literal notranslate"><span class="pre">class</span></code>, such as the use of <code class="docutils literal notranslate"><span class="pre">Bar</span></code> in:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Foo</span> <span class="p">{</span>
   <span class="nb">int</span> <span class="n">Bar</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
   <span class="nb">int</span> <span class="n">Baz</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">;</span>
 <span class="p">}</span>
@@ -558,18 +558,18 @@ definition (see <a class="reference internal" href="#name">NAME</a>).</p></li>
 </li>
 <li><p>The name of a record definition, such as the use of <code class="docutils literal notranslate"><span class="pre">Bar</span></code> in the
 definition of <code class="docutils literal notranslate"><span class="pre">Foo</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Bar</span> <span class="p">:</span> <span class="n">SomeClass</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Bar</span> <span class="p">:</span> <span class="n">SomeClass</span> <span class="p">{</span>
   <span class="nb">int</span> <span class="n">X</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">def</span> <span class="nf">Foo</span> <span class="p">{</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Foo</span> <span class="p">{</span>
   <span class="n">SomeClass</span> <span class="n">Baz</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </li>
 <li><p>A field local to a record definition, such as the use of <code class="docutils literal notranslate"><span class="pre">Bar</span></code> in:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Foo</span> <span class="p">{</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Foo</span> <span class="p">{</span>
   <span class="nb">int</span> <span class="n">Bar</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
   <span class="nb">int</span> <span class="n">Baz</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">;</span>
 <span class="p">}</span>
@@ -579,7 +579,7 @@ definition of <code class="docutils literal notranslate"><span class="pre">Foo</
 </li>
 <li><p>A template argument of a <code class="docutils literal notranslate"><span class="pre">multiclass</span></code>, such as the use of <code class="docutils literal notranslate"><span class="pre">Bar</span></code> in:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">multiclass</span> <span class="n">Foo</span> <span class="o">&lt;</span><span class="nb">int</span> <span class="n">Bar</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="k">def</span> <span class="p">:</span> <span class="n">SomeClass</span><span class="o">&lt;</span><span class="n">Bar</span><span class="o">&gt;</span><span class="p">;</span>
+  <span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">SomeClass</span><span class="o">&lt;</span><span class="n">Bar</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -587,7 +587,7 @@ definition of <code class="docutils literal notranslate"><span class="pre">Foo</
 <li><p>A variable defined with the <code class="docutils literal notranslate"><span class="pre">defvar</span></code> or <code class="docutils literal notranslate"><span class="pre">defset</span></code> statements.</p></li>
 <li><p>The iteration variable of a <code class="docutils literal notranslate"><span class="pre">foreach</span></code>, such as the use of <code class="docutils literal notranslate"><span class="pre">i</span></code> in:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">foreach</span> <span class="n">i</span> <span class="o">=</span> <span class="mf">0.</span><span class="o">.</span><span class="mf">.5</span> <span class="ow">in</span>
-  <span class="k">def</span> <span class="nf">Foo</span><span class="c1">#i;</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">Foo</span><span class="c1">#i;</span>
 </pre></div>
 </div>
 </li>
@@ -995,8 +995,8 @@ argument <code class="docutils literal notranslate"><span class="pre">NAME</span
 defined in a multiclass and the record’s name does not include a use of the
 template argument <code class="docutils literal notranslate"><span class="pre">NAME</span></code>, such a use is automatically <em>prepended</em>
 to the name.  That is, the following are equivalent inside a multiclass:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Foo</span> <span class="o">...</span>
-<span class="k">def</span> <span class="nf">NAME</span> <span class="c1"># Foo ...</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Foo</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">NAME</span> <span class="c1"># Foo ...</span>
 </pre></div>
 </div>
 <p>The records defined in a multiclass are created when the multiclass is
@@ -2118,7 +2118,7 @@ from the <code class="docutils literal notranslate"><span class="pre">Instructio
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-23.
+      Last updated on 2026-02-25.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

@@ -217,7 +217,7 @@ For canonical meeting schedules and announcements, use the official archive: htt
 
 ## Automation
 
-Automation is split into three scheduled PR workflows:
+Automation is split into four scheduled PR workflows:
 
 1. LLVM upstream sync (`.github/workflows/llvm-upstream-sync.yml`)
    - syncs talks/slides/videos from `llvm-www/devmtg`
@@ -228,14 +228,19 @@ Automation is split into three scheduled PR workflows:
    - rebuilds the canonical papers database (OpenAlex + llvm.org/pubs + blog)
    - backfills direct paper PDF links via OpenAlex + Unpaywall
    - rebuilds the updates log
-3. Docs repo sync (`.github/workflows/docs-repo-sync.yml`)
+3. Docs repo sync (LLVM Core + Clang) (`.github/workflows/docs-repo-sync.yml`)
    - pulls docs sources from `llvm/llvm-project`
-   - rebuilds local docs artifacts for LLVM Core, Clang, and LLDB
-   - regenerates local docs search indexes and sync metadata
+   - rebuilds local docs artifacts for LLVM Core and Clang
+   - regenerates local docs search indexes and sync metadata for LLVM Core and Clang
+4. Docs LLDB sync (`.github/workflows/docs-lldb-sync.yml`)
+   - pulls LLDB docs sources from `llvm/llvm-project`
+   - rebuilds local docs artifacts for LLDB only
+   - regenerates LLDB docs search indexes and sync metadata
 
 The split keeps:
 - lightweight llvm-www/blog updates independent from papers ingestion/enrichment
 - docs sync independent from both, so docs-specific issues do not block event/blog or papers updates
+- LLDB docs sync isolated from LLVM Core/Clang docs sync so LLDB-specific build issues do not block core docs updates
 
 Docs source endpoint health is checked daily in:
 - `.github/workflows/docs-sources-health.yml`
@@ -268,7 +273,8 @@ These checks run in:
 - `.github/workflows/pages.yml` (deploy gate)
 - `.github/workflows/llvm-upstream-sync.yml` (LLVM upstream automation PRs)
 - `.github/workflows/library-papers-sync.yml` (papers automation PRs)
-- `.github/workflows/docs-repo-sync.yml` (docs automation PRs)
+- `.github/workflows/docs-repo-sync.yml` (docs automation PRs for LLVM Core + Clang)
+- `.github/workflows/docs-lldb-sync.yml` (docs automation PRs for LLDB)
 - `.github/workflows/docs-sources-health.yml` (daily upstream docs endpoint health checks)
 
 ## Repository Layout

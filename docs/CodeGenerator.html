@@ -6,10 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>The LLVM Target-Independent Code Generator &#8212; LLVM 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <title>The LLVM Target-Independent Code Generator &#8212; LLVM  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/llvm-theme.css?v=96924833" />
-    <script src="_static/documentation_options.js?v=20260224-16"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -54,26 +54,26 @@
 <h3>Documentation</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
-    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
-    <li><a href="/library/docs/Reference.html">Reference</a></li>
+    <li><a href="https://llvm.org/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
+    <li><a href="https://llvm.org/docs/UserGuides.html">User Guides</a></li>
+    <li><a href="https://llvm.org/docs/Reference.html">Reference</a></li>
 </ul>
 
 <h3>Getting Involved</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
-    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
+    <li><a href="https://llvm.org/docs/Contributing.html">Contributing to LLVM</a></li>
+    <li><a href="https://llvm.org/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#discord">Discord</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
 </ul>
 
 <h3>Additional Links</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
-    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
+    <li><a href="https://llvm.org/docs/FAQ.html">FAQ</a></li>
+    <li><a href="https://llvm.org/docs/Lexicon.html">Glossary</a></li>
     <li><a href="https://llvm.org/pubs">Publications</a></li>
     <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
 </ul>
@@ -889,7 +889,7 @@ instruction selector.</p>
 description (<code class="docutils literal notranslate"><span class="pre">*.td</span></code>) files.  Our goal is for the entire instruction selector
 to be generated from these <code class="docutils literal notranslate"><span class="pre">.td</span></code> files, though currently there are still
 things that require custom C++ code.</p>
-<p><a class="reference external" href="/library/docs/GlobalISel/index.html">GlobalISel</a> is another
+<p><a class="reference external" href="https://llvm.org/docs/GlobalISel/index.html">GlobalISel</a> is another
 instruction selection framework.</p>
 <section id="introduction-to-selectiondags">
 <span id="selectiondag"></span><h4><a class="toc-backref" href="#id39" role="doc-backlink">Introduction to SelectionDAGs</a><a class="headerlink" href="#introduction-to-selectiondags" title="Link to this heading">¶</a></h4>
@@ -1757,19 +1757,19 @@ phase is a simple and unconditionally remapping from one input mnemonic to one
 output mnemonic.  It isn’t possible for this form of alias to look at the
 operands at all, so the remapping must apply for all forms of a given mnemonic.
 Mnemonic aliases are defined simply, for example X86 has:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;cbw&quot;</span><span class="p">,</span>     <span class="s2">&quot;cbtw&quot;</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="k">def</span> <span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;smovq&quot;</span><span class="p">,</span>   <span class="s2">&quot;movsq&quot;</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="k">def</span> <span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;fldcww&quot;</span><span class="p">,</span>  <span class="s2">&quot;fldcw&quot;</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="k">def</span> <span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;fucompi&quot;</span><span class="p">,</span> <span class="s2">&quot;fucomip&quot;</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="k">def</span> <span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;ud2a&quot;</span><span class="p">,</span>    <span class="s2">&quot;ud2&quot;</span><span class="o">&gt;</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;cbw&quot;</span><span class="p">,</span>     <span class="s2">&quot;cbtw&quot;</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;smovq&quot;</span><span class="p">,</span>   <span class="s2">&quot;movsq&quot;</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;fldcww&quot;</span><span class="p">,</span>  <span class="s2">&quot;fldcw&quot;</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;fucompi&quot;</span><span class="p">,</span> <span class="s2">&quot;fucomip&quot;</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;ud2a&quot;</span><span class="p">,</span>    <span class="s2">&quot;ud2&quot;</span><span class="o">&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>… and many others.  With a MnemonicAlias definition, the mnemonic is remapped
 simply and directly.  Though MnemonicAlias’s can’t look at any aspect of the
 instruction (such as the operands) they can depend on global modes (the same
 ones supported by the matcher), through a Requires clause:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;pushf&quot;</span><span class="p">,</span> <span class="s2">&quot;pushfq&quot;</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">Requires</span><span class="o">&lt;</span><span class="p">[</span><span class="n">In64BitMode</span><span class="p">]</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="k">def</span> <span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;pushf&quot;</span><span class="p">,</span> <span class="s2">&quot;pushfl&quot;</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">Requires</span><span class="o">&lt;</span><span class="p">[</span><span class="n">In32BitMode</span><span class="p">]</span><span class="o">&gt;</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;pushf&quot;</span><span class="p">,</span> <span class="s2">&quot;pushfq&quot;</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">Requires</span><span class="o">&lt;</span><span class="p">[</span><span class="n">In64BitMode</span><span class="p">]</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">def</span><span class="w"> </span><span class="p">:</span> <span class="n">MnemonicAlias</span><span class="o">&lt;</span><span class="s2">&quot;pushf&quot;</span><span class="p">,</span> <span class="s2">&quot;pushfl&quot;</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">Requires</span><span class="o">&lt;</span><span class="p">[</span><span class="n">In32BitMode</span><span class="p">]</span><span class="o">&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>In this example, the mnemonic gets mapped into a different one depending on
@@ -2228,7 +2228,7 @@ them, in order to ensure that they cannot harm the running system.  eBPF is
 a 64-bit RISC instruction set designed for one to one mapping to 64-bit CPUs.
 Opcodes are 8-bit encoded, and 87 instructions are defined.  There are 10
 registers, grouped by function as outlined below.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R0</span>        <span class="k">return</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">in</span><span class="o">-</span><span class="n">kernel</span> <span class="n">functions</span><span class="p">;</span> <span class="n">exit</span> <span class="n">value</span> <span class="k">for</span> <span class="n">eBPF</span> <span class="n">program</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R0</span>        <span class="k">return</span> <span class="n">value</span> <span class="kn">from</span><span class="w"> </span><span class="nn">in</span><span class="o">-</span><span class="n">kernel</span> <span class="n">functions</span><span class="p">;</span> <span class="n">exit</span> <span class="n">value</span> <span class="k">for</span> <span class="n">eBPF</span> <span class="n">program</span>
 <span class="n">R1</span> <span class="o">-</span> <span class="n">R5</span>   <span class="n">function</span> <span class="n">call</span> <span class="n">arguments</span> <span class="n">to</span> <span class="ow">in</span><span class="o">-</span><span class="n">kernel</span> <span class="n">functions</span>
 <span class="n">R6</span> <span class="o">-</span> <span class="n">R9</span>   <span class="n">callee</span><span class="o">-</span><span class="n">saved</span> <span class="n">registers</span> <span class="n">preserved</span> <span class="n">by</span> <span class="ow">in</span><span class="o">-</span><span class="n">kernel</span> <span class="n">functions</span>
 <span class="n">R10</span>       <span class="n">stack</span> <span class="n">frame</span> <span class="n">pointer</span> <span class="p">(</span><span class="n">read</span> <span class="n">only</span><span class="p">)</span>
@@ -2428,7 +2428,7 @@ LFI.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-23.
+      Last updated on 2026-02-25.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

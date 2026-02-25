@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Debugging C++ Coroutines &#8212; Clang 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <title>Debugging C++ Coroutines &#8212; Clang  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=e491ac2d" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
-    <script src="_static/documentation_options.js?v=20260224-19"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -18,7 +18,7 @@
     <link rel="prev" title="API Notes: Annotations Without Modifying Headers" href="APINotes.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>Clang 23.0.0git documentation</span></a></h1>
+          <span>Clang  documentation</span></a></h1>
         <h2 class="heading"><span>Debugging C++ Coroutines</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -732,10 +732,10 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
 <code class="docutils literal notranslate"><span class="pre">~/.lldbinit</span></code> file.</p>
 <p>Note that this script requires LLDB 21.0 or newer.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># lldb_coro_debugging.py</span>
-<span class="kn">import</span> <span class="nn">lldb</span>
-<span class="kn">from</span> <span class="nn">lldb.plugins.parsed_cmd</span> <span class="kn">import</span> <span class="n">ParsedCommand</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lldb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lldb.plugins.parsed_cmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParsedCommand</span>
 
-<span class="k">def</span> <span class="nf">_get_first_var_path</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">paths</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_first_var_path</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">paths</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tries multiple variable paths via `GetValueForExpressionPath`</span>
 <span class="sd">    and returns the first one that succeeds, or None if none succeed.</span>
@@ -747,7 +747,7 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
     <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">_print_async_bt</span><span class="p">(</span><span class="n">coro_hdl</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">curr_idx</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">continuation_paths</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_print_async_bt</span><span class="p">(</span><span class="n">coro_hdl</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">curr_idx</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">continuation_paths</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prints a backtrace for an async coroutine stack starting from `coro_hdl`,</span>
 <span class="sd">    using the given `continuation_paths` to get the next coroutine from the promise.</span>
@@ -781,7 +781,7 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
         <span class="n">coro_hdl</span> <span class="o">=</span> <span class="n">_get_first_var_path</span><span class="p">(</span><span class="n">promise_var</span><span class="p">,</span> <span class="n">continuation_paths</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">curr_idx</span>
 
-<span class="k">def</span> <span class="nf">_print_combined_bt</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unfiltered</span><span class="p">,</span> <span class="n">curr_idx</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">continuation_paths</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_print_combined_bt</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unfiltered</span><span class="p">,</span> <span class="n">curr_idx</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">continuation_paths</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prints a backtrace starting from `frame`, interleaving async coroutine frames</span>
 <span class="sd">    with regular frames.</span>
@@ -798,14 +798,14 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
         <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">parent</span>
 
 
-<span class="k">class</span> <span class="nc">CoroBacktraceCommand</span><span class="p">(</span><span class="n">ParsedCommand</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">get_short_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CoroBacktraceCommand</span><span class="p">(</span><span class="n">ParsedCommand</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_short_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;Create a backtrace for C++-20 coroutines&quot;</span>
 
-    <span class="k">def</span> <span class="nf">get_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">lldb</span><span class="o">.</span><span class="n">eCommandRequiresFrame</span> <span class="o">|</span> <span class="n">lldb</span><span class="o">.</span><span class="n">eCommandProcessMustBePaused</span>
 
-    <span class="k">def</span> <span class="nf">setup_command_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_command_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ov_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parser</span><span class="p">()</span>
         <span class="n">ov_parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;e&quot;</span><span class="p">,</span>
@@ -849,7 +849,7 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
             <span class="p">)</span>
         <span class="p">])</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debugger</span><span class="p">,</span> <span class="n">args_array</span><span class="p">,</span> <span class="n">exe_ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debugger</span><span class="p">,</span> <span class="n">args_array</span><span class="p">,</span> <span class="n">exe_ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
         <span class="n">ov_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parser</span><span class="p">()</span>
         <span class="n">continuation_paths</span> <span class="o">=</span> <span class="n">ov_parser</span><span class="o">.</span><span class="n">continuation_expr_arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
         <span class="n">count</span> <span class="o">=</span> <span class="n">ov_parser</span><span class="o">.</span><span class="n">count_arg</span>
@@ -884,14 +884,14 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
                 <span class="n">continuation_paths</span> <span class="o">=</span> <span class="n">continuation_paths</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">CoroInflightCommand</span><span class="p">(</span><span class="n">ParsedCommand</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">get_short_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CoroInflightCommand</span><span class="p">(</span><span class="n">ParsedCommand</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_short_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;Identify all in-flight coroutines&quot;</span>
 
-    <span class="k">def</span> <span class="nf">get_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">lldb</span><span class="o">.</span><span class="n">eCommandRequiresTarget</span> <span class="o">|</span> <span class="n">lldb</span><span class="o">.</span><span class="n">eCommandProcessMustBePaused</span>
 
-    <span class="k">def</span> <span class="nf">setup_command_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_command_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ov_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parser</span><span class="p">()</span>
         <span class="n">ov_parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
             <span class="s2">&quot;e&quot;</span><span class="p">,</span>
@@ -919,7 +919,7 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
             <span class="p">)</span>
         <span class="p">])</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debugger</span><span class="p">,</span> <span class="n">args_array</span><span class="p">,</span> <span class="n">exe_ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debugger</span><span class="p">,</span> <span class="n">args_array</span><span class="p">,</span> <span class="n">exe_ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
         <span class="n">ov_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parser</span><span class="p">()</span>
         <span class="n">continuation_paths</span> <span class="o">=</span> <span class="n">ov_parser</span><span class="o">.</span><span class="n">continuation_expr_arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
         <span class="n">count</span> <span class="o">=</span> <span class="n">ov_parser</span><span class="o">.</span><span class="n">count_arg</span>
@@ -961,7 +961,7 @@ discussed above. It can be loaded into LLDB using <code class="docutils literal 
                             <span class="n">continuation_paths</span><span class="o">=</span><span class="n">continuation_paths</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;    &quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">__lldb_init_module</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">__lldb_init_module</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
     <span class="n">debugger</span><span class="o">.</span><span class="n">HandleCommand</span><span class="p">(</span><span class="s2">&quot;command container add -h &#39;Debugging utilities for C++20 coroutines&#39; coro&quot;</span><span class="p">)</span>
     <span class="n">debugger</span><span class="o">.</span><span class="n">HandleCommand</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;command script add -o -p -c </span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.CoroBacktraceCommand coro bt&quot;</span><span class="p">)</span>
     <span class="n">debugger</span><span class="o">.</span><span class="n">HandleCommand</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;command script add -o -p -c </span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.CoroInflightCommand coro in-flight&quot;</span><span class="p">)</span>
@@ -984,13 +984,13 @@ expressions, e.g. <code class="docutils literal notranslate"><span class="pre">p
 <p>It can be loaded into GDB using <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">gdb_coro_debugging.py</span></code>.
 To load this by default, add this command to your <code class="docutils literal notranslate"><span class="pre">~/.gdbinit</span></code> file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># gdb_coro_debugging.py</span>
-<span class="kn">import</span> <span class="nn">gdb</span>
-<span class="kn">from</span> <span class="nn">gdb.FrameDecorator</span> <span class="kn">import</span> <span class="n">FrameDecorator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gdb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gdb.FrameDecorator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrameDecorator</span>
 
-<span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="k">def</span> <span class="nf">_load_pointer_at</span><span class="p">(</span><span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_pointer_at</span><span class="p">(</span><span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="o">.</span><span class="n">reinterpret_cast</span><span class="p">(</span><span class="n">gdb</span><span class="o">.</span><span class="n">lookup_type</span><span class="p">(</span><span class="s1">&#39;void&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">pointer</span><span class="p">()</span><span class="o">.</span><span class="n">pointer</span><span class="p">())</span><span class="o">.</span><span class="n">dereference</span><span class="p">()</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -1002,8 +1002,8 @@ To load this by default, add this command to your <code class="docutils literal 
 <span class="sd">Implements `to_string` and `children` to be used by `gdb.printing.PrettyPrinter`.</span>
 <span class="sd">Base class for `CoroutineHandlePrinter`.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="k">class</span> <span class="nc">DevirtualizedCoroFrame</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_ptr_raw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DevirtualizedCoroFrame</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_ptr_raw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frame_ptr_raw</span> <span class="o">=</span> <span class="n">frame_ptr_raw</span>
 
@@ -1048,7 +1048,7 @@ To load this by default, add this command to your <code class="docutils literal 
             <span class="n">label_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;__coro_resume_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">suspension_point_index</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">resume_label</span> <span class="o">=</span> <span class="n">gdb</span><span class="o">.</span><span class="n">lookup_symbol</span><span class="p">(</span><span class="n">label_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resume_func</span><span class="p">,</span> <span class="n">gdb</span><span class="o">.</span><span class="n">SYMBOL_LABEL_DOMAIN</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">get_function_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_function_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">destroy_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">destroy_func</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
@@ -1057,7 +1057,7 @@ To load this by default, add this command to your <code class="docutils literal 
             <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[:</span><span class="n">name</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;() [clone &quot;</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;coro(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_ptr_raw</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">destroy_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_function_name</span><span class="p">()</span>
@@ -1067,7 +1067,7 @@ To load this by default, add this command to your <code class="docutils literal 
             <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;, suspension point &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">suspension_point_index</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resume_ptr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span>
                 <span class="p">(</span><span class="s2">&quot;coro_frame&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_ptr</span><span class="p">),</span>
@@ -1084,7 +1084,7 @@ To load this by default, add this command to your <code class="docutils literal 
 <span class="c1"># Works for both libc++ and libstdc++.</span>
 <span class="n">libcxx_corohdl_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^std::__[A-Za-z0-9]+::coroutine_handle&lt;.+&gt;$|^std::coroutine_handle&lt;.+&gt;(( )?&amp;)?$&#39;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_extract_coro_frame_ptr_from_handle</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_coro_frame_ptr_from_handle</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">libcxx_corohdl_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">strip_typedefs</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected a std::coroutine_handle, got </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">val</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">strip_typedefs</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
@@ -1109,13 +1109,13 @@ To load this by default, add this command to your <code class="docutils literal 
 
 <span class="sd">Most of the functionality is implemented in `DevirtualizedCoroFrame`.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="k">class</span> <span class="nc">CoroutineHandlePrinter</span><span class="p">(</span><span class="n">DevirtualizedCoroFrame</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span> <span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CoroutineHandlePrinter</span><span class="p">(</span><span class="n">DevirtualizedCoroFrame</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span> <span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span><span class="p">):</span>
         <span class="n">frame_ptr_raw</span> <span class="o">=</span> <span class="n">_extract_coro_frame_ptr_from_handle</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CoroutineHandlePrinter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">frame_ptr_raw</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">build_pretty_printer</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_pretty_printer</span><span class="p">():</span>
     <span class="n">pp</span> <span class="o">=</span> <span class="n">gdb</span><span class="o">.</span><span class="n">printing</span><span class="o">.</span><span class="n">RegexpCollectionPrettyPrinter</span><span class="p">(</span><span class="s2">&quot;coroutine&quot;</span><span class="p">)</span>
     <span class="n">pp</span><span class="o">.</span><span class="n">add_printer</span><span class="p">(</span><span class="s1">&#39;std::coroutine_handle&#39;</span><span class="p">,</span> <span class="n">libcxx_corohdl_regex</span><span class="p">,</span> <span class="n">CoroutineHandlePrinter</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pp</span>
@@ -1133,11 +1133,11 @@ To load this by default, add this command to your <code class="docutils literal 
 <span class="sd">p *get_coro_frame(coroutine_hdl)</span>
 <span class="sd">```</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="k">class</span> <span class="nc">GetCoroFrame</span><span class="p">(</span><span class="n">gdb</span><span class="o">.</span><span class="n">Function</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetCoroFrame</span><span class="p">(</span><span class="n">gdb</span><span class="o">.</span><span class="n">Function</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GetCoroFrame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;get_coro_frame&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coroutine_hdl_raw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coroutine_hdl_raw</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">CoroutineHandlePrinter</span><span class="p">(</span><span class="n">coroutine_hdl_raw</span><span class="p">)</span><span class="o">.</span><span class="n">frame_ptr</span>
 
 <span class="n">GetCoroFrame</span><span class="p">()</span>
@@ -1151,11 +1151,11 @@ To load this by default, add this command to your <code class="docutils literal 
 <span class="sd">p *get_coro_promise(coroutine_hdl)</span>
 <span class="sd">```</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="k">class</span> <span class="nc">GetCoroFrame</span><span class="p">(</span><span class="n">gdb</span><span class="o">.</span><span class="n">Function</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetCoroFrame</span><span class="p">(</span><span class="n">gdb</span><span class="o">.</span><span class="n">Function</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GetCoroFrame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;get_coro_promise&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coroutine_hdl_raw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coroutine_hdl_raw</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">CoroutineHandlePrinter</span><span class="p">(</span><span class="n">coroutine_hdl_raw</span><span class="p">)</span><span class="o">.</span><span class="n">promise_ptr</span>
 
 <span class="n">GetCoroFrame</span><span class="p">()</span>
@@ -1166,38 +1166,38 @@ To load this by default, add this command to your <code class="docutils literal 
 
 <span class="sd">Used by `CoroutineFrameFilter` to add the coroutine frames to the built-in `bt` command.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="k">class</span> <span class="nc">CoroutineFrameDecorator</span><span class="p">(</span><span class="n">FrameDecorator</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coro_frame</span><span class="p">:</span> <span class="n">DevirtualizedCoroFrame</span><span class="p">,</span> <span class="n">inferior_frame</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CoroutineFrameDecorator</span><span class="p">(</span><span class="n">FrameDecorator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coro_frame</span><span class="p">:</span> <span class="n">DevirtualizedCoroFrame</span><span class="p">,</span> <span class="n">inferior_frame</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CoroutineFrameDecorator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">inferior_frame</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coro_frame</span> <span class="o">=</span> <span class="n">coro_frame</span>
 
-    <span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">func_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coro_frame</span><span class="o">.</span><span class="n">get_function_name</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">func_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;[async] &quot;</span> <span class="o">+</span> <span class="n">func_name</span>
         <span class="k">return</span> <span class="s2">&quot;[async] coroutine (coro_frame=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coro_frame</span><span class="o">.</span><span class="n">frame_ptr_raw</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
 
-    <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coro_frame</span><span class="o">.</span><span class="n">destroy_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coro_frame</span><span class="o">.</span><span class="n">destroy_func</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">symtab</span><span class="o">.</span><span class="n">filename</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coro_frame</span><span class="o">.</span><span class="n">resume_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coro_frame</span><span class="o">.</span><span class="n">resume_label</span><span class="o">.</span><span class="n">line</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">frame_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">frame_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">frame_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">frame_locals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[]</span>
 
 
-<span class="k">def</span> <span class="nf">_get_continuation</span><span class="p">(</span><span class="n">promise</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DevirtualizedCoroFrame</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_continuation</span><span class="p">(</span><span class="n">promise</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DevirtualizedCoroFrame</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># TODO: adjust this according for your coroutine framework</span>
         <span class="k">return</span> <span class="n">DevirtualizedCoroFrame</span><span class="p">(</span><span class="n">_extract_coro_frame_ptr_from_handle</span><span class="p">(</span><span class="n">promise</span><span class="p">[</span><span class="s2">&quot;continuation&quot;</span><span class="p">]))</span>
@@ -1205,7 +1205,7 @@ To load this by default, add this command to your <code class="docutils literal 
         <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">_create_coroutine_frames</span><span class="p">(</span><span class="n">coro_frame</span><span class="p">:</span> <span class="n">DevirtualizedCoroFrame</span><span class="p">,</span> <span class="n">inferior_frame</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_coroutine_frames</span><span class="p">(</span><span class="n">coro_frame</span><span class="p">:</span> <span class="n">DevirtualizedCoroFrame</span><span class="p">,</span> <span class="n">inferior_frame</span><span class="p">:</span> <span class="n">gdb</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
     <span class="k">while</span> <span class="n">coro_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">CoroutineFrameDecorator</span><span class="p">(</span><span class="n">coro_frame</span><span class="p">,</span> <span class="n">inferior_frame</span><span class="p">)</span>
         <span class="n">coro_frame</span> <span class="o">=</span> <span class="n">_get_continuation</span><span class="p">(</span><span class="n">coro_frame</span><span class="o">.</span><span class="n">promise_ptr</span><span class="p">)</span>
@@ -1214,15 +1214,15 @@ To load this by default, add this command to your <code class="docutils literal 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Frame filter to add coroutine frames to the built-in `bt` command.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="k">class</span> <span class="nc">CppCoroutineFrameFilter</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CppCoroutineFrameFilter</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;CppCoroutineFrameFilter&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="mi">50</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># Register this frame filter with the global frame_filters dictionary.</span>
         <span class="n">gdb</span><span class="o">.</span><span class="n">frame_filters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_iter</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">gdb</span><span class="o">.</span><span class="n">FrameDecorator</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_iter</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">gdb</span><span class="o">.</span><span class="n">FrameDecorator</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frame_iter</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">frame</span>
             <span class="n">inferior_frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">inferior_frame</span><span class="p">()</span>

@@ -6,10 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6. Kaleidoscope: Extending the Language: User-defined Operators &#8212; LLVM 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <title>6. Kaleidoscope: Extending the Language: User-defined Operators &#8212; LLVM  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../_static/llvm-theme.css?v=96924833" />
-    <script src="../../_static/documentation_options.js?v=20260224-16"></script>
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -56,26 +56,26 @@
 <h3>Documentation</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
-    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
-    <li><a href="/library/docs/Reference.html">Reference</a></li>
+    <li><a href="https://llvm.org/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
+    <li><a href="https://llvm.org/docs/UserGuides.html">User Guides</a></li>
+    <li><a href="https://llvm.org/docs/Reference.html">Reference</a></li>
 </ul>
 
 <h3>Getting Involved</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
-    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
+    <li><a href="https://llvm.org/docs/Contributing.html">Contributing to LLVM</a></li>
+    <li><a href="https://llvm.org/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#discord">Discord</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
 </ul>
 
 <h3>Additional Links</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
-    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
+    <li><a href="https://llvm.org/docs/FAQ.html">FAQ</a></li>
+    <li><a href="https://llvm.org/docs/Lexicon.html">Glossary</a></li>
     <li><a href="https://llvm.org/pubs">Publications</a></li>
     <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
 </ul>
@@ -532,7 +532,7 @@ newline):</p>
 <span class="n">Read</span> <span class="n">extern</span><span class="p">:</span>
 <span class="n">declare</span> <span class="n">double</span> <span class="nd">@printd</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
 
-<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">binary</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="n">x</span> <span class="n">y</span><span class="p">)</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1"># Low-precedence operator that ignores operands.</span>
+<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">binary</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="n">x</span> <span class="n">y</span><span class="p">)</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1"># Low-precedence operator that ignores operands.</span>
 <span class="o">...</span>
 <span class="n">ready</span><span class="o">&gt;</span> <span class="n">printd</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span> <span class="p">:</span> <span class="n">printd</span><span class="p">(</span><span class="mi">456</span><span class="p">)</span> <span class="p">:</span> <span class="n">printd</span><span class="p">(</span><span class="mi">789</span><span class="p">);</span>
 <span class="mf">123.000000</span>
@@ -588,7 +588,7 @@ whose “density” reflects the value passed in: the lower the value, the
 denser the character:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="n">extern</span> <span class="n">putchard</span><span class="p">(</span><span class="n">char</span><span class="p">);</span>
 <span class="o">...</span>
-<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">printdensity</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">printdensity</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="n">then</span>
     <span class="n">putchard</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>  <span class="c1"># &#39; &#39;</span>
   <span class="k">else</span> <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="n">then</span>
@@ -611,7 +611,7 @@ the number of iterations it takes for a certain function in the complex
 plane to diverge:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Determine whether the specific location diverges.</span>
 <span class="c1"># Solve for z = z^2 + c in the complex plane.</span>
-<span class="k">def</span> <span class="nf">mandelconverger</span><span class="p">(</span><span class="n">real</span> <span class="n">imag</span> <span class="n">iters</span> <span class="n">creal</span> <span class="n">cimag</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mandelconverger</span><span class="p">(</span><span class="n">real</span> <span class="n">imag</span> <span class="n">iters</span> <span class="n">creal</span> <span class="n">cimag</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">iters</span> <span class="o">&gt;</span> <span class="mi">255</span> <span class="o">|</span> <span class="p">(</span><span class="n">real</span><span class="o">*</span><span class="n">real</span> <span class="o">+</span> <span class="n">imag</span><span class="o">*</span><span class="n">imag</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="n">then</span>
     <span class="n">iters</span>
   <span class="k">else</span>
@@ -620,7 +620,7 @@ plane to diverge:</p>
                     <span class="n">iters</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">creal</span><span class="p">,</span> <span class="n">cimag</span><span class="p">);</span>
 
 <span class="c1"># Return the number of iterations required for the iteration to escape</span>
-<span class="k">def</span> <span class="nf">mandelconverge</span><span class="p">(</span><span class="n">real</span> <span class="n">imag</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mandelconverge</span><span class="p">(</span><span class="n">real</span> <span class="n">imag</span><span class="p">)</span>
   <span class="n">mandelconverger</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -635,7 +635,7 @@ limited to using putchard here, our amazing graphical output is limited,
 but we can whip together something using the density plotter above:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute and plot the mandelbrot set with the specified 2 dimensional range</span>
 <span class="c1"># info.</span>
-<span class="k">def</span> <span class="nf">mandelhelp</span><span class="p">(</span><span class="n">xmin</span> <span class="n">xmax</span> <span class="n">xstep</span>   <span class="n">ymin</span> <span class="n">ymax</span> <span class="n">ystep</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mandelhelp</span><span class="p">(</span><span class="n">xmin</span> <span class="n">xmax</span> <span class="n">xstep</span>   <span class="n">ymin</span> <span class="n">ymax</span> <span class="n">ystep</span><span class="p">)</span>
   <span class="k">for</span> <span class="n">y</span> <span class="o">=</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">ystep</span> <span class="ow">in</span> <span class="p">(</span>
     <span class="p">(</span><span class="k">for</span> <span class="n">x</span> <span class="o">=</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">xstep</span> <span class="ow">in</span>
        <span class="n">printdensity</span><span class="p">(</span><span class="n">mandelconverge</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)))</span>
@@ -644,7 +644,7 @@ but we can whip together something using the density plotter above:</p>
 
 <span class="c1"># mandel - This is a convenient helper function for plotting the mandelbrot set</span>
 <span class="c1"># from the specified position with the specified Magnification.</span>
-<span class="k">def</span> <span class="nf">mandel</span><span class="p">(</span><span class="n">realstart</span> <span class="n">imagstart</span> <span class="n">realmag</span> <span class="n">imagmag</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mandel</span><span class="p">(</span><span class="n">realstart</span> <span class="n">imagstart</span> <span class="n">realmag</span> <span class="n">imagmag</span><span class="p">)</span>
   <span class="n">mandelhelp</span><span class="p">(</span><span class="n">realstart</span><span class="p">,</span> <span class="n">realstart</span><span class="o">+</span><span class="n">realmag</span><span class="o">*</span><span class="mi">78</span><span class="p">,</span> <span class="n">realmag</span><span class="p">,</span>
              <span class="n">imagstart</span><span class="p">,</span> <span class="n">imagstart</span><span class="o">+</span><span class="n">imagmag</span><span class="o">*</span><span class="mi">40</span><span class="p">,</span> <span class="n">imagmag</span><span class="p">);</span>
 </pre></div>
@@ -1976,7 +1976,7 @@ construction</a></p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-23.
+      Last updated on 2026-02-25.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

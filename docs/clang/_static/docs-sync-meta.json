@@ -1,5 +1,5 @@
 {
-  "generator": "scripts/sync-docs-from-llvm-org.sh",
+  "generator": "scripts/sync-docs-from-llvm-project.py",
   "latestRelease": {
     "githubUrl": "https://github.com/llvm/llvm-project/releases/tag/llvmorg-22.1.0",
     "name": "LLVM 22.1.0",
@@ -7,6 +7,11 @@
     "tag": "llvmorg-22.1.0",
     "version": "22.1.0"
   },
+  "sourceHeadRevision": "84594d7539a51c17288201869a8952b8aec260ff",
+  "sourcePath": "clang/docs",
+  "sourceRef": "main",
+  "sourceRepo": "llvm/llvm-project",
+  "sourceRevision": "b1325cb709f73ba107b06a98a716297e45acc3d9",
   "sourceUrl": "https://clang.llvm.org/docs/",
-  "syncedAt": "2026-02-24T19:36:22Z"
+  "syncedAt": "2026-02-25T20:41:34Z"
 }

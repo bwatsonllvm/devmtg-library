@@ -6,10 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Compiling CUDA with clang &#8212; LLVM 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <title>Compiling CUDA with clang &#8212; LLVM  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/llvm-theme.css?v=96924833" />
-    <script src="_static/documentation_options.js?v=20260224-16"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -54,26 +54,26 @@
 <h3>Documentation</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
-    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
-    <li><a href="/library/docs/Reference.html">Reference</a></li>
+    <li><a href="https://llvm.org/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
+    <li><a href="https://llvm.org/docs/UserGuides.html">User Guides</a></li>
+    <li><a href="https://llvm.org/docs/Reference.html">Reference</a></li>
 </ul>
 
 <h3>Getting Involved</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
-    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
+    <li><a href="https://llvm.org/docs/Contributing.html">Contributing to LLVM</a></li>
+    <li><a href="https://llvm.org/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#discord">Discord</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
 </ul>
 
 <h3>Additional Links</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
-    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
+    <li><a href="https://llvm.org/docs/FAQ.html">FAQ</a></li>
+    <li><a href="https://llvm.org/docs/Lexicon.html">Glossary</a></li>
     <li><a href="https://llvm.org/pubs">Publications</a></li>
     <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
 </ul>
@@ -577,7 +577,7 @@ LLVM to make it generate good GPU code.  Among these changes are:</p>
 <ul>
 <li><p><a class="reference external" href="https://docs.google.com/document/d/1momWzKFf4D6h8H3YlfgKQ3qeZy5ayvMRh6yR-Xn2hUE">Straight-line scalar optimizations</a> – These
 reduce redundancy within straight-line code.</p></li>
-<li><p><a class="reference external" href="/library/docs/doxygen/html/SpeculativeExecution_8cpp_source.html">Aggressive speculative execution</a>
+<li><p><a class="reference external" href="https://llvm.org/docs/doxygen/html/SpeculativeExecution_8cpp_source.html">Aggressive speculative execution</a>
 – This is mainly for promoting straight-line scalar optimizations, which are
 most effective on code along dominator paths.</p></li>
 <li><p><a class="reference external" href="https://llvm.org/doxygen/InferAddressSpaces_8cpp_source.html">Memory space inference</a> –
@@ -587,7 +587,7 @@ In PTX, we can operate on pointers that are in a particular “address space”
 non-generic address space are faster, but pointers in CUDA are not explicitly
 annotated with their address space, so it’s up to LLVM to infer it where
 possible.</p></li>
-<li><p><a class="reference external" href="/library/docs/doxygen/html/BypassSlowDivision_8cpp_source.html">Bypassing 64-bit divides</a> –
+<li><p><a class="reference external" href="https://llvm.org/docs/doxygen/html/BypassSlowDivision_8cpp_source.html">Bypassing 64-bit divides</a> –
 This was an existing optimization that we enabled for the PTX backend.</p>
 <p>64-bit integer divides are much slower than 32-bit ones on NVIDIA GPUs.
 Many of the 64-bit divides in our benchmarks have a divisor and dividend
@@ -621,7 +621,7 @@ The relevant tools are now just vanilla clang/LLVM.</p>
 </section>
 <section id="obtaining-help">
 <h2><a class="toc-backref" href="#id18" role="doc-backlink">Obtaining Help</a><a class="headerlink" href="#obtaining-help" title="Link to this heading">¶</a></h2>
-<p>To obtain help on LLVM in general and its CUDA support, see <a class="reference external" href="/library/docs/#mailing-lists">the LLVM
+<p>To obtain help on LLVM in general and its CUDA support, see <a class="reference external" href="https://llvm.org/docs/#mailing-lists">the LLVM
 community</a>.</p>
 </section>
 </section>
@@ -654,7 +654,7 @@ community</a>.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-23.
+      Last updated on 2026-02-25.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

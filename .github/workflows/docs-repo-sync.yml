@@ -1,4 +1,4 @@
-name: Docs Repo Sync Bot
+name: Docs Repo Sync Bot (LLVM + Clang)
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: docs-repo-sync-bot
+  group: docs-repo-sync-bot-core-clang
   cancel-in-progress: true
 
 jobs:
@@ -39,6 +39,7 @@ jobs:
             --source-repo-url https://github.com/llvm/llvm-project.git \
             --source-repo-name llvm/llvm-project \
             --source-ref main \
+            --variants llvm-core,clang \
             --github-token "${GITHUB_TOKEN}" \
             --install-requirements
 
@@ -63,26 +64,17 @@ jobs:
             --max-age-days 10 \
             --no-check-links
 
-      - name: Validate docs mirror health (LLDB)
-        run: |
-          python3 scripts/check-docs-mirror-health.py \
-            --repo-root . \
-            --docs-dir docs/lldb \
-            --expected-source-prefix "https://lldb.llvm.org/" \
-            --max-age-days 10 \
-            --no-check-links
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main
-          branch: library/automated-sync-docs
+          branch: library/automated-sync-docs-core-clang
           delete-branch: true
-          commit-message: "Docs sync (llvm/llvm-project)"
-          title: "Docs sync (llvm/llvm-project)"
+          commit-message: "Docs sync (llvm/llvm-project: llvm-core+clang)"
+          title: "Docs sync (llvm/llvm-project: llvm-core+clang)"
           body: |
-            Automated docs sync:
+            Automated docs sync (LLVM Core + Clang):
             - rebuilds local docs artifacts from `llvm/llvm-project` sources
-            - refreshes local docs search indexes for LLVM Core, Clang, and LLDB
-            - updates docs sync metadata for each docs corpus
+            - refreshes local docs search indexes for LLVM Core and Clang
+            - updates docs sync metadata for LLVM Core and Clang

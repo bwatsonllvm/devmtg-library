@@ -6,10 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>4. Kaleidoscope: Adding JIT and Optimizer Support &#8212; LLVM 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <title>4. Kaleidoscope: Adding JIT and Optimizer Support &#8212; LLVM  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../_static/llvm-theme.css?v=96924833" />
-    <script src="../../_static/documentation_options.js?v=20260224-16"></script>
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -56,26 +56,26 @@
 <h3>Documentation</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
-    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
-    <li><a href="/library/docs/Reference.html">Reference</a></li>
+    <li><a href="https://llvm.org/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
+    <li><a href="https://llvm.org/docs/UserGuides.html">User Guides</a></li>
+    <li><a href="https://llvm.org/docs/Reference.html">Reference</a></li>
 </ul>
 
 <h3>Getting Involved</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
-    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
+    <li><a href="https://llvm.org/docs/Contributing.html">Contributing to LLVM</a></li>
+    <li><a href="https://llvm.org/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#discord">Discord</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
 </ul>
 
 <h3>Additional Links</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
-    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
+    <li><a href="https://llvm.org/docs/FAQ.html">FAQ</a></li>
+    <li><a href="https://llvm.org/docs/Lexicon.html">Glossary</a></li>
     <li><a href="https://llvm.org/pubs">Publications</a></li>
     <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
 </ul>
@@ -130,7 +130,7 @@ language.</p>
 <p>Our demonstration for Chapter 3 is elegant and easy to extend.
 Unfortunately, it does not produce wonderful code. The IRBuilder,
 however, does give us obvious optimizations when compiling simple code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">;</span>
 <span class="n">Read</span> <span class="n">function</span> <span class="n">definition</span><span class="p">:</span>
 <span class="n">define</span> <span class="n">double</span> <span class="nd">@test</span><span class="p">(</span><span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
 <span class="n">entry</span><span class="p">:</span>
@@ -141,7 +141,7 @@ however, does give us obvious optimizations when compiling simple code:</p>
 </div>
 <p>This code is not a literal transcription of the AST built by parsing the
 input. That would be:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">;</span>
 <span class="n">Read</span> <span class="n">function</span> <span class="n">definition</span><span class="p">:</span>
 <span class="n">define</span> <span class="n">double</span> <span class="nd">@test</span><span class="p">(</span><span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
 <span class="n">entry</span><span class="p">:</span>
@@ -168,7 +168,7 @@ macro preprocessor or that use a lot of constants).</p>
 <p>On the other hand, the <code class="docutils literal notranslate"><span class="pre">IRBuilder</span></code> is limited by the fact that it does
 all of its analysis inline with the code as it is built. If you take a
 slightly more complex example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">));</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">));</span>
 <span class="n">ready</span><span class="o">&gt;</span> <span class="n">Read</span> <span class="n">function</span> <span class="n">definition</span><span class="p">:</span>
 <span class="n">define</span> <span class="n">double</span> <span class="nd">@test</span><span class="p">(</span><span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
 <span class="n">entry</span><span class="p">:</span>
@@ -299,7 +299,7 @@ running it after our newly created function is constructed (in
 <code class="docutils literal notranslate"><span class="pre">FunctionPassManager</span></code> optimizes and updates the LLVM Function* in
 place, improving (hopefully) its body. With this in place, we can try
 our test above again:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">));</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">));</span>
 <span class="n">ready</span><span class="o">&gt;</span> <span class="n">Read</span> <span class="n">function</span> <span class="n">definition</span><span class="p">:</span>
 <span class="n">define</span> <span class="n">double</span> <span class="nd">@test</span><span class="p">(</span><span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
 <span class="n">entry</span><span class="p">:</span>
@@ -497,7 +497,7 @@ that will make our environment more REPL-like: Functions can be added to the
 JIT more than once (unlike a module where every function must have a unique
 definition). When you look up a symbol in KaleidoscopeJIT it will always return
 the most recent definition:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
 <span class="n">Read</span> <span class="n">function</span> <span class="n">definition</span><span class="p">:</span>
 <span class="n">define</span> <span class="n">double</span> <span class="nd">@foo</span><span class="p">(</span><span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
 <span class="n">entry</span><span class="p">:</span>
@@ -508,7 +508,7 @@ the most recent definition:</p>
 <span class="n">ready</span><span class="o">&gt;</span> <span class="n">foo</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="n">Evaluated</span> <span class="n">to</span> <span class="mf">3.000000</span>
 
-<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
 <span class="n">define</span> <span class="n">double</span> <span class="nd">@foo</span><span class="p">(</span><span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
 <span class="n">entry</span><span class="p">:</span>
   <span class="o">%</span><span class="n">addtmp</span> <span class="o">=</span> <span class="n">fadd</span> <span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">,</span> <span class="mf">2.000000e+00</span>
@@ -610,11 +610,11 @@ add the prototype to FunctionProtos.</p>
 </div>
 <p>With these changes made, let’s try our REPL again (I removed the dump of the
 anonymous functions this time, you should get the idea by now :) :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
 <span class="n">ready</span><span class="o">&gt;</span> <span class="n">foo</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="n">Evaluated</span> <span class="n">to</span> <span class="mf">3.000000</span>
 
-<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
 <span class="n">ready</span><span class="o">&gt;</span> <span class="n">foo</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="n">Evaluated</span> <span class="n">to</span> <span class="mf">4.000000</span>
 </pre></div>
@@ -639,7 +639,7 @@ check this out:</p>
 
 <span class="n">Evaluated</span> <span class="n">to</span> <span class="mf">0.841471</span>
 
-<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="n">ready</span><span class="o">&gt;</span> <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
 <span class="n">Read</span> <span class="n">function</span> <span class="n">definition</span><span class="p">:</span>
 <span class="n">define</span> <span class="n">double</span> <span class="nd">@foo</span><span class="p">(</span><span class="n">double</span> <span class="o">%</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
 <span class="n">entry</span><span class="p">:</span>
@@ -1489,7 +1489,7 @@ properly at runtime.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-23.
+      Last updated on 2026-02-25.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

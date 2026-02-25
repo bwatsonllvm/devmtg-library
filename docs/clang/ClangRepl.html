@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Clang-Repl &#8212; Clang 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <title>Clang-Repl &#8212; Clang  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=e491ac2d" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
-    <script src="_static/documentation_options.js?v=20260224-19"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -18,7 +18,7 @@
     <link rel="prev" title="Clang Offload Bundler" href="ClangOffloadBundler.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>Clang 23.0.0git documentation</span></a></h1>
+          <span>Clang  documentation</span></a></h1>
         <h2 class="heading"><span>Clang-Repl</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -262,8 +262,40 @@ expression type, it may choose to save an object (<code class="docutils literal 
 while allocating memory to it (<code class="docutils literal notranslate"><span class="pre">SetValueWithAlloc()</span></code>), or not (
 <code class="docutils literal notranslate"><span class="pre">SetValueNoAlloc()</span></code>).</p>
 <figure class="align-center" id="valuesynthesis">
-<div class="graphviz"><img src="_images/graphviz-4d52a65fd072512bb39329fb783bdfbdd8bbb1e6.png" alt="Shows how an object of type 'Value' is synthesized" class="graphviz" /></div>
-<figcaption>
+ digraph &quot;valuesynthesis&quot; {
+     rankdir=&quot;LR&quot;;
+     graph [fontname=&quot;Verdana&quot;, fontsize=&quot;12&quot;];
+     node [fontname=&quot;Verdana&quot;, fontsize=&quot;12&quot;];
+     edge [fontname=&quot;Sans&quot;, fontsize=&quot;9&quot;];
+
+     start [label=&quot; Create an Object \n 'Last Value' \n of type 'Value' &quot;, shape=&quot;note&quot;, fontcolor=white, fillcolor=&quot;#3333ff&quot;, style=filled];
+     assign [label=&quot; Assign the result \n to the 'LastValue' \n (based on respective \n Memory Allocation \n scenario) &quot;, shape=&quot;box&quot;]
+     print [label=&quot; Pretty Print \n the Value Object &quot;, shape=&quot;Msquare&quot;, fillcolor=&quot;yellow&quot;, style=filled];
+     start -&gt; assign;
+     assign -&gt; print;
+
+       subgraph SynthesizeExpression {
+         synth [label=&quot; SynthesizeExpr() &quot;, shape=&quot;note&quot;, fontcolor=white, fillcolor=&quot;#3333ff&quot;, style=filled];
+         mem [label=&quot; New Memory \n Allocation? &quot;, shape=&quot;diamond&quot;];
+         withaloc [label=&quot; SetValueWithAlloc() &quot;, shape=&quot;box&quot;];
+         noaloc [label=&quot; SetValueNoAlloc() &quot;, shape=&quot;box&quot;];
+         right [label=&quot; 1. RValue Structure \n (a temporary value)&quot;, shape=&quot;box&quot;];
+         left2 [label=&quot; 2. LValue Structure \n (a variable with \n an address)&quot;, shape=&quot;box&quot;];
+         left3 [label=&quot; 3. Built-In Type \n (int, float, etc.)&quot;, shape=&quot;box&quot;];
+         output [label=&quot; move to 'Assign' step &quot;, shape=&quot;box&quot;];
+
+         synth -&gt; mem;
+         mem -&gt; withaloc [label=&quot;Yes&quot;];
+         mem -&gt; noaloc [label=&quot;No&quot;];
+         withaloc -&gt; right;
+         noaloc -&gt; left2;
+         noaloc -&gt; left3;
+         right -&gt; output;
+         left2 -&gt; output;
+         left3 -&gt; output;
+  }
+        output -&gt; assign
+  }<figcaption>
 <p><span class="caption-text">Value Synthesis</span><a class="headerlink" href="#valuesynthesis" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
@@ -392,8 +424,21 @@ This is achieved using an extension in the <code class="docutils literal notrans
 <p>To automatically print the value of an expression, simply write the expression
 in the global scope <strong>without a semicolon</strong>.</p>
 <figure class="align-center" id="automaticprintf">
-<div class="graphviz"><img src="_images/graphviz-7b3ae88c785ecc90fa69fae162f157c2ba60ffaf.png" alt="Shows how Automatic PrintF can be used" class="graphviz" /></div>
-<figcaption>
+ digraph &quot;AutomaticPrintF&quot; {
+     size=&quot;6,4&quot;;
+     rankdir=&quot;LR&quot;;
+     graph [fontname=&quot;Verdana&quot;, fontsize=&quot;12&quot;];
+     node [fontname=&quot;Verdana&quot;, fontsize=&quot;12&quot;];
+     edge [fontname=&quot;Sans&quot;, fontsize=&quot;9&quot;];
+
+     manual [label=&quot; Manual PrintF &quot;, shape=&quot;box&quot;];
+     int1 [label=&quot; int ( &amp;) 42 &quot;, shape=&quot;box&quot;]
+     auto [label=&quot; Automatic PrintF &quot;, shape=&quot;box&quot;];
+     int2 [label=&quot; int ( &amp;) 42 &quot;, shape=&quot;box&quot;]
+
+     auto -&gt; int2 [label=&quot;int x = 42; \n x&quot;];
+     manual -&gt; int1 [label=&quot;int x = 42; \n printf(&amp;quot;(int &amp;) %d \\n&amp;quot;, x);&quot;];
+ }<figcaption>
 <p><span class="caption-text">Automatic PrintF</span><a class="headerlink" href="#automaticprintf" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
@@ -421,8 +466,31 @@ But if the value parameter is made optional and it is omitted (i.e., that the
 user does not want to utilize it elsewhere), then the last value can be
 validated and pushed into the <code class="docutils literal notranslate"><span class="pre">dump()</span></code> function.</p>
 <figure class="align-center" id="parsing">
-<div class="graphviz"><img src="_images/graphviz-2733886182489010eae293ddcc1371d32d58038d.png" alt="Shows the Parsing Mechanism for Pretty Printing" class="graphviz" /></div>
-<figcaption>
+ digraph &quot;prettyprint&quot; {
+     rankdir=&quot;LR&quot;;
+     graph [fontname=&quot;Verdana&quot;, fontsize=&quot;12&quot;];
+     node [fontname=&quot;Verdana&quot;, fontsize=&quot;12&quot;];
+     edge [fontname=&quot;Verdana&quot;, fontsize=&quot;9&quot;];
+
+     parse [label=&quot; ParseAndExecute() \n in Clang &quot;, shape=&quot;box&quot;];
+     capture [label=&quot; Capture 'Value' parameter \n for processing? &quot;, shape=&quot;diamond&quot;];
+     use [label=&quot;  Use for processing  &quot;, shape=&quot;box&quot;];
+     dump [label=&quot;  Validate and push  \n to dump()&quot;, shape=&quot;box&quot;];
+     callp [label=&quot;  call print() function &quot;, shape=&quot;box&quot;];
+     type [label=&quot;  Print the Type \n ReplPrintTypeImpl()&quot;, shape=&quot;box&quot;];
+     data [label=&quot;  Print the Data \n ReplPrintDataImpl() &quot;, shape=&quot;box&quot;];
+     output [label=&quot;  Output Pretty Print \n to the user  &quot;, shape=&quot;box&quot;, fontcolor=white, fillcolor=&quot;#3333ff&quot;, style=filled];
+
+     parse -&gt; capture [label=&quot;Optional 'Value' Parameter&quot;];
+     capture -&gt; use [label=&quot;Yes&quot;];
+     use -&gt; End;
+     capture -&gt; dump [label=&quot;No&quot;];
+     dump -&gt; callp;
+     callp -&gt; type;
+     callp -&gt; data;
+     type -&gt; output;
+     data -&gt; output;
+  }<figcaption>
 <p><span class="caption-text">Parsing Mechanism</span><a class="headerlink" href="#parsing" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>

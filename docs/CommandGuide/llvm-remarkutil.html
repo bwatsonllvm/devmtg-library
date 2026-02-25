@@ -6,10 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>llvm-remarkutil - Remark utility &#8212; LLVM 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <title>llvm-remarkutil - Remark utility &#8212; LLVM  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../_static/llvm-theme.css?v=96924833" />
-    <script src="../_static/documentation_options.js?v=20260224-16"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -55,26 +55,26 @@
 <h3>Documentation</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
-    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
-    <li><a href="/library/docs/Reference.html">Reference</a></li>
+    <li><a href="https://llvm.org/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
+    <li><a href="https://llvm.org/docs/UserGuides.html">User Guides</a></li>
+    <li><a href="https://llvm.org/docs/Reference.html">Reference</a></li>
 </ul>
 
 <h3>Getting Involved</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
-    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
+    <li><a href="https://llvm.org/docs/Contributing.html">Contributing to LLVM</a></li>
+    <li><a href="https://llvm.org/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#discord">Discord</a></li>
+    <li><a href="https://llvm.org/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
 </ul>
 
 <h3>Additional Links</h3>
 
 <ul class="want-points">
-    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
-    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
+    <li><a href="https://llvm.org/docs/FAQ.html">FAQ</a></li>
+    <li><a href="https://llvm.org/docs/Lexicon.html">Glossary</a></li>
     <li><a href="https://llvm.org/pubs">Publications</a></li>
     <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
 </ul>
@@ -112,7 +112,7 @@
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>Utility for displaying information from, and converting between different
-<a class="reference external" href="/library/docs/Remarks.html">remark</a> formats.</p>
+<a class="reference external" href="https://llvm.org/docs/Remarks.html">remark</a> formats.</p>
 </section>
 <section id="subcommands">
 <h2>Subcommands<a class="headerlink" href="#subcommands" title="Link to this heading">¶</a></h2>
@@ -187,7 +187,7 @@ the number of remark checks inserted at the function.</p>
 <p>USAGE: <strong class="program">llvm-remarkutil</strong> count [<em>options</em>] &lt;input file&gt;</p>
 <section id="id4">
 <h4>Summary<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
-<p><strong class="program">llvm-remarkutil count</strong> counts <a class="reference external" href="/library/docs/Remarks.html">remarks</a> based on specified properties.
+<p><strong class="program">llvm-remarkutil count</strong> counts <a class="reference external" href="https://llvm.org/docs/Remarks.html">remarks</a> based on specified properties.
 By default the tool counts remarks based on how many occur in a source file or function or total for the generated remark file.
 The tool also supports collecting count based on specific remark arguments. The specified arguments should have an integer value to be able to report a count.</p>
 <p>The tool contains utilities to filter the remark count based on remark name, pass name, argument value and remark type.</p>
@@ -298,7 +298,7 @@ The arguments must have a numeral value to be able to count remarks by</p>
 <p>USAGE: <strong class="program">llvm-remarkutil</strong> size-diff [<em>options</em>] <em>file_a</em> <em>file_b</em> <strong>–parser</strong> <em>parser</em></p>
 <section id="id5">
 <h4>Summary<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h4>
-<p><strong class="program">llvm-remarkutil size-diff</strong> diffs size <a class="reference external" href="/library/docs/Remarks.html">remarks</a> in two remark files: <code class="docutils literal notranslate"><span class="pre">file_a</span></code>
+<p><strong class="program">llvm-remarkutil size-diff</strong> diffs size <a class="reference external" href="https://llvm.org/docs/Remarks.html">remarks</a> in two remark files: <code class="docutils literal notranslate"><span class="pre">file_a</span></code>
 and <code class="docutils literal notranslate"><span class="pre">file_b</span></code>.</p>
 <p><strong class="program">llvm-remarkutil size-diff</strong> can be used to gain insight into which
 functions were impacted the most by code generation changes.</p>
@@ -306,8 +306,8 @@ functions were impacted the most by code generation changes.</p>
 compiling a <strong>fixed source</strong> with <strong>differing compilers</strong> or
 <strong>differing optimization settings</strong>.</p>
 <p><strong class="program">llvm-remarkutil size-diff</strong> handles both
-<a class="reference external" href="/library/docs/Remarks.html#yaml-remarks">YAML</a> and
-<a class="reference external" href="/library/docs/Remarks.html#llvm-bitstream-remarks">bitstream</a>
+<a class="reference external" href="https://llvm.org/docs/Remarks.html#yaml-remarks">YAML</a> and
+<a class="reference external" href="https://llvm.org/docs/Remarks.html#llvm-bitstream-remarks">bitstream</a>
 remarks.</p>
 </section>
 <section id="id7">
@@ -531,7 +531,7 @@ otherwise.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-23.
+      Last updated on 2026-02-25.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
