@@ -11,9 +11,63 @@
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, docs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
-  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-04';
-  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-04';
-  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=20260224-04';
+
+  function normalizeRootPath(raw) {
+    const trimmed = String(raw || '').trim();
+    if (!trimmed) return '/';
+    return trimmed.endsWith('/') ? trimmed : `${trimmed}/`;
+  }
+
+  function resolveRootFromCurrentScript() {
+    const current = document.currentScript;
+    if (!current || !current.src) return '';
+    try {
+      const url = new URL(current.src, window.location.href);
+      const marker = '/js/shared/global-search.js';
+      const markerIndex = url.pathname.indexOf(marker);
+      if (markerIndex < 0) return '';
+      return normalizeRootPath(url.pathname.slice(0, markerIndex + 1));
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function resolveLibraryRootPath() {
+    const explicit = normalizeRootPath(window.LLVMLibraryRootPath || '');
+    if (explicit && explicit !== '/') return explicit;
+
+    const fromScript = resolveRootFromCurrentScript();
+    if (fromScript && fromScript !== '/') return fromScript;
+
+    const baseNode = document.querySelector('base[href]');
+    if (baseNode) {
+      const href = String(baseNode.getAttribute('href') || '').trim();
+      if (href) {
+        try {
+          const baseUrl = new URL(href, window.location.href);
+          return normalizeRootPath(baseUrl.pathname || '/');
+        } catch (_) {
+          // Fallback below.
+        }
+      }
+    }
+
+    const path = String(window.location.pathname || '/');
+    const docsMatch = path.match(/^(.*?\/)docs(?:\/|$)/i);
+    if (docsMatch && docsMatch[1]) return normalizeRootPath(docsMatch[1]);
+
+    return '/';
+  }
+
+  function resolveAssetUrl(path) {
+    const relative = String(path || '').replace(/^\/+/, '');
+    return `${LIBRARY_ROOT_PATH}${relative}`;
+  }
+
+  const LIBRARY_ROOT_PATH = resolveLibraryRootPath();
+  const DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/_static/docs-universal-search-index.js?v=20260224-04');
+  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/clang/_static/docs-universal-search-index.js?v=20260224-04');
+  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/lldb/_static/docs-universal-search-index.js?v=20260224-04');
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
@@ -457,6 +511,34 @@
     updateScopeButtonsState(form);
   }
 
+  function positionAdvancedPanelWithinViewport(form) {
+    if (!form || form.classList.contains('search-box')) return;
+    const advanced = getAdvancedPanelState(form);
+    const panel = advanced.panel;
+    if (!panel || panel.classList.contains('hidden')) return;
+    if (typeof window === 'undefined' || typeof panel.getBoundingClientRect !== 'function') return;
+
+    const viewportWidth = Math.max(0, Number(window.innerWidth || 0));
+    if (!viewportWidth) return;
+
+    const margin = 12;
+    const panelWidth = Math.max(220, Math.min(760, viewportWidth - (margin * 2)));
+    const formRect = form.getBoundingClientRect();
+    const formRight = Number(formRect.right || 0);
+    const formLeft = Number(formRect.left || 0);
+
+    // Keep right-edge alignment by default, then clamp to viewport.
+    let desiredLeft = formRight - panelWidth;
+    const minLeft = margin;
+    const maxLeft = Math.max(minLeft, viewportWidth - margin - panelWidth);
+    desiredLeft = Math.min(Math.max(desiredLeft, minLeft), maxLeft);
+    const leftOffset = desiredLeft - formLeft;
+
+    panel.style.width = `${panelWidth}px`;
+    panel.style.left = `${leftOffset}px`;
+    panel.style.right = 'auto';
+  }
+
   function closeAdvancedPanel(form) {
     const advanced = getAdvancedPanelState(form);
     const panel = advanced.panel;
@@ -475,6 +557,7 @@
     const toggle = advanced.toggle;
     if (!panel || !toggle) return;
     panel.classList.remove('hidden');
+    positionAdvancedPanelWithinViewport(form);
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-pressed', 'true');
     form.classList.add('advanced-open');
@@ -744,6 +827,13 @@
       }
     });
 
+    const repositionAdvancedPanel = () => {
+      if (panel.classList.contains('hidden')) return;
+      positionAdvancedPanelWithinViewport(form);
+    };
+    window.addEventListener('resize', repositionAdvancedPanel, { passive: true });
+    window.addEventListener('scroll', repositionAdvancedPanel, { passive: true });
+
     form.addEventListener('submit', () => {
       syncHiddenFromAdvancedPanel(form);
       sanitizeAdvancedFieldsForContext(form);
@@ -972,10 +1062,10 @@
     dataLoadPromise = (async () => {
       const tasks = [];
       if (typeof window.loadEventData !== 'function') {
-        tasks.push(ensureScript('js/events-data.js'));
+        tasks.push(ensureScript(resolveAssetUrl('js/events-data.js')));
       }
       if (typeof window.loadPaperData !== 'function') {
-        tasks.push(ensureScript('js/papers-data.js'));
+        tasks.push(ensureScript(resolveAssetUrl('js/papers-data.js')));
       }
       tasks.push(ensureDocsIndexLoader());
       if (tasks.length) {
@@ -1017,7 +1107,7 @@
         if (rawHref) {
           if (/^https?:\/\//i.test(rawHref)) url = rawHref;
           else if (rawHref.startsWith('/')) url = rawHref;
-          else if (rawHref.startsWith('docs/')) url = rawHref;
+          else if (rawHref.startsWith('docs/')) url = resolveAssetUrl(rawHref);
           else url = `${basePrefix}/${rawHref}`.replace(/\/{2,}/g, '/');
         }
         if (!url) {
@@ -1061,9 +1151,9 @@
       }
 
       const docsPayloads = [
-        { payload: window.LLVMCoreDocsUniversalSearchIndex, sourceLabel: 'LLVM Core', basePrefix: 'docs' },
-        { payload: window.LLVMClangDocsUniversalSearchIndex, sourceLabel: 'Clang', basePrefix: 'docs/clang' },
-        { payload: window.LLVMLLDBDocsUniversalSearchIndex, sourceLabel: 'LLDB', basePrefix: 'docs/lldb' },
+        { payload: window.LLVMCoreDocsUniversalSearchIndex, sourceLabel: 'LLVM Core', basePrefix: resolveAssetUrl('docs') },
+        { payload: window.LLVMClangDocsUniversalSearchIndex, sourceLabel: 'Clang', basePrefix: resolveAssetUrl('docs/clang') },
+        { payload: window.LLVMLLDBDocsUniversalSearchIndex, sourceLabel: 'LLDB', basePrefix: resolveAssetUrl('docs/lldb') },
       ];
       docsPayloads.forEach(({ payload, sourceLabel, basePrefix }) => {
         if (!payload || !Array.isArray(payload.entries)) return;
@@ -1091,7 +1181,7 @@
         .map(([label, info]) => ({
           label,
           count: Number(info && info.count || 0),
-          url: String(info && info.url || 'docs/'),
+          url: String(info && info.url || resolveAssetUrl('docs/')),
         }))
         .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
       return autocompleteIndex;

@@ -752,6 +752,27 @@ ul, ol {
   font: inherit;
 }
 
+.mobile-nav-group-settings {
+  gap: var(--space-2);
+}
+
+.mobile-nav-setting {
+  display: grid;
+  gap: 6px;
+  padding: 0 var(--space-2);
+}
+
+.mobile-nav-setting-label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.mobile-nav-setting-select {
+  width: 100%;
+  height: 36px;
+}
+
 /* Customization Menu */
 .customization-menu {
   position: relative;
@@ -4070,14 +4091,15 @@ mark {
 
   .site-header {
     flex-wrap: wrap;
-    align-content: center;
+    align-items: center;
     padding: var(--space-2) var(--space-3);
     gap: var(--space-2);
   }
 
   .site-logo {
+    order: 1;
     min-width: 0;
-    flex: 1;
+    flex: 1 1 auto;
   }
 
   .site-logo span {
@@ -4091,19 +4113,28 @@ mark {
   }
 
   .mobile-nav-menu {
-    display: block;
+    order: 3;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0;
   }
 
   .header-right {
+    order: 2;
     flex: 0 0 auto;
     min-width: auto;
     margin-left: auto;
     gap: 6px;
   }
 
-  .global-search-form {
+  .header-right .customization-menu {
+    display: none;
+  }
+
+  .site-header .global-search-form {
+    order: 4;
     display: inline-flex;
-    flex: 1 1 auto;
+    flex: 1 0 100%;
     width: 100%;
     min-width: 0;
     max-width: none;
@@ -4151,9 +4182,17 @@ mark {
     height: 14px;
   }
 
-  .customization-toggle {
+  .mobile-nav-toggle {
     width: 40px;
+    min-width: 40px;
     height: 40px;
+    padding: 0;
+    font-size: 0;
+    justify-content: center;
+  }
+
+  .mobile-nav-toggle > span:not(.mobile-nav-toggle-icon) {
+    display: none;
   }
 
   .search-icon {
@@ -4198,6 +4237,10 @@ mark {
     padding: 0 6px;
     font-size: 10px;
     gap: 4px;
+  }
+
+  .mobile-nav-setting {
+    padding: 0;
   }
 
   .global-search-advanced-panel {

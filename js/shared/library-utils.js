@@ -4000,10 +4000,19 @@
     }
 
     function syncCustomizationMenuControls() {
-      const themeSelect = document.getElementById('custom-theme-select');
-      const textSizeSelect = document.getElementById('custom-text-size-select');
-      if (themeSelect) themeSelect.value = getThemePreference();
-      if (textSizeSelect) textSizeSelect.value = getTextSizePreference();
+      const themePreference = getThemePreference();
+      const textSizePreference = getTextSizePreference();
+      const themeSelectIds = ['custom-theme-select', 'mobile-theme-select'];
+      const textSizeSelectIds = ['custom-text-size-select', 'mobile-text-size-select'];
+
+      themeSelectIds.forEach((id) => {
+        const select = document.getElementById(id);
+        if (select) select.value = themePreference;
+      });
+      textSizeSelectIds.forEach((id) => {
+        const select = document.getElementById(id);
+        if (select) select.value = textSizePreference;
+      });
     }
 
     function handleSystemThemeChange() {
@@ -4080,17 +4089,62 @@
       }
     }
 
+    function ensureMobileSettingsGroup(panel) {
+      if (!panel) return;
+      panel.querySelectorAll('.mobile-nav-group[data-mobile-group="tools"], .mobile-nav-group').forEach((node) => {
+        if (!node || !node.querySelector) return;
+        if (!node.querySelector('[data-mobile-header-action]')) return;
+        if (node && node.parentNode) node.parentNode.removeChild(node);
+      });
+
+      if (panel.querySelector('.mobile-nav-group[data-mobile-group="settings"]')) return;
+
+      const group = document.createElement('div');
+      group.className = 'mobile-nav-group mobile-nav-group-settings';
+      group.setAttribute('role', 'group');
+      group.setAttribute('aria-label', 'Display settings');
+      group.setAttribute('data-mobile-group', 'settings');
+      group.innerHTML = `
+        <p class="mobile-nav-group-label">Settings</p>
+        <label class="mobile-nav-setting" for="mobile-theme-select">
+          <span class="mobile-nav-setting-label">Theme</span>
+          <select class="customization-select mobile-nav-setting-select" id="mobile-theme-select" aria-label="Theme preference">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label class="mobile-nav-setting" for="mobile-text-size-select">
+          <span class="mobile-nav-setting-label">Text Size</span>
+          <select class="customization-select mobile-nav-setting-select" id="mobile-text-size-select" aria-label="Text size">
+            <option value="small">Small</option>
+            <option value="default">Default</option>
+            <option value="large">Large</option>
+          </select>
+        </label>`;
+      panel.appendChild(group);
+    }
+
     function initMobileNavMenu() {
       const menu = document.getElementById('mobile-nav-menu');
       const toggle = document.getElementById('mobile-nav-toggle');
       const panel = document.getElementById('mobile-nav-panel');
       if (!menu || !toggle || !panel) return;
 
+      ensureMobileSettingsGroup(panel);
+      syncCustomizationMenuControls();
+
       const disclosure = ensureDisclosureMenu({
         menu,
         toggle,
         panel,
         onPanelClick: (event, controller) => {
+          const linkTarget = getClosestTarget(event, 'a.mobile-nav-link');
+          if (linkTarget) {
+            controller.close();
+            return true;
+          }
+
           const actionTarget = getClosestTarget(event, '[data-mobile-header-action]');
           if (!actionTarget || !mobileHeaderActionMap) return false;
 
@@ -4109,6 +4163,24 @@
           return true;
         },
       });
+
+      const mobileThemeSelect = document.getElementById('mobile-theme-select');
+      const mobileTextSizeSelect = document.getElementById('mobile-text-size-select');
+      if (mobileThemeSelect && mobileTextSizeSelect && panel.dataset.mobileSettingsBound !== '1') {
+        panel.dataset.mobileSettingsBound = '1';
+
+        mobileThemeSelect.addEventListener('change', () => {
+          const preference = themePrefValues.has(mobileThemeSelect.value) ? mobileThemeSelect.value : 'system';
+          applyTheme(preference, true);
+          syncCustomizationMenuControls();
+        });
+
+        mobileTextSizeSelect.addEventListener('change', () => {
+          const size = textSizeValues.has(mobileTextSizeSelect.value) ? mobileTextSizeSelect.value : 'default';
+          applyTextSize(size, true);
+          syncCustomizationMenuControls();
+        });
+      }
 
       if (
         disclosure

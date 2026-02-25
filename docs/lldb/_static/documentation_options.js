@@ -529,10 +529,16 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function syncHeaderDisplayControls() {
-    const themeSelect = document.getElementById('custom-theme-select');
-    const textSizeSelect = document.getElementById('custom-text-size-select');
-    if (themeSelect) themeSelect.value = getStoredThemePreference();
-    if (textSizeSelect) textSizeSelect.value = getStoredTextSizePreference();
+    const themePreference = getStoredThemePreference();
+    const textSizePreference = getStoredTextSizePreference();
+    ['custom-theme-select', 'mobile-theme-select'].forEach((id) => {
+      const select = document.getElementById(id);
+      if (select) select.value = themePreference;
+    });
+    ['custom-text-size-select', 'mobile-text-size-select'].forEach((id) => {
+      const select = document.getElementById(id);
+      if (select) select.value = textSizePreference;
+    });
   }
 
   function getHeaderMenuNodes(config) {
@@ -640,27 +646,35 @@ const DOCUMENTATION_OPTIONS = {
 
     nodes.panel.addEventListener('click', function (event) {
       const target = event.target && event.target.closest
-        ? event.target.closest('[data-mobile-header-action], a.mobile-nav-link')
+        ? event.target.closest('a.mobile-nav-link')
         : null;
       if (!target) return;
 
-      if (target.matches('a.mobile-nav-link')) {
-        setHeaderMenuOpen(HEADER_MENU_CONFIG.mobile, false);
-        return;
-      }
-
-      const action = String(target.getAttribute('data-mobile-header-action') || '').trim();
-      if (!action) return;
-
-      event.preventDefault();
-      event.stopPropagation();
       setHeaderMenuOpen(HEADER_MENU_CONFIG.mobile, false);
-      if (action === 'share') {
-        toggleHeaderMenu(HEADER_MENU_CONFIG.share);
-      } else if (action === 'display') {
-        toggleHeaderMenu(HEADER_MENU_CONFIG.display);
-      }
     });
+
+    const mobileThemeSelect = document.getElementById('mobile-theme-select');
+    const mobileTextSizeSelect = document.getElementById('mobile-text-size-select');
+    if (mobileThemeSelect && mobileTextSizeSelect) {
+      syncHeaderDisplayControls();
+    }
+    if (mobileThemeSelect && mobileTextSizeSelect && nodes.panel.dataset.docsBridgeSettingsBound !== '1') {
+      nodes.panel.dataset.docsBridgeSettingsBound = '1';
+
+      mobileThemeSelect.addEventListener('change', function () {
+        const pref = String(mobileThemeSelect.value || '').trim();
+        const nextTheme = (pref === 'light' || pref === 'dark' || pref === 'system') ? pref : 'system';
+        applyDisplayPreferences(nextTheme, getStoredTextSizePreference(), true);
+        syncHeaderDisplayControls();
+      });
+
+      mobileTextSizeSelect.addEventListener('change', function () {
+        const rawSize = String(mobileTextSizeSelect.value || '').trim();
+        const nextSize = (rawSize === 'small' || rawSize === 'large') ? rawSize : 'default';
+        applyDisplayPreferences(getStoredThemePreference(), nextSize, true);
+        syncHeaderDisplayControls();
+      });
+    }
   }
 
   function initShareMenu() {
@@ -895,10 +909,24 @@ const DOCUMENTATION_OPTIONS = {
               <a href="${rootPath}docs/clang/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'clang' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'clang' ? ' aria-current="page"' : ''}>Clang</a>
               <a href="${rootPath}docs/lldb/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'lldb' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'lldb' ? ' aria-current="page"' : ''}>LLDB</a>
             </div>
-            <div class="mobile-nav-group" role="group" aria-label="Page tools">
-              <p class="mobile-nav-group-label">Tools</p>
-              <button class="mobile-nav-link mobile-nav-link--button" type="button" data-mobile-header-action="share">Share page</button>
-              <button class="mobile-nav-link mobile-nav-link--button" type="button" data-mobile-header-action="display">Display settings</button>
+            <div class="mobile-nav-group mobile-nav-group-settings" role="group" aria-label="Display settings" data-mobile-group="settings">
+              <p class="mobile-nav-group-label">Settings</p>
+              <label class="mobile-nav-setting" for="mobile-theme-select">
+                <span class="mobile-nav-setting-label">Theme</span>
+                <select class="customization-select mobile-nav-setting-select" id="mobile-theme-select" aria-label="Theme preference">
+                  <option value="system">System</option>
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </label>
+              <label class="mobile-nav-setting" for="mobile-text-size-select">
+                <span class="mobile-nav-setting-label">Text Size</span>
+                <select class="customization-select mobile-nav-setting-select" id="mobile-text-size-select" aria-label="Text size">
+                  <option value="small">Small</option>
+                  <option value="default">Default</option>
+                  <option value="large">Large</option>
+                </select>
+              </label>
             </div>
           </div>
         </div>
@@ -948,10 +976,42 @@ const DOCUMENTATION_OPTIONS = {
       </header>`;
   }
 
-  function ensureHomeScript(_rootPath) {
-    // Intentionally disabled for docs pages.
-    // The docs bridge initializes its own header/menu interactions; loading
-    // home.js here would bind duplicate handlers and make toggles no-op.
+  function loadScriptOnce(src, id, onLoad) {
+    if (!src) return;
+    const callback = typeof onLoad === 'function' ? onLoad : function () {};
+    let script = id ? document.getElementById(id) : null;
+    if (!script) {
+      script = Array.from(document.querySelectorAll('script[src]')).find((node) => {
+        const currentSrc = String(node.getAttribute('src') || '').trim();
+        return currentSrc === src || currentSrc.startsWith(`${src}?`);
+      }) || null;
+    }
+    if (script) {
+      if (script.dataset.loaded === 'true') {
+        callback();
+        return;
+      }
+      script.addEventListener('load', callback, { once: true });
+      return;
+    }
+
+    script = document.createElement('script');
+    if (id) script.id = id;
+    script.src = src;
+    script.async = true;
+    script.addEventListener('load', function () {
+      script.dataset.loaded = 'true';
+      callback();
+    }, { once: true });
+    document.body.appendChild(script);
+  }
+
+  function ensureHomeScript(rootPath) {
+    const normalizedRoot = String(rootPath || '/');
+    window.LLVMLibraryRootPath = normalizedRoot;
+    loadScriptOnce(`${normalizedRoot}js/shared/library-utils.js?v=20260225-06`, 'llvm-library-utils-script', function () {
+      loadScriptOnce(`${normalizedRoot}js/shared/global-search.js?v=20260225-14`, 'llvm-global-search-script');
+    });
   }
 
   function slugToDocsHref(slug, rootPath, docsBasePath = ACTIVE_DOCS_BASE_PATH) {
@@ -1572,8 +1632,9 @@ const DOCUMENTATION_OPTIONS = {
       }
     });
 
-    const searchForms = root.querySelectorAll('form.search, form[role="search"], form.sidebar-search-container');
+    const searchForms = root.querySelectorAll('form.search, form.sidebar-search-container, form[role="search"]:not(.global-search-form)');
     searchForms.forEach((form) => {
+      if (form.classList.contains('global-search-form')) return;
       form.classList.add('docs-sidebar-search-form');
       form.querySelectorAll('input[type="submit"], button[type="submit"]').forEach((submitNode) => {
         if (submitNode && submitNode.parentNode) {
@@ -1586,9 +1647,9 @@ const DOCUMENTATION_OPTIONS = {
       'form.search input[name="q"]',
       'form.search input[type="search"]',
       'form.search input[type="text"]',
-      'form[role="search"] input[name="q"]',
-      'form[role="search"] input[type="search"]',
-      'form[role="search"] input[type="text"]',
+      'form[role="search"]:not(.global-search-form) input[name="q"]',
+      'form[role="search"]:not(.global-search-form) input[type="search"]',
+      'form[role="search"]:not(.global-search-form) input[type="text"]',
       'form.sidebar-search-container input[name="q"]',
       'form.sidebar-search-container input[type="search"]',
       'form.sidebar-search-container input[type="text"]',
