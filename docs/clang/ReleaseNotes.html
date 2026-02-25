@@ -235,6 +235,9 @@ a full BMI.</p></li>
 <li><p>New <code class="docutils literal notranslate"><span class="pre">-cc1</span></code> option <code class="docutils literal notranslate"><span class="pre">-fexperimental-overflow-behavior-types</span></code> added to
 enable parsing of the experimental <code class="docutils literal notranslate"><span class="pre">overflow_behavior</span></code> type attribute and
 type specifiers.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">-cl</span></code> option <code class="docutils literal notranslate"><span class="pre">/d2guardnochecks</span></code> added to match MSVC. When Windows
+Control Flow Guard (CFG) is enabled by other options, it will instruct Clang
+to emit the CFG metadata, but disable adding checks.</p></li>
 </ul>
 </section>
 <section id="deprecated-compiler-flags">
