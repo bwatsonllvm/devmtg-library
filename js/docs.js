@@ -14,12 +14,12 @@
   const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
   const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
 
-  const DOCS_SOURCES_CATALOG_SRC = 'sources.json?v=20260225-01';
+  const DOCS_SOURCES_CATALOG_SRC = 'sources.json?v=20260225-02';
   const DEFAULT_DOCS_SOURCES = [
     {
       id: 'llvm-core',
       name: 'LLVM Core',
-      localPath: 'docs/llvm-core/',
+      localPath: 'docs/',
       docsUrl: 'https://llvm.org/docs/',
       searchUrlTemplate: 'https://llvm.org/docs/search.html?q={query}',
       description: 'LLVM core manuals, references, internals, and contributor documentation.',
@@ -77,7 +77,7 @@
       .replace(/^-+|-+$/g, '') || `docs-source-${index + 1}`;
     const name = normalizeText(rawSource.name, 120) || `Docs Source ${index + 1}`;
     const localPathCandidate = normalizeText(rawSource.localPath, 160)
-      || ({ 'llvm-core': 'docs/llvm-core/', clang: 'docs/clang/', lldb: 'docs/lldb/' }[id] || `docs/${id}/`);
+      || ({ 'llvm-core': 'docs/', clang: 'docs/clang/', lldb: 'docs/lldb/' }[id] || `docs/${id}/`);
     const localPath = localPathCandidate.replace(/^\/+/, '').replace(/\/+$/, '') + '/';
     const docsUrl = sanitizeExternalUrl(rawSource.docsUrl);
     const searchUrlTemplate = normalizeText(rawSource.searchUrlTemplate, 420);
@@ -106,7 +106,7 @@
   }
 
   function resolveLocalDocsRoute(localPath, query) {
-    const normalizedPath = String(localPath || 'docs/llvm-core/').replace(/^\/+/, '');
+    const normalizedPath = String(localPath || 'docs/').replace(/^\/+/, '');
     const withSlash = normalizedPath.endsWith('/') ? normalizedPath : `${normalizedPath}/`;
     const trimmedQuery = normalizeText(query, 320);
     if (!trimmedQuery) return `../${withSlash}`;

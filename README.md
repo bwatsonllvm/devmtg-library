@@ -217,7 +217,7 @@ For canonical meeting schedules and announcements, use the official archive: htt
 
 ## Automation
 
-Automation is split into two scheduled PR workflows:
+Automation is split into three scheduled PR workflows:
 
 1. LLVM upstream sync (`.github/workflows/llvm-upstream-sync.yml`)
    - syncs talks/slides/videos from `llvm-www/devmtg`
@@ -228,21 +228,26 @@ Automation is split into two scheduled PR workflows:
    - rebuilds the canonical papers database (OpenAlex + llvm.org/pubs + blog)
    - backfills direct paper PDF links via OpenAlex + Unpaywall
    - rebuilds the updates log
+3. Docs repo sync (`.github/workflows/docs-repo-sync.yml`)
+   - pulls docs sources from `llvm/llvm-project`
+   - rebuilds local docs artifacts for LLVM Core, Clang, and LLDB
+   - regenerates local docs search indexes and sync metadata
 
-The split keeps LLVM-repo metadata merges independent from papers ingestion/enrichment so routine upstream updates can be proposed quickly without waiting on OpenAlex/papers processing.
+The split keeps:
+- lightweight llvm-www/blog updates independent from papers ingestion/enrichment
+- docs sync independent from both, so docs-specific issues do not block event/blog or papers updates
 
 Docs source endpoint health is checked daily in:
 - `.github/workflows/docs-sources-health.yml`
 
 ## Docs Source Boundaries
 
-The docs section is an upstream-first hub surface:
+The docs section keeps local formatted docs pages and search indexes while sourcing content from upstream LLVM repos:
 
 - Docs source definitions live in `docs/sources.json`.
-- Add or update docs subprojects by editing `docs/sources.json` entries (`id`, `name`, `docsUrl`, `searchUrlTemplate`, optional `description`/`keywords`).
-- The docs hub page (`docs/index.html`) routes users to canonical upstream docs and upstream search endpoints.
-- `docs/clang/index.html` and `docs/lldb/index.html` are lightweight redirects to upstream.
-- Do not synthesize docs content or cache mirrored docs pages for search.
+- Local docs pages are served from `docs/`, `docs/clang/`, and `docs/lldb/`.
+- Docs backend sync is repo-based (`scripts/sync-docs-from-llvm-project.py`), not website crawling.
+- The bridge shell/UI is intentionally preserved in local docs output (`docs/*/_static/documentation_options.js`) so docs keep the same header/search/presentation as the rest of the site.
 
 ## Validation And Test Gates
 
@@ -263,13 +268,14 @@ These checks run in:
 - `.github/workflows/pages.yml` (deploy gate)
 - `.github/workflows/llvm-upstream-sync.yml` (LLVM upstream automation PRs)
 - `.github/workflows/library-papers-sync.yml` (papers automation PRs)
+- `.github/workflows/docs-repo-sync.yml` (docs automation PRs)
 - `.github/workflows/docs-sources-health.yml` (daily upstream docs endpoint health checks)
 
 ## Repository Layout
 
 - `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes
-- `docs/`: docs hub pages and source catalog for upstream docs routing (`docs/sources.json`)
-- `docs/clang/` and `docs/lldb/`: lightweight redirect entry points to upstream docs
+- `docs/`, `docs/clang/`, `docs/lldb/`: local docs artifacts + bridge/search assets sourced from `llvm/llvm-project`
+- `docs/sources.json`: docs source catalog metadata
 - `css/`, `js/`, `images/`: shared site assets
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version
