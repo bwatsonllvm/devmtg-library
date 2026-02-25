@@ -65,9 +65,12 @@
   }
 
   const LIBRARY_ROOT_PATH = resolveLibraryRootPath();
-  const DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/_static/docs-universal-search-index.js?v=20260224-04');
-  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/clang/_static/docs-universal-search-index.js?v=20260224-04');
-  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/lldb/_static/docs-universal-search-index.js?v=20260224-04');
+  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-04';
+  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-04';
+  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=20260224-04';
+  const RESOLVED_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl(DOCS_UNIVERSAL_INDEX_SRC);
+  const RESOLVED_CLANG_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl(CLANG_DOCS_UNIVERSAL_INDEX_SRC);
+  const RESOLVED_LLDB_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl(LLDB_DOCS_UNIVERSAL_INDEX_SRC);
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
@@ -1008,7 +1011,7 @@
 
       if (!llvmPayload) {
         try {
-          await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
+          await ensureScript(RESOLVED_DOCS_UNIVERSAL_INDEX_SRC);
           if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
             llvmPayload = window.LLVMDocsUniversalSearchIndex;
             window.LLVMCoreDocsUniversalSearchIndex = llvmPayload;
@@ -1020,7 +1023,7 @@
 
       if (!clangPayload) {
         try {
-          await ensureScript(CLANG_DOCS_UNIVERSAL_INDEX_SRC);
+          await ensureScript(RESOLVED_CLANG_DOCS_UNIVERSAL_INDEX_SRC);
           if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
             clangPayload = window.LLVMDocsUniversalSearchIndex;
             window.LLVMClangDocsUniversalSearchIndex = clangPayload;
@@ -1032,7 +1035,7 @@
 
       if (!lldbPayload) {
         try {
-          await ensureScript(LLDB_DOCS_UNIVERSAL_INDEX_SRC);
+          await ensureScript(RESOLVED_LLDB_DOCS_UNIVERSAL_INDEX_SRC);
           if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
             lldbPayload = window.LLVMDocsUniversalSearchIndex;
             window.LLVMLLDBDocsUniversalSearchIndex = lldbPayload;
