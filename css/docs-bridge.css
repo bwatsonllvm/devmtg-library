@@ -264,6 +264,9 @@ body {
   padding: 0 0 var(--space-2);
   border-top: 0;
   border-bottom: 1px solid var(--color-divider);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .library-docs-bridge #searchbox h3 {
@@ -273,6 +276,27 @@ body {
 .library-docs-bridge .searchformwrapper {
   display: grid;
   gap: var(--space-2);
+  width: 100%;
+  max-width: 100%;
+}
+
+.library-docs-bridge .sphinxsidebar #searchbox form.search,
+.library-docs-bridge .sphinxsidebar #searchbox .docs-sidebar-search-form,
+.library-docs-bridge .sphinxsidebar #searchbox .searchformwrapper form {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  display: block;
+}
+
+.library-docs-bridge .sphinxsidebar #searchbox form.search input[name="q"],
+.library-docs-bridge .sphinxsidebar #searchbox form.search input[type="text"],
+.library-docs-bridge .sphinxsidebar #searchbox form.search input[type="search"],
+.library-docs-bridge .sphinxsidebar #searchbox .docs-sidebar-search-form input[name="q"],
+.library-docs-bridge .sphinxsidebar #searchbox .docs-sidebar-search-form input[type="text"],
+.library-docs-bridge .sphinxsidebar #searchbox .docs-sidebar-search-form input[type="search"] {
+  float: none !important;
+  width: 100% !important;
 }
 
 .library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[name="q"],

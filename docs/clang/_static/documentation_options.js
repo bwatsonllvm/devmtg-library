@@ -330,7 +330,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260225-12` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260225-02` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260225-03` });
   }
 
   function removeLegacySphinxChrome() {
