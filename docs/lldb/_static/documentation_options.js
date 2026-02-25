@@ -2508,6 +2508,14 @@ const DOCUMENTATION_OPTIONS = {
     return section;
   }
 
+  function hasFunctionalSidebarSearchBox(node) {
+    if (!node || !node.querySelector) return false;
+    const form = node.querySelector('form.search, form[role="search"], form.sidebar-search-container');
+    if (!form) return false;
+    const input = form.querySelector('input[name="q"], input[type="search"], input[type="text"]');
+    return !!input;
+  }
+
   function renderGeneratedBookIndexSidebar(rootPath) {
     const payload = window.LLVMDocsBookIndex;
     if (!payload || !Array.isArray(payload.chapters)) return false;
@@ -2516,7 +2524,10 @@ const DOCUMENTATION_OPTIONS = {
     if (!wrapper) return false;
 
     const quickSearch = wrapper.querySelector('#searchbox');
-    const quickSearchClone = quickSearch ? quickSearch.cloneNode(true) : null;
+    let quickSearchClone = quickSearch ? quickSearch.cloneNode(true) : null;
+    if (quickSearchClone && !hasFunctionalSidebarSearchBox(quickSearchClone)) {
+      quickSearchClone = null;
+    }
     if (quickSearchClone) {
       quickSearchClone.querySelectorAll('.docs-universal-search-dropdown').forEach((node) => {
         if (node && node.parentNode) node.parentNode.removeChild(node);
