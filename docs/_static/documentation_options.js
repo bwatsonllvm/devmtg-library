@@ -1203,11 +1203,35 @@ const DOCUMENTATION_OPTIONS = {
       }
     });
 
-    const searchInputs = root.querySelectorAll('input[name="q"], input[type="search"]');
+    const searchForms = root.querySelectorAll('form.search, form[role="search"], form.sidebar-search-container');
+    searchForms.forEach((form) => {
+      form.classList.add('docs-sidebar-search-form');
+      form.querySelectorAll('input[type="submit"], button[type="submit"]').forEach((submitNode) => {
+        if (submitNode && submitNode.parentNode) {
+          submitNode.parentNode.removeChild(submitNode);
+        }
+      });
+    });
+
+    const searchInputs = root.querySelectorAll([
+      'form.search input[name="q"]',
+      'form.search input[type="search"]',
+      'form.search input[type="text"]',
+      'form[role="search"] input[name="q"]',
+      'form[role="search"] input[type="search"]',
+      'form[role="search"] input[type="text"]',
+      'form.sidebar-search-container input[name="q"]',
+      'form.sidebar-search-container input[type="search"]',
+      'form.sidebar-search-container input[type="text"]',
+    ].join(','));
     searchInputs.forEach((input) => {
       input.setAttribute('placeholder', 'Search docs...');
       input.removeAttribute('aria-labelledby');
       input.setAttribute('aria-label', 'Search docs');
+      input.setAttribute('autocomplete', 'off');
+      input.setAttribute('autocorrect', 'off');
+      input.setAttribute('autocapitalize', 'off');
+      input.spellcheck = false;
     });
   }
 
@@ -1223,21 +1247,17 @@ const DOCUMENTATION_OPTIONS = {
     form.className = 'search';
     form.action = buildDocsSearchUrl(rootPath, '');
     form.method = 'get';
+    form.setAttribute('role', 'search');
 
     const input = document.createElement('input');
-    input.type = 'text';
+    input.type = 'search';
     input.name = 'q';
     input.autocomplete = 'off';
     input.autocorrect = 'off';
     input.autocapitalize = 'off';
     input.spellcheck = false;
 
-    const submit = document.createElement('input');
-    submit.type = 'submit';
-    submit.value = 'Go';
-
     form.appendChild(input);
-    form.appendChild(submit);
     formWrap.appendChild(form);
     box.appendChild(formWrap);
 

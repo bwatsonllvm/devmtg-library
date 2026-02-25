@@ -264,9 +264,17 @@ body {
   gap: var(--space-2);
 }
 
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[name="q"],
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[type="text"],
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[type="search"],
 .library-docs-bridge .sphinxsidebar .search input[name="q"],
 .library-docs-bridge .sphinxsidebar .search input[type="text"],
 .library-docs-bridge .sphinxsidebar .search input[type="search"],
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[name="q"],
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[type="text"],
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[type="search"],
+.library-docs-bridge .document .body form.docs-sidebar-search-form input[name="q"],
+.library-docs-bridge .document .body form.docs-sidebar-search-form input[type="search"],
 .library-docs-bridge .document .body form input[name="q"],
 .library-docs-bridge .document .body form input[type="search"] {
   width: 100%;
@@ -277,21 +285,38 @@ body {
   color: var(--color-text);
   font-size: var(--font-size-sm);
   padding: 0 10px;
+  box-sizing: border-box;
   appearance: none;
   -webkit-appearance: none;
 }
 
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[name="q"]::placeholder,
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[type="text"]::placeholder,
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[type="search"]::placeholder,
 .library-docs-bridge .sphinxsidebar .search input[name="q"]::placeholder,
 .library-docs-bridge .sphinxsidebar .search input[type="text"]::placeholder,
 .library-docs-bridge .sphinxsidebar .search input[type="search"]::placeholder,
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[name="q"]::placeholder,
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[type="text"]::placeholder,
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[type="search"]::placeholder,
+.library-docs-bridge .document .body form.docs-sidebar-search-form input[name="q"]::placeholder,
+.library-docs-bridge .document .body form.docs-sidebar-search-form input[type="search"]::placeholder,
 .library-docs-bridge .document .body form input[name="q"]::placeholder,
 .library-docs-bridge .document .body form input[type="search"]::placeholder {
   color: var(--color-text-subtle);
 }
 
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[name="q"]:focus,
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[type="text"]:focus,
+.library-docs-bridge .sphinxsidebar .docs-sidebar-search-form input[type="search"]:focus,
 .library-docs-bridge .sphinxsidebar .search input[name="q"]:focus,
 .library-docs-bridge .sphinxsidebar .search input[type="text"]:focus,
 .library-docs-bridge .sphinxsidebar .search input[type="search"]:focus,
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[name="q"]:focus,
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[type="text"]:focus,
+.library-docs-bridge .sphinxsidebar .sidebar-search-container input[type="search"]:focus,
+.library-docs-bridge .document .body form.docs-sidebar-search-form input[name="q"]:focus,
+.library-docs-bridge .document .body form.docs-sidebar-search-form input[type="search"]:focus,
 .library-docs-bridge .document .body form input[name="q"]:focus,
 .library-docs-bridge .document .body form input[type="search"]:focus {
   outline: none;
@@ -299,21 +324,11 @@ body {
   box-shadow: 0 0 0 3px var(--color-field-focus-ring);
 }
 
-.library-docs-bridge .sphinxsidebar .search input[type="submit"] {
-  height: 34px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-primary-btn-border);
-  background: var(--color-primary-btn-bg);
-  color: var(--color-primary-btn-text);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  padding: 0 var(--space-3);
-}
-
-.library-docs-bridge .sphinxsidebar .search input[type="submit"]:hover {
-  background: var(--color-primary-btn-hover-bg);
-  border-color: var(--color-primary-btn-hover-border);
-  color: var(--color-primary-btn-hover-text);
+.library-docs-bridge .sphinxsidebar .search input[type="submit"],
+.library-docs-bridge .sphinxsidebar .sidebar-search-container button[type="submit"],
+.library-docs-bridge .docs-sidebar-search-form input[type="submit"],
+.library-docs-bridge .docs-sidebar-search-form button[type="submit"] {
+  display: none !important;
 }
 
 .library-docs-bridge .docs-search-alias-panel {
