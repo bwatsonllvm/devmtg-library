@@ -5,7 +5,7 @@
     "date": "January 30, 2016",
     "location": "FOSDEM, Brussels, Belgium",
     "canceled": false,
-    "talkCount": 10
+    "talkCount": 12
   },
   "talks": [
     {
@@ -15,8 +15,16 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Tilmann Scheller",
-      "speakers": [],
+      "title": "Where is LLVM being used today?",
+      "speakers": [
+        {
+          "name": "Tilmann Scheller",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/fosdem-2016-llvm.pdf",
@@ -29,10 +37,14 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "JF Bastien / Dan Gohman",
+      "title": "WebAssembly: Here Be Dragons",
       "speakers": [
         {
-          "name": "WebAssembly: Here Be Dragons",
+          "name": "JF Bastien",
+          "affiliation": ""
+        },
+        {
+          "name": "Dan Gohman",
           "affiliation": ""
         }
       ],
@@ -48,11 +60,14 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Arnaud A. de Grandmaison",
+      "title": "Modern C++ development tools",
       "speakers": [
         {
-          "name": "Modern C++ development tools",
-          "affiliation": ""
+          "name": "Arnaud A. de Grandmaison",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
         }
       ],
       "abstract": "",
@@ -67,11 +82,14 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Kai Nacke",
+      "title": "Porting LLVM to a new OS",
       "speakers": [
         {
-          "name": "Porting LLVM to a new OS",
-          "affiliation": ""
+          "name": "Kai Nacke",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
         }
       ],
       "abstract": "",
@@ -86,11 +104,14 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Simon Cook",
+      "title": "AAPSIM: Implementing a LLVM based simulator",
       "speakers": [
         {
-          "name": "AAPSIM: Implementing a LLVM based simulator",
-          "affiliation": ""
+          "name": "Simon Cook",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
         }
       ],
       "abstract": "",
@@ -105,8 +126,16 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Alex Denisov",
-      "speakers": [],
+      "title": "How to use LLVM C API with Swift",
+      "speakers": [
+        {
+          "name": "Alex Denisov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/LLVM_Swift.pdf",
@@ -119,11 +148,14 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Greg Stark",
+      "title": "Using LLVM's LibFuzzer to Fuzz PostgreSQL",
       "speakers": [
         {
-          "name": "Using LLVM's LibFuzzer to Fuzz PostgreSQL",
-          "affiliation": ""
+          "name": "Greg Stark",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
         }
       ],
       "abstract": "",
@@ -138,8 +170,16 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Sebastien Monot",
-      "speakers": [],
+      "title": "LLVM-based dynamic dataflow compilation for heterogeneous targets",
+      "speakers": [
+        {
+          "name": "Sebastien Monot",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/LLVM-dataflow.pdf",
@@ -152,8 +192,16 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Kristof Beyls",
-      "speakers": [],
+      "title": "Automated tracking of performance of compiler-generated code",
+      "speakers": [
+        {
+          "name": "Kristof Beyls",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Beyls_FOSDEM2016.pdf",
@@ -166,11 +214,65 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "January 30, 2016",
       "category": "technical-talk",
-      "title": "Manuel Rigger",
-      "speakers": [],
+      "title": "Sulong: Fast LLVM IR Execution on the JVM with Truffle and Graal",
+      "speakers": [
+        {
+          "name": "Manuel Rigger",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/Sulong.pdf",
+      "tags": []
+    },
+    {
+      "id": "2016-01-012",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "AAP: An Altruistic Processor",
+      "speakers": [
+        {
+          "name": "edjones",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/2016-01-28_fosdem16-aap-ed.pdf",
+      "tags": []
+    },
+    {
+      "id": "2016-01-013",
+      "meeting": "2016-01",
+      "meetingName": "2016 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "January 30, 2016",
+      "category": "technical-talk",
+      "title": "Jancy Scripting Language for IO and UI programming",
+      "speakers": [
+        {
+          "name": "Vladimir Gladkov",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/JancyFOSDEM2016.pdf",
       "tags": []
     }
   ]

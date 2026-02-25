@@ -5,7 +5,7 @@
     "date": "February 1, 2015",
     "location": "FOSDEM, Brussels, Belgium",
     "canceled": false,
-    "talkCount": 4
+    "talkCount": 9
   },
   "talks": [
     {
@@ -15,17 +15,21 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "February 1, 2015",
       "category": "technical-talk",
-      "title": "Hafiz Abid Qadeer",
+      "title": "Porting LLDB to a new Target",
       "speakers": [
         {
-          "name": "Porting LLDB to a new Target",
-          "affiliation": ""
+          "name": "Hafiz Abid Qadeer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
         }
       ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/abid-lldb.pdf",
-      "tags": []
+      "tags": [],
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/qadeer-lldb_port.mp4"
     },
     {
       "id": "2015-02-002",
@@ -34,17 +38,21 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "February 1, 2015",
       "category": "technical-talk",
-      "title": "Kristof Beyls",
+      "title": "LLVM's AArch64 support - history & status",
       "speakers": [
         {
-          "name": "LLVM's AArch64 support",
-          "affiliation": ""
+          "name": "Kristof Beyls",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
         }
       ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/beyls-aarch64.pdf",
-      "tags": []
+      "tags": [],
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/beyls-aarch64.mp4"
     },
     {
       "id": "2015-02-003",
@@ -53,12 +61,21 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "February 1, 2015",
       "category": "technical-talk",
-      "title": "Erkan Diken",
-      "speakers": [],
+      "title": "moviCompile: An LLVM based compiler for heterogeneous SIMD code generation",
+      "speakers": [
+        {
+          "name": "Erkan Diken",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/diken-movicompile.pdf",
-      "tags": []
+      "tags": [],
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/diken-movicompile.mp4"
     },
     {
       "id": "2015-02-004",
@@ -67,11 +84,134 @@
       "meetingLocation": "FOSDEM, Brussels, Belgium",
       "meetingDate": "February 1, 2015",
       "category": "technical-talk",
-      "title": "David Chisnall",
-      "speakers": [],
+      "title": "Adventures with LLVM in a magical land where pointers are not integers",
+      "speakers": [
+        {
+          "name": "David Chisnall",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
       "abstract": "",
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/chisnall-pointers-not-int.pdf",
+      "tags": [],
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/chisnall-pointer.mp4"
+    },
+    {
+      "id": "2015-02-005",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "Extending the internal assembler How to add a new CPU feature",
+      "speakers": [
+        {
+          "name": "Kai Nacke",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": null,
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/kai-assembler.pdf",
+      "tags": []
+    },
+    {
+      "id": "2015-02-006",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "The C2 programming language Using Clang not like it's supposed to be used",
+      "speakers": [
+        {
+          "name": "Bas van den Berg",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/berg-c2.mp4",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/berg_c2lang.pdf",
+      "tags": []
+    },
+    {
+      "id": "2015-02-007",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "OpenMandriva's switch to clang as its default compiler OpenMandriva's experiences with switching the default compiler to clang",
+      "speakers": [
+        {
+          "name": "Bernhard Rosenkränzer",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/rosenkranzer-openmandriva.mp4",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2015-02-008",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "Code clone detection in LLVM compiler infrastructure LLVM: built-in scalable code clone detection based on semantic analysis",
+      "speakers": [
+        {
+          "name": "Sevak Sargsyan",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/sargsyan-code_clone.mp4",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/sargsyan-code-clone.pdf",
+      "tags": []
+    },
+    {
+      "id": "2015-02-009",
+      "meeting": "2015-02",
+      "meetingName": "2015 LLVM @ FOSDEM",
+      "meetingLocation": "FOSDEM, Brussels, Belgium",
+      "meetingDate": "February 1, 2015",
+      "category": "technical-talk",
+      "title": "LLVM on the Web Using Portable Native Client to run Clang/LLVM in the Browser",
+      "speakers": [
+        {
+          "name": "Brad Nelson",
+          "affiliation": "",
+          "github": "",
+          "linkedin": "",
+          "twitter": ""
+        }
+      ],
+      "abstract": "",
+      "videoUrl": "https://llvm.org/devmtg/2015-02/Videos/nelson-pnacl.mp4",
+      "videoId": null,
+      "slidesUrl": "https://llvm.org/devmtg/2015-02/slides/brad-pnacl.pdf",
       "tags": []
     }
   ]
