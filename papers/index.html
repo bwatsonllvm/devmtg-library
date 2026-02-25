@@ -47,7 +47,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260225-12">
+  <link rel="stylesheet" href="css/style.css?v=20260224-11">
 </head>
 <body data-content-scope="paper">
 
@@ -61,63 +61,42 @@
       <span>LLVM Research Library</span>
     </a>
 
-    <form class="global-search-form" action="work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, docs, people, and key topics">
-      <input type="hidden" name="mode" value="search">
-      <input
-        type="search"
-        class="global-search-input"
-        name="q"
-        placeholder="Search the full library..."
-        autocomplete="off"
-        spellcheck="false"
-        aria-label="Global Search across talks, papers, blogs, docs, people, and key topics"
-      >
-      <button class="global-search-submit" type="submit" aria-label="Run Global Search">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-      </button>
-    </form>
-
 <nav class="site-nav" aria-label="Main navigation">
-      <a href="talks/" class="nav-link" aria-label="Talks">
-        <span aria-hidden="true">Talks</span>
-      </a>
-      <a href="talks/events.html" class="nav-link" aria-label="Events">
-        <span aria-hidden="true">Events</span>
-      </a>
-      <a href="papers/" class="nav-link" aria-label="Papers">
-        <span aria-hidden="true">Papers</span>
-      </a>
-      <a href="blogs/" class="nav-link" aria-label="Blogs">
-        <span aria-hidden="true">Blogs</span>
-      </a>
-      <div class="nav-dropdown nav-dropdown-docs">
-        <a href="docs/" class="nav-link nav-dropdown-toggle" aria-label="Documentation">
-          <span aria-hidden="true">Docs</span>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </a>
-        <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
-          <a href="docs/" class="nav-dropdown-link" role="menuitem">Docs Hub</a>
-          <a href="docs/clang/" class="nav-dropdown-link" role="menuitem">Clang</a>
-          <a href="docs/lldb/" class="nav-dropdown-link" role="menuitem">LLDB</a>
-        </div>
-      </div>
-      <a href="people/" class="nav-link" aria-label="People">
-        <span aria-hidden="true">People</span>
-      </a>
-      <span class="site-nav-separator" aria-hidden="true">|</span>
-      <a href="updates/" class="nav-link" aria-label="Update log">
-        <span aria-hidden="true">Updates</span>
-      </a>
-      <a href="about/" class="nav-link" aria-label="About this site">
-        <span aria-hidden="true">About</span>
-      </a>
-    </nav>
-
+  <a href="talks/" class="nav-link" aria-label="Talks">
+    <span aria-hidden="true">Talks</span>
+  </a>
+  <a href="talks/events.html" class="nav-link" aria-label="Events">
+    <span aria-hidden="true">Events</span>
+  </a>
+  <a href="papers/" class="nav-link active" aria-current="page" aria-label="Papers">
+    <span aria-hidden="true">Papers</span>
+  </a>
+  <a href="blogs/" class="nav-link" aria-label="Blogs">
+    <span aria-hidden="true">Blogs</span>
+  </a>
+  <a href="people/" class="nav-link" aria-label="People">
+    <span aria-hidden="true">People</span>
+  </a>
+  <a href="about/" class="nav-link" aria-label="About this site">
+    <span aria-hidden="true">About</span>
+  </a>
+  <div class="nav-dropdown nav-dropdown-docs">
+    <a href="docs/" class="nav-link nav-dropdown-toggle" aria-label="Documentation">
+      <span aria-hidden="true">Docs</span>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </a>
+    <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
+      <a href="docs/" class="nav-dropdown-link" role="menuitem">LLVM Core</a>
+      <a href="docs/clang/" class="nav-dropdown-link" role="menuitem">Clang</a>
+      <a href="docs/lldb/" class="nav-dropdown-link" role="menuitem">LLDB</a>
+    </div>
+  </div>
+  <a href="updates/" class="nav-link" aria-label="Update log">
+    <span aria-hidden="true">Updates</span>
+  </a>
+</nav>
 
 <div class="mobile-nav-menu" id="mobile-nav-menu">
   <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
@@ -126,19 +105,18 @@
       <polyline points="6 9 12 15 18 9"></polyline>
     </svg>
   </button>
-        <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
-        <a href="talks/" class="mobile-nav-link">Talks</a>
-        <a href="talks/events.html" class="mobile-nav-link">Events</a>
-        <a href="papers/" class="mobile-nav-link">Papers</a>
-        <a href="blogs/" class="mobile-nav-link">Blogs</a>
-        <a href="docs/" class="mobile-nav-link">Docs: Hub</a>
-        <a href="docs/clang/" class="mobile-nav-link">Docs: Clang</a>
-        <a href="docs/lldb/" class="mobile-nav-link">Docs: LLDB</a>
-        <a href="people/" class="mobile-nav-link">People</a>
-        <a href="updates/" class="mobile-nav-link">Updates</a>
-        <a href="about/" class="mobile-nav-link">About</a>
-      </div>
-
+  <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+    <a href="talks/" class="mobile-nav-link">Talks</a>
+    <a href="talks/events.html" class="mobile-nav-link">Events</a>
+    <a href="papers/" class="mobile-nav-link active" aria-current="page">Papers</a>
+    <a href="blogs/" class="mobile-nav-link">Blogs</a>
+    <a href="people/" class="mobile-nav-link">People</a>
+    <a href="about/" class="mobile-nav-link">About</a>
+    <a href="docs/" class="mobile-nav-link">Docs: LLVM Core</a>
+    <a href="docs/clang/" class="mobile-nav-link">Docs: Clang</a>
+    <a href="docs/lldb/" class="mobile-nav-link">Docs: LLDB</a>
+    <a href="updates/" class="mobile-nav-link">Updates</a>
+  </div>
 </div>
 
 <div class="header-right">
@@ -373,9 +351,9 @@
       </div>
     </main>
   </div>
-  <script src="js/shared/library-utils.js?v=20260225-07"></script>
+  <script src="js/shared/library-utils.js?v=20260224-05"></script>
   <script src="js/papers-data.js?v=20260223-01"></script>
-  <script src="js/shared/global-search.js?v=20260225-14"></script>
+  <script src="js/shared/global-search.js?v=20260224-13"></script>
   <script src="js/papers.js?v=20260224-09"></script>
 </body>
 </html>

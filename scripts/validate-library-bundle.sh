@@ -26,7 +26,6 @@ for f in \
   people/index.html \
   about/index.html \
   docs/index.html \
-  docs/llvm-core/index.html \
   docs/clang/index.html \
   docs/lldb/index.html \
   docs/sources.json \

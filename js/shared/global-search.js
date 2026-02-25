@@ -7,94 +7,13 @@
 
   let dataLoadPromise = null;
   let indexBuildPromise = null;
-  let docsSourcesLoadPromise = null;
+  let docsIndexLoadPromise = null;
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, docs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
-
-  function normalizeRootPath(raw) {
-    const trimmed = String(raw || '').trim();
-    if (!trimmed) return '/';
-    return trimmed.endsWith('/') ? trimmed : `${trimmed}/`;
-  }
-
-  function resolveRootFromCurrentScript() {
-    const current = document.currentScript;
-    if (!current || !current.src) return '';
-    try {
-      const url = new URL(current.src, window.location.href);
-      const marker = '/js/shared/global-search.js';
-      const markerIndex = url.pathname.indexOf(marker);
-      if (markerIndex < 0) return '';
-      return normalizeRootPath(url.pathname.slice(0, markerIndex + 1));
-    } catch (_) {
-      return '';
-    }
-  }
-
-  function resolveLibraryRootPath() {
-    const explicit = normalizeRootPath(window.LLVMLibraryRootPath || '');
-    if (explicit && explicit !== '/') return explicit;
-
-    const fromScript = resolveRootFromCurrentScript();
-    if (fromScript && fromScript !== '/') return fromScript;
-
-    const baseNode = document.querySelector('base[href]');
-    if (baseNode) {
-      const href = String(baseNode.getAttribute('href') || '').trim();
-      if (href) {
-        try {
-          const baseUrl = new URL(href, window.location.href);
-          return normalizeRootPath(baseUrl.pathname || '/');
-        } catch (_) {
-          // Fallback below.
-        }
-      }
-    }
-
-    const path = String(window.location.pathname || '/');
-    const docsMatch = path.match(/^(.*?\/)docs(?:\/|$)/i);
-    if (docsMatch && docsMatch[1]) return normalizeRootPath(docsMatch[1]);
-
-    return '/';
-  }
-
-  function resolveAssetUrl(path) {
-    const relative = String(path || '').replace(/^\/+/, '');
-    return `${LIBRARY_ROOT_PATH}${relative}`;
-  }
-
-  const LIBRARY_ROOT_PATH = resolveLibraryRootPath();
-  const DOCS_SOURCES_CATALOG_SRC = 'docs/sources.json?v=20260225-01';
-  const DEFAULT_DOCS_SOURCES = [
-    {
-      id: 'llvm-core',
-      name: 'LLVM Core',
-      localPath: 'docs/llvm-core/',
-      docsUrl: 'https://llvm.org/docs/',
-      searchUrlTemplate: 'https://llvm.org/docs/search.html?q={query}',
-      description: 'LLVM core manuals, references, internals, and contributor documentation.',
-      keywords: ['llvm', 'ir', 'passes', 'codegen', 'backend', 'optimization'],
-    },
-    {
-      id: 'clang',
-      name: 'Clang',
-      localPath: 'docs/clang/',
-      docsUrl: 'https://clang.llvm.org/docs/',
-      searchUrlTemplate: 'https://clang.llvm.org/docs/search.html?q={query}',
-      description: 'Clang user guides, diagnostics, tooling, sanitizers, and frontend docs.',
-      keywords: ['clang', 'frontend', 'diagnostics', 'clang-tidy', 'clang-format', 'sanitizers'],
-    },
-    {
-      id: 'lldb',
-      name: 'LLDB',
-      localPath: 'docs/lldb/',
-      docsUrl: 'https://lldb.llvm.org/',
-      searchUrlTemplate: 'https://lldb.llvm.org/search.html?q={query}',
-      description: 'LLDB debugger documentation, command references, scripting, and API docs.',
-      keywords: ['lldb', 'debugger', 'debugging', 'breakpoints', 'python api', 'remote debugging'],
-    },
-  ];
+  const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-04';
+  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-04';
+  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=20260224-04';
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
@@ -180,7 +99,7 @@
     if (scope === 'talks') return 'Tailored for talks, speakers, and event content';
     if (scope === 'papers') return 'Tailored for papers, authors, venues, and abstracts';
     if (scope === 'blogs') return 'Tailored for blog posts, authors, and post content';
-    if (scope === 'docs') return 'Tailored for LLVM Core, Clang, and LLDB upstream docs sources';
+    if (scope === 'docs') return 'Tailored for LLVM Core, Clang, and LLDB docs pages, headings, and guide content';
     if (scope === 'people') return 'Tailored for people, expertise, affiliations, and publications';
     return 'Search across talks, papers, blogs, docs, and people';
   }
@@ -538,34 +457,6 @@
     updateScopeButtonsState(form);
   }
 
-  function positionAdvancedPanelWithinViewport(form) {
-    if (!form || form.classList.contains('search-box')) return;
-    const advanced = getAdvancedPanelState(form);
-    const panel = advanced.panel;
-    if (!panel || panel.classList.contains('hidden')) return;
-    if (typeof window === 'undefined' || typeof panel.getBoundingClientRect !== 'function') return;
-
-    const viewportWidth = Math.max(0, Number(window.innerWidth || 0));
-    if (!viewportWidth) return;
-
-    const margin = 12;
-    const panelWidth = Math.max(220, Math.min(760, viewportWidth - (margin * 2)));
-    const formRect = form.getBoundingClientRect();
-    const formRight = Number(formRect.right || 0);
-    const formLeft = Number(formRect.left || 0);
-
-    // Keep right-edge alignment by default, then clamp to viewport.
-    let desiredLeft = formRight - panelWidth;
-    const minLeft = margin;
-    const maxLeft = Math.max(minLeft, viewportWidth - margin - panelWidth);
-    desiredLeft = Math.min(Math.max(desiredLeft, minLeft), maxLeft);
-    const leftOffset = desiredLeft - formLeft;
-
-    panel.style.width = `${panelWidth}px`;
-    panel.style.left = `${leftOffset}px`;
-    panel.style.right = 'auto';
-  }
-
   function closeAdvancedPanel(form) {
     const advanced = getAdvancedPanelState(form);
     const panel = advanced.panel;
@@ -584,7 +475,6 @@
     const toggle = advanced.toggle;
     if (!panel || !toggle) return;
     panel.classList.remove('hidden');
-    positionAdvancedPanelWithinViewport(form);
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-pressed', 'true');
     form.classList.add('advanced-open');
@@ -854,13 +744,6 @@
       }
     });
 
-    const repositionAdvancedPanel = () => {
-      if (panel.classList.contains('hidden')) return;
-      positionAdvancedPanelWithinViewport(form);
-    };
-    window.addEventListener('resize', repositionAdvancedPanel, { passive: true });
-    window.addEventListener('scroll', repositionAdvancedPanel, { passive: true });
-
     form.addEventListener('submit', () => {
       syncHiddenFromAdvancedPanel(form);
       sanitizeAdvancedFieldsForContext(form);
@@ -1019,76 +902,68 @@
     });
   }
 
-  function cloneDefaultDocsSources() {
-    return DEFAULT_DOCS_SOURCES.map((source) => ({
-      ...source,
-      keywords: Array.isArray(source.keywords) ? [...source.keywords] : [],
-    }));
-  }
+  async function ensureDocsIndexLoader() {
+    if (docsIndexLoadPromise) return docsIndexLoadPromise;
 
-  function normalizeDocsSource(source, fallbackIndex = 0) {
-    if (!source || typeof source !== 'object') return null;
-    const id = normalizeText(source.id || `docs-source-${fallbackIndex + 1}`, 80)
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]+/g, '-')
-      .replace(/-{2,}/g, '-')
-      .replace(/^-+|-+$/g, '') || `docs-source-${fallbackIndex + 1}`;
-    const name = normalizeText(source.name, 120) || `Docs Source ${fallbackIndex + 1}`;
-    const localPathCandidate = normalizeText(source.localPath, 160)
-      || ({ 'llvm-core': 'docs/llvm-core/', clang: 'docs/clang/', lldb: 'docs/lldb/' }[id] || `docs/${id}/`);
-    const localPath = localPathCandidate.replace(/^\/+/, '').replace(/\/+$/, '') + '/';
-    const docsUrl = normalizeText(source.docsUrl, 420);
-    const searchUrlTemplate = normalizeText(source.searchUrlTemplate, 420);
-    const description = normalizeText(source.description, 320);
-    const keywords = Array.isArray(source.keywords)
-      ? source.keywords.map((value) => normalizeText(value, 80)).filter(Boolean).slice(0, 24)
-      : [];
-    if (!/^https?:\/\//i.test(docsUrl)) return null;
-    return {
-      id,
-      name,
-      localPath,
-      docsUrl,
-      searchUrlTemplate,
-      description,
-      keywords,
-    };
-  }
+    docsIndexLoadPromise = (async () => {
+      let llvmPayload = (window.LLVMCoreDocsUniversalSearchIndex && Array.isArray(window.LLVMCoreDocsUniversalSearchIndex.entries))
+        ? window.LLVMCoreDocsUniversalSearchIndex
+        : null;
+      let clangPayload = (window.LLVMClangDocsUniversalSearchIndex && Array.isArray(window.LLVMClangDocsUniversalSearchIndex.entries))
+        ? window.LLVMClangDocsUniversalSearchIndex
+        : null;
+      let lldbPayload = (window.LLVMLLDBDocsUniversalSearchIndex && Array.isArray(window.LLVMLLDBDocsUniversalSearchIndex.entries))
+        ? window.LLVMLLDBDocsUniversalSearchIndex
+        : null;
 
-  function buildLocalDocsRoute(localPath, query) {
-    const path = normalizeText(localPath, 240).replace(/^\/+/, '') || 'docs/llvm-core/';
-    const normalizedPath = path.endsWith('/') ? path : `${path}/`;
-    const trimmed = normalizeText(query, 320);
-    if (!trimmed) return resolveAssetUrl(normalizedPath);
-    return `${resolveAssetUrl(normalizedPath)}?q=${encodeURIComponent(trimmed)}`;
-  }
-
-  async function ensureDocsSourcesLoader() {
-    if (docsSourcesLoadPromise) return docsSourcesLoadPromise;
-
-    docsSourcesLoadPromise = (async () => {
-      const fallback = cloneDefaultDocsSources()
-        .map((source, index) => normalizeDocsSource(source, index))
-        .filter(Boolean);
-      try {
-        const response = await window.fetch(resolveAssetUrl(DOCS_SOURCES_CATALOG_SRC), { cache: 'no-store' });
-        if (!response.ok) return fallback;
-        const payload = await response.json();
-        const rawSources = Array.isArray(payload && payload.sources) ? payload.sources : [];
-        const normalized = rawSources
-          .map((source, index) => normalizeDocsSource(source, index))
-          .filter(Boolean);
-        return normalized.length ? normalized : fallback;
-      } catch {
-        return fallback;
+      if (!llvmPayload) {
+        try {
+          await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
+          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+            llvmPayload = window.LLVMDocsUniversalSearchIndex;
+            window.LLVMCoreDocsUniversalSearchIndex = llvmPayload;
+          }
+        } catch {
+          // Continue; docs autocomplete can still run with any available corpus.
+        }
       }
-    })().catch(() => (
-      cloneDefaultDocsSources()
-        .map((source, index) => normalizeDocsSource(source, index))
-        .filter(Boolean)
-    ));
 
-    return docsSourcesLoadPromise;
+      if (!clangPayload) {
+        try {
+          await ensureScript(CLANG_DOCS_UNIVERSAL_INDEX_SRC);
+          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+            clangPayload = window.LLVMDocsUniversalSearchIndex;
+            window.LLVMClangDocsUniversalSearchIndex = clangPayload;
+          }
+        } catch {
+          // Continue with LLVM Core docs only when Clang index is unavailable.
+        }
+      }
+
+      if (!lldbPayload) {
+        try {
+          await ensureScript(LLDB_DOCS_UNIVERSAL_INDEX_SRC);
+          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+            lldbPayload = window.LLVMDocsUniversalSearchIndex;
+            window.LLVMLLDBDocsUniversalSearchIndex = lldbPayload;
+          }
+        } catch {
+          // Continue with available docs corpora.
+        }
+      }
+
+      if (llvmPayload) {
+        window.LLVMDocsUniversalSearchIndex = llvmPayload;
+      }
+
+      return !!(
+        (llvmPayload && Array.isArray(llvmPayload.entries))
+        || (clangPayload && Array.isArray(clangPayload.entries))
+        || (lldbPayload && Array.isArray(lldbPayload.entries))
+      );
+    })().catch(() => false);
+
+    return docsIndexLoadPromise;
   }
 
   async function ensureDataLoaders() {
@@ -1097,12 +972,12 @@
     dataLoadPromise = (async () => {
       const tasks = [];
       if (typeof window.loadEventData !== 'function') {
-        tasks.push(ensureScript(resolveAssetUrl('js/events-data.js')));
+        tasks.push(ensureScript('js/events-data.js'));
       }
       if (typeof window.loadPaperData !== 'function') {
-        tasks.push(ensureScript(resolveAssetUrl('js/papers-data.js')));
+        tasks.push(ensureScript('js/papers-data.js'));
       }
-      tasks.push(ensureDocsSourcesLoader());
+      tasks.push(ensureDocsIndexLoader());
       if (tasks.length) {
         await Promise.allSettled(tasks);
       }
@@ -1133,7 +1008,7 @@
         bucket.labels.set(label, (bucket.labels.get(label) || 0) + 1);
       };
 
-      const addDocTitle = (title, href, sourceLabel, basePrefix, queryFromInput = false) => {
+      const addDocTitle = (title, href, sourceLabel, basePrefix) => {
         const label = normalizeText(title, 220);
         if (!label) return;
         const renderedLabel = `${label} (${sourceLabel})`;
@@ -1142,14 +1017,14 @@
         if (rawHref) {
           if (/^https?:\/\//i.test(rawHref)) url = rawHref;
           else if (rawHref.startsWith('/')) url = rawHref;
-          else if (rawHref.startsWith('docs/')) url = resolveAssetUrl(rawHref);
+          else if (rawHref.startsWith('docs/')) url = rawHref;
           else url = `${basePrefix}/${rawHref}`.replace(/\/{2,}/g, '/');
         }
         if (!url) {
           url = `${basePrefix}/`.replace(/\/{2,}/g, '/');
         }
         if (!docsTitleBuckets.has(renderedLabel)) {
-          docsTitleBuckets.set(renderedLabel, { count: 0, url, queryFromInput });
+          docsTitleBuckets.set(renderedLabel, { count: 0, url });
         }
         const bucket = docsTitleBuckets.get(renderedLabel);
         bucket.count += 1;
@@ -1185,19 +1060,22 @@
         }
       }
 
-      const docsSources = await ensureDocsSourcesLoader();
-      for (const source of docsSources) {
-        const sourceLabel = normalizeText(source && source.name, 120);
-        const docsUrl = normalizeText(source && source.docsUrl, 420);
-        const localPath = normalizeText(source && source.localPath, 180) || 'docs/llvm-core/';
-        if (!sourceLabel || !docsUrl) continue;
-
-        const primaryTitle = `${sourceLabel} Documentation`;
-        addDocTitle(primaryTitle, buildLocalDocsRoute(localPath, ''), sourceLabel, resolveAssetUrl('docs/'), false);
-
-        const searchTitle = `Search ${sourceLabel} Docs`;
-        addDocTitle(searchTitle, buildLocalDocsRoute(localPath, ''), sourceLabel, resolveAssetUrl('docs/'), true);
-      }
+      const docsPayloads = [
+        { payload: window.LLVMCoreDocsUniversalSearchIndex, sourceLabel: 'LLVM Core', basePrefix: 'docs' },
+        { payload: window.LLVMClangDocsUniversalSearchIndex, sourceLabel: 'Clang', basePrefix: 'docs/clang' },
+        { payload: window.LLVMLLDBDocsUniversalSearchIndex, sourceLabel: 'LLDB', basePrefix: 'docs/lldb' },
+      ];
+      docsPayloads.forEach(({ payload, sourceLabel, basePrefix }) => {
+        if (!payload || !Array.isArray(payload.entries)) return;
+        try {
+          for (const entry of payload.entries) {
+            if (!entry || typeof entry !== 'object') continue;
+            addDocTitle(entry.title, entry.href, sourceLabel, basePrefix);
+          }
+        } catch {
+          // Ignore docs index parse failures; other autocomplete buckets remain available.
+        }
+      });
 
       autocompleteIndex.topics = mapToSortedEntries(topicCounts);
       autocompleteIndex.people = [...peopleBuckets.values()]
@@ -1213,8 +1091,7 @@
         .map(([label, info]) => ({
           label,
           count: Number(info && info.count || 0),
-          url: String(info && info.url || resolveAssetUrl('docs/')),
-          queryFromInput: !!(info && info.queryFromInput),
+          url: String(info && info.url || 'docs/'),
         }))
         .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
       return autocompleteIndex;
@@ -1429,13 +1306,12 @@
     if (matches.docs.length) {
       sections.push(`
         <div class="search-dropdown-section">
-          <div class="search-dropdown-label" aria-hidden="true">Docs Sources</div>
+          <div class="search-dropdown-label" aria-hidden="true">Docs Pages</div>
           ${matches.docs.map((item) => `
             <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-type="doc"
                     data-autocomplete-value="${escapeHtml(item.label)}"
-                    data-autocomplete-doc-url="${escapeHtml(String(item.url || 'docs/llvm-core/'))}"
-                    data-autocomplete-doc-query-from-input="${item.queryFromInput ? '1' : '0'}">
+                    data-autocomplete-doc-url="${escapeHtml(String(item.url || 'docs/'))}">
               <span class="search-dropdown-item-icon">${docsIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
               <span class="search-dropdown-item-count">Docs</span>
@@ -1459,14 +1335,8 @@
         if (requestedType === 'doc') {
           const directUrl = String(item.dataset.autocompleteDocUrl || '').trim();
           if (!directUrl) return;
-          const useTypedQuery = String(item.dataset.autocompleteDocQueryFromInput || '').trim() === '1';
-          const liveQuery = useTypedQuery ? String(input.value || '').trim() : '';
-          const nextUrl = useTypedQuery && liveQuery
-            ? `${directUrl}${directUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(liveQuery)}`
-            : directUrl;
-          if (!nextUrl) return;
           closeDropdown(form);
-          window.location.assign(nextUrl);
+          window.location.assign(directUrl);
           return;
         }
         const submitType = resolveSubmitType(form, requestedType);
@@ -1607,13 +1477,8 @@
         if (requestedType === 'doc') {
           const directUrl = String(activeItem.dataset.autocompleteDocUrl || '').trim();
           if (!directUrl) return;
-          const useTypedQuery = String(activeItem.dataset.autocompleteDocQueryFromInput || '').trim() === '1';
-          const liveQuery = useTypedQuery ? String(input.value || '').trim() : '';
-          const nextUrl = useTypedQuery && liveQuery
-            ? `${directUrl}${directUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(liveQuery)}`
-            : directUrl;
           closeDropdown(form);
-          window.location.assign(nextUrl);
+          window.location.assign(directUrl);
           return;
         }
         const submitType = resolveSubmitType(form, requestedType);
@@ -1659,7 +1524,7 @@
     if (scope === 'talks') return 'Search talks (titles, speakers, summaries)...';
     if (scope === 'papers') return 'Search papers (titles, authors, abstracts)...';
     if (scope === 'blogs') return 'Search blogs (titles, authors, content)...';
-    if (scope === 'docs') return 'Search docs sources and route to upstream docs search...';
+    if (scope === 'docs') return 'Search docs (titles, headings, content)...';
     if (scope === 'people') return 'Search people (names, expertise, affiliations)...';
     return GLOBAL_SEARCH_PLACEHOLDER;
   }
