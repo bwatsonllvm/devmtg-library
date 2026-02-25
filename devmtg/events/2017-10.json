@@ -5,7 +5,7 @@
     "date": "October 18-19, 2017",
     "location": "San Jose, CA, USA",
     "canceled": false,
-    "talkCount": 49
+    "talkCount": 48
   },
   "talks": [
     {
@@ -39,48 +39,12 @@
       ]
     },
     {
-      "id": "2017-10-006",
-      "meeting": "2017-10",
-      "meetingName": "2017 US LLVM Developers' Meeting",
-      "meetingLocation": "San Jose, CA, USA",
-      "meetingDate": "October 18-19, 2017",
-      "category": "student-talk",
-      "title": "Student Research Competition:",
-      "speakers": [
-        {
-          "name": "Simon Moll",
-          "affiliation": ""
-        },
-        {
-          "name": "Sebastian Hack",
-          "affiliation": ""
-        }
-      ],
-      "abstract": "Posters: Venerable Variadic Vulnerabilities Vanquished - Priyam Biswas, Alessandro Di Federico, Scott A. Carr, Prabhu Rajasekaran, Stijn Volckaert, Yeoul Na, Michael Franz and Mathias Payer Extending LLVM’s masked.gather/scatter Intrinsic to Read/write Contiguous Chunks from/to Arbitrary Locations. - Farhana Aleen, Elena Demikhovsky and Hideki Saito An LLVM based Loop Profiler - Shalini Jain, Kamlesh Kumar, Suresh Purini, Dibyendu Das and Ramakrishna Upadrasta Leveraging Compiler Optimizations to Reduce Runtime Fault Recovery Overhead - Fateme S. Hosseini, Pouya Fotouhi, Chengmo Yang and Guang R. Gao Polyhedral Optimizations and transparent GPU offloading for Julia by Polly - Sanjay Srivallabh Singapuram Improving debug information in LLVM to recover optimized-out function parameters - Ananth Sowda and Ivan Baev Adding Debug Information and Merge Attribute to Merge-Functions LLVM passes - Anmol Paralkar ALLVM: LLVM All the Things! - Will Dietz and Vikram Adve Project Sulong - Executing LLVM IR on top of a JVM - Matthias Grimmer and Christian Wimmer JIT Fuzzing Solver: A LibFuzzer based constraint solver - Daniel Liew, Cristian Cadar and Alastair Donaldson Non-determinism in LLVM Code Generation - Mandeep Singh Grang",
-      "videoUrl": "https://youtu.be/svMEphbFukw",
-      "videoId": "svMEphbFukw",
-      "slidesUrl": "https://llvm.org/devmtg/2017-10/slides/Moll-Vplan.pdf",
-      "tags": [
-        "Backend",
-        "Debug Information",
-        "Dynamic Analysis",
-        "GPU",
-        "IR",
-        "JIT",
-        "Loop transformations",
-        "Optimizations",
-        "Performance",
-        "Polly",
-        "Programming Languages"
-      ]
-    },
-    {
       "id": "2017-10-007",
       "meeting": "2017-10",
       "meetingName": "2017 US LLVM Developers' Meeting",
       "meetingLocation": "San Jose, CA, USA",
       "meetingDate": "October 18-19, 2017",
-      "category": "technical-talk",
+      "category": "student-talk",
       "title": "Apple LLVM GPU Compiler: Embedded Dragons",
       "speakers": [
         {
@@ -1243,6 +1207,7 @@
       "abstract": "The future of automatic vectorization in LLVM lies in Intel's VPlan proposal. The current VPlan patches provide the basic scaffolding for outer loop vectorization. However, the advanced analyses and transformations to execute VPlans are yet missing. The Region Vectorizer (RV) is an automatic vectorization framework for LLVM. RV provides a unified interface to vectorize code regions, such as inner and outer loops, up to whole functions. RV's analysis and transformations are designed to create highly efficient SIMD code. These are the exact the analyses and transformations that are needed for VPlan. This talk presents a proposal for integrating RV with VPlan.",
       "videoUrl": "https://youtu.be/svMEphbFukw",
       "videoId": "svMEphbFukw",
+      "slidesUrl": "https://llvm.org/devmtg/2017-10/slides/Moll-Vplan.pdf",
       "tags": [
         "Autovectorization",
         "VPlan"
@@ -1254,7 +1219,7 @@
       "meetingName": "2017 US LLVM Developers' Meeting",
       "meetingLocation": "San Jose, CA, USA",
       "meetingDate": "October 18-19, 2017",
-      "category": "technical-talk",
+      "category": "student-talk",
       "title": "Polyhedral Value & Memory Analysis",
       "speakers": [
         {
@@ -1281,7 +1246,7 @@
       "meetingName": "2017 US LLVM Developers' Meeting",
       "meetingLocation": "San Jose, CA, USA",
       "meetingDate": "October 18-19, 2017",
-      "category": "technical-talk",
+      "category": "student-talk",
       "title": "DLVM: A Compiler Framework for Deep Learning DSLs",
       "speakers": [
         {
@@ -1300,6 +1265,7 @@
       "abstract": "Deep learning software demands performance and reliability. However, many of the current deep learning tools and infrastructures are highly dependent on software libraries that act as a dynamic DSL and a computation graph interpreter. We present DLVM, a design and implementation of a compiler framework that consists of linear algebra operators, automatic differentiation, domain-specific optimizations and a code generator targeting heterogeneous parallel hardware. DLVM is designed to support the development of neural network DSLs, with both AOT and JIT compilation. To demonstrate an end-to-end system from neural network DSL, via DLVM, to parallelized execution, we demonstrate NNKit, a typed tagless-final DSL embedded in the Swift programming language that targets DLVM IR. We argue that the DLVM system enables a form of modular, safe and performant toolkits for deep learning.",
       "videoUrl": "https://youtu.be/9fdFbVBUQGs",
       "videoId": "9fdFbVBUQGs",
+      "slidesUrl": "https://llvm.org/devmtg/2017-10/slides/Wei-DLVM.pdf",
       "tags": [
         "AI",
         "Embedded",
@@ -1315,7 +1281,7 @@
       "meetingName": "2017 US LLVM Developers' Meeting",
       "meetingLocation": "San Jose, CA, USA",
       "meetingDate": "October 18-19, 2017",
-      "category": "technical-talk",
+      "category": "student-talk",
       "title": "Exploiting and improving LLVM's data flow analysis using superoptimizer",
       "speakers": [
         {
@@ -1327,12 +1293,13 @@
           "affiliation": ""
         }
       ],
-      "abstract": "To contact the organizer please email Tanya Lattner.",
+      "abstract": "This proposal is about increasing the reach of a superoptimizer to find missing optimizations and make LLVM’s data flow analysis more precise. Superoptimizer usually performs optimizations based only on local information, i.e. it operates on a small set of instructions. To enhance its knowledge for farther program points, we build an interaction between a superoptimizer and LLVM’s data flow analysis. With the global information derived from a compiler’s data flow analysis, the superoptimizer can find more interesting optimizations as it knows much more than just the instruction sequence. Our goal is not limited to exploiting the data flow facts imported from LLVM to help our superoptimizer: \"Souper\". We also improve LLVM’s data flow analysis by finding imprecision and making suggestions. It is harder to implement optimizations with path conditions in LLVM compiler. To avoid writing fragile optimization without any additional information, we automatically scan Souper’s optimizations for path conditions that map into data flow facts already known to LLVM and suggest corresponding optimizations. The interesting set of optimizations found by Souper also resulted in patches to improve LLVM’s data flow analysis and some of them are already accepted.",
       "videoUrl": "https://youtu.be/WyMTa2_yNHQ",
       "videoId": "WyMTa2_yNHQ",
       "tags": [
+        "IR",
         "Optimizations",
-        "Security"
+        "Static Analysis"
       ]
     }
   ]
