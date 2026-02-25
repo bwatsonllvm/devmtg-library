@@ -929,13 +929,10 @@ const DOCUMENTATION_OPTIONS = {
       </header>`;
   }
 
-  function ensureHomeScript(rootPath) {
-    const src = `${rootPath}js/home.js?v=20260224-03`;
-    const existing = document.querySelector(`script[src="${src}"]`);
-    if (existing) return;
-    const script = document.createElement('script');
-    script.src = src;
-    document.body.appendChild(script);
+  function ensureHomeScript(_rootPath) {
+    // Intentionally disabled for docs pages.
+    // The docs bridge initializes its own header/menu interactions; loading
+    // home.js here would bind duplicate handlers and make toggles no-op.
   }
 
   function slugToDocsHref(slug, rootPath, docsBasePath = ACTIVE_DOCS_BASE_PATH) {
@@ -2189,7 +2186,7 @@ const DOCUMENTATION_OPTIONS = {
 
       const title = document.createElement('span');
       title.className = 'docs-universal-search-result-title';
-      title.textContent = String(entry.title || 'Untitled');
+      title.textContent = normalizeDocsDisplayLabel(entry.title || '', 'Untitled');
       link.appendChild(title);
 
       const contextText = buildUniversalResultContext(entry);
@@ -3097,12 +3094,22 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function stripLldbBugGlyph(value, fallback) {
-    const cleaned = String(value || '')
+    const fallbackText = String(fallback || '').trim();
+    const raw = String(value || '')
       .replace(/\uD83D\uDC1B/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
-    if (cleaned) return cleaned;
-    return String(fallback || '').trim();
+    if (!raw) return fallbackText;
+
+    const cleaned = raw
+      .replace(/\s*[\u2013\u2014-]\s*LLDB(?:\s+Documentation)?\s*$/i, '')
+      .trim();
+
+    if (cleaned && !/^LLDB(?:\s+Documentation)?$/i.test(cleaned)) {
+      return cleaned;
+    }
+
+    return fallbackText || cleaned;
   }
 
   function sanitizeLldbBranding() {
