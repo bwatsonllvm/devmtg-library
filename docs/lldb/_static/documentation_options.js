@@ -2713,7 +2713,10 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function stripLldbBugGlyph(value, fallback) {
-    const cleaned = normalizeSpace(String(value || '').replace(/\uD83D\uDC1B/g, ' '));
+    const cleaned = String(value || '')
+      .replace(/\uD83D\uDC1B/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
     if (cleaned) return cleaned;
     return String(fallback || '').trim();
   }
