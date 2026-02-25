@@ -323,7 +323,7 @@ const DOCUMENTATION_OPTIONS = {
       href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
     });
     ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/style.css?v=20260224-11` });
-    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260224-28` });
+    ensureHeadTag('link', { rel: 'stylesheet', href: `${rootPath}css/docs-bridge.css?v=20260225-02` });
   }
 
   function removeLegacySphinxChrome() {
@@ -2701,6 +2701,33 @@ const DOCUMENTATION_OPTIONS = {
     return cleaned || `${getDocsCorpusLabel(ACTIVE_DOCS_KIND)} Documentation`;
   }
 
+  function stripLldbBugGlyph(value, fallback) {
+    const cleaned = normalizeSpace(String(value || '').replace(/\uD83D\uDC1B/g, ' '));
+    if (cleaned) return cleaned;
+    return String(fallback || '').trim();
+  }
+
+  function sanitizeLldbBranding() {
+    if (ACTIVE_DOCS_KIND !== 'lldb') return;
+
+    const selectors = [
+      '.mobile-header .brand',
+      '.sidebar-brand-text',
+      '.sidebar-brand',
+    ];
+
+    selectors.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((node) => {
+        const text = stripLldbBugGlyph(node.textContent, 'LLDB');
+        if (text) node.textContent = text;
+      });
+    });
+
+    if (document.title) {
+      document.title = stripLldbBugGlyph(document.title, 'LLDB');
+    }
+  }
+
   function resolveHashTargetElement() {
     const rawHash = String(window.location.hash || '').replace(/^#/, '').trim();
     if (!rawHash) return null;
@@ -2810,7 +2837,7 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function ensureFooterContentAlignment() {
-    const footer = document.querySelector('.footer');
+    const footer = document.querySelector('body > .footer');
     if (!footer) return;
     if (footer.querySelector('.docs-footer-inner')) return;
     const inner = document.createElement('div');
@@ -2892,6 +2919,7 @@ const DOCUMENTATION_OPTIONS = {
     if (document.body) document.body.classList.add('library-docs-bridge');
     ensureSphinxLayoutScaffold();
     rewriteAbsoluteDocsLinksToMirror(rootPath);
+    sanitizeLldbBranding();
     document.documentElement.classList.add('library-docs-bridge-ready');
 
     const existingHeader = document.getElementById('llvm-docs-bridge-header');
