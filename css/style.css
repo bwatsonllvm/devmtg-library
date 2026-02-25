@@ -388,6 +388,14 @@ ul, ol {
   border-color: transparent;
 }
 
+.site-nav-separator {
+  color: var(--color-text-subtle);
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
 .nav-dropdown {
   position: relative;
   display: inline-flex;

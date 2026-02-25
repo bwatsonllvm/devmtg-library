@@ -11,6 +11,18 @@
   --docs-reading-width: 82ch;
 }
 
+/* Keep docs header height consistent across corpora (LLDB Furo defines its own
+   --header-height on body, which otherwise shrinks only LLDB pages). */
+body.library-docs-bridge {
+  --header-height: 70px !important;
+}
+
+@media (max-width: 768px) {
+  body.library-docs-bridge {
+    --header-height: 108px !important;
+  }
+}
+
 /* Hide legacy Sphinx chrome even before bridge JS finishes. */
 div.logo,
 div.related,
@@ -96,8 +108,7 @@ body {
 }
 
 .library-docs-bridge .site-nav .nav-link:hover,
-.library-docs-bridge .site-nav .nav-link.active,
-.library-docs-bridge .site-nav .nav-link[aria-current="page"] {
+.library-docs-bridge .site-nav .nav-link:focus-visible {
   color: var(--color-text, #111827) !important;
 }
 

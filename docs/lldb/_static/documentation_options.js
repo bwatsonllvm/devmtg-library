@@ -826,15 +826,31 @@ const DOCUMENTATION_OPTIONS = {
           <img src="${rootPath}images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
           <span>LLVM Research Library</span>
         </a>
+        <form class="global-search-form" action="${rootPath}work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, docs, people, and key topics">
+          <input type="hidden" name="mode" value="search">
+          <input
+            type="search"
+            class="global-search-input"
+            name="q"
+            placeholder="Search the full library..."
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Global Search across talks, papers, blogs, docs, people, and key topics"
+          >
+          <button class="global-search-submit" type="submit" aria-label="Run Global Search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
         <nav class="site-nav" aria-label="Main navigation">
           <a href="${rootPath}talks/" class="nav-link" aria-label="Talks"><span aria-hidden="true">Talks</span></a>
           <a href="${rootPath}talks/events.html" class="nav-link" aria-label="Events"><span aria-hidden="true">Events</span></a>
           <a href="${rootPath}papers/" class="nav-link" aria-label="Papers"><span aria-hidden="true">Papers</span></a>
           <a href="${rootPath}blogs/" class="nav-link" aria-label="Blogs"><span aria-hidden="true">Blogs</span></a>
-          <a href="${rootPath}people/" class="nav-link" aria-label="People"><span aria-hidden="true">People</span></a>
-          <a href="${rootPath}about/" class="nav-link" aria-label="About this site"><span aria-hidden="true">About</span></a>
           <div class="nav-dropdown nav-dropdown-docs">
-            <a href="${rootPath}${ACTIVE_DOCS_BASE_PATH}/" class="nav-link nav-dropdown-toggle active" aria-current="page" aria-label="Documentation">
+            <a href="${rootPath}${ACTIVE_DOCS_BASE_PATH}/" class="nav-link nav-dropdown-toggle" aria-label="Documentation">
               <span aria-hidden="true">Docs</span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -846,7 +862,10 @@ const DOCUMENTATION_OPTIONS = {
               <a href="${rootPath}docs/lldb/" class="nav-dropdown-link${ACTIVE_DOCS_KIND === 'lldb' ? ' active' : ''}" role="menuitem"${ACTIVE_DOCS_KIND === 'lldb' ? ' aria-current="page"' : ''}>LLDB</a>
             </div>
           </div>
+          <a href="${rootPath}people/" class="nav-link" aria-label="People"><span aria-hidden="true">People</span></a>
+          <span class="site-nav-separator" aria-hidden="true">|</span>
           <a href="${rootPath}updates/" class="nav-link" aria-label="Update log"><span aria-hidden="true">Updates</span></a>
+          <a href="${rootPath}about/" class="nav-link" aria-label="About this site"><span aria-hidden="true">About</span></a>
         </nav>
         <div class="mobile-nav-menu" id="mobile-nav-menu">
           <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
@@ -867,8 +886,8 @@ const DOCUMENTATION_OPTIONS = {
               <a href="${rootPath}papers/" class="mobile-nav-link">Papers</a>
               <a href="${rootPath}blogs/" class="mobile-nav-link">Blogs</a>
               <a href="${rootPath}people/" class="mobile-nav-link">People</a>
-              <a href="${rootPath}about/" class="mobile-nav-link">About</a>
               <a href="${rootPath}updates/" class="mobile-nav-link">Updates</a>
+              <a href="${rootPath}about/" class="mobile-nav-link">About</a>
             </div>
             <div class="mobile-nav-group" role="group" aria-label="Documentation sources">
               <p class="mobile-nav-group-label">Docs</p>
@@ -3061,7 +3080,7 @@ const DOCUMENTATION_OPTIONS = {
       script = document.createElement('script');
       script.id = scriptId;
       const docsBase = String(ACTIVE_DOCS_BASE_PATH || 'docs').replace(/^\/+|\/+$/g, '');
-      script.src = `${rootPath}${docsBase}/_static/docs-book-index.js?v=20260224-03`;
+      script.src = `${rootPath}${docsBase}/_static/docs-book-index.js?v=20260225-01`;
       script.async = true;
       script.addEventListener('load', onReady, { once: true });
       script.addEventListener('error', () => {
@@ -3087,7 +3106,11 @@ const DOCUMENTATION_OPTIONS = {
     const fallbackText = String(fallback || '').trim();
     const raw = String(value || '').trim();
     const resolved = raw || fallbackText;
-    if (ACTIVE_DOCS_KIND === 'lldb') {
+    const shouldSanitizeLldbLabel = ACTIVE_DOCS_KIND === 'lldb'
+      || /\uD83D\uDC1B/.test(resolved)
+      || /\s*[\u2013\u2014-]\s*LLDB(?:\s+Documentation)?\s*$/i.test(resolved)
+      || /^LLDB(?:\s+Documentation)?$/i.test(resolved);
+    if (shouldSanitizeLldbLabel) {
       return stripLldbBugGlyph(resolved, fallbackText || 'LLDB');
     }
     return resolved || fallbackText;
