@@ -13,6 +13,7 @@
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
   const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-04';
   const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-04';
+  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=20260224-04';
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
@@ -98,7 +99,7 @@
     if (scope === 'talks') return 'Tailored for talks, speakers, and event content';
     if (scope === 'papers') return 'Tailored for papers, authors, venues, and abstracts';
     if (scope === 'blogs') return 'Tailored for blog posts, authors, and post content';
-    if (scope === 'docs') return 'Tailored for LLVM Core and Clang docs pages, headings, and guide content';
+    if (scope === 'docs') return 'Tailored for LLVM Core, Clang, and LLDB docs pages, headings, and guide content';
     if (scope === 'people') return 'Tailored for people, expertise, affiliations, and publications';
     return 'Search across talks, papers, blogs, docs, and people';
   }
@@ -911,6 +912,9 @@
       let clangPayload = (window.LLVMClangDocsUniversalSearchIndex && Array.isArray(window.LLVMClangDocsUniversalSearchIndex.entries))
         ? window.LLVMClangDocsUniversalSearchIndex
         : null;
+      let lldbPayload = (window.LLVMLLDBDocsUniversalSearchIndex && Array.isArray(window.LLVMLLDBDocsUniversalSearchIndex.entries))
+        ? window.LLVMLLDBDocsUniversalSearchIndex
+        : null;
 
       if (!llvmPayload) {
         try {
@@ -936,6 +940,18 @@
         }
       }
 
+      if (!lldbPayload) {
+        try {
+          await ensureScript(LLDB_DOCS_UNIVERSAL_INDEX_SRC);
+          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+            lldbPayload = window.LLVMDocsUniversalSearchIndex;
+            window.LLVMLLDBDocsUniversalSearchIndex = lldbPayload;
+          }
+        } catch {
+          // Continue with available docs corpora.
+        }
+      }
+
       if (llvmPayload) {
         window.LLVMDocsUniversalSearchIndex = llvmPayload;
       }
@@ -943,6 +959,7 @@
       return !!(
         (llvmPayload && Array.isArray(llvmPayload.entries))
         || (clangPayload && Array.isArray(clangPayload.entries))
+        || (lldbPayload && Array.isArray(lldbPayload.entries))
       );
     })().catch(() => false);
 
@@ -1046,6 +1063,7 @@
       const docsPayloads = [
         { payload: window.LLVMCoreDocsUniversalSearchIndex, sourceLabel: 'LLVM Core', basePrefix: 'docs' },
         { payload: window.LLVMClangDocsUniversalSearchIndex, sourceLabel: 'Clang', basePrefix: 'docs/clang' },
+        { payload: window.LLVMLLDBDocsUniversalSearchIndex, sourceLabel: 'LLDB', basePrefix: 'docs/lldb' },
       ];
       docsPayloads.forEach(({ payload, sourceLabel, basePrefix }) => {
         if (!payload || !Array.isArray(payload.entries)) return;

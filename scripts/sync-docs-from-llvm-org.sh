@@ -7,6 +7,8 @@ DOCS_DIR="$ROOT/docs"
 REGENERATE_BOOK_INDEX=1
 REGENERATE_UNIVERSAL_SEARCH_INDEX=1
 BRIDGE_DOC_OPTIONS=""
+EXCLUDE_PATH_PREFIXES=()
+FETCH_SOURCE_COMPANIONS=1
 
 KEEP_PATHS=(
   "_static/documentation_options.js"
@@ -35,6 +37,11 @@ Options:
                           Skip universal-search-index regeneration step
   --bridge-doc-options PATH
                           Optional bridge documentation_options.js to copy into docs _static
+  --exclude-path-prefix PATH
+                          Skip crawling/downloading URLs under this absolute path prefix
+                          (repeatable, e.g. --exclude-path-prefix /cpp_reference/)
+  --skip-source-companions
+                          Skip fallback probing for missing _sources/*.txt companion files
   -h, --help              Show help
 EOF
 }
@@ -63,6 +70,25 @@ while (($#)); do
       [[ $# -ge 2 ]] || fail "--bridge-doc-options requires a value"
       BRIDGE_DOC_OPTIONS="$2"
       shift 2
+      ;;
+    --exclude-path-prefix)
+      [[ $# -ge 2 ]] || fail "--exclude-path-prefix requires a value"
+      raw_prefix="$2"
+      raw_prefix="${raw_prefix%%\#*}"
+      raw_prefix="${raw_prefix%%\?*}"
+      raw_prefix="/${raw_prefix#/}"
+      if [[ "$raw_prefix" == "/" ]]; then
+        fail "--exclude-path-prefix cannot be /"
+      fi
+      if [[ "$raw_prefix" != */ ]]; then
+        raw_prefix="${raw_prefix}/"
+      fi
+      EXCLUDE_PATH_PREFIXES+=("$raw_prefix")
+      shift 2
+      ;;
+    --skip-source-companions)
+      FETCH_SOURCE_COMPANIONS=0
+      shift
       ;;
     -h|--help)
       usage
@@ -128,6 +154,13 @@ trap cleanup EXIT
 
 echo "Syncing docs mirror from $SOURCE_URL"
 if command -v wget >/dev/null 2>&1; then
+  WGET_EXTRA_ARGS=()
+  if ((${#EXCLUDE_PATH_PREFIXES[@]})); then
+    for excluded_prefix in "${EXCLUDE_PATH_PREFIXES[@]}"; do
+      escaped_prefix="${excluded_prefix//\//\\/}"
+      WGET_EXTRA_ARGS+=(--reject-regex "https?://[^/]+${escaped_prefix}.*")
+    done
+  fi
   wget \
     --mirror \
     --no-verbose \
@@ -140,6 +173,7 @@ if command -v wget >/dev/null 2>&1; then
     --tries=4 \
     --timeout=30 \
     --read-timeout=30 \
+    "${WGET_EXTRA_ARGS[@]}" \
     "$SOURCE_URL"
 else
   echo "wget not found; using curl crawler fallback"
@@ -209,7 +243,7 @@ PY
       fi
       fetched_count=$((fetched_count + 1))
 
-      python3 - "$SOURCE_URL" "$normalized_url" "$out_path" > "$CRAWL_LINKS_FILE" <<'PY'
+      python3 - "$SOURCE_URL" "$normalized_url" "$out_path" "${EXCLUDE_PATH_PREFIXES[@]}" > "$CRAWL_LINKS_FILE" <<'PY'
 import pathlib
 import re
 import sys
@@ -220,6 +254,17 @@ from html.parser import HTMLParser
 source_url = sys.argv[1]
 current_url = sys.argv[2]
 file_path = pathlib.Path(sys.argv[3])
+exclude_prefixes = []
+for raw in sys.argv[4:]:
+    value = str(raw or "").strip()
+    if not value:
+        continue
+    if not value.startswith("/"):
+        value = "/" + value
+    if value != "/" and not value.endswith("/"):
+        value += "/"
+    exclude_prefixes.append(value)
+
 source_parsed = urllib.parse.urlparse(source_url)
 source_prefix = source_parsed.path or "/"
 if not source_prefix.endswith("/"):
@@ -246,6 +291,9 @@ def normalize(raw_url: str) -> str:
         return ""
     if not path.startswith(source_prefix):
         return ""
+    for excluded_prefix in exclude_prefixes:
+        if path == excluded_prefix.rstrip("/") or path.startswith(excluded_prefix):
+            return ""
     normalized = parsed._replace(path=path, params="", query="", fragment="")
     return urllib.parse.urlunparse(normalized)
 
@@ -317,7 +365,7 @@ PY
     FALLBACK_MIRROR_ROOT="$TMP_DIR/$SOURCE_PATH"
   fi
 
-  if [[ -d "$FALLBACK_MIRROR_ROOT" ]]; then
+  if [[ "$FETCH_SOURCE_COMPANIONS" -eq 1 && -d "$FALLBACK_MIRROR_ROOT" ]]; then
     echo "Fetching _sources companions for fallback mirror"
     while IFS= read -r html_file; do
       rel_path="${html_file#$FALLBACK_MIRROR_ROOT/}"

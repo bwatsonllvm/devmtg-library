@@ -35,6 +35,7 @@ const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
 const UNIVERSAL_MAX_RESULTS = 1200;
 const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=20260224-04';
 const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=20260224-04';
+const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=20260224-04';
 const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
 
 const state = {
@@ -158,8 +159,20 @@ async function loadDocsUniversalRecords() {
       }
     }
 
+    if (!(window.LLVMLLDBDocsUniversalSearchIndex && Array.isArray(window.LLVMLLDBDocsUniversalSearchIndex.entries))) {
+      try {
+        await ensureScript(LLDB_DOCS_UNIVERSAL_INDEX_SRC);
+        if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
+          window.LLVMLLDBDocsUniversalSearchIndex = window.LLVMDocsUniversalSearchIndex;
+        }
+      } catch {
+        // Continue with whichever docs corpora are available.
+      }
+    }
+
     const llvmPayload = window.LLVMCoreDocsUniversalSearchIndex;
     const clangPayload = window.LLVMClangDocsUniversalSearchIndex;
+    const lldbPayload = window.LLVMLLDBDocsUniversalSearchIndex;
     if (llvmPayload && Array.isArray(llvmPayload.entries)) {
       window.LLVMDocsUniversalSearchIndex = llvmPayload;
     }
@@ -170,8 +183,11 @@ async function loadDocsUniversalRecords() {
     const clangEntries = (clangPayload && Array.isArray(clangPayload.entries))
       ? clangPayload.entries.map((entry, index) => normalizeDocsRecord(entry, index + llvmEntries.length, 'docs/clang'))
       : [];
+    const lldbEntries = (lldbPayload && Array.isArray(lldbPayload.entries))
+      ? lldbPayload.entries.map((entry, index) => normalizeDocsRecord(entry, index + llvmEntries.length + clangEntries.length, 'docs/lldb'))
+      : [];
 
-    return [...llvmEntries, ...clangEntries].filter(Boolean);
+    return [...llvmEntries, ...clangEntries, ...lldbEntries].filter(Boolean);
   })().catch(() => []);
 
   return docsDataLoadPromise;
@@ -1240,7 +1256,12 @@ function normalizeDocsRecord(rawEntry, fallbackIndex = 0, docsBasePrefix = 'docs
   const idCore = slug || `doc-${fallbackIndex + 1}`;
   const idPrefix = String(docsBasePrefix || 'docs').replace(/[^a-z0-9/_-]+/gi, '').replace(/\//g, '-');
   const id = `${idPrefix}:${idCore}`;
-  const collection = String(docsBasePrefix || '').replace(/^\/+|\/+$/g, '') === 'docs/clang' ? 'Clang' : 'LLVM Core';
+  const normalizedPrefix = String(docsBasePrefix || '').replace(/^\/+|\/+$/g, '');
+  const collection = ({
+    docs: 'LLVM Core',
+    'docs/clang': 'Clang',
+    'docs/lldb': 'LLDB',
+  }[normalizedPrefix] || 'LLVM Core');
 
   if (!title || !href) return null;
 

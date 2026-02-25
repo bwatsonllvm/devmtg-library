@@ -102,7 +102,7 @@ def extract_html_title(html_path: Path) -> Optional[str]:
     if not match:
         return None
     title = html.unescape(match.group(1)).strip()
-    title = re.sub(r"\s+[–—-]\s+(?:LLVM|Clang)\s+.*$", "", title, flags=re.IGNORECASE).strip()
+    title = re.sub(r"\s+[–—-]\s+(?:LLVM|Clang|LLDB)\s+.*$", "", title, flags=re.IGNORECASE).strip()
     title = re.sub(r"\s+[–—-]\s+[^–—-]*\bdocumentation$", "", title, flags=re.IGNORECASE).strip()
     title = re.sub(r"\s+documentation$", "", title, flags=re.IGNORECASE).strip()
     if not title or title == "..":
@@ -114,8 +114,12 @@ def detect_docs_variant(source_docs: Dict[str, SourceDoc], docs_root: Path) -> s
     root_name = docs_root.name.lower()
     if root_name == "clang":
         return "clang"
+    if root_name == "lldb":
+        return "lldb"
     if "UsersManual" in source_docs and "GettingStartedTutorials" not in source_docs:
         return "clang"
+    if "use/tutorial" in source_docs and "python_api" in source_docs:
+        return "lldb"
     return "llvm-core"
 
 
@@ -280,7 +284,7 @@ def parse_toctree_edges(source_docs: Dict[str, SourceDoc]) -> Dict[str, List[str
     return edges
 
 
-def parse_clang_section_chapters(
+def parse_index_section_chapters(
     source_docs: Dict[str, SourceDoc],
     titles: Dict[str, str],
 ) -> List[tuple[str, List[str]]]:
@@ -406,8 +410,8 @@ def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict
 
     docs_variant = detect_docs_variant(source_docs, docs_root)
 
-    if docs_variant == "clang":
-        chapter_defs = parse_clang_section_chapters(source_docs, titles)
+    if docs_variant in {"clang", "lldb"}:
+        chapter_defs = parse_index_section_chapters(source_docs, titles)
     else:
         chapter_defs = [
             ("Foundations", ["FAQ", "Lexicon"]),
@@ -421,7 +425,7 @@ def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict
     chapters: List[Dict[str, object]] = []
 
     # Ensure the docs landing page is always present without making it the sole root.
-    if docs_variant == "clang" and "index" in titles:
+    if docs_variant in {"clang", "lldb"} and "index" in titles:
         chapters.append(
             {
                 "title": "Overview",

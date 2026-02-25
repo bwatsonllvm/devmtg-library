@@ -78,6 +78,17 @@ jobs:
             --bridge-doc-options docs/_static/documentation_options.js
           touch docs/clang/_static/docs-known-broken-links.txt
 
+      - name: Sync LLDB docs mirror from lldb.llvm.org
+        run: |
+          mkdir -p docs/lldb
+          bash scripts/sync-docs-from-llvm-org.sh \
+            --source-url "https://lldb.llvm.org/" \
+            --docs-dir docs/lldb \
+            --bridge-doc-options docs/_static/documentation_options.js \
+            --exclude-path-prefix "/cpp_reference/" \
+            --skip-source-companions
+          touch docs/lldb/_static/docs-known-broken-links.txt
+
       - name: Build single canonical papers database
         run: |
           python3 scripts/build-single-papers-db.py \
@@ -127,6 +138,12 @@ jobs:
             --docs-dir docs/clang \
             --expected-source-prefix "https://clang.llvm.org/docs/" \
             --max-age-days 45
+          python3 scripts/check-docs-mirror-health.py \
+            --repo-root . \
+            --docs-dir docs/lldb \
+            --expected-source-prefix "https://lldb.llvm.org/" \
+            --max-age-days 45 \
+            --no-check-links
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
@@ -136,14 +153,14 @@ jobs:
           base: main
           branch: library/automated-sync
           delete-branch: true
-          commit-message: "Library update bot sync (OpenAlex + llvm-www + llvm-blog + llvm/clang docs)"
-          title: "Library update bot sync (OpenAlex + llvm-www + llvm-blog + llvm/clang docs)"
+          commit-message: "Library update bot sync (OpenAlex + llvm-www + llvm-blog + llvm/clang/lldb docs)"
+          title: "Library update bot sync (OpenAlex + llvm-www + llvm-blog + llvm/clang/lldb docs)"
           body: |
             Automated weekly sync:
             - adds/updates talks/slides/videos from `llvm-www/devmtg`
             - refreshes OpenAlex-discovered papers
             - syncs LLVM blog posts from `llvm-blog-www`
-            - syncs mirrored docs from `llvm.org/docs` and `clang.llvm.org/docs`
+            - syncs mirrored docs from `llvm.org/docs`, `clang.llvm.org/docs`, and `lldb.llvm.org`
             - rebuilds the single canonical papers database from OpenAlex + llvm.org/pubs
             - backfills direct paper PDF links using OpenAlex + Unpaywall
             - records newly added talks/slides/videos/papers/blogs in `updates/index.json`

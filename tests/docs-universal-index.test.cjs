@@ -11,6 +11,13 @@ const CLANG_INDEX_PATH = path.join(
   '_static',
   'docs-universal-search-index.js'
 );
+const LLDB_INDEX_PATH = path.join(
+  REPO_ROOT,
+  'docs',
+  'lldb',
+  '_static',
+  'docs-universal-search-index.js'
+);
 const GLOBAL_SEARCH_JS = path.join(REPO_ROOT, 'js', 'shared', 'global-search.js');
 const WORK_JS = path.join(REPO_ROOT, 'js', 'work.js');
 
@@ -31,7 +38,16 @@ test('clang docs universal index payload exists and is non-empty', () => {
   assert.ok(payload.entries.length > 0, 'payload.entries must not be empty');
 });
 
-test('global search wiring includes clang docs index source', () => {
+test('lldb docs universal index payload exists and is non-empty', () => {
+  assert.ok(fs.existsSync(LLDB_INDEX_PATH), 'LLDB docs universal index file must exist');
+  const raw = fs.readFileSync(LLDB_INDEX_PATH, 'utf8');
+  const payload = parseUniversalIndexPayload(raw, LLDB_INDEX_PATH);
+  assert.ok(payload && typeof payload === 'object', 'payload must be an object');
+  assert.ok(Array.isArray(payload.entries), 'payload.entries must be an array');
+  assert.ok(payload.entries.length > 0, 'payload.entries must not be empty');
+});
+
+test('global search wiring includes clang and lldb docs index sources', () => {
   const raw = fs.readFileSync(GLOBAL_SEARCH_JS, 'utf8');
   assert.match(
     raw,
@@ -43,9 +59,19 @@ test('global search wiring includes clang docs index source', () => {
     /LLVMClangDocsUniversalSearchIndex/,
     'global-search.js must load/handle LLVMClangDocsUniversalSearchIndex'
   );
+  assert.match(
+    raw,
+    /const LLDB_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/lldb\/_static\/docs-universal-search-index\.js\?/,
+    'global-search.js must reference the LLDB docs universal index source'
+  );
+  assert.match(
+    raw,
+    /LLVMLLDBDocsUniversalSearchIndex/,
+    'global-search.js must load/handle LLVMLLDBDocsUniversalSearchIndex'
+  );
 });
 
-test('work universal search wiring includes clang docs index source', () => {
+test('work universal search wiring includes clang and lldb docs index sources', () => {
   const raw = fs.readFileSync(WORK_JS, 'utf8');
   assert.match(
     raw,
@@ -56,5 +82,15 @@ test('work universal search wiring includes clang docs index source', () => {
     raw,
     /LLVMClangDocsUniversalSearchIndex/,
     'work.js must load/handle LLVMClangDocsUniversalSearchIndex'
+  );
+  assert.match(
+    raw,
+    /const LLDB_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/lldb\/_static\/docs-universal-search-index\.js\?/,
+    'work.js must reference the LLDB docs universal index source'
+  );
+  assert.match(
+    raw,
+    /LLVMLLDBDocsUniversalSearchIndex/,
+    'work.js must load/handle LLVMLLDBDocsUniversalSearchIndex'
   );
 });

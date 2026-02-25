@@ -33,3 +33,9 @@ jobs:
             --docs-dir docs/clang \
             --expected-source-prefix "https://clang.llvm.org/docs/" \
             --max-age-days 14
+          python3 scripts/check-docs-mirror-health.py \
+            --repo-root . \
+            --docs-dir docs/lldb \
+            --expected-source-prefix "https://lldb.llvm.org/" \
+            --max-age-days 14 \
+            --no-check-links

@@ -1,0 +1,5 @@
+{
+  "generator": "scripts/sync-docs-from-llvm-org.sh",
+  "sourceUrl": "https://lldb.llvm.org/",
+  "syncedAt": "2026-02-25T00:51:29Z"
+}

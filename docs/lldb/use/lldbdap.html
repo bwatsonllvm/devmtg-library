@@ -1,0 +1,966 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Model Context Protocol (MCP)" href="mcp.html" /><link rel="prev" title="JSON Symbol File Format" href="symbolfilejson.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>Getting started with lldb-dap - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="python-reference.html">Python Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/writing-custom-commands.html">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBAttachInfo.html">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBDebugger.html">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBExpressionOptions.html">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBFrame.html">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBModule.html">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBThread.html">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/llvm/llvm-project/edit/main/lldb/docs/use/lldbdap.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="getting-started-with-lldb-dap">
+<h1>Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code><a class="headerlink" href="#getting-started-with-lldb-dap" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> brings the power of <code class="docutils literal notranslate"><span class="pre">lldb</span></code> to any editor or IDE that supports the
+<a class="reference external" href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol (DAP)</a>.</p>
+<section id="responsibilities-of-lldb-lldb-dap-and-ide-integrations">
+<h2>Responsibilities of LLDB, <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> and IDE Integrations<a class="headerlink" href="#responsibilities-of-lldb-lldb-dap-and-ide-integrations" title="Link to this heading">#</a></h2>
+<p>Under the hood, the UI-based debugging experience is powered by three separate
+components:</p>
+<ul class="simple">
+<li><p>LLDB provides general, IDE-independent debugging features, such as:
+loading binaries / core dumps, interpreting debug info, setting breakpoints,
+pretty-printing variables, etc. The <code class="docutils literal notranslate"><span class="pre">lldb</span></code> binary exposes this functionality
+via a command line interface.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> exposes LLDB’s functionality via the
+“<a class="reference external" href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a>”,
+i.e. a protocol through which various IDEs (Visual Studio Code, Emacs, vim,
+neovim, …) can interact with a wide range of debuggers (<code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> and many
+others).</p></li>
+<li><p>An IDE specific extension is used to hook lldb-dap and the IDEs DAP
+implementations together for launching a binary.</p></li>
+</ul>
+<p>Since <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> builds on top of LLDB, all of LLDB’s extensibility mechanisms
+such as <a class="reference external" href="https://lldb.llvm.org/use/variable.html">Variable Pretty-Printing</a>,
+<a class="reference external" href="https://lldb.llvm.org/use/python-reference.html#writing-lldb-frame-recognizers-in-python">Frame recognizers</a>
+and <a class="reference external" href="https://lldb.llvm.org/use/python.html">Python Scripting</a> are available
+also in <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code>.</p>
+<section id="links-to-ide-extensions">
+<h3>Links to IDE Extensions<a class="headerlink" href="#links-to-ide-extensions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Visual Studio Code -
+<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.lldb-dap">LLDB DAP Extension</a></p></li>
+</ul>
+<!-- Add other IDE integrations. -->
+</section>
+</section>
+<section id="procuring-the-lldb-dap-binary">
+<h2>Procuring the <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> binary<a class="headerlink" href="#procuring-the-lldb-dap-binary" title="Link to this heading">#</a></h2>
+<p>There are multiple ways to obtain this binary:</p>
+<ul class="simple">
+<li><p>Use the binary provided by your toolchain (for example <code class="docutils literal notranslate"><span class="pre">xcrun</span> <span class="pre">-f</span> <span class="pre">lldb-dap</span></code> on macOS) or contact your toolchain vendor to include it.</p></li>
+<li><p>Download one of the release packages from the <a class="reference external" href="https://github.com/llvm/llvm-project/releases/">LLVM release page</a>. The <code class="docutils literal notranslate"><span class="pre">LLVM-{version}-{operating_system}.tar.xz</span></code> packages contain a prebuilt <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> binary or check your systems prefered package manager.</p></li>
+<li><p>Build it from source (see <a class="reference external" href="https://lldb.llvm.org/resources/build.html">LLDB’s build instructions</a>).</p></li>
+</ul>
+<p>In some cases, a language specific build of <code class="docutils literal notranslate"><span class="pre">lldb</span></code> / <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> may also be
+available as part of the languages toolchain. For example the
+<a class="reference external" href="https://www.swift.org/">swift language</a> toolchain includes additional language
+integrations in <code class="docutils literal notranslate"><span class="pre">lldb</span></code> and the toolchain builds provider both the <code class="docutils literal notranslate"><span class="pre">lldb</span></code> driver
+binary and <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> binary.</p>
+</section>
+<section id="launching-a-program">
+<h2>Launching a program<a class="headerlink" href="#launching-a-program" title="Link to this heading">#</a></h2>
+<p>To launch an executable for debugging, first define a launch configuration tells
+<code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> how to launch the binary.</p>
+<p>A simple launch configuration may look like</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lldb-dap&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Debug a.out&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a.out&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="#configuration-settings-reference">Configuration Settings Reference</a>
+for more information.</p>
+</section>
+<section id="supported-features">
+<h2>Supported Features<a class="headerlink" href="#supported-features" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> supports the following capabilities:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Capability</p></th>
+<th class="head"><p>Supported</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>supportsConfigurationDoneRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">configurationDone</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsFunctionBreakpoints</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports function breakpoints.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsConditionalBreakpoints</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports conditional breakpoints.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsHitConditionalBreakpoints</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports breakpoints that break execution after a specified number of hits.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsEvaluateForHovers</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports a (side effect free) <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> request for data hovers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>exceptionBreakpointFilters</p></td>
+<td><p>Y</p></td>
+<td><p>Available exception filter options for the <code class="docutils literal notranslate"><span class="pre">setExceptionBreakpoints</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsStepBack</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports stepping back via the <code class="docutils literal notranslate"><span class="pre">stepBack</span></code> and <code class="docutils literal notranslate"><span class="pre">reverseContinue</span></code> requests.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsSetVariable</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports setting a variable to a value.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsRestartFrame</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports restarting a frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsGotoTargetsRequest</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">gotoTargets</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsStepInTargetsRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">stepInTargets</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsCompletionsRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">completions</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>completionTriggerCharacters</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">['.',</span> <span class="pre">'\s',</span> <span class="pre">'\t']</span></code></p></td>
+<td><p>The set of characters that should trigger completion in a REPL. If not specified, the UI should assume the <code class="docutils literal notranslate"><span class="pre">.</span></code> character.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsModulesRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">modules</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>additionalModuleColumns</p></td>
+<td><p>N</p></td>
+<td><p>The set of additional module information exposed by the debug adapter.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportedChecksumAlgorithms</p></td>
+<td><p>N</p></td>
+<td><p>Checksum algorithms supported by the debug adapter.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsRestartRequest</p></td>
+<td><p>Y (for launch requests)</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">restart</span></code> request. In this case a client should not implement <code class="docutils literal notranslate"><span class="pre">restart</span></code> by terminating and relaunching the adapter but by calling the <code class="docutils literal notranslate"><span class="pre">restart</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsExceptionOptions</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports <code class="docutils literal notranslate"><span class="pre">exceptionOptions</span></code> on the <code class="docutils literal notranslate"><span class="pre">setExceptionBreakpoints</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsValueFormattingOptions</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports a <code class="docutils literal notranslate"><span class="pre">format</span></code> attribute on the <code class="docutils literal notranslate"><span class="pre">stackTrace</span></code>, <code class="docutils literal notranslate"><span class="pre">variables</span></code>, and <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> requests.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsExceptionInfoRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">exceptionInfo</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportTerminateDebuggee</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">terminateDebuggee</span></code> attribute on the <code class="docutils literal notranslate"><span class="pre">disconnect</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportSuspendDebuggee</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">suspendDebuggee</span></code> attribute on the <code class="docutils literal notranslate"><span class="pre">disconnect</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsDelayedStackTraceLoading</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the delayed loading of parts of the stack, which requires that both the <code class="docutils literal notranslate"><span class="pre">startFrame</span></code> and <code class="docutils literal notranslate"><span class="pre">levels</span></code> arguments and the <code class="docutils literal notranslate"><span class="pre">totalFrames</span></code> result of the <code class="docutils literal notranslate"><span class="pre">stackTrace</span></code> request are supported.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsLoadedSourcesRequest</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">loadedSources</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsLogPoints</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports log points by interpreting the <code class="docutils literal notranslate"><span class="pre">logMessage</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">SourceBreakpoint</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsTerminateThreadsRequest</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">terminateThreads</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsSetExpression</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">setExpression</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsTerminateRequest</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">terminate</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsDataBreakpoints</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports data breakpoints.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsReadMemoryRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">readMemory</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsWriteMemoryRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">writeMemory</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsDisassembleRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">disassemble</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsCancelRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">cancel</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsBreakpointLocationsRequest</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">breakpointLocations</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsClipboardContext</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">clipboard</span></code> context value in the <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> request.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsSteppingGranularity</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports stepping granularities (argument <code class="docutils literal notranslate"><span class="pre">granularity</span></code>) for the stepping requests.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsInstructionBreakpoints</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports adding breakpoints based on instruction references.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsExceptionFilterOptions</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports <code class="docutils literal notranslate"><span class="pre">filterOptions</span></code> as an argument on the <code class="docutils literal notranslate"><span class="pre">setExceptionBreakpoints</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>supportsSingleThreadExecutionRequests</p></td>
+<td><p>N</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">singleThread</span></code> property on the execution requests (<code class="docutils literal notranslate"><span class="pre">continue</span></code>, <code class="docutils literal notranslate"><span class="pre">next</span></code>, <code class="docutils literal notranslate"><span class="pre">stepIn</span></code>, <code class="docutils literal notranslate"><span class="pre">stepOut</span></code>, <code class="docutils literal notranslate"><span class="pre">reverseContinue</span></code>, <code class="docutils literal notranslate"><span class="pre">stepBack</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsDataBreakpointBytes</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports the <code class="docutils literal notranslate"><span class="pre">asAddress</span></code> and <code class="docutils literal notranslate"><span class="pre">bytes</span></code> fields in the <code class="docutils literal notranslate"><span class="pre">dataBreakpointInfo</span></code> request.</p></td>
+</tr>
+<tr class="row-even"><td><p>breakpointModes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[]</span></code></p></td>
+<td><p>Modes of breakpoints supported by the debug adapter, such as ‘hardware’ or ‘software’. If present, the client may allow the user to select a mode and include it in its <code class="docutils literal notranslate"><span class="pre">setBreakpoints</span></code> request. Clients may present the first applicable mode in this array as the ‘default’ mode in gestures that set breakpoints.</p></td>
+</tr>
+<tr class="row-odd"><td><p>supportsANSIStyling</p></td>
+<td><p>Y</p></td>
+<td><p>The debug adapter supports ANSI escape sequences in styling of <code class="docutils literal notranslate"><span class="pre">OutputEvent.output</span></code> and <code class="docutils literal notranslate"><span class="pre">Variable.value</span></code> fields.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For more information, see
+<a class="reference external" href="https://microsoft.github.io/debug-adapter-protocol/">Debug Adapter Protocol</a>.</p>
+<section id="debug-console">
+<h3>Debug Console<a class="headerlink" href="#debug-console" title="Link to this heading">#</a></h3>
+<p>The Debug Console allows printing variables / expressions and executing lldb
+commands. By default, <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> tries to auto-detect whether a provided command
+is a variable name / expression whose values will be printed to the Debug
+Console or a LLDB command. To side-step this auto-detection and execute a LLDB
+command, prefix it with the <code class="docutils literal notranslate"><span class="pre">commandEscapePrefix</span></code>.</p>
+<p>The auto-detection mode can be adjusted using the <code class="docutils literal notranslate"><span class="pre">lldb-dap</span> <span class="pre">repl-mode</span></code> command
+in the Debug Console or by adjusting the <code class="docutils literal notranslate"><span class="pre">--repl-mode</span> <span class="pre">[mode]</span></code> argument to
+<code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code>. The supported modes are <code class="docutils literal notranslate"><span class="pre">variable</span></code>, <code class="docutils literal notranslate"><span class="pre">command</span></code> and <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
+</section>
+</section>
+<section id="configuration-settings-reference">
+<h2>Configuration Settings Reference<a class="headerlink" href="#configuration-settings-reference" title="Link to this heading">#</a></h2>
+<p>In order for <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> to know how to start a debug session a launch or attach
+configuration may be specified. Different IDEs may have different mechanisms in
+place for configuring the launch configuration.</p>
+<p>For Visual Studio Code, see <a class="reference external" href="https://code.visualstudio.com/docs/debugtest/debugging">Visual Studio Code’s Debugging User Documentation</a>.</p>
+<section id="common-configurations">
+<h3>Common configurations<a class="headerlink" href="#common-configurations" title="Link to this heading">#</a></h3>
+<p>For both launch and attach configurations, lldb-dap accepts the following
+<code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> specific key/value pairs:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head text-center"><p>Req</p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p>Y</p></td>
+<td><p>A configuration name that will be displayed in the IDE.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>type</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p>Y</p></td>
+<td><p>Must be “lldb-dap”.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>request</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p>Y</p></td>
+<td><p>Must be “launch” or “attach”.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>program</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Path to the executable to launch.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>sourcePath</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Specify a source path to remap “./” to allow full paths to be used when setting breakpoints in binaries that have relative source paths.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>sourceMap</strong></p></td>
+<td><p>[string[2]]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Specify an array of path re-mappings. Each element in the array must be a two element array containing a source and destination pathname. Overrides sourcePath.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>debuggerRoot</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Specify a working directory to use when launching lldb-dap. If the debug information in your executable contains relative paths, this option can be used so that <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> can find source files and object files that have relative paths.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>commandEscapePrefix</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>The escape prefix to use for executing regular LLDB commands in the Debug Console, instead of printing variables. Defaults to a backtick. If it’s an empty string, then all expression in the Debug Console are treated as regular LLDB commands.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>customFrameFormat</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>If non-empty, stack frames will have descriptions generated based on the provided format. See https://lldb.llvm.org/use/formatting.html for an explanation on format strings for frames. If the format string contains errors, an error message will be displayed on the Debug Console and the default frame names will be used. This might come with a performance cost because debug information might need to be processed to generate the description.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>customThreadFormat</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Same as <code class="docutils literal notranslate"><span class="pre">customFrameFormat</span></code>, but for threads instead of stack frames.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>displayExtendedBacktrace</strong></p></td>
+<td><p>bool</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Enable language specific extended backtraces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>enableAutoVariableSummaries</strong></p></td>
+<td><p>bool</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Enable auto generated summaries for variables when no summaries exist for a given type. This feature can cause performance delays in large projects when viewing variables.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>enableSyntheticChildDebugging</strong></p></td>
+<td><p>bool</p></td>
+<td class="text-center"><p></p></td>
+<td><p>If a variable is displayed using a synthetic children, also display the actual contents of the variable at the end under a [raw] entry. This is useful when creating synthetic child plug-ins as it lets you see the actual contents of the variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>initCommands</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>LLDB commands executed upon debugger startup prior to creating the LLDB target.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>preRunCommands</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>LLDB commands executed just before launching/attaching, after the LLDB target has been created.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>stopCommands</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>LLDB commands executed just after each stop.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>exitCommands</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>LLDB commands executed when the program exits.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>terminateCommands</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>LLDB commands executed when the debugging session ends.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>All commands and command outputs will be sent to the debugger console when they
+are executed. Commands can be prefixed with <code class="docutils literal notranslate"><span class="pre">?</span></code> or <code class="docutils literal notranslate"><span class="pre">!</span></code> to modify their behavior:</p>
+<ul class="simple">
+<li><p>Commands prefixed with <code class="docutils literal notranslate"><span class="pre">?</span></code> are quiet on success, i.e. nothing is written to
+stdout if the command succeeds.</p></li>
+<li><p>Prefixing a command with <code class="docutils literal notranslate"><span class="pre">!</span></code> enables error checking: If a command prefixed
+with <code class="docutils literal notranslate"><span class="pre">!</span></code> fails, subsequent commands will not be run. This is useful if one of
+the commands depends on another, as it will stop the chain of commands.</p></li>
+</ul>
+</section>
+<section id="launch-configurations">
+<h3>Launch configurations<a class="headerlink" href="#launch-configurations" title="Link to this heading">#</a></h3>
+<p><em>NOTE:</em> Either <code class="docutils literal notranslate"><span class="pre">program</span></code> or <code class="docutils literal notranslate"><span class="pre">launchCommands</span></code> must be specified.</p>
+<p>For JSON configurations of <code class="docutils literal notranslate"><span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;launch&quot;</span></code>, the JSON configuration can
+additionally contain the following key/value pairs:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head text-center"><p>Req</p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>program</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Path to the executable to launch.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>args</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>An array of command line argument strings to be passed to the program being launched.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>cwd</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>The program working directory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>env</strong></p></td>
+<td><p>dictionary or [string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Environment variables to set when launching the program. The string format of each environment variable string is “VAR=VALUE” for environment variables with values or just “VAR” for environment variables with no values.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>stopOnEntry</strong></p></td>
+<td><p>boolean</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Whether to stop program immediately after launching.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>runInTerminal</strong> (deprecated)</p></td>
+<td><p>boolean</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Launch the program inside an integrated terminal in the IDE. Useful for debugging interactive command line programs.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>console</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Specify where to launch the program: internal console (<code class="docutils literal notranslate"><span class="pre">internalConsole</span></code>), integrated terminal (<code class="docutils literal notranslate"><span class="pre">integratedTerminal</span></code>) or external terminal (<code class="docutils literal notranslate"><span class="pre">externalTerminal</span></code>). Supported from lldb-dap 21.0 version.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>stdio</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>The stdio property specifies the redirection targets for the debuggee’s stdio streams. A null value redirects a stream to the default debug terminal. String can be a path to file, named pipe or TTY device. If less than three values are provided, the list will be padded with the last value. Specifying more than three values will create additional file descriptors (4, 5, etc.). Supported from lldb-dap 22.0 version.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>launchCommands</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>LLDB commands executed to launch the program.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="attach-configurations">
+<h3>Attach configurations<a class="headerlink" href="#attach-configurations" title="Link to this heading">#</a></h3>
+<p><em>NOTE:</em> Either <code class="docutils literal notranslate"><span class="pre">pid</span></code>, <code class="docutils literal notranslate"><span class="pre">program</span></code>, <code class="docutils literal notranslate"><span class="pre">coreFile</span></code>, <code class="docutils literal notranslate"><span class="pre">attachCommands</span></code>
+or<code class="docutils literal notranslate"><span class="pre">gdb-remote-port</span></code> must be specified.</p>
+<p>For JSON configurations of <code class="docutils literal notranslate"><span class="pre">&quot;type&quot;:</span> <span class="pre">&quot;attach&quot;</span></code>, the JSON configuration can
+contain the following <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> specific key/value pairs:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head text-center"><p>Req</p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>program</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Path to the executable to attach to. This value is optional but can help to resolve breakpoints prior the attaching to the program.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>pid</strong></p></td>
+<td><p>number</p></td>
+<td class="text-center"><p></p></td>
+<td><p>The process id of the process you wish to attach to. If <strong>pid</strong> is omitted, the debugger will attempt to attach to the program by finding a process whose file name matches the file name from <strong>program</strong>. Setting this value to <code class="docutils literal notranslate"><span class="pre">${command:pickMyProcess}</span></code> will allow interactive process selection in the Visual Studio Code.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>waitFor</strong></p></td>
+<td><p>boolean</p></td>
+<td class="text-center"><p></p></td>
+<td><p>Wait for the process to launch.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>attachCommands</strong></p></td>
+<td><p>[string]</p></td>
+<td class="text-center"><p></p></td>
+<td><p>LLDB commands that will be executed after <strong>preRunCommands</strong> which take place of the code that normally does the attach. The commands can create a new target and attach or launch it however desired. This allows custom launch and attach configurations. Core files can use <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">create</span> <span class="pre">--core</span> <span class="pre">/path/to/core</span></code> to attach to core files.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>gdb-remote-port</strong></p></td>
+<td><p>int</p></td>
+<td class="text-center"><p></p></td>
+<td><p>TCP/IP port to attach to a remote system. Specifying both pid and port is an error.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>gdb-remote-host</strong></p></td>
+<td><p>string</p></td>
+<td class="text-center"><p></p></td>
+<td><p>The hostname to connect to a remote system. The default hostname being used <code class="docutils literal notranslate"><span class="pre">localhost</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="mcp.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Model Context Protocol (MCP)</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="symbolfilejson.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">JSON Symbol File Format</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a><ul>
+<li><a class="reference internal" href="#responsibilities-of-lldb-lldb-dap-and-ide-integrations">Responsibilities of LLDB, <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> and IDE Integrations</a><ul>
+<li><a class="reference internal" href="#links-to-ide-extensions">Links to IDE Extensions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#procuring-the-lldb-dap-binary">Procuring the <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code> binary</a></li>
+<li><a class="reference internal" href="#launching-a-program">Launching a program</a></li>
+<li><a class="reference internal" href="#supported-features">Supported Features</a><ul>
+<li><a class="reference internal" href="#debug-console">Debug Console</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration-settings-reference">Configuration Settings Reference</a><ul>
+<li><a class="reference internal" href="#common-configurations">Common configurations</a></li>
+<li><a class="reference internal" href="#launch-configurations">Launch configurations</a></li>
+<li><a class="reference internal" href="#attach-configurations">Attach configurations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

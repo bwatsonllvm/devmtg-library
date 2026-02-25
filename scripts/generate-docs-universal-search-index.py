@@ -65,12 +65,12 @@ def fallback_title_from_slug(slug: str) -> str:
     if tail == "index" and "/" in slug:
         tail = slug.split("/")[-2]
     text = tail.replace("-", " ").replace("_", " ").strip()
-    return text.title() if text else "LLVM Documentation"
+    return text.title() if text else "Documentation"
 
 
 def clean_doc_title(title: str) -> str:
     value = normalize_space(title)
-    value = re.sub(r"\s+[–—-]\s+LLVM.*$", "", value, flags=re.IGNORECASE).strip()
+    value = re.sub(r"\s+[–—-]\s+(?:LLVM|Clang|LLDB).*$", "", value, flags=re.IGNORECASE).strip()
     value = re.sub(r"\s+documentation$", "", value, flags=re.IGNORECASE).strip()
     return value
 

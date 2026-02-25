@@ -33,6 +33,16 @@ const DOCUMENTATION_OPTIONS = {
     state: 'idle',
     callbacks: [],
   };
+  const DOCS_CORPUS_LABELS = {
+    'llvm-core': 'LLVM',
+    clang: 'Clang',
+    lldb: 'LLDB',
+  };
+  const DOCS_RELEASE_NOTES_SLUG_BY_VARIANT = {
+    'llvm-core': 'ReleaseNotes',
+    clang: 'ReleaseNotes',
+    lldb: '',
+  };
   const DOCS_SEARCH_ALIASES_BY_VARIANT = {
     'llvm-core': [
       { token: 'langref', label: 'LLVM Language Reference', slug: 'LangRef' },
@@ -51,6 +61,15 @@ const DOCUMENTATION_OPTIONS = {
       { token: 'language extensions', label: 'Language Extensions', slug: 'LanguageExtensions' },
       { token: 'tooling', label: 'How To Write Clang Tools', slug: 'Tooling' },
       { token: 'internals', label: 'Clang Internals Manual', slug: 'InternalsManual' },
+    ],
+    lldb: [
+      { token: 'tutorial', label: 'Tutorial', slug: 'use/tutorial' },
+      { token: 'command map', label: 'GDB to LLDB command map', slug: 'use/map' },
+      { token: 'python reference', label: 'Python Reference', slug: 'use/python-reference' },
+      { token: 'python api', label: 'Python API', slug: 'python_api' },
+      { token: 'lldb dap', label: 'Getting started with lldb-dap', slug: 'use/lldbdap' },
+      { token: 'mcp', label: 'Model Context Protocol (MCP)', slug: 'use/mcp' },
+      { token: 'troubleshooting', label: 'Troubleshooting', slug: 'use/troubleshooting' },
     ],
   };
   const DOCS_SEARCH_TOKEN_SYNONYMS = {
@@ -129,10 +148,47 @@ const DOCUMENTATION_OPTIONS = {
         ],
       },
     ],
+    lldb: [
+      {
+        id: 'documentation',
+        title: 'Documentation',
+        links: [
+          { label: 'Tutorial', slug: 'use/tutorial' },
+          { label: 'GDB to LLDB command map', slug: 'use/map' },
+          { label: 'Troubleshooting', slug: 'use/troubleshooting' },
+        ],
+      },
+      {
+        id: 'scripting',
+        title: 'Scripting',
+        links: [
+          { label: 'Python Reference', slug: 'use/python-reference' },
+          { label: 'Python API', slug: 'python_api' },
+          { label: 'lldb-dap', slug: 'use/lldbdap' },
+        ],
+      },
+      {
+        id: 'additional-links',
+        title: 'Additional Links',
+        links: [
+          { label: 'Build Instructions', slug: 'resources/build' },
+          { label: 'Contributing', slug: 'resources/contributing' },
+          { label: 'Github Repository', href: 'https://github.com/llvm/llvm-project/tree/main/lldb' },
+        ],
+      },
+    ],
   };
   let ACTIVE_DOCS_KIND = 'llvm-core';
   let ACTIVE_DOCS_BASE_PATH = 'docs';
   let ACTIVE_DOCS_SOURCE_BASE_URL = 'https://llvm.org/docs/';
+
+  function getDocsCorpusLabel(docsKind) {
+    return DOCS_CORPUS_LABELS[String(docsKind || '').trim()] || DOCS_CORPUS_LABELS['llvm-core'];
+  }
+
+  function getDocsReleaseNotesSlug(docsKind) {
+    return DOCS_RELEASE_NOTES_SLUG_BY_VARIANT[String(docsKind || '').trim()] || DOCS_RELEASE_NOTES_SLUG_BY_VARIANT['llvm-core'];
+  }
 
   function resolveRootPath() {
     const pathname = String(window.location.pathname || '/');
@@ -144,6 +200,15 @@ const DOCUMENTATION_OPTIONS = {
   function resolveDocsContext() {
     const rootPath = resolveRootPath();
     const pathname = String(window.location.pathname || '');
+    const lldbDocsRoot = `${rootPath}docs/lldb`;
+    if (pathname === lldbDocsRoot || pathname === `${lldbDocsRoot}/` || pathname.startsWith(`${lldbDocsRoot}/`)) {
+      return {
+        rootPath,
+        docsKind: 'lldb',
+        docsBasePath: 'docs/lldb',
+        sourceBaseUrl: 'https://lldb.llvm.org/',
+      };
+    }
     const clangDocsRoot = `${rootPath}docs/clang`;
     if (pathname === clangDocsRoot || pathname === `${clangDocsRoot}/` || pathname.startsWith(`${clangDocsRoot}/`)) {
       return {
@@ -286,10 +351,52 @@ const DOCUMENTATION_OPTIONS = {
     }
 
     const legacyContent = document.querySelector('body > .content[role="main"], body > .content');
-    if (!legacyContent) return;
+    if (legacyContent) {
+      const parent = legacyContent.parentNode;
+      if (!parent) return;
 
-    const parent = legacyContent.parentNode;
-    if (!parent) return;
+      const sidebar = document.createElement('div');
+      sidebar.className = 'sphinxsidebar';
+      sidebar.setAttribute('role', 'navigation');
+      sidebar.setAttribute('aria-label', 'main navigation');
+      const sidebarWrapper = document.createElement('div');
+      sidebarWrapper.className = 'sphinxsidebarwrapper';
+      sidebar.appendChild(sidebarWrapper);
+
+      const documentRoot = document.createElement('div');
+      documentRoot.className = 'document';
+
+      const documentWrapper = document.createElement('div');
+      documentWrapper.className = 'documentwrapper';
+
+      const bodyWrapper = document.createElement('div');
+      bodyWrapper.className = 'bodywrapper';
+
+      const bodyMain = document.createElement('div');
+      bodyMain.className = 'body';
+      bodyMain.setAttribute('role', String(legacyContent.getAttribute('role') || 'main'));
+
+      while (legacyContent.firstChild) {
+        bodyMain.appendChild(legacyContent.firstChild);
+      }
+
+      bodyWrapper.appendChild(bodyMain);
+      documentWrapper.appendChild(bodyWrapper);
+      documentRoot.appendChild(documentWrapper);
+
+      parent.insertBefore(sidebar, legacyContent);
+      parent.insertBefore(documentRoot, legacyContent);
+      parent.removeChild(legacyContent);
+
+      removeLegacySphinxChrome();
+      document.body.dataset.docsSphinxLayoutNormalized = '1';
+      return;
+    }
+
+    const furoPage = document.querySelector('body > .page');
+    const furoSidebar = furoPage ? furoPage.querySelector('.sidebar-drawer .sidebar-sticky') : null;
+    const furoArticle = furoPage ? furoPage.querySelector('.main .content article[role="main"]') : null;
+    if (!furoPage || !furoSidebar || !furoArticle) return;
 
     const sidebar = document.createElement('div');
     sidebar.className = 'sphinxsidebar';
@@ -298,6 +405,18 @@ const DOCUMENTATION_OPTIONS = {
     const sidebarWrapper = document.createElement('div');
     sidebarWrapper.className = 'sphinxsidebarwrapper';
     sidebar.appendChild(sidebarWrapper);
+
+    while (furoSidebar.firstChild) {
+      sidebarWrapper.appendChild(furoSidebar.firstChild);
+    }
+    const sidebarSearchForm = sidebarWrapper.querySelector('form[role="search"], form[action="search.html"], form[action$="/search.html"]');
+    if (sidebarSearchForm) {
+      sidebarSearchForm.classList.add('search');
+      const sidebarSearchInput = sidebarSearchForm.querySelector('input[name="q"]');
+      if (sidebarSearchInput && !sidebarSearchInput.getAttribute('type')) {
+        sidebarSearchInput.setAttribute('type', 'text');
+      }
+    }
 
     const documentRoot = document.createElement('div');
     documentRoot.className = 'document';
@@ -310,19 +429,40 @@ const DOCUMENTATION_OPTIONS = {
 
     const bodyMain = document.createElement('div');
     bodyMain.className = 'body';
-    bodyMain.setAttribute('role', String(legacyContent.getAttribute('role') || 'main'));
+    bodyMain.setAttribute('role', 'main');
 
-    while (legacyContent.firstChild) {
-      bodyMain.appendChild(legacyContent.firstChild);
+    while (furoArticle.firstChild) {
+      bodyMain.appendChild(furoArticle.firstChild);
     }
 
     bodyWrapper.appendChild(bodyMain);
     documentWrapper.appendChild(bodyWrapper);
     documentRoot.appendChild(documentWrapper);
 
-    parent.insertBefore(sidebar, legacyContent);
-    parent.insertBefore(documentRoot, legacyContent);
-    parent.removeChild(legacyContent);
+    const furoContent = furoPage.querySelector('.main .content');
+    const furoFooter = furoContent ? furoContent.querySelector('footer') : null;
+    let footer = null;
+    if (furoFooter) {
+      footer = document.createElement('div');
+      footer.className = 'footer';
+      footer.setAttribute('role', 'contentinfo');
+      while (furoFooter.firstChild) {
+        footer.appendChild(furoFooter.firstChild);
+      }
+    }
+
+    const parent = furoPage.parentNode;
+    if (!parent) return;
+    parent.insertBefore(sidebar, furoPage);
+    parent.insertBefore(documentRoot, furoPage);
+    if (footer) {
+      parent.insertBefore(footer, furoPage);
+    }
+    parent.removeChild(furoPage);
+
+    document.querySelectorAll('input.sidebar-toggle, label.sidebar-overlay, label.toc-overlay').forEach((node) => {
+      if (node && node.parentNode) node.parentNode.removeChild(node);
+    });
 
     removeLegacySphinxChrome();
     document.body.dataset.docsSphinxLayoutNormalized = '1';
@@ -383,6 +523,7 @@ const DOCUMENTATION_OPTIONS = {
             <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
               <a href="${rootPath}docs/" class="nav-dropdown-link${ACTIVE_DOCS_KIND === 'llvm-core' ? ' active' : ''}" role="menuitem"${ACTIVE_DOCS_KIND === 'llvm-core' ? ' aria-current="page"' : ''}>LLVM Core</a>
               <a href="${rootPath}docs/clang/" class="nav-dropdown-link${ACTIVE_DOCS_KIND === 'clang' ? ' active' : ''}" role="menuitem"${ACTIVE_DOCS_KIND === 'clang' ? ' aria-current="page"' : ''}>Clang</a>
+              <a href="${rootPath}docs/lldb/" class="nav-dropdown-link${ACTIVE_DOCS_KIND === 'lldb' ? ' active' : ''}" role="menuitem"${ACTIVE_DOCS_KIND === 'lldb' ? ' aria-current="page"' : ''}>LLDB</a>
             </div>
           </div>
           <a href="${rootPath}updates/" class="nav-link" aria-label="Update log"><span aria-hidden="true">Updates</span></a>
@@ -413,6 +554,7 @@ const DOCUMENTATION_OPTIONS = {
               <p class="mobile-nav-group-label">Docs</p>
               <a href="${rootPath}docs/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'llvm-core' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'llvm-core' ? ' aria-current="page"' : ''}>LLVM Core</a>
               <a href="${rootPath}docs/clang/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'clang' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'clang' ? ' aria-current="page"' : ''}>Clang</a>
+              <a href="${rootPath}docs/lldb/" class="mobile-nav-link${ACTIVE_DOCS_KIND === 'lldb' ? ' active' : ''}"${ACTIVE_DOCS_KIND === 'lldb' ? ' aria-current="page"' : ''}>LLDB</a>
             </div>
             <div class="mobile-nav-group" role="group" aria-label="Page tools">
               <p class="mobile-nav-group-label">Tools</p>
@@ -845,11 +987,15 @@ const DOCUMENTATION_OPTIONS = {
     const githubHref = latestRelease && String(latestRelease.githubUrl || '').trim()
       ? String(latestRelease.githubUrl).trim()
       : DOCS_GITHUB_RELEASES_URL;
-    const releasePrefix = ACTIVE_DOCS_KIND === 'clang' ? 'Clang' : 'LLVM';
+    const releasePrefix = getDocsCorpusLabel(ACTIVE_DOCS_KIND);
+    const releaseNotesSlug = getDocsReleaseNotesSlug(ACTIVE_DOCS_KIND);
+    const releaseNotesHref = releaseNotesSlug
+      ? slugToDocsHref(releaseNotesSlug, rootPath)
+      : githubHref;
 
     return {
       versionLabel: `Latest release: ${releasePrefix} ${normalizedVersion}`,
-      releaseNotesHref: slugToDocsHref('ReleaseNotes', rootPath),
+      releaseNotesHref,
       githubHref,
     };
   }
@@ -859,7 +1005,7 @@ const DOCUMENTATION_OPTIONS = {
 
     const panel = document.createElement('section');
     panel.className = 'docs-book-release';
-    panel.setAttribute('aria-label', `${ACTIVE_DOCS_KIND === 'clang' ? 'Clang' : 'LLVM'} release and downloads`);
+    panel.setAttribute('aria-label', `${getDocsCorpusLabel(ACTIVE_DOCS_KIND)} release and downloads`);
 
     const title = document.createElement('h3');
     title.className = 'docs-book-release-title';
@@ -2492,10 +2638,10 @@ const DOCUMENTATION_OPTIONS = {
   function deriveFallbackTitle() {
     const title = String(document.title || '').trim();
     const cleaned = title
-      .replace(/\s+[\u2013\u2014-]\s+LLVM.*$/i, '')
+      .replace(/\s+[\u2013\u2014-]\s+(?:LLVM|Clang|LLDB).*$/i, '')
       .replace(/\s+[\u2013\u2014-]\s+documentation$/i, '')
       .trim();
-    return cleaned || 'LLVM Documentation';
+    return cleaned || `${getDocsCorpusLabel(ACTIVE_DOCS_KIND)} Documentation`;
   }
 
   function resolveHashTargetElement() {
