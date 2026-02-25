@@ -70,6 +70,7 @@
     {
       id: 'llvm-core',
       name: 'LLVM Core',
+      localPath: 'docs/llvm-core/',
       docsUrl: 'https://llvm.org/docs/',
       searchUrlTemplate: 'https://llvm.org/docs/search.html?q={query}',
       description: 'LLVM core manuals, references, internals, and contributor documentation.',
@@ -78,6 +79,7 @@
     {
       id: 'clang',
       name: 'Clang',
+      localPath: 'docs/clang/',
       docsUrl: 'https://clang.llvm.org/docs/',
       searchUrlTemplate: 'https://clang.llvm.org/docs/search.html?q={query}',
       description: 'Clang user guides, diagnostics, tooling, sanitizers, and frontend docs.',
@@ -86,6 +88,7 @@
     {
       id: 'lldb',
       name: 'LLDB',
+      localPath: 'docs/lldb/',
       docsUrl: 'https://lldb.llvm.org/',
       searchUrlTemplate: 'https://lldb.llvm.org/search.html?q={query}',
       description: 'LLDB debugger documentation, command references, scripting, and API docs.',
@@ -1031,6 +1034,9 @@
       .replace(/-{2,}/g, '-')
       .replace(/^-+|-+$/g, '') || `docs-source-${fallbackIndex + 1}`;
     const name = normalizeText(source.name, 120) || `Docs Source ${fallbackIndex + 1}`;
+    const localPathCandidate = normalizeText(source.localPath, 160)
+      || ({ 'llvm-core': 'docs/llvm-core/', clang: 'docs/clang/', lldb: 'docs/lldb/' }[id] || `docs/${id}/`);
+    const localPath = localPathCandidate.replace(/^\/+/, '').replace(/\/+$/, '') + '/';
     const docsUrl = normalizeText(source.docsUrl, 420);
     const searchUrlTemplate = normalizeText(source.searchUrlTemplate, 420);
     const description = normalizeText(source.description, 320);
@@ -1041,6 +1047,7 @@
     return {
       id,
       name,
+      localPath,
       docsUrl,
       searchUrlTemplate,
       description,
@@ -1048,31 +1055,12 @@
     };
   }
 
-  function buildDocsSearchUrl(searchUrlTemplate, query, fallbackUrl) {
+  function buildLocalDocsRoute(localPath, query) {
+    const path = normalizeText(localPath, 240).replace(/^\/+/, '') || 'docs/llvm-core/';
+    const normalizedPath = path.endsWith('/') ? path : `${path}/`;
     const trimmed = normalizeText(query, 320);
-    const fallback = /^https?:\/\//i.test(String(fallbackUrl || '')) ? String(fallbackUrl || '') : resolveAssetUrl('docs/');
-    if (!trimmed) return fallback;
-    const encoded = encodeURIComponent(trimmed);
-    const template = normalizeText(searchUrlTemplate, 420);
-    if (!template) {
-      try {
-        const url = new URL(fallback);
-        url.searchParams.set('q', trimmed);
-        return url.toString();
-      } catch {
-        return fallback;
-      }
-    }
-    if (template.includes('{query}')) {
-      return template.replace(/\{query\}/g, encoded);
-    }
-    try {
-      const url = new URL(template);
-      if (!url.searchParams.has('q')) url.searchParams.set('q', trimmed);
-      return url.toString();
-    } catch {
-      return template;
-    }
+    if (!trimmed) return resolveAssetUrl(normalizedPath);
+    return `${resolveAssetUrl(normalizedPath)}?q=${encodeURIComponent(trimmed)}`;
   }
 
   async function ensureDocsSourcesLoader() {
@@ -1145,7 +1133,7 @@
         bucket.labels.set(label, (bucket.labels.get(label) || 0) + 1);
       };
 
-      const addDocTitle = (title, href, sourceLabel, basePrefix, searchUrlTemplate = '', queryFromInput = false) => {
+      const addDocTitle = (title, href, sourceLabel, basePrefix, queryFromInput = false) => {
         const label = normalizeText(title, 220);
         if (!label) return;
         const renderedLabel = `${label} (${sourceLabel})`;
@@ -1161,7 +1149,7 @@
           url = `${basePrefix}/`.replace(/\/{2,}/g, '/');
         }
         if (!docsTitleBuckets.has(renderedLabel)) {
-          docsTitleBuckets.set(renderedLabel, { count: 0, url, searchUrlTemplate, queryFromInput });
+          docsTitleBuckets.set(renderedLabel, { count: 0, url, queryFromInput });
         }
         const bucket = docsTitleBuckets.get(renderedLabel);
         bucket.count += 1;
@@ -1201,13 +1189,14 @@
       for (const source of docsSources) {
         const sourceLabel = normalizeText(source && source.name, 120);
         const docsUrl = normalizeText(source && source.docsUrl, 420);
+        const localPath = normalizeText(source && source.localPath, 180) || 'docs/llvm-core/';
         if (!sourceLabel || !docsUrl) continue;
 
         const primaryTitle = `${sourceLabel} Documentation`;
-        addDocTitle(primaryTitle, docsUrl, sourceLabel, docsUrl, source.searchUrlTemplate || '', false);
+        addDocTitle(primaryTitle, buildLocalDocsRoute(localPath, ''), sourceLabel, resolveAssetUrl('docs/'), false);
 
         const searchTitle = `Search ${sourceLabel} Docs`;
-        addDocTitle(searchTitle, docsUrl, sourceLabel, docsUrl, source.searchUrlTemplate || '', true);
+        addDocTitle(searchTitle, buildLocalDocsRoute(localPath, ''), sourceLabel, resolveAssetUrl('docs/'), true);
       }
 
       autocompleteIndex.topics = mapToSortedEntries(topicCounts);
@@ -1225,7 +1214,6 @@
           label,
           count: Number(info && info.count || 0),
           url: String(info && info.url || resolveAssetUrl('docs/')),
-          searchUrlTemplate: String(info && info.searchUrlTemplate || ''),
           queryFromInput: !!(info && info.queryFromInput),
         }))
         .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
@@ -1446,8 +1434,7 @@
             <button type="button" class="search-dropdown-item" role="option" aria-selected="false"
                     data-autocomplete-type="doc"
                     data-autocomplete-value="${escapeHtml(item.label)}"
-                    data-autocomplete-doc-url="${escapeHtml(String(item.url || 'docs/'))}"
-                    data-autocomplete-doc-search-template="${escapeHtml(String(item.searchUrlTemplate || ''))}"
+                    data-autocomplete-doc-url="${escapeHtml(String(item.url || 'docs/llvm-core/'))}"
                     data-autocomplete-doc-query-from-input="${item.queryFromInput ? '1' : '0'}">
               <span class="search-dropdown-item-icon">${docsIcon}</span>
               <span class="search-dropdown-item-label">${highlightMatch(item.label, query)}</span>
@@ -1471,10 +1458,12 @@
         const requestedType = String(item.dataset.autocompleteType || 'query').trim().toLowerCase();
         if (requestedType === 'doc') {
           const directUrl = String(item.dataset.autocompleteDocUrl || '').trim();
-          const searchTemplate = String(item.dataset.autocompleteDocSearchTemplate || '').trim();
+          if (!directUrl) return;
           const useTypedQuery = String(item.dataset.autocompleteDocQueryFromInput || '').trim() === '1';
           const liveQuery = useTypedQuery ? String(input.value || '').trim() : '';
-          const nextUrl = buildDocsSearchUrl(searchTemplate, liveQuery, directUrl);
+          const nextUrl = useTypedQuery && liveQuery
+            ? `${directUrl}${directUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(liveQuery)}`
+            : directUrl;
           if (!nextUrl) return;
           closeDropdown(form);
           window.location.assign(nextUrl);
@@ -1618,8 +1607,13 @@
         if (requestedType === 'doc') {
           const directUrl = String(activeItem.dataset.autocompleteDocUrl || '').trim();
           if (!directUrl) return;
+          const useTypedQuery = String(activeItem.dataset.autocompleteDocQueryFromInput || '').trim() === '1';
+          const liveQuery = useTypedQuery ? String(input.value || '').trim() : '';
+          const nextUrl = useTypedQuery && liveQuery
+            ? `${directUrl}${directUrl.includes('?') ? '&' : '?'}q=${encodeURIComponent(liveQuery)}`
+            : directUrl;
           closeDropdown(form);
-          window.location.assign(directUrl);
+          window.location.assign(nextUrl);
           return;
         }
         const submitType = resolveSubmitType(form, requestedType);

@@ -1,5 +1,5 @@
 /**
- * docs.js — Upstream docs hub interactions (source catalog + query routing).
+ * docs.js — Upstream docs hub interactions (source catalog + local wrapper routing).
  */
 
 (function () {
@@ -19,6 +19,7 @@
     {
       id: 'llvm-core',
       name: 'LLVM Core',
+      localPath: 'docs/llvm-core/',
       docsUrl: 'https://llvm.org/docs/',
       searchUrlTemplate: 'https://llvm.org/docs/search.html?q={query}',
       description: 'LLVM core manuals, references, internals, and contributor documentation.',
@@ -27,6 +28,7 @@
     {
       id: 'clang',
       name: 'Clang',
+      localPath: 'docs/clang/',
       docsUrl: 'https://clang.llvm.org/docs/',
       searchUrlTemplate: 'https://clang.llvm.org/docs/search.html?q={query}',
       description: 'Clang user guides, diagnostics, tooling, sanitizers, and frontend docs.',
@@ -35,6 +37,7 @@
     {
       id: 'lldb',
       name: 'LLDB',
+      localPath: 'docs/lldb/',
       docsUrl: 'https://lldb.llvm.org/',
       searchUrlTemplate: 'https://lldb.llvm.org/search.html?q={query}',
       description: 'LLDB debugger documentation, command references, scripting, and API docs.',
@@ -73,6 +76,9 @@
       .replace(/-{2,}/g, '-')
       .replace(/^-+|-+$/g, '') || `docs-source-${index + 1}`;
     const name = normalizeText(rawSource.name, 120) || `Docs Source ${index + 1}`;
+    const localPathCandidate = normalizeText(rawSource.localPath, 160)
+      || ({ 'llvm-core': 'docs/llvm-core/', clang: 'docs/clang/', lldb: 'docs/lldb/' }[id] || `docs/${id}/`);
+    const localPath = localPathCandidate.replace(/^\/+/, '').replace(/\/+$/, '') + '/';
     const docsUrl = sanitizeExternalUrl(rawSource.docsUrl);
     const searchUrlTemplate = normalizeText(rawSource.searchUrlTemplate, 420);
     const description = normalizeText(rawSource.description, 420);
@@ -85,6 +91,7 @@
     return {
       id,
       name,
+      localPath,
       docsUrl,
       searchUrlTemplate,
       description,
@@ -98,35 +105,12 @@
       .filter(Boolean);
   }
 
-  function resolveDocsSearchUrl(searchUrlTemplate, query, docsUrl) {
+  function resolveLocalDocsRoute(localPath, query) {
+    const normalizedPath = String(localPath || 'docs/llvm-core/').replace(/^\/+/, '');
+    const withSlash = normalizedPath.endsWith('/') ? normalizedPath : `${normalizedPath}/`;
     const trimmedQuery = normalizeText(query, 320);
-    const fallbackUrl = sanitizeExternalUrl(docsUrl);
-    const template = normalizeText(searchUrlTemplate, 420);
-
-    if (!trimmedQuery) return fallbackUrl;
-    const encoded = encodeURIComponent(trimmedQuery);
-
-    if (!template) {
-      try {
-        const url = new URL(fallbackUrl || 'https://llvm.org/docs/');
-        url.searchParams.set('q', trimmedQuery);
-        return url.toString();
-      } catch {
-        return fallbackUrl;
-      }
-    }
-
-    if (template.includes('{query}')) {
-      return template.replace(/\{query\}/g, encoded);
-    }
-
-    try {
-      const url = new URL(template);
-      if (!url.searchParams.has('q')) url.searchParams.set('q', trimmedQuery);
-      return url.toString();
-    } catch {
-      return template;
-    }
+    if (!trimmedQuery) return `../${withSlash}`;
+    return `../${withSlash}?q=${encodeURIComponent(trimmedQuery)}`;
   }
 
   async function loadDocsSources() {
@@ -184,16 +168,16 @@
       const keywords = source.keywords.length
         ? `<p class="card-speakers paper-authors">${escapeHtml(source.keywords.slice(0, 6).join(' · '))}</p>`
         : '';
-      const searchUrl = resolveDocsSearchUrl(source.searchUrlTemplate, activeQuery, source.docsUrl);
+      const localRoute = resolveLocalDocsRoute(source.localPath, activeQuery);
       const actionLabel = activeQuery ? `Search ${source.name}` : `Open ${source.name}`;
 
       return `
         <article class="talk-card paper-card docs-card">
-          <a href="${escapeHtml(searchUrl || source.docsUrl)}" class="card-link-wrap" aria-label="${escapeHtml(actionLabel)}">
+          <a href="${escapeHtml(localRoute)}" class="card-link-wrap" aria-label="${escapeHtml(actionLabel)}">
             <div class="card-body">
               <div class="card-meta">
                 <span class="badge badge-blog">Docs</span>
-                <span class="meeting-label">Upstream</span>
+                <span class="meeting-label">Wrapped</span>
               </div>
               <p class="card-title">${escapeHtml(source.name)} Documentation</p>
               ${source.description ? `<p class="card-abstract">${escapeHtml(source.description)}</p>` : ''}
@@ -202,10 +186,10 @@
             </div>
           </a>
           <div class="card-footer">
-            <a href="${escapeHtml(searchUrl || source.docsUrl)}" class="card-link-btn card-link-btn--video" aria-label="${escapeHtml(actionLabel)}">
+            <a href="${escapeHtml(localRoute)}" class="card-link-btn card-link-btn--video" aria-label="${escapeHtml(actionLabel)}">
               <span aria-hidden="true">${escapeHtml(activeQuery ? 'Search Docs' : 'Open Docs')}</span>
             </a>
-            <a href="${escapeHtml(source.docsUrl)}" class="card-link-btn card-link-btn--slides" aria-label="Open ${escapeHtml(source.name)} home">
+            <a href="${escapeHtml(source.docsUrl)}" class="card-link-btn card-link-btn--slides" aria-label="Open ${escapeHtml(source.name)} source">
               <span aria-hidden="true">Source Home</span>
             </a>
           </div>
@@ -256,7 +240,7 @@
       const source = docsSources.find((item) => item.id === sourceId) || docsSources[0];
       if (!source) return;
 
-      const destination = resolveDocsSearchUrl(source.searchUrlTemplate, query, source.docsUrl);
+      const destination = resolveLocalDocsRoute(source.localPath, query);
       if (destination) {
         window.location.assign(destination);
       }

@@ -5,6 +5,7 @@
     {
       "id": "llvm-core",
       "name": "LLVM Core",
+      "localPath": "docs/llvm-core/",
       "docsUrl": "https://llvm.org/docs/",
       "searchUrlTemplate": "https://llvm.org/docs/search.html?q={query}",
       "description": "LLVM core manuals, references, internals, and contributor documentation.",
@@ -21,6 +22,7 @@
     {
       "id": "clang",
       "name": "Clang",
+      "localPath": "docs/clang/",
       "docsUrl": "https://clang.llvm.org/docs/",
       "searchUrlTemplate": "https://clang.llvm.org/docs/search.html?q={query}",
       "description": "Clang user guides, diagnostics, tooling, sanitizers, and frontend docs.",
@@ -36,6 +38,7 @@
     {
       "id": "lldb",
       "name": "LLDB",
+      "localPath": "docs/lldb/",
       "docsUrl": "https://lldb.llvm.org/",
       "searchUrlTemplate": "https://lldb.llvm.org/search.html?q={query}",
       "description": "LLDB debugger documentation, command references, scripting, and API docs.",

@@ -39,6 +39,7 @@ const DEFAULT_DOCS_SOURCES = [
   {
     id: 'llvm-core',
     name: 'LLVM Core',
+    localPath: 'docs/llvm-core/',
     docsUrl: 'https://llvm.org/docs/',
     searchUrlTemplate: 'https://llvm.org/docs/search.html?q={query}',
     description: 'LLVM core manuals, references, internals, and contributor documentation.',
@@ -47,6 +48,7 @@ const DEFAULT_DOCS_SOURCES = [
   {
     id: 'clang',
     name: 'Clang',
+    localPath: 'docs/clang/',
     docsUrl: 'https://clang.llvm.org/docs/',
     searchUrlTemplate: 'https://clang.llvm.org/docs/search.html?q={query}',
     description: 'Clang user guides, diagnostics, tooling, sanitizers, and frontend docs.',
@@ -55,6 +57,7 @@ const DEFAULT_DOCS_SOURCES = [
   {
     id: 'lldb',
     name: 'LLDB',
+    localPath: 'docs/lldb/',
     docsUrl: 'https://lldb.llvm.org/',
     searchUrlTemplate: 'https://lldb.llvm.org/search.html?q={query}',
     description: 'LLDB debugger documentation, command references, scripting, and API docs.',
@@ -145,6 +148,9 @@ function normalizeDocsSourceRecord(rawSource, fallbackIndex = 0) {
     .replace(/-{2,}/g, '-')
     .replace(/^-+|-+$/g, '') || `docs-source-${fallbackIndex + 1}`;
   const name = normalizeAdvancedText(rawSource.name, 120) || `Docs Source ${fallbackIndex + 1}`;
+  const localPathCandidate = normalizeAdvancedText(rawSource.localPath, 160)
+    || ({ 'llvm-core': 'docs/llvm-core/', clang: 'docs/clang/', lldb: 'docs/lldb/' }[id] || `docs/${id}/`);
+  const localPath = localPathCandidate.replace(/^\/+/, '').replace(/\/+$/, '') + '/';
   const docsUrl = sanitizeExternalUrl(rawSource.docsUrl);
   const searchUrlTemplate = normalizeAdvancedText(rawSource.searchUrlTemplate, 420);
   const description = normalizeAdvancedText(rawSource.description, 420);
@@ -160,6 +166,7 @@ function normalizeDocsSourceRecord(rawSource, fallbackIndex = 0) {
   return {
     id,
     name,
+    localPath,
     docsUrl,
     searchUrlTemplate,
     description,
@@ -167,34 +174,12 @@ function normalizeDocsSourceRecord(rawSource, fallbackIndex = 0) {
   };
 }
 
-function resolveDocsSearchHref(searchTemplate, query, docsUrl) {
+function buildLocalDocsRoute(localPath, query) {
+  const path = String(localPath || 'docs/llvm-core/').replace(/^\/+/, '');
+  const normalizedPath = path.endsWith('/') ? path : `${path}/`;
   const normalizedQuery = normalizeAdvancedText(query, 320);
-  const encoded = encodeURIComponent(normalizedQuery);
-  const fallback = sanitizeExternalUrl(docsUrl);
-  const template = normalizeAdvancedText(searchTemplate, 420);
-
-  if (!normalizedQuery) return fallback;
-  if (!template) {
-    try {
-      const url = new URL(fallback || 'https://llvm.org/docs/');
-      url.searchParams.set('q', normalizedQuery);
-      return url.toString();
-    } catch {
-      return fallback;
-    }
-  }
-
-  if (template.includes('{query}')) {
-    return template.replace(/\{query\}/g, encoded);
-  }
-
-  try {
-    const url = new URL(template);
-    if (!url.searchParams.has('q')) url.searchParams.set('q', normalizedQuery);
-    return url.toString();
-  } catch {
-    return template;
-  }
+  if (!normalizedQuery) return normalizedPath;
+  return `${normalizedPath}?q=${encodeURIComponent(normalizedQuery)}`;
 }
 
 async function loadDocsSourceCatalog() {
@@ -236,12 +221,14 @@ async function loadDocsUniversalRecords() {
         collection,
         slug: source.id || `source-${index + 1}`,
         title: `${source.name} Documentation`,
-        href: source.docsUrl,
+        href: buildLocalDocsRoute(source.localPath, ''),
+        sourceUrl: source.docsUrl,
         summary: source.description || `${source.name} upstream documentation.`,
         chapter: 'Upstream Docs',
         outline: 'Live',
         headings: keywords.slice(0, 4),
         search: searchCorpus,
+        localPath: source.localPath,
         searchUrlTemplate: source.searchUrlTemplate || '',
         sourceName: source.name,
         _titleLower: normalizeSearchText(`${source.name} documentation`),
@@ -2831,11 +2818,8 @@ function renderDocsCard(doc) {
   const headingPreview = Array.isArray(doc.headings)
     ? doc.headings.slice(0, 2).filter(Boolean).join(' · ')
     : '';
-  const sourceHref = String(doc.href || '').trim() || 'https://llvm.org/docs/';
-  const searchHref = query
-    ? resolveDocsSearchHref(doc.searchUrlTemplate || '', query, sourceHref)
-    : sourceHref;
-  const actionHref = searchHref || sourceHref;
+  const sourceHref = String(doc.sourceUrl || '').trim() || 'https://llvm.org/docs/';
+  const actionHref = buildLocalDocsRoute(doc.localPath || doc.href || 'docs/llvm-core/', query);
   const actionLabel = query ? 'Search Docs' : 'Open Docs';
 
   return `

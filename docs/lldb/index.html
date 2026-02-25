@@ -1,16 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-content-scope="docs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting to LLDB Docs</title>
-  <meta http-equiv="refresh" content="0; url=https://lldb.llvm.org/">
-  <link rel="canonical" href="https://lldb.llvm.org/">
-  <script>
-    window.location.replace('https://lldb.llvm.org/');
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="light dark">
+  <title>LLDB Docs Wrapper — LLVM Research Library</title>
+  <meta name="description" content="Wrapped upstream LLDB docs with local search controls.">
+  <link rel="icon" type="image/png" href="../../images/llvm-favicon.png">
+  <link rel="stylesheet" href="../../css/style.css?v=20260225-12">
+  <style>
+    html { background: #f5f5f5; }
+    html[data-theme="dark"] { background: #000000; }
+    body { background: transparent; }
+    .docs-wrapper-shell { width: min(1200px, 100%); margin: 0 auto; padding: 1rem 1.25rem 2rem; }
+    .docs-wrapper-form { display: flex; gap: 0.65rem; flex-wrap: wrap; margin: 0.4rem 0 1rem; }
+    .docs-wrapper-input { flex: 1 1 420px; min-height: 44px; border-radius: 12px; border: 1px solid var(--card-border, rgba(120,130,150,.35)); padding: 0.72rem 0.95rem; font: inherit; background: var(--card-bg, #fff); color: var(--text-main, #111); }
+    .docs-wrapper-btn { min-height: 44px; border-radius: 12px; border: 1px solid rgba(0,0,0,.08); background: #111; color: #fff; padding: 0.68rem 0.95rem; font: inherit; cursor: pointer; }
+    .docs-wrapper-frame { width: 100%; min-height: 72vh; border: 1px solid var(--card-border, rgba(120,130,150,.35)); border-radius: 14px; background: #fff; }
+    .docs-wrapper-links { display: flex; gap: 0.6rem; margin: 0.2rem 0 0.8rem; flex-wrap: wrap; }
+    .docs-wrapper-links a { color: var(--text-link, #0f5ad1); text-decoration: none; font-weight: 600; }
+  </style>
 </head>
-<body>
-  <p>Redirecting to <a href="https://lldb.llvm.org/">LLDB documentation</a>...</p>
+<body data-docs-source-id="lldb">
+  <header class="site-header">
+    <a href="../../index.html" class="site-logo" aria-label="LLVM Research Library home">
+      <img src="../../images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
+      <span>LLVM Research Library</span>
+    </a>
+    <form class="global-search-form" action="../../work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, docs, people, and key topics">
+      <input type="hidden" name="mode" value="search">
+      <input type="search" class="global-search-input" name="q" placeholder="Search the full library..." autocomplete="off" spellcheck="false" aria-label="Global Search across talks, papers, blogs, docs, people, and key topics">
+      <button class="global-search-submit" type="submit" aria-label="Run Global Search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+    </form>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../../talks/" class="nav-link" aria-label="Talks"><span aria-hidden="true">Talks</span></a>
+      <a href="../../papers/" class="nav-link" aria-label="Papers"><span aria-hidden="true">Papers</span></a>
+      <a href="../../blogs/" class="nav-link" aria-label="Blogs"><span aria-hidden="true">Blogs</span></a>
+      <div class="nav-dropdown nav-dropdown-docs">
+        <a href="../../docs/" class="nav-link nav-dropdown-toggle active" aria-label="Documentation" aria-current="page"><span aria-hidden="true">Docs</span></a>
+        <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
+          <a href="../../docs/" class="nav-dropdown-link" role="menuitem">Docs Hub</a>
+          <a href="../../docs/llvm-core/" class="nav-dropdown-link" role="menuitem">LLVM Core</a>
+          <a href="../../docs/clang/" class="nav-dropdown-link" role="menuitem">Clang</a>
+          <a href="../../docs/lldb/" class="nav-dropdown-link" role="menuitem">LLDB</a>
+        </div>
+      </div>
+      <a href="../../people/" class="nav-link" aria-label="People"><span aria-hidden="true">People</span></a>
+    </nav>
+  </header>
+
+  <main class="docs-wrapper-shell" id="docs-wrapper-root" tabindex="-1">
+    <h1 id="docs-wrapper-title">LLDB Documentation</h1>
+    <p class="subtitle" id="docs-wrapper-subtitle">Wrapped upstream docs for LLDB.</p>
+    <form id="docs-wrapper-form" class="docs-wrapper-form" role="search" aria-label="Search wrapped LLDB docs">
+      <input id="docs-wrapper-query" class="docs-wrapper-input" type="search" placeholder="Search LLDB docs..." autocomplete="off" spellcheck="false" aria-label="Search LLDB docs">
+      <button type="submit" class="docs-wrapper-btn">Search</button>
+    </form>
+    <div class="docs-wrapper-links">
+      <a href="../../docs/">Back to Docs Hub</a>
+      <a id="docs-wrapper-source-link" href="https://lldb.llvm.org/" target="_blank" rel="noopener noreferrer">Open Source Page</a>
+    </div>
+    <iframe id="docs-wrapper-frame" class="docs-wrapper-frame" title="LLDB docs content" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </main>
+
+  <script>window.LLVMLibraryRootPath = '../../';</script>
+  <script src="../../js/shared/library-utils.js?v=20260225-14"></script>
+  <script src="../../js/shared/global-search.js?v=20260225-14"></script>
+  <script src="../../js/docs-wrapper.js?v=20260225-01"></script>
 </body>
 </html>
