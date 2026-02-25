@@ -23,10 +23,10 @@ from pathlib import Path
 MAX_HEADINGS = 10
 MAX_SUMMARY_CHARS = 280
 MAX_SEARCH_CHARS = 6000
+MAX_SUMMARY_CHARS_CPP_REFERENCE = 160
+MAX_SEARCH_CHARS_CPP_REFERENCE = 420
 SKIP_HTML = {"search.html", "genindex.html", "py-modindex.html"}
-SKIP_PATH_PREFIXES_BY_ROOT = {
-    "lldb": ("cpp_reference/",),
-}
+CPP_REFERENCE_REL_PREFIX = "cpp_reference/"
 
 
 def normalize_space(value: str) -> str:
@@ -267,10 +267,7 @@ def build_entry_for_html(html_path: Path, docs_root: Path, outline_map: dict[str
         return None
     if relpath.startswith("_"):
         return None
-    root_key = docs_root.name.lower()
-    for prefix in SKIP_PATH_PREFIXES_BY_ROOT.get(root_key, ()):
-        if relpath.startswith(prefix):
-            return None
+    is_lldb_cpp_reference = docs_root.name.lower() == "lldb" and relpath.startswith(CPP_REFERENCE_REL_PREFIX)
 
     raw = html_path.read_text(encoding="utf-8", errors="ignore")
     parser = DocsPageParser()
@@ -314,17 +311,23 @@ def build_entry_for_html(html_path: Path, docs_root: Path, outline_map: dict[str
             break
     if not summary:
         summary = body_text
-    summary = truncate_text(summary, MAX_SUMMARY_CHARS)
+    summary_limit = MAX_SUMMARY_CHARS_CPP_REFERENCE if is_lldb_cpp_reference else MAX_SUMMARY_CHARS
+    summary = truncate_text(summary, summary_limit)
 
     heading_search = " ".join(item["text"] for item in headings if isinstance(item, dict) and item.get("text"))
     paragraph_search = " ".join(paragraphs[:4])
+    search_segments = [title, heading_search, paragraph_search]
+    if not is_lldb_cpp_reference:
+        search_segments.append(body_text)
+
+    search_limit = MAX_SEARCH_CHARS_CPP_REFERENCE if is_lldb_cpp_reference else MAX_SEARCH_CHARS
     search_blob = truncate_text(
         " ".join(
             segment
-            for segment in [title, heading_search, paragraph_search, body_text]
+            for segment in search_segments
             if normalize_space(segment)
         ),
-        MAX_SEARCH_CHARS,
+        search_limit,
     )
 
     if not search_blob:

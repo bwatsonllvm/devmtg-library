@@ -2141,13 +2141,25 @@ const DOCUMENTATION_OPTIONS = {
   }
 
   function slugifyHeadingText(value) {
-    const source = String(value || '').trim().toLowerCase();
+    const source = String(value || '')
+      .replace(/\u00B6/g, ' ')
+      .replace(/\s*#+\s*$/g, '')
+      .trim()
+      .toLowerCase();
     if (!source) return '';
     return source
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-+|-+$/g, '');
+  }
+
+  function cleanInlineTocHeadingLabel(value) {
+    return String(value || '')
+      .replace(/\u00B6/g, ' ')
+      .replace(/\s*#+\s*$/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   function ensureHeadingId(heading, usedIds) {
@@ -2210,7 +2222,7 @@ const DOCUMENTATION_OPTIONS = {
     if (hasNativeSphinxContents) return null;
 
     const headings = Array.from(articleBody.querySelectorAll('h2, h3, h4'))
-      .filter((heading) => String(heading.textContent || '').trim().length > 0);
+      .filter((heading) => cleanInlineTocHeadingLabel(heading.textContent || '').length > 0);
     if (headings.length < 2) return null;
     if (headings.length > 32) return null;
 
@@ -2237,7 +2249,7 @@ const DOCUMENTATION_OPTIONS = {
       link.className = 'docs-inline-toc-link';
       link.href = `#${id}`;
       link.setAttribute('data-docs-toc-target', id);
-      link.textContent = String(heading.textContent || '').trim();
+      link.textContent = cleanInlineTocHeadingLabel(heading.textContent || '');
       item.appendChild(link);
       list.appendChild(item);
     });
@@ -2845,12 +2857,6 @@ const DOCUMENTATION_OPTIONS = {
     const articleSection = document.createElement('section');
     articleSection.className = 'abstract-section';
     articleSection.setAttribute('aria-label', 'Documentation content');
-
-    const articleLabel = document.createElement('div');
-    articleLabel.className = 'section-label';
-    articleLabel.setAttribute('aria-hidden', 'true');
-    articleLabel.textContent = 'Article';
-    articleSection.appendChild(articleLabel);
 
     const articleBody = document.createElement('div');
     articleBody.className = 'abstract-body blog-content docs-hugo-content';

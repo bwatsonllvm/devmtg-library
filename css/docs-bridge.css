@@ -999,6 +999,12 @@ body {
   padding: var(--space-8) var(--space-6) var(--space-20);
 }
 
+.library-docs-bridge .docs-hugo-shell .talk-header {
+  width: min(100%, 82ch);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .library-docs-bridge .docs-hugo-shell .talk-title,
 .library-docs-bridge .docs-hugo-shell .talk-title a,
 .library-docs-bridge .docs-hugo-content h1,
