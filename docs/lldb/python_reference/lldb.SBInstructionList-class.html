@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lldb.SBInstructionList</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lldb-module.html">Package&nbsp;lldb</a> ::
+        Class&nbsp;SBInstructionList
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lldb.SBInstructionList-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SBInstructionList</h1><p class="nomargin-top"><span class="codelink"><a href="lldb-pysrc.html#SBInstructionList">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_lldb_sbi_2" name="uml_class_diagram_for_lldb_sbi_2">
+<area shape="rect" id="node1_20" href="lldb.SBInstructionList-class.html#__swig_setmethods__" title="lldb.SBInstructionList.__swig_setmethods__" alt="" coords="17,96,287,116"/>
+<area shape="rect" id="node1_21" href="lldb.SBInstructionList-class.html#__setattr__" title="lldb.SBInstructionList.__setattr__" alt="" coords="17,116,287,136"/>
+<area shape="rect" id="node1_22" href="lldb.SBInstructionList-class.html#__swig_getmethods__" title="lldb.SBInstructionList.__swig_getmethods__" alt="" coords="17,136,287,156"/>
+<area shape="rect" id="node1_23" href="lldb.SBInstructionList-class.html#__getattr__" title="lldb.SBInstructionList.__getattr__" alt="" coords="17,156,287,176"/>
+<area shape="rect" id="node1_24" href="lldb.SBInstructionList-class.html#__swig_destroy__" title="lldb.SBInstructionList.__swig_destroy__" alt="" coords="17,176,287,196"/>
+<area shape="rect" id="node1_25" href="lldb.SBInstructionList-class.html#__del__" title="lldb.SBInstructionList.__del__" alt="" coords="17,196,287,216"/>
+<area shape="rect" id="node1_26" href="lldb.SBInstructionList-class.html#__repr__" title="lldb.SBInstructionList.__repr__" alt="" coords="17,219,287,239"/>
+<area shape="rect" id="node1_27" href="lldb.SBInstructionList-class.html#__init__" title="__init__(lldb::SBInstructionList self) &#45;&gt; SBInstructionList &#160;__init__(lldb::SBInstructionList self, SBInstructionList rhs) &#45;&gt; &#160;SBInstructionList" alt="" coords="17,239,287,259"/>
+<area shape="rect" id="node1_28" href="lldb.SBInstructionList-class.html#IsValid" title="IsValid(SBInstructionList self) &#45;&gt; bool" alt="" coords="17,259,287,279"/>
+<area shape="rect" id="node1_29" href="lldb.SBInstructionList-class.html#__nonzero__" title="lldb.SBInstructionList.__nonzero__" alt="" coords="17,279,287,299"/>
+<area shape="rect" id="node1_30" href="lldb.SBInstructionList-class.html#__bool__" title="lldb.SBInstructionList.__bool__" alt="" coords="17,299,287,319"/>
+<area shape="rect" id="node1_31" href="lldb.SBInstructionList-class.html#GetSize" title="GetSize(SBInstructionList self) &#45;&gt; size_t" alt="" coords="17,319,287,339"/>
+<area shape="rect" id="node1_32" href="lldb.SBInstructionList-class.html#GetInstructionAtIndex" title="GetInstructionAtIndex(SBInstructionList self, uint32_t idx) &#45;&gt; &#160;SBInstruction" alt="" coords="17,339,287,359"/>
+<area shape="rect" id="node1_33" href="lldb.SBInstructionList-class.html#GetInstructionsCount" title="GetInstructionsCount(SBInstructionList self, SBAddress start, SBAddress &#160;end, bool canSetBreakpoint) &#45;&gt; size_t" alt="" coords="17,359,287,379"/>
+<area shape="rect" id="node1_34" href="lldb.SBInstructionList-class.html#Clear" title="Clear(SBInstructionList self)" alt="" coords="17,379,287,399"/>
+<area shape="rect" id="node1_35" href="lldb.SBInstructionList-class.html#AppendInstruction" title="AppendInstruction(SBInstructionList self, SBInstruction inst)" alt="" coords="17,399,287,419"/>
+<area shape="rect" id="node1_36" href="lldb.SBInstructionList-class.html#Print" title="Print(SBInstructionList self, FILE * out)" alt="" coords="17,419,287,439"/>
+<area shape="rect" id="node1_37" href="lldb.SBInstructionList-class.html#GetDescription" title="GetDescription(SBInstructionList self, SBStream description) &#45;&gt; bool" alt="" coords="17,439,287,459"/>
+<area shape="rect" id="node1_38" href="lldb.SBInstructionList-class.html#DumpEmulationForAllInstructions" title="DumpEmulationForAllInstructions(SBInstructionList self, char const * &#160;triple) &#45;&gt; bool" alt="" coords="17,459,287,479"/>
+<area shape="rect" id="node1_39" href="lldb.SBInstructionList-class.html#__str__" title="__str__(SBInstructionList self) &#45;&gt; PyObject *" alt="" coords="17,499,287,519"/>
+<area shape="rect" id="node1" href="lldb.SBInstructionList-class.html" title="Represents a list of machine instructions." alt="" coords="5,70,299,525"/>
+<area shape="rect" id="node2" href="lldb._object-class.html" title="lldb._object" alt="" coords="117,5,185,51"/>
+</map>
+  <img src="uml_class_diagram_for_lldb_sbi_2.gif" alt='' usemap="#uml_class_diagram_for_lldb_sbi_2" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<pre class="literalblock">
+
+Represents a list of machine instructions.  SBFunction and SBSymbol have
+GetInstructions() methods which return SBInstructionList instances.
+
+SBInstructionList supports instruction (SBInstruction instance) iteration.
+For example (see also SBDebugger for a more complete example),
+
+def disassemble_instructions (insts):
+    for i in insts:
+        print i
+
+defines a function which takes an SBInstructionList instance and prints out
+the machine instructions in assembly format.
+
+</pre>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#_swig_repr">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      __init__(lldb::SBInstructionList self) -&gt; SBInstructionList 
+      __init__(lldb::SBInstructionList self, SBInstructionList rhs) -&gt; 
+      SBInstructionList</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsValid"></a><span class="summary-sig-name">IsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsValid(SBInstructionList self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.IsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__nonzero__"></a><span class="summary-sig-name">__nonzero__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bool__"></a><span class="summary-sig-name">__bool__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetSize"></a><span class="summary-sig-name">GetSize</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetSize(SBInstructionList self) -&gt; size_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.GetSize">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetInstructionAtIndex"></a><span class="summary-sig-name">GetInstructionAtIndex</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetInstructionAtIndex(SBInstructionList self, uint32_t idx) -&gt; 
+      SBInstruction</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.GetInstructionAtIndex">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetInstructionsCount"></a><span class="summary-sig-name">GetInstructionsCount</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetInstructionsCount(SBInstructionList self, SBAddress start, 
+      SBAddress end, bool canSetBreakpoint) -&gt; size_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.GetInstructionsCount">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Clear"></a><span class="summary-sig-name">Clear</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Clear(SBInstructionList self)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.Clear">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="AppendInstruction"></a><span class="summary-sig-name">AppendInstruction</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      AppendInstruction(SBInstructionList self, SBInstruction inst)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.AppendInstruction">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Print"></a><span class="summary-sig-name">Print</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      Print(SBInstructionList self, FILE * out)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.Print">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDescription"></a><span class="summary-sig-name">GetDescription</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetDescription(SBInstructionList self, SBStream description) -&gt; 
+      bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.GetDescription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="DumpEmulationForAllInstructions"></a><span class="summary-sig-name">DumpEmulationForAllInstructions</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      DumpEmulationForAllInstructions(SBInstructionList self, char const * 
+      triple) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.DumpEmulationForAllInstructions">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__iter__"></a><span class="summary-sig-name">__iter__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Iterate over all instructions in a lldb.SBInstructionList object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.__iter__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__len__"></a><span class="summary-sig-name">__len__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Access len of the instruction list.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.__len__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__getitem__"></a><span class="summary-sig-name">__getitem__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">key</span>)</span><br />
+      Access instructions by integer index for array access or by 
+      lldb.SBAddress to find an instruction that matches a section offset 
+      address object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.__getitem__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__str__"></a><span class="summary-sig-name">__str__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      __str__(SBInstructionList self) -&gt; PyObject *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBInstructionList.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_setmethods__"></a><span class="summary-name">__swig_setmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__setattr__"></a><span class="summary-name">__setattr__</span> = <code title="lambda self, name, value:">lambda self, name, value:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_getmethods__"></a><span class="summary-name">__swig_getmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__getattr__"></a><span class="summary-name">__getattr__</span> = <code title="lambda self, name:">lambda self, name:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_destroy__"></a><span class="summary-name">__swig_destroy__</span> = <code title="_lldb.delete_SBInstructionList">_lldb.delete_SBInstructionList</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__del__"></a><span class="summary-name">__del__</span> = <code title="lambda self:">lambda self:</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Nov  4 00:57:41 2019
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

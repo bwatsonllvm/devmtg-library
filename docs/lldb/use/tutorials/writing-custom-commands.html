@@ -1,0 +1,855 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Implementing Standalone Scripts" href="implementing-standalone-scripts.html" /><link rel="prev" title="Automating Stepping Logic" href="automating-stepping-logic.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>Writing Custom Commands - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lldbdap.html">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python-reference.html">Python Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../python_api.html">Python API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBAttachInfo.html">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBDebugger.html">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBExpressionOptions.html">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBFrame.html">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBModule.html">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBThread.html">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python_api/lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/llvm/llvm-project/edit/main/lldb/docs/use/tutorials/writing-custom-commands.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="writing-custom-commands">
+<h1>Writing Custom Commands<a class="headerlink" href="#writing-custom-commands" title="Link to this heading">#</a></h1>
+<section id="create-a-new-command-using-a-python-function">
+<h2>Create a new command using a Python function<a class="headerlink" href="#create-a-new-command-using-a-python-function" title="Link to this heading">#</a></h2>
+<p>Python functions can be used to create new LLDB command interpreter commands,
+which will work like all the natively defined lldb commands. This provides a
+very flexible and easy way to extend LLDB to meet your debugging requirements.</p>
+<p>To write a python function that implements a new LLDB command define the
+function to take five arguments as follows:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">command_function</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">exe_ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+<p>The meaning of the arguments is given in the table below.</p>
+<p>If you provide a Python docstring in your command function LLDB will use it
+when providing “long help” for your command, as in:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">command_function</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This command takes a lot of options and does many fancy things&quot;&quot;&quot;</span>
+    <span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+<p>though providing help can also be done programmatically (see below).</p>
+<p>Prior to lldb 3.5.2 (April 2015), LLDB Python command definitions didn’t take the SBExecutionContext
+argument. So you may still see commands where the command definition is:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">command_function</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+<p>Using this form is strongly discouraged because it can only operate on the “currently selected”
+target, process, thread, frame.  The command will behave as expected when run
+directly on the command line.  But if the command is used in a stop-hook, breakpoint
+callback, etc. where the response to the callback determines whether we will select
+this or that particular process/frame/thread, the global “currently selected”
+entity is not necessarily the one the callback is meant to handle.  In that case, this
+command definition form can’t do the right thing.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Argument</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">debugger</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lldb.SBDebugger</span></code></p></td>
+<td><p>The current debugger object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">command</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">string</span></code></p></td>
+<td><p>A python string containing all arguments for your command. If you need to chop up the arguments try using the <code class="docutils literal notranslate"><span class="pre">shlex</span></code> module’s <code class="docutils literal notranslate"><span class="pre">shlex.split(command)</span></code> to properly extract the arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exe_ctx</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lldb.SBExecutionContext</span></code></p></td>
+<td><p>An execution context object carrying around information on the inferior process’ context in which the command is expected to act <em>Optional since lldb 3.5.2, unavailable before</em></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lldb.SBCommandReturnObject</span></code></p></td>
+<td><p>A return object which encapsulates success/failure information for the command and output text that needs to be printed as a result of the command. The plain Python “print” command also works but text won’t go in the result by default (it is useful as a temporary logging facility).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">internal_dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dict</span> <span class="pre">object</span></code></p></td>
+<td><p>The dictionary for the current embedded script session which contains all variables and functions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="create-a-new-command-using-a-python-class">
+<h2>Create a new command using a Python class<a class="headerlink" href="#create-a-new-command-using-a-python-class" title="Link to this heading">#</a></h2>
+<p>Since lldb 3.7, Python commands can also be implemented by means of a class
+which should implement the following interface:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CommandObjectType</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debugger</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+        <span class="c1"># this call should initialize the command with respect to the command interpreter for the passed-in debugger</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">exe_ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="c1"># this is the actual bulk of the command, akin to Python command functions</span>
+
+    <span class="k">def</span> <span class="nf">get_short_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># this call should return the short help text for this command[1]</span>
+
+    <span class="k">def</span> <span class="nf">get_long_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># this call should return the long help text for this command[1]</span>
+
+    <span class="k">def</span> <span class="nf">get_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># this will be called when the command is added to the command interpreter,</span>
+        <span class="c1"># and should return a flag field made from or-ing together the appropriate</span>
+        <span class="c1"># elements of the lldb.CommandFlags enum to specify the requirements of this command.</span>
+        <span class="c1"># The CommandInterpreter will make sure all these requirements are met, and will</span>
+        <span class="c1"># return the standard lldb error if they are not.[1]</span>
+
+    <span class="k">def</span> <span class="nf">get_repeat_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="c1"># The auto-repeat command is what will get executed when the user types just</span>
+        <span class="c1"># a return at the next prompt after this command is run.  Even if your command</span>
+        <span class="c1"># was run because it was specified as a repeat command, that invocation will still</span>
+        <span class="c1"># get asked for IT&#39;S repeat command, so you can chain a series of repeats, for instance</span>
+        <span class="c1"># to implement a pager.</span>
+
+        <span class="c1"># The command argument is the command that is about to be executed.</span>
+
+        <span class="c1"># If this call returns None, then the ordinary repeat mechanism will be used</span>
+        <span class="c1"># If this call returns an empty string, then auto-repeat is disabled</span>
+        <span class="c1"># If this call returns any other string, that will be the repeat command [1]</span>
+</pre></div>
+</div>
+<p>[1] This method is optional.</p>
+<p>As a convenience, you can treat the result object as a Python file object, and
+say</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;my command does lots of cool stuff&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">SBCommandReturnObject</span></code> and <code class="docutils literal notranslate"><span class="pre">SBStream</span></code> both support this file-like behavior by
+providing <code class="docutils literal notranslate"><span class="pre">write()</span></code> and <code class="docutils literal notranslate"><span class="pre">flush()</span></code> calls at the Python layer.</p>
+</section>
+<section id="parsed-commands">
+<h2>Parsed Commands<a class="headerlink" href="#parsed-commands" title="Link to this heading">#</a></h2>
+<p>The commands that are added using this class definition are what lldb calls
+“raw” commands.  The command interpreter doesn’t attempt to parse the command,
+doesn’t handle option values, neither generating help for them, or their
+completion.  Raw commands are useful when the arguments passed to the command
+are unstructured, and having to protect them against lldb command parsing would
+be onerous.  For instance, “expr” is a raw command.</p>
+<p>You can also add scripted commands that implement the “parsed command”, where
+the options and their types are specified, as well as the argument and argument
+types.  These commands look and act like the majority of lldb commands, and you
+can also add custom completions for the options and/or the arguments if you have
+special needs.</p>
+<p>The easiest way to do this is to derive your new command from the lldb.ParsedCommand
+class.  That responds in the same way to the help &amp; repeat command interfaces, and
+provides some convenience methods, and most importantly an LLDBOptionValueParser,
+accessed through lldb.ParsedCommand.get_parser().  The parser is used to set
+your command definitions, and to retrieve option values in the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method.</p>
+<p>To set up the command definition, implement the ParsedCommand abstract method:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup_command_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>This is called when your command is added to lldb.  In this method you add the
+options and their types, the option help strings, etc. to the command using the API:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">short_option</span><span class="p">,</span> <span class="n">long_option</span><span class="p">,</span> <span class="n">help</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span>
+               <span class="n">dest</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">value_type</span><span class="o">=</span><span class="n">lldb</span><span class="o">.</span><span class="n">eArgTypeNone</span><span class="p">,</span> <span class="n">completion_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">enum_values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    short_option: one character, must be unique, not required</span>
+<span class="sd">    long_option:  no spaces, must be unique, required</span>
+<span class="sd">    help:         a usage string for this option, will print in the command help</span>
+<span class="sd">    default:      the initial value for this option (if it has a value)</span>
+<span class="sd">    dest:         the name of the property that gives you access to the value for</span>
+<span class="sd">                  this value.  Defaults to the long option if not provided.</span>
+<span class="sd">    required: if true, this option must be provided or the command will error out</span>
+<span class="sd">    groups: Which &quot;option groups&quot; does this option belong to.  This can either be</span>
+<span class="sd">            a simple list (e.g. [1, 3, 4, 5]) or you can specify ranges by sublists:</span>
+<span class="sd">            so [1, [3,5]] is the same as [1, 3, 4, 5].</span>
+<span class="sd">    value_type: one of the lldb.eArgType enum values.  Some of the common arg</span>
+<span class="sd">                types also have default completers, which will be applied automatically.</span>
+<span class="sd">    completion_type: currently these are values form the lldb.CompletionType enum.	If</span>
+<span class="sd">                     you need custom completions, implement	handle_option_argument_completion.</span>
+<span class="sd">    enum_values: An array of duples: [&quot;element_name&quot;, &quot;element_help&quot;].  If provided,</span>
+<span class="sd">                 only one of the enum elements is allowed.  The value will be the</span>
+<span class="sd">                 element_name for the chosen enum element as a string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Similarly, you can add argument types to the command:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_argument_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_type</span><span class="p">,</span> <span class="n">repeat</span> <span class="o">=</span> <span class="s2">&quot;optional&quot;</span><span class="p">,</span> <span class="n">groups</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  	arg_type: The argument type, one of the	lldb.eArgType enum values.</span>
+<span class="sd">  	repeat:	Choose from the	following options:</span>
+<span class="sd">  	      	&quot;plain&quot;	- one value</span>
+<span class="sd">  	      	&quot;optional&quot; - zero or more values</span>
+<span class="sd">  	      	&quot;plus&quot; - one or	more values</span>
+<span class="sd">  	groups:	As with	add_option.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Then implement the body of the command by defining:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debugger</span><span class="p">,</span> <span class="n">args_array</span><span class="p">,</span> <span class="n">exe_ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the command callback.  The option values are</span>
+<span class="sd">    provided by the &#39;dest&#39; properties on the parser.</span>
+
+<span class="sd">    args_array: This is the list of arguments provided.</span>
+<span class="sd">    exe_ctx: Gives the SBExecutionContext on which the</span>
+<span class="sd">             command should operate.</span>
+<span class="sd">    result:  Any results of the command should be</span>
+<span class="sd">             written into this SBCommandReturnObject.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>This differs from the “raw” command’s <code class="docutils literal notranslate"><span class="pre">__call__</span></code> in that the arguments are already
+parsed into the args_array, and the option values are set in the parser, and
+can be accessed using their property name.  The LLDBOptionValueParser class has
+a couple of other handy methods:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">was_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">long_option_name</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the option was specified on the command line.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dest_for_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">long_option_name</span><span class="p">):</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This will return the value of the dest variable you defined for opt_name.</span>
+<span class="sd">Mostly useful for handle_completion where you get passed the long option.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="completion">
+<h2>Completion<a class="headerlink" href="#completion" title="Link to this heading">#</a></h2>
+<p>lldb will handle completing your option names, and all your enum values
+automatically.  If your option or argument types have associated built-in completers,
+then lldb will also handle that completion for you.  But if you have a need for
+custom completions, either in your arguments or option values, you can handle
+completion by hand as well.  To handle completion of option value arguments,
+your lldb.ParsedCommand subclass should implement:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">handle_option_argument_completion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">long_option</span><span class="p">,</span> <span class="n">cursor_pos</span><span class="p">):</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">long_option: The long option name of the option whose value you are</span>
+<span class="sd">             asked to complete.</span>
+<span class="sd">cursor_pos: The cursor position in the value for that option - which</span>
+<span class="sd">you can get from the option parser.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>And to handle the completion of arguments:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">handle_argument_completion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">arg_pos</span><span class="p">,</span> <span class="n">cursor_pos</span><span class="p">):</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">args: A list of the arguments to the command</span>
+<span class="sd">arg_pos: An index into the args list of the argument with the cursor</span>
+<span class="sd">cursor_pos: The cursor position in the arg specified by arg_pos</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>When either of these API’s is called, the command line will have been parsed up to
+the word containing the cursor, and any option values set in that part of the command
+string are available from the option value parser.  That’s useful for instance
+if you have a –shared-library option that would constrain the completions for,
+say, a symbol name option or argument.</p>
+<p>The return value specifies what the completion options are.  You have four
+choices:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: the completion was handled with no completions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: the completion was not handled, forward it to the regular
+completion machinery.</p></li>
+<li><p>A dictionary with the key: “completion”: there is one candidate,
+whose value is the value of the “completion” key.  Optionally you can pass a
+“mode” key whose value is either “partial” or “complete”.  Return partial if
+the “completion” string is a prefix for all the completed value.</p></li>
+</ul>
+<p>For instance, if the string you are completing is “Test” and the available completions are:
+“Test1”, “Test11” and “Test111”, you should return the dictionary:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="p">{</span><span class="s2">&quot;completion&quot;</span><span class="p">:</span> <span class="s2">&quot;Test1&quot;</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span> <span class="p">:</span> <span class="s2">&quot;partial&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>and then lldb will add the “1” at the cursor and advance it after the added string,
+waiting for more completions.  But if “Test1” is the only completion, return:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;completion&quot;</span><span class="p">:</span> <span class="s2">&quot;Test1&quot;</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;complete&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>and lldb will add “1 “ at the cursor, indicating the command string is complete.</p>
+<p>The default is “complete”, you don’t need to specify a “mode” in that case.</p>
+<ul class="simple">
+<li><p>A dictionary with the key: “values” whose value is a list of candidate completion
+strings.  The command interpreter will present those strings as the available choices.
+You can optionally include a “descriptions” key, whose value is a parallel array
+of description strings, and the completion will show the description next to
+each completion.</p></li>
+</ul>
+</section>
+<section id="loading-commands">
+<h2>Loading Commands<a class="headerlink" href="#loading-commands" title="Link to this heading">#</a></h2>
+<p>One other handy convenience when defining lldb command-line commands is the
+command “command script import” which will import a module specified by file
+path, so you don’t have to change your PYTHONPATH for temporary scripts. It
+also has another convenience that if your new script module has a function of
+the form:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__lldb_init_module</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="c1"># Command Initialization code goes here</span>
+</pre></div>
+</div>
+<p>where debugger and internal_dict are as above, that function will get run when
+the module is loaded allowing you to add whatever commands you want into the
+current debugger. Note that this function will only be run when using the LLDB
+command <code class="docutils literal notranslate"><span class="pre">command</span> <span class="pre">script</span> <span class="pre">import</span></code>, it will not get run if anyone imports your
+module from another module.</p>
+<p>Another way to load custom commands in lldb is to use the
+<code class="docutils literal notranslate"><span class="pre">&#64;lldb.command(command_name=None,</span> <span class="pre">doc=None)</span></code> decorator.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@lldb</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">goodstuff</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;command help string&quot;&quot;&quot;</span>
+    <span class="c1"># Command Implementation code goes here</span>
+</pre></div>
+</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
+<p>Now we can create a module called ls.py in the file ~/ls.py that will implement
+a function that can be used by LLDB’s python command code:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">lldb</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;/bin/ls&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1"># And the initialization code to add your commands</span>
+<span class="k">def</span> <span class="nf">__lldb_init_module</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="n">debugger</span><span class="o">.</span><span class="n">HandleCommand</span><span class="p">(</span><span class="s1">&#39;command script add -f ls.ls ls&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The &quot;ls&quot; python command has been installed and is ready for use.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can load the module into LLDB and use it</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>lldb
+<span class="o">(</span>lldb<span class="o">)</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>script<span class="w"> </span>import<span class="w"> </span>~/ls.py
+The<span class="w"> </span><span class="s2">&quot;ls&quot;</span><span class="w"> </span>python<span class="w"> </span><span class="nb">command</span><span class="w"> </span>has<span class="w"> </span>been<span class="w"> </span>installed<span class="w"> </span>and<span class="w"> </span>is<span class="w"> </span>ready<span class="w"> </span><span class="k">for</span><span class="w"> </span>use.
+<span class="o">(</span>lldb<span class="o">)</span><span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/tmp/
+total<span class="w"> </span><span class="m">365848</span>
+-rw-------<span class="w">   </span><span class="m">1</span><span class="w"> </span>someuser<span class="w">  </span>wheel<span class="w">         </span><span class="m">7331</span><span class="w"> </span>Jan<span class="w"> </span><span class="m">19</span><span class="w"> </span><span class="m">15</span>:37<span class="w"> </span>crash.log
+</pre></div>
+</div>
+<p>You can also make “container” commands to organize the commands you are adding to
+lldb.  Most of the lldb built-in commands structure themselves this way, and using
+a tree structure has the benefit of leaving the one-word command space free for user
+aliases.  It can also make it easier to find commands if you are adding more than
+a few of them.  Here’s a trivial example of adding two “utility” commands into a
+“my-utilities” container:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">lldb</span>
+
+<span class="k">def</span> <span class="nf">first_utility</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I am the first utility&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">second_utility</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I am the second utility&quot;</span><span class="p">)</span>
+
+<span class="c1"># And the initialization code to add your commands</span>
+<span class="k">def</span> <span class="nf">__lldb_init_module</span><span class="p">(</span><span class="n">debugger</span><span class="p">,</span> <span class="n">internal_dict</span><span class="p">):</span>
+    <span class="n">debugger</span><span class="o">.</span><span class="n">HandleCommand</span><span class="p">(</span><span class="s1">&#39;command container add -h &quot;A container for my utilities&quot; my-utilities&#39;</span><span class="p">)</span>
+    <span class="n">debugger</span><span class="o">.</span><span class="n">HandleCommand</span><span class="p">(</span><span class="s1">&#39;command script add -f my_utilities.first_utility -h &quot;My first utility&quot; my-utilities first&#39;</span><span class="p">)</span>
+    <span class="n">debugger</span><span class="o">.</span><span class="n">HandleCommand</span><span class="p">(</span><span class="s1">&#39;command script add -f my_utilities.second_utility -h &quot;My second utility&quot; my-utilities second&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The &quot;my-utilities&quot; python command has been installed and its subcommands are ready for use.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then your new commands are available under the my-utilities node:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">lldb</span><span class="p">)</span> <span class="n">help</span> <span class="n">my</span><span class="o">-</span><span class="n">utilities</span>
+<span class="n">A</span> <span class="n">container</span> <span class="k">for</span> <span class="n">my</span> <span class="n">utilities</span>
+
+<span class="n">Syntax</span><span class="p">:</span> <span class="n">my</span><span class="o">-</span><span class="n">utilities</span>
+
+<span class="n">The</span> <span class="n">following</span> <span class="n">subcommands</span> <span class="n">are</span> <span class="n">supported</span><span class="p">:</span>
+
+    <span class="n">first</span>  <span class="o">--</span> <span class="n">My</span> <span class="n">first</span> <span class="n">utility</span>  <span class="n">Expects</span> <span class="s1">&#39;raw&#39;</span> <span class="nb">input</span> <span class="p">(</span><span class="n">see</span> <span class="s1">&#39;help raw-input&#39;</span><span class="o">.</span><span class="p">)</span>
+    <span class="n">second</span> <span class="o">--</span> <span class="n">My</span> <span class="n">second</span> <span class="n">utility</span>  <span class="n">Expects</span> <span class="s1">&#39;raw&#39;</span> <span class="nb">input</span> <span class="p">(</span><span class="n">see</span> <span class="s1">&#39;help raw-input&#39;</span><span class="o">.</span><span class="p">)</span>
+
+<span class="n">For</span> <span class="n">more</span> <span class="n">help</span> <span class="n">on</span> <span class="nb">any</span> <span class="n">particular</span> <span class="n">subcommand</span><span class="p">,</span> <span class="nb">type</span> <span class="s1">&#39;help &lt;command&gt; &lt;subcommand&gt;&#39;</span><span class="o">.</span>
+<span class="p">(</span><span class="n">lldb</span><span class="p">)</span> <span class="n">my</span><span class="o">-</span><span class="n">utilities</span> <span class="n">first</span>
+<span class="n">I</span> <span class="n">am</span> <span class="n">the</span> <span class="n">first</span> <span class="n">utility</span>
+</pre></div>
+</div>
+<p>A more interesting <a class="reference external" href="https://github.com/llvm/llvm-project/blob/main/lldb/examples/python/cmdtemplate.py">template</a>
+has been created in the source repository that can help you to create lldb command quickly.</p>
+<p>A commonly required facility is being able to create a command that does some
+token substitution, and then runs a different debugger command (usually, it
+po’es the result of an expression evaluated on its argument). For instance,
+given the following program:</p>
+<div class="highlight-objc notranslate"><div class="highlight"><pre><span></span><span class="cp">#import &lt;Foundation/Foundation.h&gt;</span>
+<span class="bp">NSString</span><span class="o">*</span>
+<span class="nf">ModifyString</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="w"> </span><span class="n">src</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="n">src</span><span class="w"> </span><span class="n">stringByAppendingString</span><span class="o">:</span><span class="s">@&quot;foobar&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">	</span><span class="bp">NSString</span><span class="o">*</span><span class="w"> </span><span class="n">aString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">@&quot;Hello world&quot;</span><span class="p">;</span>
+<span class="w">	</span><span class="bp">NSString</span><span class="o">*</span><span class="w"> </span><span class="n">anotherString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">@&quot;Let&#39;s be friends&quot;</span><span class="p">;</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>you may want a <code class="docutils literal notranslate"><span class="pre">pofoo</span></code> X command, that equates po [ModifyString(X)
+capitalizedString]. The following debugger interaction shows how to achieve
+that goal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(lldb) script
+Python Interactive Interpreter. To exit, type &#39;quit()&#39;, &#39;exit()&#39; or Ctrl-D.
+&gt;&gt;&gt; def pofoo_funct(debugger, command, result, internal_dict):
+...	cmd = &quot;po [ModifyString(&quot; + command + &quot;) capitalizedString]&quot;
+...	debugger.HandleCommand(cmd)
+...
+&gt;&gt;&gt; ^D
+(lldb) command script add pofoo -f pofoo_funct
+(lldb) pofoo aString
+$1 = 0x000000010010aa00 Hello Worldfoobar
+(lldb) pofoo anotherString
+$2 = 0x000000010010aba0 Let&#39;s Be Friendsfoobar
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="implementing-standalone-scripts.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Implementing Standalone Scripts</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="automating-stepping-logic.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Automating Stepping Logic</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Writing Custom Commands</a><ul>
+<li><a class="reference internal" href="#create-a-new-command-using-a-python-function">Create a new command using a Python function</a></li>
+<li><a class="reference internal" href="#create-a-new-command-using-a-python-class">Create a new command using a Python class</a></li>
+<li><a class="reference internal" href="#parsed-commands">Parsed Commands</a></li>
+<li><a class="reference internal" href="#completion">Completion</a></li>
+<li><a class="reference internal" href="#loading-commands">Loading Commands</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

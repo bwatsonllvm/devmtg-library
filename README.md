@@ -241,7 +241,7 @@ The docs section is a mirror-first surface. To keep it faithful to upstream LLVM
 - Keep UX improvements in bridge-layer files (`docs/_static/documentation_options.js`, `css/docs-bridge.css`, generated sidebar metadata).
 - Keep mirror freshness metadata in `docs/_static/docs-sync-meta.json`, `docs/clang/_static/docs-sync-meta.json`, and `docs/lldb/_static/docs-sync-meta.json`.
 - Keep upstream breakage baseline in `docs/_static/docs-known-broken-links.txt`, `docs/clang/_static/docs-known-broken-links.txt`, and `docs/lldb/_static/docs-known-broken-links.txt`; only fail on new link regressions.
-- LLDB mirror scope excludes `https://lldb.llvm.org/cpp_reference/` to keep the docs corpus bounded to handbook/reference content.
+- LLDB mirror scope includes `https://lldb.llvm.org/cpp_reference/` so the public/private C++ API references are available locally.
 - Preserve graceful fallback: if custom sidebar/index logic fails, Sphinx navigation must still work.
 
 ## Validation And Test Gates

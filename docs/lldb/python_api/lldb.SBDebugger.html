@@ -1,0 +1,1996 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="SBDeclaration" href="lldb.SBDeclaration.html" /><link rel="prev" title="SBData" href="lldb.SBData.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>SBDebugger - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../use/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/lldbdap.html">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../use/python-reference.html">Python Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/writing-custom-commands.html">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python_api.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAttachInfo.html">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExpressionOptions.html">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrame.html">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModule.html">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThread.html">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <!-- Python API docs are generated. --><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="sbdebugger">
+<h1>SBDebugger<a class="headerlink" href="#sbdebugger" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lldb.SBDebugger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lldb.</span></span><span class="sig-name descname"><span class="pre">SBDebugger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger" title="Link to this definition">#</a></dt>
+<dd><p>SBDebugger is the primordial object that creates SBTargets and provides
+access to them.  It also manages the overall debugging experiences.</p>
+<p>For example (from example/disasm.py),:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">lldb</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">disassemble_instructions</span> <span class="p">(</span><span class="n">insts</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">insts</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="n">i</span>
+
+<span class="o">...</span>
+
+<span class="c1"># Create a new debugger instance</span>
+<span class="n">debugger</span> <span class="o">=</span> <span class="n">lldb</span><span class="o">.</span><span class="n">SBDebugger</span><span class="o">.</span><span class="n">Create</span><span class="p">()</span>
+
+<span class="c1"># When we step or continue, don&#39;t return from the function until the process</span>
+<span class="c1"># stops. We do this by setting the async mode to false.</span>
+<span class="n">debugger</span><span class="o">.</span><span class="n">SetAsync</span> <span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Create a target from a file and arch</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Creating a target for &#39;</span><span class="o">%</span><span class="n">s</span><span class="s1">&#39;&#39;</span> <span class="o">%</span> <span class="n">exe</span><span class="p">)</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="n">debugger</span><span class="o">.</span><span class="n">CreateTargetWithFileAndArch</span> <span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="n">lldb</span><span class="o">.</span><span class="n">LLDB_ARCH_DEFAULT</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">target</span><span class="p">:</span>
+    <span class="c1"># If the target is valid set a breakpoint at main</span>
+    <span class="n">main_bp</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">BreakpointCreateByName</span> <span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">GetExecutable</span><span class="p">()</span><span class="o">.</span><span class="n">GetFilename</span><span class="p">());</span>
+
+    <span class="nb">print</span> <span class="n">main_bp</span>
+
+    <span class="c1"># Launch the process. Since we specified synchronous mode, we won&#39;t return</span>
+    <span class="c1"># from this function until we hit the breakpoint at main</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">LaunchSimple</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="c1"># Make sure the launch went ok</span>
+    <span class="k">if</span> <span class="n">process</span><span class="p">:</span>
+        <span class="c1"># Print some simple process info</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">GetState</span> <span class="p">()</span>
+        <span class="nb">print</span> <span class="n">process</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">lldb</span><span class="o">.</span><span class="n">eStateStopped</span><span class="p">:</span>
+            <span class="c1"># Get the first thread</span>
+            <span class="n">thread</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">GetThreadAtIndex</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">thread</span><span class="p">:</span>
+                <span class="c1"># Print some simple thread info</span>
+                <span class="nb">print</span> <span class="n">thread</span>
+                <span class="c1"># Get the first frame</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">thread</span><span class="o">.</span><span class="n">GetFrameAtIndex</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">frame</span><span class="p">:</span>
+                    <span class="c1"># Print some simple frame info</span>
+                    <span class="nb">print</span> <span class="n">frame</span>
+                    <span class="n">function</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">GetFunction</span><span class="p">()</span>
+                    <span class="c1"># See if we have debug info (a function)</span>
+                    <span class="k">if</span> <span class="n">function</span><span class="p">:</span>
+                        <span class="c1"># We do have a function, print some info for the function</span>
+                        <span class="nb">print</span> <span class="n">function</span>
+                        <span class="c1"># Now get all instructions for this function and print them</span>
+                        <span class="n">insts</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="n">GetInstructions</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                        <span class="n">disassemble_instructions</span> <span class="p">(</span><span class="n">insts</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># See if we have a symbol in the symbol table for where we stopped</span>
+                        <span class="n">symbol</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">GetSymbol</span><span class="p">();</span>
+                        <span class="k">if</span> <span class="n">symbol</span><span class="p">:</span>
+                            <span class="c1"># We do have a symbol, print some info for the symbol</span>
+                            <span class="nb">print</span> <span class="n">symbol</span>
+                            <span class="c1"># Now get all instructions for this symbol and print them</span>
+                            <span class="n">insts</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">GetInstructions</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                            <span class="n">disassemble_instructions</span> <span class="p">(</span><span class="n">insts</span><span class="p">)</span>
+
+                    <span class="n">registerList</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">GetRegisters</span><span class="p">()</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Frame registers (size of register set = </span><span class="si">%d</span><span class="s1">):&#39;</span> <span class="o">%</span> <span class="n">registerList</span><span class="o">.</span><span class="n">GetSize</span><span class="p">())</span>
+                    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">registerList</span><span class="p">:</span>
+                        <span class="c1">#print value</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> (number of children = </span><span class="si">%d</span><span class="s1">):&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">GetName</span><span class="p">(),</span> <span class="n">value</span><span class="o">.</span><span class="n">GetNumChildren</span><span class="p">()))</span>
+                        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Name: &#39;</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">GetName</span><span class="p">(),</span> <span class="s1">&#39; Value: &#39;</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">GetValue</span><span class="p">())</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hit the breakpoint at main, enter to continue and wait for program to exit or &#39;</span><span class="n">Ctrl</span><span class="o">-</span><span class="n">D</span><span class="s1">&#39;/&#39;</span><span class="n">quit</span><span class="s1">&#39; to terminate the program&#39;</span><span class="p">)</span>
+            <span class="nb">next</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">next</span> <span class="ow">or</span> <span class="nb">next</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;quit&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Terminating the inferior process...&#39;</span><span class="p">)</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">Kill</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Now continue to the program exit</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">Continue</span><span class="p">()</span>
+                <span class="c1"># When we return from the above function we will hopefully be at the</span>
+                <span class="c1"># program exit. Print out some process info</span>
+                <span class="nb">print</span> <span class="n">process</span>
+        <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="n">lldb</span><span class="o">.</span><span class="n">eStateExited</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Didn&#39;</span><span class="n">t</span> <span class="n">hit</span> <span class="n">the</span> <span class="nb">breakpoint</span> <span class="n">at</span> <span class="n">main</span><span class="p">,</span> <span class="n">program</span> <span class="n">has</span> <span class="n">exited</span><span class="o">...</span><span class="s1">&#39;)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unexpected process state: </span><span class="si">%s</span><span class="s1">, killing process...&#39;</span> <span class="o">%</span> <span class="n">debugger</span><span class="o">.</span><span class="n">StateAsCString</span> <span class="p">(</span><span class="n">state</span><span class="p">))</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">Kill</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Sometimes you need to create an empty target that will get filled in later.  The most common use for this
+is to attach to a process by name or pid where you don’t know the executable up front.  The most convenient way
+to do this is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">debugger</span><span class="o">.</span><span class="n">CreateTarget</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">lldb</span><span class="o">.</span><span class="n">SBError</span><span class="p">()</span>
+<span class="n">process</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">AttachToProcessWithName</span><span class="p">(</span><span class="n">debugger</span><span class="o">.</span><span class="n">GetListener</span><span class="p">(),</span> <span class="s1">&#39;PROCESS_NAME&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or the equivalent arguments for <a class="reference internal" href="lldb.SBTarget.html#lldb.SBTarget.AttachToProcessWithID" title="lldb.SBTarget.AttachToProcessWithID"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBTarget.AttachToProcessWithID</span></code></a> .</p>
+<p class="rubric">Attributes Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitError" title="lldb.SBDebugger.eBroadcastBitError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitError</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitExternalProgress" title="lldb.SBDebugger.eBroadcastBitExternalProgress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitExternalProgress</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitExternalProgressCategory" title="lldb.SBDebugger.eBroadcastBitExternalProgressCategory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitExternalProgressCategory</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitProgress" title="lldb.SBDebugger.eBroadcastBitProgress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitProgress</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitProgressCategory" title="lldb.SBDebugger.eBroadcastBitProgressCategory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitProgressCategory</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitWarning" title="lldb.SBDebugger.eBroadcastBitWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitWarning</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.version" title="lldb.SBDebugger.version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.AddDestroyCallback" title="lldb.SBDebugger.AddDestroyCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AddDestroyCallback</span></code></a>(destroy_callback)</p></td>
+<td><p>Add a callback for when the debugger is destroyed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.CancelInterruptRequest" title="lldb.SBDebugger.CancelInterruptRequest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CancelInterruptRequest</span></code></a>()</p></td>
+<td><p>Cancel a previously requested interrupt.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.Clear" title="lldb.SBDebugger.Clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Clear</span></code></a>()</p></td>
+<td><p>Clear this debugger instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.Create" title="lldb.SBDebugger.Create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Create</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Create a new debugger instance (deprecated).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.CreateCategory" title="lldb.SBDebugger.CreateCategory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CreateCategory</span></code></a>(category_name)</p></td>
+<td><p>Create a new type category.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.CreateTarget" title="lldb.SBDebugger.CreateTarget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CreateTarget</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Create a target with the specified parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.CreateTargetWithFileAndArch" title="lldb.SBDebugger.CreateTargetWithFileAndArch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CreateTargetWithFileAndArch</span></code></a>(filename, archname)</p></td>
+<td><p>Create a target with the specified file and architecture.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.CreateTargetWithFileAndTargetTriple" title="lldb.SBDebugger.CreateTargetWithFileAndTargetTriple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CreateTargetWithFileAndTargetTriple</span></code></a>(...)</p></td>
+<td><p>Create a target with the specified file and target triple.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.DeleteCategory" title="lldb.SBDebugger.DeleteCategory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeleteCategory</span></code></a>(category_name)</p></td>
+<td><p>Delete a type category.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.DeleteTarget" title="lldb.SBDebugger.DeleteTarget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeleteTarget</span></code></a>(SBDebugger self, SBTarget target)</p></td>
+<td><p>Return true if target is deleted from the target list of the debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.Destroy" title="lldb.SBDebugger.Destroy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Destroy</span></code></a>(debugger)</p></td>
+<td><p>Destroy a debugger instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.DispatchInput" title="lldb.SBDebugger.DispatchInput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DispatchInput</span></code></a>(data)</p></td>
+<td><p>Dispatch input to the debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.DispatchInputEndOfFile" title="lldb.SBDebugger.DispatchInputEndOfFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DispatchInputEndOfFile</span></code></a>()</p></td>
+<td><p>Signal end-of-file to the current input dispatch.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.DispatchInputInterrupt" title="lldb.SBDebugger.DispatchInputInterrupt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DispatchInputInterrupt</span></code></a>()</p></td>
+<td><p>Interrupt the current input dispatch.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.EnableLog" title="lldb.SBDebugger.EnableLog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnableLog</span></code></a>(channel, categories)</p></td>
+<td><p>Enable logging for a specific channel and category.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.FindDebuggerWithID" title="lldb.SBDebugger.FindDebuggerWithID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindDebuggerWithID</span></code></a>(id)</p></td>
+<td><p>Find a debugger by ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.FindTargetByGloballyUniqueID" title="lldb.SBDebugger.FindTargetByGloballyUniqueID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindTargetByGloballyUniqueID</span></code></a>(id)</p></td>
+<td><p>Find a target with the specified unique ID.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.FindTargetWithFileAndArch" title="lldb.SBDebugger.FindTargetWithFileAndArch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindTargetWithFileAndArch</span></code></a>(filename, arch)</p></td>
+<td><p>Find a target with the specified file and architecture.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.FindTargetWithProcessID" title="lldb.SBDebugger.FindTargetWithProcessID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindTargetWithProcessID</span></code></a>(pid)</p></td>
+<td><p>Find a target with the specified process ID.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetAsync" title="lldb.SBDebugger.GetAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetAsync</span></code></a>()</p></td>
+<td><p>Get whether the debugger is running in asynchronous mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetAvailablePlatformInfoAtIndex" title="lldb.SBDebugger.GetAvailablePlatformInfoAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetAvailablePlatformInfoAtIndex</span></code></a>(...)</p></td>
+<td><p>Get the name and description of one of the available platforms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetBroadcaster" title="lldb.SBDebugger.GetBroadcaster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetBroadcaster</span></code></a>()</p></td>
+<td><p>Get the broadcaster that allows subscribing to events from this debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetBroadcasterClass" title="lldb.SBDebugger.GetBroadcasterClass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetBroadcasterClass</span></code></a>()</p></td>
+<td><p>Get the broadcaster class name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetBuildConfiguration" title="lldb.SBDebugger.GetBuildConfiguration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetBuildConfiguration</span></code></a>()</p></td>
+<td><p>Get the build configuration as structured data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetCategory" title="lldb.SBDebugger.GetCategory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCategory</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Get a type category by name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetCategoryAtIndex" title="lldb.SBDebugger.GetCategoryAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCategoryAtIndex</span></code></a>(index)</p></td>
+<td><p>Get a type category by index.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetCloseInputOnEOF" title="lldb.SBDebugger.GetCloseInputOnEOF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCloseInputOnEOF</span></code></a>()</p></td>
+<td><p>Get whether to close input on EOF (deprecated).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetCommandInterpreter" title="lldb.SBDebugger.GetCommandInterpreter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCommandInterpreter</span></code></a>()</p></td>
+<td><p>Get the command interpreter for this debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetDefaultArchitecture" title="lldb.SBDebugger.GetDefaultArchitecture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDefaultArchitecture</span></code></a>(arch_name, arch_name_len)</p></td>
+<td><p>Get the default architecture.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetDefaultCategory" title="lldb.SBDebugger.GetDefaultCategory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDefaultCategory</span></code></a>()</p></td>
+<td><p>Get the default type category.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetDescription" title="lldb.SBDebugger.GetDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDescription</span></code></a>(description)</p></td>
+<td><p>Get a description of this debugger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetDiagnosticFromEvent" title="lldb.SBDebugger.GetDiagnosticFromEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDiagnosticFromEvent</span></code></a>(event)</p></td>
+<td><p>Get diagnostic information from an event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetDummyTarget" title="lldb.SBDebugger.GetDummyTarget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDummyTarget</span></code></a>(SBDebugger self)</p></td>
+<td><p>The dummy target holds breakpoints and breakpoint names that will prime newly created targets.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetErrorFile" title="lldb.SBDebugger.GetErrorFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetErrorFile</span></code></a>()</p></td>
+<td><p>Get the error file for the debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetErrorFileHandle" title="lldb.SBDebugger.GetErrorFileHandle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetErrorFileHandle</span></code></a>(SBDebugger self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetFilterForType" title="lldb.SBDebugger.GetFilterForType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFilterForType</span></code></a>(type_name_spec)</p></td>
+<td><p>Get the filter for a type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetFormatForType" title="lldb.SBDebugger.GetFormatForType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFormatForType</span></code></a>(type_name_spec)</p></td>
+<td><p>Get the format for a type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetID" title="lldb.SBDebugger.GetID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetID</span></code></a>()</p></td>
+<td><p>Get the unique ID of this debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetIndexOfTarget" title="lldb.SBDebugger.GetIndexOfTarget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetIndexOfTarget</span></code></a>(target)</p></td>
+<td><p>Get the index of a target.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetInputFile" title="lldb.SBDebugger.GetInputFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetInputFile</span></code></a>()</p></td>
+<td><p>Get the input file for the debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetInputFileHandle" title="lldb.SBDebugger.GetInputFileHandle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetInputFileHandle</span></code></a>(SBDebugger self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetInstanceName" title="lldb.SBDebugger.GetInstanceName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetInstanceName</span></code></a>()</p></td>
+<td><p>Get the instance name of this debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetInternalVariableValue" title="lldb.SBDebugger.GetInternalVariableValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetInternalVariableValue</span></code></a>(var_name, ...)</p></td>
+<td><p>Get the value of an internal variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetListener" title="lldb.SBDebugger.GetListener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetListener</span></code></a>()</p></td>
+<td><p>Get the listener associated with this debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetNumAvailablePlatforms" title="lldb.SBDebugger.GetNumAvailablePlatforms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumAvailablePlatforms</span></code></a>(SBDebugger self)</p></td>
+<td><p>Get the number of available platforms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetNumCategories" title="lldb.SBDebugger.GetNumCategories"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumCategories</span></code></a>()</p></td>
+<td><p>Get the number of type categories.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetNumPlatforms" title="lldb.SBDebugger.GetNumPlatforms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumPlatforms</span></code></a>(SBDebugger self)</p></td>
+<td><p>Get the number of currently active platforms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetNumTargets" title="lldb.SBDebugger.GetNumTargets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumTargets</span></code></a>()</p></td>
+<td><p>Get the number of targets in the debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetOutputFile" title="lldb.SBDebugger.GetOutputFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetOutputFile</span></code></a>()</p></td>
+<td><p>Get the output file for the debugger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetOutputFileHandle" title="lldb.SBDebugger.GetOutputFileHandle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetOutputFileHandle</span></code></a>(SBDebugger self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetPlatformAtIndex" title="lldb.SBDebugger.GetPlatformAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetPlatformAtIndex</span></code></a>(SBDebugger self, uint32_t idx)</p></td>
+<td><p>Get one of the currently active platforms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetProgressDataFromEvent" title="lldb.SBDebugger.GetProgressDataFromEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetProgressDataFromEvent</span></code></a>(event)</p></td>
+<td><p>Get progress data from an event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetProgressFromEvent" title="lldb.SBDebugger.GetProgressFromEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetProgressFromEvent</span></code></a>(event)</p></td>
+<td><p>Get progress data from a SBEvent whose type is eBroadcastBitProgress.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetPrompt" title="lldb.SBDebugger.GetPrompt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetPrompt</span></code></a>()</p></td>
+<td><p>Get the command prompt string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetREPLLanguage" title="lldb.SBDebugger.GetREPLLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetREPLLanguage</span></code></a>()</p></td>
+<td><p>Get the current REPL language.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetReproducerPath" title="lldb.SBDebugger.GetReproducerPath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetReproducerPath</span></code></a>()</p></td>
+<td><p>Get the path to the reproducer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetScriptInterpreterInfo" title="lldb.SBDebugger.GetScriptInterpreterInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetScriptInterpreterInfo</span></code></a>(language)</p></td>
+<td><p>Get information about a script interpreter as structured data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetScriptLanguage" title="lldb.SBDebugger.GetScriptLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetScriptLanguage</span></code></a>()</p></td>
+<td><p>Get the current scripting language.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetScriptingLanguage" title="lldb.SBDebugger.GetScriptingLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetScriptingLanguage</span></code></a>(script_language_name)</p></td>
+<td><p>Get the scripting language by name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetSelectedPlatform" title="lldb.SBDebugger.GetSelectedPlatform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSelectedPlatform</span></code></a>()</p></td>
+<td><p>Get the selected platform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetSelectedTarget" title="lldb.SBDebugger.GetSelectedTarget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSelectedTarget</span></code></a>()</p></td>
+<td><p>Get the currently selected target.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetSetting" title="lldb.SBDebugger.GetSetting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSetting</span></code></a>([setting])</p></td>
+<td><p>Get debugger settings as structured data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetSourceManager" title="lldb.SBDebugger.GetSourceManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSourceManager</span></code></a>()</p></td>
+<td><p>Get the source manager for this debugger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetSummaryForType" title="lldb.SBDebugger.GetSummaryForType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSummaryForType</span></code></a>(type_name_spec)</p></td>
+<td><p>Get the summary for a type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetSyntheticForType" title="lldb.SBDebugger.GetSyntheticForType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSyntheticForType</span></code></a>(type_name_spec)</p></td>
+<td><p>Get the synthetic for a type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetTargetAtIndex" title="lldb.SBDebugger.GetTargetAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTargetAtIndex</span></code></a>(idx)</p></td>
+<td><p>Get a target by index.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetTerminalHeight" title="lldb.SBDebugger.GetTerminalHeight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTerminalHeight</span></code></a>()</p></td>
+<td><p>Get the terminal height.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetTerminalWidth" title="lldb.SBDebugger.GetTerminalWidth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTerminalWidth</span></code></a>()</p></td>
+<td><p>Get the terminal width.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetUseColor" title="lldb.SBDebugger.GetUseColor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetUseColor</span></code></a>()</p></td>
+<td><p>Get whether color is being used in output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetUseExternalEditor" title="lldb.SBDebugger.GetUseExternalEditor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetUseExternalEditor</span></code></a>()</p></td>
+<td><p>Get whether an external editor is being used.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetUseSourceCache" title="lldb.SBDebugger.GetUseSourceCache"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetUseSourceCache</span></code></a>()</p></td>
+<td><p>Get whether the source cache is being used.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.GetVersionString" title="lldb.SBDebugger.GetVersionString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetVersionString</span></code></a>()</p></td>
+<td><p>Get the LLDB version string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.HandleCommand" title="lldb.SBDebugger.HandleCommand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HandleCommand</span></code></a>(command)</p></td>
+<td><p>Execute a command in the command interpreter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.HandleProcessEvent" title="lldb.SBDebugger.HandleProcessEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HandleProcessEvent</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Handle a process event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.Initialize" title="lldb.SBDebugger.Initialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Initialize</span></code></a>()</p></td>
+<td><p>Initialize LLDB and its subsystems.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.InitializeWithErrorHandling" title="lldb.SBDebugger.InitializeWithErrorHandling"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InitializeWithErrorHandling</span></code></a>()</p></td>
+<td><p>Initialize the LLDB debugger subsystem with error handling.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.InterruptRequested" title="lldb.SBDebugger.InterruptRequested"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InterruptRequested</span></code></a>()</p></td>
+<td><p>Check if an interrupt has been requested.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.IsValid" title="lldb.SBDebugger.IsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsValid</span></code></a>()</p></td>
+<td><p>Check if this is a valid SBDebugger object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.LoadTraceFromFile" title="lldb.SBDebugger.LoadTraceFromFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LoadTraceFromFile</span></code></a>(error, trace_description_file)</p></td>
+<td><p>Load a trace from a trace description file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.MemoryPressureDetected" title="lldb.SBDebugger.MemoryPressureDetected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MemoryPressureDetected</span></code></a>()</p></td>
+<td><p>Notify the debugger that system memory pressure has been detected.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.PrintDiagnosticsOnError" title="lldb.SBDebugger.PrintDiagnosticsOnError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrintDiagnosticsOnError</span></code></a>()</p></td>
+<td><p>Configure LLDB to print diagnostic information when it crashes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.PrintStackTraceOnError" title="lldb.SBDebugger.PrintStackTraceOnError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrintStackTraceOnError</span></code></a>()</p></td>
+<td><p>Configure LLDB to print a stack trace when it crashes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.RemoveDestroyCallback" title="lldb.SBDebugger.RemoveDestroyCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemoveDestroyCallback</span></code></a>(token)</p></td>
+<td><p>Remove a destroy callback.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.RequestInterrupt" title="lldb.SBDebugger.RequestInterrupt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RequestInterrupt</span></code></a>()</p></td>
+<td><p>Request an interrupt of the current operation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.ResetStatistics" title="lldb.SBDebugger.ResetStatistics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResetStatistics</span></code></a>()</p></td>
+<td><p>Clear collected statistics for targets belonging to this debugger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.RestoreInputTerminalState" title="lldb.SBDebugger.RestoreInputTerminalState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RestoreInputTerminalState</span></code></a>()</p></td>
+<td><p>Restore the previously saved terminal state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.RunCommandInterpreter" title="lldb.SBDebugger.RunCommandInterpreter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunCommandInterpreter</span></code></a>(SBDebugger self, ...)</p></td>
+<td><p>Launch a command interpreter session.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.RunREPL" title="lldb.SBDebugger.RunREPL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunREPL</span></code></a>(language, repl_options)</p></td>
+<td><p>Run a REPL (Read-Eval-Print Loop) for the specified language.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SaveInputTerminalState" title="lldb.SBDebugger.SaveInputTerminalState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaveInputTerminalState</span></code></a>()</p></td>
+<td><p>Save the current terminal state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetAsync" title="lldb.SBDebugger.SetAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetAsync</span></code></a>(b)</p></td>
+<td><p>Set whether the debugger should run in asynchronous mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetCloseInputOnEOF" title="lldb.SBDebugger.SetCloseInputOnEOF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetCloseInputOnEOF</span></code></a>(b)</p></td>
+<td><p>Set whether to close input on EOF (deprecated).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetCurrentPlatform" title="lldb.SBDebugger.SetCurrentPlatform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetCurrentPlatform</span></code></a>(platform_name)</p></td>
+<td><p>Set the current platform by name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetCurrentPlatformSDKRoot" title="lldb.SBDebugger.SetCurrentPlatformSDKRoot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetCurrentPlatformSDKRoot</span></code></a>(sysroot)</p></td>
+<td><p>Set the SDK root for the current platform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetDefaultArchitecture" title="lldb.SBDebugger.SetDefaultArchitecture"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetDefaultArchitecture</span></code></a>(arch_name)</p></td>
+<td><p>Set the default architecture.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetDestroyCallback" title="lldb.SBDebugger.SetDestroyCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetDestroyCallback</span></code></a>(destroy_callback)</p></td>
+<td><p>Set a callback for when the debugger is destroyed (deprecated).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetErrorFile" title="lldb.SBDebugger.SetErrorFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetErrorFile</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Set the error file for the debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetErrorFileHandle" title="lldb.SBDebugger.SetErrorFileHandle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetErrorFileHandle</span></code></a>(file, transfer_ownership)</p></td>
+<td><p>DEPRECATED, use SetErrorFile</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetInputFile" title="lldb.SBDebugger.SetInputFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetInputFile</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Set the input file for the debugger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetInputFileHandle" title="lldb.SBDebugger.SetInputFileHandle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetInputFileHandle</span></code></a>(file, transfer_ownership)</p></td>
+<td><p>DEPRECATED, use SetInputFile</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetInputString" title="lldb.SBDebugger.SetInputString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetInputString</span></code></a>(data)</p></td>
+<td><p>Set the input from a string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetInternalVariable" title="lldb.SBDebugger.SetInternalVariable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetInternalVariable</span></code></a>(var_name, value, ...)</p></td>
+<td><p>Set an internal variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetLoggingCallback" title="lldb.SBDebugger.SetLoggingCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetLoggingCallback</span></code></a>(log_callback)</p></td>
+<td><p>Set a callback for log output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetOutputFile" title="lldb.SBDebugger.SetOutputFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetOutputFile</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Set the output file for the debugger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetOutputFileHandle" title="lldb.SBDebugger.SetOutputFileHandle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetOutputFileHandle</span></code></a>(file, transfer_ownership)</p></td>
+<td><p>DEPRECATED, use SetOutputFile</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetPrompt" title="lldb.SBDebugger.SetPrompt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetPrompt</span></code></a>(prompt)</p></td>
+<td><p>Set the command prompt string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetREPLLanguage" title="lldb.SBDebugger.SetREPLLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetREPLLanguage</span></code></a>(repl_lang)</p></td>
+<td><p>Set the current REPL language.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetScriptLanguage" title="lldb.SBDebugger.SetScriptLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetScriptLanguage</span></code></a>(script_lang)</p></td>
+<td><p>Set the current scripting language.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetSelectedPlatform" title="lldb.SBDebugger.SetSelectedPlatform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetSelectedPlatform</span></code></a>(platform)</p></td>
+<td><p>Set the selected platform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetSelectedTarget" title="lldb.SBDebugger.SetSelectedTarget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetSelectedTarget</span></code></a>(target)</p></td>
+<td><p>Set the selected target.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetShowInlineDiagnostics" title="lldb.SBDebugger.SetShowInlineDiagnostics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetShowInlineDiagnostics</span></code></a>(b)</p></td>
+<td><p>Set whether to show inline diagnostics.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetTerminalHeight" title="lldb.SBDebugger.SetTerminalHeight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetTerminalHeight</span></code></a>(term_height)</p></td>
+<td><p>Set the terminal height.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetTerminalWidth" title="lldb.SBDebugger.SetTerminalWidth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetTerminalWidth</span></code></a>(term_width)</p></td>
+<td><p>Set the terminal width.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetUseColor" title="lldb.SBDebugger.SetUseColor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetUseColor</span></code></a>(use_color)</p></td>
+<td><p>Set whether to use color in output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetUseExternalEditor" title="lldb.SBDebugger.SetUseExternalEditor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetUseExternalEditor</span></code></a>(input)</p></td>
+<td><p>Set whether to use an external editor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SetUseSourceCache" title="lldb.SBDebugger.SetUseSourceCache"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetUseSourceCache</span></code></a>(use_source_cache)</p></td>
+<td><p>Set whether to use the source cache.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.SkipAppInitFiles" title="lldb.SBDebugger.SkipAppInitFiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SkipAppInitFiles</span></code></a>(b)</p></td>
+<td><p>Set whether to skip loading application-specific .lldbinit files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SkipLLDBInitFiles" title="lldb.SBDebugger.SkipLLDBInitFiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SkipLLDBInitFiles</span></code></a>(b)</p></td>
+<td><p>Set whether to skip loading .lldbinit files.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.StateAsCString" title="lldb.SBDebugger.StateAsCString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StateAsCString</span></code></a>(state)</p></td>
+<td><p>Convert a state type to a string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.StateIsRunningState" title="lldb.SBDebugger.StateIsRunningState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StateIsRunningState</span></code></a>(state)</p></td>
+<td><p>Check if a state is a running state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.StateIsStoppedState" title="lldb.SBDebugger.StateIsStoppedState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StateIsStoppedState</span></code></a>(state)</p></td>
+<td><p>Check if a state is a stopped state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBDebugger.SupportsLanguage" title="lldb.SBDebugger.SupportsLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SupportsLanguage</span></code></a>(language)</p></td>
+<td><p>Check if a specific language is supported by LLDB.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBDebugger.Terminate" title="lldb.SBDebugger.Terminate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Terminate</span></code></a>()</p></td>
+<td><p>Terminate LLDB and its subsystems.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBDebugger.eBroadcastBitError">
+<span class="sig-name descname"><span class="pre">eBroadcastBitError</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBDebugger_eBroadcastBitError'</span> <span class="pre">id='129911256699808'&gt;</span></em><a class="headerlink" href="#lldb.SBDebugger.eBroadcastBitError" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBDebugger.eBroadcastBitExternalProgress">
+<span class="sig-name descname"><span class="pre">eBroadcastBitExternalProgress</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBDebugger_eBroadcastBitExternalProgress'</span> <span class="pre">id='129911256699904'&gt;</span></em><a class="headerlink" href="#lldb.SBDebugger.eBroadcastBitExternalProgress" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBDebugger.eBroadcastBitExternalProgressCategory">
+<span class="sig-name descname"><span class="pre">eBroadcastBitExternalProgressCategory</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBDebugger_eBroadcastBitExternalProgressCategory'</span> <span class="pre">id='129911256699952'&gt;</span></em><a class="headerlink" href="#lldb.SBDebugger.eBroadcastBitExternalProgressCategory" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBDebugger.eBroadcastBitProgress">
+<span class="sig-name descname"><span class="pre">eBroadcastBitProgress</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBDebugger_eBroadcastBitProgress'</span> <span class="pre">id='129911256699616'&gt;</span></em><a class="headerlink" href="#lldb.SBDebugger.eBroadcastBitProgress" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBDebugger.eBroadcastBitProgressCategory">
+<span class="sig-name descname"><span class="pre">eBroadcastBitProgressCategory</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBDebugger_eBroadcastBitProgressCategory'</span> <span class="pre">id='129911256699856'&gt;</span></em><a class="headerlink" href="#lldb.SBDebugger.eBroadcastBitProgressCategory" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBDebugger.eBroadcastBitWarning">
+<span class="sig-name descname"><span class="pre">eBroadcastBitWarning</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBDebugger_eBroadcastBitWarning'</span> <span class="pre">id='129911256699664'&gt;</span></em><a class="headerlink" href="#lldb.SBDebugger.eBroadcastBitWarning" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBDebugger.version">
+<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBDebugger_GetVersionString()'</span> <span class="pre">id='129911266541888'&gt;</span></em><a class="headerlink" href="#lldb.SBDebugger.version" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.AddDestroyCallback">
+<span class="sig-name descname"><span class="pre">AddDestroyCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destroy_callback</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.AddDestroyCallback" title="Link to this definition">#</a></dt>
+<dd><p>Add a callback for when the debugger is destroyed. Returns a token that
+can be used to remove the callback.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.CancelInterruptRequest">
+<span class="sig-name descname"><span class="pre">CancelInterruptRequest</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.CancelInterruptRequest" title="Link to this definition">#</a></dt>
+<dd><p>Cancel a previously requested interrupt.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.Clear" title="Link to this definition">#</a></dt>
+<dd><p>Clear this debugger instance.</p>
+<p>This will close all IO handlers and reset the debugger to its initial
+state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.Create">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.Create" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Create a new debugger instance (deprecated).</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Create a new debugger instance.</p>
+<p>If source_init_files is true, the debugger will source .lldbinit files
+from the home directory and current directory.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 3:</em>
+Create a new debugger instance with a custom log handler and user data
+passed to the log callback.</p>
+<p>If source_init_files is true, the debugger will source .lldbinit files
+from the home directory and current directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.CreateCategory">
+<span class="sig-name descname"><span class="pre">CreateCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.CreateCategory" title="Link to this definition">#</a></dt>
+<dd><p>Create a new type category.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.CreateTarget">
+<span class="sig-name descname"><span class="pre">CreateTarget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.CreateTarget" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Create a target with the specified parameters.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Create a target with the specified file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.CreateTargetWithFileAndArch">
+<span class="sig-name descname"><span class="pre">CreateTargetWithFileAndArch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">archname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.CreateTargetWithFileAndArch" title="Link to this definition">#</a></dt>
+<dd><p>Create a target with the specified file and architecture.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.CreateTargetWithFileAndTargetTriple">
+<span class="sig-name descname"><span class="pre">CreateTargetWithFileAndTargetTriple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_triple</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.CreateTargetWithFileAndTargetTriple" title="Link to this definition">#</a></dt>
+<dd><p>Create a target with the specified file and target triple.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.DeleteCategory">
+<span class="sig-name descname"><span class="pre">DeleteCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.DeleteCategory" title="Link to this definition">#</a></dt>
+<dd><p>Delete a type category.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.DeleteTarget">
+<span class="sig-name descname"><span class="pre">DeleteTarget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBTarget</span> <span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBDebugger.DeleteTarget" title="Link to this definition">#</a></dt>
+<dd><p>Return true if target is deleted from the target list of the debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.Destroy">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Destroy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debugger</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.Destroy" title="Link to this definition">#</a></dt>
+<dd><p>Destroy a debugger instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.DispatchInput">
+<span class="sig-name descname"><span class="pre">DispatchInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.DispatchInput" title="Link to this definition">#</a></dt>
+<dd><p>Dispatch input to the debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.DispatchInputEndOfFile">
+<span class="sig-name descname"><span class="pre">DispatchInputEndOfFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.DispatchInputEndOfFile" title="Link to this definition">#</a></dt>
+<dd><p>Signal end-of-file to the current input dispatch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.DispatchInputInterrupt">
+<span class="sig-name descname"><span class="pre">DispatchInputInterrupt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.DispatchInputInterrupt" title="Link to this definition">#</a></dt>
+<dd><p>Interrupt the current input dispatch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.EnableLog">
+<span class="sig-name descname"><span class="pre">EnableLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.EnableLog" title="Link to this definition">#</a></dt>
+<dd><p>Enable logging for a specific channel and category.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.FindDebuggerWithID">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FindDebuggerWithID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.FindDebuggerWithID" title="Link to this definition">#</a></dt>
+<dd><p>Find a debugger by ID. Returns an invalid debugger if not found.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.FindTargetByGloballyUniqueID">
+<span class="sig-name descname"><span class="pre">FindTargetByGloballyUniqueID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.FindTargetByGloballyUniqueID" title="Link to this definition">#</a></dt>
+<dd><p>Find a target with the specified unique ID.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.FindTargetWithFileAndArch">
+<span class="sig-name descname"><span class="pre">FindTargetWithFileAndArch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.FindTargetWithFileAndArch" title="Link to this definition">#</a></dt>
+<dd><p>Find a target with the specified file and architecture.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.FindTargetWithProcessID">
+<span class="sig-name descname"><span class="pre">FindTargetWithProcessID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.FindTargetWithProcessID" title="Link to this definition">#</a></dt>
+<dd><p>Find a target with the specified process ID.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetAsync">
+<span class="sig-name descname"><span class="pre">GetAsync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetAsync" title="Link to this definition">#</a></dt>
+<dd><p>Get whether the debugger is running in asynchronous mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetAvailablePlatformInfoAtIndex">
+<span class="sig-name descname"><span class="pre">GetAvailablePlatformInfoAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBStructuredData.html#lldb.SBStructuredData" title="lldb.SBStructuredData"><span class="pre">SBStructuredData</span></a></span></span><a class="headerlink" href="#lldb.SBDebugger.GetAvailablePlatformInfoAtIndex" title="Link to this definition">#</a></dt>
+<dd><p>Get the name and description of one of the available platforms.</p>
+<dl class="simple">
+<dt>&#64;param idx Zero-based index of the platform for which info should be</dt><dd><p>retrieved, must be less than the value returned by
+GetNumAvailablePlatforms().</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetBroadcaster">
+<span class="sig-name descname"><span class="pre">GetBroadcaster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetBroadcaster" title="Link to this definition">#</a></dt>
+<dd><p>Get the broadcaster that allows subscribing to events from this
+debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetBroadcasterClass">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetBroadcasterClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetBroadcasterClass" title="Link to this definition">#</a></dt>
+<dd><p>Get the broadcaster class name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetBuildConfiguration">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetBuildConfiguration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetBuildConfiguration" title="Link to this definition">#</a></dt>
+<dd><p>Get the build configuration as structured data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetCategory">
+<span class="sig-name descname"><span class="pre">GetCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetCategory" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Get a type category by name.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Get a type category by language.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetCategoryAtIndex">
+<span class="sig-name descname"><span class="pre">GetCategoryAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetCategoryAtIndex" title="Link to this definition">#</a></dt>
+<dd><p>Get a type category by index.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetCloseInputOnEOF">
+<span class="sig-name descname"><span class="pre">GetCloseInputOnEOF</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetCloseInputOnEOF" title="Link to this definition">#</a></dt>
+<dd><p>Get whether to close input on EOF (deprecated).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetCommandInterpreter">
+<span class="sig-name descname"><span class="pre">GetCommandInterpreter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetCommandInterpreter" title="Link to this definition">#</a></dt>
+<dd><p>Get the command interpreter for this debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetDefaultArchitecture">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetDefaultArchitecture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arch_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arch_name_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetDefaultArchitecture" title="Link to this definition">#</a></dt>
+<dd><p>Get the default architecture.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetDefaultCategory">
+<span class="sig-name descname"><span class="pre">GetDefaultCategory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetDefaultCategory" title="Link to this definition">#</a></dt>
+<dd><p>Get the default type category.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetDescription">
+<span class="sig-name descname"><span class="pre">GetDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetDescription" title="Link to this definition">#</a></dt>
+<dd><p>Get a description of this debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetDiagnosticFromEvent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetDiagnosticFromEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetDiagnosticFromEvent" title="Link to this definition">#</a></dt>
+<dd><p>Get diagnostic information from an event.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetDummyTarget">
+<span class="sig-name descname"><span class="pre">GetDummyTarget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBTarget.html#lldb.SBTarget" title="lldb.SBTarget"><span class="pre">SBTarget</span></a></span></span><a class="headerlink" href="#lldb.SBDebugger.GetDummyTarget" title="Link to this definition">#</a></dt>
+<dd><p>The dummy target holds breakpoints and breakpoint names that will prime newly created targets.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetErrorFile">
+<span class="sig-name descname"><span class="pre">GetErrorFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetErrorFile" title="Link to this definition">#</a></dt>
+<dd><p>Get the error file for the debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetErrorFileHandle">
+<span class="sig-name descname"><span class="pre">GetErrorFileHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::FileSP</span></span></span><a class="headerlink" href="#lldb.SBDebugger.GetErrorFileHandle" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetFilterForType">
+<span class="sig-name descname"><span class="pre">GetFilterForType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetFilterForType" title="Link to this definition">#</a></dt>
+<dd><p>Get the filter for a type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetFormatForType">
+<span class="sig-name descname"><span class="pre">GetFormatForType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetFormatForType" title="Link to this definition">#</a></dt>
+<dd><p>Get the format for a type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetID">
+<span class="sig-name descname"><span class="pre">GetID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetID" title="Link to this definition">#</a></dt>
+<dd><p>Get the unique ID of this debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetIndexOfTarget">
+<span class="sig-name descname"><span class="pre">GetIndexOfTarget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetIndexOfTarget" title="Link to this definition">#</a></dt>
+<dd><p>Get the index of a target.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetInputFile">
+<span class="sig-name descname"><span class="pre">GetInputFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetInputFile" title="Link to this definition">#</a></dt>
+<dd><p>Get the input file for the debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetInputFileHandle">
+<span class="sig-name descname"><span class="pre">GetInputFileHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::FileSP</span></span></span><a class="headerlink" href="#lldb.SBDebugger.GetInputFileHandle" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetInstanceName">
+<span class="sig-name descname"><span class="pre">GetInstanceName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetInstanceName" title="Link to this definition">#</a></dt>
+<dd><p>Get the instance name of this debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetInternalVariableValue">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetInternalVariableValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debugger_instance_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetInternalVariableValue" title="Link to this definition">#</a></dt>
+<dd><p>Get the value of an internal variable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetListener">
+<span class="sig-name descname"><span class="pre">GetListener</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetListener" title="Link to this definition">#</a></dt>
+<dd><p>Get the listener associated with this debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetNumAvailablePlatforms">
+<span class="sig-name descname"><span class="pre">GetNumAvailablePlatforms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBDebugger.GetNumAvailablePlatforms" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of available platforms.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetNumCategories">
+<span class="sig-name descname"><span class="pre">GetNumCategories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetNumCategories" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of type categories.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetNumPlatforms">
+<span class="sig-name descname"><span class="pre">GetNumPlatforms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBDebugger.GetNumPlatforms" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of currently active platforms.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetNumTargets">
+<span class="sig-name descname"><span class="pre">GetNumTargets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetNumTargets" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of targets in the debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetOutputFile">
+<span class="sig-name descname"><span class="pre">GetOutputFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetOutputFile" title="Link to this definition">#</a></dt>
+<dd><p>Get the output file for the debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetOutputFileHandle">
+<span class="sig-name descname"><span class="pre">GetOutputFileHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::FileSP</span></span></span><a class="headerlink" href="#lldb.SBDebugger.GetOutputFileHandle" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetPlatformAtIndex">
+<span class="sig-name descname"><span class="pre">GetPlatformAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBPlatform.html#lldb.SBPlatform" title="lldb.SBPlatform"><span class="pre">SBPlatform</span></a></span></span><a class="headerlink" href="#lldb.SBDebugger.GetPlatformAtIndex" title="Link to this definition">#</a></dt>
+<dd><p>Get one of the currently active platforms.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetProgressDataFromEvent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetProgressDataFromEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetProgressDataFromEvent" title="Link to this definition">#</a></dt>
+<dd><p>Get progress data from an event.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetProgressFromEvent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetProgressFromEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetProgressFromEvent" title="Link to this definition">#</a></dt>
+<dd><p>Get progress data from a SBEvent whose type is eBroadcastBitProgress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>[</strong><strong>in</strong><strong>]</strong> – event
+The event to extract the progress information from.</p></li>
+<li><p><strong>[</strong><strong>out</strong><strong>]</strong> – progress_id
+The unique integer identifier for the progress to report.</p></li>
+<li><p><strong>[</strong><strong>out</strong><strong>]</strong> – completed
+The amount of work completed. If <em>completed</em> is zero, then this event
+is a progress started event. If <em>completed</em> is equal to <em>total</em>, then
+this event is a progress end event. Otherwise completed indicates the
+current progress update.</p></li>
+<li><p><strong>[</strong><strong>out</strong><strong>]</strong> – total
+The total amount of work units that need to be completed. If this value
+is UINT64_MAX, then an indeterminate progress indicator should be
+displayed.</p></li>
+<li><p><strong>[</strong><strong>out</strong><strong>]</strong> – is_debugger_specific
+Set to true if this progress is specific to this debugger only. Many
+progress events are not specific to a debugger instance, like any
+progress events for loading information in modules since LLDB has a
+global module cache that all debuggers use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The message for the progress. If the returned value is NULL, then
+<em>event</em> was not a eBroadcastBitProgress event.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetPrompt">
+<span class="sig-name descname"><span class="pre">GetPrompt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetPrompt" title="Link to this definition">#</a></dt>
+<dd><p>Get the command prompt string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetREPLLanguage">
+<span class="sig-name descname"><span class="pre">GetREPLLanguage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetREPLLanguage" title="Link to this definition">#</a></dt>
+<dd><p>Get the current REPL language.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetReproducerPath">
+<span class="sig-name descname"><span class="pre">GetReproducerPath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetReproducerPath" title="Link to this definition">#</a></dt>
+<dd><p>Get the path to the reproducer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetScriptInterpreterInfo">
+<span class="sig-name descname"><span class="pre">GetScriptInterpreterInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetScriptInterpreterInfo" title="Link to this definition">#</a></dt>
+<dd><p>Get information about a script interpreter as structured data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetScriptLanguage">
+<span class="sig-name descname"><span class="pre">GetScriptLanguage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetScriptLanguage" title="Link to this definition">#</a></dt>
+<dd><p>Get the current scripting language.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetScriptingLanguage">
+<span class="sig-name descname"><span class="pre">GetScriptingLanguage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_language_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetScriptingLanguage" title="Link to this definition">#</a></dt>
+<dd><p>Get the scripting language by name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetSelectedPlatform">
+<span class="sig-name descname"><span class="pre">GetSelectedPlatform</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetSelectedPlatform" title="Link to this definition">#</a></dt>
+<dd><p>Get the selected platform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetSelectedTarget">
+<span class="sig-name descname"><span class="pre">GetSelectedTarget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetSelectedTarget" title="Link to this definition">#</a></dt>
+<dd><p>Get the currently selected target.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetSetting">
+<span class="sig-name descname"><span class="pre">GetSetting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetSetting" title="Link to this definition">#</a></dt>
+<dd><p>Get debugger settings as structured data.</p>
+<p>Client can specify empty string or null to get all settings.</p>
+<p>Example usages:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">lldb</span><span class="o">::</span><span class="n">SBStructuredData</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">debugger</span><span class="p">.</span><span class="n">GetSetting</span><span class="p">();</span>
+<span class="n">lldb</span><span class="o">::</span><span class="n">SBStructuredData</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">debugger</span><span class="p">.</span><span class="n">GetSetting</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span>
+<span class="n">lldb</span><span class="o">::</span><span class="n">SBStructuredData</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">debugger</span><span class="p">.</span><span class="n">GetSetting</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="n">lldb</span><span class="o">::</span><span class="n">SBStructuredData</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">debugger</span><span class="p">.</span><span class="n">GetSetting</span><span class="p">(</span><span class="s">&quot;target.arg0&quot;</span><span class="p">);</span>
+<span class="n">lldb</span><span class="o">::</span><span class="n">SBStructuredData</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">debugger</span><span class="p">.</span><span class="n">GetSetting</span><span class="p">(</span><span class="s">&quot;target&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetSourceManager">
+<span class="sig-name descname"><span class="pre">GetSourceManager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetSourceManager" title="Link to this definition">#</a></dt>
+<dd><p>Get the source manager for this debugger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetSummaryForType">
+<span class="sig-name descname"><span class="pre">GetSummaryForType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetSummaryForType" title="Link to this definition">#</a></dt>
+<dd><p>Get the summary for a type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetSyntheticForType">
+<span class="sig-name descname"><span class="pre">GetSyntheticForType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetSyntheticForType" title="Link to this definition">#</a></dt>
+<dd><p>Get the synthetic for a type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetTargetAtIndex">
+<span class="sig-name descname"><span class="pre">GetTargetAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetTargetAtIndex" title="Link to this definition">#</a></dt>
+<dd><p>Get a target by index.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetTerminalHeight">
+<span class="sig-name descname"><span class="pre">GetTerminalHeight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetTerminalHeight" title="Link to this definition">#</a></dt>
+<dd><p>Get the terminal height.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetTerminalWidth">
+<span class="sig-name descname"><span class="pre">GetTerminalWidth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetTerminalWidth" title="Link to this definition">#</a></dt>
+<dd><p>Get the terminal width.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetUseColor">
+<span class="sig-name descname"><span class="pre">GetUseColor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetUseColor" title="Link to this definition">#</a></dt>
+<dd><p>Get whether color is being used in output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetUseExternalEditor">
+<span class="sig-name descname"><span class="pre">GetUseExternalEditor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetUseExternalEditor" title="Link to this definition">#</a></dt>
+<dd><p>Get whether an external editor is being used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetUseSourceCache">
+<span class="sig-name descname"><span class="pre">GetUseSourceCache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetUseSourceCache" title="Link to this definition">#</a></dt>
+<dd><p>Get whether the source cache is being used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.GetVersionString">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetVersionString</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.GetVersionString" title="Link to this definition">#</a></dt>
+<dd><p>Get the LLDB version string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.HandleCommand">
+<span class="sig-name descname"><span class="pre">HandleCommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.HandleCommand" title="Link to this definition">#</a></dt>
+<dd><p>Execute a command in the command interpreter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.HandleProcessEvent">
+<span class="sig-name descname"><span class="pre">HandleProcessEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.HandleProcessEvent" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Handle a process event.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Handle a process event using FileSP objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.Initialize">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.Initialize" title="Link to this definition">#</a></dt>
+<dd><p>Initialize LLDB and its subsystems.</p>
+<p>This function should be called before any other LLDB functions. It
+initializes all required subsystems for proper LLDB functionality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.InitializeWithErrorHandling">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InitializeWithErrorHandling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.InitializeWithErrorHandling" title="Link to this definition">#</a></dt>
+<dd><p>Initialize the LLDB debugger subsystem with error handling.</p>
+<p>Similar to Initialize(), but returns an error if initialization fails.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.InterruptRequested">
+<span class="sig-name descname"><span class="pre">InterruptRequested</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.InterruptRequested" title="Link to this definition">#</a></dt>
+<dd><p>Check if an interrupt has been requested.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.IsValid">
+<span class="sig-name descname"><span class="pre">IsValid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.IsValid" title="Link to this definition">#</a></dt>
+<dd><p>Check if this is a valid SBDebugger object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.LoadTraceFromFile">
+<span class="sig-name descname"><span class="pre">LoadTraceFromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace_description_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.LoadTraceFromFile" title="Link to this definition">#</a></dt>
+<dd><p>Load a trace from a trace description file.</p>
+<p>This will create Targets, Processes and Threads based on the contents of
+the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> (<a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBError</span></code></a>, out) – An error if the trace could not be created.</p></li>
+<li><p><strong>trace_description_file</strong> (<a class="reference internal" href="lldb.SBFileSpec.html#lldb.SBFileSpec" title="lldb.SBFileSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFileSpec</span></code></a>, in) – The file containing the necessary information to load the trace.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lldb.SBTrace.html#lldb.SBTrace" title="lldb.SBTrace"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBTrace</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An SBTrace object representing the loaded trace.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.MemoryPressureDetected">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MemoryPressureDetected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.MemoryPressureDetected" title="Link to this definition">#</a></dt>
+<dd><p>Notify the debugger that system memory pressure has been detected.</p>
+<p>This can be used to free up memory resources by clearing caches.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.PrintDiagnosticsOnError">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PrintDiagnosticsOnError</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.PrintDiagnosticsOnError" title="Link to this definition">#</a></dt>
+<dd><p>Configure LLDB to print diagnostic information when it crashes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.PrintStackTraceOnError">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PrintStackTraceOnError</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.PrintStackTraceOnError" title="Link to this definition">#</a></dt>
+<dd><p>Configure LLDB to print a stack trace when it crashes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.RemoveDestroyCallback">
+<span class="sig-name descname"><span class="pre">RemoveDestroyCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.RemoveDestroyCallback" title="Link to this definition">#</a></dt>
+<dd><p>Remove a destroy callback.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.RequestInterrupt">
+<span class="sig-name descname"><span class="pre">RequestInterrupt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.RequestInterrupt" title="Link to this definition">#</a></dt>
+<dd><p>Request an interrupt of the current operation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.ResetStatistics">
+<span class="sig-name descname"><span class="pre">ResetStatistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.ResetStatistics" title="Link to this definition">#</a></dt>
+<dd><p>Clear collected statistics for targets belonging to this debugger.</p>
+<p>This includes clearing symbol table and debug info parsing/index time for
+all modules, breakpoint resolve time, and target statistics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.RestoreInputTerminalState">
+<span class="sig-name descname"><span class="pre">RestoreInputTerminalState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.RestoreInputTerminalState" title="Link to this definition">#</a></dt>
+<dd><p>Restore the previously saved terminal state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.RunCommandInterpreter">
+<span class="sig-name descname"><span class="pre">RunCommandInterpreter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBDebugger</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">auto_handle_events</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">spawn_thread</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBCommandInterpreterRunOptions</span> <span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">&amp;</span> <span class="pre">num_errors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">&amp;</span> <span class="pre">quit_requested</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">&amp;</span> <span class="pre">stopped_for_crash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.RunCommandInterpreter" title="Link to this definition">#</a></dt>
+<dd><p>Launch a command interpreter session. Commands are read from standard input or
+from the input handle specified for the debugger object. Output/errors are
+similarly redirected to standard output/error or the configured handles.</p>
+<p>&#64;param[in] auto_handle_events If true, automatically handle resulting events.
+&#64;param[in] spawn_thread If true, start a new thread for IO handling.
+&#64;param[in] options Parameter collection of type SBCommandInterpreterRunOptions.
+&#64;param[in] num_errors Initial error counter.
+&#64;param[in] quit_requested Initial quit request flag.
+&#64;param[in] stopped_for_crash Initial crash flag.</p>
+<p>&#64;return
+A tuple with the number of errors encountered by the interpreter, a boolean
+indicating whether quitting the interpreter was requested and another boolean
+set to True in case of a crash.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start an interactive lldb session from a script (with a valid debugger object</span>
+<span class="c1"># created beforehand):</span>
+<span class="n">n_errors</span><span class="p">,</span> <span class="n">quit_requested</span><span class="p">,</span> <span class="n">has_crashed</span> <span class="o">=</span> <span class="n">debugger</span><span class="o">.</span><span class="n">RunCommandInterpreter</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span>
+    <span class="kc">False</span><span class="p">,</span> <span class="n">lldb</span><span class="o">.</span><span class="n">SBCommandInterpreterRunOptions</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.RunREPL">
+<span class="sig-name descname"><span class="pre">RunREPL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repl_options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.RunREPL" title="Link to this definition">#</a></dt>
+<dd><p>Run a REPL (Read-Eval-Print Loop) for the specified language.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SaveInputTerminalState">
+<span class="sig-name descname"><span class="pre">SaveInputTerminalState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SaveInputTerminalState" title="Link to this definition">#</a></dt>
+<dd><p>Save the current terminal state.</p>
+<p>This should be called before modifying terminal settings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetAsync">
+<span class="sig-name descname"><span class="pre">SetAsync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetAsync" title="Link to this definition">#</a></dt>
+<dd><p>Set whether the debugger should run in asynchronous mode.</p>
+<p>When in asynchronous mode, events are processed on a background thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetCloseInputOnEOF">
+<span class="sig-name descname"><span class="pre">SetCloseInputOnEOF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetCloseInputOnEOF" title="Link to this definition">#</a></dt>
+<dd><p>Set whether to close input on EOF (deprecated).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetCurrentPlatform">
+<span class="sig-name descname"><span class="pre">SetCurrentPlatform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">platform_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetCurrentPlatform" title="Link to this definition">#</a></dt>
+<dd><p>Set the current platform by name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetCurrentPlatformSDKRoot">
+<span class="sig-name descname"><span class="pre">SetCurrentPlatformSDKRoot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sysroot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetCurrentPlatformSDKRoot" title="Link to this definition">#</a></dt>
+<dd><p>Set the SDK root for the current platform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetDefaultArchitecture">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SetDefaultArchitecture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arch_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetDefaultArchitecture" title="Link to this definition">#</a></dt>
+<dd><p>Set the default architecture.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetDestroyCallback">
+<span class="sig-name descname"><span class="pre">SetDestroyCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destroy_callback</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetDestroyCallback" title="Link to this definition">#</a></dt>
+<dd><p>Set a callback for when the debugger is destroyed (deprecated).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetErrorFile">
+<span class="sig-name descname"><span class="pre">SetErrorFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetErrorFile" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Set the error file for the debugger.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Set the error file for the debugger using a FileSP.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetErrorFileHandle">
+<span class="sig-name descname"><span class="pre">SetErrorFileHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_ownership</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetErrorFileHandle" title="Link to this definition">#</a></dt>
+<dd><p>DEPRECATED, use SetErrorFile</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetInputFile">
+<span class="sig-name descname"><span class="pre">SetInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetInputFile" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Set the input file for the debugger.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Set the input file for the debugger using a FileSP.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetInputFileHandle">
+<span class="sig-name descname"><span class="pre">SetInputFileHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_ownership</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetInputFileHandle" title="Link to this definition">#</a></dt>
+<dd><p>DEPRECATED, use SetInputFile</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetInputString">
+<span class="sig-name descname"><span class="pre">SetInputString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetInputString" title="Link to this definition">#</a></dt>
+<dd><p>Set the input from a string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetInternalVariable">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SetInternalVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debugger_instance_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetInternalVariable" title="Link to this definition">#</a></dt>
+<dd><p>Set an internal variable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetLoggingCallback">
+<span class="sig-name descname"><span class="pre">SetLoggingCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_callback</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetLoggingCallback" title="Link to this definition">#</a></dt>
+<dd><p>Set a callback for log output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetOutputFile">
+<span class="sig-name descname"><span class="pre">SetOutputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetOutputFile" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Set the output file for the debugger.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Set the output file for the debugger using a FileSP.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetOutputFileHandle">
+<span class="sig-name descname"><span class="pre">SetOutputFileHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_ownership</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetOutputFileHandle" title="Link to this definition">#</a></dt>
+<dd><p>DEPRECATED, use SetOutputFile</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetPrompt">
+<span class="sig-name descname"><span class="pre">SetPrompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetPrompt" title="Link to this definition">#</a></dt>
+<dd><p>Set the command prompt string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetREPLLanguage">
+<span class="sig-name descname"><span class="pre">SetREPLLanguage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">repl_lang</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetREPLLanguage" title="Link to this definition">#</a></dt>
+<dd><p>Set the current REPL language.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetScriptLanguage">
+<span class="sig-name descname"><span class="pre">SetScriptLanguage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_lang</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetScriptLanguage" title="Link to this definition">#</a></dt>
+<dd><p>Set the current scripting language.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetSelectedPlatform">
+<span class="sig-name descname"><span class="pre">SetSelectedPlatform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">platform</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetSelectedPlatform" title="Link to this definition">#</a></dt>
+<dd><p>Set the selected platform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetSelectedTarget">
+<span class="sig-name descname"><span class="pre">SetSelectedTarget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetSelectedTarget" title="Link to this definition">#</a></dt>
+<dd><p>Set the selected target.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetShowInlineDiagnostics">
+<span class="sig-name descname"><span class="pre">SetShowInlineDiagnostics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetShowInlineDiagnostics" title="Link to this definition">#</a></dt>
+<dd><p>Set whether to show inline diagnostics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetTerminalHeight">
+<span class="sig-name descname"><span class="pre">SetTerminalHeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term_height</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetTerminalHeight" title="Link to this definition">#</a></dt>
+<dd><p>Set the terminal height.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetTerminalWidth">
+<span class="sig-name descname"><span class="pre">SetTerminalWidth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term_width</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetTerminalWidth" title="Link to this definition">#</a></dt>
+<dd><p>Set the terminal width.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetUseColor">
+<span class="sig-name descname"><span class="pre">SetUseColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetUseColor" title="Link to this definition">#</a></dt>
+<dd><p>Set whether to use color in output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetUseExternalEditor">
+<span class="sig-name descname"><span class="pre">SetUseExternalEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetUseExternalEditor" title="Link to this definition">#</a></dt>
+<dd><p>Set whether to use an external editor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SetUseSourceCache">
+<span class="sig-name descname"><span class="pre">SetUseSourceCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_source_cache</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SetUseSourceCache" title="Link to this definition">#</a></dt>
+<dd><p>Set whether to use the source cache.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SkipAppInitFiles">
+<span class="sig-name descname"><span class="pre">SkipAppInitFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SkipAppInitFiles" title="Link to this definition">#</a></dt>
+<dd><p>Set whether to skip loading application-specific .lldbinit files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SkipLLDBInitFiles">
+<span class="sig-name descname"><span class="pre">SkipLLDBInitFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SkipLLDBInitFiles" title="Link to this definition">#</a></dt>
+<dd><p>Set whether to skip loading .lldbinit files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.StateAsCString">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StateAsCString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.StateAsCString" title="Link to this definition">#</a></dt>
+<dd><p>Convert a state type to a string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.StateIsRunningState">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StateIsRunningState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.StateIsRunningState" title="Link to this definition">#</a></dt>
+<dd><p>Check if a state is a running state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.StateIsStoppedState">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StateIsStoppedState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.StateIsStoppedState" title="Link to this definition">#</a></dt>
+<dd><p>Check if a state is a stopped state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.SupportsLanguage">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SupportsLanguage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.SupportsLanguage" title="Link to this definition">#</a></dt>
+<dd><p>Check if a specific language is supported by LLDB.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBDebugger.Terminate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Terminate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBDebugger.Terminate" title="Link to this definition">#</a></dt>
+<dd><p>Terminate LLDB and its subsystems.</p>
+<p>This should be called when LLDB is no longer needed.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lldb.SBDeclaration.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">SBDeclaration</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lldb.SBData.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">SBData</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SBDebugger</a><ul>
+<li><a class="reference internal" href="#lldb.SBDebugger"><code class="docutils literal notranslate"><span class="pre">SBDebugger</span></code></a><ul>
+<li><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitError"><code class="docutils literal notranslate"><span class="pre">SBDebugger.eBroadcastBitError</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitExternalProgress"><code class="docutils literal notranslate"><span class="pre">SBDebugger.eBroadcastBitExternalProgress</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitExternalProgressCategory"><code class="docutils literal notranslate"><span class="pre">SBDebugger.eBroadcastBitExternalProgressCategory</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitProgress"><code class="docutils literal notranslate"><span class="pre">SBDebugger.eBroadcastBitProgress</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitProgressCategory"><code class="docutils literal notranslate"><span class="pre">SBDebugger.eBroadcastBitProgressCategory</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.eBroadcastBitWarning"><code class="docutils literal notranslate"><span class="pre">SBDebugger.eBroadcastBitWarning</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.version"><code class="docutils literal notranslate"><span class="pre">SBDebugger.version</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.AddDestroyCallback"><code class="docutils literal notranslate"><span class="pre">SBDebugger.AddDestroyCallback()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.CancelInterruptRequest"><code class="docutils literal notranslate"><span class="pre">SBDebugger.CancelInterruptRequest()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.Clear"><code class="docutils literal notranslate"><span class="pre">SBDebugger.Clear()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.Create"><code class="docutils literal notranslate"><span class="pre">SBDebugger.Create()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.CreateCategory"><code class="docutils literal notranslate"><span class="pre">SBDebugger.CreateCategory()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.CreateTarget"><code class="docutils literal notranslate"><span class="pre">SBDebugger.CreateTarget()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.CreateTargetWithFileAndArch"><code class="docutils literal notranslate"><span class="pre">SBDebugger.CreateTargetWithFileAndArch()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.CreateTargetWithFileAndTargetTriple"><code class="docutils literal notranslate"><span class="pre">SBDebugger.CreateTargetWithFileAndTargetTriple()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.DeleteCategory"><code class="docutils literal notranslate"><span class="pre">SBDebugger.DeleteCategory()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.DeleteTarget"><code class="docutils literal notranslate"><span class="pre">SBDebugger.DeleteTarget()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.Destroy"><code class="docutils literal notranslate"><span class="pre">SBDebugger.Destroy()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.DispatchInput"><code class="docutils literal notranslate"><span class="pre">SBDebugger.DispatchInput()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.DispatchInputEndOfFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.DispatchInputEndOfFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.DispatchInputInterrupt"><code class="docutils literal notranslate"><span class="pre">SBDebugger.DispatchInputInterrupt()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.EnableLog"><code class="docutils literal notranslate"><span class="pre">SBDebugger.EnableLog()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.FindDebuggerWithID"><code class="docutils literal notranslate"><span class="pre">SBDebugger.FindDebuggerWithID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.FindTargetByGloballyUniqueID"><code class="docutils literal notranslate"><span class="pre">SBDebugger.FindTargetByGloballyUniqueID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.FindTargetWithFileAndArch"><code class="docutils literal notranslate"><span class="pre">SBDebugger.FindTargetWithFileAndArch()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.FindTargetWithProcessID"><code class="docutils literal notranslate"><span class="pre">SBDebugger.FindTargetWithProcessID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetAsync"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetAsync()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetAvailablePlatformInfoAtIndex"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetAvailablePlatformInfoAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetBroadcaster"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetBroadcaster()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetBroadcasterClass"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetBroadcasterClass()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetBuildConfiguration"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetBuildConfiguration()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetCategory"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetCategory()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetCategoryAtIndex"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetCategoryAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetCloseInputOnEOF"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetCloseInputOnEOF()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetCommandInterpreter"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetCommandInterpreter()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetDefaultArchitecture"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetDefaultArchitecture()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetDefaultCategory"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetDefaultCategory()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetDescription"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetDescription()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetDiagnosticFromEvent"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetDiagnosticFromEvent()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetDummyTarget"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetDummyTarget()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetErrorFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetErrorFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetErrorFileHandle"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetErrorFileHandle()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetFilterForType"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetFilterForType()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetFormatForType"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetFormatForType()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetID"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetIndexOfTarget"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetIndexOfTarget()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetInputFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetInputFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetInputFileHandle"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetInputFileHandle()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetInstanceName"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetInstanceName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetInternalVariableValue"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetInternalVariableValue()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetListener"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetListener()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetNumAvailablePlatforms"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetNumAvailablePlatforms()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetNumCategories"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetNumCategories()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetNumPlatforms"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetNumPlatforms()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetNumTargets"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetNumTargets()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetOutputFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetOutputFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetOutputFileHandle"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetOutputFileHandle()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetPlatformAtIndex"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetPlatformAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetProgressDataFromEvent"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetProgressDataFromEvent()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetProgressFromEvent"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetProgressFromEvent()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetPrompt"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetPrompt()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetREPLLanguage"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetREPLLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetReproducerPath"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetReproducerPath()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetScriptInterpreterInfo"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetScriptInterpreterInfo()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetScriptLanguage"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetScriptLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetScriptingLanguage"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetScriptingLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetSelectedPlatform"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetSelectedPlatform()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetSelectedTarget"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetSelectedTarget()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetSetting"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetSetting()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetSourceManager"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetSourceManager()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetSummaryForType"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetSummaryForType()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetSyntheticForType"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetSyntheticForType()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetTargetAtIndex"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetTargetAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetTerminalHeight"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetTerminalHeight()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetTerminalWidth"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetTerminalWidth()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetUseColor"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetUseColor()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetUseExternalEditor"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetUseExternalEditor()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetUseSourceCache"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetUseSourceCache()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.GetVersionString"><code class="docutils literal notranslate"><span class="pre">SBDebugger.GetVersionString()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.HandleCommand"><code class="docutils literal notranslate"><span class="pre">SBDebugger.HandleCommand()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.HandleProcessEvent"><code class="docutils literal notranslate"><span class="pre">SBDebugger.HandleProcessEvent()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.Initialize"><code class="docutils literal notranslate"><span class="pre">SBDebugger.Initialize()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.InitializeWithErrorHandling"><code class="docutils literal notranslate"><span class="pre">SBDebugger.InitializeWithErrorHandling()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.InterruptRequested"><code class="docutils literal notranslate"><span class="pre">SBDebugger.InterruptRequested()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.IsValid"><code class="docutils literal notranslate"><span class="pre">SBDebugger.IsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.LoadTraceFromFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.LoadTraceFromFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.MemoryPressureDetected"><code class="docutils literal notranslate"><span class="pre">SBDebugger.MemoryPressureDetected()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.PrintDiagnosticsOnError"><code class="docutils literal notranslate"><span class="pre">SBDebugger.PrintDiagnosticsOnError()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.PrintStackTraceOnError"><code class="docutils literal notranslate"><span class="pre">SBDebugger.PrintStackTraceOnError()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.RemoveDestroyCallback"><code class="docutils literal notranslate"><span class="pre">SBDebugger.RemoveDestroyCallback()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.RequestInterrupt"><code class="docutils literal notranslate"><span class="pre">SBDebugger.RequestInterrupt()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.ResetStatistics"><code class="docutils literal notranslate"><span class="pre">SBDebugger.ResetStatistics()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.RestoreInputTerminalState"><code class="docutils literal notranslate"><span class="pre">SBDebugger.RestoreInputTerminalState()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.RunCommandInterpreter"><code class="docutils literal notranslate"><span class="pre">SBDebugger.RunCommandInterpreter()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.RunREPL"><code class="docutils literal notranslate"><span class="pre">SBDebugger.RunREPL()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SaveInputTerminalState"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SaveInputTerminalState()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetAsync"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetAsync()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetCloseInputOnEOF"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetCloseInputOnEOF()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetCurrentPlatform"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetCurrentPlatform()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetCurrentPlatformSDKRoot"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetCurrentPlatformSDKRoot()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetDefaultArchitecture"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetDefaultArchitecture()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetDestroyCallback"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetDestroyCallback()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetErrorFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetErrorFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetErrorFileHandle"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetErrorFileHandle()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetInputFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetInputFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetInputFileHandle"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetInputFileHandle()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetInputString"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetInputString()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetInternalVariable"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetInternalVariable()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetLoggingCallback"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetLoggingCallback()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetOutputFile"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetOutputFile()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetOutputFileHandle"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetOutputFileHandle()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetPrompt"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetPrompt()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetREPLLanguage"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetREPLLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetScriptLanguage"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetScriptLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetSelectedPlatform"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetSelectedPlatform()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetSelectedTarget"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetSelectedTarget()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetShowInlineDiagnostics"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetShowInlineDiagnostics()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetTerminalHeight"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetTerminalHeight()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetTerminalWidth"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetTerminalWidth()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetUseColor"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetUseColor()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetUseExternalEditor"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetUseExternalEditor()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SetUseSourceCache"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SetUseSourceCache()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SkipAppInitFiles"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SkipAppInitFiles()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SkipLLDBInitFiles"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SkipLLDBInitFiles()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.StateAsCString"><code class="docutils literal notranslate"><span class="pre">SBDebugger.StateAsCString()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.StateIsRunningState"><code class="docutils literal notranslate"><span class="pre">SBDebugger.StateIsRunningState()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.StateIsStoppedState"><code class="docutils literal notranslate"><span class="pre">SBDebugger.StateIsStoppedState()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.SupportsLanguage"><code class="docutils literal notranslate"><span class="pre">SBDebugger.SupportsLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBDebugger.Terminate"><code class="docutils literal notranslate"><span class="pre">SBDebugger.Terminate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lldb.SBBlock</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lldb-module.html">Package&nbsp;lldb</a> ::
+        Class&nbsp;SBBlock
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lldb.SBBlock-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SBBlock</h1><p class="nomargin-top"><span class="codelink"><a href="lldb-pysrc.html#SBBlock">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_lldb_sbb" name="uml_class_diagram_for_lldb_sbb">
+<area shape="rect" id="node1_21" href="lldb.SBBlock-class.html#__swig_setmethods__" title="lldb.SBBlock.__swig_setmethods__" alt="" coords="17,95,208,115"/>
+<area shape="rect" id="node1_22" href="lldb.SBBlock-class.html#__setattr__" title="lldb.SBBlock.__setattr__" alt="" coords="17,115,208,135"/>
+<area shape="rect" id="node1_23" href="lldb.SBBlock-class.html#__swig_getmethods__" title="lldb.SBBlock.__swig_getmethods__" alt="" coords="17,135,208,155"/>
+<area shape="rect" id="node1_24" href="lldb.SBBlock-class.html#__getattr__" title="lldb.SBBlock.__getattr__" alt="" coords="17,155,208,175"/>
+<area shape="rect" id="node1_25" href="lldb.SBBlock-class.html#__swig_destroy__" title="lldb.SBBlock.__swig_destroy__" alt="" coords="17,175,208,195"/>
+<area shape="rect" id="node1_26" href="lldb.SBBlock-class.html#__del__" title="lldb.SBBlock.__del__" alt="" coords="17,195,208,215"/>
+<area shape="rect" id="node1_27" href="lldb.SBBlock.ranges_access-class.html" title="A helper object that will lazily hand out an array of lldb.SBAddress that &#160;represent address ranges for a block." alt="" coords="17,215,208,235"/>
+<area shape="rect" id="node1_28" href="lldb.SBBlock-class.html#__repr__" title="lldb.SBBlock.__repr__" alt="" coords="17,237,208,257"/>
+<area shape="rect" id="node1_29" href="lldb.SBBlock-class.html#__init__" title="__init__(lldb::SBBlock self) &#45;&gt; SBBlock __init__(lldb::SBBlock self, &#160;SBBlock rhs) &#45;&gt; SBBlock" alt="" coords="17,257,208,277"/>
+<area shape="rect" id="node1_30" href="lldb.SBBlock-class.html#IsInlined" title="IsInlined(SBBlock self) &#45;&gt; bool" alt="" coords="17,277,208,297"/>
+<area shape="rect" id="node1_31" href="lldb.SBBlock-class.html#IsValid" title="IsValid(SBBlock self) &#45;&gt; bool" alt="" coords="17,297,208,317"/>
+<area shape="rect" id="node1_32" href="lldb.SBBlock-class.html#__nonzero__" title="lldb.SBBlock.__nonzero__" alt="" coords="17,317,208,337"/>
+<area shape="rect" id="node1_33" href="lldb.SBBlock-class.html#__bool__" title="lldb.SBBlock.__bool__" alt="" coords="17,337,208,357"/>
+<area shape="rect" id="node1_34" href="lldb.SBBlock-class.html#GetInlinedName" title="GetInlinedName(SBBlock self) &#45;&gt; char const *" alt="" coords="17,357,208,377"/>
+<area shape="rect" id="node1_35" href="lldb.SBBlock-class.html#GetInlinedCallSiteFile" title="GetInlinedCallSiteFile(SBBlock self) &#45;&gt; SBFileSpec" alt="" coords="17,377,208,397"/>
+<area shape="rect" id="node1_36" href="lldb.SBBlock-class.html#GetInlinedCallSiteLine" title="GetInlinedCallSiteLine(SBBlock self) &#45;&gt; uint32_t" alt="" coords="17,397,208,417"/>
+<area shape="rect" id="node1_37" href="lldb.SBBlock-class.html#GetInlinedCallSiteColumn" title="GetInlinedCallSiteColumn(SBBlock self) &#45;&gt; uint32_t" alt="" coords="17,417,208,437"/>
+<area shape="rect" id="node1_38" href="lldb.SBBlock-class.html#GetParent" title="GetParent(SBBlock self) &#45;&gt; SBBlock" alt="" coords="17,437,208,457"/>
+<area shape="rect" id="node1_39" href="lldb.SBBlock-class.html#GetContainingInlinedBlock" title="GetContainingInlinedBlock(SBBlock self) &#45;&gt; SBBlock" alt="" coords="17,457,208,477"/>
+<area shape="rect" id="node1_40" href="lldb.SBBlock-class.html#GetSibling" title="GetSibling(SBBlock self) &#45;&gt; SBBlock" alt="" coords="17,477,208,497"/>
+<area shape="rect" id="node1_41" href="lldb.SBBlock-class.html#__str__" title="__str__(SBBlock self) &#45;&gt; PyObject *" alt="" coords="17,517,208,537"/>
+<area shape="rect" id="node1" href="lldb.SBBlock-class.html" title="Represents a lexical block." alt="" coords="5,69,219,544"/>
+<area shape="rect" id="node2" href="lldb._object-class.html" title="lldb._object" alt="" coords="78,5,146,51"/>
+</map>
+  <img src="uml_class_diagram_for_lldb_sbb.gif" alt='' usemap="#uml_class_diagram_for_lldb_sbb" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Represents a lexical block. SBFunction contains SBBlock(s).</p>
+
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Nested Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="lldb.SBBlock.ranges_access-class.html" class="summary-name">ranges_access</a><br />
+      A helper object that will lazily hand out an array of 
+        lldb.SBAddress that represent address ranges for a block.
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#_swig_repr">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      __init__(lldb::SBBlock self) -&gt; SBBlock __init__(lldb::SBBlock 
+      self, SBBlock rhs) -&gt; SBBlock</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#IsInlined" class="summary-sig-name">IsInlined</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsInlined(SBBlock self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.IsInlined">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsValid"></a><span class="summary-sig-name">IsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsValid(SBBlock self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.IsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__nonzero__"></a><span class="summary-sig-name">__nonzero__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bool__"></a><span class="summary-sig-name">__bool__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetInlinedName" class="summary-sig-name">GetInlinedName</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetInlinedName(SBBlock self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetInlinedCallSiteFile" class="summary-sig-name">GetInlinedCallSiteFile</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetInlinedCallSiteFile(SBBlock self) -&gt; SBFileSpec</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedCallSiteFile">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetInlinedCallSiteLine" class="summary-sig-name">GetInlinedCallSiteLine</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetInlinedCallSiteLine(SBBlock self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedCallSiteLine">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetInlinedCallSiteColumn" class="summary-sig-name">GetInlinedCallSiteColumn</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetInlinedCallSiteColumn(SBBlock self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedCallSiteColumn">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetParent" class="summary-sig-name">GetParent</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetParent(SBBlock self) -&gt; SBBlock</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetParent">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetContainingInlinedBlock" class="summary-sig-name">GetContainingInlinedBlock</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetContainingInlinedBlock(SBBlock self) -&gt; SBBlock</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetContainingInlinedBlock">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetSibling" class="summary-sig-name">GetSibling</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetSibling(SBBlock self) -&gt; SBBlock</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetSibling">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBBlock-class.html#GetFirstChild" class="summary-sig-name">GetFirstChild</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetFirstChild(SBBlock self) -&gt; SBBlock</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetFirstChild">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetNumRanges"></a><span class="summary-sig-name">GetNumRanges</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetNumRanges(SBBlock self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetNumRanges">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetRangeStartAddress"></a><span class="summary-sig-name">GetRangeStartAddress</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetRangeStartAddress(SBBlock self, uint32_t idx) -&gt; SBAddress</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetRangeStartAddress">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetRangeEndAddress"></a><span class="summary-sig-name">GetRangeEndAddress</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetRangeEndAddress(SBBlock self, uint32_t idx) -&gt; SBAddress</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetRangeEndAddress">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetRangeIndexForBlockAddress"></a><span class="summary-sig-name">GetRangeIndexForBlockAddress</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetRangeIndexForBlockAddress(SBBlock self, SBAddress block_addr) 
+      -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetRangeIndexForBlockAddress">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDescription"></a><span class="summary-sig-name">GetDescription</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetDescription(SBBlock self, SBStream description) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetDescription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetVariables"></a><span class="summary-sig-name">GetVariables</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetVariables(SBBlock self, SBFrame frame, bool arguments, bool 
+      locals, bool statics, lldb::DynamicValueType use_dynamic) -&gt; 
+      SBValueList GetVariables(SBBlock self, SBTarget target, bool 
+      arguments, bool locals, bool statics) -&gt; SBValueList</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetVariables">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_range_at_index"></a><span class="summary-sig-name">get_range_at_index</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">idx</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.get_range_at_index">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_ranges_access_object"></a><span class="summary-sig-name">get_ranges_access_object</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      An accessor function that returns a ranges_access() object which 
+      allows lazy block address ranges access.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.get_ranges_access_object">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_ranges_array"></a><span class="summary-sig-name">get_ranges_array</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      An accessor function that returns an array object that contains all 
+      ranges in this block object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.get_ranges_array">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_call_site"></a><span class="summary-sig-name">get_call_site</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.get_call_site">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__str__"></a><span class="summary-sig-name">__str__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      __str__(SBBlock self) -&gt; PyObject *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBBlock.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_setmethods__"></a><span class="summary-name">__swig_setmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__setattr__"></a><span class="summary-name">__setattr__</span> = <code title="lambda self, name, value:">lambda self, name, value:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_getmethods__"></a><span class="summary-name">__swig_getmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__getattr__"></a><span class="summary-name">__getattr__</span> = <code title="lambda self, name:">lambda self, name:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_destroy__"></a><span class="summary-name">__swig_destroy__</span> = <code title="_lldb.delete_SBBlock">_lldb.delete_SBBlock</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__del__"></a><span class="summary-name">__del__</span> = <code title="lambda self:">lambda self:</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="IsInlined"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">IsInlined</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.IsInlined">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>IsInlined(SBBlock self) -&gt; bool</p>
+  <p>Does this block represent an inlined function?</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetInlinedName"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetInlinedName</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedName">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetInlinedName(SBBlock self) -&gt; char const *</p>
+  <p>Get the function name if this block represents an inlined function; 
+  otherwise, return None.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetInlinedCallSiteFile"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetInlinedCallSiteFile</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedCallSiteFile">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetInlinedCallSiteFile(SBBlock self) -&gt; SBFileSpec</p>
+  <p>Get the call site file if this block represents an inlined function; 
+  otherwise, return an invalid file spec.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetInlinedCallSiteLine"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetInlinedCallSiteLine</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedCallSiteLine">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetInlinedCallSiteLine(SBBlock self) -&gt; uint32_t</p>
+  <p>Get the call site line if this block represents an inlined function; 
+  otherwise, return 0.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetInlinedCallSiteColumn"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetInlinedCallSiteColumn</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetInlinedCallSiteColumn">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetInlinedCallSiteColumn(SBBlock self) -&gt; uint32_t</p>
+  <p>Get the call site column if this block represents an inlined function;
+  otherwise, return 0.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetParent"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetParent</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetParent">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetParent(SBBlock self) -&gt; SBBlock</p>
+  <p>Get the parent block.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetContainingInlinedBlock"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetContainingInlinedBlock</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetContainingInlinedBlock">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetContainingInlinedBlock(SBBlock self) -&gt; SBBlock</p>
+  <p>Get the inlined block that is or contains this block.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetSibling"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetSibling</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetSibling">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetSibling(SBBlock self) -&gt; SBBlock</p>
+  <p>Get the sibling block for this block.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetFirstChild"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetFirstChild</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBBlock.GetFirstChild">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetFirstChild(SBBlock self) -&gt; SBBlock</p>
+  <p>Get the first child block.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Nov  4 00:57:40 2019
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

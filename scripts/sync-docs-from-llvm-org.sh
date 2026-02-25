@@ -229,8 +229,7 @@ PY
       out_path="$TMP_DIR/$rel_path"
       mkdir -p "$(dirname "$out_path")"
       if ! curl -fsSL \
-        --retry 10 \
-        --retry-all-errors \
+        --retry 4 \
         --retry-delay 1 \
         --connect-timeout 20 \
         --max-time 60 \
@@ -243,7 +242,11 @@ PY
       fi
       fetched_count=$((fetched_count + 1))
 
-      python3 - "$SOURCE_URL" "$normalized_url" "$out_path" "${EXCLUDE_PATH_PREFIXES[@]}" > "$CRAWL_LINKS_FILE" <<'PY'
+      CRAWL_PY_ARGS=("$SOURCE_URL" "$normalized_url" "$out_path")
+      if ((${#EXCLUDE_PATH_PREFIXES[@]})); then
+        CRAWL_PY_ARGS+=("${EXCLUDE_PATH_PREFIXES[@]}")
+      fi
+      python3 - "${CRAWL_PY_ARGS[@]}" > "$CRAWL_LINKS_FILE" <<'PY'
 import pathlib
 import re
 import sys
@@ -389,8 +392,7 @@ PY
         dest_text_path="$FALLBACK_MIRROR_ROOT/_sources/${slug}.${ext}.txt"
         mkdir -p "$(dirname "$dest_text_path")"
         if curl -fsSL \
-          --retry 4 \
-          --retry-all-errors \
+          --retry 2 \
           --retry-delay 1 \
           --connect-timeout 20 \
           --max-time 60 \
@@ -410,7 +412,7 @@ fi
 [[ -d "$MIRROR_ROOT" ]] || fail "Downloaded mirror root not found: $MIRROR_ROOT"
 [[ -f "$MIRROR_ROOT/index.html" ]] || fail "Downloaded mirror missing index.html: $MIRROR_ROOT/index.html"
 
-RSYNC_ARGS=(-a --delete --exclude ".DS_Store")
+RSYNC_ARGS=(-a --delete --exclude ".DS_Store" --exclude ".crawl-*")
 for keep_path in "${KEEP_PATHS[@]}"; do
   RSYNC_ARGS+=(--exclude "$keep_path")
 done

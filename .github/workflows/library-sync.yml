@@ -85,7 +85,6 @@ jobs:
             --source-url "https://lldb.llvm.org/" \
             --docs-dir docs/lldb \
             --bridge-doc-options docs/_static/documentation_options.js \
-            --exclude-path-prefix "/cpp_reference/" \
             --skip-source-companions
           touch docs/lldb/_static/docs-known-broken-links.txt
 

@@ -1,0 +1,1348 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="SBModuleSpec" href="lldb.SBModuleSpec.html" /><link rel="prev" title="SBMemoryRegionInfoList" href="lldb.SBMemoryRegionInfoList.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>SBModule - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../use/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/lldbdap.html">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../use/python-reference.html">Python Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/writing-custom-commands.html">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python_api.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAttachInfo.html">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDebugger.html">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExpressionOptions.html">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrame.html">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThread.html">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <!-- Python API docs are generated. --><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="sbmodule">
+<h1>SBModule<a class="headerlink" href="#sbmodule" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lldb.SBModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lldb.</span></span><span class="sig-name descname"><span class="pre">SBModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule" title="Link to this definition">#</a></dt>
+<dd><p>Represents an executable image and its associated object and symbol files.</p>
+<p>The module is designed to be able to select a single slice of an
+executable image as it would appear on disk and during program
+execution.</p>
+<p>You can retrieve SBModule from <a class="reference internal" href="lldb.SBSymbolContext.html#lldb.SBSymbolContext" title="lldb.SBSymbolContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBSymbolContext</span></code></a> , which in turn is available
+from SBFrame.</p>
+<p>SBModule supports symbol iteration, for example,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">module</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+    <span class="n">saddr</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">GetStartAddress</span><span class="p">()</span>
+    <span class="n">eaddr</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">GetEndAddress</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>and rich comparison methods which allow the API program to use,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">thisModule</span> <span class="o">==</span> <span class="n">thatModule</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This module is the same as that module&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to test module equality.  A module also contains object file sections, namely
+<a class="reference internal" href="lldb.SBSection.html#lldb.SBSection" title="lldb.SBSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBSection</span></code></a> .  SBModule supports section iteration through section_iter(), for
+example,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of sections: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">module</span><span class="o">.</span><span class="n">GetNumSections</span><span class="p">())</span>
+<span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">section_iter</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And to iterate the symbols within a SBSection, use symbol_in_section_iter(),</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Iterates the text section and prints each symbols within each sub-section.</span>
+<span class="k">for</span> <span class="n">subsec</span> <span class="ow">in</span> <span class="n">text_sec</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">INDENT</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">subsec</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">sym</span> <span class="ow">in</span> <span class="n">exe_module</span><span class="o">.</span><span class="n">symbol_in_section_iter</span><span class="p">(</span><span class="n">subsec</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">INDENT2</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">sym</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">INDENT2</span> <span class="o">+</span> <span class="s1">&#39;symbol type: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">symbol_type_to_str</span><span class="p">(</span><span class="n">sym</span><span class="o">.</span><span class="n">GetType</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p>produces this following output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mh">0x0000000100001780</span><span class="o">-</span><span class="mh">0x0000000100001d5c</span><span class="p">)</span> <span class="n">a</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">__TEXT</span><span class="o">.</span><span class="n">__text</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000004</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mask_access(MaskAction, unsigned int)&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x00000001000017c0</span><span class="o">-</span><span class="mh">0x0000000100001870</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">code</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000008</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;thread_func(void*)&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001870</span><span class="o">-</span><span class="mh">0x00000001000019b0</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">code</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x0000000c</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x00000001000019b0</span><span class="o">-</span><span class="mh">0x0000000100001d5c</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">code</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000023</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="mh">0x0000000100001780</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">code</span>
+<span class="p">[</span><span class="mh">0x0000000100001d5c</span><span class="o">-</span><span class="mh">0x0000000100001da4</span><span class="p">)</span> <span class="n">a</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">__TEXT</span><span class="o">.</span><span class="n">__stubs</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000024</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;__stack_chk_fail&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d5c</span><span class="o">-</span><span class="mh">0x0000000100001d62</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000028</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;exit&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d62</span><span class="o">-</span><span class="mh">0x0000000100001d68</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000029</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;fflush&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d68</span><span class="o">-</span><span class="mh">0x0000000100001d6e</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x0000002a</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;fgets&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d6e</span><span class="o">-</span><span class="mh">0x0000000100001d74</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x0000002b</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;printf&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d74</span><span class="o">-</span><span class="mh">0x0000000100001d7a</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x0000002c</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;pthread_create&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d7a</span><span class="o">-</span><span class="mh">0x0000000100001d80</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x0000002d</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;pthread_join&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d80</span><span class="o">-</span><span class="mh">0x0000000100001d86</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x0000002e</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;pthread_mutex_lock&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d86</span><span class="o">-</span><span class="mh">0x0000000100001d8c</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x0000002f</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;pthread_mutex_unlock&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d8c</span><span class="o">-</span><span class="mh">0x0000000100001d92</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000030</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rand&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d92</span><span class="o">-</span><span class="mh">0x0000000100001d98</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000031</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;strtoul&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d98</span><span class="o">-</span><span class="mh">0x0000000100001d9e</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x00000032</span><span class="p">},</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;usleep&#39;</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x0000000100001d9e</span><span class="o">-</span><span class="mh">0x0000000100001da4</span><span class="p">)</span>
+    <span class="n">symbol</span> <span class="nb">type</span><span class="p">:</span> <span class="n">trampoline</span>
+<span class="p">[</span><span class="mh">0x0000000100001da4</span><span class="o">-</span><span class="mh">0x0000000100001e2c</span><span class="p">)</span> <span class="n">a</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">__TEXT</span><span class="o">.</span><span class="n">__stub_helper</span>
+<span class="p">[</span><span class="mh">0x0000000100001e2c</span><span class="o">-</span><span class="mh">0x0000000100001f10</span><span class="p">)</span> <span class="n">a</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">__TEXT</span><span class="o">.</span><span class="n">__cstring</span>
+<span class="p">[</span><span class="mh">0x0000000100001f10</span><span class="o">-</span><span class="mh">0x0000000100001f68</span><span class="p">)</span> <span class="n">a</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">__TEXT</span><span class="o">.</span><span class="n">__unwind_info</span>
+<span class="p">[</span><span class="mh">0x0000000100001f68</span><span class="o">-</span><span class="mh">0x0000000100001ff8</span><span class="p">)</span> <span class="n">a</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">__TEXT</span><span class="o">.</span><span class="n">__eh_frame</span>
+</pre></div>
+</div>
+<p class="rubric">Attributes Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.addr_size" title="lldb.SBModule.addr_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addr_size</span></code></a></p></td>
+<td><p>A read only property that returns the size in bytes of an address for this module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.byte_order" title="lldb.SBModule.byte_order"><code class="xref py py-obj docutils literal notranslate"><span class="pre">byte_order</span></code></a></p></td>
+<td><p>A read only property that returns an lldb enumeration value (lldb.eByteOrderLittle, lldb.eByteOrderBig, lldb.eByteOrderInvalid) that represents the byte order for this module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.compile_units" title="lldb.SBModule.compile_units"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_units</span></code></a></p></td>
+<td><p>A read only property that returns a list() of lldb.SBCompileUnit objects contained in this module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.file" title="lldb.SBModule.file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the file (lldb.SBFileSpec) for this object file for this module as it is represented where it is being debugged.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.num_sections" title="lldb.SBModule.num_sections"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_sections</span></code></a></p></td>
+<td><p>A read only property that returns number of sections in the module as an integer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.num_symbols" title="lldb.SBModule.num_symbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_symbols</span></code></a></p></td>
+<td><p>A read only property that returns number of symbols in the module symbol table as an integer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.platform_file" title="lldb.SBModule.platform_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">platform_file</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the file (lldb.SBFileSpec) for this object file for this module as it is represented on the current host system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.section" title="lldb.SBModule.section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">section</span></code></a></p></td>
+<td><p>A read only property that can be used to access compile units by index (&quot;compile_unit = module.compile_unit[0]&quot;), name (&quot;compile_unit = module.compile_unit['main.cpp']&quot;), or using a regular expression (&quot;compile_unit = module.compile_unit[re.compile(...)]&quot;).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.sections" title="lldb.SBModule.sections"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sections</span></code></a></p></td>
+<td><p>A read only property that returns a list() of lldb.SBSection objects contained in this module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.symbol" title="lldb.SBModule.symbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">symbol</span></code></a></p></td>
+<td><p>A read only property that can be used to access symbols by index (&quot;symbol = module.symbol[0]&quot;), name (&quot;symbols = module.symbol['main']&quot;), or using a regular expression (&quot;symbols = module.symbol[re.compile(...)]&quot;).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.symbols" title="lldb.SBModule.symbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">symbols</span></code></a></p></td>
+<td><p>A read only property that returns a list() of lldb.SBSymbol objects contained in this module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.triple" title="lldb.SBModule.triple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">triple</span></code></a></p></td>
+<td><p>A read only property that returns the target triple (arch-vendor-os) for this module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.uuid" title="lldb.SBModule.uuid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uuid</span></code></a></p></td>
+<td><p>A read only property that returns a standard python uuid.UUID object that represents the UUID of this module.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.Clear" title="lldb.SBModule.Clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Clear</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.FindCompileUnits" title="lldb.SBModule.FindCompileUnits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindCompileUnits</span></code></a>(SBModule self, ...)</p></td>
+<td><p>Find compile units related to this module and passed source file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.FindFirstGlobalVariable" title="lldb.SBModule.FindFirstGlobalVariable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindFirstGlobalVariable</span></code></a>(SBModule self, ...)</p></td>
+<td><p>Find the first global (or static) variable by name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.FindFirstType" title="lldb.SBModule.FindFirstType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindFirstType</span></code></a>(SBModule self, char const * name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.FindFunctions" title="lldb.SBModule.FindFunctions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindFunctions</span></code></a>(SBModule self, ...)</p></td>
+<td><p>Find functions by name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.FindGlobalVariables" title="lldb.SBModule.FindGlobalVariables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindGlobalVariables</span></code></a>(SBModule self, ...)</p></td>
+<td><p>Find global and static variables by name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.FindSection" title="lldb.SBModule.FindSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindSection</span></code></a>(SBModule self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.FindSymbol" title="lldb.SBModule.FindSymbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindSymbol</span></code></a>(SBModule self, char const * name, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.FindSymbols" title="lldb.SBModule.FindSymbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindSymbols</span></code></a>(SBModule self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.FindTypes" title="lldb.SBModule.FindTypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindTypes</span></code></a>(SBModule self, char const * type)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GarbageCollectAllocatedModules" title="lldb.SBModule.GarbageCollectAllocatedModules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GarbageCollectAllocatedModules</span></code></a>()</p></td>
+<td><p>Removes all modules which are no longer needed by any part of LLDB from the module cache.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetAddressByteSize" title="lldb.SBModule.GetAddressByteSize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetAddressByteSize</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetBasicType" title="lldb.SBModule.GetBasicType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetBasicType</span></code></a>(SBModule self, lldb)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetByteOrder" title="lldb.SBModule.GetByteOrder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetByteOrder</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetCompileUnitAtIndex" title="lldb.SBModule.GetCompileUnitAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCompileUnitAtIndex</span></code></a>(SBModule self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetDescription" title="lldb.SBModule.GetDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDescription</span></code></a>(SBModule self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetFileSpec" title="lldb.SBModule.GetFileSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFileSpec</span></code></a>(SBModule self)</p></td>
+<td><p>Get const accessor for the module file specification.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetNumCompileUnits" title="lldb.SBModule.GetNumCompileUnits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumCompileUnits</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetNumSections" title="lldb.SBModule.GetNumSections"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumSections</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetNumSymbols" title="lldb.SBModule.GetNumSymbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumSymbols</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetNumberAllocatedModules" title="lldb.SBModule.GetNumberAllocatedModules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumberAllocatedModules</span></code></a>()</p></td>
+<td><p>Returns the number of modules in the module cache.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetObjectFileEntryPointAddress" title="lldb.SBModule.GetObjectFileEntryPointAddress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetObjectFileEntryPointAddress</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetObjectFileHeaderAddress" title="lldb.SBModule.GetObjectFileHeaderAddress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetObjectFileHeaderAddress</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetObjectName" title="lldb.SBModule.GetObjectName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetObjectName</span></code></a>()</p></td>
+<td><p>If this Module represents a specific object or part within a larger file, returns the name of that object or part.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetPlatformFileSpec" title="lldb.SBModule.GetPlatformFileSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetPlatformFileSpec</span></code></a>(SBModule self)</p></td>
+<td><p>Get accessor for the module platform file specification.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetRemoteInstallFileSpec" title="lldb.SBModule.GetRemoteInstallFileSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetRemoteInstallFileSpec</span></code></a>()</p></td>
+<td><p>Get accessor for the remote install path for a module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetSectionAtIndex" title="lldb.SBModule.GetSectionAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSectionAtIndex</span></code></a>(SBModule self, size_t idx)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetSymbolAtIndex" title="lldb.SBModule.GetSymbolAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSymbolAtIndex</span></code></a>(SBModule self, size_t idx)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetSymbolFileSpec" title="lldb.SBModule.GetSymbolFileSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSymbolFileSpec</span></code></a>()</p></td>
+<td><p>Get accessor for the symbol file specification.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetTriple" title="lldb.SBModule.GetTriple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTriple</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetTypeByID" title="lldb.SBModule.GetTypeByID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTypeByID</span></code></a>(uid)</p></td>
+<td><p>Get a type using its type ID.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetTypes" title="lldb.SBModule.GetTypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTypes</span></code></a>(SBModule self, ...)</p></td>
+<td><p>Get all types matching type_mask from debug info in this module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetUUIDBytes" title="lldb.SBModule.GetUUIDBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetUUIDBytes</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.GetUUIDString" title="lldb.SBModule.GetUUIDString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetUUIDString</span></code></a>(SBModule self)</p></td>
+<td><p>Returns the UUID of the module as a Python string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.GetVersion" title="lldb.SBModule.GetVersion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetVersion</span></code></a>()</p></td>
+<td><p>Get the module version numbers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.IsFileBacked" title="lldb.SBModule.IsFileBacked"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsFileBacked</span></code></a>(SBModule self)</p></td>
+<td><p>Check if the module is file backed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.IsValid" title="lldb.SBModule.IsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsValid</span></code></a>(SBModule self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.ResolveFileAddress" title="lldb.SBModule.ResolveFileAddress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResolveFileAddress</span></code></a>(SBModule self, lldb)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.ResolveSymbolContextForAddress" title="lldb.SBModule.ResolveSymbolContextForAddress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResolveSymbolContextForAddress</span></code></a>(...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.SetPlatformFileSpec" title="lldb.SBModule.SetPlatformFileSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetPlatformFileSpec</span></code></a>(SBModule self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.SetRemoteInstallFileSpec" title="lldb.SBModule.SetRemoteInstallFileSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetRemoteInstallFileSpec</span></code></a>(file)</p></td>
+<td><p>Set accessor for the remote install path for a module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.compile_unit_iter" title="lldb.SBModule.compile_unit_iter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_unit_iter</span></code></a>()</p></td>
+<td><p>Iterate over all compile units in a lldb.SBModule object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.get_compile_units_access_object" title="lldb.SBModule.get_compile_units_access_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compile_units_access_object</span></code></a>()</p></td>
+<td><p>An accessor function that returns a compile_units_access() object which allows lazy compile unit access from a lldb.SBModule object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.get_compile_units_array" title="lldb.SBModule.get_compile_units_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compile_units_array</span></code></a>()</p></td>
+<td><p>An accessor function that returns an array object that contains all compile_units in this module object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.get_sections_access_object" title="lldb.SBModule.get_sections_access_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sections_access_object</span></code></a>()</p></td>
+<td><p>An accessor function that returns a sections_access() object which allows lazy section array access.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.get_sections_array" title="lldb.SBModule.get_sections_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sections_array</span></code></a>()</p></td>
+<td><p>An accessor function that returns an array object that contains all sections in this module object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.get_symbols_access_object" title="lldb.SBModule.get_symbols_access_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_symbols_access_object</span></code></a>()</p></td>
+<td><p>An accessor function that returns a symbols_access() object which allows lazy symbol access from a lldb.SBModule object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.get_symbols_array" title="lldb.SBModule.get_symbols_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_symbols_array</span></code></a>()</p></td>
+<td><p>An accessor function that returns a list() that contains all symbols in a lldb.SBModule object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.get_uuid" title="lldb.SBModule.get_uuid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_uuid</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBModule.section_iter" title="lldb.SBModule.section_iter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">section_iter</span></code></a>()</p></td>
+<td><p>Iterate over all sections in a lldb.SBModule object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBModule.symbol_in_section_iter" title="lldb.SBModule.symbol_in_section_iter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">symbol_in_section_iter</span></code></a>(section)</p></td>
+<td><p>Given a module and its contained section, returns an iterator on the symbols within the section.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.addr_size">
+<span class="sig-name descname"><span class="pre">addr_size</span></span><a class="headerlink" href="#lldb.SBModule.addr_size" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the size in bytes of an address for this module.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.byte_order">
+<span class="sig-name descname"><span class="pre">byte_order</span></span><a class="headerlink" href="#lldb.SBModule.byte_order" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb enumeration value (lldb.eByteOrderLittle, lldb.eByteOrderBig, lldb.eByteOrderInvalid) that represents the byte order for this module.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.compile_units">
+<span class="sig-name descname"><span class="pre">compile_units</span></span><a class="headerlink" href="#lldb.SBModule.compile_units" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() of lldb.SBCompileUnit objects contained in this module.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.file">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#lldb.SBModule.file" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the file (lldb.SBFileSpec) for this object file for this module as it is represented where it is being debugged.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.num_sections">
+<span class="sig-name descname"><span class="pre">num_sections</span></span><a class="headerlink" href="#lldb.SBModule.num_sections" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns number of sections in the module as an integer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.num_symbols">
+<span class="sig-name descname"><span class="pre">num_symbols</span></span><a class="headerlink" href="#lldb.SBModule.num_symbols" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns number of symbols in the module symbol table as an integer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.platform_file">
+<span class="sig-name descname"><span class="pre">platform_file</span></span><a class="headerlink" href="#lldb.SBModule.platform_file" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the file (lldb.SBFileSpec) for this object file for this module as it is represented on the current host system.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.section">
+<span class="sig-name descname"><span class="pre">section</span></span><a class="headerlink" href="#lldb.SBModule.section" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that can be used to access compile units by index (“compile_unit = module.compile_unit[0]”), name (“compile_unit = module.compile_unit[‘main.cpp’]”), or using a regular expression (“compile_unit = module.compile_unit[re.compile(…)]”). The return value is a single lldb.SBCompileUnit object for array access or by full or partial path, and a list() of lldb.SBCompileUnit objects regular expressions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.sections">
+<span class="sig-name descname"><span class="pre">sections</span></span><a class="headerlink" href="#lldb.SBModule.sections" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() of lldb.SBSection objects contained in this module.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.symbol">
+<span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#lldb.SBModule.symbol" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that can be used to access symbols by index (“symbol = module.symbol[0]”), name (“symbols = module.symbol[‘main’]”), or using a regular expression (“symbols = module.symbol[re.compile(…)]”). The return value is a single lldb.SBSymbol object for array access, and a list() of lldb.SBSymbol objects for name and regular expression access</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.symbols">
+<span class="sig-name descname"><span class="pre">symbols</span></span><a class="headerlink" href="#lldb.SBModule.symbols" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() of lldb.SBSymbol objects contained in this module.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.triple">
+<span class="sig-name descname"><span class="pre">triple</span></span><a class="headerlink" href="#lldb.SBModule.triple" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the target triple (arch-vendor-os) for this module.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBModule.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><a class="headerlink" href="#lldb.SBModule.uuid" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a standard python uuid.UUID object that represents the UUID of this module.</p>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.Clear" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindCompileUnits">
+<span class="sig-name descname"><span class="pre">FindCompileUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFileSpec</span> <span class="pre">sb_file_spec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbolContextList.html#lldb.SBSymbolContextList" title="lldb.SBSymbolContextList"><span class="pre">SBSymbolContextList</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindCompileUnits" title="Link to this definition">#</a></dt>
+<dd><p>Find compile units related to this module and passed source
+file.</p>
+<dl class="simple">
+<dt>&#64;param[in] sb_file_spec</dt><dd><p>A <a class="reference internal" href="lldb.SBFileSpec.html#lldb.SBFileSpec" title="lldb.SBFileSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFileSpec</span></code></a> object that contains source file
+specification.</p>
+</dd>
+<dt>&#64;return</dt><dd><p>A <a class="reference internal" href="lldb.SBSymbolContextList.html#lldb.SBSymbolContextList" title="lldb.SBSymbolContextList"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBSymbolContextList</span></code></a> that gets filled in with all of
+the symbol contexts for all the matches.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindFirstGlobalVariable">
+<span class="sig-name descname"><span class="pre">FindFirstGlobalVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBTarget</span> <span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindFirstGlobalVariable" title="Link to this definition">#</a></dt>
+<dd><p>Find the first global (or static) variable by name.</p>
+<dl class="simple">
+<dt>&#64;param[in] target</dt><dd><p>A valid SBTarget instance representing the debuggee.</p>
+</dd>
+<dt>&#64;param[in] name</dt><dd><p>The name of the global or static variable we are looking
+for.</p>
+</dd>
+<dt>&#64;return</dt><dd><p>An SBValue that gets filled in with the found variable (if any).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindFirstType">
+<span class="sig-name descname"><span class="pre">FindFirstType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBType.html#lldb.SBType" title="lldb.SBType"><span class="pre">SBType</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindFirstType" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindFunctions">
+<span class="sig-name descname"><span class="pre">FindFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">name_type_mask=eFunctionNameTypeAny</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbolContextList.html#lldb.SBSymbolContextList" title="lldb.SBSymbolContextList"><span class="pre">SBSymbolContextList</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindFunctions" title="Link to this definition">#</a></dt>
+<dd><p>Find functions by name.</p>
+<dl class="simple">
+<dt>&#64;param[in] name</dt><dd><p>The name of the function we are looking for.</p>
+</dd>
+<dt>&#64;param[in] name_type_mask</dt><dd><p>A logical OR of one or more FunctionNameType enum bits that
+indicate what kind of names should be used when doing the
+lookup. Bits include fully qualified names, base names,
+C++ methods, or ObjC selectors.
+See FunctionNameType for more details.</p>
+</dd>
+<dt>&#64;return</dt><dd><p>A symbol context list that gets filled in with all of the
+matches.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindGlobalVariables">
+<span class="sig-name descname"><span class="pre">FindGlobalVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBTarget</span> <span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">max_matches</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValueList.html#lldb.SBValueList" title="lldb.SBValueList"><span class="pre">SBValueList</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindGlobalVariables" title="Link to this definition">#</a></dt>
+<dd><p>Find global and static variables by name.</p>
+<dl class="simple">
+<dt>&#64;param[in] target</dt><dd><p>A valid SBTarget instance representing the debuggee.</p>
+</dd>
+<dt>&#64;param[in] name</dt><dd><p>The name of the global or static variable we are looking
+for.</p>
+</dd>
+<dt>&#64;param[in] max_matches</dt><dd><p>Allow the number of matches to be limited to max_matches.</p>
+</dd>
+<dt>&#64;return</dt><dd><p>A list of matched variables in an SBValueList.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindSection">
+<span class="sig-name descname"><span class="pre">FindSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">sect_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSection.html#lldb.SBSection" title="lldb.SBSection"><span class="pre">SBSection</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindSection" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindSymbol">
+<span class="sig-name descname"><span class="pre">FindSymbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::SymbolType</span> <span class="pre">type=eSymbolTypeAny</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbol.html#lldb.SBSymbol" title="lldb.SBSymbol"><span class="pre">SBSymbol</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindSymbol" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindSymbols">
+<span class="sig-name descname"><span class="pre">FindSymbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::SymbolType</span> <span class="pre">type=eSymbolTypeAny</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbolContextList.html#lldb.SBSymbolContextList" title="lldb.SBSymbolContextList"><span class="pre">SBSymbolContextList</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindSymbols" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.FindTypes">
+<span class="sig-name descname"><span class="pre">FindTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBTypeList.html#lldb.SBTypeList" title="lldb.SBTypeList"><span class="pre">SBTypeList</span></a></span></span><a class="headerlink" href="#lldb.SBModule.FindTypes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GarbageCollectAllocatedModules">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GarbageCollectAllocatedModules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.GarbageCollectAllocatedModules" title="Link to this definition">#</a></dt>
+<dd><p>Removes all modules which are no longer needed by any part of LLDB from
+the module cache.</p>
+<p>This is an implementation detail exposed for testing and should not be
+relied upon. Use SBDebugger::MemoryPressureDetected instead to reduce
+LLDB’s memory consumption during execution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetAddressByteSize">
+<span class="sig-name descname"><span class="pre">GetAddressByteSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBModule.GetAddressByteSize" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetBasicType">
+<span class="sig-name descname"><span class="pre">GetBasicType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::BasicType</span> <span class="pre">type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBType.html#lldb.SBType" title="lldb.SBType"><span class="pre">SBType</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetBasicType" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetByteOrder">
+<span class="sig-name descname"><span class="pre">GetByteOrder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::ByteOrder</span></span></span><a class="headerlink" href="#lldb.SBModule.GetByteOrder" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetCompileUnitAtIndex">
+<span class="sig-name descname"><span class="pre">GetCompileUnitAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">arg2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBCompileUnit.html#lldb.SBCompileUnit" title="lldb.SBCompileUnit"><span class="pre">SBCompileUnit</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetCompileUnitAtIndex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetDescription">
+<span class="sig-name descname"><span class="pre">GetDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">description</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBModule.GetDescription" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetFileSpec">
+<span class="sig-name descname"><span class="pre">GetFileSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFileSpec.html#lldb.SBFileSpec" title="lldb.SBFileSpec"><span class="pre">SBFileSpec</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetFileSpec" title="Link to this definition">#</a></dt>
+<dd><p>Get const accessor for the module file specification.</p>
+<p>This function returns the file for the module on the host system
+that is running LLDB. This can differ from the path on the
+platform since we might be doing remote debugging.</p>
+<dl class="simple">
+<dt>&#64;return</dt><dd><p>A const reference to the file specification object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetNumCompileUnits">
+<span class="sig-name descname"><span class="pre">GetNumCompileUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBModule.GetNumCompileUnits" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetNumSections">
+<span class="sig-name descname"><span class="pre">GetNumSections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span><a class="headerlink" href="#lldb.SBModule.GetNumSections" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetNumSymbols">
+<span class="sig-name descname"><span class="pre">GetNumSymbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span><a class="headerlink" href="#lldb.SBModule.GetNumSymbols" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetNumberAllocatedModules">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetNumberAllocatedModules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBModule.GetNumberAllocatedModules" title="Link to this definition">#</a></dt>
+<dd><p>Returns the number of modules in the module cache. This is an
+implementation detail exposed for testing and should not be relied upon.</p>
+<dl class="simple">
+<dt>&#64;return</dt><dd><p>The number of modules in the module cache.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetObjectFileEntryPointAddress">
+<span class="sig-name descname"><span class="pre">GetObjectFileEntryPointAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBAddress.html#lldb.SBAddress" title="lldb.SBAddress"><span class="pre">SBAddress</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetObjectFileEntryPointAddress" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetObjectFileHeaderAddress">
+<span class="sig-name descname"><span class="pre">GetObjectFileHeaderAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBAddress.html#lldb.SBAddress" title="lldb.SBAddress"><span class="pre">SBAddress</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetObjectFileHeaderAddress" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetObjectName">
+<span class="sig-name descname"><span class="pre">GetObjectName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.GetObjectName" title="Link to this definition">#</a></dt>
+<dd><p>If this Module represents a specific object or part within a larger file,
+returns the name of that object or part. Otherwise, returns
+nullptr.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetPlatformFileSpec">
+<span class="sig-name descname"><span class="pre">GetPlatformFileSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFileSpec.html#lldb.SBFileSpec" title="lldb.SBFileSpec"><span class="pre">SBFileSpec</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetPlatformFileSpec" title="Link to this definition">#</a></dt>
+<dd><p>Get accessor for the module platform file specification.</p>
+<p>Platform file refers to the path of the module as it is known on
+the remote system on which it is being debugged. For local
+debugging this is always the same as Module::GetFileSpec(). But
+remote debugging might mention a file ‘/usr/lib/liba.dylib’
+which might be locally downloaded and cached. In this case the
+platform file could be something like:
+‘/tmp/lldb/platform-cache/remote.host.computer/usr/lib/liba.dylib’
+The file could also be cached in a local developer kit directory.</p>
+<dl class="simple">
+<dt>&#64;return</dt><dd><p>A const reference to the file specification object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetRemoteInstallFileSpec">
+<span class="sig-name descname"><span class="pre">GetRemoteInstallFileSpec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.GetRemoteInstallFileSpec" title="Link to this definition">#</a></dt>
+<dd><p>Get accessor for the remote install path for a module.</p>
+<p>When debugging to a remote platform by connecting to a remote
+platform, the install path of the module can be set. If the
+install path is set, every time the process is about to launch
+the target will install this module on the remote platform prior
+to launching.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lldb.SBFileSpec.html#lldb.SBFileSpec" title="lldb.SBFileSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFileSpec</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A file specification object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetSectionAtIndex">
+<span class="sig-name descname"><span class="pre">GetSectionAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_t</span> <span class="pre">idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSection.html#lldb.SBSection" title="lldb.SBSection"><span class="pre">SBSection</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetSectionAtIndex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetSymbolAtIndex">
+<span class="sig-name descname"><span class="pre">GetSymbolAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_t</span> <span class="pre">idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbol.html#lldb.SBSymbol" title="lldb.SBSymbol"><span class="pre">SBSymbol</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetSymbolAtIndex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetSymbolFileSpec">
+<span class="sig-name descname"><span class="pre">GetSymbolFileSpec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.GetSymbolFileSpec" title="Link to this definition">#</a></dt>
+<dd><p>Get accessor for the symbol file specification.</p>
+<p>When debugging an object file an additional debug information can
+be provided in separate file. Therefore if you debugging something
+like ‘/usr/lib/liba.dylib’ then debug information can be located
+in folder like ‘/usr/lib/liba.dylib.dSYM/’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lldb.SBFileSpec.html#lldb.SBFileSpec" title="lldb.SBFileSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFileSpec</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A const reference to the file specification object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetTriple">
+<span class="sig-name descname"><span class="pre">GetTriple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBModule.GetTriple" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetTypeByID">
+<span class="sig-name descname"><span class="pre">GetTypeByID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.GetTypeByID" title="Link to this definition">#</a></dt>
+<dd><p>Get a type using its type ID.</p>
+<p>Each symbol file reader will assign different user IDs to their
+types, but it is sometimes useful when debugging type issues to
+be able to grab a type using its type ID.</p>
+<p>For DWARF debug info, the type ID is the DIE offset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>uid</strong> (<em>int</em><em>, </em><em>in</em>) – The type user ID.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lldb.SBType.html#lldb.SBType" title="lldb.SBType"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBType</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An SBType for the given type ID, or an empty SBType if the
+type was not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetTypes">
+<span class="sig-name descname"><span class="pre">GetTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">type_mask=eTypeClassAny</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBTypeList.html#lldb.SBTypeList" title="lldb.SBTypeList"><span class="pre">SBTypeList</span></a></span></span><a class="headerlink" href="#lldb.SBModule.GetTypes" title="Link to this definition">#</a></dt>
+<dd><p>Get all types matching type_mask from debug info in this
+module.</p>
+<dl class="simple">
+<dt>&#64;param[in] type_mask</dt><dd><p>A bitfield that consists of one or more bits logically OR’ed
+together from the lldb::TypeClass enumeration. This allows
+you to request only structure types, or only class, struct
+and union types. Passing in lldb::eTypeClassAny will return
+all types found in the debug information for this module.</p>
+</dd>
+<dt>&#64;return</dt><dd><p>A list of types in this module that match type_mask</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetUUIDBytes">
+<span class="sig-name descname"><span class="pre">GetUUIDBytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint8_t</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBModule.GetUUIDBytes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetUUIDString">
+<span class="sig-name descname"><span class="pre">GetUUIDString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBModule.GetUUIDString" title="Link to this definition">#</a></dt>
+<dd><p>Returns the UUID of the module as a Python string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.GetVersion">
+<span class="sig-name descname"><span class="pre">GetVersion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.GetVersion" title="Link to this definition">#</a></dt>
+<dd><p>Get the module version numbers.</p>
+<p>Many object files have a set of version numbers that describe
+the version of the executable or shared library. Typically there
+are major, minor and build, but there may be more. This function
+will extract the versions from object files if they are available.</p>
+<p>If <em>versions</em> is NULL, or if <em>num_versions</em> is 0, the return
+value will indicate how many version numbers are available in
+this object file. Then a subsequent call can be made to this
+function with a value of <em>versions</em> and <em>num_versions</em> that
+has enough storage to store some or all version numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>versions</strong> (<em>int</em><em>, </em><em>out</em>) – A pointer to an array of uint32_t types that is <em>num_versions</em>
+long. If this value is NULL, the return value will indicate
+how many version numbers are required for a subsequent call
+to this function so that all versions can be retrieved. If
+the value is non-NULL, then at most <em>num_versions</em> of the
+existing versions numbers will be filled into <em>versions</em>.
+If there is no version information available, <em>versions</em>
+will be filled with <em>num_versions</em> UINT32_MAX values
+and zero will be returned.</p></li>
+<li><p><strong>num_versions</strong> (<em>int</em><em>, </em><em>in</em>) – <blockquote>
+<div><p>The maximum number of entries to fill into <em>versions</em>. If
+this value is zero, then the return value will indicate
+how many version numbers there are in total so another call
+to this function can be make with adequate storage in
+<em>versions</em> to get all of the version numbers. If</p>
+</div></blockquote>
+<dl class="simple">
+<dt><em>num_versions</em> is less than the actual number of version</dt><dd><p>numbers in this object file, only <em>num_versions</em> will be
+filled into <em>versions</em> (if <em>versions</em> is non-NULL).</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This function always returns the number of version numbers
+that this object file has regardless of the number of
+version numbers that were copied into <em>versions</em>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.IsFileBacked">
+<span class="sig-name descname"><span class="pre">IsFileBacked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBModule.IsFileBacked" title="Link to this definition">#</a></dt>
+<dd><p>Check if the module is file backed.</p>
+<p>&#64;return</p>
+<blockquote>
+<div><p>True, if the module is backed by an object file on disk.
+False, if the module is backed by an object file in memory.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.IsValid">
+<span class="sig-name descname"><span class="pre">IsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBModule.IsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.ResolveFileAddress">
+<span class="sig-name descname"><span class="pre">ResolveFileAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::addr_t</span> <span class="pre">vm_addr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBAddress.html#lldb.SBAddress" title="lldb.SBAddress"><span class="pre">SBAddress</span></a></span></span><a class="headerlink" href="#lldb.SBModule.ResolveFileAddress" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.ResolveSymbolContextForAddress">
+<span class="sig-name descname"><span class="pre">ResolveSymbolContextForAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBAddress</span> <span class="pre">addr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">resolve_scope</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbolContext.html#lldb.SBSymbolContext" title="lldb.SBSymbolContext"><span class="pre">SBSymbolContext</span></a></span></span><a class="headerlink" href="#lldb.SBModule.ResolveSymbolContextForAddress" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.SetPlatformFileSpec">
+<span class="sig-name descname"><span class="pre">SetPlatformFileSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBModule</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFileSpec</span> <span class="pre">platform_file</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBModule.SetPlatformFileSpec" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.SetRemoteInstallFileSpec">
+<span class="sig-name descname"><span class="pre">SetRemoteInstallFileSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.SetRemoteInstallFileSpec" title="Link to this definition">#</a></dt>
+<dd><p>Set accessor for the remote install path for a module.</p>
+<p>When debugging to a remote platform by connecting to a remote
+platform, the install path of the module can be set. If the
+install path is set, every time the process is about to launch
+the target will install this module on the remote platform prior
+to launching.</p>
+<p>If <em>file</em> specifies a full path to an install location, the
+module will be installed to this path. If the path is relative
+(no directory specified, or the path is partial like “usr/lib”
+or “./usr/lib”, then the install path will be resolved using
+the platform’s current working directory as the base path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<a class="reference internal" href="lldb.SBFileSpec.html#lldb.SBFileSpec" title="lldb.SBFileSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFileSpec</span></code></a>, in) – A file specification object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.compile_unit_iter">
+<span class="sig-name descname"><span class="pre">compile_unit_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.compile_unit_iter" title="Link to this definition">#</a></dt>
+<dd><p>Iterate over all compile units in a lldb.SBModule object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.get_compile_units_access_object">
+<span class="sig-name descname"><span class="pre">get_compile_units_access_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.get_compile_units_access_object" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns a compile_units_access() object which allows lazy compile unit access from a lldb.SBModule object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.get_compile_units_array">
+<span class="sig-name descname"><span class="pre">get_compile_units_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.get_compile_units_array" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns an array object that contains all compile_units in this module object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.get_sections_access_object">
+<span class="sig-name descname"><span class="pre">get_sections_access_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.get_sections_access_object" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns a sections_access() object which allows lazy section array access.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.get_sections_array">
+<span class="sig-name descname"><span class="pre">get_sections_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.get_sections_array" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns an array object that contains all sections in this module object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.get_symbols_access_object">
+<span class="sig-name descname"><span class="pre">get_symbols_access_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.get_symbols_access_object" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns a symbols_access() object which allows lazy symbol access from a lldb.SBModule object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.get_symbols_array">
+<span class="sig-name descname"><span class="pre">get_symbols_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.get_symbols_array" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns a list() that contains all symbols in a lldb.SBModule object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.get_uuid">
+<span class="sig-name descname"><span class="pre">get_uuid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.get_uuid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.section_iter">
+<span class="sig-name descname"><span class="pre">section_iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.section_iter" title="Link to this definition">#</a></dt>
+<dd><p>Iterate over all sections in a lldb.SBModule object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBModule.symbol_in_section_iter">
+<span class="sig-name descname"><span class="pre">symbol_in_section_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBModule.symbol_in_section_iter" title="Link to this definition">#</a></dt>
+<dd><p>Given a module and its contained section, returns an iterator on the
+symbols within the section.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lldb.SBModuleSpec.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">SBModuleSpec</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lldb.SBMemoryRegionInfoList.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">SBMemoryRegionInfoList</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SBModule</a><ul>
+<li><a class="reference internal" href="#lldb.SBModule"><code class="docutils literal notranslate"><span class="pre">SBModule</span></code></a><ul>
+<li><a class="reference internal" href="#lldb.SBModule.addr_size"><code class="docutils literal notranslate"><span class="pre">SBModule.addr_size</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.byte_order"><code class="docutils literal notranslate"><span class="pre">SBModule.byte_order</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.compile_units"><code class="docutils literal notranslate"><span class="pre">SBModule.compile_units</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.file"><code class="docutils literal notranslate"><span class="pre">SBModule.file</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.num_sections"><code class="docutils literal notranslate"><span class="pre">SBModule.num_sections</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.num_symbols"><code class="docutils literal notranslate"><span class="pre">SBModule.num_symbols</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.platform_file"><code class="docutils literal notranslate"><span class="pre">SBModule.platform_file</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.section"><code class="docutils literal notranslate"><span class="pre">SBModule.section</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.sections"><code class="docutils literal notranslate"><span class="pre">SBModule.sections</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.symbol"><code class="docutils literal notranslate"><span class="pre">SBModule.symbol</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.symbols"><code class="docutils literal notranslate"><span class="pre">SBModule.symbols</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.triple"><code class="docutils literal notranslate"><span class="pre">SBModule.triple</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.uuid"><code class="docutils literal notranslate"><span class="pre">SBModule.uuid</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.Clear"><code class="docutils literal notranslate"><span class="pre">SBModule.Clear()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindCompileUnits"><code class="docutils literal notranslate"><span class="pre">SBModule.FindCompileUnits()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindFirstGlobalVariable"><code class="docutils literal notranslate"><span class="pre">SBModule.FindFirstGlobalVariable()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindFirstType"><code class="docutils literal notranslate"><span class="pre">SBModule.FindFirstType()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindFunctions"><code class="docutils literal notranslate"><span class="pre">SBModule.FindFunctions()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindGlobalVariables"><code class="docutils literal notranslate"><span class="pre">SBModule.FindGlobalVariables()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindSection"><code class="docutils literal notranslate"><span class="pre">SBModule.FindSection()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindSymbol"><code class="docutils literal notranslate"><span class="pre">SBModule.FindSymbol()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindSymbols"><code class="docutils literal notranslate"><span class="pre">SBModule.FindSymbols()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.FindTypes"><code class="docutils literal notranslate"><span class="pre">SBModule.FindTypes()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GarbageCollectAllocatedModules"><code class="docutils literal notranslate"><span class="pre">SBModule.GarbageCollectAllocatedModules()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetAddressByteSize"><code class="docutils literal notranslate"><span class="pre">SBModule.GetAddressByteSize()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetBasicType"><code class="docutils literal notranslate"><span class="pre">SBModule.GetBasicType()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetByteOrder"><code class="docutils literal notranslate"><span class="pre">SBModule.GetByteOrder()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetCompileUnitAtIndex"><code class="docutils literal notranslate"><span class="pre">SBModule.GetCompileUnitAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetDescription"><code class="docutils literal notranslate"><span class="pre">SBModule.GetDescription()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetFileSpec"><code class="docutils literal notranslate"><span class="pre">SBModule.GetFileSpec()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetNumCompileUnits"><code class="docutils literal notranslate"><span class="pre">SBModule.GetNumCompileUnits()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetNumSections"><code class="docutils literal notranslate"><span class="pre">SBModule.GetNumSections()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetNumSymbols"><code class="docutils literal notranslate"><span class="pre">SBModule.GetNumSymbols()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetNumberAllocatedModules"><code class="docutils literal notranslate"><span class="pre">SBModule.GetNumberAllocatedModules()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetObjectFileEntryPointAddress"><code class="docutils literal notranslate"><span class="pre">SBModule.GetObjectFileEntryPointAddress()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetObjectFileHeaderAddress"><code class="docutils literal notranslate"><span class="pre">SBModule.GetObjectFileHeaderAddress()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetObjectName"><code class="docutils literal notranslate"><span class="pre">SBModule.GetObjectName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetPlatformFileSpec"><code class="docutils literal notranslate"><span class="pre">SBModule.GetPlatformFileSpec()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetRemoteInstallFileSpec"><code class="docutils literal notranslate"><span class="pre">SBModule.GetRemoteInstallFileSpec()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetSectionAtIndex"><code class="docutils literal notranslate"><span class="pre">SBModule.GetSectionAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetSymbolAtIndex"><code class="docutils literal notranslate"><span class="pre">SBModule.GetSymbolAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetSymbolFileSpec"><code class="docutils literal notranslate"><span class="pre">SBModule.GetSymbolFileSpec()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetTriple"><code class="docutils literal notranslate"><span class="pre">SBModule.GetTriple()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetTypeByID"><code class="docutils literal notranslate"><span class="pre">SBModule.GetTypeByID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetTypes"><code class="docutils literal notranslate"><span class="pre">SBModule.GetTypes()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetUUIDBytes"><code class="docutils literal notranslate"><span class="pre">SBModule.GetUUIDBytes()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetUUIDString"><code class="docutils literal notranslate"><span class="pre">SBModule.GetUUIDString()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.GetVersion"><code class="docutils literal notranslate"><span class="pre">SBModule.GetVersion()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.IsFileBacked"><code class="docutils literal notranslate"><span class="pre">SBModule.IsFileBacked()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.IsValid"><code class="docutils literal notranslate"><span class="pre">SBModule.IsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.ResolveFileAddress"><code class="docutils literal notranslate"><span class="pre">SBModule.ResolveFileAddress()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.ResolveSymbolContextForAddress"><code class="docutils literal notranslate"><span class="pre">SBModule.ResolveSymbolContextForAddress()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.SetPlatformFileSpec"><code class="docutils literal notranslate"><span class="pre">SBModule.SetPlatformFileSpec()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.SetRemoteInstallFileSpec"><code class="docutils literal notranslate"><span class="pre">SBModule.SetRemoteInstallFileSpec()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.compile_unit_iter"><code class="docutils literal notranslate"><span class="pre">SBModule.compile_unit_iter()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.get_compile_units_access_object"><code class="docutils literal notranslate"><span class="pre">SBModule.get_compile_units_access_object()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.get_compile_units_array"><code class="docutils literal notranslate"><span class="pre">SBModule.get_compile_units_array()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.get_sections_access_object"><code class="docutils literal notranslate"><span class="pre">SBModule.get_sections_access_object()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.get_sections_array"><code class="docutils literal notranslate"><span class="pre">SBModule.get_sections_array()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.get_symbols_access_object"><code class="docutils literal notranslate"><span class="pre">SBModule.get_symbols_access_object()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.get_symbols_array"><code class="docutils literal notranslate"><span class="pre">SBModule.get_symbols_array()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.get_uuid"><code class="docutils literal notranslate"><span class="pre">SBModule.get_uuid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.section_iter"><code class="docutils literal notranslate"><span class="pre">SBModule.section_iter()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBModule.symbol_in_section_iter"><code class="docutils literal notranslate"><span class="pre">SBModule.symbol_in_section_iter()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

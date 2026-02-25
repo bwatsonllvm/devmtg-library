@@ -1,0 +1,799 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="SBFile" href="lldb.SBFile.html" /><link rel="prev" title="SBExecutionContext" href="lldb.SBExecutionContext.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>SBExpressionOptions - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../use/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/lldbdap.html">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../use/python-reference.html">Python Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/writing-custom-commands.html">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python_api.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAttachInfo.html">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDebugger.html">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrame.html">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModule.html">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThread.html">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <!-- Python API docs are generated. --><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="sbexpressionoptions">
+<h1>SBExpressionOptions<a class="headerlink" href="#sbexpressionoptions" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lldb.</span></span><span class="sig-name descname"><span class="pre">SBExpressionOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions" title="Link to this definition">#</a></dt>
+<dd><p>A container for options to use when evaluating expressions.</p>
+<p class="rubric">Methods Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetAllowJIT" title="lldb.SBExpressionOptions.GetAllowJIT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetAllowJIT</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p>Gets whether to JIT an expression if it cannot be interpreted.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetAutoApplyFixIts" title="lldb.SBExpressionOptions.GetAutoApplyFixIts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetAutoApplyFixIts</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p>Gets whether to auto-apply fix-it hints to an expression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetBooleanLanguageOption" title="lldb.SBExpressionOptions.GetBooleanLanguageOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetBooleanLanguageOption</span></code></a>(...)</p></td>
+<td><p>Gets language-plugin specific boolean option for expression evaluation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetCoerceResultToId" title="lldb.SBExpressionOptions.GetCoerceResultToId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCoerceResultToId</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetFetchDynamicValue" title="lldb.SBExpressionOptions.GetFetchDynamicValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFetchDynamicValue</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetGenerateDebugInfo" title="lldb.SBExpressionOptions.GetGenerateDebugInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetGenerateDebugInfo</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetIgnoreBreakpoints" title="lldb.SBExpressionOptions.GetIgnoreBreakpoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetIgnoreBreakpoints</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetOneThreadTimeoutInMicroSeconds" title="lldb.SBExpressionOptions.GetOneThreadTimeoutInMicroSeconds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetOneThreadTimeoutInMicroSeconds</span></code></a>(...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetPrefix" title="lldb.SBExpressionOptions.GetPrefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetPrefix</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p>Gets the prefix to use for this expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetRetriesWithFixIts" title="lldb.SBExpressionOptions.GetRetriesWithFixIts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetRetriesWithFixIts</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p>Gets how often LLDB will retry applying fix-its to an expression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetStopOthers" title="lldb.SBExpressionOptions.GetStopOthers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopOthers</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetSuppressPersistentResult" title="lldb.SBExpressionOptions.GetSuppressPersistentResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSuppressPersistentResult</span></code></a>(...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetTimeoutInMicroSeconds" title="lldb.SBExpressionOptions.GetTimeoutInMicroSeconds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTimeoutInMicroSeconds</span></code></a>(...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetTopLevel" title="lldb.SBExpressionOptions.GetTopLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTopLevel</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetTrapExceptions" title="lldb.SBExpressionOptions.GetTrapExceptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTrapExceptions</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetTryAllThreads" title="lldb.SBExpressionOptions.GetTryAllThreads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetTryAllThreads</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.GetUnwindOnError" title="lldb.SBExpressionOptions.GetUnwindOnError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetUnwindOnError</span></code></a>(SBExpressionOptions self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetAllowJIT" title="lldb.SBExpressionOptions.SetAllowJIT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetAllowJIT</span></code></a>(SBExpressionOptions self, bool allow)</p></td>
+<td><p>Sets whether to JIT an expression if it cannot be interpreted.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetAutoApplyFixIts" title="lldb.SBExpressionOptions.SetAutoApplyFixIts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetAutoApplyFixIts</span></code></a>(SBExpressionOptions self, ...)</p></td>
+<td><p>Sets whether to auto-apply fix-it hints to the expression being evaluated.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetBooleanLanguageOption" title="lldb.SBExpressionOptions.SetBooleanLanguageOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetBooleanLanguageOption</span></code></a>(...)</p></td>
+<td><p>Sets language-plugin specific boolean option for expression evaluation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetCoerceResultToId" title="lldb.SBExpressionOptions.SetCoerceResultToId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetCoerceResultToId</span></code></a>(...)</p></td>
+<td><p>Sets whether to coerce the expression result to ObjC id type after evaluation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetFetchDynamicValue" title="lldb.SBExpressionOptions.SetFetchDynamicValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetFetchDynamicValue</span></code></a>(...)</p></td>
+<td><p>Sets whether to cast the expression result to its dynamic type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetGenerateDebugInfo" title="lldb.SBExpressionOptions.SetGenerateDebugInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetGenerateDebugInfo</span></code></a>(...)</p></td>
+<td><p>Sets whether to generate debug information for the expression and also controls if a SBModule is generated.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetIgnoreBreakpoints" title="lldb.SBExpressionOptions.SetIgnoreBreakpoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetIgnoreBreakpoints</span></code></a>(...)</p></td>
+<td><p>Sets whether to ignore breakpoint hits while running expressions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetLanguage" title="lldb.SBExpressionOptions.SetLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetLanguage</span></code></a>()</p></td>
+<td><p>Sets the language that LLDB should assume the expression is written in</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetOneThreadTimeoutInMicroSeconds" title="lldb.SBExpressionOptions.SetOneThreadTimeoutInMicroSeconds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetOneThreadTimeoutInMicroSeconds</span></code></a>(...)</p></td>
+<td><p>Sets the timeout in microseconds to run the expression on one thread before either timing out or trying all threads.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetPrefix" title="lldb.SBExpressionOptions.SetPrefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetPrefix</span></code></a>(SBExpressionOptions self, ...)</p></td>
+<td><p>Sets the prefix to use for this expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetRetriesWithFixIts" title="lldb.SBExpressionOptions.SetRetriesWithFixIts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetRetriesWithFixIts</span></code></a>(...)</p></td>
+<td><p>Sets how often LLDB should retry applying fix-its to an expression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetStopOthers" title="lldb.SBExpressionOptions.SetStopOthers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetStopOthers</span></code></a>(SBExpressionOptions self, ...)</p></td>
+<td><p>Sets whether to stop other threads at all while running expressions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetSuppressPersistentResult" title="lldb.SBExpressionOptions.SetSuppressPersistentResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetSuppressPersistentResult</span></code></a>(...)</p></td>
+<td><p>Sets whether to produce a persistent result that can be used in future expressions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetTimeoutInMicroSeconds" title="lldb.SBExpressionOptions.SetTimeoutInMicroSeconds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetTimeoutInMicroSeconds</span></code></a>(...)</p></td>
+<td><p>Sets the timeout in microseconds to run the expression for.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetTopLevel" title="lldb.SBExpressionOptions.SetTopLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetTopLevel</span></code></a>(SBExpressionOptions self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetTrapExceptions" title="lldb.SBExpressionOptions.SetTrapExceptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetTrapExceptions</span></code></a>(SBExpressionOptions self, ...)</p></td>
+<td><p>Sets whether to abort expression evaluation if an exception is thrown while executing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetTryAllThreads" title="lldb.SBExpressionOptions.SetTryAllThreads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetTryAllThreads</span></code></a>(SBExpressionOptions self, ...)</p></td>
+<td><p>Sets whether to run all threads if the expression does not complete on one thread.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBExpressionOptions.SetUnwindOnError" title="lldb.SBExpressionOptions.SetUnwindOnError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetUnwindOnError</span></code></a>(SBExpressionOptions self, ...)</p></td>
+<td><p>Sets whether to unwind the expression stack on error.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetAllowJIT">
+<span class="sig-name descname"><span class="pre">GetAllowJIT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetAllowJIT" title="Link to this definition">#</a></dt>
+<dd><p>Gets whether to JIT an expression if it cannot be interpreted.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetAutoApplyFixIts">
+<span class="sig-name descname"><span class="pre">GetAutoApplyFixIts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetAutoApplyFixIts" title="Link to this definition">#</a></dt>
+<dd><p>Gets whether to auto-apply fix-it hints to an expression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetBooleanLanguageOption">
+<span class="sig-name descname"><span class="pre">GetBooleanLanguageOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">option_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetBooleanLanguageOption" title="Link to this definition">#</a></dt>
+<dd><p>Gets language-plugin specific boolean option for expression evaluation. LLDB currently doesn’t validate whether the option being retrieved is one that is understood by the expression evaluator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetCoerceResultToId">
+<span class="sig-name descname"><span class="pre">GetCoerceResultToId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetCoerceResultToId" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetFetchDynamicValue">
+<span class="sig-name descname"><span class="pre">GetFetchDynamicValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::DynamicValueType</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetFetchDynamicValue" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetGenerateDebugInfo">
+<span class="sig-name descname"><span class="pre">GetGenerateDebugInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetGenerateDebugInfo" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetIgnoreBreakpoints">
+<span class="sig-name descname"><span class="pre">GetIgnoreBreakpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetIgnoreBreakpoints" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetOneThreadTimeoutInMicroSeconds">
+<span class="sig-name descname"><span class="pre">GetOneThreadTimeoutInMicroSeconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetOneThreadTimeoutInMicroSeconds" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetPrefix">
+<span class="sig-name descname"><span class="pre">GetPrefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetPrefix" title="Link to this definition">#</a></dt>
+<dd><p>Gets the prefix to use for this expression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetRetriesWithFixIts">
+<span class="sig-name descname"><span class="pre">GetRetriesWithFixIts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint64_t</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetRetriesWithFixIts" title="Link to this definition">#</a></dt>
+<dd><p>Gets how often LLDB will retry applying fix-its to an expression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetStopOthers">
+<span class="sig-name descname"><span class="pre">GetStopOthers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetStopOthers" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetSuppressPersistentResult">
+<span class="sig-name descname"><span class="pre">GetSuppressPersistentResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetSuppressPersistentResult" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetTimeoutInMicroSeconds">
+<span class="sig-name descname"><span class="pre">GetTimeoutInMicroSeconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetTimeoutInMicroSeconds" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetTopLevel">
+<span class="sig-name descname"><span class="pre">GetTopLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetTopLevel" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetTrapExceptions">
+<span class="sig-name descname"><span class="pre">GetTrapExceptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetTrapExceptions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetTryAllThreads">
+<span class="sig-name descname"><span class="pre">GetTryAllThreads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetTryAllThreads" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.GetUnwindOnError">
+<span class="sig-name descname"><span class="pre">GetUnwindOnError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.GetUnwindOnError" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetAllowJIT">
+<span class="sig-name descname"><span class="pre">SetAllowJIT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">allow</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetAllowJIT" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to JIT an expression if it cannot be interpreted.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetAutoApplyFixIts">
+<span class="sig-name descname"><span class="pre">SetAutoApplyFixIts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">b=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetAutoApplyFixIts" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to auto-apply fix-it hints to the expression being evaluated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetBooleanLanguageOption">
+<span class="sig-name descname"><span class="pre">SetBooleanLanguageOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">option_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span><a class="headerlink" href="#lldb.SBExpressionOptions.SetBooleanLanguageOption" title="Link to this definition">#</a></dt>
+<dd><p>Sets language-plugin specific boolean option for expression evaluation. LLDB currently doesn’t validate whether the option being set is understood by the expression evaluator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetCoerceResultToId">
+<span class="sig-name descname"><span class="pre">SetCoerceResultToId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">coerce=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetCoerceResultToId" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to coerce the expression result to ObjC id type after evaluation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetFetchDynamicValue">
+<span class="sig-name descname"><span class="pre">SetFetchDynamicValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DynamicValueType</span> <span class="pre">dynamic=eDynamicCanRunTarget</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetFetchDynamicValue" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to cast the expression result to its dynamic type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetGenerateDebugInfo">
+<span class="sig-name descname"><span class="pre">SetGenerateDebugInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">b=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetGenerateDebugInfo" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to generate debug information for the expression and also controls if a SBModule is generated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetIgnoreBreakpoints">
+<span class="sig-name descname"><span class="pre">SetIgnoreBreakpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">ignore=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetIgnoreBreakpoints" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to ignore breakpoint hits while running expressions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetLanguage">
+<span class="sig-name descname"><span class="pre">SetLanguage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::LanguageType</span> <span class="pre">language</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetLanguage" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">SetLanguage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::SBSourceLanguageName</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">version</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Sets the language that LLDB should assume the expression is written in</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetOneThreadTimeoutInMicroSeconds">
+<span class="sig-name descname"><span class="pre">SetOneThreadTimeoutInMicroSeconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">timeout=0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetOneThreadTimeoutInMicroSeconds" title="Link to this definition">#</a></dt>
+<dd><p>Sets the timeout in microseconds to run the expression on one thread before either timing out or trying all threads.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetPrefix">
+<span class="sig-name descname"><span class="pre">SetPrefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetPrefix" title="Link to this definition">#</a></dt>
+<dd><p>Sets the prefix to use for this expression. This prefix gets inserted after the ‘target.expr-prefix’ prefix contents, but before the wrapped expression function body.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetRetriesWithFixIts">
+<span class="sig-name descname"><span class="pre">SetRetriesWithFixIts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint64_t</span> <span class="pre">retries</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetRetriesWithFixIts" title="Link to this definition">#</a></dt>
+<dd><p>Sets how often LLDB should retry applying fix-its to an expression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetStopOthers">
+<span class="sig-name descname"><span class="pre">SetStopOthers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">stop_others=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetStopOthers" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to stop other threads at all while running expressions.  If false, TryAllThreads does nothing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetSuppressPersistentResult">
+<span class="sig-name descname"><span class="pre">SetSuppressPersistentResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">b=False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetSuppressPersistentResult" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to produce a persistent result that can be used in future expressions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetTimeoutInMicroSeconds">
+<span class="sig-name descname"><span class="pre">SetTimeoutInMicroSeconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">timeout=0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetTimeoutInMicroSeconds" title="Link to this definition">#</a></dt>
+<dd><p>Sets the timeout in microseconds to run the expression for. If try all threads is set to true and the expression doesn’t complete within the specified timeout, all threads will be resumed for the same timeout to see if the expression will finish.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetTopLevel">
+<span class="sig-name descname"><span class="pre">SetTopLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">b=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetTopLevel" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetTrapExceptions">
+<span class="sig-name descname"><span class="pre">SetTrapExceptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">trap_exceptions=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetTrapExceptions" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to abort expression evaluation if an exception is thrown while executing.  Don’t set this to false unless you know the function you are calling traps all exceptions itself.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetTryAllThreads">
+<span class="sig-name descname"><span class="pre">SetTryAllThreads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">run_others=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetTryAllThreads" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to run all threads if the expression does not complete on one thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBExpressionOptions.SetUnwindOnError">
+<span class="sig-name descname"><span class="pre">SetUnwindOnError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">unwind=True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBExpressionOptions.SetUnwindOnError" title="Link to this definition">#</a></dt>
+<dd><p>Sets whether to unwind the expression stack on error.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lldb.SBFile.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">SBFile</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lldb.SBExecutionContext.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">SBExecutionContext</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SBExpressionOptions</a><ul>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions</span></code></a><ul>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetAllowJIT"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetAllowJIT()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetAutoApplyFixIts"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetAutoApplyFixIts()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetBooleanLanguageOption"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetBooleanLanguageOption()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetCoerceResultToId"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetCoerceResultToId()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetFetchDynamicValue"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetFetchDynamicValue()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetGenerateDebugInfo"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetGenerateDebugInfo()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetIgnoreBreakpoints"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetIgnoreBreakpoints()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetOneThreadTimeoutInMicroSeconds"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetOneThreadTimeoutInMicroSeconds()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetPrefix"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetPrefix()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetRetriesWithFixIts"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetRetriesWithFixIts()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetStopOthers"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetStopOthers()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetSuppressPersistentResult"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetSuppressPersistentResult()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetTimeoutInMicroSeconds"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetTimeoutInMicroSeconds()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetTopLevel"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetTopLevel()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetTrapExceptions"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetTrapExceptions()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetTryAllThreads"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetTryAllThreads()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.GetUnwindOnError"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.GetUnwindOnError()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetAllowJIT"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetAllowJIT()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetAutoApplyFixIts"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetAutoApplyFixIts()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetBooleanLanguageOption"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetBooleanLanguageOption()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetCoerceResultToId"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetCoerceResultToId()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetFetchDynamicValue"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetFetchDynamicValue()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetGenerateDebugInfo"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetGenerateDebugInfo()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetIgnoreBreakpoints"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetIgnoreBreakpoints()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetLanguage"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetOneThreadTimeoutInMicroSeconds"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetOneThreadTimeoutInMicroSeconds()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetPrefix"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetPrefix()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetRetriesWithFixIts"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetRetriesWithFixIts()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetStopOthers"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetStopOthers()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetSuppressPersistentResult"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetSuppressPersistentResult()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetTimeoutInMicroSeconds"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetTimeoutInMicroSeconds()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetTopLevel"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetTopLevel()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetTrapExceptions"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetTrapExceptions()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetTryAllThreads"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetTryAllThreads()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBExpressionOptions.SetUnwindOnError"><code class="docutils literal notranslate"><span class="pre">SBExpressionOptions.SetUnwindOnError()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

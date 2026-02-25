@@ -1,0 +1,1310 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="SBFrameList" href="lldb.SBFrameList.html" /><link rel="prev" title="SBFormat" href="lldb.SBFormat.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>SBFrame - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../use/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/lldbdap.html">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../use/python-reference.html">Python Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/writing-custom-commands.html">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python_api.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAttachInfo.html">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDebugger.html">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExpressionOptions.html">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModule.html">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThread.html">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <!-- Python API docs are generated. --><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="sbframe">
+<h1>SBFrame<a class="headerlink" href="#sbframe" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lldb.SBFrame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lldb.</span></span><span class="sig-name descname"><span class="pre">SBFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame" title="Link to this definition">#</a></dt>
+<dd><p>Represents one of the stack frames associated with a thread.</p>
+<p>SBThread contains SBFrame(s). For example (from test/lldbutil.py),</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_stacktrace</span><span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">string_buffer</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Prints a simple stack trace of this thread.&#39;&#39;&#39;</span>
+
+    <span class="o">...</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">thread</span><span class="o">.</span><span class="n">GetFrameAtIndex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">GetFunction</span><span class="p">()</span>
+
+        <span class="n">load_addr</span> <span class="o">=</span> <span class="n">addrs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">GetLoadAddress</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">function</span><span class="p">:</span>
+            <span class="n">file_addr</span> <span class="o">=</span> <span class="n">addrs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">GetFileAddress</span><span class="p">()</span>
+            <span class="n">start_addr</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">GetSymbol</span><span class="p">()</span><span class="o">.</span><span class="n">GetStartAddress</span><span class="p">()</span><span class="o">.</span><span class="n">GetFileAddress</span><span class="p">()</span>
+            <span class="n">symbol_offset</span> <span class="o">=</span> <span class="n">file_addr</span> <span class="o">-</span> <span class="n">start_addr</span>
+            <span class="nb">print</span> <span class="o">&gt;&gt;</span> <span class="n">output</span><span class="p">,</span> <span class="s1">&#39;  frame #</span><span class="si">{num}</span><span class="s1">: </span><span class="si">{addr:#016x}</span><span class="s1"> </span><span class="si">{mod}</span><span class="s1">`</span><span class="si">{symbol}</span><span class="s1"> + </span><span class="si">{offset}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">num</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">addr</span><span class="o">=</span><span class="n">load_addr</span><span class="p">,</span> <span class="n">mod</span><span class="o">=</span><span class="n">mods</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">symbol</span><span class="o">=</span><span class="n">symbols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">offset</span><span class="o">=</span><span class="n">symbol_offset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="o">&gt;&gt;</span> <span class="n">output</span><span class="p">,</span> <span class="s1">&#39;  frame #</span><span class="si">{num}</span><span class="s1">: </span><span class="si">{addr:#016x}</span><span class="s1"> </span><span class="si">{mod}</span><span class="s1">`</span><span class="si">{func}</span><span class="s1"> at </span><span class="si">{file}</span><span class="s1">:</span><span class="si">{line}</span><span class="s1"> </span><span class="si">{args}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">num</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">addr</span><span class="o">=</span><span class="n">load_addr</span><span class="p">,</span> <span class="n">mod</span><span class="o">=</span><span class="n">mods</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">func</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> [inlined]&#39;</span> <span class="o">%</span> <span class="n">funcs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">IsInlined</span><span class="p">()</span> <span class="k">else</span> <span class="n">funcs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">files</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">line</span><span class="o">=</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">args</span><span class="o">=</span><span class="n">get_args_as_string</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">showFuncName</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">IsInlined</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;()&#39;</span><span class="p">)</span>
+
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>And,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">thread</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">frame</span>
+</pre></div>
+</div>
+<p>See also SBThread.</p>
+<p class="rubric">Attributes Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.addr" title="lldb.SBFrame.addr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addr</span></code></a></p></td>
+<td><p>A read only property that returns the program counter (PC) as a section offset address (lldb.SBAddress).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.args" title="lldb.SBFrame.args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">args</span></code></a></p></td>
+<td><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the argument variables in this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.arguments" title="lldb.SBFrame.arguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">arguments</span></code></a></p></td>
+<td><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the argument variables in this stack frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.block" title="lldb.SBFrame.block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">block</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the block (lldb.SBBlock) for this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.child" title="lldb.SBFrame.child"><code class="xref py py-obj docutils literal notranslate"><span class="pre">child</span></code></a></p></td>
+<td><p>A read only property that returns the child (callee) frame of the current frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.compile_unit" title="lldb.SBFrame.compile_unit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_unit</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the compile unit (lldb.SBCompileUnit) for this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.disassembly" title="lldb.SBFrame.disassembly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disassembly</span></code></a></p></td>
+<td><p>A read only property that returns the disassembly for this stack frame as a python string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.fp" title="lldb.SBFrame.fp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fp</span></code></a></p></td>
+<td><p>A read only property that returns the frame pointer (FP) as an unsigned integer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.function" title="lldb.SBFrame.function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">function</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the function (lldb.SBFunction) for this stack frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.idx" title="lldb.SBFrame.idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">idx</span></code></a></p></td>
+<td><p>A read only property that returns the zero based stack frame index.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.is_inlined" title="lldb.SBFrame.is_inlined"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_inlined</span></code></a></p></td>
+<td><p>A read only property that returns an boolean that indicates if the block frame is an inlined function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.line_entry" title="lldb.SBFrame.line_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line_entry</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the line table entry (lldb.SBLineEntry) for this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.locals" title="lldb.SBFrame.locals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">locals</span></code></a></p></td>
+<td><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the local variables in this stack frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.module" title="lldb.SBFrame.module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">module</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the module (lldb.SBModule) for this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.name" title="lldb.SBFrame.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>A read only property that retuns the name for the function that this frame represents.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.parent" title="lldb.SBFrame.parent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parent</span></code></a></p></td>
+<td><p>A read only property that returns the parent (caller) frame of the current frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.pc" title="lldb.SBFrame.pc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pc</span></code></a></p></td>
+<td><p>GetPC(SBFrame self) -&gt; lldb::addr_t</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.reg" title="lldb.SBFrame.reg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reg</span></code></a></p></td>
+<td><p>A read only property that returns an helper object providing a flattened indexable view of the CPU registers for this stack frame</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.register" title="lldb.SBFrame.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a></p></td>
+<td><p>A read only property that returns an helper object providing a flattened indexable view of the CPU registers for this stack frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.registers" title="lldb.SBFrame.registers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">registers</span></code></a></p></td>
+<td><p>Returns the register sets for this thread as a list().</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.regs" title="lldb.SBFrame.regs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">regs</span></code></a></p></td>
+<td><p>Returns the register sets for this thread as a list().</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.sp" title="lldb.SBFrame.sp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sp</span></code></a></p></td>
+<td><p>A read only property that returns the stack pointer (SP) as an unsigned integer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.statics" title="lldb.SBFrame.statics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">statics</span></code></a></p></td>
+<td><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the static variables in this stack frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.symbol" title="lldb.SBFrame.symbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">symbol</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the symbol (lldb.SBSymbol) for this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.thread" title="lldb.SBFrame.thread"><code class="xref py py-obj docutils literal notranslate"><span class="pre">thread</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the thread (lldb.SBThread) for this stack frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.variables" title="lldb.SBFrame.variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></a></p></td>
+<td><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the variables in this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.vars" title="lldb.SBFrame.vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vars</span></code></a></p></td>
+<td><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the variables in this stack frame.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.Clear" title="lldb.SBFrame.Clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Clear</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.Disassemble" title="lldb.SBFrame.Disassemble"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Disassemble</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.EvaluateExpression" title="lldb.SBFrame.EvaluateExpression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EvaluateExpression</span></code></a>(...)</p></td>
+<td><p>The version that doesn't supply a 'use_dynamic' value will use the target's default.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.FindRegister" title="lldb.SBFrame.FindRegister"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindRegister</span></code></a>(SBFrame self, char const * name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.FindValue" title="lldb.SBFrame.FindValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindValue</span></code></a>(-&gt; SBValue)</p></td>
+<td><p>Find variables, register sets, registers, or persistent variables using the frame as the scope.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.FindVariable" title="lldb.SBFrame.FindVariable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FindVariable</span></code></a>(-&gt; SBValue)</p></td>
+<td><p>The version that doesn't supply a 'use_dynamic' value will use the target's default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetBlock" title="lldb.SBFrame.GetBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetBlock</span></code></a>(SBFrame self)</p></td>
+<td><p>Gets the deepest block that contains the frame PC.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetCFA" title="lldb.SBFrame.GetCFA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCFA</span></code></a>(SBFrame self)</p></td>
+<td><p>Get the Canonical Frame Address for this stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetCompileUnit" title="lldb.SBFrame.GetCompileUnit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCompileUnit</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetDescription" title="lldb.SBFrame.GetDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDescription</span></code></a>(SBFrame self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetDescriptionWithFormat" title="lldb.SBFrame.GetDescriptionWithFormat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDescriptionWithFormat</span></code></a>(format, output)</p></td>
+<td><p>Similar to <em>GetDescription()</em> but the format of the description can be configured via the <code class="docutils literal notranslate"><span class="pre">format</span></code> parameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetDisplayFunctionName" title="lldb.SBFrame.GetDisplayFunctionName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDisplayFunctionName</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetFP" title="lldb.SBFrame.GetFP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFP</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetFrameBlock" title="lldb.SBFrame.GetFrameBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFrameBlock</span></code></a>(SBFrame self)</p></td>
+<td><p>Gets the lexical block that defines the stack frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetFrameID" title="lldb.SBFrame.GetFrameID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFrameID</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetFunction" title="lldb.SBFrame.GetFunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFunction</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetFunctionName" title="lldb.SBFrame.GetFunctionName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFunctionName</span></code></a>(-&gt; char const)</p></td>
+<td><p>Get the appropriate function name for this frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetLanguageSpecificData" title="lldb.SBFrame.GetLanguageSpecificData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetLanguageSpecificData</span></code></a>()</p></td>
+<td><p>Language plugins can use this API to report language-specific runtime information about this compile unit, such as additional language version details or feature flags.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetLineEntry" title="lldb.SBFrame.GetLineEntry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetLineEntry</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetModule" title="lldb.SBFrame.GetModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetModule</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetPC" title="lldb.SBFrame.GetPC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetPC</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetPCAddress" title="lldb.SBFrame.GetPCAddress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetPCAddress</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetRegisters" title="lldb.SBFrame.GetRegisters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetRegisters</span></code></a>(SBFrame self)</p></td>
+<td><p>Returns an SBValueList which is an array of one or more register sets that exist for this thread.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetSP" title="lldb.SBFrame.GetSP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSP</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetSymbol" title="lldb.SBFrame.GetSymbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSymbol</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetSymbolContext" title="lldb.SBFrame.GetSymbolContext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSymbolContext</span></code></a>(SBFrame self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetThread" title="lldb.SBFrame.GetThread"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetThread</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GetValueForVariablePath" title="lldb.SBFrame.GetValueForVariablePath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetValueForVariablePath</span></code></a>(-&gt; SBValue)</p></td>
+<td><p>Get a lldb.SBValue for a variable path.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.GetVariables" title="lldb.SBFrame.GetVariables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetVariables</span></code></a>(-&gt; SBValueList
+ -&gt; SBValueList)</p></td>
+<td><p>The version that doesn't supply a 'use_dynamic' value will use the target's default.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.GuessLanguage" title="lldb.SBFrame.GuessLanguage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GuessLanguage</span></code></a>(SBFrame self)</p></td>
+<td><p>Returns the language of the frame's SBFunction, or if there.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.IsArtificial" title="lldb.SBFrame.IsArtificial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsArtificial</span></code></a>(-&gt; bool)</p></td>
+<td><p>Return true if this frame is artificial (e.g a frame synthesized to capture a tail call).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.IsEqual" title="lldb.SBFrame.IsEqual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsEqual</span></code></a>(SBFrame self, SBFrame that)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.IsHidden" title="lldb.SBFrame.IsHidden"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsHidden</span></code></a>()</p></td>
+<td><p>Return whether a frame recognizer decided this frame should not be displayes in backtraces etc.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.IsInlined" title="lldb.SBFrame.IsInlined"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsInlined</span></code></a>(-&gt; bool)</p></td>
+<td><p>Return true if this frame represents an inlined function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.IsSynthetic" title="lldb.SBFrame.IsSynthetic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsSynthetic</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.IsValid" title="lldb.SBFrame.IsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsValid</span></code></a>(SBFrame self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.SetPC" title="lldb.SBFrame.SetPC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetPC</span></code></a>(SBFrame self, lldb)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.get_all_variables" title="lldb.SBFrame.get_all_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_variables</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.get_arguments" title="lldb.SBFrame.get_arguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_arguments</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.get_child_frame" title="lldb.SBFrame.get_child_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_child_frame</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.get_locals" title="lldb.SBFrame.get_locals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_locals</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.get_parent_frame" title="lldb.SBFrame.get_parent_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_parent_frame</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.get_registers_access" title="lldb.SBFrame.get_registers_access"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_registers_access</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBFrame.get_statics" title="lldb.SBFrame.get_statics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_statics</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBFrame.var" title="lldb.SBFrame.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>(var_expr_path)</p></td>
+<td><p>Calls through to lldb.SBFrame.GetValueForVariablePath() and returns a value that represents the variable expression path</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.addr">
+<span class="sig-name descname"><span class="pre">addr</span></span><a class="headerlink" href="#lldb.SBFrame.addr" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the program counter (PC) as a section offset address (lldb.SBAddress).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#lldb.SBFrame.args" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the argument variables in this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.arguments">
+<span class="sig-name descname"><span class="pre">arguments</span></span><a class="headerlink" href="#lldb.SBFrame.arguments" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the argument variables in this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.block">
+<span class="sig-name descname"><span class="pre">block</span></span><a class="headerlink" href="#lldb.SBFrame.block" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the block (lldb.SBBlock) for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.child">
+<span class="sig-name descname"><span class="pre">child</span></span><a class="headerlink" href="#lldb.SBFrame.child" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the child (callee) frame of the current frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.compile_unit">
+<span class="sig-name descname"><span class="pre">compile_unit</span></span><a class="headerlink" href="#lldb.SBFrame.compile_unit" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the compile unit (lldb.SBCompileUnit) for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.disassembly">
+<span class="sig-name descname"><span class="pre">disassembly</span></span><a class="headerlink" href="#lldb.SBFrame.disassembly" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the disassembly for this stack frame as a python string.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.fp">
+<span class="sig-name descname"><span class="pre">fp</span></span><a class="headerlink" href="#lldb.SBFrame.fp" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the frame pointer (FP) as an unsigned integer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.function">
+<span class="sig-name descname"><span class="pre">function</span></span><a class="headerlink" href="#lldb.SBFrame.function" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the function (lldb.SBFunction) for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.idx">
+<span class="sig-name descname"><span class="pre">idx</span></span><a class="headerlink" href="#lldb.SBFrame.idx" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the zero based stack frame index.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.is_inlined">
+<span class="sig-name descname"><span class="pre">is_inlined</span></span><a class="headerlink" href="#lldb.SBFrame.is_inlined" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an boolean that indicates if the block frame is an inlined function.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.line_entry">
+<span class="sig-name descname"><span class="pre">line_entry</span></span><a class="headerlink" href="#lldb.SBFrame.line_entry" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the line table entry (lldb.SBLineEntry) for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.locals">
+<span class="sig-name descname"><span class="pre">locals</span></span><a class="headerlink" href="#lldb.SBFrame.locals" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the local variables in this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.module">
+<span class="sig-name descname"><span class="pre">module</span></span><a class="headerlink" href="#lldb.SBFrame.module" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the module (lldb.SBModule) for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#lldb.SBFrame.name" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that retuns the name for the function that this frame represents. Inlined stack frame might have a concrete function that differs from the name of the inlined function (a named lldb.SBBlock).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#lldb.SBFrame.parent" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the parent (caller) frame of the current frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.pc">
+<span class="sig-name descname"><span class="pre">pc</span></span><a class="headerlink" href="#lldb.SBFrame.pc" title="Link to this definition">#</a></dt>
+<dd><p>GetPC(SBFrame self) -&gt; lldb::addr_t</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.reg">
+<span class="sig-name descname"><span class="pre">reg</span></span><a class="headerlink" href="#lldb.SBFrame.reg" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an helper object providing a flattened indexable view of the CPU registers for this stack frame</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.register">
+<span class="sig-name descname"><span class="pre">register</span></span><a class="headerlink" href="#lldb.SBFrame.register" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an helper object providing a flattened indexable view of the CPU registers for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.registers">
+<span class="sig-name descname"><span class="pre">registers</span></span><a class="headerlink" href="#lldb.SBFrame.registers" title="Link to this definition">#</a></dt>
+<dd><p>Returns the register sets for this thread as a list().  See SBFrame::GetRegisters() for details.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.regs">
+<span class="sig-name descname"><span class="pre">regs</span></span><a class="headerlink" href="#lldb.SBFrame.regs" title="Link to this definition">#</a></dt>
+<dd><p>Returns the register sets for this thread as a list().  See SBFrame::GetRegisters() for details.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.sp">
+<span class="sig-name descname"><span class="pre">sp</span></span><a class="headerlink" href="#lldb.SBFrame.sp" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the stack pointer (SP) as an unsigned integer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.statics">
+<span class="sig-name descname"><span class="pre">statics</span></span><a class="headerlink" href="#lldb.SBFrame.statics" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the static variables in this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.symbol">
+<span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#lldb.SBFrame.symbol" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the symbol (lldb.SBSymbol) for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.thread">
+<span class="sig-name descname"><span class="pre">thread</span></span><a class="headerlink" href="#lldb.SBFrame.thread" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the thread (lldb.SBThread) for this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#lldb.SBFrame.variables" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the variables in this stack frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBFrame.vars">
+<span class="sig-name descname"><span class="pre">vars</span></span><a class="headerlink" href="#lldb.SBFrame.vars" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() that contains a collection of lldb.SBValue objects that represent the variables in this stack frame.</p>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.Clear" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.Disassemble">
+<span class="sig-name descname"><span class="pre">Disassemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBFrame.Disassemble" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.EvaluateExpression">
+<span class="sig-name descname"><span class="pre">EvaluateExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">expr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.EvaluateExpression" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">EvaluateExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DynamicValueType</span> <span class="pre">use_dynamic</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">EvaluateExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DynamicValueType</span> <span class="pre">use_dynamic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">unwind_on_error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">EvaluateExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBExpressionOptions</span> <span class="pre">options</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span></dt>
+<dd><p>The version that doesn’t supply a ‘use_dynamic’ value will use the
+target’s default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.FindRegister">
+<span class="sig-name descname"><span class="pre">FindRegister</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.FindRegister" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.FindValue">
+<span class="sig-name descname"><span class="pre">FindValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::ValueType</span> <span class="pre">value_type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.FindValue" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">FindValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::ValueType</span> <span class="pre">value_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DynamicValueType</span> <span class="pre">use_dynamic</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span></dt>
+<dd><p>Find variables, register sets, registers, or persistent variables using
+the frame as the scope.</p>
+<p>The version that doesn’t supply a <code class="docutils literal notranslate"><span class="pre">use_dynamic</span></code> value will use the
+target’s default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.FindVariable">
+<span class="sig-name descname"><span class="pre">FindVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">var_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.FindVariable" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">FindVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DynamicValueType</span> <span class="pre">use_dynamic</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span></dt>
+<dd><p>The version that doesn’t supply a ‘use_dynamic’ value will use the
+target’s default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetBlock">
+<span class="sig-name descname"><span class="pre">GetBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBBlock.html#lldb.SBBlock" title="lldb.SBBlock"><span class="pre">SBBlock</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetBlock" title="Link to this definition">#</a></dt>
+<dd><p>Gets the deepest block that contains the frame PC.</p>
+<p>See also GetFrameBlock().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetCFA">
+<span class="sig-name descname"><span class="pre">GetCFA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::addr_t</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetCFA" title="Link to this definition">#</a></dt>
+<dd><p>Get the Canonical Frame Address for this stack frame.
+This is the DWARF standard’s definition of a CFA, a stack address
+that remains constant throughout the lifetime of the function.
+Returns an lldb::addr_t stack address, or LLDB_INVALID_ADDRESS if
+the CFA cannot be determined.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetCompileUnit">
+<span class="sig-name descname"><span class="pre">GetCompileUnit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBCompileUnit.html#lldb.SBCompileUnit" title="lldb.SBCompileUnit"><span class="pre">SBCompileUnit</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetCompileUnit" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetDescription">
+<span class="sig-name descname"><span class="pre">GetDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">description</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetDescription" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetDescriptionWithFormat">
+<span class="sig-name descname"><span class="pre">GetDescriptionWithFormat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.GetDescriptionWithFormat" title="Link to this definition">#</a></dt>
+<dd><p>Similar to <em>GetDescription()</em> but the format of the description can be
+configured via the <code class="docutils literal notranslate"><span class="pre">format</span></code> parameter. See
+<a class="reference external" href="https://lldb.llvm.org/use/formatting.html">https://lldb.llvm.org/use/formatting.html</a> for more information on format
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>format</strong> (<a class="reference internal" href="lldb.SBFormat.html#lldb.SBFormat" title="lldb.SBFormat"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFormat</span></code></a>, in) – The format to use for generating the description.</p></li>
+<li><p><strong>output</strong> (<a class="reference internal" href="lldb.SBStream.html#lldb.SBStream" title="lldb.SBStream"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBStream</span></code></a>, out) – The stream where the description will be written to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBError</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An error object with an error message in case of failures.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetDisplayFunctionName">
+<span class="sig-name descname"><span class="pre">GetDisplayFunctionName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetDisplayFunctionName" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetFP">
+<span class="sig-name descname"><span class="pre">GetFP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::addr_t</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetFP" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetFrameBlock">
+<span class="sig-name descname"><span class="pre">GetFrameBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBBlock.html#lldb.SBBlock" title="lldb.SBBlock"><span class="pre">SBBlock</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetFrameBlock" title="Link to this definition">#</a></dt>
+<dd><p>Gets the lexical block that defines the stack frame. Another way to think
+of this is it will return the block that contains all of the variables
+for a stack frame. Inlined functions are represented as SBBlock objects
+that have inlined function information: the name of the inlined function,
+where it was called from. The block that is returned will be the first
+block at or above the block for the PC (SBFrame::GetBlock()) that defines
+the scope of the frame. When a function contains no inlined functions,
+this will be the top most lexical block that defines the function.
+When a function has inlined functions and the PC is currently
+in one of those inlined functions, this method will return the inlined
+block that defines this frame. If the PC isn’t currently in an inlined
+function, the lexical block that defines the function is returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetFrameID">
+<span class="sig-name descname"><span class="pre">GetFrameID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetFrameID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetFunction">
+<span class="sig-name descname"><span class="pre">GetFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFunction.html#lldb.SBFunction" title="lldb.SBFunction"><span class="pre">SBFunction</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetFunction" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetFunctionName">
+<span class="sig-name descname"><span class="pre">GetFunctionName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetFunctionName" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">GetFunctionName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span></dt>
+<dd><p>Get the appropriate function name for this frame. Inlined functions in
+LLDB are represented by Blocks that have inlined function information, so
+just looking at the SBFunction or SBSymbol for a frame isn’t enough.
+This function will return the appropriate function, symbol or inlined
+function name for the frame.</p>
+<p>This function returns:
+- the name of the inlined function (if there is one)
+- the name of the concrete function (if there is one)
+- the name of the symbol (if there is one)
+- NULL</p>
+<p>See also IsInlined().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetLanguageSpecificData">
+<span class="sig-name descname"><span class="pre">GetLanguageSpecificData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.GetLanguageSpecificData" title="Link to this definition">#</a></dt>
+<dd><p>Language plugins can use this API to report language-specific
+runtime information about this compile unit, such as additional
+language version details or feature flags.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetLineEntry">
+<span class="sig-name descname"><span class="pre">GetLineEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBLineEntry.html#lldb.SBLineEntry" title="lldb.SBLineEntry"><span class="pre">SBLineEntry</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetLineEntry" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetModule">
+<span class="sig-name descname"><span class="pre">GetModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBModule.html#lldb.SBModule" title="lldb.SBModule"><span class="pre">SBModule</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetModule" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetPC">
+<span class="sig-name descname"><span class="pre">GetPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::addr_t</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetPC" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetPCAddress">
+<span class="sig-name descname"><span class="pre">GetPCAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBAddress.html#lldb.SBAddress" title="lldb.SBAddress"><span class="pre">SBAddress</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetPCAddress" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetRegisters">
+<span class="sig-name descname"><span class="pre">GetRegisters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValueList.html#lldb.SBValueList" title="lldb.SBValueList"><span class="pre">SBValueList</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetRegisters" title="Link to this definition">#</a></dt>
+<dd><p>Returns an SBValueList which is an array of one or more register
+sets that exist for this thread.
+Each SBValue in the SBValueList represents one register-set.
+The first register-set will be the general purpose registers –
+the registers printed by the <code class="xref any docutils literal notranslate"><span class="pre">register</span> <span class="pre">read</span></code> command-line in lldb, with
+no additional arguments.
+The register-set SBValue will have a name, e.g.
+SBFrame::GetRegisters().GetValueAtIndex(0).GetName()
+By convention, certain stubs choose to name their general-purpose
+register-set the ‘General Purpose Registers’, but that is not required.
+A register-set SBValue will have children, one child per register
+in the register-set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetSP">
+<span class="sig-name descname"><span class="pre">GetSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::addr_t</span></span></span><a class="headerlink" href="#lldb.SBFrame.GetSP" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetSymbol">
+<span class="sig-name descname"><span class="pre">GetSymbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbol.html#lldb.SBSymbol" title="lldb.SBSymbol"><span class="pre">SBSymbol</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetSymbol" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetSymbolContext">
+<span class="sig-name descname"><span class="pre">GetSymbolContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">resolve_scope</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBSymbolContext.html#lldb.SBSymbolContext" title="lldb.SBSymbolContext"><span class="pre">SBSymbolContext</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetSymbolContext" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetThread">
+<span class="sig-name descname"><span class="pre">GetThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBThread.html#lldb.SBThread" title="lldb.SBThread"><span class="pre">SBThread</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetThread" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetValueForVariablePath">
+<span class="sig-name descname"><span class="pre">GetValueForVariablePath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">var_expr_cstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DynamicValueType</span> <span class="pre">use_dynamic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DILMode</span> <span class="pre">mode=eDILModeFull</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetValueForVariablePath" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">GetValueForVariablePath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">var_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DILMode</span> <span class="pre">mode=eDILModeFull</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span></dt>
+<dd><p>Get a lldb.SBValue for a variable path.</p>
+<p>Variable paths can include access to pointer or instance members:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rect_ptr</span><span class="o">-&gt;</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span>
+<span class="n">pt</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+<p>Pointer dereferences:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">foo_ptr</span>
+<span class="o">**</span><span class="n">argv</span>
+</pre></div>
+</div>
+<p>Address of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">pt</span>
+<span class="o">&amp;</span><span class="n">my_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+<p>Array accesses and treating pointers as arrays:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">int_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">pt_ptr</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+<p>Unlike <a class="reference internal" href="#lldb.SBFrame.EvaluateExpression" title="lldb.SBFrame.EvaluateExpression"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">EvaluateExpression()</span></code></a> which returns <a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBValue</span></code></a> objects
+with constant copies of the values at the time of evaluation,
+the result of this function is a value that will continue to
+track the current value of the value as execution progresses
+in the current frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GetVariables">
+<span class="sig-name descname"><span class="pre">GetVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">locals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">statics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">in_scope_only</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValueList.html#lldb.SBValueList" title="lldb.SBValueList"><span class="pre">SBValueList</span></a></span></span><a class="headerlink" href="#lldb.SBFrame.GetVariables" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">GetVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">locals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">statics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">in_scope_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::DynamicValueType</span> <span class="pre">use_dynamic</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValueList.html#lldb.SBValueList" title="lldb.SBValueList"><span class="pre">SBValueList</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">GetVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBVariablesOptions</span> <span class="pre">options</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValueList.html#lldb.SBValueList" title="lldb.SBValueList"><span class="pre">SBValueList</span></a></span></span></dt>
+<dd><p>The version that doesn’t supply a ‘use_dynamic’ value will use the
+target’s default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.GuessLanguage">
+<span class="sig-name descname"><span class="pre">GuessLanguage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::LanguageType</span></span></span><a class="headerlink" href="#lldb.SBFrame.GuessLanguage" title="Link to this definition">#</a></dt>
+<dd><p>Returns the language of the frame’s SBFunction, or if there.
+is no SBFunction, guess the language from the mangled name.
+.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.IsArtificial">
+<span class="sig-name descname"><span class="pre">IsArtificial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBFrame.IsArtificial" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">IsArtificial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span></dt>
+<dd><p>Return true if this frame is artificial (e.g a frame synthesized to
+capture a tail call). Local variables may not be available in an artificial
+frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.IsEqual">
+<span class="sig-name descname"><span class="pre">IsEqual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">that</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBFrame.IsEqual" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.IsHidden">
+<span class="sig-name descname"><span class="pre">IsHidden</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.IsHidden" title="Link to this definition">#</a></dt>
+<dd><p>Return whether a frame recognizer decided this frame should not
+be displayes in backtraces etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.IsInlined">
+<span class="sig-name descname"><span class="pre">IsInlined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBFrame.IsInlined" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">IsInlined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span></dt>
+<dd><p>Return true if this frame represents an inlined function.</p>
+<p>See also GetFunctionName().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.IsSynthetic">
+<span class="sig-name descname"><span class="pre">IsSynthetic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBFrame.IsSynthetic" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.IsValid">
+<span class="sig-name descname"><span class="pre">IsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBFrame.IsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.SetPC">
+<span class="sig-name descname"><span class="pre">SetPC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::addr_t</span> <span class="pre">new_pc</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBFrame.SetPC" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.get_all_variables">
+<span class="sig-name descname"><span class="pre">get_all_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.get_all_variables" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.get_arguments">
+<span class="sig-name descname"><span class="pre">get_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.get_arguments" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.get_child_frame">
+<span class="sig-name descname"><span class="pre">get_child_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.get_child_frame" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.get_locals">
+<span class="sig-name descname"><span class="pre">get_locals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.get_locals" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.get_parent_frame">
+<span class="sig-name descname"><span class="pre">get_parent_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.get_parent_frame" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.get_registers_access">
+<span class="sig-name descname"><span class="pre">get_registers_access</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.get_registers_access" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.get_statics">
+<span class="sig-name descname"><span class="pre">get_statics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.get_statics" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBFrame.var">
+<span class="sig-name descname"><span class="pre">var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_expr_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBFrame.var" title="Link to this definition">#</a></dt>
+<dd><p>Calls through to lldb.SBFrame.GetValueForVariablePath() and returns
+a value that represents the variable expression path</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lldb.SBFrameList.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">SBFrameList</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lldb.SBFormat.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">SBFormat</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SBFrame</a><ul>
+<li><a class="reference internal" href="#lldb.SBFrame"><code class="docutils literal notranslate"><span class="pre">SBFrame</span></code></a><ul>
+<li><a class="reference internal" href="#lldb.SBFrame.addr"><code class="docutils literal notranslate"><span class="pre">SBFrame.addr</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.args"><code class="docutils literal notranslate"><span class="pre">SBFrame.args</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.arguments"><code class="docutils literal notranslate"><span class="pre">SBFrame.arguments</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.block"><code class="docutils literal notranslate"><span class="pre">SBFrame.block</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.child"><code class="docutils literal notranslate"><span class="pre">SBFrame.child</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.compile_unit"><code class="docutils literal notranslate"><span class="pre">SBFrame.compile_unit</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.disassembly"><code class="docutils literal notranslate"><span class="pre">SBFrame.disassembly</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.fp"><code class="docutils literal notranslate"><span class="pre">SBFrame.fp</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.function"><code class="docutils literal notranslate"><span class="pre">SBFrame.function</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.idx"><code class="docutils literal notranslate"><span class="pre">SBFrame.idx</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.is_inlined"><code class="docutils literal notranslate"><span class="pre">SBFrame.is_inlined</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.line_entry"><code class="docutils literal notranslate"><span class="pre">SBFrame.line_entry</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.locals"><code class="docutils literal notranslate"><span class="pre">SBFrame.locals</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.module"><code class="docutils literal notranslate"><span class="pre">SBFrame.module</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.name"><code class="docutils literal notranslate"><span class="pre">SBFrame.name</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.parent"><code class="docutils literal notranslate"><span class="pre">SBFrame.parent</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.pc"><code class="docutils literal notranslate"><span class="pre">SBFrame.pc</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.reg"><code class="docutils literal notranslate"><span class="pre">SBFrame.reg</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.register"><code class="docutils literal notranslate"><span class="pre">SBFrame.register</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.registers"><code class="docutils literal notranslate"><span class="pre">SBFrame.registers</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.regs"><code class="docutils literal notranslate"><span class="pre">SBFrame.regs</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.sp"><code class="docutils literal notranslate"><span class="pre">SBFrame.sp</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.statics"><code class="docutils literal notranslate"><span class="pre">SBFrame.statics</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.symbol"><code class="docutils literal notranslate"><span class="pre">SBFrame.symbol</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.thread"><code class="docutils literal notranslate"><span class="pre">SBFrame.thread</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.variables"><code class="docutils literal notranslate"><span class="pre">SBFrame.variables</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.vars"><code class="docutils literal notranslate"><span class="pre">SBFrame.vars</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.Clear"><code class="docutils literal notranslate"><span class="pre">SBFrame.Clear()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.Disassemble"><code class="docutils literal notranslate"><span class="pre">SBFrame.Disassemble()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.EvaluateExpression"><code class="docutils literal notranslate"><span class="pre">SBFrame.EvaluateExpression()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.FindRegister"><code class="docutils literal notranslate"><span class="pre">SBFrame.FindRegister()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.FindValue"><code class="docutils literal notranslate"><span class="pre">SBFrame.FindValue()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.FindVariable"><code class="docutils literal notranslate"><span class="pre">SBFrame.FindVariable()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetBlock"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetBlock()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetCFA"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetCFA()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetCompileUnit"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetCompileUnit()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetDescription"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetDescription()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetDescriptionWithFormat"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetDescriptionWithFormat()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetDisplayFunctionName"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetDisplayFunctionName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetFP"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetFP()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetFrameBlock"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetFrameBlock()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetFrameID"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetFrameID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetFunction"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetFunction()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetFunctionName"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetFunctionName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetLanguageSpecificData"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetLanguageSpecificData()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetLineEntry"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetLineEntry()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetModule"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetModule()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetPC"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetPC()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetPCAddress"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetPCAddress()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetRegisters"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetRegisters()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetSP"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetSP()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetSymbol"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetSymbol()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetSymbolContext"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetSymbolContext()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetThread"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetThread()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetValueForVariablePath"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetValueForVariablePath()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GetVariables"><code class="docutils literal notranslate"><span class="pre">SBFrame.GetVariables()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.GuessLanguage"><code class="docutils literal notranslate"><span class="pre">SBFrame.GuessLanguage()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.IsArtificial"><code class="docutils literal notranslate"><span class="pre">SBFrame.IsArtificial()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.IsEqual"><code class="docutils literal notranslate"><span class="pre">SBFrame.IsEqual()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.IsHidden"><code class="docutils literal notranslate"><span class="pre">SBFrame.IsHidden()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.IsInlined"><code class="docutils literal notranslate"><span class="pre">SBFrame.IsInlined()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.IsSynthetic"><code class="docutils literal notranslate"><span class="pre">SBFrame.IsSynthetic()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.IsValid"><code class="docutils literal notranslate"><span class="pre">SBFrame.IsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.SetPC"><code class="docutils literal notranslate"><span class="pre">SBFrame.SetPC()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.get_all_variables"><code class="docutils literal notranslate"><span class="pre">SBFrame.get_all_variables()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.get_arguments"><code class="docutils literal notranslate"><span class="pre">SBFrame.get_arguments()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.get_child_frame"><code class="docutils literal notranslate"><span class="pre">SBFrame.get_child_frame()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.get_locals"><code class="docutils literal notranslate"><span class="pre">SBFrame.get_locals()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.get_parent_frame"><code class="docutils literal notranslate"><span class="pre">SBFrame.get_parent_frame()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.get_registers_access"><code class="docutils literal notranslate"><span class="pre">SBFrame.get_registers_access()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.get_statics"><code class="docutils literal notranslate"><span class="pre">SBFrame.get_statics()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBFrame.var"><code class="docutils literal notranslate"><span class="pre">SBFrame.var()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

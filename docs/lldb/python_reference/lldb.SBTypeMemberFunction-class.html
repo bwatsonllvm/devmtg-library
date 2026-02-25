@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lldb.SBTypeMemberFunction</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lldb-module.html">Package&nbsp;lldb</a> ::
+        Class&nbsp;SBTypeMemberFunction
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lldb.SBTypeMemberFunction-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SBTypeMemberFunction</h1><p class="nomargin-top"><span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_lldb_sbt_18" name="uml_class_diagram_for_lldb_sbt_18">
+<area shape="rect" id="node1_21" href="lldb.SBTypeMemberFunction-class.html#__swig_setmethods__" title="lldb.SBTypeMemberFunction.__swig_setmethods__" alt="" coords="17,96,243,116"/>
+<area shape="rect" id="node1_22" href="lldb.SBTypeMemberFunction-class.html#__setattr__" title="lldb.SBTypeMemberFunction.__setattr__" alt="" coords="17,116,243,136"/>
+<area shape="rect" id="node1_23" href="lldb.SBTypeMemberFunction-class.html#__swig_getmethods__" title="lldb.SBTypeMemberFunction.__swig_getmethods__" alt="" coords="17,136,243,156"/>
+<area shape="rect" id="node1_24" href="lldb.SBTypeMemberFunction-class.html#__getattr__" title="lldb.SBTypeMemberFunction.__getattr__" alt="" coords="17,156,243,176"/>
+<area shape="rect" id="node1_25" href="lldb.SBTypeMemberFunction-class.html#__swig_destroy__" title="lldb.SBTypeMemberFunction.__swig_destroy__" alt="" coords="17,176,243,196"/>
+<area shape="rect" id="node1_26" href="lldb.SBTypeMemberFunction-class.html#__del__" title="lldb.SBTypeMemberFunction.__del__" alt="" coords="17,196,243,216"/>
+<area shape="rect" id="node1_27" href="lldb.SBTypeMemberFunction-class.html#__repr__" title="lldb.SBTypeMemberFunction.__repr__" alt="" coords="17,219,243,239"/>
+<area shape="rect" id="node1_28" href="lldb.SBTypeMemberFunction-class.html#__init__" title="__init__(lldb::SBTypeMemberFunction self) &#45;&gt; SBTypeMemberFunction &#160;__init__(lldb::SBTypeMemberFunction self, SBTypeMemberFunction rhs) &#45;&gt; &#160;SBTypeMemberFunction" alt="" coords="17,239,243,259"/>
+<area shape="rect" id="node1_29" href="lldb.SBTypeMemberFunction-class.html#IsValid" title="IsValid(SBTypeMemberFunction self) &#45;&gt; bool" alt="" coords="17,259,243,279"/>
+<area shape="rect" id="node1_30" href="lldb.SBTypeMemberFunction-class.html#__nonzero__" title="lldb.SBTypeMemberFunction.__nonzero__" alt="" coords="17,279,243,299"/>
+<area shape="rect" id="node1_31" href="lldb.SBTypeMemberFunction-class.html#__bool__" title="lldb.SBTypeMemberFunction.__bool__" alt="" coords="17,299,243,319"/>
+<area shape="rect" id="node1_32" href="lldb.SBTypeMemberFunction-class.html#GetName" title="GetName(SBTypeMemberFunction self) &#45;&gt; char const *" alt="" coords="17,319,243,339"/>
+<area shape="rect" id="node1_33" href="lldb.SBTypeMemberFunction-class.html#GetDemangledName" title="GetDemangledName(SBTypeMemberFunction self) &#45;&gt; char const *" alt="" coords="17,339,243,359"/>
+<area shape="rect" id="node1_34" href="lldb.SBTypeMemberFunction-class.html#GetMangledName" title="GetMangledName(SBTypeMemberFunction self) &#45;&gt; char const *" alt="" coords="17,359,243,379"/>
+<area shape="rect" id="node1_35" href="lldb.SBTypeMemberFunction-class.html#GetType" title="GetType(SBTypeMemberFunction self) &#45;&gt; SBType" alt="" coords="17,379,243,399"/>
+<area shape="rect" id="node1_36" href="lldb.SBTypeMemberFunction-class.html#GetReturnType" title="GetReturnType(SBTypeMemberFunction self) &#45;&gt; SBType" alt="" coords="17,399,243,419"/>
+<area shape="rect" id="node1_37" href="lldb.SBTypeMemberFunction-class.html#GetNumberOfArguments" title="GetNumberOfArguments(SBTypeMemberFunction self) &#45;&gt; uint32_t" alt="" coords="17,419,243,439"/>
+<area shape="rect" id="node1_38" href="lldb.SBTypeMemberFunction-class.html#GetArgumentTypeAtIndex" title="GetArgumentTypeAtIndex(SBTypeMemberFunction self, uint32_t arg2) &#45;&gt; SBType" alt="" coords="17,439,243,459"/>
+<area shape="rect" id="node1_39" href="lldb.SBTypeMemberFunction-class.html#GetKind" title="GetKind(SBTypeMemberFunction self) &#45;&gt; lldb::MemberFunctionKind" alt="" coords="17,459,243,479"/>
+<area shape="rect" id="node1_40" href="lldb.SBTypeMemberFunction-class.html#GetDescription" title="GetDescription(SBTypeMemberFunction self, SBStream description, &#160;lldb::DescriptionLevel description_level) &#45;&gt; bool" alt="" coords="17,479,243,499"/>
+<area shape="rect" id="node1_41" href="lldb.SBTypeMemberFunction-class.html#__str__" title="__str__(SBTypeMemberFunction self) &#45;&gt; PyObject *" alt="" coords="17,499,243,519"/>
+<area shape="rect" id="node1" href="lldb.SBTypeMemberFunction-class.html" title="Proxy of C++ lldb::SBTypeMemberFunction class" alt="" coords="5,70,254,525"/>
+<area shape="rect" id="node2" href="lldb._object-class.html" title="lldb._object" alt="" coords="95,5,163,51"/>
+</map>
+  <img src="uml_class_diagram_for_lldb_sbt_18.gif" alt='' usemap="#uml_class_diagram_for_lldb_sbt_18" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Proxy of C++ lldb::SBTypeMemberFunction class</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#_swig_repr">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      __init__(lldb::SBTypeMemberFunction self) -&gt; SBTypeMemberFunction 
+      __init__(lldb::SBTypeMemberFunction self, SBTypeMemberFunction rhs) 
+      -&gt; SBTypeMemberFunction</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsValid"></a><span class="summary-sig-name">IsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsValid(SBTypeMemberFunction self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.IsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__nonzero__"></a><span class="summary-sig-name">__nonzero__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bool__"></a><span class="summary-sig-name">__bool__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetName"></a><span class="summary-sig-name">GetName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetName(SBTypeMemberFunction self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDemangledName"></a><span class="summary-sig-name">GetDemangledName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetDemangledName(SBTypeMemberFunction self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetDemangledName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetMangledName"></a><span class="summary-sig-name">GetMangledName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetMangledName(SBTypeMemberFunction self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetMangledName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetType"></a><span class="summary-sig-name">GetType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetType(SBTypeMemberFunction self) -&gt; SBType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetReturnType"></a><span class="summary-sig-name">GetReturnType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetReturnType(SBTypeMemberFunction self) -&gt; SBType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetReturnType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetNumberOfArguments"></a><span class="summary-sig-name">GetNumberOfArguments</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetNumberOfArguments(SBTypeMemberFunction self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetNumberOfArguments">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetArgumentTypeAtIndex"></a><span class="summary-sig-name">GetArgumentTypeAtIndex</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetArgumentTypeAtIndex(SBTypeMemberFunction self, uint32_t arg2) 
+      -&gt; SBType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetArgumentTypeAtIndex">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetKind"></a><span class="summary-sig-name">GetKind</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetKind(SBTypeMemberFunction self) -&gt; lldb::MemberFunctionKind</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetKind">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDescription"></a><span class="summary-sig-name">GetDescription</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetDescription(SBTypeMemberFunction self, SBStream description, 
+      lldb::DescriptionLevel description_level) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.GetDescription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__str__"></a><span class="summary-sig-name">__str__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      __str__(SBTypeMemberFunction self) -&gt; PyObject *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeMemberFunction.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_setmethods__"></a><span class="summary-name">__swig_setmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__setattr__"></a><span class="summary-name">__setattr__</span> = <code title="lambda self, name, value:">lambda self, name, value:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_getmethods__"></a><span class="summary-name">__swig_getmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__getattr__"></a><span class="summary-name">__getattr__</span> = <code title="lambda self, name:">lambda self, name:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_destroy__"></a><span class="summary-name">__swig_destroy__</span> = <code title="_lldb.delete_SBTypeMemberFunction">_lldb.delete_SBTypeMemberFunction</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__del__"></a><span class="summary-name">__del__</span> = <code title="lambda self:">lambda self:</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Nov  4 00:57:42 2019
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -654,6 +654,51 @@ const DOCUMENTATION_OPTIONS = {
     return `${ACTIVE_DOCS_SOURCE_BASE_URL}${slug}.html`;
   }
 
+  function parseUrlSafe(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return null;
+    try {
+      return new URL(raw, window.location.href);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function mapSourceHrefToMirror(rawHref, rootPath, docsBasePath = ACTIVE_DOCS_BASE_PATH, sourceBaseUrl = ACTIVE_DOCS_SOURCE_BASE_URL) {
+    const hrefUrl = parseUrlSafe(rawHref);
+    const sourceUrl = parseUrlSafe(sourceBaseUrl);
+    if (!hrefUrl || !sourceUrl) return '';
+    if (hrefUrl.origin !== sourceUrl.origin) return '';
+
+    let sourcePrefix = String(sourceUrl.pathname || '/');
+    if (!sourcePrefix.endsWith('/')) sourcePrefix = `${sourcePrefix}/`;
+    if (!hrefUrl.pathname.startsWith(sourcePrefix)) return '';
+
+    const docsBase = String(docsBasePath || 'docs').replace(/^\/+|\/+$/g, '');
+    const relativePath = hrefUrl.pathname.slice(sourcePrefix.length);
+    const mirrorBase = `${rootPath}${docsBase}/`;
+    const mirrorHref = `${mirrorBase}${relativePath}`.replace(/([^:]\/)\/+/g, '$1');
+    return `${mirrorHref}${hrefUrl.search}${hrefUrl.hash}`;
+  }
+
+  function rewriteAbsoluteDocsLinksToMirror(rootPath, docsBasePath = ACTIVE_DOCS_BASE_PATH) {
+    if (!document.body || document.body.dataset.docsAbsoluteLinksRewritten === '1') return;
+    document.body.dataset.docsAbsoluteLinksRewritten = '1';
+
+    const links = document.querySelectorAll('a[href]');
+    links.forEach((link) => {
+      const rawHref = link.getAttribute('href');
+      if (!rawHref || rawHref.startsWith('#')) return;
+      const rewritten = mapSourceHrefToMirror(rawHref, rootPath, docsBasePath);
+      if (!rewritten || rewritten === rawHref) return;
+      link.setAttribute('href', rewritten);
+      if (String(link.target || '').toLowerCase() === '_blank') {
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+      }
+    });
+  }
+
   function formatSyncTimestamp(value) {
     const raw = String(value || '').trim();
     if (!raw) return 'Unknown';
@@ -2840,6 +2885,7 @@ const DOCUMENTATION_OPTIONS = {
   document.addEventListener('DOMContentLoaded', function () {
     if (document.body) document.body.classList.add('library-docs-bridge');
     ensureSphinxLayoutScaffold();
+    rewriteAbsoluteDocsLinksToMirror(rootPath);
     document.documentElement.classList.add('library-docs-bridge-ready');
 
     const existingHeader = document.getElementById('llvm-docs-bridge-header');

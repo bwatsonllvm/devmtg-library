@@ -1,0 +1,826 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="SBBlock" href="lldb.SBBlock.html" /><link rel="prev" title="SBAddressRangeList" href="lldb.SBAddressRangeList.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>SBAttachInfo - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../use/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/lldbdap.html">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../use/python-reference.html">Python Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/writing-custom-commands.html">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python_api.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDebugger.html">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExpressionOptions.html">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrame.html">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModule.html">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThread.html">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <!-- Python API docs are generated. --><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="sbattachinfo">
+<h1>SBAttachInfo<a class="headerlink" href="#sbattachinfo" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lldb.</span></span><span class="sig-name descname"><span class="pre">SBAttachInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo" title="Link to this definition">#</a></dt>
+<dd><p>Describes how to attach when calling <a class="reference internal" href="lldb.SBTarget.html#lldb.SBTarget.Attach" title="lldb.SBTarget.Attach"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBTarget.Attach</span></code></a>.</p>
+<p class="rubric">Methods Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.EffectiveGroupIDIsValid" title="lldb.SBAttachInfo.EffectiveGroupIDIsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveGroupIDIsValid</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.EffectiveUserIDIsValid" title="lldb.SBAttachInfo.EffectiveUserIDIsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveUserIDIsValid</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetEffectiveGroupID" title="lldb.SBAttachInfo.GetEffectiveGroupID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetEffectiveGroupID</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetEffectiveUserID" title="lldb.SBAttachInfo.GetEffectiveUserID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetEffectiveUserID</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetGroupID" title="lldb.SBAttachInfo.GetGroupID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetGroupID</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetIgnoreExisting" title="lldb.SBAttachInfo.GetIgnoreExisting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetIgnoreExisting</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetListener" title="lldb.SBAttachInfo.GetListener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetListener</span></code></a>()</p></td>
+<td><p>Get the listener that will be used to receive process events.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetParentProcessID" title="lldb.SBAttachInfo.GetParentProcessID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetParentProcessID</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetProcessID" title="lldb.SBAttachInfo.GetProcessID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetProcessID</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetProcessPluginName" title="lldb.SBAttachInfo.GetProcessPluginName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetProcessPluginName</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetResumeCount" title="lldb.SBAttachInfo.GetResumeCount"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetResumeCount</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetScriptedProcessClassName" title="lldb.SBAttachInfo.GetScriptedProcessClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetScriptedProcessClassName</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetScriptedProcessDictionary" title="lldb.SBAttachInfo.GetScriptedProcessDictionary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetScriptedProcessDictionary</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetShadowListener" title="lldb.SBAttachInfo.GetShadowListener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetShadowListener</span></code></a>()</p></td>
+<td><p>Get the shadow listener that receive public process events, additionally to the default process event listener.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetUserID" title="lldb.SBAttachInfo.GetUserID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetUserID</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GetWaitForLaunch" title="lldb.SBAttachInfo.GetWaitForLaunch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetWaitForLaunch</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.GroupIDIsValid" title="lldb.SBAttachInfo.GroupIDIsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupIDIsValid</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.ParentProcessIDIsValid" title="lldb.SBAttachInfo.ParentProcessIDIsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ParentProcessIDIsValid</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetEffectiveGroupID" title="lldb.SBAttachInfo.SetEffectiveGroupID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetEffectiveGroupID</span></code></a>(SBAttachInfo self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetEffectiveUserID" title="lldb.SBAttachInfo.SetEffectiveUserID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetEffectiveUserID</span></code></a>(SBAttachInfo self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetExecutable" title="lldb.SBAttachInfo.SetExecutable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetExecutable</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetGroupID" title="lldb.SBAttachInfo.SetGroupID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetGroupID</span></code></a>(SBAttachInfo self, uint32_t gid)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetIgnoreExisting" title="lldb.SBAttachInfo.SetIgnoreExisting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetIgnoreExisting</span></code></a>(SBAttachInfo self, bool b)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetListener" title="lldb.SBAttachInfo.SetListener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetListener</span></code></a>(listener)</p></td>
+<td><p>Set the listener that will be used to receive process events.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetParentProcessID" title="lldb.SBAttachInfo.SetParentProcessID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetParentProcessID</span></code></a>(SBAttachInfo self, lldb)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetProcessID" title="lldb.SBAttachInfo.SetProcessID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetProcessID</span></code></a>(SBAttachInfo self, lldb)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetProcessPluginName" title="lldb.SBAttachInfo.SetProcessPluginName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetProcessPluginName</span></code></a>(SBAttachInfo self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetResumeCount" title="lldb.SBAttachInfo.SetResumeCount"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetResumeCount</span></code></a>(SBAttachInfo self, uint32_t c)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetScriptedProcessClassName" title="lldb.SBAttachInfo.SetScriptedProcessClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetScriptedProcessClassName</span></code></a>(...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetScriptedProcessDictionary" title="lldb.SBAttachInfo.SetScriptedProcessDictionary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetScriptedProcessDictionary</span></code></a>(...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetShadowListener" title="lldb.SBAttachInfo.SetShadowListener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetShadowListener</span></code></a>(listener)</p></td>
+<td><p>Set the shadow listener that will receive public process events, additionally to the default process event listener.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetUserID" title="lldb.SBAttachInfo.SetUserID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetUserID</span></code></a>(SBAttachInfo self, uint32_t uid)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.SetWaitForLaunch" title="lldb.SBAttachInfo.SetWaitForLaunch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetWaitForLaunch</span></code></a>(*args)</p></td>
+<td><p><em>Overload 1:</em> Set attach by process name settings.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBAttachInfo.UserIDIsValid" title="lldb.SBAttachInfo.UserIDIsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UserIDIsValid</span></code></a>(SBAttachInfo self)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.EffectiveGroupIDIsValid">
+<span class="sig-name descname"><span class="pre">EffectiveGroupIDIsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.EffectiveGroupIDIsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.EffectiveUserIDIsValid">
+<span class="sig-name descname"><span class="pre">EffectiveUserIDIsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.EffectiveUserIDIsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetEffectiveGroupID">
+<span class="sig-name descname"><span class="pre">GetEffectiveGroupID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetEffectiveGroupID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetEffectiveUserID">
+<span class="sig-name descname"><span class="pre">GetEffectiveUserID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetEffectiveUserID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetGroupID">
+<span class="sig-name descname"><span class="pre">GetGroupID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetGroupID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetIgnoreExisting">
+<span class="sig-name descname"><span class="pre">GetIgnoreExisting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetIgnoreExisting" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetListener">
+<span class="sig-name descname"><span class="pre">GetListener</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.GetListener" title="Link to this definition">#</a></dt>
+<dd><p>Get the listener that will be used to receive process events.</p>
+<p>If no listener has been set via a call to
+SBAttachInfo::SetListener(), then an invalid SBListener will be
+returned (SBListener::IsValid() will return false). If a listener
+has been set, then the valid listener object will be returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetParentProcessID">
+<span class="sig-name descname"><span class="pre">GetParentProcessID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::pid_t</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetParentProcessID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetProcessID">
+<span class="sig-name descname"><span class="pre">GetProcessID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::pid_t</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetProcessID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetProcessPluginName">
+<span class="sig-name descname"><span class="pre">GetProcessPluginName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetProcessPluginName" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetResumeCount">
+<span class="sig-name descname"><span class="pre">GetResumeCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetResumeCount" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetScriptedProcessClassName">
+<span class="sig-name descname"><span class="pre">GetScriptedProcessClassName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetScriptedProcessClassName" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetScriptedProcessDictionary">
+<span class="sig-name descname"><span class="pre">GetScriptedProcessDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBStructuredData.html#lldb.SBStructuredData" title="lldb.SBStructuredData"><span class="pre">SBStructuredData</span></a></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetScriptedProcessDictionary" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetShadowListener">
+<span class="sig-name descname"><span class="pre">GetShadowListener</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.GetShadowListener" title="Link to this definition">#</a></dt>
+<dd><p>Get the shadow listener that receive public process events,
+additionally to the default process event listener.</p>
+<p>If no listener has been set via a call to
+SBLaunchInfo::SetShadowListener(), then an invalid SBListener will
+be returned (SBListener::IsValid() will return false). If a listener
+has been set, then the valid listener object will be returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetUserID">
+<span class="sig-name descname"><span class="pre">GetUserID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetUserID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GetWaitForLaunch">
+<span class="sig-name descname"><span class="pre">GetWaitForLaunch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GetWaitForLaunch" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.GroupIDIsValid">
+<span class="sig-name descname"><span class="pre">GroupIDIsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.GroupIDIsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.ParentProcessIDIsValid">
+<span class="sig-name descname"><span class="pre">ParentProcessIDIsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.ParentProcessIDIsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetEffectiveGroupID">
+<span class="sig-name descname"><span class="pre">SetEffectiveGroupID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">gid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetEffectiveGroupID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetEffectiveUserID">
+<span class="sig-name descname"><span class="pre">SetEffectiveUserID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">uid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetEffectiveUserID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetExecutable">
+<span class="sig-name descname"><span class="pre">SetExecutable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetExecutable" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">SetExecutable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFileSpec</span> <span class="pre">exe_file</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetGroupID">
+<span class="sig-name descname"><span class="pre">SetGroupID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">gid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetGroupID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetIgnoreExisting">
+<span class="sig-name descname"><span class="pre">SetIgnoreExisting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetIgnoreExisting" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetListener">
+<span class="sig-name descname"><span class="pre">SetListener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetListener" title="Link to this definition">#</a></dt>
+<dd><p>Set the listener that will be used to receive process events.</p>
+<p>By default the SBDebugger, which has a listener, that the SBTarget
+belongs to will listen for the process events. Calling this function
+allows a different listener to be used to listen for process events.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetParentProcessID">
+<span class="sig-name descname"><span class="pre">SetParentProcessID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::pid_t</span> <span class="pre">pid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetParentProcessID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetProcessID">
+<span class="sig-name descname"><span class="pre">SetProcessID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::pid_t</span> <span class="pre">pid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetProcessID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetProcessPluginName">
+<span class="sig-name descname"><span class="pre">SetProcessPluginName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">plugin_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetProcessPluginName" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetResumeCount">
+<span class="sig-name descname"><span class="pre">SetResumeCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetResumeCount" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetScriptedProcessClassName">
+<span class="sig-name descname"><span class="pre">SetScriptedProcessClassName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetScriptedProcessClassName" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetScriptedProcessDictionary">
+<span class="sig-name descname"><span class="pre">SetScriptedProcessDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStructuredData</span> <span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetScriptedProcessDictionary" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetShadowListener">
+<span class="sig-name descname"><span class="pre">SetShadowListener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetShadowListener" title="Link to this definition">#</a></dt>
+<dd><p>Set the shadow listener that will receive public process events,
+additionally to the default process event listener.</p>
+<p>By default a process have no shadow event listener.
+Calling this function allows public process events to be broadcasted to an
+additional listener on top of the default process event listener.
+If the <code class="xref any docutils literal notranslate"><span class="pre">listener</span></code> argument is invalid (SBListener::IsValid() will
+return false), this will clear the shadow listener.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetUserID">
+<span class="sig-name descname"><span class="pre">SetUserID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">uid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetUserID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.SetWaitForLaunch">
+<span class="sig-name descname"><span class="pre">SetWaitForLaunch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBAttachInfo.SetWaitForLaunch" title="Link to this definition">#</a></dt>
+<dd><p><em>Overload 1:</em>
+Set attach by process name settings.</p>
+<p>Designed to be used after a call to SBAttachInfo::SetExecutable().
+This function implies that a call to SBTarget::Attach(…) will
+be synchronous.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>b</strong> (<em>boolean</em><em>, </em><em>in</em>) – If <strong>false</strong>, attach to an existing process whose name matches.
+If <strong>true</strong>, then wait for the next process whose name matches.</p>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><em>Overload 2:</em>
+Set attach by process name settings.</p>
+<p>Designed to be used after a call to SBAttachInfo::SetExecutable().
+Future calls to SBTarget::Attach(…) will be synchronous or
+asynchronous depending on the <em>async</em> argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b</strong> (<em>boolean</em><em>, </em><em>in</em>) – If <strong>false</strong>, attach to an existing process whose name matches.
+If <strong>true</strong>, then wait for the next process whose name matches.</p></li>
+<li><p><strong>async</strong> (<em>boolean</em><em>, </em><em>in</em>) – If <strong>false</strong>, then the SBTarget::Attach(…) call will be a
+synchronous call with no way to cancel the attach in
+progress.
+If <strong>true</strong>, then the SBTarget::Attach(…) function will
+return immediately and clients are expected to wait for a
+process eStateStopped event if a suitable process is
+eventually found. If the client wants to cancel the event,
+SBProcess::Stop() can be called and an eStateExited process
+event will be delivered.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBAttachInfo.UserIDIsValid">
+<span class="sig-name descname"><span class="pre">UserIDIsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBAttachInfo</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBAttachInfo.UserIDIsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lldb.SBBlock.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">SBBlock</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lldb.SBAddressRangeList.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">SBAddressRangeList</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SBAttachInfo</a><ul>
+<li><a class="reference internal" href="#lldb.SBAttachInfo"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo</span></code></a><ul>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.EffectiveGroupIDIsValid"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.EffectiveGroupIDIsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.EffectiveUserIDIsValid"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.EffectiveUserIDIsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetEffectiveGroupID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetEffectiveGroupID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetEffectiveUserID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetEffectiveUserID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetGroupID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetGroupID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetIgnoreExisting"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetIgnoreExisting()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetListener"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetListener()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetParentProcessID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetParentProcessID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetProcessID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetProcessID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetProcessPluginName"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetProcessPluginName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetResumeCount"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetResumeCount()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetScriptedProcessClassName"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetScriptedProcessClassName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetScriptedProcessDictionary"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetScriptedProcessDictionary()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetShadowListener"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetShadowListener()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetUserID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetUserID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GetWaitForLaunch"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GetWaitForLaunch()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.GroupIDIsValid"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.GroupIDIsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.ParentProcessIDIsValid"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.ParentProcessIDIsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetEffectiveGroupID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetEffectiveGroupID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetEffectiveUserID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetEffectiveUserID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetExecutable"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetExecutable()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetGroupID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetGroupID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetIgnoreExisting"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetIgnoreExisting()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetListener"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetListener()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetParentProcessID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetParentProcessID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetProcessID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetProcessID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetProcessPluginName"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetProcessPluginName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetResumeCount"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetResumeCount()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetScriptedProcessClassName"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetScriptedProcessClassName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetScriptedProcessDictionary"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetScriptedProcessDictionary()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetShadowListener"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetShadowListener()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetUserID"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetUserID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.SetWaitForLaunch"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.SetWaitForLaunch()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBAttachInfo.UserIDIsValid"><code class="docutils literal notranslate"><span class="pre">SBAttachInfo.UserIDIsValid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

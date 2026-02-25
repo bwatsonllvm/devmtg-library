@@ -19,6 +19,7 @@ import html
 import posixpath
 import re
 from dataclasses import dataclass
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
@@ -30,6 +31,10 @@ HEADING_CHARS = set("=~-^\"'`:+*#.")
 class SourceDoc:
     slug: str
     path: Path
+
+
+def normalize_space(value: str) -> str:
+    return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
 def natural_key(value: str) -> List[object]:
@@ -79,11 +84,17 @@ def collect_source_docs(source_root: Path) -> Dict[str, SourceDoc]:
     return docs
 
 
-def collect_html_only_docs(docs_root: Path, source_docs: Dict[str, SourceDoc]) -> Dict[str, Path]:
+def collect_html_only_docs(
+    docs_root: Path,
+    source_docs: Dict[str, SourceDoc],
+    docs_variant: str,
+) -> Dict[str, Path]:
     html_docs: Dict[str, Path] = {}
     for path in sorted(docs_root.rglob("*.html")):
         rel = path.relative_to(docs_root).as_posix()
         if rel.startswith("_static/"):
+            continue
+        if docs_variant == "lldb" and rel.startswith("cpp_reference/"):
             continue
         if rel in {"search.html", "genindex.html"}:
             continue
@@ -374,6 +385,209 @@ def parse_index_section_chapters(
     return chapters
 
 
+def href_to_docs_slug(raw_href: str) -> Optional[str]:
+    href = str(raw_href or "").strip()
+    if not href:
+        return None
+    if href.startswith("#"):
+        return None
+    if re.match(r"^[a-z][a-z0-9+.-]*://", href, flags=re.IGNORECASE):
+        return None
+    href = href.split("#", 1)[0].split("?", 1)[0].strip()
+    if not href:
+        return None
+    href = href.lstrip("./")
+    href = href.lstrip("/")
+    if not href:
+        return "index"
+    if href.endswith(".html"):
+        slug = href[: -len(".html")]
+    elif href.endswith("/"):
+        slug = f"{href.rstrip('/')}/index"
+    else:
+        slug = href
+    slug = norm_slug(slug)
+    return slug or "index"
+
+
+class LldbSidebarTreeParser(HTMLParser):
+    """Parse LLDB's sidebar-tree chapters and nested toctree entries from index.html."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.in_sidebar_tree = False
+        self.sidebar_div_depth = 0
+        self.in_caption_text = False
+        self.caption_chunks: List[str] = []
+        self.pending_caption: Optional[str] = None
+        self.ul_depth = 0
+        self.li_stack: List[Dict[str, object]] = []
+        self.current_chapter_nodes: Optional[List[Dict[str, object]]] = None
+        self.chapters: List[tuple[str, List[Dict[str, object]]]] = []
+
+    @staticmethod
+    def attr_map(attrs: List[tuple[str, str | None]]) -> Dict[str, str]:
+        out: Dict[str, str] = {}
+        for key, value in attrs:
+            if value is None:
+                continue
+            out[key] = value
+        return out
+
+    @staticmethod
+    def has_class(attrs: Dict[str, str], expected: str) -> bool:
+        classes = set(str(attrs.get("class", "")).split())
+        return expected in classes
+
+    def handle_starttag(self, tag: str, attrs: List[tuple[str, str | None]]) -> None:
+        attr = self.attr_map(attrs)
+        if tag == "div" and self.has_class(attr, "sidebar-tree"):
+            self.in_sidebar_tree = True
+            self.sidebar_div_depth = 1
+            return
+
+        if not self.in_sidebar_tree:
+            return
+
+        if tag == "div":
+            self.sidebar_div_depth += 1
+            return
+
+        if tag == "span" and self.has_class(attr, "caption-text"):
+            self.in_caption_text = True
+            self.caption_chunks = []
+            return
+
+        if tag == "ul":
+            self.ul_depth += 1
+            if self.ul_depth == 1:
+                chapter_title = normalize_space(self.pending_caption or "") or "Overview"
+                self.current_chapter_nodes = []
+                self.chapters.append((chapter_title, self.current_chapter_nodes))
+            return
+
+        if tag == "li":
+            klass = str(attr.get("class", ""))
+            if "toctree-l" in klass:
+                self.li_stack.append({"slug": "", "children": []})
+            return
+
+        if tag == "a" and self.li_stack:
+            if self.has_class(attr, "external"):
+                return
+            slug = href_to_docs_slug(attr.get("href", ""))
+            if slug and not str(self.li_stack[-1].get("slug", "")).strip():
+                self.li_stack[-1]["slug"] = slug
+
+    def handle_endtag(self, tag: str) -> None:
+        if not self.in_sidebar_tree:
+            return
+
+        if tag == "span" and self.in_caption_text:
+            self.in_caption_text = False
+            caption = normalize_space("".join(self.caption_chunks))
+            self.pending_caption = caption or None
+            self.caption_chunks = []
+            return
+
+        if tag == "li" and self.li_stack:
+            node = self.li_stack.pop()
+            slug = normalize_space(str(node.get("slug", "")))
+            if not slug:
+                return
+            if self.li_stack:
+                parent_children = self.li_stack[-1].setdefault("children", [])
+                if isinstance(parent_children, list):
+                    parent_children.append(node)
+            elif self.current_chapter_nodes is not None:
+                self.current_chapter_nodes.append(node)
+            return
+
+        if tag == "ul":
+            if self.ul_depth == 1:
+                self.current_chapter_nodes = None
+            self.ul_depth = max(0, self.ul_depth - 1)
+            return
+
+        if tag == "div":
+            self.sidebar_div_depth -= 1
+            if self.sidebar_div_depth <= 0:
+                self.in_sidebar_tree = False
+                self.sidebar_div_depth = 0
+
+    def handle_data(self, data: str) -> None:
+        if self.in_caption_text:
+            self.caption_chunks.append(data)
+
+
+def parse_lldb_sidebar_html_chapters(
+    docs_root: Path,
+    valid_slugs: set[str],
+) -> tuple[List[tuple[str, List[str]]], Dict[str, List[str]]]:
+    index_html = docs_root / "index.html"
+    if not index_html.is_file():
+        return [], {}
+
+    parser = LldbSidebarTreeParser()
+    parser.feed(index_html.read_text(encoding="utf-8", errors="ignore"))
+
+    edges: Dict[str, List[str]] = {}
+    chapter_defs: List[tuple[str, List[str]]] = []
+
+    def walk(node: Dict[str, object]) -> Optional[str]:
+        raw_slug = normalize_space(str(node.get("slug", "")))
+        if not raw_slug:
+            return None
+
+        if raw_slug.endswith("/index"):
+            alt = raw_slug[: -len("/index")]
+            slug = raw_slug if raw_slug in valid_slugs else (alt if alt in valid_slugs else raw_slug)
+        else:
+            alt = f"{raw_slug}/index"
+            slug = raw_slug if raw_slug in valid_slugs else (alt if alt in valid_slugs else raw_slug)
+
+        if slug not in valid_slugs:
+            return None
+
+        raw_children = node.get("children")
+        child_nodes = raw_children if isinstance(raw_children, list) else []
+        child_slugs: List[str] = []
+        seen_children: set[str] = set()
+        for child in child_nodes:
+            if not isinstance(child, dict):
+                continue
+            child_slug = walk(child)
+            if not child_slug:
+                continue
+            if child_slug in seen_children:
+                continue
+            seen_children.add(child_slug)
+            child_slugs.append(child_slug)
+        if child_slugs:
+            edges.setdefault(slug, [])
+            for child_slug in child_slugs:
+                if child_slug not in edges[slug]:
+                    edges[slug].append(child_slug)
+
+        return slug
+
+    for chapter_title, chapter_nodes in parser.chapters:
+        roots: List[str] = []
+        seen_roots: set[str] = set()
+        for node in chapter_nodes:
+            root_slug = walk(node)
+            if not root_slug:
+                continue
+            if root_slug in seen_roots:
+                continue
+            seen_roots.add(root_slug)
+            roots.append(root_slug)
+        if roots:
+            chapter_defs.append((chapter_title, roots))
+
+    return chapter_defs, edges
+
+
 def build_tree_node(
     slug: str,
     edges: Dict[str, List[str]],
@@ -401,16 +615,28 @@ def build_tree_node(
 def build_book_index(source_docs: Dict[str, SourceDoc], docs_root: Path) -> Dict[str, object]:
     titles = {slug: extract_title(doc.path, docs_root, slug) for slug, doc in source_docs.items()}
     edges = parse_toctree_edges(source_docs)
-    html_only_docs = collect_html_only_docs(docs_root, source_docs)
+    docs_variant = detect_docs_variant(source_docs, docs_root)
+    html_only_docs = collect_html_only_docs(docs_root, source_docs, docs_variant)
 
     for slug, html_path in html_only_docs.items():
         fallback = slug.split("/")[-1].replace("-", " ").replace("_", " ").strip() or slug
         titles[slug] = extract_html_title(html_path) or fallback
         edges.setdefault(slug, [])
 
-    docs_variant = detect_docs_variant(source_docs, docs_root)
-
-    if docs_variant in {"clang", "lldb"}:
+    if docs_variant == "lldb":
+        chapter_defs, html_sidebar_edges = parse_lldb_sidebar_html_chapters(docs_root, set(titles.keys()))
+        for parent_slug, child_slugs in html_sidebar_edges.items():
+            if parent_slug not in titles:
+                continue
+            edges.setdefault(parent_slug, [])
+            for child_slug in child_slugs:
+                if child_slug not in titles:
+                    continue
+                if child_slug not in edges[parent_slug]:
+                    edges[parent_slug].append(child_slug)
+        if not chapter_defs and source_docs:
+            chapter_defs = parse_index_section_chapters(source_docs, titles)
+    elif docs_variant == "clang":
         chapter_defs = parse_index_section_chapters(source_docs, titles)
     else:
         chapter_defs = [

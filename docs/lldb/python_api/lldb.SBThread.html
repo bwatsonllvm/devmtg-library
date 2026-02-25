@@ -1,0 +1,1353 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="SBThreadCollection" href="lldb.SBThreadCollection.html" /><link rel="prev" title="SBTarget" href="lldb.SBTarget.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>SBThread - 🐛 LLDB</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">🐛 LLDB</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">🐛 LLDB</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../use/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/map.html">GDB to LLDB command map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/formatting.html">Frame and Thread Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/variable.html">Variable Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolication.html">Symbolication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbols.html">Symbols on macOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/remote.html">Remote Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/intel_pt.html">Tracing with Intel Processor Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/ondemand.html">On Demand Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/aarch64-linux.html">Using LLDB On AArch64 Linux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/symbolfilejson.html">JSON Symbol File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/lldbdap.html">Getting started with <code class="docutils literal notranslate"><span class="pre">lldb-dap</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/mcp.html">Model Context Protocol (MCP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use/links.html">Links</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../man/lldb.html">Man Page</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripting LLDB</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../use/python-reference.html">Python Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Python Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/accessing-documentation.html">Accessing Script Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/python-embedded-interpreter.html">Embedded Python Interpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/script-driven-debugging.html">Script-Driven Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/breakpoint-triggered-scripts.html">Breakpoint-Triggered Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/creating-custom-breakpoints.html">Custom Breakpoint Resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/automating-stepping-logic.html">Automating Stepping Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/writing-custom-commands.html">Writing Custom Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/implementing-standalone-scripts.html">Implementing Standalone Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/custom-frame-recognizers.html">Detecting Patterns With Recognizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use/tutorials/extending-target-stop-hooks.html">Extending Target Stop-Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python_api.html">Python API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Python API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddress.html">SBAddress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRange.html">SBAddressRange</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAddressRangeList.html">SBAddressRangeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBAttachInfo.html">SBAttachInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBlock.html">SBBlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpoint.html">SBBreakpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointList.html">SBBreakpointList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointLocation.html">SBBreakpointLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBreakpointName.html">SBBreakpointName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBBroadcaster.html">SBBroadcaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreter.html">SBCommandInterpreter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandInterpreterRunOptions.html">SBCommandInterpreterRunOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommandReturnObject.html">SBCommandReturnObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCommunication.html">SBCommunication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBCompileUnit.html">SBCompileUnit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBData.html">SBData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDebugger.html">SBDebugger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBDeclaration.html">SBDeclaration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEnvironment.html">SBEnvironment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBError.html">SBError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBEvent.html">SBEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExecutionContext.html">SBExecutionContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBExpressionOptions.html">SBExpressionOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFile.html">SBFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpec.html">SBFileSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFileSpecList.html">SBFileSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFormat.html">SBFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrame.html">SBFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFrameList.html">SBFrameList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBFunction.html">SBFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBHostOS.html">SBHostOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstruction.html">SBInstruction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBInstructionList.html">SBInstructionList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLanguageRuntime.html">SBLanguageRuntime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLaunchInfo.html">SBLaunchInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBLineEntry.html">SBLineEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBListener.html">SBListener</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfo.html">SBMemoryRegionInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMemoryRegionInfoList.html">SBMemoryRegionInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModule.html">SBModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpec.html">SBModuleSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBModuleSpecList.html">SBModuleSpecList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBMutex.html">SBMutex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatform.html">SBPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformConnectOptions.html">SBPlatformConnectOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBPlatformShellCommand.html">SBPlatformShellCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcess.html">SBProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfo.html">SBProcessInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProcessInfoList.html">SBProcessInfoList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBProgress.html">SBProgress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueue.html">SBQueue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBQueueItem.html">SBQueueItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBReproducer.html">SBReproducer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSaveCoreOptions.html">SBSaveCoreOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBScriptObject.html">SBScriptObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSection.html">SBSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSourceManager.html">SBSourceManager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStatisticsOptions.html">SBStatisticsOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStream.html">SBStream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStringList.html">SBStringList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBStructuredData.html">SBStructuredData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbol.html">SBSymbol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContext.html">SBSymbolContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSymbolContextList.html">SBSymbolContextList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBSyntheticValueProvider.html">SBSyntheticValueProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTarget.html">SBTarget</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">SBThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadCollection.html">SBThreadCollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBThreadPlan.html">SBThreadPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTrace.html">SBTrace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTraceCursor.html">SBTraceCursor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBType.html">SBType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeCategory.html">SBTypeCategory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMember.html">SBTypeEnumMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeEnumMemberList.html">SBTypeEnumMemberList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFilter.html">SBTypeFilter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeFormat.html">SBTypeFormat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeList.html">SBTypeList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMember.html">SBTypeMember</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeMemberFunction.html">SBTypeMemberFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeNameSpecifier.html">SBTypeNameSpecifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeStaticField.html">SBTypeStaticField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummary.html">SBTypeSummary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSummaryOptions.html">SBTypeSummaryOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBTypeSynthetic.html">SBTypeSynthetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBUnixSignals.html">SBUnixSignals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValue.html">SBValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBValueList.html">SBValueList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBVariablesOptions.html">SBVariablesOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpoint.html">SBWatchpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.SBWatchpointOptions.html">SBWatchpointOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value.html">value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.value_iter.html">value_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_extensions.html">Python Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Python Extensions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.operating_system.OperatingSystem.html">OperatingSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_frame_provider.ScriptedFrameProvider.html">ScriptedFrameProvider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedProcess.html">PassthroughScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.PassthroughScriptedThread.html">PassthroughScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedFrame.html">ScriptedFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedProcess.html">ScriptedProcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_process.ScriptedThread.html">ScriptedThread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_platform.ScriptedPlatform.html">ScriptedPlatform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lldb.plugins.scripted_thread_plan.ScriptedThreadPlan.html">ScriptedThreadPlan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developing LLDB</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../resources/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/build.html">Building</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/qemu-testing.html">Testing LLDB using QEMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/fuzzing.html">Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/sbapi.html">Scripting Bridge API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/dataformatters.html">Data Formatters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/formatterbytecode.html">Formatter Bytecode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/extensions.html">DWARF Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbgdbremote.html">GDB Remote Protocol Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbplatformpackets.html">LLDB Platform Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/caveats.html">Caveats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/projects.html">Open Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/lldbdap-contributing.html">Contributing to LLDB-DAP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/addinglanguagesupport.html">Adding Programming Language Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/namespacelldb.html">Public C++ API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://lldb.llvm.org/cpp_reference/index.html">Private C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project">Source Code</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/releases">Releases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/xS7Z362">Join the Discord</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.com/channels/636084430946959380/636732809708306432">Discord Channel</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discourse.llvm.org/c/subprojects/lldb/8">Discussion Forums</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://llvm.org/docs/DeveloperPolicy.html">Developer Policy</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/issues?q=is%3Aissue+label%3Alldb+is%3Aopen">Bug Reports</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/llvm/llvm-project/pulls?q=is%3Apr+label%3Alldb+is%3Aopen">Code Reviews</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <!-- Python API docs are generated. --><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="sbthread">
+<h1>SBThread<a class="headerlink" href="#sbthread" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="lldb.SBThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lldb.</span></span><span class="sig-name descname"><span class="pre">SBThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread" title="Link to this definition">#</a></dt>
+<dd><p>Represents a thread of execution. <a class="reference internal" href="lldb.SBProcess.html#lldb.SBProcess" title="lldb.SBProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBProcess</span></code></a> contains SBThread(s).</p>
+<p>SBThreads can be referred to by their ID, which maps to the system specific thread
+identifier, or by IndexID.  The ID may or may not be unique depending on whether the
+system reuses its thread identifiers.  The IndexID is a monotonically increasing identifier
+that will always uniquely reference a particular thread, and when that thread goes
+away it will not be reused.</p>
+<p>SBThread supports frame iteration. For example (from test/python_api/
+lldbutil/iter/TestLLDBIterator.py),</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">lldbutil</span> <span class="kn">import</span> <span class="n">print_stacktrace</span>
+<span class="n">stopped_due_to_breakpoint</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">process</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TraceOn</span><span class="p">():</span>
+        <span class="n">print_stacktrace</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
+    <span class="n">ID</span> <span class="o">=</span> <span class="n">thread</span><span class="o">.</span><span class="n">GetThreadID</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">thread</span><span class="o">.</span><span class="n">GetStopReason</span><span class="p">()</span> <span class="o">==</span> <span class="n">lldb</span><span class="o">.</span><span class="n">eStopReasonBreakpoint</span><span class="p">:</span>
+        <span class="n">stopped_due_to_breakpoint</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">thread</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">GetThread</span><span class="p">()</span><span class="o">.</span><span class="n">GetThreadID</span><span class="p">()</span> <span class="o">==</span> <span class="n">ID</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TraceOn</span><span class="p">():</span>
+            <span class="nb">print</span> <span class="n">frame</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">stopped_due_to_breakpoint</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="lldb.SBFrame.html#lldb.SBFrame" title="lldb.SBFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFrame</span></code></a> .</p>
+<p class="rubric">Attributes Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.eBroadcastBitSelectedFrameChanged" title="lldb.SBThread.eBroadcastBitSelectedFrameChanged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitSelectedFrameChanged</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.eBroadcastBitStackChanged" title="lldb.SBThread.eBroadcastBitStackChanged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitStackChanged</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.eBroadcastBitThreadResumed" title="lldb.SBThread.eBroadcastBitThreadResumed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitThreadResumed</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.eBroadcastBitThreadSelected" title="lldb.SBThread.eBroadcastBitThreadSelected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitThreadSelected</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.eBroadcastBitThreadSuspended" title="lldb.SBThread.eBroadcastBitThreadSuspended"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eBroadcastBitThreadSuspended</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.frame" title="lldb.SBThread.frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame</span></code></a></p></td>
+<td><p>A read only property that returns an object that can be used to access frames as an array (&quot;frame_12 = lldb.thread.frame[12]&quot;).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.frames" title="lldb.SBThread.frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frames</span></code></a></p></td>
+<td><p>A read only property that returns a list() of lldb.SBFrame objects for all frames in this thread.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.id" title="lldb.SBThread.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></a></p></td>
+<td><p>A read only property that returns the thread ID as an integer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.idx" title="lldb.SBThread.idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">idx</span></code></a></p></td>
+<td><p>A read only property that returns the thread index ID as an integer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.is_stopped" title="lldb.SBThread.is_stopped"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_stopped</span></code></a></p></td>
+<td><p>A read only property that returns a boolean value that indicates if this thread is stopped but not exited.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.is_suspended" title="lldb.SBThread.is_suspended"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_suspended</span></code></a></p></td>
+<td><p>A read only property that returns a boolean value that indicates if this thread is suspended.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.name" title="lldb.SBThread.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>A read only property that returns the name of this thread as a string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.num_frames" title="lldb.SBThread.num_frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_frames</span></code></a></p></td>
+<td><p>A read only property that returns the number of stack frames in this thread as an integer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.process" title="lldb.SBThread.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the process (lldb.SBProcess) that owns this thread.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.queue" title="lldb.SBThread.queue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">queue</span></code></a></p></td>
+<td><p>A read only property that returns the dispatch queue name of this thread as a string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.queue_id" title="lldb.SBThread.queue_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">queue_id</span></code></a></p></td>
+<td><p>A read only property that returns the dispatch queue id of this thread as an integer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.return_value" title="lldb.SBThread.return_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_value</span></code></a></p></td>
+<td><p>A read only property that returns an lldb object that represents the return value from the last stop (lldb.SBValue) if we just stopped due to stepping out of a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.selected_frame" title="lldb.SBThread.selected_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">selected_frame</span></code></a></p></td>
+<td><p>A read/write property that gets and sets the selected frame of this SBThread.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.stop_description" title="lldb.SBThread.stop_description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop_description</span></code></a></p></td>
+<td><p>A read only property that returns a string describing the reason this thread stopped.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.stop_reason" title="lldb.SBThread.stop_reason"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop_reason</span></code></a></p></td>
+<td><p>A read only property that returns an lldb enumeration value (see enumerations that start with &quot;lldb.eStopReason&quot;) that represents the reason this thread stopped.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.stop_reason_data" title="lldb.SBThread.stop_reason_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop_reason_data</span></code></a></p></td>
+<td><p>A read only property that returns the stop reason data as a list.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods Summary</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.Clear" title="lldb.SBThread.Clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Clear</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.EventIsThreadEvent" title="lldb.SBThread.EventIsThreadEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EventIsThreadEvent</span></code></a>(SBEvent event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetBroadcasterClassName" title="lldb.SBThread.GetBroadcasterClassName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetBroadcasterClassName</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetCurrentException" title="lldb.SBThread.GetCurrentException"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCurrentException</span></code></a>(SBThread self)</p></td>
+<td><p>Returns an SBValue object represeting the current exception for the thread, if there is any.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetCurrentExceptionBacktrace" title="lldb.SBThread.GetCurrentExceptionBacktrace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCurrentExceptionBacktrace</span></code></a>(SBThread self)</p></td>
+<td><p>Returns a historical (fake) SBThread representing the stack trace of an exception, if there is one for the thread.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetDescription" title="lldb.SBThread.GetDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDescription</span></code></a>(-&gt; bool)</p></td>
+<td><p>Get the description strings for this thread that match what the lldb driver will present, using the thread-format (stop_format==false) or thread-stop-format (stop_format = true).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetDescriptionWithFormat" title="lldb.SBThread.GetDescriptionWithFormat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetDescriptionWithFormat</span></code></a>(format, output)</p></td>
+<td><p>Similar to <em>GetDescription()</em> but the format of the description can be configured via the <code class="docutils literal notranslate"><span class="pre">format</span></code> parameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetExtendedBacktraceOriginatingIndexID" title="lldb.SBThread.GetExtendedBacktraceOriginatingIndexID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetExtendedBacktraceOriginatingIndexID</span></code></a>(...)</p></td>
+<td><p>If this SBThread is an ExtendedBacktrace thread, get the IndexID of the original thread that this ExtendedBacktrace thread represents, if available.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetExtendedBacktraceThread" title="lldb.SBThread.GetExtendedBacktraceThread"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetExtendedBacktraceThread</span></code></a>(SBThread self, ...)</p></td>
+<td><p>Given an argument of str to specify the type of thread-origin extended backtrace to retrieve, query whether the origin of this thread is available.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetFrameAtIndex" title="lldb.SBThread.GetFrameAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFrameAtIndex</span></code></a>(SBThread self, uint32_t idx)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetFrames" title="lldb.SBThread.GetFrames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetFrames</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetIndexID" title="lldb.SBThread.GetIndexID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetIndexID</span></code></a>(SBThread self)</p></td>
+<td><p>Return the index number for this SBThread.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetInfoItemByPathAsString" title="lldb.SBThread.GetInfoItemByPathAsString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetInfoItemByPathAsString</span></code></a>(SBThread self, ...)</p></td>
+<td><p>Takes a path string and a SBStream reference as parameters, returns a bool.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetName" title="lldb.SBThread.GetName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetName</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetNumFrames" title="lldb.SBThread.GetNumFrames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetNumFrames</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetProcess" title="lldb.SBThread.GetProcess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetProcess</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetQueue" title="lldb.SBThread.GetQueue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetQueue</span></code></a>(SBThread self)</p></td>
+<td><p>Return the SBQueue for this thread.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetQueueID" title="lldb.SBThread.GetQueueID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetQueueID</span></code></a>(SBThread self)</p></td>
+<td><p>Return the dispatch_queue_id for this thread, if any, as a lldb::queue_id_t.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetQueueName" title="lldb.SBThread.GetQueueName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetQueueName</span></code></a>(SBThread self)</p></td>
+<td><p>Return the queue name associated with this thread, if any, as a str.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetSelectedFrame" title="lldb.SBThread.GetSelectedFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSelectedFrame</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetSiginfo" title="lldb.SBThread.GetSiginfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSiginfo</span></code></a>(SBThread self)</p></td>
+<td><p>Returns a SBValue object representing the siginfo for the current signal.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetStackFrameFromEvent" title="lldb.SBThread.GetStackFrameFromEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStackFrameFromEvent</span></code></a>(SBEvent event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetStatus" title="lldb.SBThread.GetStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStatus</span></code></a>(SBThread self, SBStream status)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetStopDescription" title="lldb.SBThread.GetStopDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopDescription</span></code></a>(-&gt; bool)</p></td>
+<td><p>Pass only an (int)length and expect to get a Python string describing the stop reason.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetStopReason" title="lldb.SBThread.GetStopReason"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopReason</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetStopReasonDataAtIndex" title="lldb.SBThread.GetStopReasonDataAtIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopReasonDataAtIndex</span></code></a>(SBThread self, ...)</p></td>
+<td><p>Get information associated with a stop reason.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetStopReasonDataCount" title="lldb.SBThread.GetStopReasonDataCount"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopReasonDataCount</span></code></a>(SBThread self)</p></td>
+<td><p>Get the number of words associated with the stop reason.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetStopReasonExtendedBacktraces" title="lldb.SBThread.GetStopReasonExtendedBacktraces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopReasonExtendedBacktraces</span></code></a>(...)</p></td>
+<td><p>Returns a collection of historical stack traces that are significant to the current stop reason.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetStopReasonExtendedInfoAsJSON" title="lldb.SBThread.GetStopReasonExtendedInfoAsJSON"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopReasonExtendedInfoAsJSON</span></code></a>(...)</p></td>
+<td><p>Collects a thread's stop reason extended information dictionary and prints it into the SBStream in a JSON format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetStopReturnValue" title="lldb.SBThread.GetStopReturnValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetStopReturnValue</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.GetThreadFromEvent" title="lldb.SBThread.GetThreadFromEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetThreadFromEvent</span></code></a>(SBEvent event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.GetThreadID" title="lldb.SBThread.GetThreadID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetThreadID</span></code></a>(SBThread self)</p></td>
+<td><p>Returns a unique thread identifier (type lldb::tid_t, typically a 64-bit type) for the current SBThread that will remain constant throughout the thread's lifetime in this process and will not be reused by another thread during this process lifetime.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.IsStopped" title="lldb.SBThread.IsStopped"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsStopped</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.IsSuspended" title="lldb.SBThread.IsSuspended"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsSuspended</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.IsValid" title="lldb.SBThread.IsValid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IsValid</span></code></a>(SBThread self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.JumpToLine" title="lldb.SBThread.JumpToLine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JumpToLine</span></code></a>(SBThread self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.Resume" title="lldb.SBThread.Resume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Resume</span></code></a>(-&gt; bool)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.ReturnFromFrame" title="lldb.SBThread.ReturnFromFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReturnFromFrame</span></code></a>(SBThread self, ...)</p></td>
+<td><p>Force a return from the frame passed in (and any frames younger than it) without executing any more code in those frames.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.RunToAddress" title="lldb.SBThread.RunToAddress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunToAddress</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.SafeToCallFunctions" title="lldb.SBThread.SafeToCallFunctions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SafeToCallFunctions</span></code></a>(SBThread self)</p></td>
+<td><p>lldb may be able to detect that function calls should not be executed on a given thread at a particular point in time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.SetSelectedFrame" title="lldb.SBThread.SetSelectedFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetSelectedFrame</span></code></a>(SBThread self, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.StepInstruction" title="lldb.SBThread.StepInstruction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepInstruction</span></code></a>()</p></td>
+<td><p>Do an instruction level single step in the currently selected thread.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.StepInto" title="lldb.SBThread.StepInto"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepInto</span></code></a>(-&gt; None)</p></td>
+<td><p>Step the current thread from the current source line to the line given by end_line, stopping if the thread steps into the function given by target_name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.StepOut" title="lldb.SBThread.StepOut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepOut</span></code></a>()</p></td>
+<td><p>Step out of the currently selected thread.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.StepOutOfFrame" title="lldb.SBThread.StepOutOfFrame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepOutOfFrame</span></code></a>()</p></td>
+<td><p>Step out of the specified frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.StepOver" title="lldb.SBThread.StepOver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepOver</span></code></a>()</p></td>
+<td><p>Do a source level single step over in the currently selected thread.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.StepOverUntil" title="lldb.SBThread.StepOverUntil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepOverUntil</span></code></a>(SBThread self, SBFrame frame, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.StepUsingScriptedThreadPlan" title="lldb.SBThread.StepUsingScriptedThreadPlan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepUsingScriptedThreadPlan</span></code></a>(...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.Suspend" title="lldb.SBThread.Suspend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Suspend</span></code></a>(-&gt; bool)</p></td>
+<td><p>LLDB currently supports process centric debugging which means when any thread in a process stops, all other threads are stopped.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.UnwindInnermostExpression" title="lldb.SBThread.UnwindInnermostExpression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnwindInnermostExpression</span></code></a>(SBThread self)</p></td>
+<td><p>Unwind the stack frames from the innermost expression evaluation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.get_frames_access_object" title="lldb.SBThread.get_frames_access_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_frames_access_object</span></code></a>()</p></td>
+<td><p>An accessor function that returns a frames_access() object which allows lazy frame access from a lldb.SBThread object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.get_stop_description" title="lldb.SBThread.get_stop_description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stop_description</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.get_stop_reason_data" title="lldb.SBThread.get_stop_reason_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stop_reason_data</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lldb.SBThread.get_thread_frames" title="lldb.SBThread.get_thread_frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_thread_frames</span></code></a>()</p></td>
+<td><p>An accessor function that returns a list() that contains all frames in a lldb.SBThread object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lldb.SBThread.set_selected_frame" title="lldb.SBThread.set_selected_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_selected_frame</span></code></a>(frame)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.eBroadcastBitSelectedFrameChanged">
+<span class="sig-name descname"><span class="pre">eBroadcastBitSelectedFrameChanged</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBThread_eBroadcastBitSelectedFrameChanged'</span> <span class="pre">id='129911252798016'&gt;</span></em><a class="headerlink" href="#lldb.SBThread.eBroadcastBitSelectedFrameChanged" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.eBroadcastBitStackChanged">
+<span class="sig-name descname"><span class="pre">eBroadcastBitStackChanged</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBThread_eBroadcastBitStackChanged'</span> <span class="pre">id='129911252797776'&gt;</span></em><a class="headerlink" href="#lldb.SBThread.eBroadcastBitStackChanged" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.eBroadcastBitThreadResumed">
+<span class="sig-name descname"><span class="pre">eBroadcastBitThreadResumed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBThread_eBroadcastBitThreadResumed'</span> <span class="pre">id='129911252797968'&gt;</span></em><a class="headerlink" href="#lldb.SBThread.eBroadcastBitThreadResumed" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.eBroadcastBitThreadSelected">
+<span class="sig-name descname"><span class="pre">eBroadcastBitThreadSelected</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBThread_eBroadcastBitThreadSelected'</span> <span class="pre">id='129911252798064'&gt;</span></em><a class="headerlink" href="#lldb.SBThread.eBroadcastBitThreadSelected" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.eBroadcastBitThreadSuspended">
+<span class="sig-name descname"><span class="pre">eBroadcastBitThreadSuspended</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Mock</span> <span class="pre">name='mock.SBThread_eBroadcastBitThreadSuspended'</span> <span class="pre">id='129911252797824'&gt;</span></em><a class="headerlink" href="#lldb.SBThread.eBroadcastBitThreadSuspended" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.frame">
+<span class="sig-name descname"><span class="pre">frame</span></span><a class="headerlink" href="#lldb.SBThread.frame" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an object that can be used to access frames as an array (“frame_12 = lldb.thread.frame[12]”).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.frames">
+<span class="sig-name descname"><span class="pre">frames</span></span><a class="headerlink" href="#lldb.SBThread.frames" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a list() of lldb.SBFrame objects for all frames in this thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#lldb.SBThread.id" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the thread ID as an integer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.idx">
+<span class="sig-name descname"><span class="pre">idx</span></span><a class="headerlink" href="#lldb.SBThread.idx" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the thread index ID as an integer. Thread index ID values start at 1 and increment as threads come and go and can be used to uniquely identify threads.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.is_stopped">
+<span class="sig-name descname"><span class="pre">is_stopped</span></span><a class="headerlink" href="#lldb.SBThread.is_stopped" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a boolean value that indicates if this thread is stopped but not exited.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.is_suspended">
+<span class="sig-name descname"><span class="pre">is_suspended</span></span><a class="headerlink" href="#lldb.SBThread.is_suspended" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a boolean value that indicates if this thread is suspended.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#lldb.SBThread.name" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the name of this thread as a string.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.num_frames">
+<span class="sig-name descname"><span class="pre">num_frames</span></span><a class="headerlink" href="#lldb.SBThread.num_frames" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the number of stack frames in this thread as an integer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.process">
+<span class="sig-name descname"><span class="pre">process</span></span><a class="headerlink" href="#lldb.SBThread.process" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the process (lldb.SBProcess) that owns this thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.queue">
+<span class="sig-name descname"><span class="pre">queue</span></span><a class="headerlink" href="#lldb.SBThread.queue" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the dispatch queue name of this thread as a string.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.queue_id">
+<span class="sig-name descname"><span class="pre">queue_id</span></span><a class="headerlink" href="#lldb.SBThread.queue_id" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the dispatch queue id of this thread as an integer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.return_value">
+<span class="sig-name descname"><span class="pre">return_value</span></span><a class="headerlink" href="#lldb.SBThread.return_value" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb object that represents the return value from the last stop (lldb.SBValue) if we just stopped due to stepping out of a function.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.selected_frame">
+<span class="sig-name descname"><span class="pre">selected_frame</span></span><a class="headerlink" href="#lldb.SBThread.selected_frame" title="Link to this definition">#</a></dt>
+<dd><p>A read/write property that gets and sets the selected frame of this SBThread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.stop_description">
+<span class="sig-name descname"><span class="pre">stop_description</span></span><a class="headerlink" href="#lldb.SBThread.stop_description" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns a string describing the reason this thread stopped.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.stop_reason">
+<span class="sig-name descname"><span class="pre">stop_reason</span></span><a class="headerlink" href="#lldb.SBThread.stop_reason" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns an lldb enumeration value (see enumerations that start with “lldb.eStopReason”) that represents the reason this thread stopped.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lldb.SBThread.stop_reason_data">
+<span class="sig-name descname"><span class="pre">stop_reason_data</span></span><a class="headerlink" href="#lldb.SBThread.stop_reason_data" title="Link to this definition">#</a></dt>
+<dd><p>A read only property that returns the stop reason data as a list.</p>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.Clear" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.EventIsThreadEvent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EventIsThreadEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBEvent</span> <span class="pre">event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.EventIsThreadEvent" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetBroadcasterClassName">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetBroadcasterClassName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBThread.GetBroadcasterClassName" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetCurrentException">
+<span class="sig-name descname"><span class="pre">GetCurrentException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetCurrentException" title="Link to this definition">#</a></dt>
+<dd><p>Returns an SBValue object represeting the current exception for the thread,
+if there is any. Currently, this works for Obj-C code and returns an SBValue
+representing the NSException object at the throw site or that’s currently
+being processes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetCurrentExceptionBacktrace">
+<span class="sig-name descname"><span class="pre">GetCurrentExceptionBacktrace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lldb.SBThread" title="lldb.SBThread"><span class="pre">SBThread</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetCurrentExceptionBacktrace" title="Link to this definition">#</a></dt>
+<dd><p>Returns a historical (fake) SBThread representing the stack trace of an
+exception, if there is one for the thread. Currently, this works for Obj-C
+code, and can retrieve the throw-site backtrace of an NSException object
+even when the program is no longer at the throw site.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetDescription">
+<span class="sig-name descname"><span class="pre">GetDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">description</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.GetDescription" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">GetDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">stop_format</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span></dt>
+<dd><p>Get the description strings for this thread that match what the
+lldb driver will present, using the thread-format (stop_format==false)
+or thread-stop-format (stop_format = true).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetDescriptionWithFormat">
+<span class="sig-name descname"><span class="pre">GetDescriptionWithFormat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.GetDescriptionWithFormat" title="Link to this definition">#</a></dt>
+<dd><p>Similar to <em>GetDescription()</em> but the format of the description can be
+configured via the <code class="docutils literal notranslate"><span class="pre">format</span></code> parameter. See
+<a class="reference external" href="https://lldb.llvm.org/use/formatting.html">https://lldb.llvm.org/use/formatting.html</a> for more information on format
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>format</strong> (<a class="reference internal" href="lldb.SBFormat.html#lldb.SBFormat" title="lldb.SBFormat"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBFormat</span></code></a>, in) – The format to use for generating the description.</p></li>
+<li><p><strong>output</strong> (<a class="reference internal" href="lldb.SBStream.html#lldb.SBStream" title="lldb.SBStream"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBStream</span></code></a>, out) – The stream where the description will be written to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SBError</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An error object with an error message in case of failures.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetExtendedBacktraceOriginatingIndexID">
+<span class="sig-name descname"><span class="pre">GetExtendedBacktraceOriginatingIndexID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBThread.GetExtendedBacktraceOriginatingIndexID" title="Link to this definition">#</a></dt>
+<dd><p>If this SBThread is an ExtendedBacktrace thread, get the IndexID of the
+original thread that this ExtendedBacktrace thread represents, if
+available.  The thread that was running this backtrace in the past may
+not have been registered with lldb’s thread index (if it was created,
+did its work, and was destroyed without lldb ever stopping execution).
+In that case, this ExtendedBacktrace thread’s IndexID will be returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetExtendedBacktraceThread">
+<span class="sig-name descname"><span class="pre">GetExtendedBacktraceThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lldb.SBThread" title="lldb.SBThread"><span class="pre">SBThread</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetExtendedBacktraceThread" title="Link to this definition">#</a></dt>
+<dd><p>Given an argument of str to specify the type of thread-origin extended
+backtrace to retrieve, query whether the origin of this thread is
+available.  An SBThread is retured; SBThread.IsValid will return true
+if an extended backtrace was available.  The returned SBThread is not
+a part of the SBProcess’ thread list and it cannot be manipulated like
+normal threads – you cannot step or resume it, for instance – it is
+intended to used primarily for generating a backtrace.  You may request
+the returned thread’s own thread origin in turn.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetFrameAtIndex">
+<span class="sig-name descname"><span class="pre">GetFrameAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFrame.html#lldb.SBFrame" title="lldb.SBFrame"><span class="pre">SBFrame</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetFrameAtIndex" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetFrames">
+<span class="sig-name descname"><span class="pre">GetFrames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFrameList.html#lldb.SBFrameList" title="lldb.SBFrameList"><span class="pre">SBFrameList</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetFrames" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetIndexID">
+<span class="sig-name descname"><span class="pre">GetIndexID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBThread.GetIndexID" title="Link to this definition">#</a></dt>
+<dd><p>Return the index number for this SBThread.  The index number is the same thing
+that a user gives as an argument to ‘thread select’ in the command line lldb.
+These numbers start at 1 (for the first thread lldb sees in a debug session)
+and increments up throughout the process lifetime.  An index number will not be
+reused for a different thread later in a process - thread 1 will always be
+associated with the same thread.  See related GetThreadID.
+This method returns a uint32_t index number, takes no arguments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetInfoItemByPathAsString">
+<span class="sig-name descname"><span class="pre">GetInfoItemByPathAsString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">strm</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.GetInfoItemByPathAsString" title="Link to this definition">#</a></dt>
+<dd><p>Takes a path string and a SBStream reference as parameters, returns a bool.
+Collects the thread’s ‘info’ dictionary from the remote system, uses the path
+argument to descend into the dictionary to an item of interest, and prints
+it into the SBStream in a natural format.  Return bool is to indicate if
+anything was printed into the stream (true) or not (false).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetName">
+<span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBThread.GetName" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetNumFrames">
+<span class="sig-name descname"><span class="pre">GetNumFrames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint32_t</span></span></span><a class="headerlink" href="#lldb.SBThread.GetNumFrames" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetProcess">
+<span class="sig-name descname"><span class="pre">GetProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBProcess.html#lldb.SBProcess" title="lldb.SBProcess"><span class="pre">SBProcess</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetProcess" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetQueue">
+<span class="sig-name descname"><span class="pre">GetQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBQueue.html#lldb.SBQueue" title="lldb.SBQueue"><span class="pre">SBQueue</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetQueue" title="Link to this definition">#</a></dt>
+<dd><p>Return the SBQueue for this thread.  If this thread is not currently associated
+with a libdispatch queue, the SBQueue object’s IsValid() method will return false.
+If this SBThread is actually a HistoryThread, we may be able to provide QueueID
+and QueueName, but not provide an SBQueue.  Those individual attributes may have
+been saved for the HistoryThread without enough information to reconstitute the
+entire SBQueue at that time.
+This method takes no arguments, returns an SBQueue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetQueueID">
+<span class="sig-name descname"><span class="pre">GetQueueID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::queue_id_t</span></span></span><a class="headerlink" href="#lldb.SBThread.GetQueueID" title="Link to this definition">#</a></dt>
+<dd><p>Return the dispatch_queue_id for this thread, if any, as a lldb::queue_id_t.
+For example, with a libdispatch (aka Grand Central Dispatch) queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetQueueName">
+<span class="sig-name descname"><span class="pre">GetQueueName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#lldb.SBThread.GetQueueName" title="Link to this definition">#</a></dt>
+<dd><p>Return the queue name associated with this thread, if any, as a str.
+For example, with a libdispatch (aka Grand Central Dispatch) queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetSelectedFrame">
+<span class="sig-name descname"><span class="pre">GetSelectedFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFrame.html#lldb.SBFrame" title="lldb.SBFrame"><span class="pre">SBFrame</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetSelectedFrame" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetSiginfo">
+<span class="sig-name descname"><span class="pre">GetSiginfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetSiginfo" title="Link to this definition">#</a></dt>
+<dd><p>Returns a SBValue object representing the siginfo for the current signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStackFrameFromEvent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetStackFrameFromEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBEvent</span> <span class="pre">event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFrame.html#lldb.SBFrame" title="lldb.SBFrame"><span class="pre">SBFrame</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetStackFrameFromEvent" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStatus">
+<span class="sig-name descname"><span class="pre">GetStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">status</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.GetStatus" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStopDescription">
+<span class="sig-name descname"><span class="pre">GetStopDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">stream</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.GetStopDescription" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">GetStopDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">dst_or_null</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span></dt>
+<dd><p>Pass only an (int)length and expect to get a Python string describing the
+stop reason.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStopReason">
+<span class="sig-name descname"><span class="pre">GetStopReason</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::StopReason</span></span></span><a class="headerlink" href="#lldb.SBThread.GetStopReason" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStopReasonDataAtIndex">
+<span class="sig-name descname"><span class="pre">GetStopReasonDataAtIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">uint64_t</span></span></span><a class="headerlink" href="#lldb.SBThread.GetStopReasonDataAtIndex" title="Link to this definition">#</a></dt>
+<dd><p>Get information associated with a stop reason.</p>
+<p>Breakpoint stop reasons will have data that consists of pairs of
+breakpoint IDs followed by the breakpoint location IDs (they always come
+in pairs).</p>
+<p>Stop Reason              Count Data Type
+======================== ===== =========================================
+eStopReasonNone          0
+eStopReasonTrace         0
+eStopReasonBreakpoint    N     duple: {breakpoint id, location id}
+eStopReasonWatchpoint    1     watchpoint id
+eStopReasonSignal        1     unix signal number
+eStopReasonException     N     exception data
+eStopReasonExec          0
+eStopReasonFork          1     pid of the child process
+eStopReasonVFork         1     pid of the child process
+eStopReasonVForkDone     0
+eStopReasonPlanComplete  0</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStopReasonDataCount">
+<span class="sig-name descname"><span class="pre">GetStopReasonDataCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span><a class="headerlink" href="#lldb.SBThread.GetStopReasonDataCount" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of words associated with the stop reason.
+See also GetStopReasonDataAtIndex().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStopReasonExtendedBacktraces">
+<span class="sig-name descname"><span class="pre">GetStopReasonExtendedBacktraces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::InstrumentationRuntimeType</span> <span class="pre">type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBThreadCollection.html#lldb.SBThreadCollection" title="lldb.SBThreadCollection"><span class="pre">SBThreadCollection</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetStopReasonExtendedBacktraces" title="Link to this definition">#</a></dt>
+<dd><p>Returns a collection of historical stack traces that are significant to the
+current stop reason. Used by ThreadSanitizer, where we provide various stack
+traces that were involved in a data race or other type of detected issue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStopReasonExtendedInfoAsJSON">
+<span class="sig-name descname"><span class="pre">GetStopReasonExtendedInfoAsJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStream</span> <span class="pre">stream</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.GetStopReasonExtendedInfoAsJSON" title="Link to this definition">#</a></dt>
+<dd><p>Collects a thread’s stop reason extended information dictionary and prints it
+into the SBStream in a JSON format. The format of this JSON dictionary depends
+on the stop reason and is currently used only for instrumentation plugins.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetStopReturnValue">
+<span class="sig-name descname"><span class="pre">GetStopReturnValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBValue.html#lldb.SBValue" title="lldb.SBValue"><span class="pre">SBValue</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetStopReturnValue" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetThreadFromEvent">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GetThreadFromEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBEvent</span> <span class="pre">event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#lldb.SBThread" title="lldb.SBThread"><span class="pre">SBThread</span></a></span></span><a class="headerlink" href="#lldb.SBThread.GetThreadFromEvent" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.GetThreadID">
+<span class="sig-name descname"><span class="pre">GetThreadID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">lldb::tid_t</span></span></span><a class="headerlink" href="#lldb.SBThread.GetThreadID" title="Link to this definition">#</a></dt>
+<dd><p>Returns a unique thread identifier (type lldb::tid_t, typically a 64-bit type)
+for the current SBThread that will remain constant throughout the thread’s
+lifetime in this process and will not be reused by another thread during this
+process lifetime.  On Mac OS X systems, this is a system-wide unique thread
+identifier; this identifier is also used by other tools like sample which helps
+to associate data from those tools with lldb.  See related GetIndexID.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.IsStopped">
+<span class="sig-name descname"><span class="pre">IsStopped</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.IsStopped" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.IsSuspended">
+<span class="sig-name descname"><span class="pre">IsSuspended</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.IsSuspended" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.IsValid">
+<span class="sig-name descname"><span class="pre">IsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.IsValid" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.JumpToLine">
+<span class="sig-name descname"><span class="pre">JumpToLine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFileSpec</span> <span class="pre">file_spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">line</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span><a class="headerlink" href="#lldb.SBThread.JumpToLine" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.Resume">
+<span class="sig-name descname"><span class="pre">Resume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.Resume" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Resume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.ReturnFromFrame">
+<span class="sig-name descname"><span class="pre">ReturnFromFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBValue</span> <span class="pre">return_value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span><a class="headerlink" href="#lldb.SBThread.ReturnFromFrame" title="Link to this definition">#</a></dt>
+<dd><p>Force a return from the frame passed in (and any frames younger than it)
+without executing any more code in those frames.  If return_value contains
+a valid SBValue, that will be set as the return value from frame.  Note, at
+present only scalar return values are supported.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.RunToAddress">
+<span class="sig-name descname"><span class="pre">RunToAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::addr_t</span> <span class="pre">addr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.RunToAddress" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">RunToAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::addr_t</span> <span class="pre">addr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.SafeToCallFunctions">
+<span class="sig-name descname"><span class="pre">SafeToCallFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.SafeToCallFunctions" title="Link to this definition">#</a></dt>
+<dd><p>lldb may be able to detect that function calls should not be executed
+on a given thread at a particular point in time.  It is recommended that
+this is checked before performing an inferior function call on a given
+thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.SetSelectedFrame">
+<span class="sig-name descname"><span class="pre">SetSelectedFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">frame_idx</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBFrame.html#lldb.SBFrame" title="lldb.SBFrame"><span class="pre">SBFrame</span></a></span></span><a class="headerlink" href="#lldb.SBThread.SetSelectedFrame" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.StepInstruction">
+<span class="sig-name descname"><span class="pre">StepInstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">step_over</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.StepInstruction" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepInstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">step_over</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Do an instruction level single step in the currently selected thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.StepInto">
+<span class="sig-name descname"><span class="pre">StepInto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::RunMode</span> <span class="pre">stop_other_threads=eOnlyDuringStepping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.StepInto" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepInto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::RunMode</span> <span class="pre">stop_other_threads=eOnlyDuringStepping</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepInto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">end_line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::RunMode</span> <span class="pre">stop_other_threads=eOnlyDuringStepping</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Step the current thread from the current source line to the line given by end_line, stopping if
+the thread steps into the function given by target_name.  If target_name is None, then stepping will stop
+in any of the places we would normally stop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.StepOut">
+<span class="sig-name descname"><span class="pre">StepOut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.StepOut" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepOut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Step out of the currently selected thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.StepOutOfFrame">
+<span class="sig-name descname"><span class="pre">StepOutOfFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.StepOutOfFrame" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepOutOfFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Step out of the specified frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.StepOver">
+<span class="sig-name descname"><span class="pre">StepOver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::RunMode</span> <span class="pre">stop_other_threads=eOnlyDuringStepping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.StepOver" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepOver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lldb::RunMode</span> <span class="pre">stop_other_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span></dt>
+<dd><p>Do a source level single step over in the currently selected thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.StepOverUntil">
+<span class="sig-name descname"><span class="pre">StepOverUntil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFrame</span> <span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBFileSpec</span> <span class="pre">file_spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uint32_t</span> <span class="pre">line</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span><a class="headerlink" href="#lldb.SBThread.StepOverUntil" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.StepUsingScriptedThreadPlan">
+<span class="sig-name descname"><span class="pre">StepUsingScriptedThreadPlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">script_class_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span><a class="headerlink" href="#lldb.SBThread.StepUsingScriptedThreadPlan" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepUsingScriptedThreadPlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">script_class_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">resume_immediately</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">StepUsingScriptedThreadPlan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">script_class_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBStructuredData</span> <span class="pre">args_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">resume_immediately</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.Suspend">
+<span class="sig-name descname"><span class="pre">Suspend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lldb.SBThread.Suspend" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Suspend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SBError</span> <span class="pre">error</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span></dt>
+<dd><p>LLDB currently supports process centric debugging which means when any
+thread in a process stops, all other threads are stopped. The Suspend()
+call here tells our process to suspend a thread and not let it run when
+the other threads in a process are allowed to run. So when
+SBProcess::Continue() is called, any threads that aren’t suspended will
+be allowed to run. If any of the SBThread functions for stepping are
+called (StepOver, StepInto, StepOut, StepInstruction, RunToAddres), the
+thread will now be allowed to run and these functions will simply return.</p>
+<p>Eventually we plan to add support for thread centric debugging where
+each thread is controlled individually and each thread would broadcast
+its state, but we haven’t implemented this yet.</p>
+<p>Likewise the SBThread::Resume() call will again allow the thread to run
+when the process is continued.</p>
+<p>Suspend() and Resume() functions are not currently reference counted, if
+anyone has the need for them to be reference counted, please let us
+know.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.UnwindInnermostExpression">
+<span class="sig-name descname"><span class="pre">UnwindInnermostExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SBThread</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lldb.SBError.html#lldb.SBError" title="lldb.SBError"><span class="pre">SBError</span></a></span></span><a class="headerlink" href="#lldb.SBThread.UnwindInnermostExpression" title="Link to this definition">#</a></dt>
+<dd><p>Unwind the stack frames from the innermost expression evaluation.
+This API is equivalent to ‘thread return -x’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.get_frames_access_object">
+<span class="sig-name descname"><span class="pre">get_frames_access_object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.get_frames_access_object" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns a frames_access() object which allows lazy frame access from a lldb.SBThread object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.get_stop_description">
+<span class="sig-name descname"><span class="pre">get_stop_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.get_stop_description" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.get_stop_reason_data">
+<span class="sig-name descname"><span class="pre">get_stop_reason_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.get_stop_reason_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.get_thread_frames">
+<span class="sig-name descname"><span class="pre">get_thread_frames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.get_thread_frames" title="Link to this definition">#</a></dt>
+<dd><p>An accessor function that returns a list() that contains all frames in a lldb.SBThread object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lldb.SBThread.set_selected_frame">
+<span class="sig-name descname"><span class="pre">set_selected_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lldb.SBThread.set_selected_frame" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lldb.SBThreadCollection.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">SBThreadCollection</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lldb.SBTarget.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">SBTarget</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2007-2026, The LLDB Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on Feb 24, 2026</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SBThread</a><ul>
+<li><a class="reference internal" href="#lldb.SBThread"><code class="docutils literal notranslate"><span class="pre">SBThread</span></code></a><ul>
+<li><a class="reference internal" href="#lldb.SBThread.eBroadcastBitSelectedFrameChanged"><code class="docutils literal notranslate"><span class="pre">SBThread.eBroadcastBitSelectedFrameChanged</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.eBroadcastBitStackChanged"><code class="docutils literal notranslate"><span class="pre">SBThread.eBroadcastBitStackChanged</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.eBroadcastBitThreadResumed"><code class="docutils literal notranslate"><span class="pre">SBThread.eBroadcastBitThreadResumed</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.eBroadcastBitThreadSelected"><code class="docutils literal notranslate"><span class="pre">SBThread.eBroadcastBitThreadSelected</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.eBroadcastBitThreadSuspended"><code class="docutils literal notranslate"><span class="pre">SBThread.eBroadcastBitThreadSuspended</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.frame"><code class="docutils literal notranslate"><span class="pre">SBThread.frame</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.frames"><code class="docutils literal notranslate"><span class="pre">SBThread.frames</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.id"><code class="docutils literal notranslate"><span class="pre">SBThread.id</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.idx"><code class="docutils literal notranslate"><span class="pre">SBThread.idx</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.is_stopped"><code class="docutils literal notranslate"><span class="pre">SBThread.is_stopped</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.is_suspended"><code class="docutils literal notranslate"><span class="pre">SBThread.is_suspended</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.name"><code class="docutils literal notranslate"><span class="pre">SBThread.name</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.num_frames"><code class="docutils literal notranslate"><span class="pre">SBThread.num_frames</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.process"><code class="docutils literal notranslate"><span class="pre">SBThread.process</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.queue"><code class="docutils literal notranslate"><span class="pre">SBThread.queue</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.queue_id"><code class="docutils literal notranslate"><span class="pre">SBThread.queue_id</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.return_value"><code class="docutils literal notranslate"><span class="pre">SBThread.return_value</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.selected_frame"><code class="docutils literal notranslate"><span class="pre">SBThread.selected_frame</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.stop_description"><code class="docutils literal notranslate"><span class="pre">SBThread.stop_description</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.stop_reason"><code class="docutils literal notranslate"><span class="pre">SBThread.stop_reason</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.stop_reason_data"><code class="docutils literal notranslate"><span class="pre">SBThread.stop_reason_data</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.Clear"><code class="docutils literal notranslate"><span class="pre">SBThread.Clear()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.EventIsThreadEvent"><code class="docutils literal notranslate"><span class="pre">SBThread.EventIsThreadEvent()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetBroadcasterClassName"><code class="docutils literal notranslate"><span class="pre">SBThread.GetBroadcasterClassName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetCurrentException"><code class="docutils literal notranslate"><span class="pre">SBThread.GetCurrentException()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetCurrentExceptionBacktrace"><code class="docutils literal notranslate"><span class="pre">SBThread.GetCurrentExceptionBacktrace()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetDescription"><code class="docutils literal notranslate"><span class="pre">SBThread.GetDescription()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetDescriptionWithFormat"><code class="docutils literal notranslate"><span class="pre">SBThread.GetDescriptionWithFormat()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetExtendedBacktraceOriginatingIndexID"><code class="docutils literal notranslate"><span class="pre">SBThread.GetExtendedBacktraceOriginatingIndexID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetExtendedBacktraceThread"><code class="docutils literal notranslate"><span class="pre">SBThread.GetExtendedBacktraceThread()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetFrameAtIndex"><code class="docutils literal notranslate"><span class="pre">SBThread.GetFrameAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetFrames"><code class="docutils literal notranslate"><span class="pre">SBThread.GetFrames()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetIndexID"><code class="docutils literal notranslate"><span class="pre">SBThread.GetIndexID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetInfoItemByPathAsString"><code class="docutils literal notranslate"><span class="pre">SBThread.GetInfoItemByPathAsString()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetName"><code class="docutils literal notranslate"><span class="pre">SBThread.GetName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetNumFrames"><code class="docutils literal notranslate"><span class="pre">SBThread.GetNumFrames()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetProcess"><code class="docutils literal notranslate"><span class="pre">SBThread.GetProcess()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetQueue"><code class="docutils literal notranslate"><span class="pre">SBThread.GetQueue()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetQueueID"><code class="docutils literal notranslate"><span class="pre">SBThread.GetQueueID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetQueueName"><code class="docutils literal notranslate"><span class="pre">SBThread.GetQueueName()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetSelectedFrame"><code class="docutils literal notranslate"><span class="pre">SBThread.GetSelectedFrame()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetSiginfo"><code class="docutils literal notranslate"><span class="pre">SBThread.GetSiginfo()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStackFrameFromEvent"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStackFrameFromEvent()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStatus"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStatus()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStopDescription"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStopDescription()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStopReason"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStopReason()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStopReasonDataAtIndex"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStopReasonDataAtIndex()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStopReasonDataCount"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStopReasonDataCount()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStopReasonExtendedBacktraces"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStopReasonExtendedBacktraces()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStopReasonExtendedInfoAsJSON"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStopReasonExtendedInfoAsJSON()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetStopReturnValue"><code class="docutils literal notranslate"><span class="pre">SBThread.GetStopReturnValue()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetThreadFromEvent"><code class="docutils literal notranslate"><span class="pre">SBThread.GetThreadFromEvent()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.GetThreadID"><code class="docutils literal notranslate"><span class="pre">SBThread.GetThreadID()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.IsStopped"><code class="docutils literal notranslate"><span class="pre">SBThread.IsStopped()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.IsSuspended"><code class="docutils literal notranslate"><span class="pre">SBThread.IsSuspended()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.IsValid"><code class="docutils literal notranslate"><span class="pre">SBThread.IsValid()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.JumpToLine"><code class="docutils literal notranslate"><span class="pre">SBThread.JumpToLine()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.Resume"><code class="docutils literal notranslate"><span class="pre">SBThread.Resume()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.ReturnFromFrame"><code class="docutils literal notranslate"><span class="pre">SBThread.ReturnFromFrame()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.RunToAddress"><code class="docutils literal notranslate"><span class="pre">SBThread.RunToAddress()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.SafeToCallFunctions"><code class="docutils literal notranslate"><span class="pre">SBThread.SafeToCallFunctions()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.SetSelectedFrame"><code class="docutils literal notranslate"><span class="pre">SBThread.SetSelectedFrame()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.StepInstruction"><code class="docutils literal notranslate"><span class="pre">SBThread.StepInstruction()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.StepInto"><code class="docutils literal notranslate"><span class="pre">SBThread.StepInto()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.StepOut"><code class="docutils literal notranslate"><span class="pre">SBThread.StepOut()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.StepOutOfFrame"><code class="docutils literal notranslate"><span class="pre">SBThread.StepOutOfFrame()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.StepOver"><code class="docutils literal notranslate"><span class="pre">SBThread.StepOver()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.StepOverUntil"><code class="docutils literal notranslate"><span class="pre">SBThread.StepOverUntil()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.StepUsingScriptedThreadPlan"><code class="docutils literal notranslate"><span class="pre">SBThread.StepUsingScriptedThreadPlan()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.Suspend"><code class="docutils literal notranslate"><span class="pre">SBThread.Suspend()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.UnwindInnermostExpression"><code class="docutils literal notranslate"><span class="pre">SBThread.UnwindInnermostExpression()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.get_frames_access_object"><code class="docutils literal notranslate"><span class="pre">SBThread.get_frames_access_object()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.get_stop_description"><code class="docutils literal notranslate"><span class="pre">SBThread.get_stop_description()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.get_stop_reason_data"><code class="docutils literal notranslate"><span class="pre">SBThread.get_stop_reason_data()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.get_thread_frames"><code class="docutils literal notranslate"><span class="pre">SBThread.get_thread_frames()</span></code></a></li>
+<li><a class="reference internal" href="#lldb.SBThread.set_selected_frame"><code class="docutils literal notranslate"><span class="pre">SBThread.set_selected_frame()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d42a975f"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

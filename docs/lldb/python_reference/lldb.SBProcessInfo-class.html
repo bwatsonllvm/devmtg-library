@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lldb.SBProcessInfo</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lldb-module.html">Package&nbsp;lldb</a> ::
+        Class&nbsp;SBProcessInfo
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lldb.SBProcessInfo-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SBProcessInfo</h1><p class="nomargin-top"><span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_lldb_sbp_6" name="uml_class_diagram_for_lldb_sbp_6">
+<area shape="rect" id="node1_20" href="lldb.SBProcessInfo-class.html#__swig_setmethods__" title="lldb.SBProcessInfo.__swig_setmethods__" alt="" coords="17,96,175,116"/>
+<area shape="rect" id="node1_21" href="lldb.SBProcessInfo-class.html#__setattr__" title="lldb.SBProcessInfo.__setattr__" alt="" coords="17,116,175,136"/>
+<area shape="rect" id="node1_22" href="lldb.SBProcessInfo-class.html#__swig_getmethods__" title="lldb.SBProcessInfo.__swig_getmethods__" alt="" coords="17,136,175,156"/>
+<area shape="rect" id="node1_23" href="lldb.SBProcessInfo-class.html#__getattr__" title="lldb.SBProcessInfo.__getattr__" alt="" coords="17,156,175,176"/>
+<area shape="rect" id="node1_24" href="lldb.SBProcessInfo-class.html#__swig_destroy__" title="lldb.SBProcessInfo.__swig_destroy__" alt="" coords="17,176,175,196"/>
+<area shape="rect" id="node1_25" href="lldb.SBProcessInfo-class.html#__del__" title="lldb.SBProcessInfo.__del__" alt="" coords="17,196,175,216"/>
+<area shape="rect" id="node1_26" href="lldb.SBProcessInfo-class.html#__repr__" title="lldb.SBProcessInfo.__repr__" alt="" coords="17,219,175,239"/>
+<area shape="rect" id="node1_27" href="lldb.SBProcessInfo-class.html#__init__" title="__init__(lldb::SBProcessInfo self) &#45;&gt; SBProcessInfo &#160;__init__(lldb::SBProcessInfo self, SBProcessInfo rhs) &#45;&gt; SBProcessInfo" alt="" coords="17,239,175,259"/>
+<area shape="rect" id="node1_28" href="lldb.SBProcessInfo-class.html#IsValid" title="IsValid(SBProcessInfo self) &#45;&gt; bool" alt="" coords="17,259,175,279"/>
+<area shape="rect" id="node1_29" href="lldb.SBProcessInfo-class.html#__nonzero__" title="lldb.SBProcessInfo.__nonzero__" alt="" coords="17,279,175,299"/>
+<area shape="rect" id="node1_30" href="lldb.SBProcessInfo-class.html#__bool__" title="lldb.SBProcessInfo.__bool__" alt="" coords="17,299,175,319"/>
+<area shape="rect" id="node1_31" href="lldb.SBProcessInfo-class.html#GetName" title="GetName(SBProcessInfo self) &#45;&gt; char const *" alt="" coords="17,319,175,339"/>
+<area shape="rect" id="node1_32" href="lldb.SBProcessInfo-class.html#GetExecutableFile" title="GetExecutableFile(SBProcessInfo self) &#45;&gt; SBFileSpec" alt="" coords="17,339,175,359"/>
+<area shape="rect" id="node1_33" href="lldb.SBProcessInfo-class.html#GetProcessID" title="GetProcessID(SBProcessInfo self) &#45;&gt; lldb::pid_t" alt="" coords="17,359,175,379"/>
+<area shape="rect" id="node1_34" href="lldb.SBProcessInfo-class.html#GetUserID" title="GetUserID(SBProcessInfo self) &#45;&gt; uint32_t" alt="" coords="17,379,175,399"/>
+<area shape="rect" id="node1_35" href="lldb.SBProcessInfo-class.html#GetGroupID" title="GetGroupID(SBProcessInfo self) &#45;&gt; uint32_t" alt="" coords="17,399,175,419"/>
+<area shape="rect" id="node1_36" href="lldb.SBProcessInfo-class.html#UserIDIsValid" title="UserIDIsValid(SBProcessInfo self) &#45;&gt; bool" alt="" coords="17,419,175,439"/>
+<area shape="rect" id="node1_37" href="lldb.SBProcessInfo-class.html#GroupIDIsValid" title="GroupIDIsValid(SBProcessInfo self) &#45;&gt; bool" alt="" coords="17,439,175,459"/>
+<area shape="rect" id="node1_38" href="lldb.SBProcessInfo-class.html#GetEffectiveUserID" title="GetEffectiveUserID(SBProcessInfo self) &#45;&gt; uint32_t" alt="" coords="17,459,175,479"/>
+<area shape="rect" id="node1_39" href="lldb.SBProcessInfo-class.html#GetParentProcessID" title="GetParentProcessID(SBProcessInfo self) &#45;&gt; lldb::pid_t" alt="" coords="17,499,175,519"/>
+<area shape="rect" id="node1" href="lldb.SBProcessInfo-class.html" title="Describes an existing process and any discoverable information that pertains to that process." alt="" coords="5,70,187,525"/>
+<area shape="rect" id="node2" href="lldb._object-class.html" title="lldb._object" alt="" coords="61,5,129,51"/>
+</map>
+  <img src="uml_class_diagram_for_lldb_sbp_6.gif" alt='' usemap="#uml_class_diagram_for_lldb_sbp_6" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Describes an existing process and any discoverable information that 
+  pertains to that process.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#_swig_repr">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      __init__(lldb::SBProcessInfo self) -&gt; SBProcessInfo 
+      __init__(lldb::SBProcessInfo self, SBProcessInfo rhs) -&gt; 
+      SBProcessInfo</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsValid"></a><span class="summary-sig-name">IsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsValid(SBProcessInfo self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.IsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__nonzero__"></a><span class="summary-sig-name">__nonzero__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bool__"></a><span class="summary-sig-name">__bool__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetName"></a><span class="summary-sig-name">GetName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetName(SBProcessInfo self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetExecutableFile"></a><span class="summary-sig-name">GetExecutableFile</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetExecutableFile(SBProcessInfo self) -&gt; SBFileSpec</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetExecutableFile">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetProcessID"></a><span class="summary-sig-name">GetProcessID</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetProcessID(SBProcessInfo self) -&gt; lldb::pid_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetProcessID">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetUserID"></a><span class="summary-sig-name">GetUserID</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetUserID(SBProcessInfo self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetUserID">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetGroupID"></a><span class="summary-sig-name">GetGroupID</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetGroupID(SBProcessInfo self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetGroupID">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="UserIDIsValid"></a><span class="summary-sig-name">UserIDIsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      UserIDIsValid(SBProcessInfo self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.UserIDIsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GroupIDIsValid"></a><span class="summary-sig-name">GroupIDIsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GroupIDIsValid(SBProcessInfo self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GroupIDIsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetEffectiveUserID"></a><span class="summary-sig-name">GetEffectiveUserID</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetEffectiveUserID(SBProcessInfo self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetEffectiveUserID">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetEffectiveGroupID"></a><span class="summary-sig-name">GetEffectiveGroupID</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetEffectiveGroupID(SBProcessInfo self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetEffectiveGroupID">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="EffectiveUserIDIsValid"></a><span class="summary-sig-name">EffectiveUserIDIsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      EffectiveUserIDIsValid(SBProcessInfo self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.EffectiveUserIDIsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="EffectiveGroupIDIsValid"></a><span class="summary-sig-name">EffectiveGroupIDIsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      EffectiveGroupIDIsValid(SBProcessInfo self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.EffectiveGroupIDIsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetParentProcessID"></a><span class="summary-sig-name">GetParentProcessID</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetParentProcessID(SBProcessInfo self) -&gt; lldb::pid_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBProcessInfo.GetParentProcessID">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_setmethods__"></a><span class="summary-name">__swig_setmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__setattr__"></a><span class="summary-name">__setattr__</span> = <code title="lambda self, name, value:">lambda self, name, value:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_getmethods__"></a><span class="summary-name">__swig_getmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__getattr__"></a><span class="summary-name">__getattr__</span> = <code title="lambda self, name:">lambda self, name:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_destroy__"></a><span class="summary-name">__swig_destroy__</span> = <code title="_lldb.delete_SBProcessInfo">_lldb.delete_SBProcessInfo</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__del__"></a><span class="summary-name">__del__</span> = <code title="lambda self:">lambda self:</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Nov  4 00:57:42 2019
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

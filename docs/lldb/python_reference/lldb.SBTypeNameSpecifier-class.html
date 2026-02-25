@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lldb.SBTypeNameSpecifier</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lldb-module.html">Package&nbsp;lldb</a> ::
+        Class&nbsp;SBTypeNameSpecifier
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lldb.SBTypeNameSpecifier-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SBTypeNameSpecifier</h1><p class="nomargin-top"><span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_lldb_sbt_19" name="uml_class_diagram_for_lldb_sbt_19">
+<area shape="rect" id="node1_19" href="lldb.SBTypeNameSpecifier-class.html#__swig_setmethods__" title="lldb.SBTypeNameSpecifier.__swig_setmethods__" alt="" coords="17,96,179,116"/>
+<area shape="rect" id="node1_20" href="lldb.SBTypeNameSpecifier-class.html#__setattr__" title="lldb.SBTypeNameSpecifier.__setattr__" alt="" coords="17,116,179,136"/>
+<area shape="rect" id="node1_21" href="lldb.SBTypeNameSpecifier-class.html#__swig_getmethods__" title="lldb.SBTypeNameSpecifier.__swig_getmethods__" alt="" coords="17,136,179,156"/>
+<area shape="rect" id="node1_22" href="lldb.SBTypeNameSpecifier-class.html#__getattr__" title="lldb.SBTypeNameSpecifier.__getattr__" alt="" coords="17,156,179,176"/>
+<area shape="rect" id="node1_23" href="lldb.SBTypeNameSpecifier-class.html#__swig_destroy__" title="lldb.SBTypeNameSpecifier.__swig_destroy__" alt="" coords="17,176,179,196"/>
+<area shape="rect" id="node1_24" href="lldb.SBTypeNameSpecifier-class.html#__del__" title="lldb.SBTypeNameSpecifier.__del__" alt="" coords="17,196,179,216"/>
+<area shape="rect" id="node1_25" href="lldb.SBTypeNameSpecifier-class.html#__repr__" title="lldb.SBTypeNameSpecifier.__repr__" alt="" coords="17,219,179,239"/>
+<area shape="rect" id="node1_26" href="lldb.SBTypeNameSpecifier-class.html#__init__" title="__init__(lldb::SBTypeNameSpecifier self) &#45;&gt; SBTypeNameSpecifier &#160;__init__(lldb::SBTypeNameSpecifier self, char const * name, bool &#160;is_regex=False) &#45;&gt; SBTypeNameSpecifier __init__(lldb::SBTypeNameSpecifier &#160;self, char const * name) &#45;&gt; SBTypeNameSpecifier &#160;__init__(lldb::SBTypeNameSpecifier self, SBType type) &#45;&gt; &#160;SBTypeNameSpecifier __init__(lldb::SBTypeNameSpecifier self, &#160;SBTypeNameSpecifier rhs) &#45;&gt; SBTypeNameSpecifier" alt="" coords="17,239,179,259"/>
+<area shape="rect" id="node1_27" href="lldb.SBTypeNameSpecifier-class.html#IsValid" title="IsValid(SBTypeNameSpecifier self) &#45;&gt; bool" alt="" coords="17,259,179,279"/>
+<area shape="rect" id="node1_28" href="lldb.SBTypeNameSpecifier-class.html#__nonzero__" title="lldb.SBTypeNameSpecifier.__nonzero__" alt="" coords="17,279,179,299"/>
+<area shape="rect" id="node1_29" href="lldb.SBTypeNameSpecifier-class.html#__bool__" title="lldb.SBTypeNameSpecifier.__bool__" alt="" coords="17,299,179,319"/>
+<area shape="rect" id="node1_30" href="lldb.SBTypeNameSpecifier-class.html#IsEqualTo" title="IsEqualTo(SBTypeNameSpecifier self, SBTypeNameSpecifier rhs) &#45;&gt; bool" alt="" coords="17,319,179,339"/>
+<area shape="rect" id="node1_31" href="lldb.SBTypeNameSpecifier-class.html#GetName" title="GetName(SBTypeNameSpecifier self) &#45;&gt; char const *" alt="" coords="17,339,179,359"/>
+<area shape="rect" id="node1_32" href="lldb.SBTypeNameSpecifier-class.html#GetType" title="GetType(SBTypeNameSpecifier self) &#45;&gt; SBType" alt="" coords="17,359,179,379"/>
+<area shape="rect" id="node1_33" href="lldb.SBTypeNameSpecifier-class.html#IsRegex" title="IsRegex(SBTypeNameSpecifier self) &#45;&gt; bool" alt="" coords="17,379,179,399"/>
+<area shape="rect" id="node1_34" href="lldb.SBTypeNameSpecifier-class.html#GetDescription" title="GetDescription(SBTypeNameSpecifier self, SBStream description, &#160;lldb::DescriptionLevel description_level) &#45;&gt; bool" alt="" coords="17,399,179,419"/>
+<area shape="rect" id="node1_35" href="lldb.SBTypeNameSpecifier-class.html#__str__" title="__str__(SBTypeNameSpecifier self) &#45;&gt; PyObject *" alt="" coords="17,419,179,439"/>
+<area shape="rect" id="node1_36" href="lldb.SBTypeNameSpecifier-class.html#__eq__" title="lldb.SBTypeNameSpecifier.__eq__" alt="" coords="17,439,179,459"/>
+<area shape="rect" id="node1_37" href="lldb.SBTypeNameSpecifier-class.html#__ne__" title="lldb.SBTypeNameSpecifier.__ne__" alt="" coords="17,459,179,479"/>
+<area shape="rect" id="node1" href="lldb.SBTypeNameSpecifier-class.html" title="Represents a general way to provide a type name to LLDB APIs." alt="" coords="5,70,190,485"/>
+<area shape="rect" id="node2" href="lldb._object-class.html" title="lldb._object" alt="" coords="63,5,131,51"/>
+</map>
+  <img src="uml_class_diagram_for_lldb_sbt_19.gif" alt='' usemap="#uml_class_diagram_for_lldb_sbt_19" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Represents a general way to provide a type name to LLDB APIs.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#_swig_repr">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      __init__(lldb::SBTypeNameSpecifier self) -&gt; SBTypeNameSpecifier 
+      __init__(lldb::SBTypeNameSpecifier self, char const * name, bool 
+      is_regex=False) -&gt; SBTypeNameSpecifier 
+      __init__(lldb::SBTypeNameSpecifier self, char const * name) -&gt; 
+      SBTypeNameSpecifier __init__(lldb::SBTypeNameSpecifier self, SBType 
+      type) -&gt; SBTypeNameSpecifier __init__(lldb::SBTypeNameSpecifier 
+      self, SBTypeNameSpecifier rhs) -&gt; SBTypeNameSpecifier</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsValid"></a><span class="summary-sig-name">IsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsValid(SBTypeNameSpecifier self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.IsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__nonzero__"></a><span class="summary-sig-name">__nonzero__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bool__"></a><span class="summary-sig-name">__bool__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsEqualTo"></a><span class="summary-sig-name">IsEqualTo</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      IsEqualTo(SBTypeNameSpecifier self, SBTypeNameSpecifier rhs) -&gt; 
+      bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.IsEqualTo">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetName"></a><span class="summary-sig-name">GetName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetName(SBTypeNameSpecifier self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.GetName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetType"></a><span class="summary-sig-name">GetType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetType(SBTypeNameSpecifier self) -&gt; SBType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.GetType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsRegex"></a><span class="summary-sig-name">IsRegex</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsRegex(SBTypeNameSpecifier self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.IsRegex">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDescription"></a><span class="summary-sig-name">GetDescription</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetDescription(SBTypeNameSpecifier self, SBStream description, 
+      lldb::DescriptionLevel description_level) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.GetDescription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__str__"></a><span class="summary-sig-name">__str__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      __str__(SBTypeNameSpecifier self) -&gt; PyObject *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__eq__"></a><span class="summary-sig-name">__eq__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">rhs</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.__eq__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__ne__"></a><span class="summary-sig-name">__ne__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">rhs</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBTypeNameSpecifier.__ne__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_setmethods__"></a><span class="summary-name">__swig_setmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__setattr__"></a><span class="summary-name">__setattr__</span> = <code title="lambda self, name, value:">lambda self, name, value:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_getmethods__"></a><span class="summary-name">__swig_getmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__getattr__"></a><span class="summary-name">__getattr__</span> = <code title="lambda self, name:">lambda self, name:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_destroy__"></a><span class="summary-name">__swig_destroy__</span> = <code title="_lldb.delete_SBTypeNameSpecifier">_lldb.delete_SBTypeNameSpecifier</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__del__"></a><span class="summary-name">__del__</span> = <code title="lambda self:">lambda self:</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Nov  4 00:57:42 2019
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

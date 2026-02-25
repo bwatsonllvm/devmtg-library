@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lldb.SBError</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lldb-module.html">Package&nbsp;lldb</a> ::
+        Class&nbsp;SBError
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lldb.SBError-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SBError</h1><p class="nomargin-top"><span class="codelink"><a href="lldb-pysrc.html#SBError">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_lldb_sbe" name="uml_class_diagram_for_lldb_sbe">
+<area shape="rect" id="node1_20" href="lldb.SBError-class.html#__swig_setmethods__" title="lldb.SBError.__swig_setmethods__" alt="" coords="16,96,240,116"/>
+<area shape="rect" id="node1_21" href="lldb.SBError-class.html#__setattr__" title="lldb.SBError.__setattr__" alt="" coords="16,116,240,136"/>
+<area shape="rect" id="node1_22" href="lldb.SBError-class.html#__swig_getmethods__" title="lldb.SBError.__swig_getmethods__" alt="" coords="16,136,240,156"/>
+<area shape="rect" id="node1_23" href="lldb.SBError-class.html#__getattr__" title="lldb.SBError.__getattr__" alt="" coords="16,156,240,176"/>
+<area shape="rect" id="node1_24" href="lldb.SBError-class.html#__swig_destroy__" title="lldb.SBError.__swig_destroy__" alt="" coords="16,176,240,196"/>
+<area shape="rect" id="node1_25" href="lldb.SBError-class.html#__del__" title="lldb.SBError.__del__" alt="" coords="16,196,240,216"/>
+<area shape="rect" id="node1_26" href="lldb.SBError-class.html#__repr__" title="lldb.SBError.__repr__" alt="" coords="16,219,240,239"/>
+<area shape="rect" id="node1_27" href="lldb.SBError-class.html#__init__" title="__init__(lldb::SBError self) &#45;&gt; SBError __init__(lldb::SBError self, &#160;SBError rhs) &#45;&gt; SBError" alt="" coords="16,239,240,259"/>
+<area shape="rect" id="node1_28" href="lldb.SBError-class.html#GetCString" title="GetCString(SBError self) &#45;&gt; char const *" alt="" coords="16,259,240,279"/>
+<area shape="rect" id="node1_29" href="lldb.SBError-class.html#Clear" title="Clear(SBError self)" alt="" coords="16,279,240,299"/>
+<area shape="rect" id="node1_30" href="lldb.SBError-class.html#Fail" title="Fail(SBError self) &#45;&gt; bool" alt="" coords="16,299,240,319"/>
+<area shape="rect" id="node1_31" href="lldb.SBError-class.html#Success" title="Success(SBError self) &#45;&gt; bool" alt="" coords="16,319,240,339"/>
+<area shape="rect" id="node1_32" href="lldb.SBError-class.html#GetError" title="GetError(SBError self) &#45;&gt; uint32_t" alt="" coords="16,339,240,359"/>
+<area shape="rect" id="node1_33" href="lldb.SBError-class.html#GetType" title="GetType(SBError self) &#45;&gt; lldb::ErrorType" alt="" coords="16,359,240,379"/>
+<area shape="rect" id="node1_34" href="lldb.SBError-class.html#SetError" title="SetError(SBError self, uint32_t err, lldb::ErrorType type)" alt="" coords="16,379,240,399"/>
+<area shape="rect" id="node1_35" href="lldb.SBError-class.html#SetErrorToErrno" title="SetErrorToErrno(SBError self)" alt="" coords="16,399,240,419"/>
+<area shape="rect" id="node1_36" href="lldb.SBError-class.html#SetErrorToGenericError" title="SetErrorToGenericError(SBError self)" alt="" coords="16,419,240,439"/>
+<area shape="rect" id="node1_37" href="lldb.SBError-class.html#SetErrorString" title="SetErrorString(SBError self, char const * err_str)" alt="" coords="16,439,240,459"/>
+<area shape="rect" id="node1_38" href="lldb.SBError-class.html#SetErrorStringWithFormat" title="SetErrorStringWithFormat(SBError self, char const * format, char * &#160;str1=None, char * str2=None, char * str3=None) &#45;&gt; int &#160;SetErrorStringWithFormat(SBError self, char const * format, char * &#160;str1=None, char * str2=None) &#45;&gt; int SetErrorStringWithFormat(SBError self, &#160;char const * format, char * str1=None) &#45;&gt; int &#160;SetErrorStringWithFormat(SBError self, char const * format) &#45;&gt; int" alt="" coords="16,459,240,479"/>
+<area shape="rect" id="node1_39" href="lldb.SBError-class.html#__str__" title="__str__(SBError self) &#45;&gt; PyObject *" alt="" coords="16,499,240,519"/>
+<area shape="rect" id="node1" href="lldb.SBError-class.html" title="Represents a container for holding any error code." alt="" coords="4,70,252,525"/>
+<area shape="rect" id="node2" href="lldb._object-class.html" title="lldb._object" alt="" coords="93,5,161,51"/>
+</map>
+  <img src="uml_class_diagram_for_lldb_sbe.gif" alt='' usemap="#uml_class_diagram_for_lldb_sbe" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<pre class="literalblock">
+
+Represents a container for holding any error code.
+
+For example (from test/python_api/hello_world/TestHelloWorld.py),
+
+    def hello_world_attach_with_id_api(self):
+        '''Create target, spawn a process, and attach to it by id.'''
+
+        target = self.dbg.CreateTarget(self.exe)
+
+        # Spawn a new process and don't display the stdout if not in TraceOn() mode.
+        import subprocess
+        popen = subprocess.Popen([self.exe, 'abc', 'xyz'],
+                                 stdout = open(os.devnull, 'w') if not self.TraceOn() else None)
+
+        listener = lldb.SBListener('my.attach.listener')
+        error = lldb.SBError()
+        process = target.AttachToProcessWithID(listener, popen.pid, error)
+
+        self.assertTrue(error.Success() and process, PROCESS_IS_VALID)
+
+        # Let's check the stack traces of the attached process.
+        import lldbutil
+        stacktraces = lldbutil.print_stacktraces(process, string_buffer=True)
+        self.expect(stacktraces, exe=False,
+            substrs = ['main.c:%d' % self.line2,
+                       '(int)argc=3'])
+
+        listener = lldb.SBListener('my.attach.listener')
+        error = lldb.SBError()
+        process = target.AttachToProcessWithID(listener, popen.pid, error)
+
+        self.assertTrue(error.Success() and process, PROCESS_IS_VALID)
+
+checks that after the attach, there is no error condition by asserting
+that error.Success() is True and we get back a valid process object.
+
+And (from test/python_api/event/TestEvent.py),
+
+        # Now launch the process, and do not stop at entry point.
+        error = lldb.SBError()
+        process = target.Launch(listener, None, None, None, None, None, None, 0, False, error)
+        self.assertTrue(error.Success() and process, PROCESS_IS_VALID)
+
+checks that after calling the target.Launch() method there's no error
+condition and we get back a void process object.
+
+</pre>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#_swig_repr">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      __init__(lldb::SBError self) -&gt; SBError __init__(lldb::SBError 
+      self, SBError rhs) -&gt; SBError</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetCString"></a><span class="summary-sig-name">GetCString</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetCString(SBError self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.GetCString">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Clear"></a><span class="summary-sig-name">Clear</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Clear(SBError self)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.Clear">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Fail"></a><span class="summary-sig-name">Fail</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Fail(SBError self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.Fail">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Success"></a><span class="summary-sig-name">Success</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Success(SBError self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.Success">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetError"></a><span class="summary-sig-name">GetError</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetError(SBError self) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.GetError">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetType"></a><span class="summary-sig-name">GetType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetType(SBError self) -&gt; lldb::ErrorType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.GetType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetError"></a><span class="summary-sig-name">SetError</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetError(SBError self, uint32_t err, lldb::ErrorType type)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.SetError">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetErrorToErrno"></a><span class="summary-sig-name">SetErrorToErrno</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      SetErrorToErrno(SBError self)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.SetErrorToErrno">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetErrorToGenericError"></a><span class="summary-sig-name">SetErrorToGenericError</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      SetErrorToGenericError(SBError self)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.SetErrorToGenericError">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetErrorString"></a><span class="summary-sig-name">SetErrorString</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetErrorString(SBError self, char const * err_str)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.SetErrorString">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetErrorStringWithFormat"></a><span class="summary-sig-name">SetErrorStringWithFormat</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetErrorStringWithFormat(SBError self, char const * format, char * 
+      str1=None, char * str2=None, char * str3=None) -&gt; int 
+      SetErrorStringWithFormat(SBError self, char const * format, char * 
+      str1=None, char * str2=None) -&gt; int 
+      SetErrorStringWithFormat(SBError self, char const * format, char * 
+      str1=None) -&gt; int SetErrorStringWithFormat(SBError self, char 
+      const * format) -&gt; int</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.SetErrorStringWithFormat">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsValid"></a><span class="summary-sig-name">IsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsValid(SBError self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.IsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__nonzero__"></a><span class="summary-sig-name">__nonzero__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bool__"></a><span class="summary-sig-name">__bool__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDescription"></a><span class="summary-sig-name">GetDescription</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetDescription(SBError self, SBStream description) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.GetDescription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__str__"></a><span class="summary-sig-name">__str__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      __str__(SBError self) -&gt; PyObject *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBError.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_setmethods__"></a><span class="summary-name">__swig_setmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__setattr__"></a><span class="summary-name">__setattr__</span> = <code title="lambda self, name, value:">lambda self, name, value:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_getmethods__"></a><span class="summary-name">__swig_getmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__getattr__"></a><span class="summary-name">__getattr__</span> = <code title="lambda self, name:">lambda self, name:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_destroy__"></a><span class="summary-name">__swig_destroy__</span> = <code title="_lldb.delete_SBError">_lldb.delete_SBError</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__del__"></a><span class="summary-name">__del__</span> = <code title="lambda self:">lambda self:</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Nov  4 00:57:41 2019
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

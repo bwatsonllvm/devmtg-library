@@ -24,6 +24,9 @@ MAX_HEADINGS = 10
 MAX_SUMMARY_CHARS = 280
 MAX_SEARCH_CHARS = 6000
 SKIP_HTML = {"search.html", "genindex.html", "py-modindex.html"}
+SKIP_PATH_PREFIXES_BY_ROOT = {
+    "lldb": ("cpp_reference/",),
+}
 
 
 def normalize_space(value: str) -> str:
@@ -264,6 +267,10 @@ def build_entry_for_html(html_path: Path, docs_root: Path, outline_map: dict[str
         return None
     if relpath.startswith("_"):
         return None
+    root_key = docs_root.name.lower()
+    for prefix in SKIP_PATH_PREFIXES_BY_ROOT.get(root_key, ()):
+        if relpath.startswith(prefix):
+            return None
 
     raw = html_path.read_text(encoding="utf-8", errors="ignore")
     parser = DocsPageParser()

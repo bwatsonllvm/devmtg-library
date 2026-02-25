@@ -1,0 +1,2222 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>lldb.SBValue</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="lldb-module.html">Package&nbsp;lldb</a> ::
+        Class&nbsp;SBValue
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="lldb.SBValue-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SBValue</h1><p class="nomargin-top"><span class="codelink"><a href="lldb-pysrc.html#SBValue">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_lldb_sbv" name="uml_class_diagram_for_lldb_sbv">
+<area shape="rect" id="node1_21" href="lldb.SBValue-class.html#__swig_setmethods__" title="lldb.SBValue.__swig_setmethods__" alt="" coords="17,95,183,115"/>
+<area shape="rect" id="node1_22" href="lldb.SBValue-class.html#__setattr__" title="lldb.SBValue.__setattr__" alt="" coords="17,115,183,135"/>
+<area shape="rect" id="node1_23" href="lldb.SBValue-class.html#__swig_getmethods__" title="lldb.SBValue.__swig_getmethods__" alt="" coords="17,135,183,155"/>
+<area shape="rect" id="node1_24" href="lldb.SBValue-class.html#__getattr__" title="lldb.SBValue.__getattr__" alt="" coords="17,155,183,175"/>
+<area shape="rect" id="node1_25" href="lldb.SBValue-class.html#__swig_destroy__" title="lldb.SBValue.__swig_destroy__" alt="" coords="17,175,183,195"/>
+<area shape="rect" id="node1_26" href="lldb.SBValue-class.html#__del__" title="lldb.SBValue.__del__" alt="" coords="17,195,183,215"/>
+<area shape="rect" id="node1_27" href="lldb.SBValue.children_access-class.html" title="A helper object that will lazily hand out thread for a process when &#160;supplied an index." alt="" coords="17,215,183,235"/>
+<area shape="rect" id="node1_28" href="lldb.SBValue-class.html#__repr__" title="lldb.SBValue.__repr__" alt="" coords="17,237,183,257"/>
+<area shape="rect" id="node1_29" href="lldb.SBValue-class.html#__init__" title="__init__(lldb::SBValue self) &#45;&gt; SBValue __init__(lldb::SBValue self, &#160;SBValue rhs) &#45;&gt; SBValue" alt="" coords="17,257,183,277"/>
+<area shape="rect" id="node1_30" href="lldb.SBValue-class.html#IsValid" title="IsValid(SBValue self) &#45;&gt; bool" alt="" coords="17,277,183,297"/>
+<area shape="rect" id="node1_31" href="lldb.SBValue-class.html#__nonzero__" title="lldb.SBValue.__nonzero__" alt="" coords="17,297,183,317"/>
+<area shape="rect" id="node1_32" href="lldb.SBValue-class.html#__bool__" title="lldb.SBValue.__bool__" alt="" coords="17,317,183,337"/>
+<area shape="rect" id="node1_33" href="lldb.SBValue-class.html#Clear" title="Clear(SBValue self)" alt="" coords="17,337,183,357"/>
+<area shape="rect" id="node1_34" href="lldb.SBValue-class.html#GetError" title="GetError(SBValue self) &#45;&gt; SBError" alt="" coords="17,357,183,377"/>
+<area shape="rect" id="node1_35" href="lldb.SBValue-class.html#GetID" title="GetID(SBValue self) &#45;&gt; lldb::user_id_t" alt="" coords="17,377,183,397"/>
+<area shape="rect" id="node1_36" href="lldb.SBValue-class.html#GetName" title="GetName(SBValue self) &#45;&gt; char const *" alt="" coords="17,397,183,417"/>
+<area shape="rect" id="node1_37" href="lldb.SBValue-class.html#GetTypeName" title="GetTypeName(SBValue self) &#45;&gt; char const *" alt="" coords="17,417,183,437"/>
+<area shape="rect" id="node1_38" href="lldb.SBValue-class.html#GetDisplayTypeName" title="GetDisplayTypeName(SBValue self) &#45;&gt; char const *" alt="" coords="17,437,183,457"/>
+<area shape="rect" id="node1_39" href="lldb.SBValue-class.html#GetByteSize" title="GetByteSize(SBValue self) &#45;&gt; size_t" alt="" coords="17,457,183,477"/>
+<area shape="rect" id="node1_40" href="lldb.SBValue-class.html#IsInScope" title="IsInScope(SBValue self) &#45;&gt; bool" alt="" coords="17,477,183,497"/>
+<area shape="rect" id="node1_41" href="lldb.SBValue-class.html#__str__" title="__str__(SBValue self) &#45;&gt; PyObject *" alt="" coords="17,517,183,537"/>
+<area shape="rect" id="node1" href="lldb.SBValue-class.html" title="Represents the value of a variable, a register, or an expression." alt="" coords="5,69,195,544"/>
+<area shape="rect" id="node2" href="lldb._object-class.html" title="lldb._object" alt="" coords="65,5,133,51"/>
+</map>
+  <img src="uml_class_diagram_for_lldb_sbv.gif" alt='' usemap="#uml_class_diagram_for_lldb_sbv" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<pre class="literalblock">
+
+Represents the value of a variable, a register, or an expression.
+
+SBValue supports iteration through its child, which in turn is represented
+as an SBValue.  For example, we can get the general purpose registers of a
+frame as an SBValue, and iterate through all the registers,
+
+    registerSet = frame.registers # Returns an SBValueList.
+    for regs in registerSet:
+        if 'general purpose registers' in regs.name.lower():
+            GPRs = regs
+            break
+
+    print('%s (number of children = %d):' % (GPRs.name, GPRs.num_children))
+    for reg in GPRs:
+        print('Name: ', reg.name, ' Value: ', reg.value)
+
+produces the output:
+
+General Purpose Registers (number of children = 21):
+Name:  rax  Value:  0x0000000100000c5c
+Name:  rbx  Value:  0x0000000000000000
+Name:  rcx  Value:  0x00007fff5fbffec0
+Name:  rdx  Value:  0x00007fff5fbffeb8
+Name:  rdi  Value:  0x0000000000000001
+Name:  rsi  Value:  0x00007fff5fbffea8
+Name:  rbp  Value:  0x00007fff5fbffe80
+Name:  rsp  Value:  0x00007fff5fbffe60
+Name:  r8  Value:  0x0000000008668682
+Name:  r9  Value:  0x0000000000000000
+Name:  r10  Value:  0x0000000000001200
+Name:  r11  Value:  0x0000000000000206
+Name:  r12  Value:  0x0000000000000000
+Name:  r13  Value:  0x0000000000000000
+Name:  r14  Value:  0x0000000000000000
+Name:  r15  Value:  0x0000000000000000
+Name:  rip  Value:  0x0000000100000dae
+Name:  rflags  Value:  0x0000000000000206
+Name:  cs  Value:  0x0000000000000027
+Name:  fs  Value:  0x0000000000000010
+Name:  gs  Value:  0x0000000000000048
+
+See also linked_list_iter() for another perspective on how to iterate through an
+SBValue instance which interprets the value object as representing the head of a
+linked list.
+
+</pre>
+
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Nested Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="lldb.SBValue.children_access-class.html" class="summary-name">children_access</a><br />
+      A helper object that will lazily hand out thread for a process when
+        supplied an index.
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__repr__"></a><span class="summary-sig-name">__repr__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#_swig_repr">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      __init__(lldb::SBValue self) -&gt; SBValue __init__(lldb::SBValue 
+      self, SBValue rhs) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsValid"></a><span class="summary-sig-name">IsValid</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsValid(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.IsValid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__nonzero__"></a><span class="summary-sig-name">__nonzero__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bool__"></a><span class="summary-sig-name">__bool__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__nonzero__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Clear"></a><span class="summary-sig-name">Clear</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Clear(SBValue self)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.Clear">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetError"></a><span class="summary-sig-name">GetError</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetError(SBValue self) -&gt; SBError</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetError">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetID"></a><span class="summary-sig-name">GetID</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetID(SBValue self) -&gt; lldb::user_id_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetID">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetName"></a><span class="summary-sig-name">GetName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetName(SBValue self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetTypeName"></a><span class="summary-sig-name">GetTypeName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetTypeName(SBValue self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetTypeName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDisplayTypeName"></a><span class="summary-sig-name">GetDisplayTypeName</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetDisplayTypeName(SBValue self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetDisplayTypeName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetByteSize"></a><span class="summary-sig-name">GetByteSize</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetByteSize(SBValue self) -&gt; size_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetByteSize">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsInScope"></a><span class="summary-sig-name">IsInScope</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsInScope(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.IsInScope">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetFormat"></a><span class="summary-sig-name">GetFormat</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetFormat(SBValue self) -&gt; lldb::Format</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetFormat">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetFormat"></a><span class="summary-sig-name">SetFormat</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetFormat(SBValue self, lldb::Format format)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.SetFormat">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetValue"></a><span class="summary-sig-name">GetValue</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetValue(SBValue self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetValueAsSigned"></a><span class="summary-sig-name">GetValueAsSigned</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetValueAsSigned(SBValue self, SBError error, int64_t fail_value=0) 
+      -&gt; int64_t GetValueAsSigned(SBValue self, SBError error) -&gt; 
+      int64_t GetValueAsSigned(SBValue self, int64_t fail_value=0) -&gt; 
+      int64_t GetValueAsSigned(SBValue self) -&gt; int64_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetValueAsSigned">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetValueAsUnsigned"></a><span class="summary-sig-name">GetValueAsUnsigned</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetValueAsUnsigned(SBValue self, SBError error, uint64_t 
+      fail_value=0) -&gt; uint64_t GetValueAsUnsigned(SBValue self, SBError
+      error) -&gt; uint64_t GetValueAsUnsigned(SBValue self, uint64_t 
+      fail_value=0) -&gt; uint64_t GetValueAsUnsigned(SBValue self) -&gt; 
+      uint64_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetValueAsUnsigned">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetValueType"></a><span class="summary-sig-name">GetValueType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetValueType(SBValue self) -&gt; lldb::ValueType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetValueType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetValueDidChange"></a><span class="summary-sig-name">GetValueDidChange</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetValueDidChange(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetValueDidChange">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetSummary"></a><span class="summary-sig-name">GetSummary</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetSummary(SBValue self) -&gt; char const GetSummary(SBValue self, 
+      SBStream stream, SBTypeSummaryOptions options) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetSummary">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetObjectDescription"></a><span class="summary-sig-name">GetObjectDescription</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetObjectDescription(SBValue self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetObjectDescription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetTypeValidatorResult"></a><span class="summary-sig-name">GetTypeValidatorResult</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetTypeValidatorResult(SBValue self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetTypeValidatorResult">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDynamicValue"></a><span class="summary-sig-name">GetDynamicValue</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetDynamicValue(SBValue self, lldb::DynamicValueType use_dynamic) 
+      -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetDynamicValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetStaticValue"></a><span class="summary-sig-name">GetStaticValue</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetStaticValue(SBValue self) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetStaticValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetNonSyntheticValue"></a><span class="summary-sig-name">GetNonSyntheticValue</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetNonSyntheticValue(SBValue self) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetNonSyntheticValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetPreferDynamicValue"></a><span class="summary-sig-name">GetPreferDynamicValue</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetPreferDynamicValue(SBValue self) -&gt; lldb::DynamicValueType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetPreferDynamicValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetPreferDynamicValue"></a><span class="summary-sig-name">SetPreferDynamicValue</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetPreferDynamicValue(SBValue self, lldb::DynamicValueType 
+      use_dynamic)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.SetPreferDynamicValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetPreferSyntheticValue"></a><span class="summary-sig-name">GetPreferSyntheticValue</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetPreferSyntheticValue(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetPreferSyntheticValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetPreferSyntheticValue"></a><span class="summary-sig-name">SetPreferSyntheticValue</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetPreferSyntheticValue(SBValue self, bool use_synthetic)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.SetPreferSyntheticValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsDynamic"></a><span class="summary-sig-name">IsDynamic</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsDynamic(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.IsDynamic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsSynthetic"></a><span class="summary-sig-name">IsSynthetic</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsSynthetic(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.IsSynthetic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsSyntheticChildrenGenerated"></a><span class="summary-sig-name">IsSyntheticChildrenGenerated</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsSyntheticChildrenGenerated(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.IsSyntheticChildrenGenerated">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetSyntheticChildrenGenerated"></a><span class="summary-sig-name">SetSyntheticChildrenGenerated</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetSyntheticChildrenGenerated(SBValue self, bool arg2)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.SetSyntheticChildrenGenerated">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetLocation"></a><span class="summary-sig-name">GetLocation</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetLocation(SBValue self) -&gt; char const *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetLocation">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetValueFromCString"></a><span class="summary-sig-name">SetValueFromCString</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetValueFromCString(SBValue self, char const * value_str) -&gt; bool 
+      SetValueFromCString(SBValue self, char const * value_str, SBError 
+      error) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.SetValueFromCString">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetTypeFormat"></a><span class="summary-sig-name">GetTypeFormat</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetTypeFormat(SBValue self) -&gt; SBTypeFormat</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetTypeFormat">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetTypeSummary"></a><span class="summary-sig-name">GetTypeSummary</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetTypeSummary(SBValue self) -&gt; SBTypeSummary</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetTypeSummary">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetTypeFilter"></a><span class="summary-sig-name">GetTypeFilter</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetTypeFilter(SBValue self) -&gt; SBTypeFilter</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetTypeFilter">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetTypeSynthetic"></a><span class="summary-sig-name">GetTypeSynthetic</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetTypeSynthetic(SBValue self) -&gt; SBTypeSynthetic</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetTypeSynthetic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#GetChildAtIndex" class="summary-sig-name">GetChildAtIndex</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetChildAtIndex(SBValue self, uint32_t idx) -&gt; SBValue
+GetChildAtIndex(SBValue self, uint32_t idx, lldb::DynamicValueType use_dynamic, bool can_create_synthetic) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetChildAtIndex">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="CreateChildAtOffset"></a><span class="summary-sig-name">CreateChildAtOffset</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      CreateChildAtOffset(SBValue self, char const * name, uint32_t offset,
+      SBType type) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.CreateChildAtOffset">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Cast"></a><span class="summary-sig-name">Cast</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      Cast(SBValue self, SBType type) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.Cast">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="CreateValueFromExpression"></a><span class="summary-sig-name">CreateValueFromExpression</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      CreateValueFromExpression(SBValue self, char const * name, char const
+      * expression) -&gt; SBValue CreateValueFromExpression(SBValue self, 
+      char const * name, char const * expression, SBExpressionOptions 
+      options) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.CreateValueFromExpression">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="CreateValueFromAddress"></a><span class="summary-sig-name">CreateValueFromAddress</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      CreateValueFromAddress(SBValue self, char const * name, lldb::addr_t 
+      address, SBType type) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.CreateValueFromAddress">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="CreateValueFromData"></a><span class="summary-sig-name">CreateValueFromData</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      CreateValueFromData(SBValue self, char const * name, SBData data, 
+      SBType type) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.CreateValueFromData">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetType"></a><span class="summary-sig-name">GetType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetType(SBValue self) -&gt; SBType</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#GetIndexOfChildWithName" class="summary-sig-name">GetIndexOfChildWithName</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetIndexOfChildWithName(SBValue self, char const * name) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetIndexOfChildWithName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#GetChildMemberWithName" class="summary-sig-name">GetChildMemberWithName</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetChildMemberWithName(SBValue self, char const * name) -&gt; SBValue
+GetChildMemberWithName(SBValue self, char const * name, lldb::DynamicValueType use_dynamic) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetChildMemberWithName">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#GetValueForExpressionPath" class="summary-sig-name">GetValueForExpressionPath</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetValueForExpressionPath(SBValue self, char const * expr_path) -&gt;
+      SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetValueForExpressionPath">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDeclaration"></a><span class="summary-sig-name">GetDeclaration</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetDeclaration(SBValue self) -&gt; SBDeclaration</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetDeclaration">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="MightHaveChildren"></a><span class="summary-sig-name">MightHaveChildren</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      MightHaveChildren(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.MightHaveChildren">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="IsRuntimeSupportValue"></a><span class="summary-sig-name">IsRuntimeSupportValue</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      IsRuntimeSupportValue(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.IsRuntimeSupportValue">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetNumChildren"></a><span class="summary-sig-name">GetNumChildren</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetNumChildren(SBValue self) -&gt; uint32_t GetNumChildren(SBValue 
+      self, uint32_t max) -&gt; uint32_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetNumChildren">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetOpaqueType"></a><span class="summary-sig-name">GetOpaqueType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetOpaqueType(SBValue self) -&gt; void *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetOpaqueType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Dereference"></a><span class="summary-sig-name">Dereference</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Dereference(SBValue self) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.Dereference">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="AddressOf"></a><span class="summary-sig-name">AddressOf</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      AddressOf(SBValue self) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.AddressOf">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="TypeIsPointerType"></a><span class="summary-sig-name">TypeIsPointerType</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      TypeIsPointerType(SBValue self) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.TypeIsPointerType">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetTarget"></a><span class="summary-sig-name">GetTarget</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetTarget(SBValue self) -&gt; SBTarget</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetTarget">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetProcess"></a><span class="summary-sig-name">GetProcess</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetProcess(SBValue self) -&gt; SBProcess</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetProcess">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetThread"></a><span class="summary-sig-name">GetThread</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetThread(SBValue self) -&gt; SBThread</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetThread">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetFrame"></a><span class="summary-sig-name">GetFrame</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetFrame(SBValue self) -&gt; SBFrame</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetFrame">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#Watch" class="summary-sig-name">Watch</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      Watch(SBValue self, bool resolve_location, bool read, bool write, 
+      SBError error) -&gt; SBWatchpoint</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.Watch">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#WatchPointee" class="summary-sig-name">WatchPointee</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      WatchPointee(SBValue self, bool resolve_location, bool read, bool 
+      write, SBError error) -&gt; SBWatchpoint</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.WatchPointee">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetDescription"></a><span class="summary-sig-name">GetDescription</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetDescription(SBValue self, SBStream description) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetDescription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#GetPointeeData" class="summary-sig-name">GetPointeeData</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">item_idx</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">item_count</span>=<span class="summary-sig-default">1</span>)</span><br />
+      GetPointeeData(SBValue self, uint32_t item_idx=0, uint32_t item_count=1) -&gt; SBData
+GetPointeeData(SBValue self, uint32_t item_idx=0) -&gt; SBData
+GetPointeeData(SBValue self) -&gt; SBData</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetPointeeData">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#GetData" class="summary-sig-name">GetData</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetData(SBValue self) -&gt; SBData</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetData">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="SetData"></a><span class="summary-sig-name">SetData</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      SetData(SBValue self, SBData data, SBError error) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.SetData">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetLoadAddress"></a><span class="summary-sig-name">GetLoadAddress</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetLoadAddress(SBValue self) -&gt; lldb::addr_t</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetLoadAddress">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="GetAddress"></a><span class="summary-sig-name">GetAddress</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      GetAddress(SBValue self) -&gt; SBAddress</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetAddress">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Persist"></a><span class="summary-sig-name">Persist</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Persist(SBValue self) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.Persist">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#GetExpressionPath" class="summary-sig-name">GetExpressionPath</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      GetExpressionPath(SBValue self, SBStream description) -&gt; bool 
+      GetExpressionPath(SBValue self, SBStream description, bool 
+      qualify_cxx_base_classes) -&gt; bool</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.GetExpressionPath">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="EvaluateExpression"></a><span class="summary-sig-name">EvaluateExpression</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>)</span><br />
+      EvaluateExpression(SBValue self, char const * expr) -&gt; SBValue 
+      EvaluateExpression(SBValue self, char const * expr, 
+      SBExpressionOptions options) -&gt; SBValue EvaluateExpression(SBValue
+      self, char const * expr, SBExpressionOptions options, char const * 
+      name) -&gt; SBValue</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.EvaluateExpression">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__get_dynamic__"></a><span class="summary-sig-name">__get_dynamic__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Helper function for the &quot;SBValue.dynamic&quot; property.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__get_dynamic__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_child_access_object"></a><span class="summary-sig-name">get_child_access_object</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      An accessor function that returns a children_access() object which 
+      allows lazy member variable access from a lldb.SBValue object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.get_child_access_object">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_value_child_list"></a><span class="summary-sig-name">get_value_child_list</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      An accessor function that returns a list() that contains all children
+      in a lldb.SBValue object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.get_value_child_list">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__iter__"></a><span class="summary-sig-name">__iter__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Iterate over all child values of a lldb.SBValue object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__iter__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__len__"></a><span class="summary-sig-name">__len__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return the number of child values of a lldb.SBValue object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__len__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_expr_path"></a><span class="summary-sig-name">get_expr_path</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.get_expr_path">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="synthetic_child_from_expression"></a><span class="summary-sig-name">synthetic_child_from_expression</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">expr</span>,
+        <span class="summary-sig-arg">options</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.synthetic_child_from_expression">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="synthetic_child_from_data"></a><span class="summary-sig-name">synthetic_child_from_data</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">type</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.synthetic_child_from_data">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="synthetic_child_from_address"></a><span class="summary-sig-name">synthetic_child_from_address</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">addr</span>,
+        <span class="summary-sig-arg">type</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.synthetic_child_from_address">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#__eol_test" class="summary-sig-name" onclick="show_private();">__eol_test</a>(<span class="summary-sig-arg">val</span>)</span><br />
+      Default function for end of list test takes an SBValue object.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__eol_test">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="lldb.SBValue-class.html#linked_list_iter" class="summary-sig-name">linked_list_iter</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">next_item_name</span>,
+        <span class="summary-sig-arg">end_of_list_test</span>=<span class="summary-sig-default">__eol_test</span>)</span><br />
+      Generator adaptor to support iteration for SBValue as a linked list.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.linked_list_iter">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__str__"></a><span class="summary-sig-name">__str__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      __str__(SBValue self) -&gt; PyObject *</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="lldb-pysrc.html#SBValue.__str__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_setmethods__"></a><span class="summary-name">__swig_setmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__setattr__"></a><span class="summary-name">__setattr__</span> = <code title="lambda self, name, value:">lambda self, name, value:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_getmethods__"></a><span class="summary-name">__swig_getmethods__</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__getattr__"></a><span class="summary-name">__getattr__</span> = <code title="lambda self, name:">lambda self, name:</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__swig_destroy__"></a><span class="summary-name">__swig_destroy__</span> = <code title="_lldb.delete_SBValue">_lldb.delete_SBValue</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__del__"></a><span class="summary-name">__del__</span> = <code title="lambda self:">lambda self:</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="GetChildAtIndex"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetChildAtIndex</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.GetChildAtIndex">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+GetChildAtIndex(SBValue self, uint32_t idx) -&gt; SBValue
+GetChildAtIndex(SBValue self, uint32_t idx, lldb::DynamicValueType use_dynamic, bool can_create_synthetic) -&gt; SBValue
+
+Get a child value by index from a value.
+
+Structs, unions, classes, arrays and pointers have child
+values that can be access by index.
+
+Structs and unions access child members using a zero based index
+for each child member. For
+
+Classes reserve the first indexes for base classes that have
+members (empty base classes are omitted), and all members of the
+current class will then follow the base classes.
+
+Pointers differ depending on what they point to. If the pointer
+points to a simple type, the child at index zero
+is the only child value available, unless synthetic_allowed
+is true, in which case the pointer will be used as an array
+and can create 'synthetic' child values using positive or
+negative indexes. If the pointer points to an aggregate type
+(an array, class, union, struct), then the pointee is
+transparently skipped and any children are going to be the indexes
+of the child values within the aggregate type. For example if
+we have a 'Point' type and we have a SBValue that contains a
+pointer to a 'Point' type, then the child at index zero will be
+the 'x' member, and the child at index 1 will be the 'y' member
+(the child at index zero won't be a 'Point' instance).
+
+If you actually need an SBValue that represents the type pointed
+to by a SBValue for which GetType().IsPointeeType() returns true,
+regardless of the pointee type, you can do that with the SBValue.Dereference
+method (or the equivalent deref property).
+
+Arrays have a preset number of children that can be accessed by
+index and will returns invalid child values for indexes that are
+out of bounds unless the synthetic_allowed is true. In this
+case the array can create 'synthetic' child values for indexes
+that aren't in the array bounds using positive or negative
+indexes.
+
+@param[in] idx
+    The index of the child value to get
+
+@param[in] use_dynamic
+    An enumeration that specifies whether to get dynamic values,
+    and also if the target can be run to figure out the dynamic
+    type of the child value.
+
+@param[in] synthetic_allowed
+    If true, then allow child values to be created by index
+    for pointers and arrays for indexes that normally wouldn't
+    be allowed.
+
+@return
+    A new SBValue object that represents the child member value.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetIndexOfChildWithName"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetIndexOfChildWithName</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.GetIndexOfChildWithName">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+GetIndexOfChildWithName(SBValue self, char const * name) -&gt; uint32_t
+
+Returns the child member index.
+
+Matches children of this object only and will match base classes and
+member names if this is a clang typed object.
+
+@param[in] name
+    The name of the child value to get
+
+@return
+    An index to the child member value.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetChildMemberWithName"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetChildMemberWithName</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.GetChildMemberWithName">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+GetChildMemberWithName(SBValue self, char const * name) -&gt; SBValue
+GetChildMemberWithName(SBValue self, char const * name, lldb::DynamicValueType use_dynamic) -&gt; SBValue
+
+Returns the child member value.
+
+Matches child members of this object and child members of any base
+classes.
+
+@param[in] name
+    The name of the child value to get
+
+@param[in] use_dynamic
+    An enumeration that specifies whether to get dynamic values,
+    and also if the target can be run to figure out the dynamic
+    type of the child value.
+
+@return
+    A new SBValue object that represents the child member value.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetValueForExpressionPath"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetValueForExpressionPath</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.GetValueForExpressionPath">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetValueForExpressionPath(SBValue self, char const * expr_path) -&gt; 
+  SBValue</p>
+  <p>Expands nested expressions like .a-&gt;b[0].c[1]-&gt;d.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="Watch"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">Watch</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.Watch">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Watch(SBValue self, bool resolve_location, bool read, bool write, 
+  SBError error) -&gt; SBWatchpoint</p>
+  <p>Find and watch a variable. It returns an SBWatchpoint, which may be 
+  invalid.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="WatchPointee"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">WatchPointee</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.WatchPointee">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>WatchPointee(SBValue self, bool resolve_location, bool read, bool 
+  write, SBError error) -&gt; SBWatchpoint</p>
+  <p>Find and watch the location pointed to by a variable. It returns an 
+  SBWatchpoint, which may be invalid.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetPointeeData"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetPointeeData</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">item_idx</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">item_count</span>=<span class="sig-default">1</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.GetPointeeData">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+GetPointeeData(SBValue self, uint32_t item_idx=0, uint32_t item_count=1) -&gt; SBData
+GetPointeeData(SBValue self, uint32_t item_idx=0) -&gt; SBData
+GetPointeeData(SBValue self) -&gt; SBData
+
+Get an SBData wrapping what this SBValue points to.
+
+This method will dereference the current SBValue, if its
+data type is a T* or T[], and extract item_count elements
+of type T from it, copying their contents in an SBData.
+
+@param[in] item_idx
+    The index of the first item to retrieve. For an array
+    this is equivalent to array[item_idx], for a pointer
+    to *(pointer + item_idx). In either case, the measurement
+    unit for item_idx is the sizeof(T) rather than the byte
+
+@param[in] item_count
+    How many items should be copied into the output. By default
+    only one item is copied, but more can be asked for.
+
+@return
+    An SBData with the contents of the copied items, on success.
+    An empty SBData otherwise.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetData"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetData</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.GetData">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+GetData(SBValue self) -&gt; SBData
+
+Get an SBData wrapping the contents of this SBValue.
+
+This method will read the contents of this object in memory
+and copy them into an SBData for future use.
+
+@return
+    An SBData with the contents of this SBValue, on success.
+    An empty SBData otherwise.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="GetExpressionPath"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">GetExpressionPath</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.GetExpressionPath">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>GetExpressionPath(SBValue self, SBStream description) -&gt; bool 
+  GetExpressionPath(SBValue self, SBStream description, bool 
+  qualify_cxx_base_classes) -&gt; bool</p>
+  <p>Returns an expression path for this value.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="__eol_test"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__eol_test</span>(<span class="sig-arg">val</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.__eol_test">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Default function for end of list test takes an SBValue object.</p>
+  <p>Return True if val is invalid or it corresponds to a null pointer. 
+  Otherwise, return False.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="linked_list_iter"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">linked_list_iter</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">next_item_name</span>,
+        <span class="sig-arg">end_of_list_test</span>=<span class="sig-default">__eol_test</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="lldb-pysrc.html#SBValue.linked_list_iter">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Generator adaptor to support iteration for SBValue as a linked list.
+
+linked_list_iter() is a special purpose iterator to treat the SBValue as
+the head of a list data structure, where you specify the child member
+name which points to the next item on the list and you specify the
+end-of-list test function which takes an SBValue for an item and returns
+True if EOL is reached and False if not.
+
+linked_list_iter() also detects infinite loop and bails out early.
+
+The end_of_list_test arg, if omitted, defaults to the __eol_test
+function above.
+
+For example,
+
+# Get Frame #0.
+...
+
+# Get variable 'task_head'.
+task_head = frame0.FindVariable('task_head')
+...
+
+for t in task_head.linked_list_iter('next'):
+    print t
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="lldb-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://lldb.llvm.org">LLDB python API</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Nov  4 00:57:43 2019
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
