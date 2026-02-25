@@ -1344,7 +1344,7 @@
           "affiliation": ""
         }
       ],
-      "abstract": "",
+      "abstract": "Programming languages such as C and C++ support variadic functions, i.e., functions that accept a variable number of arguments (e.g., printf). While variadic functions are flexible, they are inherently not type-safe. In fact, the semantics and parameters of variadic functions are defined implicitly by their implementation. It is left to the programmer to ensure that the caller and callee follow this implicit specification, without the help of a static type checker. An adversary can take advantage of a mismatch between the argument types used by the caller of a variadic function and the types expected by the callee to violate the language semantics and to tamper with memory. Format string attacks are the most popular example of such a mismatch. Indirect function calls can be exploited by an adversary to divert execution through illegal paths. CFI restricts call targets according to the function prototype which, for variadic functions, does not include all the actual parameters. However, as shown by our case study, current Control Flow Integrity (CFI) implementations are mainly limited to non-variadic functions and fail to address this potential attack vector. Defending against such an attack requires a stateful dynamic check. We present HexVASAN, a compiler based sanitizer to effectively type-check and thus prevent any attack via variadic functions (when called directly or indirectly). The key idea is to record metadata at the call site and verify parameters and their types at the callee whenever they are used at runtime. Our evaluation shows that HexVASAN is (i) practically deployable as the measured overhead is negligible (0.72%) and (ii) effective as we show in several case studies.",
       "videoId": null,
       "tags": []
     },
@@ -1370,7 +1370,7 @@
           "affiliation": ""
         }
       ],
-      "abstract": "",
+      "abstract": "Vectorization is important and growing part of the LLVM's eco-system. With new SIMD ISA extensions like gather/scatter instructions, it is not uncommon to vectorize complex, irregular data access patterns. LLVM's gather/scatter intrinsics serves these cases well. Today LLVM's vectorizer represents a group of adjacent interleaved-accesses using a wide-load followed by shuffle instructions which get further optimized by the target-specific optimizations. This covers the case where multiple strided loads/stores together accesses a single contiguous chunk of memory. But currently there is no way to represent the cases where multiple gathers accesses a group of contiguous chunks of memory. This poster shows how a group of adjacent non-interleaved accesses can be represented using the wide-vector+shuffles schema and how they can be further optimized by the targets to provide further performance gain on top of the regular vectorization.",
       "videoId": null,
       "tags": []
     },
@@ -1404,7 +1404,8 @@
           "affiliation": ""
         }
       ],
-      "abstract": "",
+      "abstract": "It is well understood that programs spend most of their time in loops. The application writer may want to know the measure of time-taken for each loop in large programs, so that (s)he can then focus on these loops for applying optimizations. Loop profiling is a way to calculate loop-based run-time information such as execution-time, cache-miss equations and other runtime metrics, which help us to analyze code to fix performance related issues in the code base. This is achieved by instrumenting/annotating the existing input program. There already exist loop-profilers for conventional languages like C++, Java etc., both in open-source and commercial domain. However, as far as we know, there is no such loop-profiler available for LLVM-IR; such a tool would help LLVM users analyze loops in LLVM-IR. Our work mainly focuses around developing such a generic loop profiler for LLVM-IR. It can thus be used for any language(s) which have a LLVM IR. Our current work proposes an LLVM based loop-profiler which works on the IR level and gives execution times, and total number of clocks for each loop. Currently, we focus on the inner-most loop(s) as well as each individual loop(s) for collecting run-time profiling data. Our profiler works on LLVM IR and inserts the instrumented code into the entry and exit blocks of each loop. It also returns the number of clock(s) ticks and execution time(s) for each loop of the input program. It also append(s) some instrumented code into the exit block of outer-most loop for calculating total and average number of clocks for each loop. We are currently working to capture other runtime metrics like number of cache misses, number of registers required. We have results from SPEC CPU 2006 which demonstrate that for all benchmarks in the suite, very few loops are highly compute intensive. For most of the other loops, either control does not reach to them, or they take negligible execution time.",
+      "slidesUrl": "https://llvm.org/devmtg/2017-10/slides/Jain-LLVM%20based%20Loop%20Profiler.pdf",
       "videoId": null,
       "tags": []
     },
@@ -1434,7 +1435,7 @@
           "affiliation": ""
         }
       ],
-      "abstract": "",
+      "abstract": "Smaller feature size, lower supply voltage, and faster clock rates have made modern computer systems more susceptible to faults. Although previous fault tolerance techniques usually target a relatively low fault rate and consider error recovery less critical, with the advent of higher fault rates, recovery overhead is no longer negligible. In this paper, we propose a scheme that leverages and revises a set of compiler optimizations to design, for each application hotspot, a smart recovery plan that identifies the minimal set of instructions to be re-executed in different fault scenarios. Such fault scenario and recovery plan information is efficiently delivered to the processor for runtime fault recovery. The proposed optimizations are implemented in LLVM and GEM5. The results show that the proposed scheme can significantly reduce runtime recovery overhead by 72%.",
       "videoId": null,
       "tags": []
     },
