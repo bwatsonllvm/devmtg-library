@@ -44,7 +44,7 @@
       "meetingName": "2017 US LLVM Developers' Meeting",
       "meetingLocation": "San Jose, CA, USA",
       "meetingDate": "October 18-19, 2017",
-      "category": "student-talk",
+      "category": "technical-talk",
       "title": "Apple LLVM GPU Compiler: Embedded Dragons",
       "speakers": [
         {
@@ -1192,7 +1192,7 @@
       "meetingName": "2017 US LLVM Developers' Meeting",
       "meetingLocation": "San Jose, CA, USA",
       "meetingDate": "October 18-19, 2017",
-      "category": "technical-talk",
+      "category": "student-talk",
       "title": "VPlan + RV: A Proposal",
       "speakers": [
         {
