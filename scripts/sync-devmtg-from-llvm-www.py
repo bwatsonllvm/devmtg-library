@@ -414,6 +414,37 @@ def list_remote_slugs(
     return sorted(set(out), reverse=True)
 
 
+def fetch_latest_path_revision(
+    github_api_base: str,
+    repo: str,
+    ref: str,
+    path: str,
+    github_token: str = "",
+) -> str:
+    normalized_path = collapse_ws(path).lstrip("/")
+    if not normalized_path:
+        return ""
+    url = (
+        f"{github_api_base.rstrip('/')}/repos/{repo}/commits"
+        f"?sha={urllib.parse.quote(ref)}"
+        f"&path={urllib.parse.quote(normalized_path)}"
+        "&per_page=1"
+    )
+    payload = json.loads(_http_get(url, github_token=github_token))
+
+    entries: list[dict] = []
+    if isinstance(payload, list):
+        entries = [entry for entry in payload if isinstance(entry, dict)]
+    elif isinstance(payload, dict):
+        entries = [payload]
+
+    for entry in entries:
+        sha = collapse_ws(str(entry.get("sha", "")))
+        if re.fullmatch(r"[0-9a-fA-F]{7,40}", sha):
+            return sha
+    return ""
+
+
 def extract_meeting_name(page_html: str, slug: str) -> str:
     h1_match = re.search(r"<h1[^>]*>(.*?)</h1>", page_html, flags=re.IGNORECASE | re.DOTALL)
     if h1_match:
@@ -999,6 +1030,48 @@ def main() -> int:
 
     manifest_files = [collapse_ws(str(item)) for item in manifest.get("eventFiles", []) if collapse_ws(str(item))]
     manifest_set = set(manifest_files)
+    existing_source_repo = collapse_ws(str(manifest.get("sourceRepo", "")))
+    existing_source_ref = collapse_ws(str(manifest.get("sourceRef", "")))
+    existing_source_revision = collapse_ws(str(manifest.get("sourceRevision", "")))
+
+    latest_source_revision = ""
+    if not args.only_slug:
+        try:
+            latest_source_revision = fetch_latest_path_revision(
+                github_api_base=args.github_api_base,
+                repo=args.repo,
+                ref=args.ref,
+                path="devmtg",
+                github_token=args.github_token,
+            )
+        except urllib.error.HTTPError as exc:
+            if args.verbose:
+                print(f"[warn] Could not resolve llvm-www/devmtg revision (HTTP {exc.code}); continuing.", flush=True)
+        except urllib.error.URLError as exc:
+            if args.verbose:
+                print(f"[warn] Could not resolve llvm-www/devmtg revision ({exc}); continuing.", flush=True)
+
+    source_meta_changed = False
+    if existing_source_repo != args.repo:
+        manifest["sourceRepo"] = args.repo
+        source_meta_changed = True
+    if existing_source_ref != args.ref:
+        manifest["sourceRef"] = args.ref
+        source_meta_changed = True
+    if latest_source_revision and existing_source_revision != latest_source_revision:
+        manifest["sourceRevision"] = latest_source_revision
+        source_meta_changed = True
+
+    if (
+        not args.only_slug
+        and latest_source_revision
+        and existing_source_revision
+        and latest_source_revision == existing_source_revision
+    ):
+        if source_meta_changed and not args.dry_run:
+            manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"No devmtg updates detected (sourceRevision={latest_source_revision[:12]}).")
+        return 0
 
     index_hints: dict[str, dict[str, str]] = {}
     try:
@@ -1091,7 +1164,11 @@ def main() -> int:
             )
 
     if not changed_slugs:
-        print("No devmtg updates detected.")
+        if source_meta_changed and not args.dry_run:
+            manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            print(f"No devmtg content updates detected; refreshed source metadata ({manifest_path}).")
+        else:
+            print("No devmtg updates detected.")
         return 0
 
     next_event_files = sorted(manifest_set, reverse=True)
@@ -1099,6 +1176,7 @@ def main() -> int:
     manifest_changed = (
         manifest.get("eventFiles", []) != next_event_files
         or collapse_ws(str(manifest.get("dataVersion", ""))) != next_data_version
+        or source_meta_changed
     )
     manifest["eventFiles"] = next_event_files
     manifest["dataVersion"] = next_data_version

@@ -64,28 +64,37 @@ jobs:
             --github-token "${GITHUB_TOKEN}"
 
       - name: Sync LLVM docs mirror from llvm.org/docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           bash scripts/sync-docs-from-llvm-org.sh \
             --source-url "https://llvm.org/docs/" \
-            --docs-dir docs
+            --docs-dir docs \
+            --github-token "${GITHUB_TOKEN}"
 
       - name: Sync Clang docs mirror from clang.llvm.org/docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p docs/clang
           bash scripts/sync-docs-from-llvm-org.sh \
             --source-url "https://clang.llvm.org/docs/" \
             --docs-dir docs/clang \
-            --bridge-doc-options docs/_static/documentation_options.js
+            --bridge-doc-options docs/_static/documentation_options.js \
+            --github-token "${GITHUB_TOKEN}"
           touch docs/clang/_static/docs-known-broken-links.txt
 
       - name: Sync LLDB docs mirror from lldb.llvm.org
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p docs/lldb
           bash scripts/sync-docs-from-llvm-org.sh \
             --source-url "https://lldb.llvm.org/" \
             --docs-dir docs/lldb \
             --bridge-doc-options docs/_static/documentation_options.js \
-            --skip-source-companions
+            --skip-source-companions \
+            --github-token "${GITHUB_TOKEN}"
           touch docs/lldb/_static/docs-known-broken-links.txt
 
       - name: Build single canonical papers database

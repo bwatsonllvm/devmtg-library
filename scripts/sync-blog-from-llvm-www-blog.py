@@ -498,10 +498,54 @@ def download_repo_tarball(
     return tar_path, remote_etag, True
 
 
+def fetch_latest_repo_path_revision(
+    repo: str,
+    ref: str,
+    source_path: str,
+    user_agent: str,
+    github_token: str,
+    timeout_s: int,
+) -> str:
+    normalized_path = collapse_ws(source_path).lstrip("/")
+    if not normalized_path:
+        return ""
+    url = (
+        f"https://api.github.com/repos/{repo}/commits"
+        f"?sha={urllib.parse.quote(ref)}"
+        f"&path={urllib.parse.quote(normalized_path)}"
+        "&per_page=1"
+    )
+    try:
+        raw = run_curl(
+            url,
+            output_path=None,
+            user_agent=user_agent,
+            github_token=github_token,
+            timeout_s=timeout_s,
+        )
+        payload = json.loads(raw)
+    except Exception:
+        return ""
+
+    entries: list[dict] = []
+    if isinstance(payload, list):
+        entries = [entry for entry in payload if isinstance(entry, dict)]
+    elif isinstance(payload, dict):
+        entries = [payload]
+
+    for entry in entries:
+        sha = collapse_ws(str(entry.get("sha", "")))
+        if re.fullmatch(r"[0-9a-fA-F]{7,40}", sha):
+            return sha
+    return ""
+
+
 def build_blog_bundle(
     tar_path: Path,
     repo: str,
     ref: str,
+    source_path: str,
+    source_revision: str,
     blog_base_url: str,
     max_posts: int,
     include_legacy_html: bool,
@@ -606,6 +650,10 @@ def build_blog_bundle(
             "slug": DEFAULT_SOURCE_SLUG,
             "name": DEFAULT_SOURCE_NAME,
             "url": f"https://github.com/{repo}",
+            "repo": repo,
+            "ref": ref,
+            "path": source_path,
+            "revision": source_revision,
         },
         "papers": papers,
     }
@@ -618,6 +666,7 @@ def main() -> int:
     parser.add_argument("--ref", default=DEFAULT_REF)
     parser.add_argument("--output", default=DEFAULT_OUTPUT)
     parser.add_argument("--cache-dir", default=DEFAULT_CACHE_DIR)
+    parser.add_argument("--source-path", default="content/posts")
     parser.add_argument("--blog-base-url", default=DEFAULT_BLOG_BASE_URL)
     parser.add_argument("--max-posts", type=int, default=0)
     parser.add_argument("--exclude-legacy-html", action="store_true")
@@ -638,8 +687,29 @@ def main() -> int:
     output_path = Path(args.output).resolve()
     cache_dir = Path(args.cache_dir).resolve()
     blog_base_url = collapse_ws(args.blog_base_url) or DEFAULT_BLOG_BASE_URL
+    source_path = collapse_ws(args.source_path).lstrip("/") or "content/posts"
     if not blog_base_url.endswith("/"):
         blog_base_url += "/"
+
+    existing_bundle = load_json(output_path) if output_path.exists() else {}
+    existing_source = existing_bundle.get("source") if isinstance(existing_bundle.get("source"), dict) else {}
+    existing_source_revision = collapse_ws(str(existing_source.get("revision", "")))
+    latest_source_revision = fetch_latest_repo_path_revision(
+        repo=repo,
+        ref=ref,
+        source_path=source_path,
+        user_agent=args.user_agent,
+        github_token=args.github_token,
+        timeout_s=max(30, int(args.timeout)),
+    )
+    if (
+        output_path.exists()
+        and latest_source_revision
+        and existing_source_revision
+        and latest_source_revision == existing_source_revision
+    ):
+        print(f"No llvm-blog-www updates detected (sourceRevision={latest_source_revision[:12]}).", flush=True)
+        return 0
 
     tar_path, etag, downloaded = download_repo_tarball(
         repo=repo,
@@ -654,6 +724,8 @@ def main() -> int:
         tar_path=tar_path,
         repo=repo,
         ref=ref,
+        source_path=source_path,
+        source_revision=latest_source_revision,
         blog_base_url=blog_base_url,
         max_posts=int(args.max_posts),
         include_legacy_html=not args.exclude_legacy_html,
@@ -664,6 +736,7 @@ def main() -> int:
     print(f"Tarball: {tar_path}", flush=True)
     print(f"Tarball downloaded: {'yes' if downloaded else 'no'}", flush=True)
     print(f"Tarball etag: {etag or '(missing)'}", flush=True)
+    print(f"Source path revision: {latest_source_revision or '(unknown)'}", flush=True)
     print(f"Blog posts exported: {len(bundle.get('papers', []))}", flush=True)
     print(f"Posts skipped: {skipped}", flush=True)
     print(f"Output bundle: {output_path}", flush=True)
