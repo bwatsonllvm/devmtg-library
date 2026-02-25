@@ -5,7 +5,7 @@
     "date": "October 18-19, 2017",
     "location": "San Jose, CA, USA",
     "canceled": false,
-    "talkCount": 48
+    "talkCount": 59
   },
   "talks": [
     {
@@ -1301,6 +1301,288 @@
         "Optimizations",
         "Static Analysis"
       ]
+    },
+    {
+      "id": "2017-10-054",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Venerable Variadic Vulnerabilities Vanquished",
+      "speakers": [
+        {
+          "name": "Priyam Biswas",
+          "affiliation": ""
+        },
+        {
+          "name": "Alessandro Di Federico",
+          "affiliation": ""
+        },
+        {
+          "name": "Scott A. Carr",
+          "affiliation": ""
+        },
+        {
+          "name": "Prabhu Rajasekaran",
+          "affiliation": ""
+        },
+        {
+          "name": "Stijn Volckaert",
+          "affiliation": ""
+        },
+        {
+          "name": "Yeoul Na",
+          "affiliation": ""
+        },
+        {
+          "name": "Michael Franz",
+          "affiliation": ""
+        },
+        {
+          "name": "Mathias Payer",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-055",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Extending LLVM’s masked.gather/scatter Intrinsic to Read/write Contiguous Chunks from/to Arbitrary Locations.",
+      "speakers": [
+        {
+          "name": "Farhana Aleen",
+          "affiliation": ""
+        },
+        {
+          "name": "Elena Demikhovsky",
+          "affiliation": ""
+        },
+        {
+          "name": "Hideki Saito",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-056",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "An LLVM based Loop Profiler",
+      "speakers": [
+        {
+          "name": "Shalini Jain",
+          "affiliation": ""
+        },
+        {
+          "name": "Kamlesh Kumar",
+          "affiliation": ""
+        },
+        {
+          "name": "Suresh Purini",
+          "affiliation": ""
+        },
+        {
+          "name": "Dibyendu Das",
+          "affiliation": ""
+        },
+        {
+          "name": "Ramakrishna Upadrasta",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-057",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Leveraging Compiler Optimizations to Reduce Runtime Fault Recovery Overhead",
+      "speakers": [
+        {
+          "name": "Fateme S. Hosseini",
+          "affiliation": ""
+        },
+        {
+          "name": "Pouya Fotouhi",
+          "affiliation": ""
+        },
+        {
+          "name": "Chengmo Yang",
+          "affiliation": ""
+        },
+        {
+          "name": "Guang R. Gao",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-058",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Polyhedral Optimizations and transparent GPU offloading for Julia by Polly",
+      "speakers": [
+        {
+          "name": "Sanjay Srivallabh Singapuram",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-059",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Improving debug information in LLVM to recover optimized-out function parameters",
+      "speakers": [
+        {
+          "name": "Ananth Sowda",
+          "affiliation": ""
+        },
+        {
+          "name": "Ivan Baev",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-060",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Adding Debug Information and Merge Attribute to Merge-Functions LLVM passes",
+      "speakers": [
+        {
+          "name": "Anmol Paralkar",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-061",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "ALLVM: LLVM All the Things!",
+      "speakers": [
+        {
+          "name": "Will Dietz",
+          "affiliation": ""
+        },
+        {
+          "name": "Vikram Adve",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-062",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Project Sulong - Executing LLVM IR on top of a JVM",
+      "speakers": [
+        {
+          "name": "Matthias Grimmer",
+          "affiliation": ""
+        },
+        {
+          "name": "Christian Wimmer",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-063",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "JIT Fuzzing Solver: A LibFuzzer based constraint solver",
+      "speakers": [
+        {
+          "name": "Daniel Liew",
+          "affiliation": ""
+        },
+        {
+          "name": "Cristian Cadar",
+          "affiliation": ""
+        },
+        {
+          "name": "Alastair Donaldson",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
+    },
+    {
+      "id": "2017-10-064",
+      "meeting": "2017-10",
+      "meetingName": "2017 US LLVM Developers' Meeting",
+      "meetingLocation": "San Jose, CA, USA",
+      "meetingDate": "October 18-19, 2017",
+      "category": "poster",
+      "title": "Non-determinism in LLVM Code Generation",
+      "speakers": [
+        {
+          "name": "Mandeep Singh Grang",
+          "affiliation": ""
+        }
+      ],
+      "abstract": "",
+      "videoId": null,
+      "tags": []
     }
   ]
 }
