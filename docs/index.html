@@ -1,202 +1,270 @@
-
 <!DOCTYPE html>
+<html lang="en" data-content-scope="docs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      try {
+        var storedTheme = localStorage.getItem('llvm-hub-theme-preference');
+        var themePreference = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+          ? storedTheme
+          : 'system';
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var resolvedTheme = themePreference === 'system' ? (prefersDark ? 'dark' : 'light') : themePreference;
+        var storedTextSize = localStorage.getItem('llvm-hub-text-size');
+        var textSize = (storedTextSize === 'small' || storedTextSize === 'large') ? storedTextSize : 'default';
 
-<html lang="en" data-content_root="./">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
+        document.documentElement.setAttribute('data-theme-preference', themePreference);
+        if (textSize === 'default') {
+          document.documentElement.removeAttribute('data-text-size');
+        } else {
+          document.documentElement.setAttribute('data-text-size', textSize);
+        }
+        document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f5f5f5';
+      } catch (_) {
+        var fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var fallbackTheme = fallbackDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', fallbackTheme);
+        document.documentElement.setAttribute('data-theme-preference', 'system');
+        document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#000000' : '#f5f5f5';
+      }
+    })();
+  </script>
+  <style>
+    html { background: #f5f5f5; }
+    html[data-theme="dark"] { background: #000000; }
+    body { background: transparent; }
 
-    <title>About &#8212; LLVM 23.0.0git documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
-    <link rel="stylesheet" type="text/css" href="_static/llvm-theme.css?v=96924833" />
-    <script src="_static/documentation_options.js?v=20260224-16"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Frequently Asked Questions (FAQ)" href="FAQ.html" />
-<style type="text/css">
-  table.right { float: right; margin-left: 20px; }
-  table.right td { border: 1px solid #ccc; }
-</style>
+    .docs-hub-search-row {
+      display: grid;
+      grid-template-columns: 1fr minmax(150px, 220px);
+      gap: 0.75rem;
+      width: min(860px, 100%);
+      margin: 0.65rem auto 0;
+      align-items: center;
+    }
 
-  </head><body>
-<div class="logo">
-  <a href="#">
-    <img src="_static/logo.png"
-         alt="LLVM Logo" width="250" height="88"/></a>
-</div>
+    .docs-source-select {
+      width: 100%;
+      border: 1px solid var(--card-border, rgba(120, 130, 150, 0.36));
+      border-radius: 12px;
+      background: var(--card-bg, #ffffff);
+      color: var(--text-main, #111111);
+      padding: 0.68rem 0.85rem;
+      font: inherit;
+    }
 
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="FAQ.html" title="Frequently Asked Questions (FAQ)"
-             accesskey="N">next</a> |</li>
-  <li><a href="https://llvm.org/">LLVM Home</a>&nbsp;|&nbsp;</li>
-  <li><a href="#">Documentation</a>&raquo;</li>
+    .docs-hub-note {
+      margin: 0.75rem auto 0;
+      max-width: 900px;
+      text-align: center;
+      color: var(--text-subtle, #626b78);
+      font-size: 0.95rem;
+    }
 
-        <li class="nav-item nav-item-this"><a href="">About</a></li> 
-      </ul>
-    </div>
+    @media (max-width: 760px) {
+      .docs-hub-search-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <title>Docs Hub — LLVM Research Library</title>
+  <meta name="description" content="Upstream LLVM documentation hub. Search LLVM Core, Clang, and LLDB docs directly from their canonical sources.">
+  <link rel="icon" type="image/png" href="../images/llvm-favicon.png">
+  <link rel="shortcut icon" href="../images/llvm-favicon.png">
+  <link rel="apple-touch-icon" href="../images/llvm-favicon.png">
+  <link rel="stylesheet" href="../css/style.css?v=20260225-12">
+</head>
+<body>
 
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+  <nav class="skip-links" aria-label="Skip links">
+    <a href="#docs-root" class="skip-link">Skip to main content</a>
+  </nav>
 
-<h3>Documentation</h3>
+  <header class="site-header">
+    <a href="../index.html" class="site-logo" aria-label="LLVM Research Library home">
+      <img src="../images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
+      <span>LLVM Research Library</span>
+    </a>
 
-<ul class="want-points">
-    <li><a href="/library/docs/GettingStartedTutorials.html">Getting Started/Tutorials</a></li>
-    <li><a href="/library/docs/UserGuides.html">User Guides</a></li>
-    <li><a href="/library/docs/Reference.html">Reference</a></li>
-</ul>
-
-<h3>Getting Involved</h3>
-
-<ul class="want-points">
-    <li><a href="/library/docs/Contributing.html">Contributing to LLVM</a></li>
-    <li><a href="/library/docs/HowToSubmitABug.html">Submitting Bug Reports</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#mailing-lists">Mailing Lists</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#discord">Discord</a></li>
-    <li><a href="/library/docs/GettingInvolved.html#meetups-and-social-events">Meetups and Social Events</a></li>
-</ul>
-
-<h3>Additional Links</h3>
-
-<ul class="want-points">
-    <li><a href="/library/docs/FAQ.html">FAQ</a></li>
-    <li><a href="/library/docs/Lexicon.html">Glossary</a></li>
-    <li><a href="https://llvm.org/pubs">Publications</a></li>
-    <li><a href="https://github.com/llvm/llvm-project/">Github Repository</a></li>
-</ul>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
+    <form class="global-search-form" action="../work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, docs, people, and key topics">
+      <input type="hidden" name="mode" value="search">
+      <input
+        type="search"
+        class="global-search-input"
+        name="q"
+        placeholder="Search the full library..."
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Global Search across talks, papers, blogs, docs, people, and key topics"
+      >
+      <button class="global-search-submit" type="submit" aria-label="Run Global Search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
     </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+
+<nav class="site-nav" aria-label="Main navigation">
+      <a href="../talks/" class="nav-link" aria-label="Talks">
+        <span aria-hidden="true">Talks</span>
+      </a>
+      <a href="../talks/events.html" class="nav-link" aria-label="Events">
+        <span aria-hidden="true">Events</span>
+      </a>
+      <a href="../papers/" class="nav-link" aria-label="Papers">
+        <span aria-hidden="true">Papers</span>
+      </a>
+      <a href="../blogs/" class="nav-link" aria-label="Blogs">
+        <span aria-hidden="true">Blogs</span>
+      </a>
+      <div class="nav-dropdown nav-dropdown-docs">
+        <a href="../docs/" class="nav-link nav-dropdown-toggle active" aria-label="Documentation" aria-current="page">
+          <span aria-hidden="true">Docs</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </a>
+        <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
+          <a href="../docs/" class="nav-dropdown-link" role="menuitem">Docs Hub</a>
+          <a href="https://llvm.org/docs/" class="nav-dropdown-link" role="menuitem">LLVM Core</a>
+          <a href="https://clang.llvm.org/docs/" class="nav-dropdown-link" role="menuitem">Clang</a>
+          <a href="https://lldb.llvm.org/" class="nav-dropdown-link" role="menuitem">LLDB</a>
         </div>
       </div>
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <section id="about">
-<h1>About<a class="headerlink" href="#about" title="Link to this heading">¶</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If you are using a released version of LLVM, see <a class="reference external" href="https://llvm.org/releases/">the download page</a> to find your documentation.</p>
-</div>
-<p>The LLVM compiler infrastructure supports a wide range of projects, from
-industrial strength compilers to specialized JIT applications to small
-research projects.</p>
-<p>Similarly, documentation is broken down into several high-level groupings
-targeted at different audiences:</p>
-</section>
-<section id="llvm-design-overview">
-<h1>LLVM Design &amp; Overview<a class="headerlink" href="#llvm-design-overview" title="Link to this heading">¶</a></h1>
-<p>Several introductory papers and presentations.</p>
-<div class="toctree-wrapper compound">
-</div>
-<dl class="simple">
-<dt><a class="reference internal" href="FAQ.html"><span class="doc">Frequently Asked Questions (FAQ)</span></a></dt><dd><p>Frequently asked questions.</p>
-</dd>
-<dt><a class="reference internal" href="Lexicon.html"><span class="doc">The LLVM Lexicon</span></a></dt><dd><p>Glossary.</p>
-</dd>
-<dt><a class="reference external" href="https://llvm.org/pubs/2008-10-04-ACAT-LLVM-Intro.html">Introduction to the LLVM Compiler</a></dt><dd><p>Presentation providing a users introduction to LLVM.</p>
-</dd>
-<dt><a class="reference external" href="http://www.aosabook.org/en/llvm.html">Intro to LLVM</a></dt><dd><p>A chapter from the book “The Architecture of Open Source Applications” that
-describes high-level design decisions that shaped LLVM.</p>
-</dd>
-<dt><a class="reference external" href="https://llvm.org/pubs/2004-01-30-CGO-LLVM.html">LLVM: A Compilation Framework for Lifelong Program Analysis &amp; Transformation</a></dt><dd><p>Design overview.</p>
-</dd>
-<dt><a class="reference external" href="https://llvm.org/pubs/2002-12-LattnerMSThesis.html">LLVM: An Infrastructure for Multi-Stage Optimization</a></dt><dd><p>More details (quite old now).</p>
-</dd>
-</dl>
-</section>
-<section id="documentation">
-<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h1>
-<p>Getting Started, How-tos, Developer Guides, and Tutorials.</p>
-<div class="toctree-wrapper compound">
-</div>
-<dl class="simple">
-<dt><a class="reference internal" href="GettingStartedTutorials.html"><span class="doc">Getting Started/Tutorials</span></a></dt><dd><p>For those new to the LLVM system.</p>
-</dd>
-<dt><a class="reference internal" href="UserGuides.html"><span class="doc">User Guides</span></a></dt><dd><p>User guides and How-tos.</p>
-</dd>
-<dt><a class="reference internal" href="Reference.html"><span class="doc">Reference</span></a></dt><dd><p>LLVM and API reference documentation.</p>
-</dd>
-<dt><a class="reference internal" href="DiscourseMigrationGuide.html"><span class="doc">Discourse Migration Guide</span></a></dt><dd><p>Guide for users to migrate to Discourse</p>
-</dd>
-</dl>
-</section>
-<section id="community">
-<h1>Community<a class="headerlink" href="#community" title="Link to this heading">¶</a></h1>
-<p>LLVM welcomes contributions of all kinds. To learn more, see the following articles:</p>
-<div class="toctree-wrapper compound">
-</div>
-<ul>
-<li><p><a class="reference internal" href="GettingInvolved.html"><span class="doc">Getting Involved</span></a></p></li>
-<li><p><a class="reference internal" href="GettingInvolved.html#development-process"><span class="std std-ref">Development Process</span></a></p></li>
-<li><p><a class="reference internal" href="RFCProcess.html"><span class="doc">Request For Comment (RFC) process</span></a></p></li>
-<li><p><a class="reference internal" href="GettingInvolved.html#lists-forums"><span class="std std-ref">Forums &amp; Mailing Lists</span></a></p></li>
-<li><p><a class="reference internal" href="GettingInvolved.html#meetups-social-events"><span class="std std-ref">Meetups and social events</span></a></p></li>
-<li><p><a class="reference internal" href="GettingInvolved.html#community-proposals"><span class="std std-ref">Community wide proposals</span></a></p>
-<p>Reporting a security issue</p>
-</li>
-<li><p><a class="reference internal" href="Security.html#report-security-issue"><span class="std std-ref">How to report a security issue?</span></a></p></li>
-</ul>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
-</section>
+      <a href="../people/" class="nav-link" aria-label="People">
+        <span aria-hidden="true">People</span>
+      </a>
+      <span class="site-nav-separator" aria-hidden="true">|</span>
+      <a href="../updates/" class="nav-link" aria-label="Update log">
+        <span aria-hidden="true">Updates</span>
+      </a>
+      <a href="../about/" class="nav-link" aria-label="About this site">
+        <span aria-hidden="true">About</span>
+      </a>
+    </nav>
 
 
-            <div class="clearer"></div>
+    <div class="mobile-nav-menu" id="mobile-nav-menu">
+      <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
+        Browse
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+            <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+        <a href="../talks/" class="mobile-nav-link">Talks</a>
+        <a href="../talks/events.html" class="mobile-nav-link">Events</a>
+        <a href="../papers/" class="mobile-nav-link">Papers</a>
+        <a href="../blogs/" class="mobile-nav-link">Blogs</a>
+        <a href="../docs/" class="mobile-nav-link active" aria-current="page">Docs: Hub</a>
+        <a href="https://llvm.org/docs/" class="mobile-nav-link">Docs: LLVM Core</a>
+        <a href="https://clang.llvm.org/docs/" class="mobile-nav-link">Docs: Clang</a>
+        <a href="https://lldb.llvm.org/" class="mobile-nav-link">Docs: LLDB</a>
+        <a href="../people/" class="mobile-nav-link">People</a>
+        <a href="../updates/" class="mobile-nav-link">Updates</a>
+        <a href="../about/" class="mobile-nav-link">About</a>
+      </div>
+
+    </div>
+
+    <div class="header-right">
+      <a class="header-action-btn" href="../work.html?mode=search&scope=docs">Search Docs</a>
+      <div class="share-menu" id="share-menu">
+        <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this page" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
+          Share
+        </button>
+        <div class="share-panel" id="share-panel" hidden>
+          <button class="share-option" id="share-native-share" type="button" hidden>Share via device</button>
+          <button class="share-option" id="share-copy-link" type="button">Copy link</button>
+          <a class="share-option" id="share-email-link" href="#">Email</a>
+          <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+          <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+        </div>
+      </div>
+      <div class="customization-menu" id="customization-menu">
+        <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+          <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
+          </svg>
+        </button>
+        <div class="customization-panel" id="customization-panel" hidden>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-theme-select">Theme</label>
+            <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
           </div>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-text-size-select">Text Size</label>
+            <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+              <option value="small">Small</option>
+              <option value="default">Default</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
         </div>
       </div>
-      <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="FAQ.html" title="Frequently Asked Questions (FAQ)"
-             >next</a> |</li>
-  <li><a href="https://llvm.org/">LLVM Home</a>&nbsp;|&nbsp;</li>
-  <li><a href="#">Documentation</a>&raquo;</li>
+  </header>
 
-        <li class="nav-item nav-item-this"><a href="">About</a></li> 
-      </ul>
+  <section class="search-hero" aria-label="Docs hub search">
+    <div class="search-hero-shell">
+      <h1>LLVM Docs Hub</h1>
+      <p class="subtitle">Search canonical upstream docs without local mirror crawling. Add future docs sources by editing <code>docs/sources.json</code>.</p>
+      <form id="docs-hub-search-form" class="search-box" action="#" method="get" role="search" aria-label="Search upstream LLVM docs">
+        <div class="docs-hub-search-row">
+          <div class="search-box" style="margin:0; width:100%;">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              class="search-input"
+              id="docs-search-input"
+              placeholder="Search upstream docs..."
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Search upstream docs"
+            >
+            <button type="button" class="search-clear" id="docs-search-clear" aria-label="Clear search" title="Clear">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <select id="docs-source-select" class="docs-source-select" aria-label="Docs source"></select>
+        </div>
+      </form>
+      <p class="docs-hub-note">Queries route directly to each upstream project's own search page.</p>
     </div>
-    <div class="footer" role="contentinfo">
-    &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-23.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
-    </div>
-  </body>
+  </section>
+
+  <main class="feed-column" id="docs-root" tabindex="-1">
+    <section class="work-section" aria-label="Upstream docs sources">
+      <h2 class="work-section-title">Upstream Docs Sources</h2>
+      <div class="cards-grid" id="docs-source-grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script>window.LLVMLibraryRootPath = '../';</script>
+  <script src="../js/shared/library-utils.js?v=20260225-14"></script>
+  <script src="../js/shared/global-search.js?v=20260225-14"></script>
+  <script src="../js/docs.js?v=20260225-01"></script>
+</body>
 </html>

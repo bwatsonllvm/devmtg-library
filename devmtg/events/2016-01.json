@@ -19,10 +19,7 @@
       "speakers": [
         {
           "name": "Tilmann Scheller",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -64,10 +61,7 @@
       "speakers": [
         {
           "name": "Arnaud A. de Grandmaison",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -86,10 +80,7 @@
       "speakers": [
         {
           "name": "Kai Nacke",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -108,10 +99,7 @@
       "speakers": [
         {
           "name": "Simon Cook",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -130,10 +118,7 @@
       "speakers": [
         {
           "name": "Alex Denisov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -152,10 +137,7 @@
       "speakers": [
         {
           "name": "Greg Stark",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -174,10 +156,7 @@
       "speakers": [
         {
           "name": "Sebastien Monot",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -196,10 +175,7 @@
       "speakers": [
         {
           "name": "Kristof Beyls",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -218,10 +194,7 @@
       "speakers": [
         {
           "name": "Manuel Rigger",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
@@ -240,14 +213,10 @@
       "speakers": [
         {
           "name": "edjones",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/2016-01-28_fosdem16-aap-ed.pdf",
       "tags": []
@@ -263,14 +232,10 @@
       "speakers": [
         {
           "name": "Vladimir Gladkov",
-          "affiliation": "",
-          "github": "",
-          "linkedin": "",
-          "twitter": ""
+          "affiliation": ""
         }
       ],
       "abstract": "",
-      "videoUrl": null,
       "videoId": null,
       "slidesUrl": "https://llvm.org/devmtg/2016-01/slides/JancyFOSDEM2016.pdf",
       "tags": []

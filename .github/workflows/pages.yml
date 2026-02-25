@@ -37,17 +37,15 @@ jobs:
         run: bash scripts/validate-code-quality.sh
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh
-      - name: Validate docs mirror health
-        run: |
-          python3 scripts/check-docs-mirror-health.py \
-            --repo-root . \
-            --max-age-days 45
       - name: Prepare site bundle
         run: |
           rm -rf _site
-          mkdir -p _site/papers _site/devmtg
+          mkdir -p _site/papers _site/devmtg _site/docs _site/docs/clang _site/docs/lldb
           cp index.html work.html _site/
-          cp -R talks blogs people about docs updates css js images _site/
+          cp -R talks blogs people about updates css js images _site/
+          cp docs/index.html docs/sources.json _site/docs/
+          cp docs/clang/index.html _site/docs/clang/
+          cp docs/lldb/index.html _site/docs/lldb/
           rsync -a --exclude '.cache/' papers/ _site/papers/
           cp -R devmtg/events _site/devmtg/
       - name: Setup Pages

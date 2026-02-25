@@ -112,7 +112,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - affiliations
   - all persisted in URL state
 - `work.html` (global/entity combined results):
-  - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs`, `People` (default `All`)
+  - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs`, `Docs`, `People` (default `All`)
   - time filter in Global Search mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
   - `Advanced` panel for structured Google-style constraints (all/exact/any/without words, where words occur, author, publication, dated between)
   - advanced toggle always shows explicit state (`Advanced On` / `Advanced Off`)
@@ -130,7 +130,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
 
 - `work.html` supports:
   - `mode=search&q=...` for global query mode
-  - optional `scope=all|talks|papers|blogs|people` in search mode to focus results by content type
+  - optional `scope=all|talks|papers|blogs|docs|people` in search mode to focus results by content type
   - optional `time=any|since-2026|since-2025|since-2022|custom` in search mode
   - optional `yearFrom=YYYY&yearTo=YYYY` for custom ranges (`time=custom`)
   - optional advanced-search params in search mode:
@@ -222,7 +222,6 @@ Automation is split into two scheduled PR workflows:
 1. LLVM upstream sync (`.github/workflows/llvm-upstream-sync.yml`)
    - syncs talks/slides/videos from `llvm-www/devmtg`
    - syncs LLVM blog posts from `llvm-blog-www`
-   - syncs mirrored docs from `llvm.org/docs`, `clang.llvm.org/docs`, and `lldb.llvm.org`
    - rebuilds the updates log
 2. Papers/library sync (`.github/workflows/library-papers-sync.yml`)
    - refreshes OpenAlex-discovered papers
@@ -230,20 +229,20 @@ Automation is split into two scheduled PR workflows:
    - backfills direct paper PDF links via OpenAlex + Unpaywall
    - rebuilds the updates log
 
-The split keeps LLVM-repo/content mirror merges independent from papers ingestion/enrichment so upstream mirror updates can be proposed quickly without waiting on OpenAlex/papers processing.
+The split keeps LLVM-repo metadata merges independent from papers ingestion/enrichment so routine upstream updates can be proposed quickly without waiting on OpenAlex/papers processing.
 
-## Docs Mirror Boundaries
+Docs source endpoint health is checked daily in:
+- `.github/workflows/docs-sources-health.yml`
 
-The docs section is a mirror-first surface. To keep it faithful to upstream LLVM/Clang/LLDB docs while improving usability:
+## Docs Source Boundaries
 
-- Do not rewrite mirrored docs content in `docs/**/*.html`, `docs/clang/**/*.html`, or `docs/lldb/**/*.html`.
-- Do not change canonical docs order or upstream heading structure.
-- Do not change canonical docs URL paths/anchors.
-- Keep UX improvements in bridge-layer files (`docs/_static/documentation_options.js`, `css/docs-bridge.css`, generated sidebar metadata).
-- Keep mirror freshness metadata in `docs/_static/docs-sync-meta.json`, `docs/clang/_static/docs-sync-meta.json`, and `docs/lldb/_static/docs-sync-meta.json`.
-- Keep upstream breakage baseline in `docs/_static/docs-known-broken-links.txt`, `docs/clang/_static/docs-known-broken-links.txt`, and `docs/lldb/_static/docs-known-broken-links.txt`; only fail on new link regressions.
-- LLDB mirror scope includes `https://lldb.llvm.org/cpp_reference/` so the public/private C++ API references are available locally.
-- Preserve graceful fallback: if custom sidebar/index logic fails, Sphinx navigation must still work.
+The docs section is an upstream-first hub surface:
+
+- Docs source definitions live in `docs/sources.json`.
+- Add or update docs subprojects by editing `docs/sources.json` entries (`id`, `name`, `docsUrl`, `searchUrlTemplate`, optional `description`/`keywords`).
+- The docs hub page (`docs/index.html`) routes users to canonical upstream docs and upstream search endpoints.
+- `docs/clang/index.html` and `docs/lldb/index.html` are lightweight redirects to upstream.
+- Do not synthesize docs content or cache mirrored docs pages for search.
 
 ## Validation And Test Gates
 
@@ -264,17 +263,13 @@ These checks run in:
 - `.github/workflows/pages.yml` (deploy gate)
 - `.github/workflows/llvm-upstream-sync.yml` (LLVM upstream automation PRs)
 - `.github/workflows/library-papers-sync.yml` (papers automation PRs)
-
-Mirror health is also checked on a daily schedule in:
-- `.github/workflows/docs-mirror-health.yml`
+- `.github/workflows/docs-sources-health.yml` (daily upstream docs endpoint health checks)
 
 ## Repository Layout
 
 - `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes
-- `docs/`: mirrored LLVM core documentation site content plus bridge customizations
-- `docs/clang/`: mirrored Clang documentation site content plus bridge customizations
-- `docs/lldb/`: mirrored LLDB documentation site content plus bridge customizations
-- `docs/_static/docs-sync-meta.json`, `docs/clang/_static/docs-sync-meta.json`, and `docs/lldb/_static/docs-sync-meta.json`: docs mirror freshness metadata (source + synced timestamp + latest GitHub release metadata)
+- `docs/`: docs hub pages and source catalog for upstream docs routing (`docs/sources.json`)
+- `docs/clang/` and `docs/lldb/`: lightweight redirect entry points to upstream docs
 - `css/`, `js/`, `images/`: shared site assets
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version

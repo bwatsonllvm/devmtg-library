@@ -1,333 +1,283 @@
 /**
- * docs.js — Documentation page interactions and shared header controls.
+ * docs.js — Upstream docs hub interactions (source catalog + query routing).
  */
 
-const HubUtils = window.LLVMHubUtils || {};
-const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
-const PageShell = typeof HubUtils.createPageShell === 'function'
-  ? HubUtils.createPageShell()
-  : null;
+(function () {
+  const HubUtils = window.LLVMHubUtils || {};
+  const PageShell = typeof HubUtils.createPageShell === 'function'
+    ? HubUtils.createPageShell()
+    : null;
 
-const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
-const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
-const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
-const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
-const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
+  const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
+  const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
+  const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
+  const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
+  const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
 
-function initDocsHeroSearch() {
-  const input = document.getElementById('docs-search-input');
-  const clearBtn = document.getElementById('docs-search-clear');
-  if (!input || !clearBtn) return;
+  const DOCS_SOURCES_CATALOG_SRC = 'sources.json?v=20260225-01';
+  const DEFAULT_DOCS_SOURCES = [
+    {
+      id: 'llvm-core',
+      name: 'LLVM Core',
+      docsUrl: 'https://llvm.org/docs/',
+      searchUrlTemplate: 'https://llvm.org/docs/search.html?q={query}',
+      description: 'LLVM core manuals, references, internals, and contributor documentation.',
+      keywords: ['llvm', 'ir', 'passes', 'codegen', 'backend', 'optimization'],
+    },
+    {
+      id: 'clang',
+      name: 'Clang',
+      docsUrl: 'https://clang.llvm.org/docs/',
+      searchUrlTemplate: 'https://clang.llvm.org/docs/search.html?q={query}',
+      description: 'Clang user guides, diagnostics, tooling, sanitizers, and frontend docs.',
+      keywords: ['clang', 'frontend', 'diagnostics', 'clang-tidy', 'clang-format', 'sanitizers'],
+    },
+    {
+      id: 'lldb',
+      name: 'LLDB',
+      docsUrl: 'https://lldb.llvm.org/',
+      searchUrlTemplate: 'https://lldb.llvm.org/search.html?q={query}',
+      description: 'LLDB debugger documentation, command references, scripting, and API docs.',
+      keywords: ['lldb', 'debugger', 'debugging', 'breakpoints', 'python api', 'remote debugging'],
+    },
+  ];
 
-  const syncClear = () => {
-    const hasText = String(input.value || '').trim().length > 0;
-    clearBtn.classList.toggle('visible', hasText);
-  };
+  let docsSources = [];
 
-  input.addEventListener('input', syncClear);
-  input.addEventListener('focus', syncClear);
-  input.addEventListener('blur', () => {
-    window.setTimeout(syncClear, 150);
-  });
-
-  clearBtn.addEventListener('click', (event) => {
-    event.preventDefault();
-    input.value = '';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.focus();
-    syncClear();
-  });
-
-  syncClear();
-}
-
-function setText(id, value) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = value;
-}
-
-function formatCount(value) {
-  return Number(value || 0).toLocaleString();
-}
-
-function normalizeTalks(rawTalks) {
-  if (typeof HubUtils.normalizeTalks === 'function') {
-    return HubUtils.normalizeTalks(rawTalks);
-  }
-  return Array.isArray(rawTalks) ? rawTalks : [];
-}
-
-function normalizePapers(rawPapers) {
-  return Array.isArray(rawPapers)
-    ? rawPapers.filter((paper) => paper && typeof paper === 'object')
-    : [];
-}
-
-function isBlogPaperRecord(paper) {
-  if (!paper || typeof paper !== 'object') return false;
-  if (paper._isBlog === true) return true;
-
-  const source = String(paper.source || '').trim().toLowerCase();
-  const type = String(paper.type || '').trim().toLowerCase();
-  const sourceUrl = String(paper.sourceUrl || '').trim();
-  const paperUrl = String(paper.paperUrl || '').trim();
-
-  if (BLOG_SOURCE_SLUGS.has(source)) return true;
-  if (type === 'blog' || type === 'blog-post') return true;
-  if (/^https?:\/\/(?:www\.)?blog\.llvm\.org\//i.test(sourceUrl)) return true;
-  if (/github\.com\/llvm\/(?:llvm-blog-www|llvm-www-blog)\b/i.test(paperUrl)) return true;
-  return false;
-}
-
-function isValidPaperRecord(paper) {
-  if (!paper || typeof paper !== 'object') return false;
-  const id = String(paper.id || '').trim();
-  const title = String(paper.title || '').trim();
-  return !!(id && title);
-}
-
-function countPaperRecordsForPapersPage(papers) {
-  return papers.filter((paper) => isValidPaperRecord(paper) && !isBlogPaperRecord(paper)).length;
-}
-
-function isCanceledMeeting(meeting) {
-  if (!meeting || typeof meeting !== 'object') return false;
-  if (meeting.canceled === true) return true;
-  const location = String(meeting.location || '').toLowerCase();
-  return location.includes('canceled') || location.includes('cancelled');
-}
-
-function isDevelopersMeeting(meeting) {
-  if (!meeting || typeof meeting !== 'object') return false;
-  if (isCanceledMeeting(meeting)) return false;
-  const name = String(meeting.name || '').toLowerCase();
-  return name.includes("llvm developers' meeting");
-}
-
-async function loadAndRenderStats() {
-  let meetings = [];
-  let talks = [];
-  let papers = [];
-
-  try {
-    if (typeof window.loadEventData === 'function') {
-      const events = await window.loadEventData();
-      talks = normalizeTalks(events && events.talks);
-      meetings = Array.isArray(events && events.meetings) ? events.meetings : [];
-    }
-    if (typeof window.loadPaperData === 'function') {
-      const paperPayload = await window.loadPaperData();
-      papers = normalizePapers(paperPayload && paperPayload.papers);
-    }
-  } catch {
-    // Keep defaults if any data source fails.
+  function normalizeText(value, maxLength = 300) {
+    return String(value || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, maxLength);
   }
 
-  const uniqueMeetings = new Set(
-    meetings
-      .filter((meeting) => isDevelopersMeeting(meeting))
-      .map((meeting) => String(meeting.slug || meeting.name || '').trim())
-      .filter(Boolean)
-  );
-
-  let peopleCount = 0;
-  if (typeof HubUtils.buildPeopleIndex === 'function') {
+  function sanitizeExternalUrl(value) {
+    const raw = normalizeText(value, 480);
+    if (!raw) return '';
     try {
-      peopleCount = HubUtils.buildPeopleIndex(talks, papers).length;
+      const parsed = new URL(raw, window.location.href);
+      const protocol = String(parsed.protocol || '').toLowerCase();
+      if (protocol === 'http:' || protocol === 'https:') return parsed.toString();
     } catch {
-      peopleCount = 0;
+      return '';
+    }
+    return '';
+  }
+
+  function normalizeSource(rawSource, index = 0) {
+    if (!rawSource || typeof rawSource !== 'object') return null;
+
+    const id = normalizeText(rawSource.id || `docs-source-${index + 1}`, 80)
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, '-')
+      .replace(/-{2,}/g, '-')
+      .replace(/^-+|-+$/g, '') || `docs-source-${index + 1}`;
+    const name = normalizeText(rawSource.name, 120) || `Docs Source ${index + 1}`;
+    const docsUrl = sanitizeExternalUrl(rawSource.docsUrl);
+    const searchUrlTemplate = normalizeText(rawSource.searchUrlTemplate, 420);
+    const description = normalizeText(rawSource.description, 420);
+    const keywords = Array.isArray(rawSource.keywords)
+      ? rawSource.keywords.map((value) => normalizeText(value, 80)).filter(Boolean).slice(0, 20)
+      : [];
+
+    if (!docsUrl) return null;
+
+    return {
+      id,
+      name,
+      docsUrl,
+      searchUrlTemplate,
+      description,
+      keywords,
+    };
+  }
+
+  function cloneDefaultSources() {
+    return DEFAULT_DOCS_SOURCES
+      .map((source, index) => normalizeSource(source, index))
+      .filter(Boolean);
+  }
+
+  function resolveDocsSearchUrl(searchUrlTemplate, query, docsUrl) {
+    const trimmedQuery = normalizeText(query, 320);
+    const fallbackUrl = sanitizeExternalUrl(docsUrl);
+    const template = normalizeText(searchUrlTemplate, 420);
+
+    if (!trimmedQuery) return fallbackUrl;
+    const encoded = encodeURIComponent(trimmedQuery);
+
+    if (!template) {
+      try {
+        const url = new URL(fallbackUrl || 'https://llvm.org/docs/');
+        url.searchParams.set('q', trimmedQuery);
+        return url.toString();
+      } catch {
+        return fallbackUrl;
+      }
+    }
+
+    if (template.includes('{query}')) {
+      return template.replace(/\{query\}/g, encoded);
+    }
+
+    try {
+      const url = new URL(template);
+      if (!url.searchParams.has('q')) url.searchParams.set('q', trimmedQuery);
+      return url.toString();
+    } catch {
+      return template;
     }
   }
 
-  setText('docs-stat-talks', formatCount(talks.length));
-  setText('docs-stat-papers', formatCount(countPaperRecordsForPapersPage(papers)));
-  setText('docs-stat-people', formatCount(peopleCount));
-  setText('docs-stat-meetings', formatCount(uniqueMeetings.size));
-}
-
-function initDocsTocControls() {
-  const toc = document.getElementById('docs-toc');
-  const filterInput = document.getElementById('docs-toc-filter');
-  const expandAllBtn = document.getElementById('docs-expand-all');
-  const collapseAllBtn = document.getElementById('docs-collapse-all');
-  if (!toc) return;
-
-  const chapters = Array.from(toc.querySelectorAll('.docs-toc-chapter'));
-  const links = Array.from(toc.querySelectorAll('.docs-toc-link'));
-
-  const normalize = (value) => String(value || '').trim().toLowerCase();
-
-  const expandAll = () => {
-    chapters.forEach((chapter) => {
-      chapter.open = true;
-    });
-  };
-
-  const collapseAll = () => {
-    chapters.forEach((chapter) => {
-      chapter.open = false;
-    });
-  };
-
-  if (expandAllBtn) {
-    expandAllBtn.addEventListener('click', () => {
-      expandAll();
-      if (filterInput) filterInput.focus();
-    });
+  async function loadDocsSources() {
+    const fallback = cloneDefaultSources();
+    try {
+      const response = await window.fetch(DOCS_SOURCES_CATALOG_SRC, { cache: 'no-store' });
+      if (!response.ok) return fallback;
+      const payload = await response.json();
+      const rawSources = Array.isArray(payload && payload.sources) ? payload.sources : [];
+      const normalized = rawSources
+        .map((source, index) => normalizeSource(source, index))
+        .filter(Boolean);
+      return normalized.length ? normalized : fallback;
+    } catch {
+      return fallback;
+    }
   }
 
-  if (collapseAllBtn) {
-    collapseAllBtn.addEventListener('click', () => {
-      collapseAll();
-      if (filterInput) filterInput.focus();
-    });
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
-  if (filterInput) {
-    const applyFilter = () => {
-      const query = normalize(filterInput.value);
+  function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    const query = normalizeText(params.get('q') || '', 320);
+    const source = normalizeText(params.get('source') || '', 80)
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, '-');
+    return { query, source };
+  }
 
-      chapters.forEach((chapter) => {
-        const summary = chapter.querySelector('summary');
-        const summaryText = normalize(summary ? summary.textContent : '');
-        const items = Array.from(chapter.querySelectorAll('li'));
-        const chapterMatches = [];
+  function fillSourceSelect(sources, selectedSourceId = '') {
+    const select = document.getElementById('docs-source-select');
+    if (!select) return;
 
-        items.forEach((item) => {
-          const link = item.querySelector('.docs-toc-link');
-          const label = normalize(link ? link.textContent : '');
-          const match = !query || summaryText.includes(query) || label.includes(query);
-          item.classList.toggle('hidden', !match);
-          if (link) link.classList.toggle('hidden', !match);
-          if (match) chapterMatches.push(item);
-        });
+    select.innerHTML = sources
+      .map((source) => {
+        const selected = source.id === selectedSourceId ? ' selected' : '';
+        return `<option value="${escapeHtml(source.id)}"${selected}>${escapeHtml(source.name)}</option>`;
+      })
+      .join('');
 
-        const hasMatch = chapterMatches.length > 0;
-        chapter.classList.toggle('hidden', !hasMatch);
-        if (query && hasMatch) {
-          chapter.open = true;
-        }
-      });
+    if (!select.value && sources.length) select.value = sources[0].id;
+  }
+
+  function renderSourceCards(sources, activeQuery = '') {
+    const grid = document.getElementById('docs-source-grid');
+    if (!grid) return;
+
+    const cards = sources.map((source) => {
+      const keywords = source.keywords.length
+        ? `<p class="card-speakers paper-authors">${escapeHtml(source.keywords.slice(0, 6).join(' · '))}</p>`
+        : '';
+      const searchUrl = resolveDocsSearchUrl(source.searchUrlTemplate, activeQuery, source.docsUrl);
+      const actionLabel = activeQuery ? `Search ${source.name}` : `Open ${source.name}`;
+
+      return `
+        <article class="talk-card paper-card docs-card">
+          <a href="${escapeHtml(searchUrl || source.docsUrl)}" class="card-link-wrap" aria-label="${escapeHtml(actionLabel)}">
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="badge badge-blog">Docs</span>
+                <span class="meeting-label">Upstream</span>
+              </div>
+              <p class="card-title">${escapeHtml(source.name)} Documentation</p>
+              ${source.description ? `<p class="card-abstract">${escapeHtml(source.description)}</p>` : ''}
+              <p class="card-speakers paper-authors">${escapeHtml(source.docsUrl)}</p>
+              ${keywords}
+            </div>
+          </a>
+          <div class="card-footer">
+            <a href="${escapeHtml(searchUrl || source.docsUrl)}" class="card-link-btn card-link-btn--video" aria-label="${escapeHtml(actionLabel)}">
+              <span aria-hidden="true">${escapeHtml(activeQuery ? 'Search Docs' : 'Open Docs')}</span>
+            </a>
+            <a href="${escapeHtml(source.docsUrl)}" class="card-link-btn card-link-btn--slides" aria-label="Open ${escapeHtml(source.name)} home">
+              <span aria-hidden="true">Source Home</span>
+            </a>
+          </div>
+        </article>`;
+    });
+
+    grid.innerHTML = cards.join('');
+  }
+
+  function applyHeroQueryState(query) {
+    const input = document.getElementById('docs-search-input');
+    const clearBtn = document.getElementById('docs-search-clear');
+    if (!input || !clearBtn) return;
+
+    input.value = query || '';
+
+    const syncClear = () => {
+      const hasText = normalizeText(input.value, 320).length > 0;
+      clearBtn.classList.toggle('visible', hasText);
     };
 
-    filterInput.addEventListener('input', applyFilter);
-    applyFilter();
+    input.addEventListener('input', syncClear);
+    input.addEventListener('focus', syncClear);
+    input.addEventListener('blur', () => window.setTimeout(syncClear, 150));
+    clearBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+      syncClear();
+    });
+
+    syncClear();
   }
 
-  const sectionIds = links
-    .map((link) => (link.getAttribute('href') || '').trim())
-    .filter((href) => href.startsWith('#'))
-    .map((href) => href.slice(1));
+  function bindHubSearchForm() {
+    const form = document.getElementById('docs-hub-search-form');
+    const input = document.getElementById('docs-search-input');
+    const select = document.getElementById('docs-source-select');
+    if (!form || !input || !select) return;
 
-  const sections = sectionIds
-    .map((id) => document.getElementById(id))
-    .filter((section) => section && section.classList.contains('doc-section'));
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const query = normalizeText(input.value, 320);
+      const sourceId = normalizeText(select.value, 80)
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, '-');
+      const source = docsSources.find((item) => item.id === sourceId) || docsSources[0];
+      if (!source) return;
 
-  const linkById = new Map();
-  links.forEach((link) => {
-    const href = (link.getAttribute('href') || '').trim();
-    if (!href.startsWith('#')) return;
-    const id = href.slice(1);
-    linkById.set(id, link);
-
-    link.addEventListener('click', () => {
-      setActiveLink(id);
-      const chapter = link.closest('.docs-toc-chapter');
-      if (chapter) chapter.open = true;
-    });
-  });
-
-  function setActiveLink(id) {
-    links.forEach((link) => {
-      const href = (link.getAttribute('href') || '').trim();
-      const active = href === `#${id}`;
-      link.classList.toggle('active', active);
-      if (active) {
-        const chapter = link.closest('.docs-toc-chapter');
-        if (chapter) chapter.open = true;
+      const destination = resolveDocsSearchUrl(source.searchUrlTemplate, query, source.docsUrl);
+      if (destination) {
+        window.location.assign(destination);
       }
     });
   }
 
-  let activeId = '';
+  async function init() {
+    initTheme();
+    initTextSize();
+    initCustomizationMenu();
+    initMobileNavMenu();
+    initShareMenu();
 
-  const updateByViewport = () => {
-    if (!sections.length) return;
-    let best = null;
-    let bestTop = Number.POSITIVE_INFINITY;
+    const { query, source } = getQueryParams();
+    docsSources = await loadDocsSources();
 
-    sections.forEach((section) => {
-      const rect = section.getBoundingClientRect();
-      const thresholdTop = Math.max(90, window.innerHeight * 0.2);
-      if (rect.top <= thresholdTop && Math.abs(rect.top - thresholdTop) < bestTop) {
-        bestTop = Math.abs(rect.top - thresholdTop);
-        best = section;
-      }
-    });
-
-    if (!best) {
-      best = sections.find((section) => section.getBoundingClientRect().top > 0) || sections[sections.length - 1];
-    }
-
-    if (!best) return;
-    if (activeId !== best.id) {
-      activeId = best.id;
-      setActiveLink(activeId);
-    }
-  };
-
-  if ('IntersectionObserver' in window && sections.length) {
-    const observer = new IntersectionObserver((entries) => {
-      let bestEntry = null;
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        if (!bestEntry || entry.boundingClientRect.top < bestEntry.boundingClientRect.top) {
-          bestEntry = entry;
-        }
-      });
-
-      if (bestEntry && bestEntry.target && bestEntry.target.id) {
-        const nextId = bestEntry.target.id;
-        if (activeId !== nextId) {
-          activeId = nextId;
-          setActiveLink(activeId);
-        }
-      }
-    }, {
-      rootMargin: '-15% 0px -70% 0px',
-      threshold: [0, 0.25, 0.6, 1],
-    });
-
-    sections.forEach((section) => observer.observe(section));
+    fillSourceSelect(docsSources, source);
+    applyHeroQueryState(query);
+    renderSourceCards(docsSources, query);
+    bindHubSearchForm();
   }
 
-  window.addEventListener('scroll', updateByViewport, { passive: true });
-  window.addEventListener('resize', updateByViewport, { passive: true });
-  window.addEventListener('hashchange', () => {
-    const id = String(window.location.hash || '').replace(/^#/, '');
-    if (!id) return;
-    setActiveLink(id);
-  });
-
-  const initialHash = String(window.location.hash || '').replace(/^#/, '');
-  if (initialHash && linkById.has(initialHash)) {
-    activeId = initialHash;
-    setActiveLink(initialHash);
-  } else {
-    updateByViewport();
-  }
-}
-
-async function init() {
-  initTheme();
-  initTextSize();
-  initCustomizationMenu();
-  initMobileNavMenu();
-  initShareMenu();
-  initDocsHeroSearch();
-  initDocsTocControls();
-  await loadAndRenderStats();
-}
-
-init();
+  init();
+})();

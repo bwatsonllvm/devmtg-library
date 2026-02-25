@@ -28,21 +28,7 @@ for f in \
   docs/index.html \
   docs/clang/index.html \
   docs/lldb/index.html \
-  docs/_static/docs-book-index.js \
-  docs/clang/_static/docs-book-index.js \
-  docs/lldb/_static/docs-book-index.js \
-  docs/_static/docs-universal-search-index.js \
-  docs/clang/_static/docs-universal-search-index.js \
-  docs/lldb/_static/docs-universal-search-index.js \
-  docs/_static/docs-known-broken-links.txt \
-  docs/clang/_static/docs-known-broken-links.txt \
-  docs/lldb/_static/docs-known-broken-links.txt \
-  docs/_static/docs-sync-meta.json \
-  docs/clang/_static/docs-sync-meta.json \
-  docs/lldb/_static/docs-sync-meta.json \
-  docs/_static/documentation_options.js \
-  docs/clang/_static/documentation_options.js \
-  docs/lldb/_static/documentation_options.js \
+  docs/sources.json \
   updates/index.html \
   updates/index.json \
   css/style.css \
@@ -86,7 +72,7 @@ ruby -rjson -e '
 ' "$EVENTS_ROOT"
 
 # Validate every devmtg/events/*.json parses.
-ruby -rjson -e '
+ruby -rjson -ruri -e '
   events_root = ARGV.fetch(0)
   Dir[File.join(events_root, "*.json")].each do |f|
     JSON.parse(File.read(f))
@@ -117,6 +103,37 @@ ruby -rjson -e '
     end
   end
 ' "$UPDATES_ROOT"
+
+# Validate docs sources catalog JSON.
+ruby -rjson -e '
+  path = ARGV.fetch(0)
+  payload = JSON.parse(File.read(path))
+  abort("docs/sources.json must contain an object") unless payload.is_a?(Hash)
+  sources = payload["sources"]
+  abort("docs/sources.json must contain a non-empty sources array") unless sources.is_a?(Array) && !sources.empty?
+
+  sources.each_with_index do |source, idx|
+    abort("docs/sources.json sources[#{idx}] must be an object") unless source.is_a?(Hash)
+    id = String(source["id"]).strip
+    name = String(source["name"]).strip
+    docs_url = String(source["docsUrl"]).strip
+    search_url = String(source["searchUrlTemplate"]).strip
+    abort("docs/sources.json sources[#{idx}] missing id") if id.empty?
+    abort("docs/sources.json sources[#{idx}] missing name") if name.empty?
+    abort("docs/sources.json sources[#{idx}] missing docsUrl") if docs_url.empty?
+    abort("docs/sources.json sources[#{idx}] missing searchUrlTemplate") if search_url.empty?
+    [docs_url, search_url].each do |url|
+      begin
+        uri = URI.parse(url)
+      rescue URI::InvalidURIError
+        abort("docs/sources.json sources[#{idx}] has invalid URL: #{url}")
+      end
+      unless %w[http https].include?(String(uri.scheme).downcase) && !String(uri.host).strip.empty?
+        abort("docs/sources.json sources[#{idx}] URL must be absolute http/https: #{url}")
+      end
+    end
+  end
+' "$SITE_ROOT/docs/sources.json"
 
 # Validate papers manifest points to existing JSON files.
 ruby -rjson -e '

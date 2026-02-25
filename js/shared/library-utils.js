@@ -4133,9 +4133,9 @@
 
       if (!docsLinks.length) {
         docsLinks.push(
-          { href: 'docs/', label: 'LLVM Core', active: false, current: false },
-          { href: 'docs/clang/', label: 'Clang', active: false, current: false },
-          { href: 'docs/lldb/', label: 'LLDB', active: false, current: false },
+          { href: 'docs/', label: 'Docs Hub', active: false, current: false },
+          { href: 'https://clang.llvm.org/docs/', label: 'Clang', active: false, current: false },
+          { href: 'https://lldb.llvm.org/', label: 'LLDB', active: false, current: false },
         );
       }
 

@@ -3,7 +3,7 @@ name: LLVM Upstream Sync Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 9 * * *"
+    - cron: "17 9 * * 1"
 
 permissions:
   contents: write
@@ -16,7 +16,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     env:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
@@ -51,40 +51,6 @@ jobs:
             --blog-base-url "https://blog.llvm.org/" \
             --github-token "${GITHUB_TOKEN}"
 
-      - name: Sync LLVM docs mirror from llvm.org/docs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bash scripts/sync-docs-from-llvm-org.sh \
-            --source-url "https://llvm.org/docs/" \
-            --docs-dir docs \
-            --github-token "${GITHUB_TOKEN}"
-
-      - name: Sync Clang docs mirror from clang.llvm.org/docs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          mkdir -p docs/clang
-          bash scripts/sync-docs-from-llvm-org.sh \
-            --source-url "https://clang.llvm.org/docs/" \
-            --docs-dir docs/clang \
-            --bridge-doc-options docs/_static/documentation_options.js \
-            --github-token "${GITHUB_TOKEN}"
-          touch docs/clang/_static/docs-known-broken-links.txt
-
-      - name: Sync LLDB docs mirror from lldb.llvm.org
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          mkdir -p docs/lldb
-          bash scripts/sync-docs-from-llvm-org.sh \
-            --source-url "https://lldb.llvm.org/" \
-            --docs-dir docs/lldb \
-            --bridge-doc-options docs/_static/documentation_options.js \
-            --skip-source-companions \
-            --github-token "${GITHUB_TOKEN}"
-          touch docs/lldb/_static/docs-known-broken-links.txt
-
       - name: Sanitize URL-bearing fields
         run: |
           python3 scripts/sanitize-library-urls.py --repo-root .
@@ -105,11 +71,10 @@ jobs:
           base: main
           branch: library/automated-sync-llvm-upstream
           delete-branch: true
-          commit-message: "LLVM upstream sync (llvm-www + llvm-blog + docs mirrors)"
-          title: "LLVM upstream sync (llvm-www + llvm-blog + docs mirrors)"
+          commit-message: "LLVM upstream sync (llvm-www + llvm-blog)"
+          title: "LLVM upstream sync (llvm-www + llvm-blog)"
           body: |
             Automated LLVM upstream sync:
             - syncs talks/slides/videos from `llvm-www/devmtg`
             - syncs LLVM blog posts from `llvm-blog-www`
-            - syncs mirrored docs from `llvm.org/docs`, `clang.llvm.org/docs`, and `lldb.llvm.org`
             - sanitizes URL-bearing fields and rebuilds `updates/index.json`

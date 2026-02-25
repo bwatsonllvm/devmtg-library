@@ -1,0 +1,52 @@
+{
+  "dataVersion": "2026-02-25-docs-sources-v1",
+  "generatedAt": "2026-02-25T00:00:00Z",
+  "sources": [
+    {
+      "id": "llvm-core",
+      "name": "LLVM Core",
+      "docsUrl": "https://llvm.org/docs/",
+      "searchUrlTemplate": "https://llvm.org/docs/search.html?q={query}",
+      "description": "LLVM core manuals, references, internals, and contributor documentation.",
+      "keywords": [
+        "llvm",
+        "ir",
+        "passes",
+        "codegen",
+        "backend",
+        "optimization",
+        "clangir"
+      ]
+    },
+    {
+      "id": "clang",
+      "name": "Clang",
+      "docsUrl": "https://clang.llvm.org/docs/",
+      "searchUrlTemplate": "https://clang.llvm.org/docs/search.html?q={query}",
+      "description": "Clang user guides, diagnostics, tooling, sanitizers, and frontend docs.",
+      "keywords": [
+        "clang",
+        "frontend",
+        "diagnostics",
+        "clang-tidy",
+        "clang-format",
+        "sanitizers"
+      ]
+    },
+    {
+      "id": "lldb",
+      "name": "LLDB",
+      "docsUrl": "https://lldb.llvm.org/",
+      "searchUrlTemplate": "https://lldb.llvm.org/search.html?q={query}",
+      "description": "LLDB debugger documentation, command references, scripting, and API docs.",
+      "keywords": [
+        "lldb",
+        "debugger",
+        "debugging",
+        "breakpoints",
+        "python api",
+        "remote debugging"
+      ]
+    }
+  ]
+}
