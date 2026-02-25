@@ -29,16 +29,18 @@ test('docs sources catalog exists and contains valid entries', () => {
   });
 });
 
-test('global-search.js uses docs sources catalog instead of local docs universal index files', () => {
+test('global-search.js uses local docs universal index files for formatted docs search', () => {
   const raw = fs.readFileSync(GLOBAL_SEARCH_JS, 'utf8');
-  assert.match(raw, /const DOCS_SOURCES_CATALOG_SRC\s*=\s*['"]docs\/sources\.json\?/, 'global-search.js must reference docs/sources.json');
-  assert.match(raw, /ensureDocsSourcesLoader\(/, 'global-search.js must load docs sources via ensureDocsSourcesLoader');
-  assert.doesNotMatch(raw, /docs-universal-search-index\.js/, 'global-search.js must not reference local docs-universal-search-index files');
+  assert.match(raw, /const DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local LLVM docs universal index');
+  assert.match(raw, /const CLANG_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/clang\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local Clang docs universal index');
+  assert.match(raw, /const LLDB_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/lldb\/_static\/docs-universal-search-index\.js\?/, 'global-search.js must reference the local LLDB docs universal index');
+  assert.match(raw, /ensureDocsIndexLoader\(/, 'global-search.js must load docs search data via ensureDocsIndexLoader');
 });
 
-test('work.js uses docs sources catalog instead of local docs universal index files', () => {
+test('work.js uses local docs universal index files for formatted docs search', () => {
   const raw = fs.readFileSync(WORK_JS, 'utf8');
-  assert.match(raw, /const DOCS_SOURCES_CATALOG_SRC\s*=\s*['"]docs\/sources\.json\?/, 'work.js must reference docs/sources.json');
-  assert.match(raw, /loadDocsSourceCatalog\(/, 'work.js must load docs sources via loadDocsSourceCatalog');
-  assert.doesNotMatch(raw, /docs-universal-search-index\.js/, 'work.js must not reference local docs-universal-search-index files');
+  assert.match(raw, /const DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/_static\/docs-universal-search-index\.js\?/, 'work.js must reference the local LLVM docs universal index');
+  assert.match(raw, /const CLANG_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/clang\/_static\/docs-universal-search-index\.js\?/, 'work.js must reference the local Clang docs universal index');
+  assert.match(raw, /const LLDB_DOCS_UNIVERSAL_INDEX_SRC\s*=\s*['"]docs\/lldb\/_static\/docs-universal-search-index\.js\?/, 'work.js must reference the local LLDB docs universal index');
+  assert.match(raw, /loadDocsUniversalRecords\(/, 'work.js must load docs content via loadDocsUniversalRecords');
 });
