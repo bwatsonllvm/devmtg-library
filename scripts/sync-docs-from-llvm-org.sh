@@ -153,6 +153,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo "Syncing docs mirror from $SOURCE_URL"
+USE_CURL_CRAWLER=0
 if command -v wget >/dev/null 2>&1; then
   WGET_EXTRA_ARGS=()
   if ((${#EXCLUDE_PATH_PREFIXES[@]})); then
@@ -161,7 +162,7 @@ if command -v wget >/dev/null 2>&1; then
       WGET_EXTRA_ARGS+=(--reject-regex "https?://[^/]+${escaped_prefix}.*")
     done
   fi
-  wget \
+  if wget \
     --mirror \
     --no-verbose \
     --no-host-directories \
@@ -174,9 +175,19 @@ if command -v wget >/dev/null 2>&1; then
     --timeout=30 \
     --read-timeout=30 \
     "${WGET_EXTRA_ARGS[@]}" \
-    "$SOURCE_URL"
+    "$SOURCE_URL"; then
+    :
+  else
+    wget_status=$?
+    echo "wget mirror failed (exit ${wget_status}); using curl crawler fallback"
+    USE_CURL_CRAWLER=1
+  fi
 else
   echo "wget not found; using curl crawler fallback"
+  USE_CURL_CRAWLER=1
+fi
+
+if [[ "$USE_CURL_CRAWLER" -eq 1 ]]; then
   CRAWL_QUEUE_FILE="$TMP_DIR/.crawl-queue.txt"
   CRAWL_NEXT_FILE="$TMP_DIR/.crawl-next.txt"
   CRAWL_SEEN_FILE="$TMP_DIR/.crawl-seen.txt"
