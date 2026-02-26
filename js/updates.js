@@ -6,6 +6,9 @@ const UPDATE_LOG_PATH = 'updates/index.json';
 const INITIAL_RENDER_BATCH_SIZE = 60;
 const RENDER_BATCH_SIZE = 40;
 const LOAD_MORE_ROOT_MARGIN = '900px 0px';
+const INITIAL_BATCH_ENTRY_RENDER_SIZE = 60;
+const BATCH_ENTRY_RENDER_SIZE = 40;
+const BATCH_ENTRY_LOAD_ROOT_MARGIN = '600px 0px';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 const UPDATE_KIND_ORDER = ['paper', 'docs', 'talk', 'blog'];
 const UPDATE_KIND_LABELS = {
@@ -19,6 +22,7 @@ let renderedBatchCount = 0;
 let renderedEntryCount = 0;
 let loadMoreObserver = null;
 let loadMoreScrollHandler = null;
+const batchEntryRenderState = new Map();
 const HubUtils = window.LLVMHubUtils || {};
 const PageShell = typeof HubUtils.createPageShell === 'function'
   ? HubUtils.createPageShell()
@@ -422,16 +426,14 @@ function renderEntry(entry) {
   `;
 }
 
-function renderBatch(batch) {
+function renderBatch(batch, batchIndex) {
   const entryCount = Number(batch.entryCount || 0);
   const loggedAtLabel = batch.loggedAt ? formatLoggedAt(batch.loggedAt) : 'Unknown time';
   const countLabel = `${entryCount.toLocaleString()} update${entryCount === 1 ? '' : 's'}`;
   const summaryLabel = batch.kindSummary ? `${countLabel} · ${batch.kindSummary}` : countLabel;
-  const entriesHtml = (Array.isArray(batch.entries) ? batch.entries : [])
-    .map((entry) => renderEntry(entry))
-    .join('');
   const safeDomId = escapeHtml(collapseWs(batch.domId) || `updates-batch-${Math.random().toString(16).slice(2)}`);
   const safeBatchKey = escapeHtml(collapseWs(batch.batchKey) || safeDomId);
+  const safeBatchIndex = Number.isFinite(Number(batchIndex)) ? String(Number(batchIndex)) : '-1';
 
   return `
     <section class="update-batch" data-batch-key="${safeBatchKey}">
@@ -440,15 +442,17 @@ function renderBatch(batch) {
         <span class="update-batch-subheading">${escapeHtml(summaryLabel)}</span>
         <span class="update-batch-chevron" aria-hidden="true">⌄</span>
       </button>
-      <div class="update-batch-panel" id="${safeDomId}" hidden>
-        ${entriesHtml}
+      <div class="update-batch-panel" id="${safeDomId}" data-batch-index="${safeBatchIndex}" hidden>
+        <div class="update-batch-entries" data-batch-entries></div>
+        <p class="update-batch-load-status" data-batch-load-status hidden></p>
+        <div class="update-batch-load-sentinel" data-batch-load-sentinel aria-hidden="true" hidden></div>
       </div>
     </section>
   `;
 }
 
 async function fetchJson(path) {
-  const response = await fetch(path, { cache: 'no-store' });
+  const response = await fetch(path, { cache: 'no-cache' });
   if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
   return response.json();
 }
@@ -458,7 +462,7 @@ async function loadUpdateLog() {
   if (!payload || typeof payload !== 'object') {
     throw new Error(`${UPDATE_LOG_PATH}: expected JSON object`);
   }
-  const entries = sortEntriesMostRecent(payload.entries);
+  const entries = Array.isArray(payload.entries) ? payload.entries : [];
   const batches = groupEntriesIntoBatches(entries);
   const lastLibraryUpdateCompletedAt = collapseWs(payload.lastLibraryUpdateCompletedAt) || collapseWs(payload.generatedAt);
   return {
@@ -534,6 +538,177 @@ function setLoadStatus(message) {
   root.appendChild(status);
 }
 
+function batchStateKeyForNode(batchNode) {
+  return collapseWs(batchNode && batchNode.getAttribute && batchNode.getAttribute('data-batch-key'));
+}
+
+function getExistingBatchEntryState(batchNode) {
+  const stateKey = batchStateKeyForNode(batchNode);
+  if (!stateKey) return null;
+  return batchEntryRenderState.get(stateKey) || null;
+}
+
+function ensureBatchEntryState(batchNode) {
+  const stateKey = batchStateKeyForNode(batchNode);
+  if (!stateKey) return null;
+  if (!batchEntryRenderState.has(stateKey)) {
+    batchEntryRenderState.set(stateKey, {
+      initialized: false,
+      renderedCount: 0,
+      observer: null,
+      scrollHandler: null,
+      isAppending: false,
+    });
+  }
+  return batchEntryRenderState.get(stateKey) || null;
+}
+
+function teardownBatchEntryLoader(batchNode) {
+  const state = getExistingBatchEntryState(batchNode);
+  if (!state) return;
+
+  if (state.observer) {
+    state.observer.disconnect();
+    state.observer = null;
+  }
+
+  if (state.scrollHandler) {
+    window.removeEventListener('scroll', state.scrollHandler);
+    window.removeEventListener('resize', state.scrollHandler);
+    state.scrollHandler = null;
+  }
+}
+
+function teardownAllBatchEntryLoaders() {
+  for (const state of batchEntryRenderState.values()) {
+    if (state && state.observer) state.observer.disconnect();
+    if (state && state.scrollHandler) {
+      window.removeEventListener('scroll', state.scrollHandler);
+      window.removeEventListener('resize', state.scrollHandler);
+    }
+  }
+  batchEntryRenderState.clear();
+}
+
+function batchForNode(batchNode) {
+  if (!batchNode) return null;
+  const panel = batchNode.querySelector('.update-batch-panel');
+  if (!panel) return null;
+  const batchIndex = Number.parseInt(collapseWs(panel.dataset.batchIndex), 10);
+  if (!Number.isInteger(batchIndex) || batchIndex < 0 || batchIndex >= activeRenderBatches.length) return null;
+  return activeRenderBatches[batchIndex] || null;
+}
+
+function updateBatchLoadStatus(panel, message) {
+  const status = panel ? panel.querySelector('[data-batch-load-status]') : null;
+  if (!status) return;
+  if (!message) {
+    status.hidden = true;
+    status.textContent = '';
+    return;
+  }
+  status.hidden = false;
+  status.textContent = message;
+}
+
+function appendEntriesForBatch(batchNode, count) {
+  if (!batchNode) return;
+  const panel = batchNode.querySelector('.update-batch-panel');
+  const entriesRoot = panel ? panel.querySelector('[data-batch-entries]') : null;
+  const sentinel = panel ? panel.querySelector('[data-batch-load-sentinel]') : null;
+  const batch = batchForNode(batchNode);
+  const state = ensureBatchEntryState(batchNode);
+  if (!panel || !entriesRoot || !sentinel || !batch || !state || state.isAppending) return;
+
+  const entries = Array.isArray(batch.entries) ? batch.entries : [];
+  const total = entries.length;
+  if (!total) {
+    sentinel.hidden = true;
+    updateBatchLoadStatus(panel, '');
+    return;
+  }
+
+  if (state.renderedCount >= total) {
+    sentinel.hidden = true;
+    updateBatchLoadStatus(panel, total > INITIAL_BATCH_ENTRY_RENDER_SIZE ? `Loaded all ${total.toLocaleString()} updates in this batch.` : '');
+    return;
+  }
+
+  const chunkSize = Number.isFinite(Number(count)) && Number(count) > 0
+    ? Number(count)
+    : BATCH_ENTRY_RENDER_SIZE;
+
+  state.isAppending = true;
+  try {
+    const nextCount = Math.min(state.renderedCount + chunkSize, total);
+    const nextSlice = entries.slice(state.renderedCount, nextCount);
+    const html = nextSlice.map((entry) => renderEntry(entry)).join('');
+    if (html) entriesRoot.insertAdjacentHTML('beforeend', html);
+    state.renderedCount = nextCount;
+  } finally {
+    state.isAppending = false;
+  }
+
+  if (state.renderedCount >= total) {
+    sentinel.hidden = true;
+    updateBatchLoadStatus(panel, total > INITIAL_BATCH_ENTRY_RENDER_SIZE ? `Loaded all ${total.toLocaleString()} updates in this batch.` : '');
+    teardownBatchEntryLoader(batchNode);
+    return;
+  }
+
+  sentinel.hidden = false;
+  updateBatchLoadStatus(
+    panel,
+    `Showing ${state.renderedCount.toLocaleString()} of ${total.toLocaleString()} updates in this batch...`
+  );
+}
+
+function ensureBatchEntriesInitialized(batchNode) {
+  const state = ensureBatchEntryState(batchNode);
+  if (!state || state.initialized) return;
+  state.initialized = true;
+  appendEntriesForBatch(batchNode, INITIAL_BATCH_ENTRY_RENDER_SIZE);
+}
+
+function setupBatchEntryLoader(batchNode) {
+  const panel = batchNode ? batchNode.querySelector('.update-batch-panel') : null;
+  const sentinel = panel ? panel.querySelector('[data-batch-load-sentinel]') : null;
+  const batch = batchForNode(batchNode);
+  const state = ensureBatchEntryState(batchNode);
+  if (!panel || !sentinel || !batch || !state) return;
+
+  teardownBatchEntryLoader(batchNode);
+  const total = Array.isArray(batch.entries) ? batch.entries.length : 0;
+  if (!total || state.renderedCount >= total || panel.hidden) {
+    sentinel.hidden = true;
+    return;
+  }
+  sentinel.hidden = false;
+
+  if ('IntersectionObserver' in window) {
+    state.observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          appendEntriesForBatch(batchNode, BATCH_ENTRY_RENDER_SIZE);
+          break;
+        }
+      }
+    }, { root: null, rootMargin: BATCH_ENTRY_LOAD_ROOT_MARGIN, threshold: 0 });
+    state.observer.observe(sentinel);
+    return;
+  }
+
+  state.scrollHandler = () => {
+    const rect = sentinel.getBoundingClientRect();
+    if (rect.top <= window.innerHeight + 650) {
+      appendEntriesForBatch(batchNode, BATCH_ENTRY_RENDER_SIZE);
+    }
+  };
+  window.addEventListener('scroll', state.scrollHandler, { passive: true });
+  window.addEventListener('resize', state.scrollHandler);
+  state.scrollHandler();
+}
+
 function setBatchExpandedState(batchNode, expanded) {
   if (!batchNode) return;
   const toggle = batchNode.querySelector('.update-batch-toggle');
@@ -558,7 +733,15 @@ function bindBatchToggleDelegation() {
     const batchNode = toggle.closest('.update-batch');
     if (!batchNode) return;
     const expanded = String(toggle.getAttribute('aria-expanded') || '').toLowerCase() === 'true';
-    setBatchExpandedState(batchNode, !expanded);
+    const nextExpanded = !expanded;
+    setBatchExpandedState(batchNode, nextExpanded);
+
+    if (nextExpanded) {
+      ensureBatchEntriesInitialized(batchNode);
+      setupBatchEntryLoader(batchNode);
+    } else {
+      teardownBatchEntryLoader(batchNode);
+    }
   });
 }
 
@@ -570,7 +753,10 @@ function appendNextEntriesBatch(forceBatchSize = RENDER_BATCH_SIZE) {
     teardownInfiniteLoader();
     if (activeRenderBatches.length) {
       const totalEntries = totalEntriesInBatches(activeRenderBatches);
-      setLoadStatus(`Loaded all ${activeRenderBatches.length.toLocaleString()} batches (${totalEntries.toLocaleString()} updates).`);
+      setLoadStatus(
+        `Loaded ${activeRenderBatches.length.toLocaleString()} batches `
+        + `(${totalEntries.toLocaleString()} updates). Expand a batch to load entries.`
+      );
     } else {
       setLoadStatus('');
     }
@@ -579,8 +765,9 @@ function appendNextEntriesBatch(forceBatchSize = RENDER_BATCH_SIZE) {
 
   const nextBatchCount = Math.min(renderedBatchCount + forceBatchSize, activeRenderBatches.length);
   const nextSlice = activeRenderBatches.slice(renderedBatchCount, nextBatchCount);
+  const batchStartIndex = renderedBatchCount;
   const nextHtml = nextSlice
-    .map((batch) => renderBatch(batch))
+    .map((batch, index) => renderBatch(batch, batchStartIndex + index))
     .join('');
 
   root.insertAdjacentHTML('beforeend', nextHtml);
@@ -590,15 +777,19 @@ function appendNextEntriesBatch(forceBatchSize = RENDER_BATCH_SIZE) {
   if (renderedBatchCount >= activeRenderBatches.length) {
     teardownInfiniteLoader();
     const totalEntries = totalEntriesInBatches(activeRenderBatches);
-    setLoadStatus(`Loaded all ${activeRenderBatches.length.toLocaleString()} batches (${totalEntries.toLocaleString()} updates).`);
+    setLoadStatus(
+      `Loaded ${activeRenderBatches.length.toLocaleString()} batches `
+      + `(${totalEntries.toLocaleString()} updates). Expand a batch to load entries.`
+    );
     return;
   }
 
   ensureLoadMoreSentinel(root);
   const totalEntries = totalEntriesInBatches(activeRenderBatches);
   setLoadStatus(
-    `Showing ${renderedBatchCount.toLocaleString()} of ${activeRenderBatches.length.toLocaleString()} batches `
-    + `(${renderedEntryCount.toLocaleString()} of ${totalEntries.toLocaleString()} updates)...`
+    `Loaded ${renderedBatchCount.toLocaleString()} of ${activeRenderBatches.length.toLocaleString()} batch`
+    + `${renderedBatchCount === 1 ? '' : 'es'} `
+    + `(${renderedEntryCount.toLocaleString()} of ${totalEntries.toLocaleString()} updates indexed)...`
   );
 }
 
@@ -644,6 +835,7 @@ function renderEntries(batches) {
   if (!root) return;
 
   teardownInfiniteLoader();
+  teardownAllBatchEntryLoaders();
   activeRenderBatches = [];
   renderedBatchCount = 0;
   renderedEntryCount = 0;
@@ -663,6 +855,7 @@ function renderEntries(batches) {
 
 function showError(message) {
   teardownInfiniteLoader();
+  teardownAllBatchEntryLoaders();
   activeRenderBatches = [];
   renderedBatchCount = 0;
   renderedEntryCount = 0;
