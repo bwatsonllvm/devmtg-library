@@ -2568,6 +2568,7 @@ body.filter-collapsed .filter-collapse-btn svg {
 .card-footer {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4) var(--space-3);
   border-top: 1px solid var(--color-divider);
@@ -2995,6 +2996,10 @@ body.filter-collapsed .filter-collapse-btn svg {
 .talks-list .card-tags-wrap,
 .talks-list .card-footer {
   display: none;
+}
+
+.talks-list .paper-card .card-footer {
+  display: flex;
 }
 
 /* ============================================================
