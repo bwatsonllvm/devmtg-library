@@ -9,6 +9,7 @@
   const REVIEW_STATE_KEY = 'llvm-hub-paper-review-state-v1';
   const RECENT_REVIEW_LIMIT = 40;
   const AUTO_LOGIN_ATTEMPT_KEY = 'llvm-hub-paper-review-auto-login-attempted-v1';
+  const AUTH_BASE_STORAGE_KEY = 'llvm-hub-paper-review-auth-base-v1';
   const AUTO_LOGIN_COOLDOWN_MS = 2 * 60 * 1000;
 
   const adminCard = document.getElementById('review-admin-card');
@@ -102,19 +103,62 @@
     }
   }
 
-  function readAuthBase() {
-    const meta = document.querySelector('meta[name="review-auth-base"]');
-    const raw = String(meta && meta.content || '').trim();
+  function storageRemove(key) {
+    try {
+      window.localStorage.removeItem(key);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function normalizeAuthBase(rawValue) {
+    const raw = String(rawValue || '').trim();
     if (!raw) return '';
     try {
-      const resolved = new URL(raw, window.location.href);
+      const resolved = new URL(raw);
+      const protocol = resolved.protocol.toLowerCase();
+      if (protocol !== 'http:' && protocol !== 'https:') return '';
       return resolved.toString().replace(/\/+$/, '');
     } catch {
       return '';
     }
   }
 
+  function hostLooksLikeGitHubPages() {
+    const host = String(window.location.hostname || '').toLowerCase();
+    return host.endsWith('.github.io');
+  }
+
+  function readAuthBase() {
+    const meta = document.querySelector('meta[name="review-auth-base"]');
+    const metaValue = normalizeAuthBase(meta && meta.content);
+
+    const params = new URLSearchParams(window.location.search || '');
+    const queryRaw = String(params.get('auth_base') || '').trim();
+    const queryValue = normalizeAuthBase(queryRaw);
+
+    if (queryRaw.toLowerCase() === 'clear') {
+      storageRemove(AUTH_BASE_STORAGE_KEY);
+      return metaValue;
+    }
+
+    if (queryValue) {
+      storageSet(AUTH_BASE_STORAGE_KEY, queryValue);
+      return queryValue;
+    }
+
+    const storedValue = normalizeAuthBase(storageGet(AUTH_BASE_STORAGE_KEY));
+    if (storedValue) return storedValue;
+
+    return metaValue;
+  }
+
   const AUTH_BASE = readAuthBase();
+
+  function authBaseRequiredButMissing() {
+    return hostLooksLikeGitHubPages() && !AUTH_BASE;
+  }
 
   function authUrl(pathname) {
     const path = String(pathname || '').trim();
@@ -584,8 +628,16 @@
   }
 
   function setAuthLinks() {
-    adminLogin.href = buildLoginUrl();
-    adminLogin.rel = 'noopener noreferrer';
+    if (authBaseRequiredButMissing()) {
+      adminLogin.href = '#';
+      adminLogin.setAttribute('aria-disabled', 'true');
+      adminLogin.tabIndex = -1;
+    } else {
+      adminLogin.href = buildLoginUrl();
+      adminLogin.rel = 'noopener noreferrer';
+      adminLogin.setAttribute('aria-disabled', 'false');
+      adminLogin.removeAttribute('tabindex');
+    }
     reviewLockBtn.textContent = 'Sign Out';
   }
 
@@ -643,6 +695,13 @@
 
   async function refreshAuthAndRender() {
     setAuthLinks();
+    if (authBaseRequiredButMissing()) {
+      showAuthGate({
+        ok: false,
+        error: 'Auth service URL is not configured. Use ?auth_base=https://<your-worker-domain> (or set meta[name=\"review-auth-base\"]) and reload.',
+      });
+      return;
+    }
     setAdminStatus('Checking admin session...', '');
     const session = await fetchAuthSession();
     if (session.ok && session.authenticated && session.authorized) {
@@ -664,6 +723,12 @@
 
   adminRefresh.addEventListener('click', () => {
     refreshAuthAndRender();
+  });
+  adminLogin.addEventListener('click', (event) => {
+    if (adminLogin.getAttribute('aria-disabled') === 'true') {
+      event.preventDefault();
+      setAdminStatus('Set auth_base first. Example: ?auth_base=https://your-worker.workers.dev', 'error');
+    }
   });
   reviewLockBtn.addEventListener('click', signOut);
   reviewResetBtn.addEventListener('click', resetAllReviews);
