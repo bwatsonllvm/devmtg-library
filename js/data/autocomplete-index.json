@@ -1,16 +1,16 @@
 {
   "meta": {
-    "generatedAt": "2026-02-26T15:53:06Z",
     "source": "scripts/generate-autocomplete-index.py",
     "talkCount": 1643,
-    "paperCount": 3577,
+    "paperCount": 3585,
     "entryCount": {
       "topics": 800,
       "people": 6000,
       "talks": 1566,
-      "papers": 3497,
+      "papers": 3505,
       "docs": 4500
-    }
+    },
+    "generatedAt": "2026-02-26T17:26:37Z"
   },
   "topics": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "label": "Optimizations",
-      "count": 1252
+      "count": 1253
     },
     {
       "label": "Clang",
@@ -59,7 +59,7 @@
     },
     {
       "label": "LLVM",
-      "count": 379
+      "count": 388
     },
     {
       "label": "Programming Languages",
@@ -79,7 +79,7 @@
     },
     {
       "label": "OpenMP",
-      "count": 250
+      "count": 252
     },
     {
       "label": "Libraries",
@@ -139,7 +139,7 @@
     },
     {
       "label": "Polly",
-      "count": 85
+      "count": 86
     },
     {
       "label": "Loop transformations",
@@ -182,12 +182,12 @@
       "count": 56
     },
     {
-      "label": "runtimes",
+      "label": "Fuzzing",
       "count": 48
     },
     {
-      "label": "Fuzzing",
-      "count": 47
+      "label": "runtimes",
+      "count": 48
     },
     {
       "label": "Sanitizers",
@@ -199,7 +199,7 @@
     },
     {
       "label": "optimization",
-      "count": 36
+      "count": 37
     },
     {
       "label": "PGO",
@@ -290,6 +290,14 @@
       "count": 14
     },
     {
+      "label": "SIMD",
+      "count": 14
+    },
+    {
+      "label": "HLS",
+      "count": 13
+    },
+    {
       "label": "HPC",
       "count": 13
     },
@@ -306,15 +314,7 @@
       "count": 12
     },
     {
-      "label": "HLS",
-      "count": 12
-    },
-    {
       "label": "llvm-users",
-      "count": 12
-    },
-    {
-      "label": "SIMD",
       "count": 12
     },
     {
@@ -1650,6 +1650,10 @@
       "count": 2
     },
     {
+      "label": "Quantum",
+      "count": 2
+    },
+    {
       "label": "Quantum Accelerators",
       "count": 2
     },
@@ -2422,6 +2426,10 @@
       "count": 1
     },
     {
+      "label": "Automatic loop optimization",
+      "count": 1
+    },
+    {
       "label": "Automatically Generated",
       "count": 1
     },
@@ -2699,6 +2707,10 @@
     },
     {
       "label": "Busy Binary Analyst",
+      "count": 1
+    },
+    {
+      "label": "Cache",
       "count": 1
     },
     {
@@ -3200,18 +3212,6 @@
     {
       "label": "Compiler Optimizations Meet",
       "count": 1
-    },
-    {
-      "label": "Compiler Passes",
-      "count": 1
-    },
-    {
-      "label": "Compiler Phase Ordering",
-      "count": 1
-    },
-    {
-      "label": "Compiler Phases",
-      "count": 1
     }
   ],
   "people": [
@@ -3228,12 +3228,12 @@
       "count": 60
     },
     {
-      "label": "Vikram Adve",
-      "count": 45
+      "label": "Tobias Grosser",
+      "count": 51
     },
     {
-      "label": "Tobias Grosser",
-      "count": 43
+      "label": "Vikram Adve",
+      "count": 45
     },
     {
       "label": "Hal Finkel",
@@ -3437,6 +3437,10 @@
     },
     {
       "label": "Nick Brown",
+      "count": 12
+    },
+    {
+      "label": "Siddharth Bhat",
       "count": 12
     },
     {
@@ -3681,10 +3685,6 @@
     },
     {
       "label": "Shi‐Jie Cao",
-      "count": 9
-    },
-    {
-      "label": "Siddharth Bhat",
       "count": 9
     },
     {
@@ -4393,6 +4393,10 @@
     },
     {
       "label": "Rodolfo Pellizzoni",
+      "count": 6
+    },
+    {
+      "label": "Sasha Lopoukhine",
       "count": 6
     },
     {
@@ -5844,10 +5848,6 @@
       "count": 4
     },
     {
-      "label": "Sasha Lopoukhine",
-      "count": 4
-    },
-    {
       "label": "Satish Narayanasamy",
       "count": 4
     },
@@ -6136,6 +6136,10 @@
       "count": 3
     },
     {
+      "label": "Alex Keizer",
+      "count": 3
+    },
+    {
       "label": "Alex Lorenz",
       "count": 3
     },
@@ -6253,6 +6257,10 @@
     },
     {
       "label": "Apala Guha",
+      "count": 3
+    },
+    {
+      "label": "Armin Größlinger",
       "count": 3
     },
     {
@@ -7269,6 +7277,10 @@
     },
     {
       "label": "Martin Roetteler",
+      "count": 3
+    },
+    {
+      "label": "Martin Vechev",
       "count": 3
     },
     {
@@ -8316,10 +8328,6 @@
       "count": 2
     },
     {
-      "label": "Alex Keizer",
-      "count": 2
-    },
-    {
       "label": "Alex Renda",
       "count": 2
     },
@@ -8577,10 +8585,6 @@
     },
     {
       "label": "Arkaprava Sinha",
-      "count": 2
-    },
-    {
-      "label": "Armin Größlinger",
       "count": 2
     },
     {
@@ -8972,6 +8976,10 @@
       "count": 2
     },
     {
+      "label": "Chris Hughes",
+      "count": 2
+    },
+    {
       "label": "Chris Jackson",
       "count": 2
     },
@@ -8989,6 +8997,10 @@
     },
     {
       "label": "Christian Hammer",
+      "count": 2
+    },
+    {
+      "label": "Christian Lengauer",
       "count": 2
     },
     {
@@ -13880,6 +13892,10 @@
       "count": 1
     },
     {
+      "label": "Abhinav Bhattar",
+      "count": 1
+    },
+    {
       "label": "Abhinav Jangda",
       "count": 1
     },
@@ -15081,6 +15097,10 @@
     },
     {
       "label": "Anna Sikora",
+      "count": 1
+    },
+    {
+      "label": "Anna Slobodyan",
       "count": 1
     },
     {
@@ -16392,6 +16412,10 @@
       "count": 1
     },
     {
+      "label": "Cedric Renggli",
+      "count": 1
+    },
+    {
       "label": "Cem Yuksel",
       "count": 1
     },
@@ -16620,6 +16644,10 @@
       "count": 1
     },
     {
+      "label": "Chih-Hong Cheng",
+      "count": 1
+    },
+    {
       "label": "Chih-Kai Hsu",
       "count": 1
     },
@@ -16645,10 +16673,6 @@
     },
     {
       "label": "Chris Gamble",
-      "count": 1
-    },
-    {
-      "label": "Chris Hughes",
       "count": 1
     },
     {
@@ -16713,10 +16737,6 @@
     },
     {
       "label": "Christian Kühnel (Google)",
-      "count": 1
-    },
-    {
-      "label": "Christian Lengauer",
       "count": 1
     },
     {
@@ -16837,6 +16857,10 @@
     },
     {
       "label": "Christos P. Lamprakos",
+      "count": 1
+    },
+    {
+      "label": "Christos Poiniotis",
       "count": 1
     },
     {
@@ -19396,6 +19420,10 @@
       "count": 1
     },
     {
+      "label": "Geoffrey Roeder",
+      "count": 1
+    },
+    {
       "label": "Geonhwa Jeong",
       "count": 1
     },
@@ -20733,6 +20761,10 @@
     },
     {
       "label": "Hyerean Jang",
+      "count": 1
+    },
+    {
+      "label": "Hyojung Choi",
       "count": 1
     },
     {
@@ -24372,6 +24404,10 @@
       "count": 1
     },
     {
+      "label": "Lucas Caccia",
+      "count": 1
+    },
+    {
       "label": "Lucas Klemmer",
       "count": 1
     },
@@ -25028,6 +25064,10 @@
       "count": 1
     },
     {
+      "label": "Maria Garzón",
+      "count": 1
+    },
+    {
       "label": "Mariam Arutunian",
       "count": 1
     },
@@ -25281,10 +25321,6 @@
     },
     {
       "label": "Martin Unterguggenberger",
-      "count": 1
-    },
-    {
-      "label": "Martin Vechev",
       "count": 1
     },
     {
@@ -25569,6 +25605,10 @@
     },
     {
       "label": "Matthieu Herrmann",
+      "count": 1
+    },
+    {
+      "label": "Matthieu Moy",
       "count": 1
     },
     {
@@ -26944,6 +26984,10 @@
       "count": 1
     },
     {
+      "label": "Niel de Beaudrap",
+      "count": 1
+    },
+    {
       "label": "Niels Ole Salscheider",
       "count": 1
     },
@@ -27169,50 +27213,6 @@
     },
     {
       "label": "O. Kovalenko",
-      "count": 1
-    },
-    {
-      "label": "O. Simhon",
-      "count": 1
-    },
-    {
-      "label": "O. V. Naumenko",
-      "count": 1
-    },
-    {
-      "label": "Octavian Buiu",
-      "count": 1
-    },
-    {
-      "label": "Octavio Nieto-Taladriz",
-      "count": 1
-    },
-    {
-      "label": "Ofer Shinaar",
-      "count": 1
-    },
-    {
-      "label": "Ognjen Plavsic",
-      "count": 1
-    },
-    {
-      "label": "Ohio State",
-      "count": 1
-    },
-    {
-      "label": "Ohkawa Takeshi",
-      "count": 1
-    },
-    {
-      "label": "Ola Karajeh",
-      "count": 1
-    },
-    {
-      "label": "Olaf Krzikalla",
-      "count": 1
-    },
-    {
-      "label": "Oleg Knut",
       "count": 1
     }
   ],
@@ -35848,6 +35848,10 @@
       "count": 1
     },
     {
+      "label": "Building a Static HLS Pass with FPL",
+      "count": 1
+    },
+    {
       "label": "Building LLVM and GCC, with Amake",
       "count": 1
     },
@@ -36801,6 +36805,10 @@
     },
     {
       "label": "Comprehension of Thread Scheduling for the C++ Programming Language",
+      "count": 1
+    },
+    {
+      "label": "Compressed and Parallelized Structured Tensor Algebra",
       "count": 1
     },
     {
@@ -38764,6 +38772,10 @@
       "count": 1
     },
     {
+      "label": "Falcon: A Scalable Analytical Cache Model",
+      "count": 1
+    },
+    {
       "label": "FAROS: A Framework to Analyze OpenMP Compilation Through Benchmarking and Compiler Optimization Analysis",
       "count": 1
     },
@@ -39625,6 +39637,10 @@
     },
     {
       "label": "GuardianOMP: A Framework for Highly Productive Fault Tolerance Via OpenMP Task-Level Replication",
+      "count": 1
+    },
+    {
+      "label": "Guided Equality Saturation",
       "count": 1
     },
     {
@@ -42204,6 +42220,10 @@
       "count": 1
     },
     {
+      "label": "Metamorphic Fuzzing of C++ Libraries",
+      "count": 1
+    },
+    {
       "label": "Metamorphic Java Engine",
       "count": 1
     },
@@ -43532,6 +43552,10 @@
       "count": 1
     },
     {
+      "label": "POLLY — PERFORMING POLYHEDRAL OPTIMIZATIONS ON A LOW-LEVEL INTERMEDIATE REPRESENTATION",
+      "count": 1
+    },
+    {
       "label": "Polly's Polyhedral Scheduling in the Presence of Reductions",
       "count": 1
     },
@@ -44033,6 +44057,14 @@
     },
     {
       "label": "QIRopt: An Optimization Method for Quantum Intermediate Representation",
+      "count": 1
+    },
+    {
+      "label": "QRANE: Lifting QASM Programs to an Affine IR",
+      "count": 1
+    },
+    {
+      "label": "QSSA: An SSA-Based IR for Quantum Computing",
       "count": 1
     },
     {

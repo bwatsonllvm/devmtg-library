@@ -305,6 +305,7 @@ These checks run in:
 - `updates/index.json`: update-log dataset
 - `papers/*.json`: source and derived paper bundles (site serves the manifest-listed file)
 - `papers/index.json`: paper manifest + data version
+- `papers/manual-added-papers.json`: curated manual-paper bundle for records that should stay separate from upstream source feeds
 - `papers/key-topic-canonical.json`: updater-owned canonical key-topic vocabulary used by paper/discovery scripts
 - `scripts/`: ingestion, normalization, and validation tooling
 - `templates/site-header.html`: canonical shared site header template for viewer pages

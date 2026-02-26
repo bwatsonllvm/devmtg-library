@@ -1,0 +1,301 @@
+{
+  "source": {
+    "slug": "manual-added",
+    "name": "Manual Added Papers",
+    "url": ""
+  },
+  "papers": [
+    {
+      "id": "doi-10-1142-s0129626412500107",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "POLLY — PERFORMING POLYHEDRAL OPTIMIZATIONS ON A LOW-LEVEL INTERMEDIATE REPRESENTATION",
+      "authors": [
+        {
+          "name": "Tobias Grosser",
+          "affiliation": "Parkas Group, Computer Science Department, Ecole Normale Supérieure / INRIA, 45 Rue d’Ulm, Paris, 75005, France"
+        },
+        {
+          "name": "Armin Größlinger",
+          "affiliation": "Programming Group, Department of Informatics and Mathematics, University of Passau, Innstraße 33, Passau, 94032, Germany"
+        },
+        {
+          "name": "Christian Lengauer",
+          "affiliation": "Programming Group, Department of Informatics and Mathematics, University of Passau, Innstraße 33, Passau, 94032, Germany"
+        }
+      ],
+      "year": "2012",
+      "publication": "Parallel Processing Letters",
+      "venue": "Parallel Processing Letters | Vol. 22 (Issue 04)",
+      "type": "research-paper",
+      "abstract": "The polyhedral model for loop parallelization has proved to be an effective tool for advanced optimization and automatic parallelization of programs in higher-level languages. Yet, to integrate such optimizations seamlessly into production compilers, they must be performed on the compiler’s internal, low-level, intermediate representation (IR). With Polly, we present an infrastructure for polyhedral optimizations on such an IR. We describe the detection of program parts amenable to a polyhedral optimization (so-called static control parts), their translation to a Z-polyhedral representation, optimizations on this representation and the generation of optimized IR code. Furthermore, we define an interface for connecting external optimizers and present a novel way of using the parallelism they introduce to generate SIMD and OpenMP code. To evaluate Polly, we compile the PolyBench 2.0 benchmarks fully automatically with PLuTo as external optimizer and parallelizer. We can report on significant speedups.",
+      "paperUrl": "https://grosser.science/static/aa0a34689c2dc41e993b07f4c80cec17/grosser-2012-Polly-Performing-polyhedral-optimizations-on-a-low-level-intermediate-representation.pdf",
+      "sourceUrl": "https://doi.org/10.1142/S0129626412500107",
+      "doi": "10.1142/s0129626412500107",
+      "citationCount": 0,
+      "tags": [
+        "LLVM",
+        "OpenMP",
+        "Optimizations",
+        "Polly",
+        "SIMD"
+      ],
+      "keywords": [
+        "Automatic loop optimization",
+        "LLVM",
+        "OpenMP",
+        "Polyhedron model",
+        "SIMD",
+        "Tiling"
+      ]
+    },
+    {
+      "id": "manual-grosser-2025-compressed-parallelized-structured-tensor-algebra",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "Compressed and Parallelized Structured Tensor Algebra",
+      "authors": [
+        {
+          "name": "Sasha Lopoukhine"
+        },
+        {
+          "name": "Tobias Grosser"
+        }
+      ],
+      "year": "2025",
+      "publication": "ASPLOS",
+      "venue": "ASPLOS 2025",
+      "type": "research-paper",
+      "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3669940.3707214",
+      "sourceUrl": "https://grosser.science/pub/2025-compressed-and-parallelized-structured-tensor-algebra",
+      "doi": "10.1145/3669940.3707214",
+      "citationCount": 0,
+      "contentFormat": "markdown",
+      "content": "- Source page: https://grosser.science/pub/2025-compressed-and-parallelized-structured-tensor-algebra\n- OpenReview: https://openreview.net/forum?id=xM6lhJk8Px\n- DOI: https://doi.org/10.1145/3669940.3707214\n- PDF: https://dl.acm.org/doi/pdf/10.1145/3669940.3707214",
+      "tags": [
+        "LLVM",
+        "Tensor Algebra"
+      ]
+    },
+    {
+      "id": "manual-grosser-2024-falcon-scalable-analytical-cache-model",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "Falcon: A Scalable Analytical Cache Model",
+      "authors": [
+        {
+          "name": "Sasha Lopoukhine"
+        },
+        {
+          "name": "Siddharth Bhat"
+        },
+        {
+          "name": "Matthieu Moy"
+        },
+        {
+          "name": "Tobias Grosser"
+        }
+      ],
+      "year": "2024",
+      "publication": "PLDI",
+      "venue": "PLDI 2024",
+      "type": "research-paper",
+      "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3656436",
+      "sourceUrl": "https://grosser.science/pub/2024-falcon",
+      "doi": "10.1145/3656436",
+      "citationCount": 0,
+      "contentFormat": "markdown",
+      "content": "- Source page: https://grosser.science/pub/2024-falcon\n- DOI: https://doi.org/10.1145/3656436\n- PDF: https://dl.acm.org/doi/pdf/10.1145/3656436",
+      "tags": [
+        "LLVM",
+        "Cache"
+      ]
+    },
+    {
+      "id": "manual-grosser-2024-guided-equality-saturation",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "Guided Equality Saturation",
+      "authors": [
+        {
+          "name": "Sara Magliari"
+        },
+        {
+          "name": "Chris Hughes"
+        },
+        {
+          "name": "Toby Hodges"
+        },
+        {
+          "name": "Tobias Grosser"
+        }
+      ],
+      "year": "2024",
+      "publication": "DIS",
+      "venue": "DIS 2024",
+      "type": "research-paper",
+      "paperUrl": "https://arxiv.org/pdf/2401.04450.pdf",
+      "sourceUrl": "https://grosser.science/pub/2024-guided-equality-saturation",
+      "citationCount": 0,
+      "contentFormat": "markdown",
+      "content": "- Source page: https://grosser.science/pub/2024-guided-equality-saturation\n- arXiv: https://arxiv.org/abs/2401.04450\n- PDF: https://arxiv.org/pdf/2401.04450.pdf",
+      "tags": [
+        "LLVM",
+        "Optimization"
+      ]
+    },
+    {
+      "id": "manual-grosser-2023-building-static-hls-pass-fpl",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "Building a Static HLS Pass with FPL",
+      "authors": [
+        {
+          "name": "Maria Garzón"
+        },
+        {
+          "name": "Victor A. Latorre"
+        },
+        {
+          "name": "Alex Keizer"
+        },
+        {
+          "name": "Anna Slobodyan"
+        },
+        {
+          "name": "Tobias Grosser"
+        }
+      ],
+      "year": "2023",
+      "publication": "LLVM-HPC",
+      "venue": "LLVM-HPC 2023",
+      "type": "research-paper",
+      "paperUrl": "https://arxiv.org/pdf/2308.10285.pdf",
+      "sourceUrl": "https://grosser.science/pub/2023-static-hls",
+      "citationCount": 0,
+      "contentFormat": "markdown",
+      "content": "- Source page: https://grosser.science/pub/2023-static-hls\n- arXiv: https://arxiv.org/abs/2308.10285\n- PDF: https://arxiv.org/pdf/2308.10285.pdf",
+      "tags": [
+        "LLVM",
+        "HLS"
+      ]
+    },
+    {
+      "id": "manual-grosser-2022-metamorphic-fuzzing-cpp-libraries",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "Metamorphic Fuzzing of C++ Libraries",
+      "authors": [
+        {
+          "name": "Radu-Cristian Nica"
+        },
+        {
+          "name": "Chih-Hong Cheng"
+        },
+        {
+          "name": "Tobias Grosser"
+        }
+      ],
+      "year": "2022",
+      "publication": "SSBSE",
+      "venue": "SSBSE 2022",
+      "type": "research-paper",
+      "paperUrl": "https://link.springer.com/content/pdf/10.1007/978-3-031-22385-3_4.pdf",
+      "sourceUrl": "https://grosser.science/pub/2022-metamorphic-fuzzing-of-c-libraries",
+      "doi": "10.1007/978-3-031-22385-3_4",
+      "citationCount": 0,
+      "contentFormat": "markdown",
+      "content": "- Source page: https://grosser.science/pub/2022-metamorphic-fuzzing-of-c-libraries\n- DOI: https://doi.org/10.1007/978-3-031-22385-3_4\n- PDF: https://link.springer.com/content/pdf/10.1007/978-3-031-22385-3_4.pdf",
+      "tags": [
+        "LLVM",
+        "Fuzzing"
+      ]
+    },
+    {
+      "id": "manual-grosser-2022-qssa-ssa-based-ir-quantum-computing",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "QSSA: An SSA-Based IR for Quantum Computing",
+      "authors": [
+        {
+          "name": "Siddharth Bhat"
+        },
+        {
+          "name": "Cedric Renggli"
+        },
+        {
+          "name": "Lucas Caccia"
+        },
+        {
+          "name": "Geoffrey Roeder"
+        },
+        {
+          "name": "Christos Poiniotis"
+        },
+        {
+          "name": "Tobias Grosser"
+        },
+        {
+          "name": "Martin Vechev"
+        }
+      ],
+      "year": "2022",
+      "publication": "IEEE Quantum Week",
+      "venue": "IEEE Quantum Week 2022",
+      "type": "research-paper",
+      "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3503221.3508415",
+      "sourceUrl": "https://grosser.science/pub/2022-qssa",
+      "doi": "10.1145/3503221.3508415",
+      "citationCount": 0,
+      "contentFormat": "markdown",
+      "content": "- Source page: https://grosser.science/pub/2022-qssa\n- DOI: https://doi.org/10.1145/3503221.3508415\n- PDF: https://dl.acm.org/doi/pdf/10.1145/3503221.3508415\n- arXiv: https://arxiv.org/abs/2109.00941",
+      "tags": [
+        "LLVM",
+        "Quantum"
+      ]
+    },
+    {
+      "id": "manual-grosser-2022-qrane-lifting-qasm-affine-ir",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "QRANE: Lifting QASM Programs to an Affine IR",
+      "authors": [
+        {
+          "name": "Siddharth Bhat"
+        },
+        {
+          "name": "Niel de Beaudrap"
+        },
+        {
+          "name": "Hyojung Choi"
+        },
+        {
+          "name": "Abhinav Bhattar"
+        },
+        {
+          "name": "Pranav Gokhale"
+        },
+        {
+          "name": "Tobias Grosser"
+        },
+        {
+          "name": "Martin Vechev"
+        }
+      ],
+      "year": "2022",
+      "publication": "CGO",
+      "venue": "CGO 2022",
+      "type": "research-paper",
+      "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3497775.3503694",
+      "sourceUrl": "https://grosser.science/pub/2022-qrane",
+      "doi": "10.1145/3497775.3503694",
+      "citationCount": 0,
+      "contentFormat": "markdown",
+      "content": "- Source page: https://grosser.science/pub/2022-qrane\n- DOI: https://doi.org/10.1145/3497775.3503694\n- arXiv: https://arxiv.org/abs/2104.14722\n- PDF: https://dl.acm.org/doi/pdf/10.1145/3497775.3503694",
+      "tags": [
+        "LLVM",
+        "Quantum"
+      ]
+    }
+  ]
+}

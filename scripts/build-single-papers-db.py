@@ -196,11 +196,13 @@ LOW_QUALITY_TITLE_KEYS = {
     "sign in",
 }
 SOURCE_PRIORITY = {
+    "manual-added": 400,
     "openalex-discovery": 300,
     "openalex-llvm-query": 250,
     "llvm-blog-www": 200,
     "llvm-org-pubs": 150,
 }
+MANUAL_BUNDLE_NAME = "manual-added-papers.json"
 PUBLICATION_ALIAS_MAP: dict[str, str] = {
     "proceedingsofacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
     "proceedingsoftheacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
@@ -1758,8 +1760,21 @@ def update_manifest(
     payload = load_json(manifest_path) if manifest_path.exists() else {}
     changed = False
 
-    files_before = payload.get("paperFiles") if isinstance(payload.get("paperFiles"), list) else []
+    files_before_raw = payload.get("paperFiles") if isinstance(payload.get("paperFiles"), list) else []
+    files_before = [collapse_ws(str(value)) for value in files_before_raw if collapse_ws(str(value))]
+
     files_after = [output_bundle_name]
+    for bundle_name in files_before:
+        if bundle_name == output_bundle_name:
+            continue
+        bundle_path = (manifest_path.parent / bundle_name).resolve()
+        if bundle_path.exists() and bundle_name.endswith(".json"):
+            files_after.append(bundle_name)
+
+    manual_bundle_path = (manifest_path.parent / MANUAL_BUNDLE_NAME).resolve()
+    if manual_bundle_path.exists() and MANUAL_BUNDLE_NAME not in files_after:
+        files_after.append(MANUAL_BUNDLE_NAME)
+
     if files_before != files_after:
         payload["paperFiles"] = files_after
         changed = True
@@ -1910,8 +1925,11 @@ def main() -> int:
         force_bump_data_version=output_changed,
     )
     print(f"Manifest changed: {'yes' if manifest_changed else 'no'}", flush=True)
+    manifest_state = load_json(manifest_path) if manifest_path.exists() else {}
+    manifest_files = manifest_state.get("paperFiles") if isinstance(manifest_state.get("paperFiles"), list) else []
+    manifest_files_text = ", ".join(str(value) for value in manifest_files) if manifest_files else "(none)"
     print(
-        f"Manifest state: {manifest_path} -> paperFiles=[{output_path.name}] dataVersion={effective_data_version or '(unchanged)'}",
+        f"Manifest state: {manifest_path} -> paperFiles=[{manifest_files_text}] dataVersion={effective_data_version or '(unchanged)'}",
         flush=True,
     )
     return 0

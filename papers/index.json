@@ -1,6 +1,7 @@
 {
   "dataVersion": "2026-02-26-papers-single-db-openalex-unpaywall-pdf-v1",
   "paperFiles": [
-    "combined-all-papers-deduped.json"
+    "combined-all-papers-deduped.json",
+    "manual-added-papers.json"
   ]
 }
