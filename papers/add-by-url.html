@@ -42,103 +42,75 @@
     html[data-theme="dark"] { background: #000000; }
     body { background: transparent; }
 
-    .manual-paper-main {
+    .url-intake-main {
       max-width: 1240px;
       margin: 0 auto;
       padding: 0 1rem 3rem;
     }
 
-    .manual-paper-shell {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .manual-paper-card {
+    .url-intake-card {
       border: 1px solid var(--color-border);
       border-radius: 14px;
       background: var(--color-surface);
       padding: 1rem;
+      display: grid;
+      gap: 0.8rem;
     }
 
-    .manual-paper-card h2 {
-      margin: 0 0 0.6rem;
-      font-size: 1.06rem;
+    .url-intake-card h2 {
+      margin: 0;
+      font-size: 1.08rem;
       line-height: 1.3;
+      color: var(--color-text);
     }
 
-    .manual-paper-card p {
-      margin: 0 0 0.75rem;
+    .url-intake-card p {
+      margin: 0;
       color: var(--color-text-muted);
       font-size: 0.94rem;
       line-height: 1.45;
     }
 
-    .manual-paper-grid {
+    .url-intake-field {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
+      gap: 0.32rem;
     }
 
-    .manual-paper-field {
-      display: grid;
-      gap: 0.34rem;
-    }
-
-    .manual-paper-field.manual-span-2 {
-      grid-column: 1 / -1;
-    }
-
-    .manual-paper-label {
+    .url-intake-label {
       color: var(--color-text-muted);
-      font-size: 0.77rem;
+      font-size: 0.78rem;
       font-weight: 600;
       letter-spacing: 0.02em;
       text-transform: uppercase;
     }
 
-    .manual-paper-input,
-    .manual-paper-select,
-    .manual-paper-textarea {
+    .url-intake-input {
       width: 100%;
       border: 1px solid var(--color-border);
-      border-radius: 9px;
+      border-radius: 10px;
       background: var(--color-surface);
       color: var(--color-text);
-      padding: 0.58rem 0.66rem;
-      font-size: 0.9rem;
+      padding: 0.62rem 0.72rem;
+      font-size: 0.93rem;
       line-height: 1.4;
     }
 
-    .manual-paper-textarea {
-      resize: vertical;
-      min-height: 84px;
-    }
-
-    .manual-paper-input:focus,
-    .manual-paper-select:focus,
-    .manual-paper-textarea:focus {
+    .url-intake-input:focus {
       outline: none;
       border-color: var(--color-border-focus);
       box-shadow: 0 0 0 3px var(--color-field-focus-ring);
     }
 
-    .manual-paper-hint {
-      color: var(--color-text-muted);
-      font-size: 0.78rem;
-      line-height: 1.35;
-    }
-
-    .manual-paper-actions {
+    .url-intake-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.85rem;
+      gap: 0.52rem;
     }
 
-    .manual-paper-btn {
+    .url-intake-btn {
       border: 1px solid var(--color-border);
       border-radius: 9px;
-      padding: 0.48rem 0.74rem;
+      padding: 0.48rem 0.75rem;
       background: var(--color-surface);
       color: var(--color-text);
       font-size: 0.86rem;
@@ -151,84 +123,55 @@
       transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
     }
 
-    .manual-paper-btn:hover {
+    .url-intake-btn:hover {
       color: var(--color-accent);
       border-color: var(--color-border-focus);
       background: var(--color-accent-bg);
     }
 
-    .manual-paper-btn.primary {
+    .url-intake-btn.primary {
       background: var(--color-primary-btn-bg);
       border-color: var(--color-primary-btn-border);
       color: var(--color-primary-btn-text);
     }
 
-    .manual-paper-btn.primary:hover {
+    .url-intake-btn.primary:hover {
       background: var(--color-primary-btn-hover-bg);
       border-color: var(--color-primary-btn-hover-border);
       color: var(--color-primary-btn-hover-text);
     }
 
-    .manual-paper-output {
-      width: 100%;
-      min-height: 240px;
-      border: 1px solid var(--color-border);
-      border-radius: 9px;
-      background: var(--color-surface-subtle);
-      color: var(--color-text);
-      padding: 0.7rem;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      line-height: 1.45;
-      resize: vertical;
-    }
-
-    .manual-paper-cli {
-      margin: 0.65rem 0 0;
-      border: 1px solid var(--color-border);
-      border-radius: 9px;
-      background: var(--color-surface-subtle);
-      color: var(--color-text);
-      padding: 0.65rem;
-      overflow-x: auto;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      line-height: 1.4;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .manual-paper-status {
-      margin-top: 0.56rem;
+    .url-intake-status {
+      min-height: 1.2rem;
+      color: var(--color-text-muted);
       font-size: 0.82rem;
       line-height: 1.35;
-      color: var(--color-text-muted);
-      min-height: 1.4rem;
     }
 
-    .manual-paper-status.error {
+    .url-intake-status.error {
       color: var(--color-error);
     }
 
-    .manual-paper-status.success {
+    .url-intake-status.success {
       color: var(--color-success);
     }
 
-    .manual-paper-top-actions {
-      margin-top: 0.42rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.48rem;
-    }
-
-    @media (max-width: 900px) {
-      .manual-paper-grid {
-        grid-template-columns: 1fr;
-      }
+    .url-intake-command {
+      margin: 0;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface-subtle);
+      color: var(--color-text);
+      padding: 0.72rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
   </style>
-  <title>Add Manual Paper - LLVM Research Library</title>
-  <meta name="description" content="Add manual paper metadata and generate a workflow payload to open a pull request.">
+  <title>Add Paper by URL - LLVM Research Library</title>
+  <meta name="description" content="Submit one publication URL and trigger manual paper PR intake.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -370,153 +313,43 @@
     </div>
   </header>
 
-  <section class="search-hero search-hero--compact" aria-label="Manual paper intake">
+  <section class="search-hero search-hero--compact" aria-label="Add paper by URL">
     <div class="search-hero-shell">
       <div class="search-hero-title-row">
-        <h1>Add Manual Paper</h1>
-        <p class="search-hero-title-aside">Generate payload for automated PR intake</p>
+        <h1>Add Paper by URL</h1>
+        <p class="search-hero-title-aside">Quick intake form</p>
       </div>
-      <p class="subtitle">
-        Fast path: open the GitHub Action and provide only <code>source_url</code>. The workflow extracts metadata and opens the PR.
-        The full form below is optional and useful for local payload drafting.
-      </p>
-      <div class="manual-paper-top-actions">
+      <p class="subtitle">Paste one publication link. The workflow extracts metadata and opens a pull request automatically.</p>
+      <div class="empty-state-actions" aria-label="Intake actions">
         <a href="papers/" class="empty-action-btn">Back to Papers</a>
-        <a href="papers/add-by-url.html" class="empty-action-btn">Quick URL Intake</a>
-        <a href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" target="_blank" rel="noopener noreferrer" class="empty-action-btn" id="manual-paper-workflow-link-top">Open Manual Intake Action</a>
+        <a href="papers/add.html" class="empty-action-btn">Advanced Manual Form</a>
       </div>
     </div>
   </section>
 
-  <main id="main-content" class="manual-paper-main" tabindex="-1">
-    <div class="manual-paper-shell">
-      <section class="manual-paper-card" aria-labelledby="manual-input-heading">
-        <h2 id="manual-input-heading">Paper Metadata</h2>
-        <p>Provide all fields used by our paper schema. Required fields are validated before payload generation.</p>
-        <form id="manual-paper-form" novalidate>
-          <div class="manual-paper-grid">
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Source slug</span>
-              <input id="mp-source" class="manual-paper-input" value="manual-added">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Source name</span>
-              <input id="mp-source-name" class="manual-paper-input" value="Manual Added Papers">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Record ID (optional)</span>
-              <input id="mp-id" class="manual-paper-input" placeholder="manual-year-paper-title">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Type</span>
-              <select id="mp-type" class="manual-paper-select">
-                <option value="research-paper" selected>research-paper</option>
-                <option value="thesis">thesis</option>
-                <option value="report">report</option>
-                <option value="other">other</option>
-              </select>
-            </label>
-            <label class="manual-paper-field manual-span-2">
-              <span class="manual-paper-label">Title (required)</span>
-              <input id="mp-title" class="manual-paper-input" required>
-            </label>
-            <label class="manual-paper-field manual-span-2">
-              <span class="manual-paper-label">Authors (required)</span>
-              <textarea id="mp-authors" class="manual-paper-textarea" required placeholder="One author per line. Format: Name | Affiliation A ; Affiliation B"></textarea>
-              <span class="manual-paper-hint">Example: <code>Tobias Grosser | Universitat Passau ; Ohio State University</code></span>
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Year (required)</span>
-              <input id="mp-year" class="manual-paper-input" required placeholder="2026">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Citation count</span>
-              <input id="mp-citation-count" class="manual-paper-input" type="number" min="0" step="1" value="0">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Publication</span>
-              <input id="mp-publication" class="manual-paper-input" placeholder="PLDI">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Venue</span>
-              <input id="mp-venue" class="manual-paper-input" placeholder="PLDI 2026">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Paper URL (required)</span>
-              <input id="mp-paper-url" class="manual-paper-input" required placeholder="https://.../paper.pdf">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Source URL (required)</span>
-              <input id="mp-source-url" class="manual-paper-input" required placeholder="https://.../publication-page">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">DOI</span>
-              <input id="mp-doi" class="manual-paper-input" placeholder="10.xxxx/xxxx">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">OpenAlex ID</span>
-              <input id="mp-openalex-id" class="manual-paper-input" placeholder="W123... or https://openalex.org/W123...">
-            </label>
-            <label class="manual-paper-field manual-span-2">
-              <span class="manual-paper-label">Abstract</span>
-              <textarea id="mp-abstract" class="manual-paper-textarea" placeholder="Abstract text..."></textarea>
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Tags</span>
-              <input id="mp-tags" class="manual-paper-input" placeholder="LLVM, Polly, OpenMP">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Keywords</span>
-              <input id="mp-keywords" class="manual-paper-input" placeholder="Loop optimization, SIMD, ...">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Matched Authors</span>
-              <input id="mp-matched-authors" class="manual-paper-input" placeholder="Author A, Author B">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Matched Subprojects</span>
-              <input id="mp-matched-subprojects" class="manual-paper-input" placeholder="mlir, lldb, llvm">
-            </label>
-            <label class="manual-paper-field">
-              <span class="manual-paper-label">Content format</span>
-              <select id="mp-content-format" class="manual-paper-select">
-                <option value="">(none)</option>
-                <option value="markdown" selected>markdown</option>
-                <option value="text">text</option>
-                <option value="html">html</option>
-              </select>
-            </label>
-            <label class="manual-paper-field manual-span-2">
-              <span class="manual-paper-label">Content</span>
-              <textarea id="mp-content" class="manual-paper-textarea" placeholder="Optional markdown content (extra links, notes, etc.)"></textarea>
-            </label>
-          </div>
-          <div class="manual-paper-actions">
-            <button type="button" class="manual-paper-btn primary" id="mp-generate-btn">Generate JSON Payload</button>
-            <button type="reset" class="manual-paper-btn" id="mp-reset-btn">Reset Form</button>
-          </div>
-        </form>
-      </section>
+  <main id="main-content" class="url-intake-main" tabindex="-1">
+    <section class="url-intake-card" aria-labelledby="url-intake-heading">
+      <h2 id="url-intake-heading">Source URL Intake</h2>
+      <p>The GitHub Action only requires this URL input.</p>
 
-      <section class="manual-paper-card" aria-labelledby="manual-output-heading">
-        <h2 id="manual-output-heading">Workflow Payload + PR Trigger</h2>
-        <p>
-          Fastest: run the workflow with only <code>source_url</code> on the
-          <a href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" id="manual-paper-workflow-link-inline" target="_blank" rel="noopener noreferrer">Manual Paper Intake workflow</a>.
-        </p>
-        <textarea id="mp-json-output" class="manual-paper-output" readonly aria-label="Generated paper JSON payload"></textarea>
-        <div class="manual-paper-actions">
-          <button type="button" class="manual-paper-btn" id="mp-copy-btn">Copy JSON</button>
-          <a href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" target="_blank" rel="noopener noreferrer" class="manual-paper-btn">Open GitHub Action</a>
-        </div>
-        <div class="manual-paper-status" id="mp-status" role="status" aria-live="polite"></div>
-        <pre class="manual-paper-cli" id="mp-gh-cli"></pre>
-      </section>
-    </div>
+      <label class="url-intake-field" for="url-intake-source">
+        <span class="url-intake-label">Source URL</span>
+        <input id="url-intake-source" class="url-intake-input" type="url" placeholder="https://..." required>
+      </label>
+
+      <div class="url-intake-actions">
+        <button type="button" class="url-intake-btn primary" id="url-intake-copy-command">Copy Workflow Command</button>
+        <a class="url-intake-btn" id="url-intake-open-workflow" href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" target="_blank" rel="noopener noreferrer">Open Workflow</a>
+        <button type="button" class="url-intake-btn" id="url-intake-open-advanced">Open Advanced Form With URL</button>
+      </div>
+
+      <div class="url-intake-status" id="url-intake-status" role="status" aria-live="polite"></div>
+      <pre class="url-intake-command" id="url-intake-command">gh workflow run manual-paper-pr.yml --repo llvm/library --ref main -f source_url='https://example.com/paper'</pre>
+    </section>
   </main>
 
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/shared/global-search.js?v=e5c202108124"></script>
-  <script src="js/paper-manual-add.js?v=fa984b52f344"></script>
+  <script src="js/paper-add-by-url.js?v=60948a7c52db"></script>
 </body>
 </html>

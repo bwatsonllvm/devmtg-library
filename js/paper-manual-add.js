@@ -190,6 +190,14 @@
   const repoSlug = detectRepoSlug();
   const workflowUrl = updateWorkflowLinks(repoSlug);
 
+  const sourceQueryParam = new URLSearchParams(window.location.search || '').get('source_url');
+  if (sourceQueryParam) {
+    const sourceField = document.getElementById('mp-source-url');
+    if (sourceField && !String(sourceField.value || '').trim()) {
+      sourceField.value = String(sourceQueryParam).trim();
+    }
+  }
+
   function renderPayload() {
     try {
       const payload = buildPayload();

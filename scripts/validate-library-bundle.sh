@@ -21,6 +21,7 @@ for f in \
   talks/events.html \
   talks/talk.html \
   papers/index.html \
+  papers/add-by-url.html \
   papers/add.html \
   papers/paper.html \
   blogs/index.html \
@@ -38,6 +39,7 @@ for f in \
   js/meetings.js \
   js/talk.js \
   js/paper.js \
+  js/paper-add-by-url.js \
   js/paper-manual-add.js \
   js/papers-data.js \
   js/papers.js \
@@ -269,6 +271,7 @@ ruby -e '
     talks/events.html
     talks/talk.html
     papers/index.html
+    papers/add-by-url.html
     papers/add.html
     papers/paper.html
     blogs/index.html

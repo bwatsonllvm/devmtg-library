@@ -15,6 +15,7 @@ VIEWER_PAGES = [
     "talks/events.html",
     "talks/talk.html",
     "papers/index.html",
+    "papers/add-by-url.html",
     "papers/add.html",
     "papers/paper.html",
     "blogs/index.html",
