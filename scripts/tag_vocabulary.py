@@ -77,14 +77,44 @@ def _parse_tags_from_events(events_dir: Path) -> list[str]:
     return out
 
 
+def _parse_tags_from_json_file(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    values = payload.get("tags") if isinstance(payload, dict) else []
+    if not isinstance(values, list):
+        return []
+
+    out: list[str] = []
+    seen: set[str] = set()
+    for value in values:
+        tag = collapse_ws(str(value))
+        key = _normalize_key(tag)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(tag)
+    return out
+
+
 def load_canonical_tags(app_js_path: Path, events_dir: Path | None = None) -> list[str]:
     """Load canonical tags.
 
     Priority:
-      1) `const ALL_TAGS = [...]` in app.js (legacy/static setup)
-      2) `KEY_TOPIC_CANONICAL` in `js/shared/library-utils.js`
-      3) unique tags inferred from `devmtg/events/*.json`
+      1) `papers/key-topic-canonical.json` (updater-owned canonical source)
+      2) `const ALL_TAGS = [...]` in app.js (legacy/static setup)
+      3) `KEY_TOPIC_CANONICAL` in `js/shared/library-utils.js`
+      4) unique tags inferred from `devmtg/events/*.json`
     """
+    repo_root = app_js_path.parent.parent
+    canonical_json = (repo_root / "papers" / "key-topic-canonical.json").resolve()
+    tags = _parse_tags_from_json_file(canonical_json)
+    if tags:
+        return tags
+
     tags = _parse_all_tags_from_app_js(app_js_path)
     if tags:
         return tags
@@ -95,7 +125,6 @@ def load_canonical_tags(app_js_path: Path, events_dir: Path | None = None) -> li
 
     candidate_events_dir = events_dir
     if candidate_events_dir is None:
-        repo_root = app_js_path.parent.parent
         devmtg_events = (repo_root / "devmtg" / "events").resolve()
         legacy_events = (repo_root / "events").resolve()
         candidate_events_dir = devmtg_events if devmtg_events.exists() else legacy_events

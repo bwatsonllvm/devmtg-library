@@ -1,0 +1,130 @@
+<header class="site-header">
+    <a href="index.html" class="site-logo" aria-label="LLVM Research Library home">
+      <img src="images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
+      <span>LLVM Research Library</span>
+    </a>
+
+    <form class="global-search-form" action="work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, docs, people, and key topics">
+      <input type="hidden" name="mode" value="search">
+      <input
+        type="search"
+        class="global-search-input"
+        name="q"
+        placeholder="Search the full library..."
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Global Search across talks, papers, blogs, docs, people, and key topics"
+      >
+      <button class="global-search-submit" type="submit" aria-label="Run Global Search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+    </form>
+
+<nav class="site-nav" aria-label="Main navigation">
+      <a href="talks/" class="nav-link" aria-label="Talks">
+        <span aria-hidden="true">Talks</span>
+      </a>
+      <a href="talks/events.html" class="nav-link" aria-label="Events">
+        <span aria-hidden="true">Events</span>
+      </a>
+      <a href="papers/" class="nav-link" aria-label="Papers">
+        <span aria-hidden="true">Papers</span>
+      </a>
+      <a href="blogs/" class="nav-link" aria-label="Blogs">
+        <span aria-hidden="true">Blogs</span>
+      </a>
+      <div class="nav-dropdown nav-dropdown-docs">
+        <a href="docs/" class="nav-link nav-dropdown-toggle" aria-label="Documentation">
+          <span aria-hidden="true">Docs</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </a>
+        <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
+          <a href="docs/" class="nav-dropdown-link" role="menuitem">LLVM Core</a>
+          <a href="docs/clang/" class="nav-dropdown-link" role="menuitem">Clang</a>
+          <a href="docs/lldb/" class="nav-dropdown-link" role="menuitem">LLDB</a>
+        </div>
+      </div>
+      <a href="people/" class="nav-link" aria-label="People">
+        <span aria-hidden="true">People</span>
+      </a>
+      <span class="site-nav-separator" aria-hidden="true">|</span>
+      <a href="updates/" class="nav-link" aria-label="Update log">
+        <span aria-hidden="true">Updates</span>
+      </a>
+      <a href="about/" class="nav-link" aria-label="About this site">
+        <span aria-hidden="true">About</span>
+      </a>
+    </nav>
+
+
+    <div class="mobile-nav-menu" id="mobile-nav-menu">
+      <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
+        Browse
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+            <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+        <a href="talks/" class="mobile-nav-link">Talks</a>
+        <a href="talks/events.html" class="mobile-nav-link">Events</a>
+        <a href="papers/" class="mobile-nav-link">Papers</a>
+        <a href="blogs/" class="mobile-nav-link">Blogs</a>
+        <a href="docs/" class="mobile-nav-link">Docs: LLVM Core</a>
+        <a href="docs/clang/" class="mobile-nav-link">Docs: Clang</a>
+        <a href="docs/lldb/" class="mobile-nav-link">Docs: LLDB</a>
+        <a href="people/" class="mobile-nav-link">People</a>
+        <a href="updates/" class="mobile-nav-link">Updates</a>
+        <a href="about/" class="mobile-nav-link">About</a>
+      </div>
+
+    </div>
+
+    <div class="header-right">
+      <div class="share-menu" id="share-menu">
+        <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this page" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
+          Share
+        </button>
+        <div class="share-panel" id="share-panel" hidden>
+          <button class="share-option" id="share-native-share" type="button" hidden>Share via device</button>
+          <button class="share-option" id="share-copy-link" type="button">Copy link</button>
+          <a class="share-option" id="share-email-link" href="#">Email</a>
+          <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+          <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+        </div>
+      </div>
+      <div class="customization-menu" id="customization-menu">
+        <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+          <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
+          </svg>
+        </button>
+        <div class="customization-panel" id="customization-panel" hidden>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-theme-select">Theme</label>
+            <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-text-size-select">Text Size</label>
+            <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+              <option value="small">Small</option>
+              <option value="default">Default</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
+        </div>
+      </div>
+    </div>
+  </header>
