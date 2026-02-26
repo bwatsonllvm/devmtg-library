@@ -89,6 +89,27 @@
       justify-content: center;
     }
 
+    .home-divider {
+      margin: 1.15rem auto 0.95rem;
+      border: 0;
+      border-top: 1px solid var(--color-border);
+      width: min(720px, 100%);
+    }
+
+    .home-project-note {
+      margin: 0 auto;
+      max-width: 760px;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-base);
+    }
+
+    .home-project-note a {
+      color: var(--color-link);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .home-link-chip {
       display: inline-flex;
       align-items: center;
@@ -287,17 +308,19 @@
   </section>
 
   <main class="home-main" id="home-root" tabindex="-1">
-    <p>Start with universal search, or browse directly:</p>
+    <p>Start typying to search or browse directly:</p>
     <div class="home-links" aria-label="Browse sections">
       <a class="home-link-chip" href="talks/">Talks</a>
       <a class="home-link-chip" href="talks/events.html">Events</a>
       <a class="home-link-chip" href="papers/">Papers</a>
       <a class="home-link-chip" href="blogs/">Blogs</a>
-      <a class="home-link-chip" href="people/">People</a>
       <a class="home-link-chip" href="docs/">Docs</a>
-      <a class="home-link-chip" href="about/">About</a>
+      <a class="home-link-chip" href="people/">People</a>
       <a class="home-link-chip" href="updates/">Updates</a>
+      <a class="home-link-chip" href="about/">About</a>
     </div>
+    <hr class="home-divider" aria-hidden="true">
+    <p class="home-project-note">The LLVM Research Library is an ongoing project by the <a href="https://foundation.llvm.org">LLVM Foundation</a> to collect and organize talks, research, and other materials to support education and advancement in the field of compilers.</p>
   </main>
 
   <script src="js/shared/library-utils.js?v=20260225-07"></script>
