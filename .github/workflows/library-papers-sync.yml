@@ -46,6 +46,14 @@ jobs:
             --per-page 200 \
             --mailto "llvm-library-bot@users.noreply.github.com"
 
+      - name: Build OpenAlex update summary (Markdown)
+        run: |
+          python3 scripts/generate-openalex-update-summary.py \
+            --repo-root . \
+            --bundle papers/openalex-llvm-query.json \
+            --output updates/openalex-update-summary.md \
+            --skip-when-unchanged
+
       - name: Build single canonical papers database
         run: |
           python3 scripts/build-single-papers-db.py \
@@ -92,6 +100,7 @@ jobs:
           body: |
             Automated papers/library sync:
             - refreshes OpenAlex-discovered papers
+            - writes `updates/openalex-update-summary.md` with OpenAlex titles and authors for this sync
             - rebuilds the canonical papers database (OpenAlex + llvm.org/pubs + blog)
             - backfills direct paper PDF links via OpenAlex + Unpaywall
             - sanitizes URL-bearing fields and rebuilds `updates/index.json`
