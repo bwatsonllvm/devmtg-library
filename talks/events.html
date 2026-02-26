@@ -47,7 +47,7 @@
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
-  <link rel="stylesheet" href="css/style.css?v=20260225-12">
+  <link rel="stylesheet" href="css/style.css?v=fa4c08a9e23b">
 </head>
 <body>
 
@@ -123,14 +123,14 @@
     </nav>
 
 
-<div class="mobile-nav-menu" id="mobile-nav-menu">
-  <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
-    Browse
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
-  </button>
-        <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+    <div class="mobile-nav-menu" id="mobile-nav-menu">
+      <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
+        Browse
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+            <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
         <a href="talks/" class="mobile-nav-link">Talks</a>
         <a href="talks/events.html" class="mobile-nav-link">Events</a>
         <a href="papers/" class="mobile-nav-link">Papers</a>
@@ -143,51 +143,51 @@
         <a href="about/" class="mobile-nav-link">About</a>
       </div>
 
-</div>
+    </div>
 
-<div class="header-right">
-  <div class="share-menu" id="share-menu">
-    <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this page" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
-      Share
-    </button>
-    <div class="share-panel" id="share-panel" hidden>
-      <button class="share-option" id="share-native-share" type="button" hidden>Share via device</button>
-      <button class="share-option" id="share-copy-link" type="button">Copy link</button>
-      <a class="share-option" id="share-email-link" href="#">Email</a>
-      <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
-      <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+    <div class="header-right">
+      <div class="share-menu" id="share-menu">
+        <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this page" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
+          Share
+        </button>
+        <div class="share-panel" id="share-panel" hidden>
+          <button class="share-option" id="share-native-share" type="button" hidden>Share via device</button>
+          <button class="share-option" id="share-copy-link" type="button">Copy link</button>
+          <a class="share-option" id="share-email-link" href="#">Email</a>
+          <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+          <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+        </div>
+      </div>
+      <div class="customization-menu" id="customization-menu">
+        <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+          <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
+          </svg>
+        </button>
+        <div class="customization-panel" id="customization-panel" hidden>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-theme-select">Theme</label>
+            <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-text-size-select">Text Size</label>
+            <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+              <option value="small">Small</option>
+              <option value="default">Default</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="customization-menu" id="customization-menu">
-  <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
-    <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
-      <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
-      <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
-      <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
-    </svg>
-  </button>
-  <div class="customization-panel" id="customization-panel" hidden>
-    <div class="customization-group">
-      <label class="customization-label" for="custom-theme-select">Theme</label>
-      <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
-        <option value="system">System</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
-    <div class="customization-group">
-      <label class="customization-label" for="custom-text-size-select">Text Size</label>
-      <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
-        <option value="small">Small</option>
-        <option value="default">Default</option>
-        <option value="large">Large</option>
-      </select>
-    </div>
-    <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
-  </div>
-</div>
-</div>
   </header>
 
   <!-- ======================================================
@@ -208,9 +208,9 @@
     </div>
   </main>
   <!-- Event data loader -->
-  <script src="js/events-data.js?v=20260223-01"></script>
-  <script src="js/shared/library-utils.js?v=20260225-07"></script>
-  <script src="js/shared/global-search.js?v=20260225-14"></script>
-  <script src="js/meetings.js?v=20260222-02"></script>
+  <script src="js/events-data.js?v=471690adae6b"></script>
+  <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
+  <script src="js/shared/global-search.js?v=1f4a619c0c9e"></script>
+  <script src="js/meetings.js?v=f2edfe2e9702"></script>
 </body>
 </html>
