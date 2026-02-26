@@ -3,8 +3,8 @@
  */
 
 const UPDATE_LOG_PATH = 'updates/index.json';
-const INITIAL_RENDER_BATCH_SIZE = 24;
-const RENDER_BATCH_SIZE = 12;
+const INITIAL_RENDER_BATCH_SIZE = 60;
+const RENDER_BATCH_SIZE = 40;
 const LOAD_MORE_ROOT_MARGIN = '900px 0px';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 const UPDATE_KIND_ORDER = ['paper', 'docs', 'talk', 'blog'];
