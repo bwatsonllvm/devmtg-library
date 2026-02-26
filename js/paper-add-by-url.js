@@ -8,11 +8,12 @@
   const sourceEl = document.getElementById('url-intake-source');
   const statusEl = document.getElementById('url-intake-status');
   const commandEl = document.getElementById('url-intake-command');
+  const copyUrlBtn = document.getElementById('url-intake-copy-url');
   const copyBtn = document.getElementById('url-intake-copy-command');
   const workflowLink = document.getElementById('url-intake-open-workflow');
   const advancedBtn = document.getElementById('url-intake-open-advanced');
 
-  if (!sourceEl || !statusEl || !commandEl || !copyBtn || !workflowLink || !advancedBtn) return;
+  if (!sourceEl || !statusEl || !commandEl || !copyUrlBtn || !copyBtn || !workflowLink || !advancedBtn) return;
 
   function setStatus(message, kind) {
     statusEl.textContent = message || '';
@@ -68,6 +69,20 @@
     setStatus('', '');
   });
 
+  copyUrlBtn.addEventListener('click', async function () {
+    const sourceUrl = String(sourceEl.value || '').trim();
+    if (!isHttpUrl(sourceUrl)) {
+      setStatus('Enter a valid http/https source URL first.', 'error');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(sourceUrl);
+      setStatus('URL copied. Paste it directly into workflow source_url.', 'success');
+    } catch (_) {
+      setStatus('Clipboard write failed. Copy URL manually from the field.', 'error');
+    }
+  });
+
   copyBtn.addEventListener('click', async function () {
     const sourceUrl = String(sourceEl.value || '').trim();
     if (!isHttpUrl(sourceUrl)) {
@@ -77,7 +92,7 @@
     const command = updateCommand();
     try {
       await navigator.clipboard.writeText(command);
-      setStatus('Workflow command copied.', 'success');
+      setStatus('Workflow command copied (for terminal use).', 'success');
     } catch (_) {
       setStatus('Clipboard write failed. Copy from the command box.', 'error');
     }

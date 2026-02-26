@@ -59,6 +59,37 @@ def sanitize_http_url(value: str) -> str:
     return urllib.parse.urlunparse(parsed)
 
 
+def coerce_source_url(value: str) -> str:
+    raw = collapse_ws(value)
+    if not raw:
+        return ""
+    direct = sanitize_http_url(raw)
+    if direct:
+        return direct
+
+    unquoted = urllib.parse.unquote(raw)
+
+    # Handle command-like payloads:
+    # gh workflow run ... -f source_url='https://...'
+    match = re.search(r"source_url\s*=\s*(['\"])(.+?)\1", unquoted, flags=re.IGNORECASE)
+    if match:
+        extracted = sanitize_http_url(match.group(2))
+        if extracted:
+            return extracted
+    match = re.search(r"source_url\s*=\s*([^\s\"']+)", unquoted, flags=re.IGNORECASE)
+    if match:
+        extracted = sanitize_http_url(match.group(1))
+        if extracted:
+            return extracted
+
+    # Fallback: first absolute URL token in the text.
+    for token in re.findall(r"https?://[^\s\"'<>]+", unquoted):
+        extracted = sanitize_http_url(token)
+        if extracted:
+            return extracted
+    return ""
+
+
 def normalize_doi(value: str) -> str:
     raw = collapse_ws(value).lower()
     if not raw:
@@ -782,9 +813,9 @@ def _extract_from_crossref(message: dict[str, Any]) -> dict[str, Any]:
 
 
 def extract_payload_from_source_url(source_url: str) -> dict[str, Any]:
-    sanitized_source = sanitize_http_url(source_url)
+    sanitized_source = coerce_source_url(source_url)
     if not sanitized_source:
-        raise ValueError("source_url must be an absolute http/https URL")
+        raise ValueError("source_url must be an absolute http/https URL (paste only the URL, not the full command)")
 
     html_text = ""
     final_url = sanitized_source
