@@ -514,6 +514,21 @@ def _decode_openalex_abstract(value: Any) -> str:
     return collapse_ws(" ".join(token for _, token in parts))
 
 
+def _strip_inline_markup(value: str) -> str:
+    text = unescape(value or "")
+    text = re.sub(r"<[^>]+>", " ", text)
+    return collapse_ws(text)
+
+
+def _extract_first_doi(value: str) -> str:
+    text = urllib.parse.unquote(value or "")
+    direct = normalize_doi(text)
+    if direct:
+        return direct
+    candidates = _extract_doi_candidates(text)
+    return candidates[0] if candidates else ""
+
+
 def _fetch_url_text(url: str, timeout: int = 25) -> tuple[str, str]:
     req = urllib.request.Request(
         url,
@@ -642,17 +657,146 @@ def _extract_from_openalex(work: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def _fetch_crossref_work_by_doi(doi: str, timeout: int = 20) -> dict[str, Any] | None:
+    norm = normalize_doi(doi)
+    if not norm:
+        return None
+    encoded = urllib.parse.quote(norm, safe="/")
+    url = f"https://api.crossref.org/works/{encoded}"
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "llvm-library-manual-paper-intake/1.0"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            payload = json.loads(response.read().decode("utf-8", errors="replace"))
+    except Exception:
+        return None
+    if not isinstance(payload, dict):
+        return None
+    message = payload.get("message")
+    return message if isinstance(message, dict) else None
+
+
+def _extract_from_crossref(message: dict[str, Any]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+
+    titles = message.get("title")
+    if isinstance(titles, list):
+        for item in titles:
+            title = collapse_ws(str(item))
+            if title:
+                out["title"] = title
+                break
+
+    year = ""
+    for date_key in ("issued", "published-print", "published-online", "created"):
+        obj = message.get(date_key)
+        if not isinstance(obj, dict):
+            continue
+        date_parts = obj.get("date-parts")
+        if not isinstance(date_parts, list) or not date_parts:
+            continue
+        first = date_parts[0]
+        if not isinstance(first, list) or not first:
+            continue
+        try:
+            year_int = int(first[0])
+        except Exception:
+            continue
+        if 1000 <= year_int <= 2999:
+            year = str(year_int)
+            break
+    if year:
+        out["year"] = year
+
+    publication = ""
+    container_title = message.get("container-title")
+    if isinstance(container_title, list):
+        for item in container_title:
+            text = collapse_ws(str(item))
+            if text:
+                publication = text
+                break
+    if publication:
+        out["publication"] = publication
+        out["venue"] = publication
+
+    abstract = _strip_inline_markup(str(message.get("abstract", "")))
+    if abstract:
+        out["abstract"] = abstract
+
+    cited_by = message.get("is-referenced-by-count")
+    if isinstance(cited_by, int) and cited_by >= 0:
+        out["citationCount"] = cited_by
+
+    doi = normalize_doi(str(message.get("DOI", "")))
+    if doi:
+        out["doi"] = doi
+
+    authors: list[dict[str, str]] = []
+    author_list = message.get("author")
+    if isinstance(author_list, list):
+        for item in author_list:
+            if not isinstance(item, dict):
+                continue
+            name = collapse_ws(str(item.get("name", "")))
+            if not name:
+                given = collapse_ws(str(item.get("given", "")))
+                family = collapse_ws(str(item.get("family", "")))
+                name = collapse_ws(f"{given} {family}")
+            if not name:
+                continue
+            author: dict[str, str] = {"name": name}
+            aff_obj = item.get("affiliation")
+            if isinstance(aff_obj, list):
+                affs: list[str] = []
+                for aff in aff_obj:
+                    if not isinstance(aff, dict):
+                        continue
+                    aff_name = collapse_ws(str(aff.get("name", "")))
+                    if aff_name and aff_name not in affs:
+                        affs.append(aff_name)
+                if affs:
+                    author["affiliation"] = " | ".join(affs)
+            authors.append(author)
+    if authors:
+        out["authors"] = authors
+
+    link_obj = message.get("link")
+    if isinstance(link_obj, list):
+        for link in link_obj:
+            if not isinstance(link, dict):
+                continue
+            href = sanitize_http_url(str(link.get("URL", "")))
+            ctype = collapse_ws(str(link.get("content-type", ""))).lower()
+            if href and "pdf" in ctype:
+                out["paperUrl"] = href
+                break
+    if "paperUrl" not in out:
+        fallback_url = sanitize_http_url(str(message.get("URL", "")))
+        if fallback_url:
+            out["paperUrl"] = fallback_url
+
+    return out
+
+
 def extract_payload_from_source_url(source_url: str) -> dict[str, Any]:
     sanitized_source = sanitize_http_url(source_url)
     if not sanitized_source:
         raise ValueError("source_url must be an absolute http/https URL")
 
+    html_text = ""
+    final_url = sanitized_source
+    fetch_error: Exception | None = None
     try:
         html_text, final_url = _fetch_url_text(sanitized_source)
     except Exception as exc:
-        raise ValueError(f"failed to fetch source_url: {sanitized_source}") from exc
+        fetch_error = exc
+
     parser = _MetadataHTMLParser()
-    parser.feed(html_text)
+    if html_text:
+        parser.feed(html_text)
 
     title = _first_meta(
         parser.meta,
@@ -750,6 +894,8 @@ def extract_payload_from_source_url(source_url: str) -> dict[str, Any]:
         )
     )
     if not doi:
+        doi = _extract_first_doi(final_url or sanitized_source)
+    if not doi:
         doi_candidates = _extract_doi_candidates(final_url + "\n" + html_text)
         if doi_candidates:
             doi = doi_candidates[0]
@@ -810,13 +956,26 @@ def extract_payload_from_source_url(source_url: str) -> dict[str, Any]:
         openalex_work = _fetch_openalex_work_by_doi(doi)
         if openalex_work:
             record = merge_payload(record, _extract_from_openalex(openalex_work))
-            # Preserve source links from extracted page, not OpenAlex landing defaults.
-            record["sourceUrl"] = final_url or sanitized_source
-            if paper_url:
-                record["paperUrl"] = paper_url
-            if "content" not in record or not collapse_ws(str(record.get("content", ""))):
-                record["contentFormat"] = "markdown"
-                record["content"] = "\n".join(content_lines)
+        crossref_work = _fetch_crossref_work_by_doi(doi)
+        if crossref_work:
+            crossref_extract = _extract_from_crossref(crossref_work)
+            # Merge only fields that are currently missing from record.
+            for key, val in crossref_extract.items():
+                if key not in record or not collapse_ws(str(record.get(key, ""))):
+                    record[key] = val
+
+    # Preserve source links from extracted page, not metadata service landing URLs.
+    record["sourceUrl"] = final_url or sanitized_source
+    if paper_url:
+        record["paperUrl"] = paper_url
+    if "paperUrl" not in record or not sanitize_http_url(str(record.get("paperUrl", ""))):
+        record["paperUrl"] = record["sourceUrl"]
+    if "content" not in record or not collapse_ws(str(record.get("content", ""))):
+        record["contentFormat"] = "markdown"
+        record["content"] = "\n".join(content_lines)
+
+    if not html_text and not doi and fetch_error is not None:
+        raise ValueError(f"failed to fetch source_url and could not infer DOI: {sanitized_source}")
 
     return record
 

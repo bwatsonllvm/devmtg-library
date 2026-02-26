@@ -377,8 +377,8 @@
         <p class="search-hero-title-aside">Generate payload for automated PR intake</p>
       </div>
       <p class="subtitle">
-        Fast path: open the GitHub Action and provide only <code>source_url</code> to auto-extract metadata.
-        If needed, add <code>overrides_json</code> or generate full <code>paper_json</code> below.
+        Fast path: open the GitHub Action and provide only <code>source_url</code>. The workflow extracts metadata and opens the PR.
+        The full form below is optional and useful for local payload drafting.
       </p>
       <div class="manual-paper-top-actions">
         <a href="papers/" class="empty-action-btn">Back to Papers</a>
@@ -500,7 +500,7 @@
       <section class="manual-paper-card" aria-labelledby="manual-output-heading">
         <h2 id="manual-output-heading">Workflow Payload + PR Trigger</h2>
         <p>
-          Fastest: run the workflow with only <code>source_url</code>. Optional: paste generated JSON into <code>paper_json</code> and/or <code>overrides_json</code> on the
+          Fastest: run the workflow with only <code>source_url</code> on the
           <a href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" id="manual-paper-workflow-link-inline" target="_blank" rel="noopener noreferrer">Manual Paper Intake workflow</a>.
         </p>
         <textarea id="mp-json-output" class="manual-paper-output" readonly aria-label="Generated paper JSON payload"></textarea>
@@ -516,6 +516,6 @@
 
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/shared/global-search.js?v=e5c202108124"></script>
-  <script src="js/paper-manual-add.js?v=bbac3ac300d4"></script>
+  <script src="js/paper-manual-add.js?v=ed7217c24b79"></script>
 </body>
 </html>
