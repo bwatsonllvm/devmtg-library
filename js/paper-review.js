@@ -44,7 +44,7 @@
   const batchWorkflowLink = document.getElementById('review-batch-workflow-link');
   const batchCommand = document.getElementById('review-batch-command');
   const batchCopyBtn = document.getElementById('review-batch-copy-btn');
-  const batchCopyIdsBtn = document.getElementById('review-batch-copy-ids-btn');
+  const batchCopyJsonBtn = document.getElementById('review-batch-copy-json-btn');
   const batchStatus = document.getElementById('review-batch-status');
 
   if (
@@ -52,7 +52,7 @@
     !emptyCopy || !titleEl || !metaEl || !abstractEl || !authorsEl || !markBtn || !nextBtn ||
     !detailLink || !paperLink || !sourceLink || !editLink || !updateLink || !clearStagedBtn ||
     !clearStagedEmptyBtn || !stagedList || !permanentList || !batchWorkflowLink || !batchCommand ||
-    !batchCopyBtn || !batchCopyIdsBtn || !batchStatus
+    !batchCopyBtn || !batchCopyJsonBtn || !batchStatus
   ) {
     return;
   }
@@ -70,6 +70,33 @@
 
   function collapseWs(value) {
     return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function isPlainObject(value) {
+    return !!value && typeof value === 'object' && !Array.isArray(value);
+  }
+
+  function normalizeUpdatesPayload(value) {
+    let parsed = value;
+    if (typeof parsed === 'string') {
+      const text = parsed.trim();
+      if (!text) return {};
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        return {};
+      }
+    }
+
+    if (!isPlainObject(parsed)) return {};
+
+    const out = {};
+    for (const [key, item] of Object.entries(parsed)) {
+      const field = collapseWs(key);
+      if (!field) continue;
+      out[field] = item;
+    }
+    return out;
   }
 
   function detectRepoSlug() {
@@ -301,6 +328,7 @@
           stagedAt: normalizeTimestamp(entry.stagedAt) || new Date(0).toISOString(),
           title: collapseWs(entry.title || ''),
           year: collapseWs(entry.year || ''),
+          updates: normalizeUpdatesPayload(entry.updates || entry.updates_json),
         };
       }
       return { staged: normalized };
@@ -389,6 +417,11 @@
         stagedAt: String((entry && entry.stagedAt) || ''),
         title: collapseWs((entry && entry.title) || ''),
         year: collapseWs((entry && entry.year) || ''),
+        updates: normalizeUpdatesPayload(entry && entry.updates),
+      }))
+      .map((entry) => ({
+        ...entry,
+        updateFieldCount: Object.keys(entry.updates || {}).length,
       }))
       .sort((a, b) => String(b.stagedAt || '').localeCompare(String(a.stagedAt || '')));
   }
@@ -443,9 +476,12 @@
         const detailHref = `papers/paper.html?id=${encodeURIComponent(entry.id)}&from=papers`;
         const label = entry.year ? `${entry.title} (${entry.year})` : entry.title;
         const stagedAtText = formatTimestamp(entry.stagedAt);
+        const pendingLabel = entry.updateFieldCount
+          ? `Pending PR + ${entry.updateFieldCount} field update${entry.updateFieldCount === 1 ? '' : 's'}`
+          : 'Pending PR';
         return `
           <li class="review-recent-item review-recent-item--staged">
-            <span class="review-pending-pill">Pending PR</span>
+            <span class="review-pending-pill">${escapeHtml(pendingLabel)}</span>
             <a href="${detailHref}">${escapeHtml(label)}</a>
             <button type="button" class="review-remove-staged" data-review-id="${escapeHtml(entry.id)}" aria-label="Remove ${escapeHtml(entry.title)} from staged batch">Remove</button>
             ${stagedAtText ? `<time datetime="${escapeHtml(entry.stagedAt)}">${escapeHtml(stagedAtText)}</time>` : '<span></span>'}
@@ -476,30 +512,34 @@
       .join('');
   }
 
-  function buildBatchCommandFromIds(ids) {
-    const encodedIds = JSON.stringify(ids);
-    return `gh workflow run paper-review-batch-pr.yml --repo ${state.repoSlug} --ref main -f review_ids_json='${shellSingleQuote(encodedIds)}'`;
+  function stagedBatchEntriesForCommand() {
+    return stagedEntriesSorted().map((entry) => {
+      const out = { id: entry.id };
+      if (entry.updateFieldCount > 0) out.updates = entry.updates;
+      return out;
+    });
   }
 
-  function stagedIdsForCommand() {
-    return stagedEntriesSorted().map((entry) => entry.id);
+  function buildBatchCommandFromEntries(entries) {
+    const encodedBatch = JSON.stringify(entries);
+    return `gh workflow run paper-review-batch-pr.yml --repo ${state.repoSlug} --ref main -f review_batch_json='${shellSingleQuote(encodedBatch)}'`;
   }
 
   function renderBatchControls() {
     const workflowUrl = `https://github.com/${state.repoSlug}/actions/workflows/paper-review-batch-pr.yml`;
     batchWorkflowLink.href = workflowUrl;
 
-    const stagedIds = stagedIdsForCommand();
-    if (!stagedIds.length) {
-      batchCommand.textContent = `gh workflow run paper-review-batch-pr.yml --repo ${state.repoSlug} --ref main -f review_ids_json='["openalex-w1234567890"]'`;
+    const stagedBatch = stagedBatchEntriesForCommand();
+    if (!stagedBatch.length) {
+      batchCommand.textContent = `gh workflow run paper-review-batch-pr.yml --repo ${state.repoSlug} --ref main -f review_batch_json='[{"id":"openalex-w1234567890"}]'`;
       batchCopyBtn.disabled = true;
-      batchCopyIdsBtn.disabled = true;
+      batchCopyJsonBtn.disabled = true;
       return;
     }
 
-    batchCommand.textContent = buildBatchCommandFromIds(stagedIds);
+    batchCommand.textContent = buildBatchCommandFromEntries(stagedBatch);
     batchCopyBtn.disabled = false;
-    batchCopyIdsBtn.disabled = false;
+    batchCopyJsonBtn.disabled = false;
   }
 
   function renderStats() {
@@ -601,6 +641,7 @@
       stagedAt: new Date().toISOString(),
       title: paper.title,
       year: paper.year,
+      updates: {},
     };
     saveStagedState();
     rebuildPendingQueue();
@@ -649,18 +690,18 @@
     }
   }
 
-  async function copyBatchIdsJson() {
-    const ids = stagedIdsForCommand();
-    if (!ids.length) {
+  async function copyBatchJson() {
+    const entries = stagedBatchEntriesForCommand();
+    if (!entries.length) {
       setBatchStatus('Stage at least one reviewed paper first.', 'error');
       return;
     }
 
     try {
-      await navigator.clipboard.writeText(JSON.stringify(ids));
-      setBatchStatus('review_ids_json copied.', 'success');
+      await navigator.clipboard.writeText(JSON.stringify(entries));
+      setBatchStatus('review_batch_json copied.', 'success');
     } catch {
-      setBatchStatus('Clipboard write failed. Copy IDs manually.', 'error');
+      setBatchStatus('Clipboard write failed. Copy batch JSON manually.', 'error');
     }
   }
 
@@ -736,7 +777,7 @@
   clearStagedBtn.addEventListener('click', clearStagedBatch);
   clearStagedEmptyBtn.addEventListener('click', clearStagedBatch);
   batchCopyBtn.addEventListener('click', copyBatchCommand);
-  batchCopyIdsBtn.addEventListener('click', copyBatchIdsJson);
+  batchCopyJsonBtn.addEventListener('click', copyBatchJson);
   stagedList.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
@@ -747,7 +788,7 @@
   });
 
   batchCopyBtn.disabled = true;
-  batchCopyIdsBtn.disabled = true;
+  batchCopyJsonBtn.disabled = true;
   reviewShell.classList.remove('hidden');
   init();
 })();

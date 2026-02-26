@@ -254,7 +254,8 @@ Automation is split into four scheduled PR workflows:
 
 Manual workflow for review rigor:
 - Paper review batch (`.github/workflows/paper-review-batch-pr.yml`)
-  - applies a staged `review_ids_json` batch into `papers/reviewed-papers.json`
+  - applies one staged `review_batch_json` payload (review ids + optional paper field updates)
+  - updates paper records and `papers/reviewed-papers.json` in one PR flow
   - opens a PR so permanent review checkmarks are merge-gated
 
 The split keeps:

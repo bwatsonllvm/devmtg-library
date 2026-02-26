@@ -34,12 +34,13 @@
   const copyJsonBtn = document.getElementById('paper-edit-copy-json-btn');
   const copyCommandBtn = document.getElementById('paper-edit-copy-command-btn');
   const workflowLink = document.getElementById('paper-edit-workflow-link');
+  const submitHelp = document.getElementById('paper-edit-submit-help');
 
   if (
     !idInput || !loadBtn || !loadStatus || !urlCard || !urlInput || !urlPreviewBtn || !urlStatus ||
     !urlDiffShell || !urlDiffList || !urlApplyBtn || !originalCard || !originalPre || !changeCard ||
     !generateBtn || !resetBtn || !returnReviewBtn || !genStatus || !outputCard || !updatesJsonPre || !commandPre ||
-    !copyJsonBtn || !copyCommandBtn || !workflowLink
+    !copyJsonBtn || !copyCommandBtn || !workflowLink || !submitHelp
   ) {
     return;
   }
@@ -215,8 +216,9 @@
   const REVIEW_RETURN_MESSAGE_KEY = 'llvm-hub-paper-review-return-message-v1';
 
   const repoSlug = detectRepoSlug();
-  const workflowUrl = `https://github.com/${repoSlug}/actions/workflows/manual-paper-edit-pr.yml`;
-  workflowLink.href = workflowUrl;
+  const manualEditWorkflowUrl = `https://github.com/${repoSlug}/actions/workflows/manual-paper-edit-pr.yml`;
+  const reviewBatchWorkflowUrl = `https://github.com/${repoSlug}/actions/workflows/paper-review-batch-pr.yml`;
+  workflowLink.href = manualEditWorkflowUrl;
 
   let paperCache = null;
   let originalPaper = null;
@@ -444,6 +446,11 @@
     }
   }
 
+  function currentFormUpdates() {
+    if (!originalPaper || !currentPaperId) return {};
+    return buildUpdatesFromCandidate(buildCandidateFromForm());
+  }
+
   function generateUpdatesPayload() {
     setStatus(genStatus, '', '');
     if (!originalPaper || !currentPaperId) {
@@ -452,8 +459,7 @@
     }
 
     try {
-      const candidate = buildCandidateFromForm();
-      const updates = buildUpdatesFromCandidate(candidate);
+      const updates = currentFormUpdates();
       const keys = Object.keys(updates);
       if (!keys.length) {
         setStatus(genStatus, 'No changes detected.', 'error');
@@ -463,7 +469,12 @@
       const pretty = JSON.stringify(updates, null, 2);
       currentUpdatesMinified = JSON.stringify(updates);
       updatesJsonPre.textContent = pretty;
-      commandPre.textContent = `gh workflow run manual-paper-edit-pr.yml --repo ${repoSlug} --ref main -f paper_id='${shellSingleQuote(currentPaperId)}' -f updates_json='${shellSingleQuote(currentUpdatesMinified)}'`;
+      if (returnToReview) {
+        const batchPayload = JSON.stringify([{ id: currentPaperId, updates }]);
+        commandPre.textContent = `gh workflow run paper-review-batch-pr.yml --repo ${repoSlug} --ref main -f review_batch_json='${shellSingleQuote(batchPayload)}'`;
+      } else {
+        commandPre.textContent = `gh workflow run manual-paper-edit-pr.yml --repo ${repoSlug} --ref main -f paper_id='${shellSingleQuote(currentPaperId)}' -f updates_json='${shellSingleQuote(currentUpdatesMinified)}'`;
+      }
       outputCard.classList.remove('hidden');
       setStatus(genStatus, `Generated updates_json with ${keys.length} changed field(s).`, 'success');
       return true;
@@ -530,22 +541,29 @@
 
     const title = collapseWs(fields.title.value || (originalPaper && originalPaper.title) || currentPaperId);
     const year = normalizeYear(fields.year.value || (originalPaper && originalPaper.year) || '');
+    const updates = currentFormUpdates();
+    const updateFieldCount = Object.keys(updates).length;
 
     const stagedPayload = loadReviewStageState();
-    stagedPayload.staged[currentPaperId] = {
+    const stagedEntry = {
       stagedAt: new Date().toISOString(),
       title,
       year,
     };
+    if (updateFieldCount) stagedEntry.updates = updates;
+    stagedPayload.staged[currentPaperId] = stagedEntry;
 
     if (!saveReviewStageState(stagedPayload)) {
       throw new Error('Could not save review queue state in this browser.');
     }
 
     try {
+      const message = updateFieldCount
+        ? `Staged in queue with ${updateFieldCount} field update${updateFieldCount === 1 ? '' : 's'}: ${title}`
+        : `Staged in queue and ready for next paper: ${title}`;
       window.sessionStorage.setItem(
         REVIEW_RETURN_MESSAGE_KEY,
-        `Staged in queue and ready for next paper: ${title}`
+        message
       );
     } catch {
       // Best effort only.
@@ -1170,19 +1188,6 @@
       return;
     }
 
-    let pendingChanges = {};
-    try {
-      pendingChanges = buildUpdatesFromCandidate(buildCandidateFromForm());
-    } catch {
-      pendingChanges = {};
-    }
-    if (Object.keys(pendingChanges).length && currentUpdatesMinified === '{}') {
-      const proceed = window.confirm(
-        'You have field changes that are not yet generated into updates_json. Continue back to the queue anyway?'
-      );
-      if (!proceed) return;
-    }
-
     try {
       stageCurrentPaperForQueue();
       window.location.href = 'papers/review.html';
@@ -1198,8 +1203,14 @@
 
   if (returnToReview) {
     returnReviewBtn.classList.remove('hidden');
+    workflowLink.href = reviewBatchWorkflowUrl;
+    workflowLink.textContent = 'Open Review Batch Workflow';
+    submitHelp.innerHTML = 'Use <code>Confirm In Queue And Return</code> to stage this paper into the review batch payload.';
   } else {
     returnReviewBtn.classList.add('hidden');
+    workflowLink.href = manualEditWorkflowUrl;
+    workflowLink.textContent = 'Open Edit Workflow';
+    submitHelp.innerHTML = 'Paste <code>paper_id</code> and <code>updates_json</code> into the workflow inputs.';
   }
 
   if (sourceUrlFromQuery) {
