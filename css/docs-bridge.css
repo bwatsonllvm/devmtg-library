@@ -19,7 +19,7 @@ body.library-docs-bridge {
 
 @media (max-width: 768px) {
   body.library-docs-bridge {
-    --header-height: 108px !important;
+    --header-height: 126px !important;
   }
 }
 
