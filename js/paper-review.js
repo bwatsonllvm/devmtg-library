@@ -8,6 +8,8 @@
   const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
   const REVIEW_STATE_KEY = 'llvm-hub-paper-review-state-v1';
   const RECENT_REVIEW_LIMIT = 40;
+  const AUTO_LOGIN_ATTEMPT_KEY = 'llvm-hub-paper-review-auto-login-attempted-v1';
+  const AUTO_LOGIN_COOLDOWN_MS = 2 * 60 * 1000;
 
   const adminCard = document.getElementById('review-admin-card');
   const adminHint = document.getElementById('review-admin-hint');
@@ -147,6 +149,32 @@
     reviewStatus.textContent = message || '';
     reviewStatus.classList.remove('error', 'success');
     if (kind) reviewStatus.classList.add(kind);
+  }
+
+  function getSearchParams() {
+    try {
+      return new URLSearchParams(window.location.search || '');
+    } catch {
+      return new URLSearchParams('');
+    }
+  }
+
+  function autoLoginDisabled() {
+    const params = getSearchParams();
+    const value = String(params.get('no_auto_login') || '').trim().toLowerCase();
+    return value === '1' || value === 'true' || value === 'yes';
+  }
+
+  function shouldAutoLoginNow() {
+    if (autoLoginDisabled()) return false;
+    const raw = storageGet(AUTO_LOGIN_ATTEMPT_KEY);
+    const last = Number.parseInt(String(raw || '').trim(), 10);
+    if (!Number.isFinite(last) || last <= 0) return true;
+    return (Date.now() - last) > AUTO_LOGIN_COOLDOWN_MS;
+  }
+
+  function markAutoLoginAttempt() {
+    storageSet(AUTO_LOGIN_ATTEMPT_KEY, String(Date.now()));
   }
 
   function normalizeIsoDate(value) {
@@ -578,6 +606,13 @@
     if (!sessionResult.authenticated) {
       adminHint.textContent = 'Sign in with an allowlisted GitHub account to access this queue.';
       setAdminStatus('', '');
+      if (shouldAutoLoginNow()) {
+        markAutoLoginAttempt();
+        setAdminStatus('Redirecting to GitHub sign-in...', '');
+        window.setTimeout(() => {
+          window.location.href = buildLoginUrl();
+        }, 220);
+      }
       return;
     }
 
