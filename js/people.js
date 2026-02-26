@@ -638,7 +638,7 @@ function renderDropdown(query) {
         <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
                 data-autocomplete-type="global" data-autocomplete-value="${escapeHtml(query)}">
           <span class="search-dropdown-item-icon">${searchIcon}</span>
-          <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(query)}"</span>
+          <span class="search-dropdown-item-label">Run Search All for "${escapeHtml(query)}"</span>
           <span class="search-dropdown-item-count">All</span>
         </button>
       </div>`];
@@ -1168,7 +1168,7 @@ function render() {
   } else {
     subtitle.innerHTML = filterSummary
       ? `Browsing <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles filtered by ${filterSummary}.`
-      : `Global Search is primary. Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
+      : `Search All is primary. Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
   }
 
   if (!people.length) {

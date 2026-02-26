@@ -33,18 +33,18 @@ Design goal: keep the viewer fast and simple, and keep all heavy/complex logic i
 
 Search now uses a shared, relevance-first stack intended to work for both LLVM newcomers and advanced researchers.
 
-### Global Search autocomplete and query routing
+### Search All autocomplete and query routing
 
 - All `.global-search-form` inputs use a shared autocomplete index sourced from talks, papers/blogs, people, and key topics.
 - Home, section pages (`talks/`, `papers/`, `blogs/`, `people/`), detail pages, `about/`, and `work.html` now all use the shared `js/shared/global-search.js` component for a unified search-bar UX.
 - Advanced search is now available from every shared search bar (not only `work.html`):
   - fields: all words, exact phrase, any words, without words, where words occur, author, publication, year range
   - section pages default advanced scope to the active section (`talks`, `papers`, `blogs`, `people`) with a switch to `All`
-  - when advanced fields are active, submit is forced to Global Search so constraints are applied by the shared ranking model
+  - when advanced fields are active, submit is forced to Search All so constraints are applied by the shared ranking model
 - Search behavior is route-aware:
-  - home/about/detail/work routes default to **Global Search** (`work.html?mode=search&q=...`)
+  - home/about/detail/work routes default to **Search All** (`work.html?mode=search&q=...`)
   - section index pages (`talks/`, `papers/`, `blogs/`, `people/`) default to contextual local filtering
-  - section pages still expose explicit **Run Global Search** action in the shared dropdown to jump to cross-library results
+  - section pages still expose explicit **Run Search All** action in the shared dropdown to jump to cross-library results
 - Browsing remains available as secondary behavior through section filters/chips/card actions (for example, topic chips and sidebar facets).
 - Suggestions are grouped into:
   - Key Topics
@@ -97,7 +97,7 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - venue constraint: `venue:arxiv`
   - year filters: `since:2025`, `before:2022`, `year:2024`, `year:2022-2025`
   - exclusion: `mlir -cuda`, `topic:mlir -topic:openmp`
-- These operators work in Global Search (`work.html?mode=search`) for talks, papers, blogs, and cross-type `All` mode.
+- These operators work in Search All (`work.html?mode=search`) for talks, papers, blogs, and cross-type `All` mode.
 - `work.html` now also exposes a Google-style **Advanced** search panel with explicit fields:
   - Find articles with all of the words
   - With the exact phrase
@@ -127,12 +127,12 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - affiliations
   - all persisted in URL state
 - `work.html` (global/entity combined results):
-  - search scope toggle in Global Search mode: `All`, `Talks`, `Papers`, `Blogs`, `Docs`, `People` (default `All`)
-  - time filter in Global Search mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
+  - search scope toggle in Search All mode: `All`, `Talks`, `Papers`, `Blogs`, `Docs`, `People` (default `All`)
+  - time filter in Search All mode: `Any time`, `Since 2026`, `Since 2025`, `Since 2022`, `Custom range`
   - `Advanced` panel for structured Google-style constraints (all/exact/any/without words, where words occur, author, publication, dated between)
   - advanced toggle always shows explicit state (`Advanced On` / `Advanced Off`)
   - sort (`relevance`, `newest`, `oldest`, `title`, `citations`)
-  - in Global Search mode (`mode=search`), results are interleaved across talks/papers/blogs/people by cross-type relevance (not fixed by content type)
+  - in Search All mode (`mode=search`), results are interleaved across talks/papers/blogs/people by cross-type relevance (not fixed by content type)
   - exact/prefix title intent gets additional boost so precise queries surface the best matching item first, regardless of type
   - people ranking combines direct query-name matching with cross-reference context from matched talks/papers/blogs so relevant people surface for both name and topic queries
   - `expanded/compact` view toggle across talks, papers, blogs, and people sections
@@ -171,10 +171,10 @@ Shared ranking helpers in `js/shared/library-utils.js` power core search behavio
   - `pub=<normalized-publication-key,...>`
   - `aff=<normalized-affiliation-key,...>`
 
-### Terminology: All Work vs Global Search
+### Terminology: All Work vs Search All
 
-- **Global Search**: free-text, cross-library ranking mode (`work.html?mode=search&q=...`).
-- Section pages search locally by default; Global Search is invoked explicitly from the shared search-dropdown action.
+- **Search All**: free-text, cross-library ranking mode (`work.html?mode=search&q=...`).
+- Section pages search locally by default; Search All is invoked explicitly from the shared search-dropdown action.
 - **All Work**: entity aggregation mode for a speaker or key topic (`work.html?mode=entity&kind=...&value=...`).
 
 ## How The Database Is Constructed

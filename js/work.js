@@ -3092,8 +3092,8 @@ function applyHeaderState() {
   if (state.mode === 'search') {
     const searchLabel = buildSearchDisplayValue() || state.query;
     if (!hasActiveSearchCriteria()) {
-      if (titleEl) titleEl.textContent = 'Global Search';
-      if (subtitleEl) subtitleEl.textContent = 'Use Global Search across talks, papers, blogs, docs, and people from one place.';
+      if (titleEl) titleEl.textContent = 'Search All';
+      if (subtitleEl) subtitleEl.textContent = 'Use Search All across talks, papers, blogs, docs, and people from one place.';
       if (summaryEl) summaryEl.textContent = 'No search query provided';
       if (universalCountEl) universalCountEl.textContent = '';
       if (talksCountEl) talksCountEl.textContent = '';
@@ -3101,11 +3101,11 @@ function applyHeaderState() {
       if (blogsCountEl) blogsCountEl.textContent = '';
       if (docsCountEl) docsCountEl.textContent = '';
       if (peopleCountEl) peopleCountEl.textContent = '';
-      setWorkDocumentTitle('Global Search');
+      setWorkDocumentTitle('Search All');
       return;
     }
 
-    if (titleEl) titleEl.textContent = 'Global Search';
+    if (titleEl) titleEl.textContent = 'Search All';
     if (subtitleEl) {
       if (state.scope === 'all') {
         subtitleEl.innerHTML = `Results for <strong>${escapeHtml(searchLabel || 'advanced search')}</strong>, ranked across talks, papers, blogs, docs, and people`;
@@ -3113,7 +3113,7 @@ function applyHeaderState() {
         subtitleEl.innerHTML = `Results for <strong>${escapeHtml(searchLabel || 'advanced search')}</strong> in <strong>${escapeHtml(getSearchScopeLabel(state.scope))}</strong>`;
       }
     }
-    setWorkDocumentTitle(`Global Search: ${searchLabel || 'Advanced search'}${state.scope === 'all' ? '' : ` (${getSearchScopeLabel(state.scope)})`}`);
+    setWorkDocumentTitle(`Search All: ${searchLabel || 'Advanced search'}${state.scope === 'all' ? '' : ` (${getSearchScopeLabel(state.scope)})`}`);
   } else {
     if (!state.value) {
       if (titleEl) titleEl.textContent = 'All Work';

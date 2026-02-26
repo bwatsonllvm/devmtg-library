@@ -1549,7 +1549,7 @@ function updateHeroSubtitle() {
   } else if (state.activeTag && state.query && !state.meeting) {
     el.innerHTML = `Showing all talks for key topic <strong>${escapeHtml(state.activeTag)}</strong>`;
   } else {
-    el.innerHTML = `Global Search is primary. Browse <strong id="total-count">${allTalks.length.toLocaleString()}</strong> talks from 2007 to present with filters below.`;
+    el.innerHTML = `Search All is primary. Browse <strong id="total-count">${allTalks.length.toLocaleString()}</strong> talks from 2007 to present with filters below.`;
   }
 }
 
@@ -2259,7 +2259,7 @@ function renderDropdown(query) {
       <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
               data-autocomplete-type="global" data-autocomplete-value="${escapeHtml(query)}">
         <span class="search-dropdown-item-icon">${searchIcon}</span>
-        <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(query)}"</span>
+        <span class="search-dropdown-item-label">Run Search All for "${escapeHtml(query)}"</span>
         <span class="search-dropdown-item-count">All</span>
       </button>
     </div>`;

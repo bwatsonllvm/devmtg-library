@@ -1,5 +1,5 @@
 /**
- * global-search.js — Header Global Search hydration + autocomplete (talks/papers/blogs/docs/people).
+ * global-search.js — Header Search All hydration + autocomplete (talks/papers/blogs/docs/people).
  */
 
 (function () {
@@ -10,7 +10,7 @@
   let docsIndexLoadPromise = null;
   let prebuiltAutocompleteLoadPromise = null;
   const formStateMap = new WeakMap();
-  const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, docs, people, and key topics';
+  const GLOBAL_SEARCH_LABEL = 'Search All across talks, papers, blogs, docs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
 
   function normalizeRootPath(raw) {
@@ -99,7 +99,7 @@
     'Global search across talks, papers, people, and key topics',
     'Global search across talks, papers, blogs, and people',
     'Global search across talks, papers, blogs, people, and key topics',
-    'Global Search across talks, papers, blogs, people, and key topics',
+    'Search All across talks, papers, blogs, people, and key topics',
   ]);
 
   const autocompleteIndex = {
@@ -1317,7 +1317,7 @@
     dropdown = document.createElement('div');
     dropdown.className = 'search-dropdown global-search-dropdown hidden';
     dropdown.setAttribute('role', 'listbox');
-    dropdown.setAttribute('aria-label', 'Global Search suggestions');
+    dropdown.setAttribute('aria-label', 'Search All suggestions');
     dropdownParent.appendChild(dropdown);
     return dropdown;
   }
@@ -1399,7 +1399,7 @@
                 data-autocomplete-type="global"
                 data-autocomplete-value="${escapeHtml(String(query || '').trim())}">
           <span class="search-dropdown-item-icon">${searchIcon}</span>
-          <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(String(query || '').trim())}"</span>
+          <span class="search-dropdown-item-label">Run Search All for "${escapeHtml(String(query || '').trim())}"</span>
           <span class="search-dropdown-item-count">All</span>
         </button>
       </div>`];
@@ -1572,9 +1572,9 @@
     }
     const submitButton = form.querySelector('.global-search-submit');
     if (submitButton) {
-      submitButton.setAttribute('aria-label', 'Run Global Search');
+      submitButton.setAttribute('aria-label', 'Run Search All');
       if (!submitButton.getAttribute('title')) {
-        submitButton.setAttribute('title', 'Run Global Search');
+        submitButton.setAttribute('title', 'Run Search All');
       }
     }
     input.setAttribute('placeholder', resolveSectionSearchPlaceholder(form));

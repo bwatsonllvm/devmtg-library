@@ -831,7 +831,7 @@ const DOCUMENTATION_OPTIONS = {
           <img src="${rootPath}images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
           <span>LLVM Research Library</span>
         </a>
-        <form class="global-search-form" action="${rootPath}work.html" method="get" role="search" aria-label="Global Search across talks, papers, blogs, docs, people, and key topics">
+        <form class="global-search-form" action="${rootPath}work.html" method="get" role="search" aria-label="Search All across talks, papers, blogs, docs, people, and key topics">
           <input type="hidden" name="mode" value="search">
           <input
             type="search"
@@ -840,9 +840,9 @@ const DOCUMENTATION_OPTIONS = {
             placeholder="Search the full library..."
             autocomplete="off"
             spellcheck="false"
-            aria-label="Global Search across talks, papers, blogs, docs, people, and key topics"
+            aria-label="Search All across talks, papers, blogs, docs, people, and key topics"
           >
-          <button class="global-search-submit" type="submit" aria-label="Run Global Search">
+          <button class="global-search-submit" type="submit" aria-label="Run Search All">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="7"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>

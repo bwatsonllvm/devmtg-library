@@ -1189,7 +1189,7 @@ function updateHeroSubtitle(resultsCount) {
   }
 
   if (resultsCount === total) {
-    el.innerHTML = `Global Search is primary. Browse <strong>${total.toLocaleString()}</strong> ${escapeHtml(plural)} with filters below.`;
+    el.innerHTML = `Search All is primary. Browse <strong>${total.toLocaleString()}</strong> ${escapeHtml(plural)} with filters below.`;
     return;
   }
 
@@ -2802,7 +2802,7 @@ function renderDropdown(query) {
       <button type="button" class="search-dropdown-item search-dropdown-item--action" role="option" aria-selected="false"
               data-autocomplete-type="global" data-autocomplete-value="${escapeHtml(query)}">
         <span class="search-dropdown-item-icon">${searchIcon}</span>
-        <span class="search-dropdown-item-label">Run Global Search for "${escapeHtml(query)}"</span>
+        <span class="search-dropdown-item-label">Run Search All for "${escapeHtml(query)}"</span>
         <span class="search-dropdown-item-count">All</span>
       </button>
     </div>`;
