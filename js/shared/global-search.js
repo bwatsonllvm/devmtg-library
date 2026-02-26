@@ -8,6 +8,7 @@
   let dataLoadPromise = null;
   let indexBuildPromise = null;
   let docsIndexLoadPromise = null;
+  let prebuiltAutocompleteLoadPromise = null;
   const formStateMap = new WeakMap();
   const GLOBAL_SEARCH_LABEL = 'Global Search across talks, papers, blogs, docs, people, and key topics';
   const GLOBAL_SEARCH_PLACEHOLDER = 'Search the full library...';
@@ -65,9 +66,10 @@
   }
 
   const LIBRARY_ROOT_PATH = resolveLibraryRootPath();
-  const DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/_static/docs-universal-search-index.js?v=20260224-04');
-  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/clang/_static/docs-universal-search-index.js?v=20260224-04');
-  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/lldb/_static/docs-universal-search-index.js?v=20260224-04');
+  const AUTOCOMPLETE_INDEX_SRC = resolveAssetUrl('js/data/autocomplete-index.json?v=5ec3a4ce0b33');
+  const DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/_static/docs-universal-search-index.js?v=9b2701561091');
+  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/clang/_static/docs-universal-search-index.js?v=74116e3da143');
+  const LLDB_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/lldb/_static/docs-universal-search-index.js?v=eba40672f6e7');
   const ADVANCED_FIELDS = [
     'allWords',
     'exactPhrase',
@@ -963,6 +965,70 @@
       .sort((a, b) => a.label.localeCompare(b.label));
   }
 
+  function resolvePrebuiltAutocompleteUrl(value) {
+    const raw = normalizeText(value, 400);
+    if (!raw) return '';
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (raw.startsWith('/')) return raw;
+    return resolveAssetUrl(raw.replace(/^\/+/, ''));
+  }
+
+  function normalizePrebuiltAutocompleteEntries(values, { includeUrl = false } = {}) {
+    const list = Array.isArray(values) ? values : [];
+    const out = [];
+    for (const entry of list) {
+      if (!entry || typeof entry !== 'object') continue;
+      const label = normalizeText(entry.label, 220);
+      if (!label) continue;
+      const count = Number(entry.count);
+      const normalized = {
+        label,
+        count: Number.isFinite(count) && count > 0 ? Math.floor(count) : 1,
+      };
+      if (includeUrl) {
+        const url = resolvePrebuiltAutocompleteUrl(entry.url);
+        if (!url) continue;
+        normalized.url = url;
+      }
+      out.push(normalized);
+    }
+    return out;
+  }
+
+  async function loadPrebuiltAutocompleteIndex() {
+    if (prebuiltAutocompleteLoadPromise) return prebuiltAutocompleteLoadPromise;
+
+    prebuiltAutocompleteLoadPromise = (async () => {
+      try {
+        const response = await fetch(AUTOCOMPLETE_INDEX_SRC, { cache: 'force-cache' });
+        if (!response.ok) return false;
+        const payload = await response.json();
+        if (!payload || typeof payload !== 'object') return false;
+
+        const topics = normalizePrebuiltAutocompleteEntries(payload.topics);
+        const people = normalizePrebuiltAutocompleteEntries(payload.people);
+        const talks = normalizePrebuiltAutocompleteEntries(payload.talks);
+        const papers = normalizePrebuiltAutocompleteEntries(payload.papers);
+        const docs = normalizePrebuiltAutocompleteEntries(payload.docs, { includeUrl: true });
+
+        if (!topics.length && !people.length && !talks.length && !papers.length && !docs.length) {
+          return false;
+        }
+
+        autocompleteIndex.topics = topics;
+        autocompleteIndex.people = people;
+        autocompleteIndex.talks = talks;
+        autocompleteIndex.papers = papers;
+        autocompleteIndex.docs = docs;
+        return true;
+      } catch {
+        return false;
+      }
+    })();
+
+    return prebuiltAutocompleteLoadPromise;
+  }
+
   function ensureScript(src) {
     return new Promise((resolve, reject) => {
       const existing = [...document.querySelectorAll('script[src]')]
@@ -1067,7 +1133,6 @@
       if (typeof window.loadPaperData !== 'function') {
         tasks.push(ensureScript(resolveAssetUrl('js/papers-data.js')));
       }
-      tasks.push(ensureDocsIndexLoader());
       if (tasks.length) {
         await Promise.allSettled(tasks);
       }
@@ -1080,6 +1145,11 @@
     if (indexBuildPromise) return indexBuildPromise;
 
     indexBuildPromise = (async () => {
+      const loadedFromPrebuilt = await loadPrebuiltAutocompleteIndex();
+      if (loadedFromPrebuilt) {
+        return autocompleteIndex;
+      }
+
       await ensureDataLoaders();
 
       const topicCounts = new Map();
@@ -1150,6 +1220,7 @@
         }
       }
 
+      await ensureDocsIndexLoader();
       const docsPayloads = [
         { payload: window.LLVMCoreDocsUniversalSearchIndex, sourceLabel: 'LLVM Core', basePrefix: resolveAssetUrl('docs') },
         { payload: window.LLVMClangDocsUniversalSearchIndex, sourceLabel: 'Clang', basePrefix: resolveAssetUrl('docs/clang') },

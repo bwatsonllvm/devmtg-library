@@ -4,9 +4,9 @@
 
 (function () {
   let inMemoryCache = null;
+  let inMemoryVersion = '';
 
   const MANIFEST_JSON_CANDIDATES = ['../papers/index.json', 'papers/index.json', './papers/index.json'];
-  const CACHE_PREFIX = 'llvm-hub-paper-data:v1:';
 
   function uniquePaths(paths) {
     return [...new Set(paths.map((p) => String(p || '').trim()).filter(Boolean))];
@@ -77,7 +77,7 @@
   }
 
   async function fetchJson(path) {
-    const resp = await fetch(path, { cache: 'no-store' });
+    const resp = await fetch(path, { cache: 'default' });
     if (!resp.ok) {
       throw new Error(`${path}: HTTP ${resp.status}`);
     }
@@ -89,7 +89,7 @@
   }
 
   async function fetchJsonWithMeta(path) {
-    const resp = await fetch(path, { cache: 'no-store' });
+    const resp = await fetch(path, { cache: 'default' });
     if (!resp.ok) {
       throw new Error(`${path}: HTTP ${resp.status}`);
     }
@@ -121,74 +121,9 @@
     throw new Error(`Could not load papers manifest from ${candidates.join(', ')} (${failures.join(' | ')})`);
   }
 
-  function getStorage(kind) {
-    try {
-      return window[kind] || null;
-    } catch {
-      return null;
-    }
-  }
-
-  function getCacheKey(dataVersion) {
-    return `${CACHE_PREFIX}${dataVersion}`;
-  }
-
-  function isValidDataPayload(payload) {
-    return payload &&
-      typeof payload === 'object' &&
-      Array.isArray(payload.papers) &&
-      Array.isArray(payload.sources);
-  }
-
-  function loadCachedPayload(cacheKey) {
-    const storages = [getStorage('sessionStorage'), getStorage('localStorage')].filter(Boolean);
-    for (const storage of storages) {
-      try {
-        const raw = storage.getItem(cacheKey);
-        if (!raw) continue;
-        const parsed = JSON.parse(raw);
-        if (isValidDataPayload(parsed)) return parsed;
-      } catch {
-        // Ignore malformed cache and continue.
-      }
-    }
-    return null;
-  }
-
-  function saveCachedPayload(cacheKey, payload) {
-    const storages = [getStorage('sessionStorage'), getStorage('localStorage')].filter(Boolean);
-    for (const storage of storages) {
-      try {
-        storage.setItem(cacheKey, JSON.stringify(payload));
-      } catch {
-        // Ignore storage quota/security errors.
-      }
-    }
-  }
-
-  function pruneStaleCaches(activeCacheKey) {
-    const storages = [getStorage('sessionStorage'), getStorage('localStorage')].filter(Boolean);
-    for (const storage of storages) {
-      try {
-        for (let i = storage.length - 1; i >= 0; i -= 1) {
-          const key = storage.key(i);
-          if (!key || !key.startsWith(CACHE_PREFIX) || key === activeCacheKey) continue;
-          storage.removeItem(key);
-        }
-      } catch {
-        // Ignore storage errors.
-      }
-    }
-  }
-
   async function loadPaperData() {
-    if (inMemoryCache) return inMemoryCache;
-
     const manifest = await loadManifest();
-    const cacheKey = getCacheKey(manifest.dataVersion);
-    const cachedPayload = loadCachedPayload(cacheKey);
-    if (cachedPayload) {
-      inMemoryCache = cachedPayload;
+    if (inMemoryCache && inMemoryVersion === manifest.dataVersion) {
       return inMemoryCache;
     }
 
@@ -208,8 +143,7 @@
     }
 
     inMemoryCache = { papers, sources };
-    saveCachedPayload(cacheKey, inMemoryCache);
-    pruneStaleCaches(cacheKey);
+    inMemoryVersion = manifest.dataVersion;
     return inMemoryCache;
   }
 
