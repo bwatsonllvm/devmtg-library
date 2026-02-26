@@ -70,45 +70,6 @@
       line-height: 1.45;
     }
 
-    .review-admin-form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      align-items: flex-end;
-    }
-
-    .review-field {
-      display: grid;
-      gap: 0.32rem;
-      min-width: 260px;
-      flex: 1;
-    }
-
-    .review-label {
-      color: var(--color-text-muted);
-      font-size: 0.77rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-
-    .review-input {
-      width: 100%;
-      border: 1px solid var(--color-border);
-      border-radius: 9px;
-      background: var(--color-surface);
-      color: var(--color-text);
-      padding: 0.58rem 0.66rem;
-      font-size: 0.9rem;
-      line-height: 1.35;
-    }
-
-    .review-input:focus {
-      outline: none;
-      border-color: var(--color-border-focus);
-      box-shadow: 0 0 0 3px var(--color-field-focus-ring);
-    }
-
     .review-actions {
       display: flex;
       flex-wrap: wrap;
@@ -252,6 +213,10 @@
       font-size: 0.84rem;
     }
 
+    .review-recent-item--staged {
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+    }
+
     .review-check {
       color: var(--color-success);
       font-weight: 700;
@@ -273,6 +238,35 @@
       color: var(--color-text-muted);
       font-size: 0.77rem;
       white-space: nowrap;
+    }
+
+    .review-pending-pill {
+      color: var(--color-text-muted);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      padding: 0.1rem 0.46rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .review-remove-staged {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-size: 0.73rem;
+      font-weight: 600;
+      line-height: 1.2;
+      padding: 0.22rem 0.42rem;
+      cursor: pointer;
+    }
+
+    .review-remove-staged:hover {
+      color: var(--color-accent);
+      border-color: var(--color-border-focus);
+      background: var(--color-accent-bg);
     }
 
     .review-recent-empty {
@@ -301,6 +295,21 @@
       font-size: 0.8rem;
     }
 
+    .review-command-box {
+      margin: 0;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface-subtle);
+      color: var(--color-text);
+      padding: 0.72rem;
+      font-size: 0.81rem;
+      line-height: 1.42;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
     @media (max-width: 980px) {
       .review-shell-grid {
         grid-template-columns: 1fr;
@@ -308,7 +317,7 @@
     }
   </style>
   <title>Review Queue - LLVM Research Library</title>
-  <meta name="description" content="Admin review queue for paper accuracy checks and confirmation.">
+  <meta name="description" content="Paper review queue with pull-request batched permanent confirmations.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -454,9 +463,9 @@
     <div class="search-hero-shell">
       <div class="search-hero-title-row">
         <h1>Paper Review Queue</h1>
-        <p class="search-hero-title-aside">Local review verification flow</p>
+        <p class="search-hero-title-aside">PR-batched verification flow</p>
       </div>
-      <p class="subtitle">Mark papers as reviewed for accuracy. Completed papers drop out of the pending queue and show a checkmark in review history.</p>
+      <p class="subtitle">Mark papers to stage a review batch. Permanent checkmarks are added only after the review PR merges.</p>
       <div class="empty-state-actions" aria-label="Review actions">
         <a href="papers/" class="empty-action-btn">Back to Papers</a>
         <a href="papers/edit.html" class="empty-action-btn">Edit Paper</a>
@@ -466,39 +475,15 @@
   </section>
 
   <main id="main-content" class="review-main" tabindex="-1">
-    <section class="review-card" id="review-admin-card" aria-labelledby="review-admin-heading">
-      <h2 id="review-admin-heading">Admin Access</h2>
-      <p id="review-admin-hint">Set an admin passphrase for this browser to protect the review queue.</p>
-      <form class="review-admin-form" id="review-admin-form" autocomplete="off">
-        <label class="review-field" for="review-admin-input">
-          <span class="review-label">Passphrase</span>
-          <input
-            class="review-input"
-            id="review-admin-input"
-            type="password"
-            minlength="6"
-            required
-            autocomplete="current-password"
-            placeholder="Enter passphrase"
-          >
-        </label>
-        <button type="submit" class="review-btn primary" id="review-admin-submit">Unlock Queue</button>
-        <button type="button" class="review-btn hidden" id="review-admin-reset">Reset Passphrase</button>
-      </form>
-      <div class="review-status" id="review-admin-status" role="status" aria-live="polite"></div>
-      <p class="review-note">Passphrase is stored locally in this browser only.</p>
-    </section>
-
-    <section class="hidden" id="review-shell" aria-label="Review queue content">
+    <section id="review-shell" aria-label="Review queue content">
       <section class="review-card">
         <div class="review-topbar">
           <div>
-            <div class="review-stats" id="review-stats">Pending 0 | Reviewed 0 | Total 0</div>
+            <div class="review-stats" id="review-stats">Pending 0 | Permanent 0 | Staged 0 | Total 0</div>
             <div class="review-position" id="review-position">Queue position 0 of 0 pending</div>
           </div>
           <div class="review-actions">
-            <button type="button" class="review-btn" id="review-lock-btn">Lock Queue</button>
-            <button type="button" class="review-btn" id="review-reset-btn">Reset Reviewed Marks</button>
+            <button type="button" class="review-btn" id="review-clear-staged-btn">Clear Staged Batch</button>
           </div>
         </div>
         <div class="review-status" id="review-status" role="status" aria-live="polite"></div>
@@ -520,22 +505,32 @@
             <a class="review-btn" id="review-update-link" href="#">Update via URL</a>
           </div>
           <div class="review-actions" aria-label="Queue controls">
-            <button type="button" class="review-btn primary" id="review-mark-btn">Mark Reviewed ✓</button>
+            <button type="button" class="review-btn primary" id="review-mark-btn">Stage Reviewed For PR</button>
             <button type="button" class="review-btn" id="review-next-btn">Next</button>
           </div>
         </section>
 
         <section class="review-card hidden" id="review-empty-card" aria-labelledby="review-empty-heading">
-          <h2 id="review-empty-heading">Queue Complete ✓</h2>
-          <p>All papers are currently marked as reviewed in this browser.</p>
+          <h2 id="review-empty-heading">Queue Complete</h2>
+          <p id="review-empty-copy">No pending papers remain.</p>
           <div class="review-actions">
-            <button type="button" class="review-btn" id="review-reset-all-btn">Reset and review again</button>
+            <button type="button" class="review-btn" id="review-clear-staged-empty-btn">Clear Staged Batch</button>
           </div>
         </section>
 
         <section class="review-card" aria-labelledby="review-history-heading">
-          <h2 id="review-history-heading">Recently Reviewed</h2>
-          <p>Most recent completed reviews with confirmation checkmarks.</p>
+          <h2 id="review-history-heading">Review Batch</h2>
+          <p>Stage reviewed papers, submit one PR batch, and let permanent checkmarks update after merge.</p>
+          <div class="review-actions">
+            <a class="review-btn" id="review-batch-workflow-link" href="#" target="_blank" rel="noopener noreferrer">Open Workflow</a>
+            <button type="button" class="review-btn" id="review-batch-copy-btn">Copy gh Command</button>
+            <button type="button" class="review-btn" id="review-batch-copy-ids-btn">Copy IDs JSON</button>
+          </div>
+          <pre class="review-command-box" id="review-batch-command"></pre>
+          <div class="review-status" id="review-batch-status" role="status" aria-live="polite"></div>
+          <h3>Staged For PR</h3>
+          <ul class="review-recent-list" id="review-staged-list"></ul>
+          <h3>Permanently Reviewed</h3>
           <ul class="review-recent-list" id="review-recent-list"></ul>
         </section>
       </div>
@@ -545,6 +540,6 @@
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/papers-data.js?v=b7e926cee2db"></script>
   <script src="js/shared/global-search.js?v=6aee01784996"></script>
-  <script src="js/paper-review.js?v=8fd840ef05c2"></script>
+  <script src="js/paper-review.js?v=83be562f0856"></script>
 </body>
 </html>

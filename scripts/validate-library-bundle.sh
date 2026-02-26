@@ -64,6 +64,7 @@ done
 [ -f "$PAPERS_ROOT/index.json" ] || fail "Missing required file: papers/index.json"
 [ -f "$PAPERS_ROOT/key-topic-canonical.json" ] || fail "Missing required file: papers/key-topic-canonical.json"
 [ -f "$PAPERS_ROOT/manual-added-papers.json" ] || fail "Missing required file: papers/manual-added-papers.json"
+[ -f "$PAPERS_ROOT/reviewed-papers.json" ] || fail "Missing required file: papers/reviewed-papers.json"
 
 # Validate generated viewer artifacts are synchronized.
 scripts/build-viewer-artifacts.sh --check

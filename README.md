@@ -252,6 +252,11 @@ Automation is split into four scheduled PR workflows:
    - rebuilds local docs artifacts for LLDB only
    - regenerates LLDB docs search indexes and sync metadata
 
+Manual workflow for review rigor:
+- Paper review batch (`.github/workflows/paper-review-batch-pr.yml`)
+  - applies a staged `review_ids_json` batch into `papers/reviewed-papers.json`
+  - opens a PR so permanent review checkmarks are merge-gated
+
 The split keeps:
 - lightweight llvm-www/blog updates independent from papers ingestion/enrichment
 - docs sync independent from both, so docs-specific issues do not block event/blog or papers updates
@@ -306,6 +311,7 @@ These checks run in:
 - `papers/*.json`: source and derived paper bundles (site serves the manifest-listed file)
 - `papers/index.json`: paper manifest + data version
 - `papers/manual-added-papers.json`: curated manual-paper bundle for records that should stay separate from upstream source feeds
+- `papers/reviewed-papers.json`: merge-gated permanent reviewed-paper confirmations used by `papers/review.html`
 - `papers/key-topic-canonical.json`: updater-owned canonical key-topic vocabulary used by paper/discovery scripts
 - `scripts/`: ingestion, normalization, and validation tooling
 - `templates/site-header.html`: canonical shared site header template for viewer pages
