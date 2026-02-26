@@ -169,6 +169,74 @@
       word-break: break-word;
     }
 
+    .paper-edit-diff-list {
+      display: grid;
+      gap: 0.72rem;
+    }
+
+    .paper-edit-diff-item {
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      background: var(--color-surface-subtle);
+      padding: 0.64rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .paper-edit-diff-title {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--color-text);
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .paper-edit-diff-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.56rem;
+    }
+
+    .paper-edit-diff-col {
+      display: grid;
+      gap: 0.3rem;
+      min-width: 0;
+    }
+
+    .paper-edit-diff-label {
+      color: var(--color-text-muted);
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .paper-edit-diff-value {
+      margin: 0;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface);
+      color: var(--color-text);
+      padding: 0.56rem 0.62rem;
+      font-family: var(--font-mono);
+      font-size: 0.77rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .paper-edit-diff-value.del {
+      border-color: color-mix(in oklab, var(--color-error) 45%, var(--color-border));
+      background: color-mix(in oklab, var(--color-error) 10%, var(--color-surface));
+      color: color-mix(in oklab, var(--color-error) 72%, var(--color-text));
+    }
+
+    .paper-edit-diff-value.add {
+      border-color: color-mix(in oklab, var(--color-success) 45%, var(--color-border));
+      background: color-mix(in oklab, var(--color-success) 10%, var(--color-surface));
+      color: color-mix(in oklab, var(--color-success) 70%, var(--color-text));
+    }
+
     .paper-edit-status {
       min-height: 1.3rem;
       color: var(--color-text-muted);
@@ -191,6 +259,10 @@
 
     @media (max-width: 900px) {
       .paper-edit-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .paper-edit-diff-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -368,12 +440,31 @@
     </section>
 
     <section class="paper-edit-card hidden" id="paper-edit-original-card" aria-labelledby="paper-edit-original-heading">
-      <h2 id="paper-edit-original-heading">2. Original Values</h2>
+      <h2 id="paper-edit-original-heading">3. Original Values</h2>
       <pre class="paper-edit-pre" id="paper-edit-original-pre"></pre>
     </section>
 
+    <section class="paper-edit-card hidden" id="paper-edit-url-card" aria-labelledby="paper-edit-url-heading">
+      <h2 id="paper-edit-url-heading">2. Update From URL</h2>
+      <p>Paste the source URL, click update, review the red/green diff, then confirm to apply changes to this edit form.</p>
+      <div class="paper-edit-row">
+        <label class="paper-edit-field" for="paper-edit-url-input">
+          <span class="paper-edit-label">Source URL</span>
+          <input id="paper-edit-url-input" class="paper-edit-input" placeholder="https://...">
+        </label>
+        <button type="button" class="paper-edit-btn primary" id="paper-edit-url-preview-btn">Update From URL</button>
+      </div>
+      <div class="paper-edit-status" id="paper-edit-url-status" role="status" aria-live="polite"></div>
+      <div class="hidden" id="paper-edit-url-diff-shell">
+        <div class="paper-edit-diff-list" id="paper-edit-url-diff-list"></div>
+        <div class="paper-edit-actions">
+          <button type="button" class="paper-edit-btn primary" id="paper-edit-url-apply-btn">Confirm And Apply Changes</button>
+        </div>
+      </div>
+    </section>
+
     <section class="paper-edit-card hidden" id="paper-edit-change-card" aria-labelledby="paper-edit-change-heading">
-      <h2 id="paper-edit-change-heading">3. Make Changes</h2>
+      <h2 id="paper-edit-change-heading">4. Make Changes</h2>
       <p>Only changed fields are included in <code>updates_json</code>.</p>
       <form id="paper-edit-form" novalidate>
         <div class="paper-edit-grid">
@@ -435,7 +526,7 @@
     </section>
 
     <section class="paper-edit-card hidden" id="paper-edit-output-card" aria-labelledby="paper-edit-output-heading">
-      <h2 id="paper-edit-output-heading">4. Submit Workflow</h2>
+      <h2 id="paper-edit-output-heading">5. Submit Workflow</h2>
       <pre class="paper-edit-pre" id="paper-edit-updates-json">{}</pre>
       <pre class="paper-edit-pre" id="paper-edit-command"></pre>
       <div class="paper-edit-actions">
@@ -450,6 +541,6 @@
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/papers-data.js?v=b7e926cee2db"></script>
   <script src="js/shared/global-search.js?v=6aee01784996"></script>
-  <script src="js/paper-edit.js?v=b14f641208fa"></script>
+  <script src="js/paper-edit.js?v=2a6f1691cb4e"></script>
 </body>
 </html>

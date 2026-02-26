@@ -104,7 +104,7 @@
     sourceEl.value = fromQuery;
   }
   if (editLink && isHttpUrl(fromQuery)) {
-    editLink.href = `papers/edit.html?id=${encodeURIComponent(fromQuery)}`;
+    editLink.href = `papers/edit.html?source_url=${encodeURIComponent(fromQuery)}`;
   }
   updateCommand();
 })();

@@ -303,8 +303,8 @@ function buildPaperAdminLinks(paper, fallbackUrl = '') {
   const paperUrl = sanitizeExternalUrl(paper && paper.paperUrl);
   const fallback = sanitizeExternalUrl(fallbackUrl);
   const updateSourceUrl = sourceUrl || paperUrl || fallback;
-  const updateHref = updateSourceUrl
-    ? `papers/add-by-url.html?source_url=${encodeURIComponent(updateSourceUrl)}`
+  const updateHref = (paperId && updateSourceUrl)
+    ? `papers/edit.html?id=${encodeURIComponent(paperId)}&source_url=${encodeURIComponent(updateSourceUrl)}`
     : '';
   return { editHref, updateHref };
 }

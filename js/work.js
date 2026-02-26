@@ -223,8 +223,8 @@ function buildPaperAdminLinks(paper) {
   const sourceUrl = sanitizeExternalUrl(paper && paper.sourceUrl);
   const paperUrl = sanitizeExternalUrl(paper && paper.paperUrl);
   const updateSourceUrl = sourceUrl || paperUrl;
-  const updateHref = updateSourceUrl
-    ? `papers/add-by-url.html?source_url=${encodeURIComponent(updateSourceUrl)}`
+  const updateHref = (paperId && updateSourceUrl)
+    ? `papers/edit.html?id=${encodeURIComponent(paperId)}&source_url=${encodeURIComponent(updateSourceUrl)}`
     : '';
   return { editHref, updateHref };
 }
