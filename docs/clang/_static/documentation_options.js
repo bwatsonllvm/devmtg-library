@@ -38,11 +38,6 @@ const DOCUMENTATION_OPTIONS = {
     clang: 'Clang',
     lldb: 'LLDB',
   };
-  const DOCS_RELEASE_NOTES_SLUG_BY_VARIANT = {
-    'llvm-core': 'ReleaseNotes',
-    clang: 'ReleaseNotes',
-    lldb: '',
-  };
   const DOCS_SEARCH_ALIASES_BY_VARIANT = {
     'llvm-core': [
       { token: 'langref', label: 'LLVM Language Reference', slug: 'LangRef' },
@@ -191,10 +186,6 @@ const DOCUMENTATION_OPTIONS = {
 
   function getDocsCorpusLabel(docsKind) {
     return DOCS_CORPUS_LABELS[String(docsKind || '').trim()] || DOCS_CORPUS_LABELS['llvm-core'];
-  }
-
-  function getDocsReleaseNotesSlug(docsKind) {
-    return DOCS_RELEASE_NOTES_SLUG_BY_VARIANT[String(docsKind || '').trim()] || DOCS_RELEASE_NOTES_SLUG_BY_VARIANT['llvm-core'];
   }
 
   function resolveRootPath() {
@@ -1406,16 +1397,42 @@ const DOCUMENTATION_OPTIONS = {
     return value.trim();
   }
 
-  function normalizeDocsTrackValue(raw) {
-    const source = String(raw || '').trim();
-    if (!source) return '';
-    if (/^mainline$/i.test(source) || /git$/i.test(source)) return 'mainline';
-    const normalized = normalizeReleaseVersionValue(source);
-    return normalized || source;
-  }
-
   function isExternalHttpUrl(href) {
     return /^https?:\/\//i.test(String(href || '').trim());
+  }
+
+  function resolveMetaReleaseRecord(metaRoot) {
+    if (!metaRoot || typeof metaRoot !== 'object') return null;
+    const candidates = [
+      metaRoot.subprojectRelease,
+      metaRoot.latestSubprojectRelease,
+      metaRoot.projectRelease,
+    ];
+    for (let i = 0; i < candidates.length; i += 1) {
+      const candidate = candidates[i];
+      if (candidate && typeof candidate === 'object') return candidate;
+    }
+    return null;
+  }
+
+  function getSubprojectReleaseNotesFallbackHref(rootPath) {
+    if (ACTIVE_DOCS_KIND === 'clang') {
+      return slugToDocsHref('ReleaseNotes', rootPath);
+    }
+    return '';
+  }
+
+  function shouldShowSubprojectReleaseNotes(subprojectVersion, llvmVersion, metaRelease) {
+    if (ACTIVE_DOCS_KIND === 'llvm-core') return false;
+    if (!subprojectVersion || !llvmVersion) return false;
+    const normalizedSubproject = normalizeReleaseVersionValue(subprojectVersion).toLowerCase();
+    const normalizedLLVM = normalizeReleaseVersionValue(llvmVersion).toLowerCase();
+    if (!normalizedSubproject || !normalizedLLVM) return false;
+    if (normalizedSubproject !== normalizedLLVM) return true;
+    const explicitOverride = metaRelease && Object.prototype.hasOwnProperty.call(metaRelease, 'differentFromLLVM')
+      ? metaRelease.differentFromLLVM
+      : null;
+    return explicitOverride === true;
   }
 
   function getLatestReleaseModel(rootPath) {
@@ -1425,46 +1442,40 @@ const DOCUMENTATION_OPTIONS = {
     const latestRelease = (metaRoot && metaRoot.latestRelease && typeof metaRoot.latestRelease === 'object')
       ? metaRoot.latestRelease
       : null;
+    const subprojectRelease = resolveMetaReleaseRecord(metaRoot);
 
     const fromMeta = latestRelease
       ? (latestRelease.version || latestRelease.name || latestRelease.tag || '')
       : '';
-    const fromDocs = (typeof DOCUMENTATION_OPTIONS === 'object' && DOCUMENTATION_OPTIONS && DOCUMENTATION_OPTIONS.VERSION)
-      ? DOCUMENTATION_OPTIONS.VERSION
-      : '';
-
-    const releaseVersion = normalizeReleaseVersionValue(fromMeta);
-    const docsTrack = normalizeDocsTrackValue(fromDocs);
-    const normalizedVersion = releaseVersion
-      || normalizeReleaseVersionValue(fromDocs)
-      || 'Unknown';
-
     const githubHref = latestRelease && String(latestRelease.githubUrl || '').trim()
       ? String(latestRelease.githubUrl).trim()
       : DOCS_GITHUB_RELEASES_URL;
+    const llvmVersion = normalizeReleaseVersionValue(fromMeta);
+    const versionLabel = llvmVersion
+      ? `Latest stable release: LLVM Version ${llvmVersion}`
+      : 'Latest stable release: LLVM Version unavailable';
+    const llvmReleaseNotesHref = `${rootPath}docs/ReleaseNotes.html`;
 
-    if (ACTIVE_DOCS_KIND === 'lldb') {
-      const docsTrackLabel = docsTrack || 'mainline';
-      const llvmReleaseLabel = releaseVersion ? `LLVM ${releaseVersion}` : 'Unknown';
-      return {
-        versionLabel: `Docs track: ${docsTrackLabel}; latest LLVM project release: ${llvmReleaseLabel}`,
-        releaseNotesHref: DOCS_GITHUB_RELEASES_URL,
-        releaseNotesLabel: 'LLVM project releases (includes LLDB)',
-        githubHref,
-        githubLabel: 'Latest LLVM release assets',
-      };
-    }
+    const subprojectRawVersion = subprojectRelease
+      ? (subprojectRelease.version || subprojectRelease.name || subprojectRelease.tag || '')
+      : '';
+    const subprojectVersion = normalizeReleaseVersionValue(subprojectRawVersion);
+    const subprojectReleaseNotesHrefRaw = subprojectRelease && String(subprojectRelease.releaseNotesUrl || '').trim()
+      ? String(subprojectRelease.releaseNotesUrl).trim()
+      : getSubprojectReleaseNotesFallbackHref(rootPath);
+    const subprojectReleaseNotesHref = subprojectReleaseNotesHrefRaw || '';
 
-    const releasePrefix = getDocsCorpusLabel(ACTIVE_DOCS_KIND);
-    const releaseNotesSlug = getDocsReleaseNotesSlug(ACTIVE_DOCS_KIND);
-    const releaseNotesHref = releaseNotesSlug
-      ? slugToDocsHref(releaseNotesSlug, rootPath)
-      : githubHref;
+    const includeSubprojectReleaseNotes = shouldShowSubprojectReleaseNotes(subprojectVersion, llvmVersion, subprojectRelease)
+      && !!subprojectReleaseNotesHref;
+    const subprojectLabel = getDocsCorpusLabel(ACTIVE_DOCS_KIND);
 
     return {
-      versionLabel: `Latest release: ${releasePrefix} ${normalizedVersion}`,
-      releaseNotesHref,
-      releaseNotesLabel: 'Latest release notes',
+      versionLabel,
+      llvmReleaseNotesHref,
+      llvmReleaseNotesLabel: 'LLVM Release notes',
+      includeSubprojectReleaseNotes,
+      subprojectReleaseNotesHref,
+      subprojectReleaseNotesLabel: `${subprojectLabel} Release notes`,
       githubHref,
       githubLabel: 'Download via GitHub',
     };
@@ -1490,15 +1501,27 @@ const DOCUMENTATION_OPTIONS = {
     const links = document.createElement('div');
     links.className = 'docs-release-links';
 
-    const notes = document.createElement('a');
-    notes.className = 'docs-release-link';
-    notes.href = release.releaseNotesHref;
-    notes.textContent = release.releaseNotesLabel || 'Latest release notes';
-    if (isExternalHttpUrl(release.releaseNotesHref)) {
-      notes.target = '_blank';
-      notes.rel = 'noopener noreferrer';
+    const llvmNotes = document.createElement('a');
+    llvmNotes.className = 'docs-release-link';
+    llvmNotes.href = release.llvmReleaseNotesHref || `${rootPath}docs/ReleaseNotes.html`;
+    llvmNotes.textContent = release.llvmReleaseNotesLabel || 'LLVM Release notes';
+    if (isExternalHttpUrl(llvmNotes.href)) {
+      llvmNotes.target = '_blank';
+      llvmNotes.rel = 'noopener noreferrer';
     }
-    links.appendChild(notes);
+    links.appendChild(llvmNotes);
+
+    if (release.includeSubprojectReleaseNotes && release.subprojectReleaseNotesHref) {
+      const subprojectNotes = document.createElement('a');
+      subprojectNotes.className = 'docs-release-link';
+      subprojectNotes.href = release.subprojectReleaseNotesHref;
+      subprojectNotes.textContent = release.subprojectReleaseNotesLabel || `${getDocsCorpusLabel(ACTIVE_DOCS_KIND)} release notes`;
+      if (isExternalHttpUrl(subprojectNotes.href)) {
+        subprojectNotes.target = '_blank';
+        subprojectNotes.rel = 'noopener noreferrer';
+      }
+      links.appendChild(subprojectNotes);
+    }
 
     const download = document.createElement('a');
     download.className = 'docs-release-link';
