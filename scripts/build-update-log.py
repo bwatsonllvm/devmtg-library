@@ -864,6 +864,7 @@ def talk_entry(
     talk: dict,
     parts: list[str],
     logged_at_iso: str,
+    batch_id: str,
     site_base: str,
     topic_by_key: dict[str, str],
 ) -> dict:
@@ -881,6 +882,7 @@ def talk_entry(
     entry = {
         "kind": "talk",
         "loggedAt": logged_at_iso,
+        "batchId": batch_id,
         "sortHint": meeting_sort_hint(meeting_slug),
         "fingerprint": fingerprint,
         "parts": normalized_parts,
@@ -899,7 +901,7 @@ def talk_entry(
     return entry
 
 
-def paper_entry(paper: dict, logged_at_iso: str, site_base: str, topic_by_key: dict[str, str]) -> dict:
+def paper_entry(paper: dict, logged_at_iso: str, batch_id: str, site_base: str, topic_by_key: dict[str, str]) -> dict:
     paper_id = collapse_ws(str(paper.get("id", "")))
     year = collapse_ws(str(paper.get("year", "")))
     source = collapse_ws(str(paper.get("sourceName", ""))) or collapse_ws(str(paper.get("source", "")))
@@ -915,6 +917,7 @@ def paper_entry(paper: dict, logged_at_iso: str, site_base: str, topic_by_key: d
     entry = {
         "kind": kind,
         "loggedAt": logged_at_iso,
+        "batchId": batch_id,
         "sortHint": paper_sort_hint(year),
         "fingerprint": f"{kind}:{paper_id}",
         "parts": [part],
@@ -1012,6 +1015,7 @@ def docs_entry(
     current_meta: dict,
     rel_path: str,
     logged_at_iso: str,
+    batch_id: str,
     site_base: str,
     topic_by_key: dict[str, str],
 ) -> dict:
@@ -1078,6 +1082,7 @@ def docs_entry(
     entry = {
         "kind": "docs",
         "loggedAt": entry_logged_at,
+        "batchId": batch_id,
         "sortHint": docs_sort_hint(entry_logged_at),
         "fingerprint": f"docs:{variant_id}:{fingerprint_token}",
         "parts": ["docs"],
@@ -1118,6 +1123,7 @@ def diff_docs_entries(
     prev_payload: dict | None,
     rel_path: str,
     logged_at_iso: str,
+    batch_id: str,
     site_base: str,
     topic_by_key: dict[str, str],
 ) -> list[dict]:
@@ -1125,13 +1131,14 @@ def diff_docs_entries(
         return []
     if docs_change_signature(current_payload) == docs_change_signature(prev_payload):
         return []
-    return [docs_entry(current_payload, rel_path, logged_at_iso, site_base, topic_by_key)]
+    return [docs_entry(current_payload, rel_path, logged_at_iso, batch_id, site_base, topic_by_key)]
 
 
 def diff_talk_entries(
     current_payload: dict | None,
     prev_payload: dict | None,
     logged_at_iso: str,
+    batch_id: str,
     site_base: str,
     topic_by_key: dict[str, str],
 ) -> list[dict]:
@@ -1151,7 +1158,7 @@ def diff_talk_entries(
             parts.append("video")
 
         if parts:
-            entries.append(talk_entry(current_talk, parts, logged_at_iso, site_base, topic_by_key))
+            entries.append(talk_entry(current_talk, parts, logged_at_iso, batch_id, site_base, topic_by_key))
     return entries
 
 
@@ -1159,6 +1166,7 @@ def diff_paper_entries(
     current_payload: dict | None,
     prev_payload: dict | None,
     logged_at_iso: str,
+    batch_id: str,
     site_base: str,
     topic_by_key: dict[str, str],
 ) -> list[dict]:
@@ -1169,7 +1177,7 @@ def diff_paper_entries(
     for paper_id, current_paper in current_papers.items():
         if paper_id in prev_papers:
             continue
-        entries.append(paper_entry(current_paper, logged_at_iso, site_base, topic_by_key))
+        entries.append(paper_entry(current_paper, logged_at_iso, batch_id, site_base, topic_by_key))
     return entries
 
 
@@ -1266,6 +1274,7 @@ def build_entries_from_working_tree_delta(
     repo_root: Path,
     site_base: str,
     logged_at_iso: str,
+    batch_id: str,
     topic_by_key: dict[str, str],
 ) -> tuple[list[dict], int, int, int]:
     changed_json_paths = list_changed_json_paths(repo_root)
@@ -1282,7 +1291,7 @@ def build_entries_from_working_tree_delta(
         current_payload = load_json_file(abs_path)
         prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
         prev_payload = parse_json_text(prev_raw) if prev_raw else None
-        entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
+        entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, batch_id, site_base, topic_by_key))
 
     for rel_path in changed_paper_paths:
         abs_path = repo_root / rel_path
@@ -1291,7 +1300,7 @@ def build_entries_from_working_tree_delta(
         current_payload = load_json_file(abs_path)
         prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
         prev_payload = parse_json_text(prev_raw) if prev_raw else None
-        entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
+        entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, batch_id, site_base, topic_by_key))
 
     for rel_path in changed_docs_meta_paths:
         abs_path = repo_root / rel_path
@@ -1300,7 +1309,7 @@ def build_entries_from_working_tree_delta(
         current_payload = load_json_file(abs_path)
         prev_raw = git_show_file_at_revision(repo_root, "HEAD", rel_path)
         prev_payload = parse_json_text(prev_raw) if prev_raw else None
-        entries.extend(diff_docs_entries(current_payload, prev_payload, rel_path, logged_at_iso, site_base, topic_by_key))
+        entries.extend(diff_docs_entries(current_payload, prev_payload, rel_path, logged_at_iso, batch_id, site_base, topic_by_key))
 
     return entries, len(changed_event_paths), len(changed_paper_paths), len(changed_docs_meta_paths)
 
@@ -1318,6 +1327,7 @@ def build_entries_from_history(
 
     for commit in commits:
         logged_at_iso = collapse_ws(run_git(repo_root, ["show", "-s", "--format=%cI", commit]))
+        batch_id = f"commit:{commit}"
         parent = first_parent_of_commit(repo_root, commit)
         changed_paths = changed_json_paths_for_commit(repo_root, commit, parent)
 
@@ -1328,7 +1338,7 @@ def build_entries_from_history(
             prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
             current_payload = parse_json_text(current_raw)
             prev_payload = parse_json_text(prev_raw) if prev_raw else None
-            entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
+            entries.extend(diff_talk_entries(current_payload, prev_payload, logged_at_iso, batch_id, site_base, topic_by_key))
             changed_event_count += 1
 
         for rel_path in sorted(path for path in changed_paths if is_paper_json_path(path)):
@@ -1338,7 +1348,7 @@ def build_entries_from_history(
             prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
             current_payload = parse_json_text(current_raw)
             prev_payload = parse_json_text(prev_raw) if prev_raw else None
-            entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, site_base, topic_by_key))
+            entries.extend(diff_paper_entries(current_payload, prev_payload, logged_at_iso, batch_id, site_base, topic_by_key))
             changed_paper_count += 1
 
         for rel_path in sorted(path for path in changed_paths if is_docs_meta_json_path(path)):
@@ -1348,7 +1358,7 @@ def build_entries_from_history(
             prev_raw = git_show_file_at_revision(repo_root, parent, rel_path) if parent else None
             current_payload = parse_json_text(current_raw)
             prev_payload = parse_json_text(prev_raw) if prev_raw else None
-            entries.extend(diff_docs_entries(current_payload, prev_payload, rel_path, logged_at_iso, site_base, topic_by_key))
+            entries.extend(diff_docs_entries(current_payload, prev_payload, rel_path, logged_at_iso, batch_id, site_base, topic_by_key))
             changed_docs_meta_count += 1
 
     return entries, changed_event_count, changed_paper_count, changed_docs_meta_count
@@ -1385,10 +1395,12 @@ def main() -> int:
             topic_by_key=topic_by_key,
         )
     else:
+        run_batch_id = f"run:{logged_at_iso}"
         new_entries, changed_event_count, changed_paper_count, changed_docs_meta_count = build_entries_from_working_tree_delta(
             repo_root=repo_root,
             site_base=site_base,
             logged_at_iso=logged_at_iso,
+            batch_id=run_batch_id,
             topic_by_key=topic_by_key,
         )
 
