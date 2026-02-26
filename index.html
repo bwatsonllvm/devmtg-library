@@ -74,6 +74,11 @@
       text-align: center;
     }
 
+    .home-main-inner {
+      width: min(760px, 100%);
+      margin: 0 auto;
+    }
+
     .home-main p {
       color: var(--color-text-muted);
       margin: 0;
@@ -93,11 +98,11 @@
       margin: 1.15rem auto 0.95rem;
       border: 0;
       border-top: 1px solid var(--color-border);
-      width: min(720px, 100%);
+      width: 100%;
     }
 
     .home-project-note {
-      width: min(760px, 100%);
+      width: 100%;
       margin: 0 auto;
       text-align: center;
       color: var(--color-text-muted);
@@ -309,19 +314,21 @@
   </section>
 
   <main class="home-main" id="home-root" tabindex="-1">
-    <p>Start typying to search or browse directly:</p>
-    <div class="home-links" aria-label="Browse sections">
-      <a class="home-link-chip" href="talks/">Talks</a>
-      <a class="home-link-chip" href="talks/events.html">Events</a>
-      <a class="home-link-chip" href="papers/">Papers</a>
-      <a class="home-link-chip" href="blogs/">Blogs</a>
-      <a class="home-link-chip" href="docs/">Docs</a>
-      <a class="home-link-chip" href="people/">People</a>
-      <a class="home-link-chip" href="updates/">Updates</a>
-      <a class="home-link-chip" href="about/">About</a>
+    <div class="home-main-inner">
+      <p>Start typying to search or browse directly:</p>
+      <div class="home-links" aria-label="Browse sections">
+        <a class="home-link-chip" href="talks/">Talks</a>
+        <a class="home-link-chip" href="talks/events.html">Events</a>
+        <a class="home-link-chip" href="papers/">Papers</a>
+        <a class="home-link-chip" href="blogs/">Blogs</a>
+        <a class="home-link-chip" href="docs/">Docs</a>
+        <a class="home-link-chip" href="people/">People</a>
+        <a class="home-link-chip" href="updates/">Updates</a>
+        <a class="home-link-chip" href="about/">About</a>
+      </div>
+      <hr class="home-divider" aria-hidden="true">
+      <p class="home-project-note">The LLVM Research Library is an ongoing project by the <a href="https://foundation.llvm.org">LLVM Foundation</a> to collect and organize talks, research, and other materials to support education and advancement in the field of compilers.</p>
     </div>
-    <hr class="home-divider" aria-hidden="true">
-    <p class="home-project-note">The LLVM Research Library is an ongoing project by the <a href="https://foundation.llvm.org">LLVM Foundation</a> to collect and organize talks, research, and other materials to support education and advancement in the field of compilers.</p>
   </main>
 
   <script src="js/shared/library-utils.js?v=20260225-07"></script>
