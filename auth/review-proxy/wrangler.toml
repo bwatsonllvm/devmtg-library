@@ -1,0 +1,14 @@
+name = "llvm-library-review-auth"
+main = "worker.js"
+compatibility_date = "2026-02-26"
+workers_dev = true
+
+[vars]
+# Public origin that serves the static library site.
+UPSTREAM_ORIGIN = "https://bwatsonllvm.github.io/library"
+
+# Comma-separated GitHub logins that can access /papers/review.html.
+ALLOWED_GITHUB_USERS = "bwatsonllvm"
+
+# Optional override (seconds). Default is 28800 (8 hours).
+SESSION_TTL_SECONDS = "28800"

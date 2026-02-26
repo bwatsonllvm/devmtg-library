@@ -1,23 +1,20 @@
 /*
  * paper-review.js
- * Local admin-gated review queue for paper accuracy confirmation.
+ * Admin review queue gated by server-side GitHub auth.
  */
 (function () {
   'use strict';
 
   const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
   const REVIEW_STATE_KEY = 'llvm-hub-paper-review-state-v1';
-  const ADMIN_HASH_KEY = 'llvm-hub-paper-review-admin-hash-v1';
-  const ADMIN_UNLOCK_KEY = 'llvm-hub-paper-review-admin-unlocked-v1';
   const RECENT_REVIEW_LIMIT = 40;
 
   const adminCard = document.getElementById('review-admin-card');
   const adminHint = document.getElementById('review-admin-hint');
-  const adminForm = document.getElementById('review-admin-form');
-  const adminInput = document.getElementById('review-admin-input');
-  const adminSubmit = document.getElementById('review-admin-submit');
-  const adminReset = document.getElementById('review-admin-reset');
   const adminStatus = document.getElementById('review-admin-status');
+  const adminLogin = document.getElementById('review-admin-login');
+  const adminRefresh = document.getElementById('review-admin-refresh');
+  const adminIdentity = document.getElementById('review-admin-identity');
 
   const reviewShell = document.getElementById('review-shell');
   const reviewStats = document.getElementById('review-stats');
@@ -44,7 +41,7 @@
   const recentList = document.getElementById('review-recent-list');
 
   if (
-    !adminCard || !adminHint || !adminForm || !adminInput || !adminSubmit || !adminReset || !adminStatus ||
+    !adminCard || !adminHint || !adminStatus || !adminLogin || !adminRefresh || !adminIdentity ||
     !reviewShell || !reviewStats || !reviewPosition || !reviewStatus || !reviewLockBtn || !reviewResetBtn ||
     !currentCard || !emptyCard || !titleEl || !metaEl || !abstractEl || !authorsEl || !markBtn || !nextBtn ||
     !detailLink || !paperLink || !sourceLink || !editLink || !updateLink || !resetAllBtn || !recentList
@@ -58,6 +55,11 @@
     pending: [],
     currentIndex: 0,
     reviewed: {},
+    auth: {
+      authenticated: false,
+      authorized: false,
+      login: '',
+    },
   };
 
   function escapeHtml(value) {
@@ -81,30 +83,58 @@
     return '';
   }
 
-  function storageGet(key, useSession = false) {
+  function storageGet(key) {
     try {
-      return (useSession ? window.sessionStorage : window.localStorage).getItem(key);
+      return window.localStorage.getItem(key);
     } catch {
       return null;
     }
   }
 
-  function storageSet(key, value, useSession = false) {
+  function storageSet(key, value) {
     try {
-      (useSession ? window.sessionStorage : window.localStorage).setItem(key, value);
+      window.localStorage.setItem(key, value);
       return true;
     } catch {
       return false;
     }
   }
 
-  function storageRemove(key, useSession = false) {
+  function readAuthBase() {
+    const meta = document.querySelector('meta[name="review-auth-base"]');
+    const raw = String(meta && meta.content || '').trim();
+    if (!raw) return '';
     try {
-      (useSession ? window.sessionStorage : window.localStorage).removeItem(key);
-      return true;
+      const resolved = new URL(raw, window.location.href);
+      return resolved.toString().replace(/\/+$/, '');
     } catch {
-      return false;
+      return '';
     }
+  }
+
+  const AUTH_BASE = readAuthBase();
+
+  function authUrl(pathname) {
+    const path = String(pathname || '').trim();
+    if (!path) return window.location.href;
+    if (!AUTH_BASE) return path;
+    return `${AUTH_BASE}${path}`;
+  }
+
+  function currentReturnPath() {
+    return `${window.location.pathname}${window.location.search}`;
+  }
+
+  function buildLoginUrl() {
+    const url = new URL(authUrl('/auth/review/login'), window.location.href);
+    url.searchParams.set('return_to', currentReturnPath());
+    return url.toString();
+  }
+
+  function buildLogoutUrl() {
+    const url = new URL(authUrl('/auth/review/logout'), window.location.href);
+    url.searchParams.set('return_to', currentReturnPath());
+    return url.toString();
   }
 
   function setAdminStatus(message, kind) {
@@ -203,7 +233,7 @@
 
   function loadReviewState() {
     const fallback = { reviewed: {} };
-    const raw = storageGet(REVIEW_STATE_KEY, false);
+    const raw = storageGet(REVIEW_STATE_KEY);
     if (!raw) return fallback;
     try {
       const parsed = JSON.parse(raw);
@@ -228,7 +258,7 @@
 
   function saveReviewState() {
     const payload = { reviewed: state.reviewed };
-    storageSet(REVIEW_STATE_KEY, JSON.stringify(payload), false);
+    storageSet(REVIEW_STATE_KEY, JSON.stringify(payload));
   }
 
   function isReviewed(paperId) {
@@ -458,41 +488,6 @@
     renderQueue();
   }
 
-  async function hashText(value) {
-    const raw = String(value || '');
-    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
-      const data = new TextEncoder().encode(raw);
-      const digest = await window.crypto.subtle.digest('SHA-256', data);
-      const bytes = new Uint8Array(digest);
-      return Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    let hash = 2166136261;
-    for (let i = 0; i < raw.length; i += 1) {
-      hash ^= raw.charCodeAt(i);
-      hash = Math.imul(hash, 16777619);
-    }
-    return `fallback-${(hash >>> 0).toString(16)}`;
-  }
-
-  function adminConfigured() {
-    return !!String(storageGet(ADMIN_HASH_KEY, false) || '').trim();
-  }
-
-  function adminUnlocked() {
-    return storageGet(ADMIN_UNLOCK_KEY, true) === '1';
-  }
-
-  function configureAdminUi() {
-    const configured = adminConfigured();
-    adminHint.textContent = configured
-      ? 'Enter your admin passphrase to unlock this review queue.'
-      : 'Set an admin passphrase for this browser to protect the review queue.';
-    adminSubmit.textContent = configured ? 'Unlock Queue' : 'Set Passphrase & Unlock';
-    adminReset.classList.toggle('hidden', !configured);
-    setAdminStatus('', '');
-  }
-
   async function ensureDataLoaded() {
     if (state.initialized) return;
     if (typeof window.loadPaperData !== 'function') {
@@ -510,80 +505,136 @@
     state.initialized = true;
   }
 
-  async function unlockQueue() {
+  async function fetchAuthSession() {
+    const endpoint = authUrl('/auth/review/session');
     try {
-      await ensureDataLoaded();
-      adminCard.classList.add('hidden');
-      reviewShell.classList.remove('hidden');
-      setReviewStatus('', '');
-      renderQueue();
-    } catch (err) {
-      setAdminStatus(err && err.message ? err.message : 'Failed to load papers.', 'error');
-    }
-  }
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        credentials: 'include',
+        headers: { Accept: 'application/json' },
+      });
 
-  function lockQueue() {
-    storageRemove(ADMIN_UNLOCK_KEY, true);
-    reviewShell.classList.add('hidden');
-    adminCard.classList.remove('hidden');
-    adminInput.value = '';
-    configureAdminUi();
-  }
-
-  adminForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const passphrase = String(adminInput.value || '').trim();
-    if (passphrase.length < 6) {
-      setAdminStatus('Passphrase must be at least 6 characters.', 'error');
-      return;
-    }
-
-    const storedHash = String(storageGet(ADMIN_HASH_KEY, false) || '').trim();
-    const incomingHash = await hashText(passphrase);
-
-    if (!storedHash) {
-      if (!storageSet(ADMIN_HASH_KEY, incomingHash, false)) {
-        setAdminStatus('Could not save admin passphrase in this browser.', 'error');
-        return;
+      if (!response.ok) {
+        return {
+          ok: false,
+          error: `Auth endpoint returned HTTP ${response.status}.`,
+          authenticated: false,
+          authorized: false,
+          login: '',
+          reason: '',
+        };
       }
-      storageSet(ADMIN_UNLOCK_KEY, '1', true);
-      setAdminStatus('Admin passphrase set. Queue unlocked.', 'success');
-      adminInput.value = '';
-      await unlockQueue();
-      return;
+
+      const contentType = String(response.headers.get('content-type') || '').toLowerCase();
+      if (!contentType.includes('application/json')) {
+        return {
+          ok: false,
+          error: 'Auth endpoint did not return JSON.',
+          authenticated: false,
+          authorized: false,
+          login: '',
+          reason: '',
+        };
+      }
+
+      const payload = await response.json();
+      const authenticated = !!payload.authenticated;
+      const authorized = !!payload.authorized;
+      const login = String(payload.login || '').trim();
+      const reason = String(payload.reason || '').trim();
+      return { ok: true, authenticated, authorized, login, reason };
+    } catch (err) {
+      return {
+        ok: false,
+        error: err && err.message ? err.message : 'Could not reach auth endpoint.',
+        authenticated: false,
+        authorized: false,
+        login: '',
+        reason: '',
+      };
     }
+  }
 
-    if (storedHash !== incomingHash) {
-      setAdminStatus('Incorrect passphrase.', 'error');
-      return;
-    }
+  function setAuthLinks() {
+    adminLogin.href = buildLoginUrl();
+    adminLogin.rel = 'noopener noreferrer';
+    reviewLockBtn.textContent = 'Sign Out';
+  }
 
-    storageSet(ADMIN_UNLOCK_KEY, '1', true);
-    setAdminStatus('Queue unlocked.', 'success');
-    adminInput.value = '';
-    await unlockQueue();
-  });
-
-  adminReset.addEventListener('click', () => {
-    const confirmed = window.confirm('Reset admin passphrase for this browser? You will need to set a new one.');
-    if (!confirmed) return;
-    storageRemove(ADMIN_HASH_KEY, false);
-    storageRemove(ADMIN_UNLOCK_KEY, true);
+  function showAuthGate(sessionResult) {
     reviewShell.classList.add('hidden');
     adminCard.classList.remove('hidden');
-    adminInput.value = '';
-    configureAdminUi();
-    setAdminStatus('Admin passphrase reset for this browser.', 'success');
-  });
 
-  reviewLockBtn.addEventListener('click', lockQueue);
+    adminIdentity.textContent = AUTH_BASE
+      ? `Auth service: ${AUTH_BASE}`
+      : 'Auth service: same origin (/auth/review/*)';
+
+    if (!sessionResult.ok) {
+      adminHint.textContent = 'Sign in with an allowlisted GitHub account to access this queue.';
+      setAdminStatus(`${sessionResult.error} If this is GitHub Pages directly, use the worker-protected domain.`, 'error');
+      return;
+    }
+
+    if (!sessionResult.authenticated) {
+      adminHint.textContent = 'Sign in with an allowlisted GitHub account to access this queue.';
+      setAdminStatus('', '');
+      return;
+    }
+
+    if (!sessionResult.authorized) {
+      const login = sessionResult.login ? ` (${sessionResult.login})` : '';
+      adminHint.textContent = `Signed in${login}, but this account is not allowlisted for review access.`;
+      setAdminStatus('Your GitHub account is authenticated but not authorized.', 'error');
+      return;
+    }
+
+    adminHint.textContent = 'Sign in with an allowlisted GitHub account to access this queue.';
+    setAdminStatus('', '');
+  }
+
+  async function showQueue(sessionResult) {
+    state.auth.authenticated = true;
+    state.auth.authorized = true;
+    state.auth.login = sessionResult.login;
+    adminIdentity.textContent = sessionResult.login
+      ? `Authenticated as @${sessionResult.login}`
+      : 'Authenticated';
+    adminCard.classList.add('hidden');
+    reviewShell.classList.remove('hidden');
+    await ensureDataLoaded();
+    setReviewStatus('', '');
+    renderQueue();
+  }
+
+  async function refreshAuthAndRender() {
+    setAuthLinks();
+    setAdminStatus('Checking admin session...', '');
+    const session = await fetchAuthSession();
+    if (session.ok && session.authenticated && session.authorized) {
+      try {
+        await showQueue(session);
+      } catch (err) {
+        reviewShell.classList.add('hidden');
+        adminCard.classList.remove('hidden');
+        setAdminStatus(err && err.message ? err.message : 'Failed to load review queue data.', 'error');
+      }
+      return;
+    }
+    showAuthGate(session);
+  }
+
+  function signOut() {
+    window.location.href = buildLogoutUrl();
+  }
+
+  adminRefresh.addEventListener('click', () => {
+    refreshAuthAndRender();
+  });
+  reviewLockBtn.addEventListener('click', signOut);
   reviewResetBtn.addEventListener('click', resetAllReviews);
   resetAllBtn.addEventListener('click', resetAllReviews);
   markBtn.addEventListener('click', markCurrentReviewed);
   nextBtn.addEventListener('click', moveToNext);
 
-  configureAdminUi();
-  if (adminConfigured() && adminUnlocked()) {
-    unlockQueue();
-  }
+  refreshAuthAndRender();
 })();

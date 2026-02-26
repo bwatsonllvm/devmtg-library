@@ -309,6 +309,7 @@
   </style>
   <title>Review Queue - LLVM Research Library</title>
   <meta name="description" content="Admin review queue for paper accuracy checks and confirmation.">
+  <meta name="review-auth-base" content="">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -468,19 +469,13 @@
   <main id="main-content" class="review-main" tabindex="-1">
     <section class="review-card" id="review-admin-card" aria-labelledby="review-admin-heading">
       <h2 id="review-admin-heading">Admin Access</h2>
-      <p id="review-admin-hint">Set an admin passphrase for this browser to protect the review queue.</p>
-      <form class="review-admin-form" id="review-admin-form">
-        <label class="review-field" for="review-admin-input">
-          <span class="review-label">Admin passphrase</span>
-          <input id="review-admin-input" class="review-input" type="password" autocomplete="current-password" required>
-        </label>
-        <div class="review-actions">
-          <button type="submit" class="review-btn primary" id="review-admin-submit">Unlock Queue</button>
-          <button type="button" class="review-btn hidden" id="review-admin-reset">Reset passphrase</button>
-        </div>
-      </form>
+      <p id="review-admin-hint">Sign in with an allowlisted GitHub account to access this queue.</p>
+      <div class="review-actions">
+        <a class="review-btn primary" id="review-admin-login" href="#">Sign in with GitHub</a>
+        <button type="button" class="review-btn" id="review-admin-refresh">Retry Session</button>
+      </div>
       <div class="review-status" id="review-admin-status" role="status" aria-live="polite"></div>
-      <p class="review-note">This is a local browser gate for admin workflow convenience and is not server-side authentication.</p>
+      <p class="review-note" id="review-admin-identity">Server-side auth required.</p>
     </section>
 
     <section class="hidden" id="review-shell" aria-label="Review queue content">
@@ -491,7 +486,7 @@
             <div class="review-position" id="review-position">Queue position 0 of 0 pending</div>
           </div>
           <div class="review-actions">
-            <button type="button" class="review-btn" id="review-lock-btn">Lock Queue</button>
+            <button type="button" class="review-btn" id="review-lock-btn">Sign Out</button>
             <button type="button" class="review-btn" id="review-reset-btn">Reset Reviewed Marks</button>
           </div>
         </div>
@@ -539,6 +534,6 @@
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/papers-data.js?v=b7e926cee2db"></script>
   <script src="js/shared/global-search.js?v=6aee01784996"></script>
-  <script src="js/paper-review.js?v=8fd840ef05c2"></script>
+  <script src="js/paper-review.js?v=deeebd53bfea"></script>
 </body>
 </html>
