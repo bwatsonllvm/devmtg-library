@@ -2720,11 +2720,20 @@ function renderPaperCard(paper) {
   const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl || '');
   const sourceHref = sanitizeExternalUrl(paper.sourceUrl);
   const paperHref = sanitizeExternalUrl(paper.paperUrl);
-  const sourceLink = !blogEntry && sourceIsPdf && !paperIsPdf && sourceHref && sourceHref !== paperHref
-    ? `<a href="${escapeHtml(sourceHref)}" class="card-link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">PDF</span></a>`
+  const detailHref = `papers/paper.html?id=${encodeURIComponent(paper.id || '')}&from=${listingFrom}`;
+  const directPdfHref = !blogEntry
+    ? (paperIsPdf && paperHref
+      ? paperHref
+      : (sourceIsPdf && sourceHref ? sourceHref : ''))
     : '';
-  const paperActionLabel = blogEntry ? 'Post' : (paperIsPdf ? 'PDF' : 'Paper');
-  const paperLink = paperHref
+  const pdfLink = directPdfHref
+    ? `<a href="${escapeHtml(directPdfHref)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open PDF for ${titleEsc} (opens in new tab)"><span aria-hidden="true">PDF</span></a>`
+    : '';
+  const detailLink = (!blogEntry && directPdfHref)
+    ? `<a href="${escapeHtml(detailHref)}" class="card-link-btn" aria-label="Open detail page for ${titleEsc}"><span aria-hidden="true">Detail</span></a>`
+    : '';
+  const paperActionLabel = blogEntry ? 'Post' : 'Paper';
+  const paperLink = (paperHref && !directPdfHref)
     ? `<a href="${escapeHtml(paperHref)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
   const adminLinks = buildPaperAdminLinks(paper);
@@ -2741,7 +2750,7 @@ function renderPaperCard(paper) {
 
   return `
     <article class="talk-card paper-card">
-      <a href="papers/paper.html?id=${escapeHtml(paper.id || '')}&from=${listingFrom}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
+      <a href="${escapeHtml(detailHref)}" class="card-link-wrap" aria-label="${titleEsc}${authorLabel ? ` by ${escapeHtml(authorLabel)}` : ''}">
         <div class="card-body">
           <div class="card-meta">
             <span class="badge ${blogEntry ? 'badge-blog' : 'badge-paper'}">${blogEntry ? 'Blog' : 'Paper'}</span>
@@ -2754,7 +2763,7 @@ function renderPaperCard(paper) {
       </a>
       ${authorsHtml ? `<p class="card-speakers paper-authors">${authorsHtml}</p>` : ''}
       ${renderTagLinks(topics)}
-      ${(paperLink || sourceLink || editLink || updateByUrlLink || citationHtml) ? `<div class="card-footer">${paperLink}${sourceLink}${editLink}${updateByUrlLink}${citationHtml}</div>` : ''}
+      ${(pdfLink || detailLink || paperLink || editLink || updateByUrlLink || citationHtml) ? `<div class="card-footer">${pdfLink}${detailLink}${paperLink}${editLink}${updateByUrlLink}${citationHtml}</div>` : ''}
     </article>`;
 }
 
