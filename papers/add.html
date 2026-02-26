@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <base href="../">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      try {
+        var storedTheme = localStorage.getItem('llvm-hub-theme-preference');
+        var themePreference = (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system')
+          ? storedTheme
+          : 'system';
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var resolvedTheme = themePreference === 'system' ? (prefersDark ? 'dark' : 'light') : themePreference;
+        var storedTextSize = localStorage.getItem('llvm-hub-text-size');
+        var textSize = (storedTextSize === 'small' || storedTextSize === 'large') ? storedTextSize : 'default';
+
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
+        document.documentElement.setAttribute('data-theme-preference', themePreference);
+        if (textSize === 'default') {
+          document.documentElement.removeAttribute('data-text-size');
+        } else {
+          document.documentElement.setAttribute('data-text-size', textSize);
+        }
+        document.documentElement.style.backgroundColor = resolvedTheme === 'dark' ? '#000000' : '#f5f5f5';
+      } catch (_) {
+        var fallbackDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var fallbackTheme = fallbackDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', fallbackTheme);
+        document.documentElement.setAttribute('data-theme-preference', 'system');
+        document.documentElement.style.backgroundColor = fallbackTheme === 'dark' ? '#000000' : '#f5f5f5';
+      }
+    })();
+  </script>
+  <style>
+    html { background: #f5f5f5; }
+    html[data-theme="dark"] { background: #000000; }
+    body { background: transparent; }
+
+    .manual-paper-main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+
+    .manual-paper-shell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .manual-paper-card {
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      background: var(--color-surface);
+      padding: 1rem;
+    }
+
+    .manual-paper-card h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.06rem;
+      line-height: 1.3;
+    }
+
+    .manual-paper-card p {
+      margin: 0 0 0.75rem;
+      color: var(--color-text-muted);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .manual-paper-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .manual-paper-field {
+      display: grid;
+      gap: 0.34rem;
+    }
+
+    .manual-paper-field.manual-span-2 {
+      grid-column: 1 / -1;
+    }
+
+    .manual-paper-label {
+      color: var(--color-text-muted);
+      font-size: 0.77rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .manual-paper-input,
+    .manual-paper-select,
+    .manual-paper-textarea {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface);
+      color: var(--color-text);
+      padding: 0.58rem 0.66rem;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .manual-paper-textarea {
+      resize: vertical;
+      min-height: 84px;
+    }
+
+    .manual-paper-input:focus,
+    .manual-paper-select:focus,
+    .manual-paper-textarea:focus {
+      outline: none;
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 3px var(--color-field-focus-ring);
+    }
+
+    .manual-paper-hint {
+      color: var(--color-text-muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .manual-paper-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+
+    .manual-paper-btn {
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      padding: 0.48rem 0.74rem;
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-size: 0.86rem;
+      font-weight: 600;
+      line-height: 1.3;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .manual-paper-btn:hover {
+      color: var(--color-accent);
+      border-color: var(--color-border-focus);
+      background: var(--color-accent-bg);
+    }
+
+    .manual-paper-btn.primary {
+      background: var(--color-primary-btn-bg);
+      border-color: var(--color-primary-btn-border);
+      color: var(--color-primary-btn-text);
+    }
+
+    .manual-paper-btn.primary:hover {
+      background: var(--color-primary-btn-hover-bg);
+      border-color: var(--color-primary-btn-hover-border);
+      color: var(--color-primary-btn-hover-text);
+    }
+
+    .manual-paper-output {
+      width: 100%;
+      min-height: 240px;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface-subtle);
+      color: var(--color-text);
+      padding: 0.7rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.45;
+      resize: vertical;
+    }
+
+    .manual-paper-cli {
+      margin: 0.65rem 0 0;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface-subtle);
+      color: var(--color-text);
+      padding: 0.65rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .manual-paper-status {
+      margin-top: 0.56rem;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      color: var(--color-text-muted);
+      min-height: 1.4rem;
+    }
+
+    .manual-paper-status.error {
+      color: var(--color-error);
+    }
+
+    .manual-paper-status.success {
+      color: var(--color-success);
+    }
+
+    .manual-paper-top-actions {
+      margin-top: 0.42rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.48rem;
+    }
+
+    @media (max-width: 900px) {
+      .manual-paper-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <title>Add Manual Paper - LLVM Research Library</title>
+  <meta name="description" content="Add manual paper metadata and generate a workflow payload to open a pull request.">
+  <link rel="icon" type="image/png" href="images/llvm-favicon.png">
+  <link rel="shortcut icon" href="images/llvm-favicon.png">
+  <link rel="apple-touch-icon" href="images/llvm-favicon.png">
+  <link rel="stylesheet" href="css/style.css?v=fa4c08a9e23b">
+</head>
+<body data-content-scope="paper">
+  <nav class="skip-links" aria-label="Skip links">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+  </nav>
+
+  <header class="site-header">
+    <a href="index.html" class="site-logo" aria-label="LLVM Research Library home">
+      <img src="images/llvm-logo.png" alt="LLVM Foundation logo" class="site-logo-img">
+      <span>LLVM Research Library</span>
+    </a>
+
+    <form class="global-search-form" action="work.html" method="get" role="search" aria-label="Search All across talks, papers, blogs, docs, people, and key topics">
+      <input type="hidden" name="mode" value="search">
+      <input
+        type="search"
+        class="global-search-input"
+        name="q"
+        placeholder="Search the full library..."
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Search All across talks, papers, blogs, docs, people, and key topics"
+      >
+      <button class="global-search-submit" type="submit" aria-label="Run Search All">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+    </form>
+
+<nav class="site-nav" aria-label="Main navigation">
+      <a href="talks/" class="nav-link" aria-label="Talks">
+        <span aria-hidden="true">Talks</span>
+      </a>
+      <a href="talks/events.html" class="nav-link" aria-label="Events">
+        <span aria-hidden="true">Events</span>
+      </a>
+      <a href="papers/" class="nav-link" aria-label="Papers">
+        <span aria-hidden="true">Papers</span>
+      </a>
+      <a href="blogs/" class="nav-link" aria-label="Blogs">
+        <span aria-hidden="true">Blogs</span>
+      </a>
+      <div class="nav-dropdown nav-dropdown-docs">
+        <a href="docs/" class="nav-link nav-dropdown-toggle" aria-label="Documentation">
+          <span aria-hidden="true">Docs</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </a>
+        <div class="nav-dropdown-menu" role="menu" aria-label="Docs sources">
+          <a href="docs/" class="nav-dropdown-link" role="menuitem">LLVM Core</a>
+          <a href="docs/clang/" class="nav-dropdown-link" role="menuitem">Clang</a>
+          <a href="docs/lldb/" class="nav-dropdown-link" role="menuitem">LLDB</a>
+        </div>
+      </div>
+      <a href="people/" class="nav-link" aria-label="People">
+        <span aria-hidden="true">People</span>
+      </a>
+      <span class="site-nav-separator" aria-hidden="true">|</span>
+      <a href="updates/" class="nav-link" aria-label="Update log">
+        <span aria-hidden="true">Updates</span>
+      </a>
+      <a href="about/" class="nav-link" aria-label="About this site">
+        <span aria-hidden="true">About</span>
+      </a>
+    </nav>
+
+
+    <div class="mobile-nav-menu" id="mobile-nav-menu">
+      <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="mobile-nav-panel">
+        Browse
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+            <div class="mobile-nav-panel" id="mobile-nav-panel" hidden>
+        <a href="talks/" class="mobile-nav-link">Talks</a>
+        <a href="talks/events.html" class="mobile-nav-link">Events</a>
+        <a href="papers/" class="mobile-nav-link">Papers</a>
+        <a href="blogs/" class="mobile-nav-link">Blogs</a>
+        <a href="docs/" class="mobile-nav-link">Docs: LLVM Core</a>
+        <a href="docs/clang/" class="mobile-nav-link">Docs: Clang</a>
+        <a href="docs/lldb/" class="mobile-nav-link">Docs: LLDB</a>
+        <a href="people/" class="mobile-nav-link">People</a>
+        <a href="updates/" class="mobile-nav-link">Updates</a>
+        <a href="about/" class="mobile-nav-link">About</a>
+      </div>
+
+    </div>
+
+    <div class="header-right">
+      <div class="share-menu" id="share-menu">
+        <button class="header-action-btn share-toggle" id="share-btn" aria-label="Share this page" title="Share" aria-haspopup="true" aria-expanded="false" aria-controls="share-panel">
+          Share
+        </button>
+        <div class="share-panel" id="share-panel" hidden>
+          <button class="share-option" id="share-native-share" type="button" hidden>Share via device</button>
+          <button class="share-option" id="share-copy-link" type="button">Copy link</button>
+          <a class="share-option" id="share-email-link" href="#">Email</a>
+          <a class="share-option" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">Share on X</a>
+          <a class="share-option" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">Share on LinkedIn</a>
+        </div>
+      </div>
+      <div class="customization-menu" id="customization-menu">
+        <button class="customization-toggle" id="customization-toggle" aria-label="Display settings" title="Display settings" aria-haspopup="true" aria-expanded="false" aria-controls="customization-panel">
+          <svg class="icon-customize" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+            <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+            <line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/>
+          </svg>
+        </button>
+        <div class="customization-panel" id="customization-panel" hidden>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-theme-select">Theme</label>
+            <select class="customization-select" id="custom-theme-select" aria-label="Theme preference">
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div class="customization-group">
+            <label class="customization-label" for="custom-text-size-select">Text Size</label>
+            <select class="customization-select" id="custom-text-size-select" aria-label="Text size">
+              <option value="small">Small</option>
+              <option value="default">Default</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <button class="customization-reset" id="custom-reset-display" type="button">Reset display settings</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="search-hero search-hero--compact" aria-label="Manual paper intake">
+    <div class="search-hero-shell">
+      <div class="search-hero-title-row">
+        <h1>Add Manual Paper</h1>
+        <p class="search-hero-title-aside">Generate payload for automated PR intake</p>
+      </div>
+      <p class="subtitle">
+        Fast path: open the GitHub Action and provide only <code>source_url</code> to auto-extract metadata.
+        If needed, add <code>overrides_json</code> or generate full <code>paper_json</code> below.
+      </p>
+      <div class="manual-paper-top-actions">
+        <a href="papers/" class="empty-action-btn">Back to Papers</a>
+        <a href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" target="_blank" rel="noopener noreferrer" class="empty-action-btn" id="manual-paper-workflow-link-top">Open Manual Intake Action</a>
+      </div>
+    </div>
+  </section>
+
+  <main id="main-content" class="manual-paper-main" tabindex="-1">
+    <div class="manual-paper-shell">
+      <section class="manual-paper-card" aria-labelledby="manual-input-heading">
+        <h2 id="manual-input-heading">Paper Metadata</h2>
+        <p>Provide all fields used by our paper schema. Required fields are validated before payload generation.</p>
+        <form id="manual-paper-form" novalidate>
+          <div class="manual-paper-grid">
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Source slug</span>
+              <input id="mp-source" class="manual-paper-input" value="manual-added">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Source name</span>
+              <input id="mp-source-name" class="manual-paper-input" value="Manual Added Papers">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Record ID (optional)</span>
+              <input id="mp-id" class="manual-paper-input" placeholder="manual-year-paper-title">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Type</span>
+              <select id="mp-type" class="manual-paper-select">
+                <option value="research-paper" selected>research-paper</option>
+                <option value="thesis">thesis</option>
+                <option value="report">report</option>
+                <option value="other">other</option>
+              </select>
+            </label>
+            <label class="manual-paper-field manual-span-2">
+              <span class="manual-paper-label">Title (required)</span>
+              <input id="mp-title" class="manual-paper-input" required>
+            </label>
+            <label class="manual-paper-field manual-span-2">
+              <span class="manual-paper-label">Authors (required)</span>
+              <textarea id="mp-authors" class="manual-paper-textarea" required placeholder="One author per line. Format: Name | Affiliation A ; Affiliation B"></textarea>
+              <span class="manual-paper-hint">Example: <code>Tobias Grosser | Universitat Passau ; Ohio State University</code></span>
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Year (required)</span>
+              <input id="mp-year" class="manual-paper-input" required placeholder="2026">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Citation count</span>
+              <input id="mp-citation-count" class="manual-paper-input" type="number" min="0" step="1" value="0">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Publication</span>
+              <input id="mp-publication" class="manual-paper-input" placeholder="PLDI">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Venue</span>
+              <input id="mp-venue" class="manual-paper-input" placeholder="PLDI 2026">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Paper URL (required)</span>
+              <input id="mp-paper-url" class="manual-paper-input" required placeholder="https://.../paper.pdf">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Source URL (required)</span>
+              <input id="mp-source-url" class="manual-paper-input" required placeholder="https://.../publication-page">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">DOI</span>
+              <input id="mp-doi" class="manual-paper-input" placeholder="10.xxxx/xxxx">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">OpenAlex ID</span>
+              <input id="mp-openalex-id" class="manual-paper-input" placeholder="W123... or https://openalex.org/W123...">
+            </label>
+            <label class="manual-paper-field manual-span-2">
+              <span class="manual-paper-label">Abstract</span>
+              <textarea id="mp-abstract" class="manual-paper-textarea" placeholder="Abstract text..."></textarea>
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Tags</span>
+              <input id="mp-tags" class="manual-paper-input" placeholder="LLVM, Polly, OpenMP">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Keywords</span>
+              <input id="mp-keywords" class="manual-paper-input" placeholder="Loop optimization, SIMD, ...">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Matched Authors</span>
+              <input id="mp-matched-authors" class="manual-paper-input" placeholder="Author A, Author B">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Matched Subprojects</span>
+              <input id="mp-matched-subprojects" class="manual-paper-input" placeholder="mlir, lldb, llvm">
+            </label>
+            <label class="manual-paper-field">
+              <span class="manual-paper-label">Content format</span>
+              <select id="mp-content-format" class="manual-paper-select">
+                <option value="">(none)</option>
+                <option value="markdown" selected>markdown</option>
+                <option value="text">text</option>
+                <option value="html">html</option>
+              </select>
+            </label>
+            <label class="manual-paper-field manual-span-2">
+              <span class="manual-paper-label">Content</span>
+              <textarea id="mp-content" class="manual-paper-textarea" placeholder="Optional markdown content (extra links, notes, etc.)"></textarea>
+            </label>
+          </div>
+          <div class="manual-paper-actions">
+            <button type="button" class="manual-paper-btn primary" id="mp-generate-btn">Generate JSON Payload</button>
+            <button type="reset" class="manual-paper-btn" id="mp-reset-btn">Reset Form</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="manual-paper-card" aria-labelledby="manual-output-heading">
+        <h2 id="manual-output-heading">Workflow Payload + PR Trigger</h2>
+        <p>
+          Fastest: run the workflow with only <code>source_url</code>. Optional: paste generated JSON into <code>paper_json</code> and/or <code>overrides_json</code> on the
+          <a href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" id="manual-paper-workflow-link-inline" target="_blank" rel="noopener noreferrer">Manual Paper Intake workflow</a>.
+        </p>
+        <textarea id="mp-json-output" class="manual-paper-output" readonly aria-label="Generated paper JSON payload"></textarea>
+        <div class="manual-paper-actions">
+          <button type="button" class="manual-paper-btn" id="mp-copy-btn">Copy JSON</button>
+          <a href="https://github.com/llvm/library/actions/workflows/manual-paper-pr.yml" target="_blank" rel="noopener noreferrer" class="manual-paper-btn">Open GitHub Action</a>
+        </div>
+        <div class="manual-paper-status" id="mp-status" role="status" aria-live="polite"></div>
+        <pre class="manual-paper-cli" id="mp-gh-cli"></pre>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
+  <script src="js/shared/global-search.js?v=e5c202108124"></script>
+  <script src="js/paper-manual-add.js?v=bbac3ac300d4"></script>
+</body>
+</html>
