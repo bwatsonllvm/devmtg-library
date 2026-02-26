@@ -17,6 +17,7 @@ import ssl
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
@@ -61,6 +62,9 @@ PRESERVED_STATIC_RELATIVE_PATHS: tuple[str, ...] = (
     "_static/docs-known-broken-links.txt",
     "_static/docs-sync-meta.json",
 )
+
+DEFAULT_NETWORK_RETRIES = 2
+DEFAULT_RETRY_BACKOFF_SECONDS = 2.0
 
 
 def parse_args() -> argparse.Namespace:
@@ -136,6 +140,9 @@ def run(
     *,
     cwd: Path | None = None,
     env: dict[str, str] | None = None,
+    retries: int = 0,
+    retry_backoff_seconds: float = DEFAULT_RETRY_BACKOFF_SECONDS,
+    retry_label: str = "",
 ) -> None:
     rendered = " ".join(cmd)
     print(f"+ {rendered}")
@@ -143,12 +150,26 @@ def run(
     if env:
         merged_env = os.environ.copy()
         merged_env.update(env)
-    subprocess.run(
-        cmd,
-        cwd=str(cwd) if cwd else None,
-        env=merged_env,
-        check=True,
-    )
+    attempts = max(int(retries), 0) + 1
+    label = retry_label or (cmd[0] if cmd else "command")
+    for attempt in range(1, attempts + 1):
+        try:
+            subprocess.run(
+                cmd,
+                cwd=str(cwd) if cwd else None,
+                env=merged_env,
+                check=True,
+            )
+            return
+        except subprocess.CalledProcessError:
+            if attempt >= attempts:
+                raise
+            delay = float(retry_backoff_seconds) * (2 ** (attempt - 1))
+            print(
+                f"WARNING: {label} failed "
+                f"(attempt {attempt}/{attempts}); retrying in {delay:.1f}s..."
+            )
+            time.sleep(delay)
 
 
 def run_capture(cmd: list[str], *, cwd: Path | None = None) -> str:
@@ -211,7 +232,7 @@ def parse_requested_variants(raw: str) -> list[DocsVariant]:
     return [VARIANT_BY_ID[variant_id] for variant_id in requested]
 
 
-def fetch_github_json(url: str, token: str, timeout: int = 25) -> object | None:
+def fetch_github_json(url: str, token: str, timeout: int = 25, retries: int = DEFAULT_NETWORK_RETRIES) -> object | None:
     headers = {
         "Accept": "application/vnd.github+json",
         "User-Agent": "llvm-library-docs-repo-sync/1.0",
@@ -219,21 +240,31 @@ def fetch_github_json(url: str, token: str, timeout: int = 25) -> object | None:
     if token:
         headers["Authorization"] = f"Bearer {token}"
     request = urllib.request.Request(url, headers=headers, method="GET")
-    try:
-        with urllib.request.urlopen(
-            request,
-            timeout=timeout,
-            context=ssl.create_default_context(),
-        ) as response:
-            raw = response.read().decode("utf-8", errors="replace")
-    except Exception as exc:  # noqa: BLE001
-        print(f"WARNING: GitHub API request failed ({url}): {exc}")
-        return None
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        print(f"WARNING: GitHub API returned invalid JSON ({url})")
-        return None
+    attempts = max(int(retries), 0) + 1
+    for attempt in range(1, attempts + 1):
+        try:
+            with urllib.request.urlopen(
+                request,
+                timeout=timeout,
+                context=ssl.create_default_context(),
+            ) as response:
+                raw = response.read().decode("utf-8", errors="replace")
+            try:
+                return json.loads(raw)
+            except json.JSONDecodeError:
+                print(f"WARNING: GitHub API returned invalid JSON ({url})")
+                return None
+        except Exception as exc:  # noqa: BLE001
+            if attempt >= attempts:
+                print(f"WARNING: GitHub API request failed ({url}): {exc}")
+                return None
+            delay = DEFAULT_RETRY_BACKOFF_SECONDS * (2 ** (attempt - 1))
+            print(
+                f"WARNING: GitHub API request failed ({url}) "
+                f"(attempt {attempt}/{attempts}); retrying in {delay:.1f}s... ({exc})"
+            )
+            time.sleep(delay)
+    return None
 
 
 def fetch_latest_path_commit(repo_name: str, ref: str, source_path: str, token: str) -> str:
@@ -309,7 +340,9 @@ def ensure_repo_clone(
             source_ref,
             source_repo_url,
             str(checkout_dir),
-        ]
+        ],
+        retries=DEFAULT_NETWORK_RETRIES,
+        retry_label="git clone llvm-project",
     )
     run(["git", "-C", str(checkout_dir), "sparse-checkout", "init", "--cone"])
     run(["git", "-C", str(checkout_dir), "sparse-checkout", "set", *sparse_paths])
@@ -657,7 +690,11 @@ def main() -> int:
                     raise SystemExit(f"Failed to create virtualenv python: {venv_python}")
                 build_python = str(venv_python)
 
-            run([build_python, "-m", "pip", "install", "--upgrade", "pip"])
+            run(
+                [build_python, "-m", "pip", "install", "--upgrade", "pip"],
+                retries=DEFAULT_NETWORK_RETRIES,
+                retry_label="pip install --upgrade pip",
+            )
 
             requirement_paths: list[Path] = []
             seen_req_paths: set[Path] = set()
@@ -673,7 +710,11 @@ def main() -> int:
             if not requirement_paths:
                 raise SystemExit("No upstream docs requirements files found.")
             for requirements in requirement_paths:
-                run([build_python, "-m", "pip", "install", "-r", str(requirements)])
+                run(
+                    [build_python, "-m", "pip", "install", "-r", str(requirements)],
+                    retries=DEFAULT_NETWORK_RETRIES,
+                    retry_label=f"pip install -r {requirements.name}",
+                )
 
         build_root = temp_root_path / "build"
         built_outputs: dict[str, Path] = {}
