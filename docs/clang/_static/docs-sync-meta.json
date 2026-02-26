@@ -7,11 +7,11 @@
     "tag": "llvmorg-22.1.0",
     "version": "22.1.0"
   },
-  "sourceHeadRevision": "25ebf5e9d27510566dda2cba6585a6064beec878",
+  "sourceHeadRevision": "3c566a698ad0cb52ee814156f09ccdfa81266771",
   "sourcePath": "clang/docs",
   "sourceRef": "main",
   "sourceRepo": "llvm/llvm-project",
-  "sourceRevision": "4a8d5327ff69e43f35ea516a372fb59c30a3e2cb",
+  "sourceRevision": "fb371ce258d390716a653b8c63649526b9b5831f",
   "sourceUrl": "https://clang.llvm.org/docs/",
-  "syncedAt": "2026-02-25T23:25:01Z"
+  "syncedAt": "2026-02-26T09:12:40Z"
 }
