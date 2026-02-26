@@ -2,15 +2,15 @@
   "meta": {
     "source": "scripts/generate-autocomplete-index.py",
     "talkCount": 1643,
-    "paperCount": 3585,
+    "paperCount": 3586,
     "entryCount": {
       "topics": 800,
       "people": 6000,
       "talks": 1566,
-      "papers": 3505,
+      "papers": 3506,
       "docs": 4500
     },
-    "generatedAt": "2026-02-26T17:26:37Z"
+    "generatedAt": "2026-02-26T18:15:23Z"
   },
   "topics": [
     {
@@ -4884,6 +4884,10 @@
       "count": 5
     },
     {
+      "label": "Pekka Jääskeläinen",
+      "count": 5
+    },
+    {
       "label": "Peng Li",
       "count": 5
     },
@@ -5741,10 +5745,6 @@
     },
     {
       "label": "Pawel K. Radtke",
-      "count": 4
-    },
-    {
-      "label": "Pekka Jääskeläinen",
       "count": 4
     },
     {
@@ -21408,6 +21408,10 @@
       "count": 1
     },
     {
+      "label": "Jan Solanti",
+      "count": 1
+    },
+    {
       "label": "Jan Svoboda",
       "count": 1
     },
@@ -22601,6 +22605,10 @@
     },
     {
       "label": "Joon Un Jang",
+      "count": 1
+    },
+    {
+      "label": "Joonas Multanen",
       "count": 1
     },
     {
@@ -23985,6 +23993,10 @@
     },
     {
       "label": "Lee, Byoungyoung",
+      "count": 1
+    },
+    {
+      "label": "Leevi Leppänen",
       "count": 1
     },
     {
@@ -27201,18 +27213,6 @@
     },
     {
       "label": "Nuno Roma",
-      "count": 1
-    },
-    {
-      "label": "Nusrat Jahan Lisa",
-      "count": 1
-    },
-    {
-      "label": "Nuwan De Silva",
-      "count": 1
-    },
-    {
-      "label": "O. Kovalenko",
       "count": 1
     }
   ],
@@ -36793,6 +36793,10 @@
     },
     {
       "label": "Composable and Modular Code Generation in MLIR: A Structured and Retargetable Approach to Tensor Compiler Construction",
+      "count": 1
+    },
+    {
+      "label": "Composable Open-Source Toolchain for Synthesizing Hardware Accelerators from OpenCL Command Buffers",
       "count": 1
     },
     {

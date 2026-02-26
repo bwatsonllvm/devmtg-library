@@ -296,6 +296,49 @@
         "LLVM",
         "Quantum"
       ]
+    },
+    {
+      "id": "doi-10-1145-3786204",
+      "source": "manual-added",
+      "sourceName": "Manual Added Papers",
+      "title": "Composable Open-Source Toolchain for Synthesizing Hardware Accelerators from OpenCL Command Buffers",
+      "authors": [
+        {
+          "name": "Topi Leppänen",
+          "affiliation": "Tampere University, Finland"
+        },
+        {
+          "name": "Leevi Leppänen",
+          "affiliation": "Tampere University, Finland"
+        },
+        {
+          "name": "Zainab Jamil",
+          "affiliation": "Tampere University, Finland"
+        },
+        {
+          "name": "Jan Solanti",
+          "affiliation": "Tampere University, Finland"
+        },
+        {
+          "name": "Joonas Multanen",
+          "affiliation": "Tampere University, Finland"
+        },
+        {
+          "name": "Pekka Jääskeläinen",
+          "affiliation": "Tampere University, Finland"
+        }
+      ],
+      "year": "2025",
+      "type": "research-paper",
+      "paperUrl": "https://doi.org/10.1145/3786204",
+      "sourceUrl": "https://dl.acm.org/doi/abs/10.1145/3786204",
+      "citationCount": 0,
+      "publication": "ACM Transactions on Reconfigurable Technology and Systems",
+      "venue": "ACM Transactions on Reconfigurable Technology and Systems",
+      "abstract": "High-level synthesis tools enable developers to use high-level programming languages such as C, C++, or OpenCL to design FPGA accelerators, reducing the complexity of hardware design. While OpenCL provides a portable programming model for heterogeneous systems, the existing FPGA toolchains require non-portable program modifications, pragmas, and pre-generation of bitstreams. To this end, we present a composable open-source toolchain for automated synthesis of hardware accelerators from OpenCL, bridging the gap between high-level parallel programming and reconfigurable hardware design. Our toolchain supports the standard OpenCL input, and the runtime handles bitstream generation, reconfiguration, and kernel execution. In addition to supporting unmodified OpenCL applications, this work is the first to even partially implement the OpenCL command buffer extension to automatically generate specialized FPGA bitstreams. The toolchain is modular and extensible, supporting multiple HLS tools and a vendor-agnostic FPGA integration flow, demonstrated on FPGAs from two different vendors. Compared to AMD's OpenCL FPGA implementation, the proposed toolchain achieves equal or better performance on 70% of PolybenchGPU benchmarks using standard OpenCL and on 80% when using the command buffer extension.",
+      "doi": "10.1145/3786204",
+      "content": "- Source page: https://dl.acm.org/doi/abs/10.1145/3786204\n- DOI: https://doi.org/10.1145/3786204",
+      "contentFormat": "markdown"
     }
   ]
 }
