@@ -378,6 +378,11 @@ jobs:
             --repo-root . \
             --log-json updates/index.json
 
+      - name: Build viewer artifacts
+        if: steps.assembled.outputs.has_changes == 'true'
+        run: |
+          scripts/build-viewer-artifacts.sh
+
       - name: Validate bundle
         if: steps.assembled.outputs.has_changes == 'true'
         run: scripts/validate-library-bundle.sh
@@ -434,4 +439,5 @@ jobs:
             Finalization:
             - sanitizes URL-bearing fields
             - rebuilds `updates/index.json`
+            - regenerates viewer artifacts (canonical header, lightweight autocomplete index, asset versions)
             - validates library bundle and docs mirror health

@@ -42,12 +42,22 @@ for f in \
   js/updates.js \
   js/docs.js \
   js/shared/library-utils.js \
+  js/data/autocomplete-index.json \
+  templates/site-header.html \
+  scripts/build-viewer-artifacts.sh \
+  scripts/sync-site-header.py \
+  scripts/generate-autocomplete-index.py \
+  scripts/apply-asset-versions.py \
   images/llvm-logo.png \
   images/llvm-favicon.png \
   devmtg/events/index.json; do
   [ -f "$SITE_ROOT/$f" ] || fail "Missing required file: $f"
 done
 [ -f "$PAPERS_ROOT/index.json" ] || fail "Missing required file: papers/index.json"
+[ -f "$PAPERS_ROOT/key-topic-canonical.json" ] || fail "Missing required file: papers/key-topic-canonical.json"
+
+# Validate generated viewer artifacts are synchronized.
+scripts/build-viewer-artifacts.sh --check
 
 # Ensure event bundles are JSON-native.
 if find "$EVENTS_ROOT" -maxdepth 1 -name '*.md' | grep -q .; then

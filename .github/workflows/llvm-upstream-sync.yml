@@ -62,6 +62,10 @@ jobs:
             --repo-root . \
             --log-json updates/index.json
 
+      - name: Build viewer artifacts
+        run: |
+          scripts/build-viewer-artifacts.sh
+
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh
 
@@ -79,3 +83,4 @@ jobs:
             - syncs talks/slides/videos from `llvm-www/devmtg`
             - syncs LLVM blog posts from `llvm-blog-www`
             - sanitizes URL-bearing fields and rebuilds `updates/index.json`
+            - regenerates viewer artifacts (canonical header, lightweight autocomplete index, asset versions)

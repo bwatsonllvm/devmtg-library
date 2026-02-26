@@ -50,6 +50,10 @@ jobs:
             --repo-root . \
             --log-json updates/index.json
 
+      - name: Build viewer artifacts
+        run: |
+          scripts/build-viewer-artifacts.sh
+
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh
 
@@ -77,3 +81,4 @@ jobs:
             - refreshes local LLDB docs search indexes
             - updates LLDB docs sync metadata
             - rebuilds `updates/index.json` so docs sync entries appear in Updates
+            - regenerates viewer artifacts (canonical header, lightweight autocomplete index, asset versions)

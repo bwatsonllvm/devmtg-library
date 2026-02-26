@@ -14,6 +14,21 @@ The library is a searchable index of:
 
 It is designed as a public, online reference site.
 
+## Architecture Contract (2 Parts)
+
+This repository is intentionally split into two clean layers:
+
+1. Viewer layer (`html/css/js`):
+   - static pages and client-side rendering only
+   - consumes prebuilt artifacts
+   - avoids heavy runtime indexing/build work in the browser
+2. Updater layer (`scripts/` + CI workflows):
+   - fetches and normalizes upstream data
+   - generates derived artifacts (updates log, docs search indexes, autocomplete index)
+   - enforces consistency checks (shell sync + asset version stamps + bundle/schema checks)
+
+Design goal: keep the viewer fast and simple, and keep all heavy/complex logic in updater scripts.
+
 ## Search And Discovery Experience (Updated February 24, 2026)
 
 Search now uses a shared, relevance-first stack intended to work for both LLVM newcomers and advanced researchers.
@@ -264,6 +279,7 @@ CI now runs two validation layers before merge/deploy:
    - `bash -n scripts/*.sh`
    - `node --test tests`
 2. Bundle/data checks (`scripts/validate-library-bundle.sh`)
+   - validates generated viewer artifacts are synchronized (`scripts/build-viewer-artifacts.sh --check`)
 
 Search relevance behavior is covered by deterministic regression tests in:
 - `tests/search-ranking.test.cjs`
@@ -283,9 +299,18 @@ These checks run in:
 - `docs/`, `docs/clang/`, `docs/lldb/`: local docs artifacts + bridge/search assets sourced from `llvm/llvm-project`
 - `docs/sources.json`: docs source catalog metadata
 - `css/`, `js/`, `images/`: shared site assets
+- `js/data/autocomplete-index.json`: prebuilt lightweight autocomplete payload consumed by header/global search
 - `devmtg/events/*.json`: talk/event records
 - `devmtg/events/index.json`: event manifest + data version
 - `updates/index.json`: update-log dataset
 - `papers/*.json`: source and derived paper bundles (site serves the manifest-listed file)
 - `papers/index.json`: paper manifest + data version
+- `papers/key-topic-canonical.json`: updater-owned canonical key-topic vocabulary used by paper/discovery scripts
 - `scripts/`: ingestion, normalization, and validation tooling
+- `templates/site-header.html`: canonical shared site header template for viewer pages
+
+Key viewer-artifact generators:
+- `scripts/build-viewer-artifacts.sh`: runs all viewer artifact generation/sync steps
+- `scripts/sync-site-header.py`: enforces canonical shared header across viewer pages
+- `scripts/generate-autocomplete-index.py`: builds lightweight autocomplete artifact
+- `scripts/apply-asset-versions.py`: applies deterministic content-hash asset versions
