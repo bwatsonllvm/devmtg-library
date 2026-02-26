@@ -7,6 +7,7 @@
 
   const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
   const STAGED_STATE_KEY = 'llvm-hub-paper-review-staged-v1';
+  const REVIEW_RETURN_MESSAGE_KEY = 'llvm-hub-paper-review-return-message-v1';
   const REVIEWED_JSON_CANDIDATES = [
     'papers/reviewed-papers.json',
     '../papers/reviewed-papers.json',
@@ -277,7 +278,7 @@
     const paperUrl = sanitizeExternalUrl(paper && paper.paperUrl);
     const updateSourceUrl = sourceUrl || paperUrl;
     const updateHref = (paperId && updateSourceUrl)
-      ? `papers/edit.html?id=${encodeURIComponent(paperId)}&source_url=${encodeURIComponent(updateSourceUrl)}`
+      ? `papers/edit.html?id=${encodeURIComponent(paperId)}&source_url=${encodeURIComponent(updateSourceUrl)}&return_to=review`
       : '';
     return { editHref, updateHref };
   }
@@ -676,6 +677,17 @@
     if (changed) saveStagedState();
   }
 
+  function consumeReturnMessage() {
+    try {
+      const message = String(window.sessionStorage.getItem(REVIEW_RETURN_MESSAGE_KEY) || '').trim();
+      if (!message) return '';
+      window.sessionStorage.removeItem(REVIEW_RETURN_MESSAGE_KEY);
+      return message;
+    } catch {
+      return '';
+    }
+  }
+
   async function ensureDataLoaded() {
     if (state.initialized) return;
 
@@ -708,7 +720,9 @@
       await ensureDataLoaded();
       reviewShell.classList.remove('hidden');
       renderQueue();
-      setReviewStatus('', '');
+      const returnMessage = consumeReturnMessage();
+      if (returnMessage) setReviewStatus(returnMessage, 'success');
+      else setReviewStatus('', '');
       setBatchStatus('Permanent checkmarks are applied only after the review-batch PR is merged.', '');
     } catch (err) {
       const message = err && err.message ? err.message : 'Failed to initialize review queue.';

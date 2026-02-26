@@ -25,6 +25,7 @@
   const changeCard = document.getElementById('paper-edit-change-card');
   const generateBtn = document.getElementById('paper-edit-generate-btn');
   const resetBtn = document.getElementById('paper-edit-reset-btn');
+  const returnReviewBtn = document.getElementById('paper-edit-return-review-btn');
   const genStatus = document.getElementById('paper-edit-generate-status');
 
   const outputCard = document.getElementById('paper-edit-output-card');
@@ -37,7 +38,7 @@
   if (
     !idInput || !loadBtn || !loadStatus || !urlCard || !urlInput || !urlPreviewBtn || !urlStatus ||
     !urlDiffShell || !urlDiffList || !urlApplyBtn || !originalCard || !originalPre || !changeCard ||
-    !generateBtn || !resetBtn || !genStatus || !outputCard || !updatesJsonPre || !commandPre ||
+    !generateBtn || !resetBtn || !returnReviewBtn || !genStatus || !outputCard || !updatesJsonPre || !commandPre ||
     !copyJsonBtn || !copyCommandBtn || !workflowLink
   ) {
     return;
@@ -210,6 +211,9 @@
     return JSON.stringify(value === undefined ? null : value);
   }
 
+  const REVIEW_STAGE_KEY = 'llvm-hub-paper-review-staged-v1';
+  const REVIEW_RETURN_MESSAGE_KEY = 'llvm-hub-paper-review-return-message-v1';
+
   const repoSlug = detectRepoSlug();
   const workflowUrl = `https://github.com/${repoSlug}/actions/workflows/manual-paper-edit-pr.yml`;
   workflowLink.href = workflowUrl;
@@ -220,6 +224,7 @@
   let currentUpdatesMinified = '{}';
   let pendingUrlCandidatePaper = null;
   let pendingUrlUpdates = {};
+  let returnToReview = false;
 
   async function ensurePapers() {
     if (paperCache) return paperCache;
@@ -492,6 +497,58 @@
       setStatus(genStatus, 'Workflow command copied.', 'success');
     } catch {
       setStatus(genStatus, 'Clipboard write failed. Copy from command box.', 'error');
+    }
+  }
+
+  function loadReviewStageState() {
+    const fallback = { staged: {} };
+    try {
+      const raw = window.localStorage.getItem(REVIEW_STAGE_KEY);
+      if (!raw) return fallback;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return fallback;
+      if (!parsed.staged || typeof parsed.staged !== 'object') return fallback;
+      return { staged: { ...parsed.staged } };
+    } catch {
+      return fallback;
+    }
+  }
+
+  function saveReviewStageState(payload) {
+    try {
+      window.localStorage.setItem(REVIEW_STAGE_KEY, JSON.stringify(payload));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function stageCurrentPaperForQueue() {
+    if (!currentPaperId) {
+      throw new Error('Load a paper first.');
+    }
+
+    const title = collapseWs(fields.title.value || (originalPaper && originalPaper.title) || currentPaperId);
+    const year = normalizeYear(fields.year.value || (originalPaper && originalPaper.year) || '');
+
+    const stagedPayload = loadReviewStageState();
+    stagedPayload.staged[currentPaperId] = {
+      stagedAt: new Date().toISOString(),
+      title,
+      year,
+    };
+
+    if (!saveReviewStageState(stagedPayload)) {
+      throw new Error('Could not save review queue state in this browser.');
+    }
+
+    try {
+      window.sessionStorage.setItem(
+        REVIEW_RETURN_MESSAGE_KEY,
+        `Staged in queue and ready for next paper: ${title}`
+      );
+    } catch {
+      // Best effort only.
     }
   }
 
@@ -1106,9 +1163,44 @@
     }, 0);
   });
 
+  returnReviewBtn.addEventListener('click', () => {
+    if (!returnToReview) return;
+    if (!currentPaperId || !originalPaper) {
+      setStatus(genStatus, 'Load a paper first.', 'error');
+      return;
+    }
+
+    let pendingChanges = {};
+    try {
+      pendingChanges = buildUpdatesFromCandidate(buildCandidateFromForm());
+    } catch {
+      pendingChanges = {};
+    }
+    if (Object.keys(pendingChanges).length && currentUpdatesMinified === '{}') {
+      const proceed = window.confirm(
+        'You have field changes that are not yet generated into updates_json. Continue back to the queue anyway?'
+      );
+      if (!proceed) return;
+    }
+
+    try {
+      stageCurrentPaperForQueue();
+      window.location.href = 'papers/review.html';
+    } catch (err) {
+      setStatus(genStatus, err && err.message ? err.message : 'Could not stage this paper in the queue.', 'error');
+    }
+  });
+
   const query = new URLSearchParams(window.location.search || '');
   const idFromQuery = collapseWs(query.get('id') || '');
   const sourceUrlFromQuery = collapseWs(query.get('source_url') || '');
+  returnToReview = collapseWs(query.get('return_to') || '').toLowerCase() === 'review';
+
+  if (returnToReview) {
+    returnReviewBtn.classList.remove('hidden');
+  } else {
+    returnReviewBtn.classList.add('hidden');
+  }
 
   if (sourceUrlFromQuery) {
     urlInput.value = sourceUrlFromQuery;
