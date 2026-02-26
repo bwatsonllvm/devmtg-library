@@ -293,20 +293,6 @@ These checks run in:
 - `.github/workflows/docs-lldb-sync.yml` (docs automation PRs for LLDB)
 - `.github/workflows/docs-sources-health.yml` (daily upstream docs endpoint health checks)
 
-## Admin Review Auth
-
-`papers/review.html` is intended to be admin-only and now depends on server-side auth.
-
-- Viewer queue UI: `papers/review.html` + `js/paper-review.js`
-- Auth backend (GitHub OAuth + allowlist): `auth/review-proxy/worker.js`
-- Worker config: `auth/review-proxy/wrangler.toml`
-- Setup notes: `auth/review-proxy/README.md`
-- Optional deploy workflow: `.github/workflows/review-auth-worker-deploy.yml`
-
-Important:
-- Direct GitHub Pages hosting alone cannot enforce private admin access.
-- To enforce admin-only access, route traffic through the auth worker (or equivalent server-side gate) so `/papers/review.html` is protected before content is served.
-
 ## Repository Layout
 
 - `index.html`, `work.html`, and section folders (`talks/`, `papers/`, `blogs/`, `people/`, `about/`, `updates/`): static site pages/routes

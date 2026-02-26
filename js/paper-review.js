@@ -1,23 +1,23 @@
 /*
  * paper-review.js
- * Admin review queue gated by server-side GitHub auth.
+ * Local admin-gated review queue for paper accuracy confirmation.
  */
 (function () {
   'use strict';
 
   const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
   const REVIEW_STATE_KEY = 'llvm-hub-paper-review-state-v1';
+  const ADMIN_HASH_KEY = 'llvm-hub-paper-review-admin-hash-v1';
+  const ADMIN_UNLOCK_KEY = 'llvm-hub-paper-review-admin-unlocked-v1';
   const RECENT_REVIEW_LIMIT = 40;
-  const AUTO_LOGIN_ATTEMPT_KEY = 'llvm-hub-paper-review-auto-login-attempted-v1';
-  const AUTH_BASE_STORAGE_KEY = 'llvm-hub-paper-review-auth-base-v1';
-  const AUTO_LOGIN_COOLDOWN_MS = 2 * 60 * 1000;
 
   const adminCard = document.getElementById('review-admin-card');
   const adminHint = document.getElementById('review-admin-hint');
+  const adminForm = document.getElementById('review-admin-form');
+  const adminInput = document.getElementById('review-admin-input');
+  const adminSubmit = document.getElementById('review-admin-submit');
+  const adminReset = document.getElementById('review-admin-reset');
   const adminStatus = document.getElementById('review-admin-status');
-  const adminLogin = document.getElementById('review-admin-login');
-  const adminRefresh = document.getElementById('review-admin-refresh');
-  const adminIdentity = document.getElementById('review-admin-identity');
 
   const reviewShell = document.getElementById('review-shell');
   const reviewStats = document.getElementById('review-stats');
@@ -44,7 +44,7 @@
   const recentList = document.getElementById('review-recent-list');
 
   if (
-    !adminCard || !adminHint || !adminStatus || !adminLogin || !adminRefresh || !adminIdentity ||
+    !adminCard || !adminHint || !adminForm || !adminInput || !adminSubmit || !adminReset || !adminStatus ||
     !reviewShell || !reviewStats || !reviewPosition || !reviewStatus || !reviewLockBtn || !reviewResetBtn ||
     !currentCard || !emptyCard || !titleEl || !metaEl || !abstractEl || !authorsEl || !markBtn || !nextBtn ||
     !detailLink || !paperLink || !sourceLink || !editLink || !updateLink || !resetAllBtn || !recentList
@@ -58,11 +58,6 @@
     pending: [],
     currentIndex: 0,
     reviewed: {},
-    auth: {
-      authenticated: false,
-      authorized: false,
-      login: '',
-    },
   };
 
   function escapeHtml(value) {
@@ -86,101 +81,30 @@
     return '';
   }
 
-  function storageGet(key) {
+  function storageGet(key, useSession = false) {
     try {
-      return window.localStorage.getItem(key);
+      return (useSession ? window.sessionStorage : window.localStorage).getItem(key);
     } catch {
       return null;
     }
   }
 
-  function storageSet(key, value) {
+  function storageSet(key, value, useSession = false) {
     try {
-      window.localStorage.setItem(key, value);
+      (useSession ? window.sessionStorage : window.localStorage).setItem(key, value);
       return true;
     } catch {
       return false;
     }
   }
 
-  function storageRemove(key) {
+  function storageRemove(key, useSession = false) {
     try {
-      window.localStorage.removeItem(key);
+      (useSession ? window.sessionStorage : window.localStorage).removeItem(key);
       return true;
     } catch {
       return false;
     }
-  }
-
-  function normalizeAuthBase(rawValue) {
-    const raw = String(rawValue || '').trim();
-    if (!raw) return '';
-    try {
-      const resolved = new URL(raw);
-      const protocol = resolved.protocol.toLowerCase();
-      if (protocol !== 'http:' && protocol !== 'https:') return '';
-      return resolved.toString().replace(/\/+$/, '');
-    } catch {
-      return '';
-    }
-  }
-
-  function hostLooksLikeGitHubPages() {
-    const host = String(window.location.hostname || '').toLowerCase();
-    return host.endsWith('.github.io');
-  }
-
-  function readAuthBase() {
-    const meta = document.querySelector('meta[name="review-auth-base"]');
-    const metaValue = normalizeAuthBase(meta && meta.content);
-
-    const params = new URLSearchParams(window.location.search || '');
-    const queryRaw = String(params.get('auth_base') || '').trim();
-    const queryValue = normalizeAuthBase(queryRaw);
-
-    if (queryRaw.toLowerCase() === 'clear') {
-      storageRemove(AUTH_BASE_STORAGE_KEY);
-      return metaValue;
-    }
-
-    if (queryValue) {
-      storageSet(AUTH_BASE_STORAGE_KEY, queryValue);
-      return queryValue;
-    }
-
-    const storedValue = normalizeAuthBase(storageGet(AUTH_BASE_STORAGE_KEY));
-    if (storedValue) return storedValue;
-
-    return metaValue;
-  }
-
-  const AUTH_BASE = readAuthBase();
-
-  function authBaseRequiredButMissing() {
-    return hostLooksLikeGitHubPages() && !AUTH_BASE;
-  }
-
-  function authUrl(pathname) {
-    const path = String(pathname || '').trim();
-    if (!path) return window.location.href;
-    if (!AUTH_BASE) return path;
-    return `${AUTH_BASE}${path}`;
-  }
-
-  function currentReturnPath() {
-    return `${window.location.pathname}${window.location.search}`;
-  }
-
-  function buildLoginUrl() {
-    const url = new URL(authUrl('/auth/review/login'), window.location.href);
-    url.searchParams.set('return_to', currentReturnPath());
-    return url.toString();
-  }
-
-  function buildLogoutUrl() {
-    const url = new URL(authUrl('/auth/review/logout'), window.location.href);
-    url.searchParams.set('return_to', currentReturnPath());
-    return url.toString();
   }
 
   function setAdminStatus(message, kind) {
@@ -193,32 +117,6 @@
     reviewStatus.textContent = message || '';
     reviewStatus.classList.remove('error', 'success');
     if (kind) reviewStatus.classList.add(kind);
-  }
-
-  function getSearchParams() {
-    try {
-      return new URLSearchParams(window.location.search || '');
-    } catch {
-      return new URLSearchParams('');
-    }
-  }
-
-  function autoLoginDisabled() {
-    const params = getSearchParams();
-    const value = String(params.get('no_auto_login') || '').trim().toLowerCase();
-    return value === '1' || value === 'true' || value === 'yes';
-  }
-
-  function shouldAutoLoginNow() {
-    if (autoLoginDisabled()) return false;
-    const raw = storageGet(AUTO_LOGIN_ATTEMPT_KEY);
-    const last = Number.parseInt(String(raw || '').trim(), 10);
-    if (!Number.isFinite(last) || last <= 0) return true;
-    return (Date.now() - last) > AUTO_LOGIN_COOLDOWN_MS;
-  }
-
-  function markAutoLoginAttempt() {
-    storageSet(AUTO_LOGIN_ATTEMPT_KEY, String(Date.now()));
   }
 
   function normalizeIsoDate(value) {
@@ -305,7 +203,7 @@
 
   function loadReviewState() {
     const fallback = { reviewed: {} };
-    const raw = storageGet(REVIEW_STATE_KEY);
+    const raw = storageGet(REVIEW_STATE_KEY, false);
     if (!raw) return fallback;
     try {
       const parsed = JSON.parse(raw);
@@ -330,7 +228,7 @@
 
   function saveReviewState() {
     const payload = { reviewed: state.reviewed };
-    storageSet(REVIEW_STATE_KEY, JSON.stringify(payload));
+    storageSet(REVIEW_STATE_KEY, JSON.stringify(payload), false);
   }
 
   function isReviewed(paperId) {
@@ -560,6 +458,41 @@
     renderQueue();
   }
 
+  async function hashText(value) {
+    const raw = String(value || '');
+    if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+      const data = new TextEncoder().encode(raw);
+      const digest = await window.crypto.subtle.digest('SHA-256', data);
+      const bytes = new Uint8Array(digest);
+      return Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    let hash = 2166136261;
+    for (let i = 0; i < raw.length; i += 1) {
+      hash ^= raw.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return `fallback-${(hash >>> 0).toString(16)}`;
+  }
+
+  function adminConfigured() {
+    return !!String(storageGet(ADMIN_HASH_KEY, false) || '').trim();
+  }
+
+  function adminUnlocked() {
+    return storageGet(ADMIN_UNLOCK_KEY, true) === '1';
+  }
+
+  function configureAdminUi() {
+    const configured = adminConfigured();
+    adminHint.textContent = configured
+      ? 'Enter your admin passphrase to unlock this review queue.'
+      : 'Set an admin passphrase for this browser to protect the review queue.';
+    adminSubmit.textContent = configured ? 'Unlock Queue' : 'Set Passphrase & Unlock';
+    adminReset.classList.toggle('hidden', !configured);
+    setAdminStatus('', '');
+  }
+
   async function ensureDataLoaded() {
     if (state.initialized) return;
     if (typeof window.loadPaperData !== 'function') {
@@ -577,164 +510,80 @@
     state.initialized = true;
   }
 
-  async function fetchAuthSession() {
-    const endpoint = authUrl('/auth/review/session');
+  async function unlockQueue() {
     try {
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        credentials: 'include',
-        headers: { Accept: 'application/json' },
-      });
-
-      if (!response.ok) {
-        return {
-          ok: false,
-          error: `Auth endpoint returned HTTP ${response.status}.`,
-          authenticated: false,
-          authorized: false,
-          login: '',
-          reason: '',
-        };
-      }
-
-      const contentType = String(response.headers.get('content-type') || '').toLowerCase();
-      if (!contentType.includes('application/json')) {
-        return {
-          ok: false,
-          error: 'Auth endpoint did not return JSON.',
-          authenticated: false,
-          authorized: false,
-          login: '',
-          reason: '',
-        };
-      }
-
-      const payload = await response.json();
-      const authenticated = !!payload.authenticated;
-      const authorized = !!payload.authorized;
-      const login = String(payload.login || '').trim();
-      const reason = String(payload.reason || '').trim();
-      return { ok: true, authenticated, authorized, login, reason };
+      await ensureDataLoaded();
+      adminCard.classList.add('hidden');
+      reviewShell.classList.remove('hidden');
+      setReviewStatus('', '');
+      renderQueue();
     } catch (err) {
-      return {
-        ok: false,
-        error: err && err.message ? err.message : 'Could not reach auth endpoint.',
-        authenticated: false,
-        authorized: false,
-        login: '',
-        reason: '',
-      };
+      setAdminStatus(err && err.message ? err.message : 'Failed to load papers.', 'error');
     }
   }
 
-  function setAuthLinks() {
-    if (authBaseRequiredButMissing()) {
-      adminLogin.href = '#';
-      adminLogin.setAttribute('aria-disabled', 'true');
-      adminLogin.tabIndex = -1;
-    } else {
-      adminLogin.href = buildLoginUrl();
-      adminLogin.rel = 'noopener noreferrer';
-      adminLogin.setAttribute('aria-disabled', 'false');
-      adminLogin.removeAttribute('tabindex');
-    }
-    reviewLockBtn.textContent = 'Sign Out';
-  }
-
-  function showAuthGate(sessionResult) {
+  function lockQueue() {
+    storageRemove(ADMIN_UNLOCK_KEY, true);
     reviewShell.classList.add('hidden');
     adminCard.classList.remove('hidden');
+    adminInput.value = '';
+    configureAdminUi();
+  }
 
-    adminIdentity.textContent = AUTH_BASE
-      ? `Auth service: ${AUTH_BASE}`
-      : 'Auth service: same origin (/auth/review/*)';
-
-    if (!sessionResult.ok) {
-      adminHint.textContent = 'Sign in with an allowlisted GitHub account to access this queue.';
-      setAdminStatus(`${sessionResult.error} If this is GitHub Pages directly, use the worker-protected domain.`, 'error');
+  adminForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const passphrase = String(adminInput.value || '').trim();
+    if (passphrase.length < 6) {
+      setAdminStatus('Passphrase must be at least 6 characters.', 'error');
       return;
     }
 
-    if (!sessionResult.authenticated) {
-      adminHint.textContent = 'Sign in with an allowlisted GitHub account to access this queue.';
-      setAdminStatus('', '');
-      if (shouldAutoLoginNow()) {
-        markAutoLoginAttempt();
-        setAdminStatus('Redirecting to GitHub sign-in...', '');
-        window.setTimeout(() => {
-          window.location.href = buildLoginUrl();
-        }, 220);
+    const storedHash = String(storageGet(ADMIN_HASH_KEY, false) || '').trim();
+    const incomingHash = await hashText(passphrase);
+
+    if (!storedHash) {
+      if (!storageSet(ADMIN_HASH_KEY, incomingHash, false)) {
+        setAdminStatus('Could not save admin passphrase in this browser.', 'error');
+        return;
       }
+      storageSet(ADMIN_UNLOCK_KEY, '1', true);
+      setAdminStatus('Admin passphrase set. Queue unlocked.', 'success');
+      adminInput.value = '';
+      await unlockQueue();
       return;
     }
 
-    if (!sessionResult.authorized) {
-      const login = sessionResult.login ? ` (${sessionResult.login})` : '';
-      adminHint.textContent = `Signed in${login}, but this account is not allowlisted for review access.`;
-      setAdminStatus('Your GitHub account is authenticated but not authorized.', 'error');
+    if (storedHash !== incomingHash) {
+      setAdminStatus('Incorrect passphrase.', 'error');
       return;
     }
 
-    adminHint.textContent = 'Sign in with an allowlisted GitHub account to access this queue.';
-    setAdminStatus('', '');
-  }
-
-  async function showQueue(sessionResult) {
-    state.auth.authenticated = true;
-    state.auth.authorized = true;
-    state.auth.login = sessionResult.login;
-    adminIdentity.textContent = sessionResult.login
-      ? `Authenticated as @${sessionResult.login}`
-      : 'Authenticated';
-    adminCard.classList.add('hidden');
-    reviewShell.classList.remove('hidden');
-    await ensureDataLoaded();
-    setReviewStatus('', '');
-    renderQueue();
-  }
-
-  async function refreshAuthAndRender() {
-    setAuthLinks();
-    if (authBaseRequiredButMissing()) {
-      showAuthGate({
-        ok: false,
-        error: 'Auth service URL is not configured. Use ?auth_base=https://<your-worker-domain> (or set meta[name=\"review-auth-base\"]) and reload.',
-      });
-      return;
-    }
-    setAdminStatus('Checking admin session...', '');
-    const session = await fetchAuthSession();
-    if (session.ok && session.authenticated && session.authorized) {
-      try {
-        await showQueue(session);
-      } catch (err) {
-        reviewShell.classList.add('hidden');
-        adminCard.classList.remove('hidden');
-        setAdminStatus(err && err.message ? err.message : 'Failed to load review queue data.', 'error');
-      }
-      return;
-    }
-    showAuthGate(session);
-  }
-
-  function signOut() {
-    window.location.href = buildLogoutUrl();
-  }
-
-  adminRefresh.addEventListener('click', () => {
-    refreshAuthAndRender();
+    storageSet(ADMIN_UNLOCK_KEY, '1', true);
+    setAdminStatus('Queue unlocked.', 'success');
+    adminInput.value = '';
+    await unlockQueue();
   });
-  adminLogin.addEventListener('click', (event) => {
-    if (adminLogin.getAttribute('aria-disabled') === 'true') {
-      event.preventDefault();
-      setAdminStatus('Set auth_base first. Example: ?auth_base=https://your-worker.workers.dev', 'error');
-    }
+
+  adminReset.addEventListener('click', () => {
+    const confirmed = window.confirm('Reset admin passphrase for this browser? You will need to set a new one.');
+    if (!confirmed) return;
+    storageRemove(ADMIN_HASH_KEY, false);
+    storageRemove(ADMIN_UNLOCK_KEY, true);
+    reviewShell.classList.add('hidden');
+    adminCard.classList.remove('hidden');
+    adminInput.value = '';
+    configureAdminUi();
+    setAdminStatus('Admin passphrase reset for this browser.', 'success');
   });
-  reviewLockBtn.addEventListener('click', signOut);
+
+  reviewLockBtn.addEventListener('click', lockQueue);
   reviewResetBtn.addEventListener('click', resetAllReviews);
   resetAllBtn.addEventListener('click', resetAllReviews);
   markBtn.addEventListener('click', markCurrentReviewed);
   nextBtn.addEventListener('click', moveToNext);
 
-  refreshAuthAndRender();
+  configureAdminUi();
+  if (adminConfigured() && adminUnlocked()) {
+    unlockQueue();
+  }
 })();
