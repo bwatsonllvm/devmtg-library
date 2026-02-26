@@ -11,9 +11,9 @@
   const copyUrlBtn = document.getElementById('url-intake-copy-url');
   const copyBtn = document.getElementById('url-intake-copy-command');
   const workflowLink = document.getElementById('url-intake-open-workflow');
-  const advancedBtn = document.getElementById('url-intake-open-advanced');
+  const editLink = document.querySelector('a[href="papers/edit.html"]');
 
-  if (!sourceEl || !statusEl || !commandEl || !copyUrlBtn || !copyBtn || !workflowLink || !advancedBtn) return;
+  if (!sourceEl || !statusEl || !commandEl || !copyUrlBtn || !copyBtn || !workflowLink) return;
 
   function setStatus(message, kind) {
     statusEl.textContent = message || '';
@@ -98,19 +98,13 @@
     }
   });
 
-  advancedBtn.addEventListener('click', function () {
-    const sourceUrl = String(sourceEl.value || '').trim();
-    if (!isHttpUrl(sourceUrl)) {
-      window.location.href = 'papers/add.html';
-      return;
-    }
-    window.location.href = `papers/add.html?source_url=${encodeURIComponent(sourceUrl)}`;
-  });
-
   const query = new URLSearchParams(window.location.search || '');
   const fromQuery = String(query.get('source_url') || '').trim();
   if (isHttpUrl(fromQuery)) {
     sourceEl.value = fromQuery;
+  }
+  if (editLink && isHttpUrl(fromQuery)) {
+    editLink.href = `papers/edit.html?id=${encodeURIComponent(fromQuery)}`;
   }
   updateCommand();
 })();

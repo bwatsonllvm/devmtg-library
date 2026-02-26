@@ -23,6 +23,7 @@ for f in \
   papers/index.html \
   papers/add-by-url.html \
   papers/add.html \
+  papers/edit.html \
   papers/paper.html \
   blogs/index.html \
   people/index.html \
@@ -40,6 +41,7 @@ for f in \
   js/talk.js \
   js/paper.js \
   js/paper-add-by-url.js \
+  js/paper-edit.js \
   js/paper-manual-add.js \
   js/papers-data.js \
   js/papers.js \
@@ -273,6 +275,7 @@ ruby -e '
     papers/index.html
     papers/add-by-url.html
     papers/add.html
+    papers/edit.html
     papers/paper.html
     blogs/index.html
     people/index.html
