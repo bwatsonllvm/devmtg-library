@@ -1,0 +1,437 @@
+name: Auto Sync - Umbrella (All Silos, Single PR)
+
+run-name: Umbrella autosync (llvm upstream + papers + docs)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "13 9 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: library-umbrella-sync-bot
+  cancel-in-progress: true
+
+jobs:
+  sync-upstream:
+    name: Sync llvm-www + llvm-blog
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    outputs:
+      has_changes: ${{ steps.collect.outputs.has_changes }}
+      files_count: ${{ steps.collect.outputs.files_count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sync events talks/slides/videos from llvm-www
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/sync-devmtg-from-llvm-www.py \
+            --events-dir devmtg/events \
+            --manifest devmtg/events/index.json \
+            --github-token "${GITHUB_TOKEN}"
+
+      - name: Sync LLVM blog posts from llvm-blog-www
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/sync-blog-from-llvm-www-blog.py \
+            --repo llvm/llvm-blog-www \
+            --ref main \
+            --output papers/llvm-blog-posts.json \
+            --cache-dir papers/.cache/llvm-blog \
+            --blog-base-url "https://blog.llvm.org/" \
+            --github-token "${GITHUB_TOKEN}"
+
+      - name: Sanitize URL-bearing fields
+        run: |
+          python3 scripts/sanitize-library-urls.py --repo-root .
+
+      - name: Build patch artifact
+        id: collect
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "files_count=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          files_count="$(git diff --cached --name-only | wc -l | tr -d ' ')"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          echo "files_count=${files_count}" >> "$GITHUB_OUTPUT"
+          git diff --cached --binary > "${RUNNER_TEMP}/patch-upstream.diff"
+
+      - name: Upload patch artifact
+        if: steps.collect.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: patch-upstream
+          path: ${{ runner.temp }}/patch-upstream.diff
+          retention-days: 3
+
+  sync-papers:
+    name: Sync OpenAlex papers
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    outputs:
+      has_changes: ${{ steps.collect.outputs.has_changes }}
+      files_count: ${{ steps.collect.outputs.files_count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Refresh OpenAlex discovered papers
+        run: |
+          python3 scripts/build-openalex-discovery.py \
+            --events-dir devmtg/events \
+            --papers-dir papers \
+            --index-json papers/index.json \
+            --app-js js/app.js \
+            --subprojects-file papers/subproject-seeds.txt \
+            --skip-author-queries \
+            --max-pages-per-keyword 5 \
+            --per-page 200 \
+            --mailto "llvm-library-bot@users.noreply.github.com"
+
+      - name: Build OpenAlex update summary (Markdown)
+        run: |
+          python3 scripts/generate-openalex-update-summary.py \
+            --repo-root . \
+            --bundle papers/openalex-llvm-query.json \
+            --output updates/openalex-update-summary.md \
+            --skip-when-unchanged
+
+      - name: Build single canonical papers database
+        run: |
+          python3 scripts/build-single-papers-db.py \
+            --output papers/combined-all-papers-deduped.json \
+            --manifest papers/index.json \
+            --cache-dir papers/.cache/openalex \
+            --landing-cache papers/.cache/openalex-landing-enrichment.json \
+            --batch-size 40 \
+            --landing-timeout 5 \
+            --landing-max-probes 120 \
+            --landing-miss-recheck-days 30 \
+            --mailto "llvm-library-bot@users.noreply.github.com"
+
+      - name: Backfill direct PDF links via OpenAlex + Unpaywall
+        run: |
+          python3 scripts/backfill-openalex-unpaywall-pdfs.py \
+            --bundle papers/combined-all-papers-deduped.json \
+            --manifest papers/index.json \
+            --cache papers/.cache/unpaywall-pdf-links.json \
+            --mailto "llvm-library-bot@users.noreply.github.com"
+
+      - name: Sanitize URL-bearing fields
+        run: |
+          python3 scripts/sanitize-library-urls.py --repo-root .
+
+      - name: Build patch artifact
+        id: collect
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "files_count=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          files_count="$(git diff --cached --name-only | wc -l | tr -d ' ')"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          echo "files_count=${files_count}" >> "$GITHUB_OUTPUT"
+          git diff --cached --binary > "${RUNNER_TEMP}/patch-papers.diff"
+
+      - name: Upload patch artifact
+        if: steps.collect.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: patch-papers
+          path: ${{ runner.temp }}/patch-papers.diff
+          retention-days: 3
+
+  sync-docs-core-clang:
+    name: Sync docs (LLVM Core + Clang)
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    outputs:
+      has_changes: ${{ steps.collect.outputs.has_changes }}
+      files_count: ${{ steps.collect.outputs.files_count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sync docs from llvm/llvm-project
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/sync-docs-from-llvm-project.py \
+            --repo-root . \
+            --source-repo-url https://github.com/llvm/llvm-project.git \
+            --source-repo-name llvm/llvm-project \
+            --source-ref main \
+            --variants llvm-core,clang \
+            --github-token "${GITHUB_TOKEN}" \
+            --install-requirements
+
+      - name: Build patch artifact
+        id: collect
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "files_count=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          files_count="$(git diff --cached --name-only | wc -l | tr -d ' ')"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          echo "files_count=${files_count}" >> "$GITHUB_OUTPUT"
+          git diff --cached --binary > "${RUNNER_TEMP}/patch-docs-core-clang.diff"
+
+      - name: Upload patch artifact
+        if: steps.collect.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: patch-docs-core-clang
+          path: ${{ runner.temp }}/patch-docs-core-clang.diff
+          retention-days: 3
+
+  sync-docs-lldb:
+    name: Sync docs (LLDB)
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    outputs:
+      has_changes: ${{ steps.collect.outputs.has_changes }}
+      files_count: ${{ steps.collect.outputs.files_count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sync LLDB docs from llvm/llvm-project
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/sync-docs-from-llvm-project.py \
+            --repo-root . \
+            --source-repo-url https://github.com/llvm/llvm-project.git \
+            --source-repo-name llvm/llvm-project \
+            --source-ref main \
+            --variants lldb \
+            --github-token "${GITHUB_TOKEN}" \
+            --install-requirements
+
+      - name: Build patch artifact
+        id: collect
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "files_count=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          files_count="$(git diff --cached --name-only | wc -l | tr -d ' ')"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          echo "files_count=${files_count}" >> "$GITHUB_OUTPUT"
+          git diff --cached --binary > "${RUNNER_TEMP}/patch-docs-lldb.diff"
+
+      - name: Upload patch artifact
+        if: steps.collect.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: patch-docs-lldb
+          path: ${{ runner.temp }}/patch-docs-lldb.diff
+          retention-days: 3
+
+  assemble-and-pr:
+    name: Assemble silo diffs + validate + create one PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    needs:
+      - sync-upstream
+      - sync-papers
+      - sync-docs-core-clang
+      - sync-docs-lldb
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Download upstream patch
+        if: needs.sync-upstream.outputs.has_changes == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: patch-upstream
+          path: ${{ runner.temp }}/patch-upstream
+
+      - name: Download papers patch
+        if: needs.sync-papers.outputs.has_changes == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: patch-papers
+          path: ${{ runner.temp }}/patch-papers
+
+      - name: Download docs core+clang patch
+        if: needs.sync-docs-core-clang.outputs.has_changes == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: patch-docs-core-clang
+          path: ${{ runner.temp }}/patch-docs-core-clang
+
+      - name: Download docs lldb patch
+        if: needs.sync-docs-lldb.outputs.has_changes == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: patch-docs-lldb
+          path: ${{ runner.temp }}/patch-docs-lldb
+
+      - name: Apply silo patches
+        run: |
+          set -euo pipefail
+
+          if [[ "${{ needs.sync-upstream.outputs.has_changes }}" == "true" ]]; then
+            git apply --index --whitespace=nowarn "${RUNNER_TEMP}/patch-upstream/patch-upstream.diff"
+          fi
+          if [[ "${{ needs.sync-papers.outputs.has_changes }}" == "true" ]]; then
+            git apply --index --whitespace=nowarn "${RUNNER_TEMP}/patch-papers/patch-papers.diff"
+          fi
+          if [[ "${{ needs.sync-docs-core-clang.outputs.has_changes }}" == "true" ]]; then
+            git apply --index --whitespace=nowarn "${RUNNER_TEMP}/patch-docs-core-clang/patch-docs-core-clang.diff"
+          fi
+          if [[ "${{ needs.sync-docs-lldb.outputs.has_changes }}" == "true" ]]; then
+            git apply --index --whitespace=nowarn "${RUNNER_TEMP}/patch-docs-lldb/patch-docs-lldb.diff"
+          fi
+
+      - name: Detect assembled changes
+        id: assembled
+        run: |
+          set -euo pipefail
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Sanitize URL-bearing fields
+        if: steps.assembled.outputs.has_changes == 'true'
+        run: |
+          python3 scripts/sanitize-library-urls.py --repo-root .
+
+      - name: Build updates log
+        if: steps.assembled.outputs.has_changes == 'true'
+        run: |
+          python3 scripts/build-update-log.py \
+            --repo-root . \
+            --log-json updates/index.json
+
+      - name: Validate bundle
+        if: steps.assembled.outputs.has_changes == 'true'
+        run: scripts/validate-library-bundle.sh
+
+      - name: Validate docs mirror health (LLVM)
+        if: steps.assembled.outputs.has_changes == 'true'
+        run: |
+          python3 scripts/check-docs-mirror-health.py \
+            --repo-root . \
+            --docs-dir docs \
+            --expected-source-prefix "https://llvm.org/docs/" \
+            --max-age-days 10 \
+            --no-check-links
+
+      - name: Validate docs mirror health (Clang)
+        if: steps.assembled.outputs.has_changes == 'true'
+        run: |
+          python3 scripts/check-docs-mirror-health.py \
+            --repo-root . \
+            --docs-dir docs/clang \
+            --expected-source-prefix "https://clang.llvm.org/docs/" \
+            --max-age-days 10 \
+            --no-check-links
+
+      - name: Validate docs mirror health (LLDB)
+        if: steps.assembled.outputs.has_changes == 'true'
+        run: |
+          python3 scripts/check-docs-mirror-health.py \
+            --repo-root . \
+            --docs-dir docs/lldb \
+            --expected-source-prefix "https://lldb.llvm.org/" \
+            --max-age-days 10 \
+            --no-check-links
+
+      - name: Create Pull Request
+        if: steps.assembled.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: library/automated-sync-umbrella
+          delete-branch: true
+          commit-message: "Library umbrella sync (llvm upstream + papers + docs)"
+          title: "Library umbrella sync (llvm upstream + papers + docs)"
+          body: |
+            Automated umbrella sync (parallel silos, single PR):
+
+            Silo change detection:
+            - llvm upstream (llvm-www + llvm-blog): `${{ needs.sync-upstream.outputs.has_changes }}`
+            - papers (OpenAlex + canonical DB): `${{ needs.sync-papers.outputs.has_changes }}`
+            - docs (LLVM Core + Clang): `${{ needs.sync-docs-core-clang.outputs.has_changes }}`
+            - docs (LLDB): `${{ needs.sync-docs-lldb.outputs.has_changes }}`
+
+            Finalization:
+            - sanitizes URL-bearing fields
+            - rebuilds `updates/index.json`
+            - validates library bundle and docs mirror health

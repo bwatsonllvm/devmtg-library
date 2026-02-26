@@ -4,8 +4,6 @@ run-name: Sync llvm-www talks/slides/videos + llvm-blog posts
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "17 9 * * 1"
 
 permissions:
   contents: write

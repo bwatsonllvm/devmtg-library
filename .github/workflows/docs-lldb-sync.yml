@@ -4,8 +4,6 @@ run-name: Sync llvm-project docs for LLDB
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "53 8 * * *"
 
 permissions:
   contents: write

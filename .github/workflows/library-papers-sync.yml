@@ -4,8 +4,6 @@ run-name: Sync OpenAlex papers + rebuild canonical papers DB
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "47 9 * * 1"
 
 permissions:
   contents: write

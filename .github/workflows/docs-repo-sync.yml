@@ -4,8 +4,6 @@ run-name: Sync llvm-project docs for LLVM Core + Clang
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "23 8 * * *"
 
 permissions:
   contents: write
