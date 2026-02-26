@@ -66,7 +66,9 @@
       "matchedAuthors": [
         "Cristian Assaiante",
         "Daniele Cono D’Elia",
+        "Giuseppe Di Luna",
         "Leonardo Querzoni",
+        "Simone Di Biasio",
         "Snehasish Kumar"
       ],
       "matchedSubprojects": [
@@ -201,6 +203,8 @@
       "matchedAuthors": [
         "Brian Homerding",
         "David I. August",
+        "Federico Sossai",
+        "Haocheng Gao",
         "Simone Campanoni",
         "Yebin Chon",
         "Yian Su"
@@ -378,7 +382,9 @@
         "Fault Injection"
       ],
       "matchedAuthors": [
-        "François de Ferrière"
+        "François de Ferrière",
+        "Sirine Mechmech",
+        "Yves L. Janin"
       ],
       "matchedSubprojects": [
         "llvm"
@@ -562,8 +568,11 @@
         "LLVM IR"
       ],
       "matchedAuthors": [
+        "Jiaqin Kang",
+        "Lev Mukhanov",
         "Rodrigo C. O. Rocha",
-        "Sam Ainsworth"
+        "Sam Ainsworth",
+        "Xu Fang"
       ],
       "matchedSubprojects": [
         "llvm"
@@ -619,7 +628,8 @@
       ],
       "matchedAuthors": [
         "Amir Mohammad Tavakkoli",
-        "Cosmin E. Oancea"
+        "Cosmin E. Oancea",
+        "Mary Jane Hall"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -673,7 +683,8 @@
         "Several"
       ],
       "matchedAuthors": [
-        "Brian Kelley"
+        "Brian Kelley",
+        "Edmond Chow"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -733,7 +744,7 @@
       ]
     },
     {
-      "id": "openalex-w7131319969",
+      "id": "openalex-w7131377983",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Hexagon-MLIR: An AI Compilation Stack For Qualcomm's Neural Processing Units (NPUs)",
@@ -844,10 +855,9 @@
       "venue": "arXiv",
       "type": "research-paper",
       "abstract": "In this paper, we present Hexagon-MLIR,an open-source compilation stack that targets Qualcomm Hexagon Neural Processing Unit (NPU) and provides unified support for lowering Triton kernels and PyTorch models . Built using the MLIR framework, our compiler applies a structured sequence of passes to exploit NPU architectural features to accelerate AI workloads. It enables faster deployment of new Triton kernels (hand-written or subgraphs from PyTorch 2.0), for our target by providing automated compilation from kernel to binary. By ingesting Triton kernels, we generate mega-kernels that maximize data locality in the NPU's Tightly Coupled Memory (TCM), reducing the bandwidth bottlenecks inherent in library-based approaches. This initiative complements our commercial toolchains by providing developers with an open-source MLIR-based compilation stack that gives them a path to advance AI compilation capabilities through a more flexible approach. Hexagon-MLIR is a work-in-progress, and we are continuing to add many more optimizations and capabilities in this effort.",
-      "paperUrl": "https://arxiv.org/pdf/2602.19762",
-      "sourceUrl": "http://arxiv.org/abs/2602.19762",
-      "openalexId": "https://openalex.org/W7131319969",
-      "doi": "",
+      "paperUrl": "https://doi.org/10.48550/arxiv.2602.19762",
+      "openalexId": "https://openalex.org/W7131377983",
+      "doi": "10.48550/arxiv.2602.19762",
       "tags": [
         "MLIR",
         "Optimizations",
@@ -864,14 +874,31 @@
         "Processing Units Npus"
       ],
       "matchedAuthors": [
+        "Abhikrant Sharma",
+        "Abhilash Bhandari",
+        "Ankit Aggarwal",
         "Arun Rangasamy",
         "Dibyendu Das",
         "Fateme S. Hosseini",
         "Franck Slama",
         "Iulian Brumar",
+        "Jyotsna Verma",
+        "Krishnaprasad Bindumadhavan",
+        "Mitesh Kothari",
+        "Mohammed Javed Absar",
+        "Mohit Gupta",
         "Muthu Manikandan Baskaran",
+        "Ravishankar Kolachana",
+        "Richard Lethin",
         "Samarth Narang",
-        "Shalini Jain"
+        "Sanjay Motilal Ladwa",
+        "Shalini Jain",
+        "Snigdha Suresh Dalvi",
+        "Tasmia Rahman",
+        "Venkat Rasagna Reddy Komatireddy",
+        "Vivek Vasudevbhai Pandya",
+        "Xiyue Shi",
+        "Zachary Zipper"
       ],
       "matchedSubprojects": [
         "mlir"
@@ -1086,7 +1113,9 @@
         "Compilation"
       ],
       "matchedAuthors": [
-        "Alexandra Jimborean"
+        "Alberto Ros",
+        "Alexandra Jimborean",
+        "Shreya Alladi"
       ],
       "matchedSubprojects": [
         "llvm",
@@ -1283,7 +1312,15 @@
         "Three Realistic"
       ],
       "matchedAuthors": [
-        "Hanjun Kim"
+        "H. Kwon",
+        "Hanjun Kim",
+        "Hanwoong Jung",
+        "Hoyun Youm",
+        "J. Lee",
+        "S.D. Kim",
+        "Sanggyu Shin",
+        "Seungbin Song",
+        "Seungwon Lee"
       ],
       "matchedSubprojects": [
         "llvm"
@@ -1418,10 +1455,66 @@
       ],
       "matchedAuthors": [
         "Jingling Xue",
-        "Peng Di"
+        "Peng Di",
+        "Puzhuo Liu",
+        "Yi‐Fan Jiang"
       ],
       "matchedSubprojects": [
         "llvm"
+      ]
+    },
+    {
+      "id": "openalex-w7131476460",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Analyzing Latency Hiding and Parallelism in an MLIR-based AI Kernel Compiler",
+      "authors": [
+        {
+          "name": "Javed Absar",
+          "affiliation": ""
+        },
+        {
+          "name": "Samarth Narang",
+          "affiliation": ""
+        },
+        {
+          "name": "Muthu Manikandan Baskaran",
+          "affiliation": ""
+        }
+      ],
+      "year": "2026",
+      "publication": "arXiv",
+      "venue": "arXiv",
+      "type": "research-paper",
+      "abstract": "AI kernel compilation for edge devices depends on the compiler's ability to exploit parallelism and hide memory latency in the presence of hierarchical memory and explicit data movement. This paper reports a benchmark methodology and corresponding results for three compiler-controlled mechanisms in an MLIR-based compilation pipeline: vectorization (Vec), multi-threading (MT) across hardware contexts, and double buffering (DB) using ping--pong scratchpad buffers to overlap DMA transfers with compute. Using Triton/Inductor-generated kernels, we present an ablation ladder that separates the contribution of Vec, MT, and DB, and we quantify how MT speedup scales with problem size using GELU as a representative activation kernel. The results show that vectorization provides the primary gain for bandwidth-sensitive kernels, MT delivers substantial improvements once scheduling overhead is amortized, and DB provides additional benefit when transfers and compute can be overlapped (i.e., outside the extremes of purely memory-bound or purely compute-bound behavior).",
+      "paperUrl": "https://arxiv.org/pdf/2602.20204",
+      "sourceUrl": "http://arxiv.org/abs/2602.20204",
+      "openalexId": "https://openalex.org/W7131476460",
+      "doi": "",
+      "tags": [
+        "MLIR",
+        "Autovectorization",
+        "AI"
+      ],
+      "keywords": [
+        "MLIR",
+        "Autovectorization",
+        "AI",
+        "Kernels",
+        "Compute",
+        "Memory",
+        "Parallelism",
+        "Compilation",
+        "Analyzing Latency Hiding",
+        "Kernel Compiler"
+      ],
+      "matchedAuthors": [
+        "Javed Absar",
+        "Muthu Manikandan Baskaran",
+        "Samarth Narang"
+      ],
+      "matchedSubprojects": [
+        "mlir"
       ]
     },
     {
@@ -1557,7 +1650,11 @@
       ],
       "matchedAuthors": [
         "Antonio Barbalace",
-        "Binoy Ravindran"
+        "Binoy Ravindran",
+        "Edson Lemos Horta",
+        "Jiaxun Yang",
+        "Maxime France-Pillois",
+        "Zihan Huang"
       ],
       "matchedSubprojects": [
         "llvm"
@@ -2799,6 +2896,54 @@
       ]
     },
     {
+      "id": "openalex-w4413451685",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "SYprox: Combining Host and Device Perforation with Mixed Precision Approximation on Heterogeneous Architectures",
+      "authors": [
+        {
+          "name": "Lorenzo Carpentieri",
+          "affiliation": "University of Salerno"
+        },
+        {
+          "name": "Biagio Cosenza",
+          "affiliation": "University of Salerno"
+        }
+      ],
+      "year": "2025",
+      "publication": "Proceedings of the 39th ACM International Conference on Supercomputing",
+      "venue": "Proceedings of the 39th ACM International Conference on Supercomputing",
+      "type": "research-paper",
+      "abstract": "Approximate computing is an emerging paradigm that aims to exploit the inherent error tolerance of many applications, particularly in domains such as image processing and machine learning.Taking advantage of this property, applications can trade off accuracy for significant gains in performance and power consumption.Existing approximation techniques for GPUs are limited to very specific approaches, do not fully exploit the host-device execution model, and are often restricted in terms of programming models and supported target hardware.This paper introduces SYprox, a new approximate computing framework based on SYCL that allows programmers to easily implement heterogeneous approximated applications.SYprox supports multiple techniques, including data perforation, signal reconstruction, and mixed precision, and allows them to be combined to support a wide range of approximations.In particular, SYprox extends existing perforation approaches to allow both host and device data perforation.Experimental results show that SYprox's approximations are Pareto dominant with respect to state-of-the-art approaches and are portable to AMD, Intel and NVIDIA GPUs.",
+      "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3721145.3725741",
+      "sourceUrl": "https://doi.org/10.1145/3721145.3725741",
+      "openalexId": "https://openalex.org/W4413451685",
+      "doi": "10.1145/3721145.3725741",
+      "tags": [
+        "Performance",
+        "GPU",
+        "ML"
+      ],
+      "keywords": [
+        "Performance",
+        "GPU",
+        "ML",
+        "Syprox Combining Host",
+        "Perforation",
+        "Device Perforation",
+        "Mixed Precision Approximation",
+        "Approximate Computing",
+        "Heterogeneous Architectures"
+      ],
+      "matchedAuthors": [
+        "Biagio Cosenza",
+        "Lorenzo Carpentieri"
+      ],
+      "matchedSubprojects": [
+        "libsycl"
+      ]
+    },
+    {
       "id": "openalex-w7128574628",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
@@ -3878,7 +4023,10 @@
         "Interpreting Performances"
       ],
       "matchedAuthors": [
-        "Patrick Carribault"
+        "Adrien Roussel",
+        "Patrick Carribault",
+        "Romain Pereira",
+        "Thierry Gautier"
       ],
       "matchedSubprojects": [
         "llvm",
@@ -4370,6 +4518,8 @@
         "CPU"
       ],
       "matchedAuthors": [
+        "Kazuki Ichinose",
+        "Ryu Morimoto",
         "Tomoharu Ugawa"
       ],
       "matchedSubprojects": [
@@ -4705,7 +4855,12 @@
         "Optimization Automatic Tuner"
       ],
       "matchedAuthors": [
-        "Chun Huang"
+        "Chun Huang",
+        "Guangping Yu",
+        "Hengbiao Yu",
+        "Xin Yi",
+        "Xinni Liu",
+        "Xinpeng Li"
       ],
       "matchedSubprojects": [
         "clang",
@@ -4965,6 +5120,8 @@
         "Vector Architecture"
       ],
       "matchedAuthors": [
+        "Carlos García",
+        "Enrique de la Calle Montilla",
         "Francisco D. Igual"
       ],
       "matchedSubprojects": [
@@ -5630,7 +5787,12 @@
         "Transformations"
       ],
       "matchedAuthors": [
-        "Gilles Barthe"
+        "Gilles Barthe",
+        "Lionel Blatter",
+        "Santiago Arranz Olmos",
+        "Sören van der Wall",
+        "Zhang, Zhiyuan",
+        "Zhiyuan Zhang"
       ],
       "matchedSubprojects": [
         "llvm"
@@ -6636,9 +6798,12 @@
         "Empirical Performance"
       ],
       "matchedAuthors": [
+        "C. Y. Deng",
         "Chun Huang",
+        "Huan Liang",
         "Jianbin Fang",
-        "Peng Zhang"
+        "Peng Zhang",
+        "Tao Tang"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -7024,7 +7189,11 @@
         "Memory Corruption"
       ],
       "matchedAuthors": [
-        "Sabine Houy"
+        "Alexandre Bartel",
+        "Bruno Kreyssig",
+        "Patrick McDaniel",
+        "Sabine Houy",
+        "Timothée Riom"
       ],
       "matchedSubprojects": [
         "llvm"
@@ -8704,7 +8873,10 @@
         "Differential Fuzzing"
       ],
       "matchedAuthors": [
-        "Lei Wu"
+        "Chunyang Peng",
+        "Lei Wu",
+        "Muhui Jiang",
+        "Yajin Zhou"
       ],
       "matchedSubprojects": [
         "runtimes"
@@ -9311,7 +9483,9 @@
         "Softbound Cets Revisited"
       ],
       "matchedAuthors": [
+        "Benjamin Orthen",
         "Julian Horsch",
+        "Oliver Braunsdorf",
         "Philipp Zieris"
       ],
       "matchedSubprojects": [
@@ -9423,6 +9597,51 @@
       ],
       "matchedSubprojects": [
         "clang"
+      ]
+    },
+    {
+      "id": "openalex-w4392881826",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "SYCL in the edge: performance and energy evaluation for heterogeneous acceleration",
+      "authors": [
+        {
+          "name": "Youssef Faqir-Rhazoui",
+          "affiliation": "Universidad Complutense de Madrid"
+        },
+        {
+          "name": "Carlos García",
+          "affiliation": "Universidad Complutense de Madrid"
+        }
+      ],
+      "year": "2024",
+      "publication": "The Journal of Supercomputing",
+      "venue": "The Journal of Supercomputing | Vol. 80 (Issue 10)",
+      "type": "research-paper",
+      "abstract": "Abstract Edge computing is essential to handle increasing data volumes and processing capacities. It provides real-time and secure data processing near data sources, like smart devices, alleviating cloud computing energy use, and saving network bandwidth. Specialized accelerators, like GPUs and FPGAs, are vital for low-latency edge computing but the requirements to customized code for different hardware and vendors suppose important compatibility issues. This paper evaluates the potential of SYCL in addressing code portability issues encountered in edge computing. We employed the Polybench suite to compare various SYCL implementations, specifically DPC++ and AdaptiveCpp, with the native solution, CUDA. The disparity between SYCL implementations was negligible, at just 5%. Furthermore, we evaluated SYCL in the context of specific edge computing applications such as video processing using three different optical flow algorithms. The results revealed a slight performance gap of 3% when transitioning from CUDA to SYCL. Upon evaluating energy consumption, the observed difference ranged from $$\\pm 10\\%$$ <mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\"> <mml:mrow> <mml:mo>±</mml:mo> <mml:mn>10</mml:mn> <mml:mo>%</mml:mo> </mml:mrow> </mml:math> , depending on the application utilized. These gaps are the price one may need to pay when achieving the ability to successfully run the same code on two distinct edge boards. These findings underscore SYCL’s capacity to increase productivity in terms of development costs and facilitate IoT deployment without being locked into a particular platform or manufacturer.",
+      "paperUrl": "https://link.springer.com/content/pdf/10.1007/s11227-024-05957-6.pdf",
+      "sourceUrl": "https://doi.org/10.1007/s11227-024-05957-6",
+      "openalexId": "https://openalex.org/W4392881826",
+      "doi": "10.1007/s11227-024-05957-6",
+      "tags": [
+        "Performance",
+        "GPU",
+        "CUDA"
+      ],
+      "keywords": [
+        "Performance",
+        "GPU",
+        "CUDA",
+        "Edge Computing",
+        "Energy",
+        "Edge Performance",
+        "Heterogeneous Acceleration"
+      ],
+      "matchedAuthors": [
+        "Carlos García"
+      ],
+      "matchedSubprojects": [
+        "libsycl"
       ]
     },
     {
@@ -9686,7 +9905,12 @@
         "WASM Runtimes"
       ],
       "matchedAuthors": [
-        "Haoyu Wang"
+        "Gang Huang",
+        "Haoyu Wang",
+        "Mugeng Liu",
+        "Xuanzhe Liu",
+        "Yixuan Zhang",
+        "Yun Ma"
       ],
       "matchedSubprojects": [
         "runtimes"
@@ -10163,7 +10387,12 @@
         "Openacc Offloading"
       ],
       "matchedAuthors": [
-        "Reuben D. Budiardja"
+        "Anand N. P. Radhakrishnan",
+        "Benjamin Wilfong",
+        "Henry A. Le Berre",
+        "Reuben D. Budiardja",
+        "Spencer H. Bryngelson",
+        "Steve Abbott"
       ],
       "matchedSubprojects": [
         "offload"
@@ -10891,7 +11120,9 @@
       ],
       "matchedAuthors": [
         "Arkaprava Sinha",
+        "Das, Srijan",
         "Dominick Reilly",
+        "François Brémond",
         "M. Govind",
         "Pu Wang",
         "Rajatsubhra Chakraborty",
@@ -10946,6 +11177,7 @@
         "Control Flow Transfers"
       ],
       "matchedAuthors": [
+        "Florian Kasten",
         "Julian Horsch",
         "Philipp Zieris"
       ],
@@ -12577,7 +12809,6 @@
       "type": "research-paper",
       "abstract": "Interest in metaprogramming, reflection, and compile-time evaluation continues to inspire and foster innovation among the users and designers of the C++ programming language. Regretably, the impact on compile-times of such features can be significant; and outside of build systems, multi-core parallelism is unable to bring down compilation times of individual translation units. We present ClangOz, a novel Clang-based research compiler that addresses this issue by evaluating annotated constant expressions in parallel, thereby reducing compilation times. Prior benchmarks analysed parallel map operations, but were unable to consider reduction operations. Thus we also introduce parallel reduction functionality, alongside two additional benchmark programs.",
       "paperUrl": "https://doi.org/10.1016/j.cola.2024.101298",
-      "sourceUrl": "https://openalex.org/W4403286085",
       "openalexId": "https://openalex.org/W4403286085",
       "doi": "10.1016/j.cola.2024.101298",
       "tags": [
@@ -12943,7 +13174,11 @@
         "Assessing Opportunities"
       ],
       "matchedAuthors": [
-        "Manuel Prieto"
+        "Carlos García",
+        "Enzo Rucci",
+        "Manuel Costanzo",
+        "Manuel Prieto",
+        "Marcelo Naiouf"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -13181,6 +13416,8 @@
         "CGRAs"
       ],
       "matchedAuthors": [
+        "Arham Khan",
+        "Ian Foster",
         "Kyle Chard",
         "Maksim Levental",
         "Ryan Chard",
@@ -14159,6 +14396,73 @@
       ]
     },
     {
+      "id": "openalex-w4386528112",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Unified Shared Memory: Friend or Foe? Understanding the Implications of Unified Memory on Managed Heaps",
+      "authors": [
+        {
+          "name": "Juan Fumero",
+          "affiliation": "University of Manchester"
+        },
+        {
+          "name": "Florin Blanaru",
+          "affiliation": ""
+        },
+        {
+          "name": "Athanasios Stratikopoulos",
+          "affiliation": "University of Manchester"
+        },
+        {
+          "name": "Steve Dohrmann",
+          "affiliation": "Intel (United States)"
+        },
+        {
+          "name": "Sandhya Viswanathan",
+          "affiliation": "Intel (United States)"
+        },
+        {
+          "name": "Christos Kotselidis",
+          "affiliation": "University of Manchester"
+        }
+      ],
+      "year": "2023",
+      "publication": "Proceedings of the 20th ACM SIGPLAN International Conference on Managed Programming Languages and Runtimes",
+      "venue": "Proceedings of the 20th ACM SIGPLAN International Conference on Managed Programming Languages and Runtimes",
+      "type": "research-paper",
+      "abstract": "Adopting heterogeneous execution on GPUs and FPGAs in managed runtime systems, such as Java, is a challenging task due to the complexities of the underlying virtual machine. The majority of the current work has been focusing on compiler toolchains to solve the challenge of transparent just-in-time compilation of different code segments onto the accelerators. However, apart from providing automatic code generation, another paramount challenge is the seamless interoperability between the host memory manager and the Garbage Collector (GC). Currently, heterogeneous programming models that run on top of managed runtime systems, such as Aparapi and TornadoVM, need to block the GC when running native code (e.g, JNI code) in order to prevent the GC from moving data while the native code is still running on the hardware accelerator.",
+      "paperUrl": "https://dl.acm.org/doi/pdf/10.1145/3617651.3622984",
+      "sourceUrl": "https://doi.org/10.1145/3617651.3622984",
+      "openalexId": "https://openalex.org/W4386528112",
+      "doi": "10.1145/3617651.3622984",
+      "tags": [
+        "runtimes",
+        "Backend",
+        "Code Generation",
+        "GPU",
+        "Programming Languages"
+      ],
+      "keywords": [
+        "runtimes",
+        "Backend",
+        "Code Generation",
+        "GPU",
+        "Programming Languages",
+        "Shared Memory Friend",
+        "Managed Runtime",
+        "Unified Shared Memory",
+        "Foe Understanding",
+        "Managed Heaps",
+        "Unified Memory"
+      ],
+      "matchedAuthors": [
+        "Christos Kotselidis"
+      ],
+      "matchedSubprojects": [
+        "runtimes"
+      ]
+    },
+    {
       "id": "openalex-w4390679238",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
@@ -14365,10 +14669,13 @@
       ],
       "matchedAuthors": [
         "Ben Ashbaugh",
+        "Greg Lueck",
         "James Brodman",
         "Michael Kinsner",
+        "Michael Voss",
         "Roland Schulz",
-        "S. J. Pennycook"
+        "S. J. Pennycook",
+        "Steffen Larsen"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -14925,11 +15232,61 @@
         "Frequency Scaling"
       ],
       "matchedAuthors": [
-        "Federico Ficarelli"
+        "Biagio Cosenza",
+        "Daniele Cesarini",
+        "Federico Ficarelli",
+        "Kaijie Fan",
+        "Lorenzo Carpentieri",
+        "Marco D’Antonio"
       ],
       "matchedSubprojects": [
         "libsycl",
         "runtimes"
+      ]
+    },
+    {
+      "id": "openalex-w4387670706",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "SYCL in the Edge: Performance Evaluation for Heterogeneous Acceleration",
+      "authors": [
+        {
+          "name": "Youssef Faqir-Rhazoui",
+          "affiliation": "Universidad Complutense de Madrid"
+        },
+        {
+          "name": "Carlos García",
+          "affiliation": "Universidad Complutense de Madrid"
+        }
+      ],
+      "year": "2023",
+      "publication": "Research Square (Research Square)",
+      "venue": "Research Square (Research Square)",
+      "type": "research-paper",
+      "abstract": "Abstract Edge computing is essential to handle increasing data volumes and processing capacities. It provides real-time, secure data processing near data sources, like smart devices, alleviating cloud computing energy use and saving network band-width. Specialized accelerators, like GPUs and FPGAs, are vital for low-latency edge computing but the requirements to customized code for different hardware and vendors supposes important compatibility issues. This paper evaluates the potential of SYCL in addressing code portability issues encountered in edge computing. We employed the Polybench suite to compare various SYCL implementations, specifically DPC++ and AdaptiveCpp, with the native solution, CUDA. The disparity between SYCL implementations was negligible, at just 5%. Furthermore, we evaluated SYCL in the context of specific edge computing applications such as video processing using three different optical flow algorithms. The results exposed a potential performance gap of 19% between CUDA and SYCL. This performance differential is the price one may need to pay when achieving the ability to successfully run the same code on two distinct edge boards with four different architectures, including x86/64 CPU, ARM CPU, NVIDIA GPU, and Intel GPU. These findings underscore SYCL’s capacity to increase productivity in term of development costs and facilitate the IoT deployment without being locked into a particular platform or manufacturer.",
+      "paperUrl": "https://www.researchsquare.com/article/rs-3439288/latest.pdf",
+      "sourceUrl": "https://doi.org/10.21203/rs.3.rs-3439288/v1",
+      "openalexId": "https://openalex.org/W4387670706",
+      "doi": "10.21203/rs.3.rs-3439288/v1",
+      "tags": [
+        "Performance",
+        "GPU",
+        "CUDA"
+      ],
+      "keywords": [
+        "Performance",
+        "GPU",
+        "CUDA",
+        "Edge Computing",
+        "Edge Performance",
+        "CPU",
+        "Heterogeneous Acceleration"
+      ],
+      "matchedAuthors": [
+        "Carlos García"
+      ],
+      "matchedSubprojects": [
+        "libsycl"
       ]
     },
     {
@@ -15500,7 +15857,10 @@
         "Runtime Libraries"
       ],
       "matchedAuthors": [
+        "Haipeng Cai",
+        "Haoran Yang",
         "Long Cheng",
+        "Wen Li",
         "Xiapu Luo"
       ],
       "matchedSubprojects": [
@@ -15896,8 +16256,13 @@
         "Bricklib"
       ],
       "matchedAuthors": [
+        "Hans Johansen",
         "Mary Hall",
-        "Samuel Williams"
+        "Oscar Antepara",
+        "Priya Goyal",
+        "Samantha Hirsch",
+        "Samuel Williams",
+        "Tuowen Zhao"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -17254,9 +17619,11 @@
         "Spmd Kernels"
       ],
       "matchedAuthors": [
+        "Aksel Alpay",
         "Holger Fröning",
         "Joachim Meyer",
-        "Sebastian Hack"
+        "Sebastian Hack",
+        "Vincent Heuveline"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -17429,7 +17796,9 @@
         "Hwasanio Detecting"
       ],
       "matchedAuthors": [
-        "Konrad Hohentanner"
+        "Florian H. Kasten",
+        "Konrad Hohentanner",
+        "Lukas Auer"
       ],
       "matchedSubprojects": [
         "addresssanitizer"
@@ -17484,7 +17853,8 @@
       "matchedAuthors": [
         "Giorgis Georgakoudis",
         "Harshitha Menon",
-        "Konstantinos Parasyris"
+        "Konstantinos Parasyris",
+        "Zane Fink"
       ],
       "matchedSubprojects": [
         "offload"
@@ -17788,6 +18158,7 @@
       "matchedAuthors": [
         "Arun Thangamani",
         "Bérenger Bramas",
+        "Raphaël Colin",
         "Stéphane Genaud",
         "Tiago Trevisan Jost",
         "Vincent Loechner"
@@ -17970,7 +18341,9 @@
         "Dedicated Thread"
       ],
       "matchedAuthors": [
+        "Dieter Kranzlmüller",
         "Josef Weidendorfer",
+        "Karl Fürlinger",
         "Minh Thanh Chung"
       ],
       "matchedSubprojects": [
@@ -18214,6 +18587,54 @@
       ],
       "matchedSubprojects": [
         "mlir"
+      ]
+    },
+    {
+      "id": "openalex-w4376610236",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Exploring the performance and portability of the k-means algorithm on SYCL across CPU and GPU architectures",
+      "authors": [
+        {
+          "name": "Youssef Faqir-Rhazoui",
+          "affiliation": "Universidad Complutense de Madrid"
+        },
+        {
+          "name": "Carlos García",
+          "affiliation": "Universidad Complutense de Madrid"
+        }
+      ],
+      "year": "2023",
+      "publication": "The Journal of Supercomputing",
+      "venue": "The Journal of Supercomputing | Vol. 79 (Issue 16)",
+      "type": "research-paper",
+      "abstract": "Abstract The aim of SYCL is to reduce the gap between the performance and code portability of the main accelerators used in HPC, such as multi-vendor CPUs, GPUs, and FPGAs. To evaluate SYCL’s performance portability, this paper uses the k -means algorithm as a case study. The k -means algorithm is simple to code but can be complex to optimize. In this research, we compare our developed SYCL version with the most efficient implementations of CUDA and OpenMP. Our resulting SYCL code can potentially run on multi-vendor CPUs and GPUs. Additionally, we have created a hand-tuned SYCL variation that is optimized for specific device architectures (CPU, NVIDIA GPU, and Intel GPU) to evaluate the performance difference between a standard version and an optimized one. The results show that SYCL outperforms Intel GPUs and CPUs compared to the state-of-the-art He-Vialle version, while on NVIDIA GPUs SYCL offers equivalent performance compared to its native CUDA implementation.",
+      "paperUrl": "https://link.springer.com/content/pdf/10.1007/s11227-023-05373-2.pdf",
+      "sourceUrl": "https://doi.org/10.1007/s11227-023-05373-2",
+      "openalexId": "https://openalex.org/W4376610236",
+      "doi": "10.1007/s11227-023-05373-2",
+      "tags": [
+        "OpenMP",
+        "Performance",
+        "GPU",
+        "CUDA"
+      ],
+      "keywords": [
+        "OpenMP",
+        "Performance",
+        "GPU",
+        "CUDA",
+        "Multi Vendor Cpus",
+        "GPU Architectures",
+        "Portability",
+        "Version"
+      ],
+      "matchedAuthors": [
+        "Carlos García"
+      ],
+      "matchedSubprojects": [
+        "libsycl",
+        "openmp"
       ]
     },
     {
@@ -18475,19 +18896,26 @@
       "publication": "Lecture Notes in Computer Science",
       "venue": "Lecture Notes in Computer Science",
       "type": "research-paper",
-      "abstract": "No abstract available in discovery metadata.",
+      "abstract": "Abstract We identify and show how to overcome an OpenMP bottleneck in the administration of GPU memory. It arises for a wave equation solver on dynamically adaptive block-structured Cartesian meshes, which keeps all CPU threads busy and allows all of them to offload sets of patches to the GPU. Our studies show that multithreaded, concurrent, non-deterministic access to the GPU leads to performance breakdowns, since the GPU memory bookkeeping as offered through OpenMP’s clause, i.e., the allocation and freeing, becomes another runtime challenge besides expensive data transfer and actual computation. We, therefore, propose to retain the memory management responsibility on the host: A caching mechanism acquires memory on the accelerator for all CPU threads, keeps hold of this memory and hands it out to the offloading threads upon demand. We show that this user-managed, CPU-based memory administration helps us to overcome the GPU memory bookkeeping bottleneck and speeds up the time-to-solution of Finite Volume kernels by more than an order of magnitude.",
       "paperUrl": "https://link.springer.com/content/pdf/10.1007/978-3-031-32041-5_4.pdf",
       "sourceUrl": "https://doi.org/10.1007/978-3-031-32041-5_4",
       "openalexId": "https://openalex.org/W4382315185",
       "doi": "10.1007/978-3-031-32041-5_4",
       "tags": [
         "OpenMP",
+        "offload",
+        "Performance",
         "GPU"
       ],
       "keywords": [
         "OpenMP",
+        "offload",
+        "Performance",
         "GPU",
         "Offloading",
+        "Memory",
+        "GPU Memory Bookkeeping",
+        "All CPU Threads",
         "Dynamically Adaptive Meshes",
         "GPU Offloading",
         "Hyperbolic Finite"
@@ -18670,6 +19098,7 @@
       "matchedAuthors": [
         "Ben Ashbaugh",
         "James Brodman",
+        "James Reinders",
         "Michael Kinsner",
         "S. J. Pennycook",
         "Xinmin Tian"
@@ -19239,7 +19668,10 @@
         "Beau Johnston",
         "Jeffrey S. Vetter",
         "Keita Teranishi",
-        "Seyong Lee"
+        "Norihisa Fujita",
+        "Ryohei Kobayashi",
+        "Seyong Lee",
+        "Taisuke Boku"
       ],
       "matchedSubprojects": [
         "libsycl",
@@ -19932,7 +20364,11 @@
         "Assessing Opportunities"
       ],
       "matchedAuthors": [
-        "Manuel Prieto"
+        "Carlos García",
+        "Enzo Rucci",
+        "Manuel Costanzo",
+        "Manuel Prieto",
+        "Marcelo Naiouf"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -20562,8 +20998,12 @@
         "Performance Portable Sycl"
       ],
       "matchedAuthors": [
+        "Adrian Pope",
         "Esteban Rangel",
-        "S. J. Pennycook"
+        "Nicholas Frontiere",
+        "S. J. Pennycook",
+        "Varsha Madananth",
+        "Zhiqiang Ma"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -22833,7 +23273,8 @@
         "David Leopoldseder",
         "Hanspeter Mössenböck",
         "Lukas Stadler",
-        "Raphael Mosaner"
+        "Raphael Mosaner",
+        "Wolfgang Kisling"
       ],
       "matchedSubprojects": [
         "runtimes"
@@ -23077,6 +23518,8 @@
       ],
       "matchedAuthors": [
         "Antonio Barbalace",
+        "Kimberley Stonehouse",
+        "Raven Szewczyk",
         "Tom Spink"
       ],
       "matchedSubprojects": [
@@ -23620,6 +24063,53 @@
       ]
     },
     {
+      "id": "openalex-w4313242131",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Exploring the Performance and Portability of the k-means Algorithm on SYCL Across CPU and GPU Architectures",
+      "authors": [
+        {
+          "name": "Youssef Faqir-Rhazoui",
+          "affiliation": "Universidad Complutense de Madrid"
+        },
+        {
+          "name": "Carlos García",
+          "affiliation": "Universidad Complutense de Madrid"
+        }
+      ],
+      "year": "2022",
+      "publication": "Research Square (Research Square)",
+      "venue": "Research Square (Research Square)",
+      "type": "research-paper",
+      "abstract": "Abstract The aim of SYCL is to reduce the gap between the performance and code portability of the main accelerators used in HPC, such as multi-vendor CPUs, GPUs, and FPGAs. To evaluate SYCL's performance portability, this paper uses the k-means algorithm as a case study. The k-means algorithm is simple to code but can be complex to optimize. In this study, we compare our developed SYCL version with the most efficient implementations of CUDA and OpenMP. Our resulting SYCL code can potentially run on multi-vendor CPUs and GPUs. Additionally, we have created a hand-tuned SYCL variation that is optimized for specific device architectures (CPU, NVIDIA GPU, and Intel GPU) to evaluate the performance difference between a standard version and an optimized one. The results show that SYCL outperforms Intel GPUs and CPUs by 8% compared to the original versions, while on NVIDIA GPUs SYCL offers equivalent performance compared to the native CUDA implementation.",
+      "paperUrl": "https://www.researchsquare.com/article/rs-2402689/latest.pdf",
+      "sourceUrl": "https://doi.org/10.21203/rs.3.rs-2402689/v1",
+      "openalexId": "https://openalex.org/W4313242131",
+      "doi": "10.21203/rs.3.rs-2402689/v1",
+      "tags": [
+        "OpenMP",
+        "Performance",
+        "GPU",
+        "CUDA"
+      ],
+      "keywords": [
+        "OpenMP",
+        "Performance",
+        "GPU",
+        "CUDA",
+        "Multi Vendor Cpus",
+        "GPU Architectures",
+        "Portability"
+      ],
+      "matchedAuthors": [
+        "Carlos García"
+      ],
+      "matchedSubprojects": [
+        "libsycl",
+        "openmp"
+      ]
+    },
+    {
       "id": "openalex-w3214121473",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
@@ -23662,7 +24152,9 @@
       ],
       "matchedAuthors": [
         "Daniele Cono D’Elia",
-        "Leonardo Querzoni"
+        "Federico Palmaro",
+        "Leonardo Querzoni",
+        "Lorenzo Invidia"
       ],
       "matchedSubprojects": [
         "runtimes"
@@ -24878,7 +25370,9 @@
         "Daniele Bonetta",
         "David Leopoldseder",
         "Hanspeter Mössenböck",
-        "Lukas Stadler"
+        "Lukas Makor",
+        "Lukas Stadler",
+        "Sebastian Kloibhofer"
       ],
       "matchedSubprojects": [
         "runtimes"
@@ -28659,7 +29153,11 @@
       ],
       "matchedAuthors": [
         "Fudong Liu",
-        "Jianmin Pang"
+        "Jianmin Pang",
+        "Jie Tan",
+        "Jun Wang",
+        "Mingliang Li",
+        "Yue Feng"
       ],
       "matchedSubprojects": [
         "offload"
@@ -29602,7 +30100,9 @@
         "Programs Generated"
       ],
       "matchedAuthors": [
-        "Masato Edahiro"
+        "Masaki Kondo",
+        "Masato Edahiro",
+        "Pinjie Xu"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -29949,6 +30449,7 @@
         "Reducible Control Flow"
       ],
       "matchedAuthors": [
+        "Julian Rosemann",
         "Sebastian Hack",
         "Simon Moll"
       ],
@@ -30456,8 +30957,13 @@
         "Putting Idle Vector"
       ],
       "matchedAuthors": [
+        "Donghyeon Kim",
+        "Hongjun Um",
+        "Jonghyun Ham",
+        "Seokho Lee",
         "Seokwon Kang",
-        "Yongjun Park"
+        "Yongjun Park",
+        "Youngbin Son"
       ],
       "matchedSubprojects": [
         "offload"
@@ -31021,11 +31527,13 @@
         "Tdo Cim Transparent"
       ],
       "matchedAuthors": [
+        "Ali BanaGozar",
         "Gagandeep Singh",
         "Henk Corporaal",
         "Kanishkan Vadivel",
         "Lorenzo Chelini",
-        "Roel Jordans"
+        "Roel Jordans",
+        "Stefano Corda"
       ],
       "matchedSubprojects": [
         "llvm",
@@ -31125,7 +31633,7 @@
       "publication": "2020 IEEE/ACM 6th Workshop on the LLVM Compiler Infrastructure in HPC (LLVM-HPC) and Workshop on Hierarchical Parallelism for Exascale Computing (HiPar)",
       "venue": "2020 IEEE/ACM 6th Workshop on the LLVM Compiler Infrastructure in HPC (LLVM-HPC) and Workshop on Hierarchical Parallelism for Exascale Computing (HiPar)",
       "type": "research-paper",
-      "abstract": "The phase-ordering problem of modern compilers has received a lot of attention from the research community over the years, yet remains largely unsolved. Various optimization sequences exposed to the user are manually designed by compiler developers. In designing such a sequence developers have to choose the set of optimization passes, their parameters and ordering within a sequence. Resulting sequences usually fall short of achieving optimal runtime for a given source code and may sometimes even degrade the performance when compared to unoptimized version. In this paper, we employ a deep reinforcement learning approach to the phase-ordering problem. Provided with sub-sequences constituting LLVM's O3 sequence, our agent learns to outperform the O3 sequence on the set of source codes used for training and achieves competitive performance on the validation set, gaining up to 1.32x speedup on previously-unseen programs. Notably, our approach differs from autotuning methods by not depending on one or more test runs of the program for making successful optimization decisions. It has no dependence on any dynamic feature, but only on the statically-attainable intermediate representation of the source code. We believe that the models trained using our approach can be integrated into modern compilers as neural optimization agents, at first to complement, and eventually replace the hand-crafted optimization sequences.",
+      "abstract": "The phase-ordering problem of modern compilers has received a lot of attention from the research community over the years, yet remains largely unsolved. Various optimization sequences exposed to the user are manually designed by compiler developers. In designing such a sequence developers have to choose the set of optimization passes, their parameters and ordering within a sequence. Resulting sequences usually fall short of achieving optimal runtime for a given source code and may sometimes even degrade the performance when compared to unoptimized version. In this paper, we employ a deep reinforcement learning approach to the phase-ordering problem. Provided with sub-sequences constituting LLVM's O3 sequence, our agent learns to outperform the O3 sequence on the set of source codes used for training and achieves competitive performance on the validation set, gaining up to 1.32x speedup on previously-unseen programs. Notably, our approach differs from autotuning methods by not depending on one or more test runs of the program for making successful optimization decisions. It has no dependence on any dynamic feature, but only on the statically-attainable intermediate representation of the source code. We believe that the models trained using our approach can be integrated into modern compilers as neural optimization agents, at first to complement, and eventually replace the handcrafted optimization sequences.",
       "paperUrl": "https://arxiv.org/pdf/2008.08951",
       "sourceUrl": "https://doi.org/10.1109/llvmhpchipar51896.2020.00006",
       "openalexId": "https://openalex.org/W3064302811",
@@ -32410,7 +32918,8 @@
       ],
       "matchedAuthors": [
         "Maurice Jamieson",
-        "Nick Brown"
+        "Nick Brown",
+        "Sihang Liu"
       ],
       "matchedSubprojects": [
         "offload"
@@ -32460,6 +32969,8 @@
         "Middlebox"
       ],
       "matchedAuthors": [
+        "Arvind Krishnamurthy",
+        "Danyang Zhuo",
         "Kaiyuan Zhang"
       ],
       "matchedSubprojects": [
@@ -32974,6 +33485,7 @@
       "matchedAuthors": [
         "Ben Ashbaugh",
         "James Brodman",
+        "James Reinders",
         "Michael Kinsner",
         "S. J. Pennycook",
         "Xinmin Tian"
@@ -33565,7 +34077,7 @@
       "publication": "Lecture Notes in Computer Science",
       "venue": "Lecture Notes in Computer Science",
       "type": "research-paper",
-      "abstract": "Incorrect usage of OpenMP constructs may cause different kinds of defects in OpenMP applications. Most of the existing work focuses on concurrency bugs such as data races and deadlocks, since concurrency bugs are difficult to detect and debug. In this paper, we discuss an under-examined defect in OpenMP applications: memory anomalies. These occur when the application issues illegal memory accesses that may result in a non-deterministic result or even a program crash. Based on the latest OpenMP 5.0 specification, we analyze some OpenMP usage errors that may lead to memory anomalies. Then we illustrate three kinds of memory anomalies: use of uninitialized memory (UUM), use of stale data (USD), and use after free (UAF). While all three anomalies can occur in sequential programs, their manifestations in parallel OpenMP programs can be different, and debugging such anomalies in the context of parallel programs also imposes an additional complexity relative to sequential programs. To measure the effectiveness of memory anomaly detectors on OpenMP applications, we have evaluated three state-of-the-art tools with a group of micro-benchmarks. These micro-benchmarks are either selected from the DRACC benchmark suite or constructed from our own experience. The evaluation result shows that none of these tools can currently handle all three kinds of memory anomalies.",
+      "abstract": "No abstract available in discovery metadata.",
       "paperUrl": "https://link.springer.com/content/pdf/10.1007/978-3-030-58144-2_21.pdf",
       "sourceUrl": "https://doi.org/10.1007/978-3-030-58144-2_21",
       "openalexId": "https://openalex.org/W3082924206",
@@ -33575,12 +34087,7 @@
       ],
       "keywords": [
         "OpenMP",
-        "Memory",
-        "Memory Anomalies",
-        "All Three",
-        "Concurrency Bugs",
-        "Sequential Programs",
-        "Three Kinds"
+        "Memory Anomalies"
       ],
       "matchedAuthors": [
         "Joachim Protze",
@@ -34413,7 +34920,9 @@
       "matchedAuthors": [
         "Guoxing Chen",
         "Sanchuan Chen",
+        "Ten H. Lai",
         "Yinqian Zhang",
+        "Yuan Xiao",
         "Zhiqiang Lin"
       ],
       "matchedSubprojects": [
@@ -34923,10 +35432,12 @@
         "ISA"
       ],
       "matchedAuthors": [
+        "A K M Fazla Mehrab",
         "Binoy Ravindran",
         "Mohamed Lamine Karaoui",
         "Pierre Olivier",
-        "Robert Lyerly"
+        "Robert Lyerly",
+        "Stefan Lankes"
       ],
       "matchedSubprojects": [
         "offload"
@@ -35449,8 +35960,14 @@
         "Vulnerable Open"
       ],
       "matchedAuthors": [
+        "Ashish Bijlani",
+        "Brendan Saltaformaggio",
+        "Ji Yang",
+        "Moses Ike",
         "Omar Alrawi",
-        "Wenke Lee"
+        "Ruian Duan",
+        "Wenke Lee",
+        "Yiyuan Xiong"
       ],
       "matchedSubprojects": [
         "offload"
@@ -35667,12 +36184,16 @@
         "Agnostic Accuracy Tuning"
       ],
       "matchedAuthors": [
+        "Hashim Sharif",
         "Keyur Joshi",
         "Maria Kotsifakou",
+        "Muhammad Huzaifa",
+        "Nathan Zhao",
         "Prakalp Srivastava",
         "Sarita V. Adve",
         "Saša Misailovíc",
-        "Vikram Adve"
+        "Vikram Adve",
+        "Yasmin Sarita"
       ],
       "matchedSubprojects": [
         "offload"
@@ -36297,6 +36818,7 @@
         "Instrumentation"
       ],
       "matchedAuthors": [
+        "Z. Parragi",
         "Zoltán Porkoláb"
       ],
       "matchedSubprojects": [
@@ -36490,6 +37012,54 @@
       ],
       "matchedSubprojects": [
         "clang"
+      ]
+    },
+    {
+      "id": "openalex-w2939240286",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Cross-ISA Execution Migration of Unikernels: Build Toolchain, Memory Alignment, and VM State Transfer Techniques",
+      "authors": [
+        {
+          "name": "A K M Fazla Mehrab",
+          "affiliation": ""
+        }
+      ],
+      "year": "2018",
+      "publication": "VTechWorks (Virginia Tech)",
+      "venue": "VTechWorks (Virginia Tech)",
+      "type": "thesis",
+      "abstract": "The data centers are composed of resource-rich expensive server machines. A server, overloadeded with workloads, offloads some jobs to other servers; otherwise, its throughput becomes low. On the other hand, low-end embedded computers are low-power, and cheap OS-capable devices. We propose a system to use these embedded devices besides the servers and migrate some jobs from the server to the boards to increase the throughput when overloaded. The datacenters usually run workloads inside virtual machines (VM), but these embedded boards are not capable of running full-fledged VMs. In this thesis, we propose to use lightweight VMs, called unikernel, which can run on these low-end embedded devices. Another problem is that the most efficient versions of these boards have different instruction set architectures than the servers have. The ISA-difference between the servers and the embedded boards and the migration of the entire unikernel between them makes the migration a non-trivial problem. This thesis proposes a way to provide the unikernels with migration capabilities so that it becomes possible to offload workloads from the server to the embedded boards. This thesis describes a toolchain development process for building migratable unikernel for the native applications. This thesis also describes the alignment of the memory components between unikernels for different ISAs, so that the memory referencing remains valid and consistent after migration. Moreover, this thesis represents an efficient VM state transfer method so that the workloads experience higher execution time and minimum downtime due to the migration.",
+      "paperUrl": "http://hdl.handle.net/10919/86485",
+      "openalexId": "https://openalex.org/W2939240286",
+      "doi": "",
+      "tags": [
+        "offload",
+        "Infrastructure",
+        "GPU",
+        "Embedded"
+      ],
+      "keywords": [
+        "offload",
+        "Infrastructure",
+        "GPU",
+        "Embedded",
+        "Offloading",
+        "ISA Execution Migration",
+        "Embedded Boards",
+        "Thesis",
+        "Servers",
+        "Workloads",
+        "Build Toolchain Memory",
+        "Unikernels Build Toolchain",
+        "State Transfer",
+        "Embedded Devices"
+      ],
+      "matchedAuthors": [
+        "A K M Fazla Mehrab"
+      ],
+      "matchedSubprojects": [
+        "offload"
       ]
     },
     {
@@ -37131,6 +37701,55 @@
       ]
     },
     {
+      "id": "openalex-w2736295073",
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "SunDew: systematic automated security testing (keynote)",
+      "authors": [
+        {
+          "name": "Domagoj Babić",
+          "affiliation": "Google (United States)"
+        }
+      ],
+      "year": "2017",
+      "publication": "Proceedings of the 24th ACM SIGSOFT International SPIN Symposium on Model Checking of Software",
+      "venue": "Proceedings of the 24th ACM SIGSOFT International SPIN Symposium on Model Checking of Software",
+      "type": "research-paper",
+      "abstract": "SunDew is a new automated test generation framework developed at Google, focused on finding security bugs in C/C++ code. It combines the strengths of multiple test generation techniques under a single cohesive platform. It leverages the vast amount of computational resources available at Google to massively parallelize the automated test generation and triage. By using a portfolio of test generation techniques, SunDew aims to overcome the coverage saturation (or plateau) that occurs with any individual technique. This saturation manifests as the inability of the technique to discover unexplored parts of a program after a certain number of generated tests. A portfolio of techniques, on the other hand, provides a diversity of test generation strategies that complement each other. SunDew embeds the most recent advances in automated test case generation, which provide precision and thoroughness. For example, symbolic execution uses powerful constraint solvers to generate tests that precisely follow desired program branches. This approach allows symbolic execution to reach code executed under very specific input preconditions that would be difficult to discover randomly. At the same time, recent improvements to coverage guided automated fuzzing, such as AFL or LibFuzzer, generates tests faster than symbolic execution. Thus, SunDew alternates these approaches by using coverage-guided fuzzing to quickly bring the coverage to a first saturation level, then using symbolic execution to refine the search for harder-to-reach code. This, in turn, may provide additional inputs for coverage-guided fuzzers, etc. As part of SunDew, we also developed a number of format-aware fuzzers, that rely on, amongst other things, machine learning to generate language-aware fuzzers. The SunDew architecture follows a distributed continuous pipeline pattern. It allows a performance-based dynamic resource allocation for the various test generation techniques. This allows us to maximize the combined output of the test suite generation and avoid long plateaus in the coverage growth of the test suite. We discuss the application of SunDew on a variety of fuzzing targets of interest.",
+      "paperUrl": "https://doi.org/10.1145/3092282.3092314",
+      "openalexId": "https://openalex.org/W2736295073",
+      "doi": "10.1145/3092282.3092314",
+      "tags": [
+        "Dynamic Analysis",
+        "Testing",
+        "Security",
+        "Performance",
+        "ML"
+      ],
+      "keywords": [
+        "Dynamic Analysis",
+        "Testing",
+        "Security",
+        "Performance",
+        "ML",
+        "Symbolic Execution",
+        "Model Checking",
+        "Fuzzing",
+        "Sundew Systematic Automated",
+        "Coverage Guided",
+        "Allows",
+        "Aware Fuzzers",
+        "Saturation",
+        "Automated Security Testing"
+      ],
+      "matchedAuthors": [
+        "Domagoj Babić"
+      ],
+      "matchedSubprojects": [
+        "libfuzzer"
+      ]
+    },
+    {
       "id": "openalex-w2761620348",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
@@ -37272,6 +37891,7 @@
         "Parallel Tasking Runtimes"
       ],
       "matchedAuthors": [
+        "Patrick Atkinson",
         "Simon McIntosh‐Smith"
       ],
       "matchedSubprojects": [
@@ -38526,6 +39146,7 @@
         "Albert Cohen",
         "Andi Drebes",
         "Antoniu Pop",
+        "Jean-Baptiste Bréjon",
         "Karine Heydemann"
       ],
       "matchedSubprojects": [
@@ -39044,10 +39665,23 @@
         "Designed Stack"
       ],
       "matchedAuthors": [
+        "Amanieu d'Antras",
+        "Andrey Rodchenko",
         "Andy Nisbet",
         "Antoniu Pop",
+        "Christos Kotselidis",
+        "Colin Barrett",
+        "Cosmin Gorgovan",
+        "James Clarkson",
+        "Javier Navaridas",
+        "Jim Garside",
         "John Goodacre",
-        "Mikel Luján"
+        "John Mawer",
+        "Mikel Luján",
+        "Sebastian Werner",
+        "Thanos Stratikopoulos",
+        "Will Toms",
+        "Yaman Cakmakci"
       ],
       "matchedSubprojects": [
         "runtimes"

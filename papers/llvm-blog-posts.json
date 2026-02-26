@@ -2,7 +2,11 @@
   "source": {
     "slug": "llvm-blog-www",
     "name": "LLVM Project Blog (llvm/llvm-blog-www)",
-    "url": "https://github.com/llvm/llvm-blog-www"
+    "url": "https://github.com/llvm/llvm-blog-www",
+    "repo": "llvm/llvm-blog-www",
+    "ref": "main",
+    "path": "content/posts",
+    "revision": "de02102e7c7a69d408eca46ce26c0c948b87eb5b"
   },
   "papers": [
     {

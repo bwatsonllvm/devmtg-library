@@ -300,6 +300,7 @@ extensions.</p></li>
 Absolute Difference) extension.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-mcpu=spacemit-a100</span></code> was added.</p></li>
 <li><p>The opt-in <code class="docutils literal notranslate"><span class="pre">-riscv-enable-p-ext-simd-codegen</span></code> flag has been removed. P extension SIMD code generation is now enabled automatically if the P extension is supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-mcpu=xt-c910v2</span></code> and <code class="docutils literal notranslate"><span class="pre">-mcpu=xt-c920v2</span></code> were added.</p></li>
 </ul>
 </section>
 <section id="changes-to-the-webassembly-backend">
@@ -378,8 +379,6 @@ from any platform.</p></li>
 <li><p>Threads are listed in incrmental order by pid then by tid.</p></li>
 <li><p>Unread kernel messages saved in msgbufp are now printed when lldb starts. This information is printed only
 when lldb is in the interactive mode (i.e. not in batch mode).</p></li>
-<li><p>Memory writes are currently disabled. You can enable them with
-<code class="docutils literal notranslate"><span class="pre">settings</span> <span class="pre">set</span> <span class="pre">plugin.process.freebsd-kernel-core.read-only</span> <span class="pre">false</span></code>.</p></li>
 </ul>
 </section>
 </section>
@@ -446,7 +445,7 @@ us via the <a class="reference external" href="https://discourse.llvm.org">Disco
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-25.
+      Last updated on 2026-02-26.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
