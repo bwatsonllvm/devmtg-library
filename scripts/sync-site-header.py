@@ -18,6 +18,7 @@ VIEWER_PAGES = [
     "papers/add-by-url.html",
     "papers/add.html",
     "papers/edit.html",
+    "papers/review.html",
     "papers/paper.html",
     "blogs/index.html",
     "people/index.html",

@@ -38,7 +38,7 @@
     html[data-theme="dark"] { background: #000000; }
     body { background: transparent; }
 
-    .paper-edit-main {
+    .review-main {
       max-width: 1240px;
       margin: 0 auto;
       padding: 0 1rem 3rem;
@@ -46,44 +46,45 @@
       gap: 1rem;
     }
 
-    .paper-edit-card {
+    .review-card {
       border: 1px solid var(--color-border);
       border-radius: 14px;
       background: var(--color-surface);
       padding: 1rem;
       display: grid;
-      gap: 0.72rem;
+      gap: 0.75rem;
     }
 
-    .paper-edit-card h2 {
+    .review-card h2,
+    .review-card h3 {
       margin: 0;
-      font-size: 1.05rem;
-      line-height: 1.3;
       color: var(--color-text);
+      font-size: 1.02rem;
+      line-height: 1.35;
     }
 
-    .paper-edit-card p {
+    .review-card p {
       margin: 0;
       color: var(--color-text-muted);
       font-size: 0.93rem;
       line-height: 1.45;
     }
 
-    .paper-edit-row {
+    .review-admin-form {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.56rem;
+      gap: 0.55rem;
       align-items: flex-end;
     }
 
-    .paper-edit-field {
+    .review-field {
       display: grid;
-      gap: 0.3rem;
-      min-width: 280px;
+      gap: 0.32rem;
+      min-width: 260px;
       flex: 1;
     }
 
-    .paper-edit-label {
+    .review-label {
       color: var(--color-text-muted);
       font-size: 0.77rem;
       font-weight: 600;
@@ -91,43 +92,36 @@
       text-transform: uppercase;
     }
 
-    .paper-edit-input,
-    .paper-edit-textarea {
+    .review-input {
       width: 100%;
       border: 1px solid var(--color-border);
       border-radius: 9px;
       background: var(--color-surface);
       color: var(--color-text);
-      padding: 0.56rem 0.66rem;
+      padding: 0.58rem 0.66rem;
       font-size: 0.9rem;
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
-    .paper-edit-textarea {
-      min-height: 86px;
-      resize: vertical;
-    }
-
-    .paper-edit-input:focus,
-    .paper-edit-textarea:focus {
+    .review-input:focus {
       outline: none;
       border-color: var(--color-border-focus);
       box-shadow: 0 0 0 3px var(--color-field-focus-ring);
     }
 
-    .paper-edit-actions {
+    .review-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
 
-    .paper-edit-btn {
+    .review-btn {
       border: 1px solid var(--color-border);
       border-radius: 9px;
-      padding: 0.47rem 0.74rem;
+      padding: 0.47rem 0.72rem;
       background: var(--color-surface);
       color: var(--color-text);
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       font-weight: 600;
       line-height: 1.3;
       text-decoration: none;
@@ -135,68 +129,186 @@
       align-items: center;
       justify-content: center;
       transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+      cursor: pointer;
     }
 
-    .paper-edit-btn:hover {
+    .review-btn:hover {
       color: var(--color-accent);
       border-color: var(--color-border-focus);
       background: var(--color-accent-bg);
     }
 
-    .paper-edit-btn.primary {
+    .review-btn.primary {
       background: var(--color-primary-btn-bg);
       border-color: var(--color-primary-btn-border);
       color: var(--color-primary-btn-text);
     }
 
-    .paper-edit-btn.primary:hover {
+    .review-btn.primary:hover {
       background: var(--color-primary-btn-hover-bg);
       border-color: var(--color-primary-btn-hover-border);
       color: var(--color-primary-btn-hover-text);
     }
 
-    .paper-edit-pre {
-      margin: 0;
-      border: 1px solid var(--color-border);
-      border-radius: 9px;
-      background: var(--color-surface-subtle);
-      color: var(--color-text);
-      padding: 0.68rem;
-      font-family: var(--font-mono);
-      font-size: 0.79rem;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      word-break: break-word;
+    .review-btn:disabled {
+      opacity: 0.55;
+      cursor: default;
+      pointer-events: none;
     }
 
-    .paper-edit-status {
-      min-height: 1.3rem;
+    .review-status {
+      min-height: 1.25rem;
       color: var(--color-text-muted);
       font-size: 0.82rem;
       line-height: 1.35;
     }
 
-    .paper-edit-status.error { color: var(--color-error); }
-    .paper-edit-status.success { color: var(--color-success); }
+    .review-status.error { color: var(--color-error); }
+    .review-status.success { color: var(--color-success); }
 
-    .paper-edit-grid {
+    .review-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+
+    .review-stats {
+      color: var(--color-text);
+      font-size: 0.91rem;
+      font-weight: 600;
+    }
+
+    .review-position {
+      color: var(--color-text-muted);
+      font-size: 0.82rem;
+    }
+
+    .review-meta {
+      color: var(--color-text-muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    .review-abstract {
+      margin: 0;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface-subtle);
+      color: var(--color-text);
+      padding: 0.72rem;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .review-authors {
+      margin: 0;
+      padding-left: 1rem;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.68rem;
+      gap: 0.35rem;
     }
 
-    .paper-edit-span-2 {
-      grid-column: 1 / -1;
+    .review-author {
+      color: var(--color-text);
+      font-size: 0.88rem;
+      line-height: 1.45;
     }
 
-    @media (max-width: 900px) {
-      .paper-edit-grid {
+    .review-author strong {
+      font-weight: 600;
+      margin-right: 0.4rem;
+    }
+
+    .review-author span {
+      color: var(--color-text-muted);
+    }
+
+    .review-author--empty {
+      color: var(--color-text-muted);
+      list-style: none;
+      margin-left: -1rem;
+    }
+
+    .review-recent-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.42rem;
+      max-height: 360px;
+      overflow: auto;
+    }
+
+    .review-recent-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.45rem;
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      background: var(--color-surface-subtle);
+      padding: 0.5rem 0.56rem;
+      font-size: 0.84rem;
+    }
+
+    .review-check {
+      color: var(--color-success);
+      font-weight: 700;
+      font-size: 0.96rem;
+      line-height: 1;
+    }
+
+    .review-recent-item a {
+      color: var(--color-text);
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .review-recent-item a:hover {
+      text-decoration: underline;
+    }
+
+    .review-recent-item time {
+      color: var(--color-text-muted);
+      font-size: 0.77rem;
+      white-space: nowrap;
+    }
+
+    .review-recent-empty {
+      color: var(--color-text-muted);
+      font-size: 0.86rem;
+      border: 1px dashed var(--color-border);
+      border-radius: 9px;
+      padding: 0.72rem;
+    }
+
+    .review-shell-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.9fr) minmax(0, 1.1fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .review-link-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .review-note {
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 980px) {
+      .review-shell-grid {
         grid-template-columns: 1fr;
       }
     }
   </style>
-  <title>Edit Paper - LLVM Research Library</title>
-  <meta name="description" content="Edit an existing paper record by showing original values and generating update payloads.">
+  <title>Review Queue - LLVM Research Library</title>
+  <meta name="description" content="Admin review queue for paper accuracy checks and confirmation.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -338,118 +450,95 @@
     </div>
   </header>
 
-  <section class="search-hero search-hero--compact" aria-label="Edit paper">
+  <section class="search-hero search-hero--compact" aria-label="Paper review queue">
     <div class="search-hero-shell">
       <div class="search-hero-title-row">
-        <h1>Edit Paper</h1>
-        <p class="search-hero-title-aside">Show originals, then apply targeted changes</p>
+        <h1>Paper Review Queue</h1>
+        <p class="search-hero-title-aside">Admin verification flow</p>
       </div>
-      <p class="subtitle">Load a paper by id to see current values, then edit fields such as PDF URL, key topics, and affiliations.</p>
-      <div class="empty-state-actions" aria-label="Edit actions">
+      <p class="subtitle">Mark papers as reviewed for accuracy. Completed papers drop out of the pending queue and show a checkmark in review history.</p>
+      <div class="empty-state-actions" aria-label="Review actions">
         <a href="papers/" class="empty-action-btn">Back to Papers</a>
+        <a href="papers/edit.html" class="empty-action-btn">Edit Paper</a>
         <a href="papers/add-by-url.html" class="empty-action-btn">Add by URL</a>
-        <a href="papers/review.html" class="empty-action-btn">Review Queue</a>
       </div>
     </div>
   </section>
 
-  <main id="main-content" class="paper-edit-main" tabindex="-1">
-    <section class="paper-edit-card" aria-labelledby="paper-edit-load-heading">
-      <h2 id="paper-edit-load-heading">1. Load Existing Paper</h2>
-      <p>Use paper id (for example: <code>openalex-w2606963276</code>) or a paper URL containing <code>?id=...</code>.</p>
-      <div class="paper-edit-row">
-        <label class="paper-edit-field" for="paper-edit-id-input">
-          <span class="paper-edit-label">Paper ID or URL</span>
-          <input id="paper-edit-id-input" class="paper-edit-input" placeholder="openalex-w2606963276 or https://.../paper.html?id=openalex-w2606963276">
+  <main id="main-content" class="review-main" tabindex="-1">
+    <section class="review-card" id="review-admin-card" aria-labelledby="review-admin-heading">
+      <h2 id="review-admin-heading">Admin Access</h2>
+      <p id="review-admin-hint">Set an admin passphrase for this browser to protect the review queue.</p>
+      <form class="review-admin-form" id="review-admin-form">
+        <label class="review-field" for="review-admin-input">
+          <span class="review-label">Admin passphrase</span>
+          <input id="review-admin-input" class="review-input" type="password" autocomplete="current-password" required>
         </label>
-        <button type="button" class="paper-edit-btn primary" id="paper-edit-load-btn">Load Paper</button>
-      </div>
-      <div class="paper-edit-status" id="paper-edit-load-status" role="status" aria-live="polite"></div>
-    </section>
-
-    <section class="paper-edit-card hidden" id="paper-edit-original-card" aria-labelledby="paper-edit-original-heading">
-      <h2 id="paper-edit-original-heading">2. Original Values</h2>
-      <pre class="paper-edit-pre" id="paper-edit-original-pre"></pre>
-    </section>
-
-    <section class="paper-edit-card hidden" id="paper-edit-change-card" aria-labelledby="paper-edit-change-heading">
-      <h2 id="paper-edit-change-heading">3. Make Changes</h2>
-      <p>Only changed fields are included in <code>updates_json</code>.</p>
-      <form id="paper-edit-form" novalidate>
-        <div class="paper-edit-grid">
-          <label class="paper-edit-field">
-            <span class="paper-edit-label">Title</span>
-            <input id="pe-title" class="paper-edit-input">
-          </label>
-          <label class="paper-edit-field">
-            <span class="paper-edit-label">Year</span>
-            <input id="pe-year" class="paper-edit-input" placeholder="2026">
-          </label>
-          <label class="paper-edit-field">
-            <span class="paper-edit-label">Paper URL (PDF)</span>
-            <input id="pe-paper-url" class="paper-edit-input" placeholder="https://.../paper.pdf">
-          </label>
-          <label class="paper-edit-field">
-            <span class="paper-edit-label">Source URL</span>
-            <input id="pe-source-url" class="paper-edit-input" placeholder="https://...">
-          </label>
-          <label class="paper-edit-field">
-            <span class="paper-edit-label">Publication</span>
-            <input id="pe-publication" class="paper-edit-input">
-          </label>
-          <label class="paper-edit-field">
-            <span class="paper-edit-label">Venue</span>
-            <input id="pe-venue" class="paper-edit-input">
-          </label>
-          <label class="paper-edit-field paper-edit-span-2">
-            <span class="paper-edit-label">Tags (Key topics, comma-separated)</span>
-            <input id="pe-tags" class="paper-edit-input" placeholder="LLVM, Polly, OpenMP">
-          </label>
-          <label class="paper-edit-field paper-edit-span-2">
-            <span class="paper-edit-label">Keywords (comma-separated)</span>
-            <input id="pe-keywords" class="paper-edit-input">
-          </label>
-          <label class="paper-edit-field paper-edit-span-2">
-            <span class="paper-edit-label">Matched Authors (comma-separated)</span>
-            <input id="pe-matched-authors" class="paper-edit-input">
-          </label>
-          <label class="paper-edit-field paper-edit-span-2">
-            <span class="paper-edit-label">Matched Subprojects (comma-separated)</span>
-            <input id="pe-matched-subprojects" class="paper-edit-input">
-          </label>
-          <label class="paper-edit-field paper-edit-span-2">
-            <span class="paper-edit-label">Authors + Affiliations (one per line: Name | Affiliation A ; Affiliation B)</span>
-            <textarea id="pe-authors" class="paper-edit-textarea"></textarea>
-          </label>
-          <label class="paper-edit-field paper-edit-span-2">
-            <span class="paper-edit-label">Abstract</span>
-            <textarea id="pe-abstract" class="paper-edit-textarea"></textarea>
-          </label>
-        </div>
-        <div class="paper-edit-actions">
-          <button type="button" class="paper-edit-btn primary" id="paper-edit-generate-btn">Generate updates_json</button>
-          <button type="reset" class="paper-edit-btn" id="paper-edit-reset-btn">Reset to original</button>
+        <div class="review-actions">
+          <button type="submit" class="review-btn primary" id="review-admin-submit">Unlock Queue</button>
+          <button type="button" class="review-btn hidden" id="review-admin-reset">Reset passphrase</button>
         </div>
       </form>
-      <div class="paper-edit-status" id="paper-edit-generate-status" role="status" aria-live="polite"></div>
+      <div class="review-status" id="review-admin-status" role="status" aria-live="polite"></div>
+      <p class="review-note">This is a local browser gate for admin workflow convenience and is not server-side authentication.</p>
     </section>
 
-    <section class="paper-edit-card hidden" id="paper-edit-output-card" aria-labelledby="paper-edit-output-heading">
-      <h2 id="paper-edit-output-heading">4. Submit Workflow</h2>
-      <pre class="paper-edit-pre" id="paper-edit-updates-json">{}</pre>
-      <pre class="paper-edit-pre" id="paper-edit-command"></pre>
-      <div class="paper-edit-actions">
-        <button type="button" class="paper-edit-btn" id="paper-edit-copy-json-btn">Copy updates_json</button>
-        <button type="button" class="paper-edit-btn" id="paper-edit-copy-command-btn">Copy command</button>
-        <a class="paper-edit-btn" id="paper-edit-workflow-link" href="https://github.com/llvm/library/actions/workflows/manual-paper-edit-pr.yml" target="_blank" rel="noopener noreferrer">Open Edit Workflow</a>
+    <section class="hidden" id="review-shell" aria-label="Review queue content">
+      <section class="review-card">
+        <div class="review-topbar">
+          <div>
+            <div class="review-stats" id="review-stats">Pending 0 | Reviewed 0 | Total 0</div>
+            <div class="review-position" id="review-position">Queue position 0 of 0 pending</div>
+          </div>
+          <div class="review-actions">
+            <button type="button" class="review-btn" id="review-lock-btn">Lock Queue</button>
+            <button type="button" class="review-btn" id="review-reset-btn">Reset Reviewed Marks</button>
+          </div>
+        </div>
+        <div class="review-status" id="review-status" role="status" aria-live="polite"></div>
+      </section>
+
+      <div class="review-shell-grid">
+        <section class="review-card" id="review-current-card" aria-labelledby="review-current-heading">
+          <h2 id="review-current-heading">Current Paper</h2>
+          <h3 id="review-title">-</h3>
+          <p class="review-meta" id="review-meta">Metadata unavailable</p>
+          <p class="review-abstract" id="review-abstract">No abstract available.</p>
+          <h3>Authors</h3>
+          <ul class="review-authors" id="review-authors"></ul>
+          <div class="review-link-grid" aria-label="Current paper links">
+            <a class="review-btn" id="review-detail-link" href="#">Open Detail</a>
+            <a class="review-btn" id="review-paper-link" href="#" target="_blank" rel="noopener noreferrer">Open PDF/Paper</a>
+            <a class="review-btn" id="review-source-link" href="#" target="_blank" rel="noopener noreferrer">Open Source</a>
+            <a class="review-btn" id="review-edit-link" href="#">Edit Record</a>
+            <a class="review-btn" id="review-update-link" href="#">Update via URL</a>
+          </div>
+          <div class="review-actions" aria-label="Queue controls">
+            <button type="button" class="review-btn primary" id="review-mark-btn">Mark Reviewed ✓</button>
+            <button type="button" class="review-btn" id="review-next-btn">Next</button>
+          </div>
+        </section>
+
+        <section class="review-card hidden" id="review-empty-card" aria-labelledby="review-empty-heading">
+          <h2 id="review-empty-heading">Queue Complete ✓</h2>
+          <p>All papers are currently marked as reviewed in this browser.</p>
+          <div class="review-actions">
+            <button type="button" class="review-btn" id="review-reset-all-btn">Reset and review again</button>
+          </div>
+        </section>
+
+        <section class="review-card" aria-labelledby="review-history-heading">
+          <h2 id="review-history-heading">Recently Reviewed</h2>
+          <p>Most recent completed reviews with confirmation checkmarks.</p>
+          <ul class="review-recent-list" id="review-recent-list"></ul>
+        </section>
       </div>
-      <p>Paste <code>paper_id</code> and <code>updates_json</code> into the workflow inputs.</p>
     </section>
   </main>
 
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/papers-data.js?v=b7e926cee2db"></script>
   <script src="js/shared/global-search.js?v=6aee01784996"></script>
-  <script src="js/paper-edit.js?v=b14f641208fa"></script>
+  <script src="js/paper-review.js?v=8fd840ef05c2"></script>
 </body>
 </html>
