@@ -10,7 +10,7 @@
       "papers": 3506,
       "docs": 4500
     },
-    "generatedAt": "2026-02-26T18:15:23Z"
+    "generatedAt": "2026-02-27T00:48:25Z"
   },
   "topics": [
     {
@@ -3908,10 +3908,6 @@
       "count": 7
     },
     {
-      "label": "Anton Lydike",
-      "count": 7
-    },
-    {
       "label": "Antonio Barbalace",
       "count": 7
     },
@@ -4181,6 +4177,10 @@
     },
     {
       "label": "Anna Zaks",
+      "count": 6
+    },
+    {
+      "label": "Anton Lydike",
       "count": 6
     },
     {
@@ -15148,6 +15148,10 @@
       "count": 1
     },
     {
+      "label": "Anton Lydike The University of Edinburgh",
+      "count": 1
+    },
+    {
       "label": "Anton Zhernov",
       "count": 1
     },
@@ -18204,7 +18208,7 @@
       "count": 1
     },
     {
-      "label": "Edson Lemos Horta",
+      "label": "Edson Horta",
       "count": 1
     },
     {
@@ -27209,10 +27213,6 @@
     },
     {
       "label": "Nuno P. Lopes (Microsoft Research",
-      "count": 1
-    },
-    {
-      "label": "Nuno Roma",
       "count": 1
     }
   ],
