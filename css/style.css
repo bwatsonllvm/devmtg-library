@@ -39,8 +39,6 @@
   --color-media-overlay-hover: rgba(0, 0, 0, 0.12);
   --color-chip-remove-hover:   #e5e7eb;
   --color-field-focus-ring:    rgba(37, 99, 235, 0.18);
-  --color-highlight-bg:        #fed7aa;
-  --color-highlight-text:      #9a3412;
 
   /* Color — Category Badges */
   --badge-keynote-bg:      #fef3c7;
@@ -208,8 +206,6 @@
   --color-media-overlay-hover: rgba(255, 255, 255, 0.08);
   --color-chip-remove-hover:   #2f2f2f;
   --color-field-focus-ring:    rgba(147, 197, 253, 0.25);
-  --color-highlight-bg:        rgba(251, 146, 60, 0.32);
-  --color-highlight-text:      #fdba74;
 
   --badge-keynote-bg:      rgba(217, 119, 6, 0.25);
   --badge-keynote-text:    #fbbf24;
@@ -1489,13 +1485,10 @@ body.filter-collapsed .search-hero--compact .search-hero-shell {
 }
 
 .search-dropdown-item mark {
-  background: var(--color-highlight-bg);
-  color: var(--color-highlight-text);
+  background: none;
+  color: var(--color-accent);
   font-weight: var(--font-weight-semi);
-  border-radius: 2px;
-  padding: 0 2px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  padding: 0;
 }
 
 .search-dropdown-section--action {
@@ -3151,12 +3144,10 @@ body.filter-collapsed .filter-collapse-btn svg {
    Highlight (search match)
    ============================================================ */
 mark {
-  background: var(--color-highlight-bg);
-  color: var(--color-highlight-text);
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
   border-radius: 2px;
   padding: 0 2px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
 }
 
 /* ============================================================

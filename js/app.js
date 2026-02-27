@@ -10,7 +10,7 @@ let allTalks = [];
 let searchIndex = [];
 let viewMode = 'grid'; // 'grid' | 'list'
 let debounceTimer = null;
-let searchMode = 'browse'; // 'browse' | 'exact'
+let searchMode = 'browse'; // 'browse' | 'exact' | 'fuzzy'
 let meetingOptions = [];
 let yearFilterTouched = false; // true once user directly toggles a year chip this session
 const INITIAL_RENDER_BATCH_SIZE = 60;
@@ -62,63 +62,28 @@ const CATEGORY_META = {
 // Data Loading
 // ============================================================
 
-const HubUtils = window.LLVMHubUtils;
-if (!HubUtils || typeof HubUtils !== 'object') {
-  throw new Error('LLVMHubUtils is required before loading app.js');
-}
+const HubUtils = window.LLVMHubUtils || {};
+const PageShell = typeof HubUtils.createPageShell === 'function'
+  ? HubUtils.createPageShell()
+  : null;
 
-function requireHubFunction(name) {
-  const fn = HubUtils[name];
-  if (typeof fn !== 'function') {
-    throw new Error(`LLVMHubUtils.${name} is required by app.js`);
-  }
-  return fn.bind(HubUtils);
-}
-
-const createPageShell = requireHubFunction('createPageShell');
-const getTalkKeyTopicsFromHub = requireHubFunction('getTalkKeyTopics');
-const normalizeTalksFromHub = requireHubFunction('normalizeTalks');
-const normalizePersonKeyFromHub = requireHubFunction('normalizePersonKey');
-const arePersonMiddleVariants = requireHubFunction('arePersonMiddleVariants');
-const tokenizeQueryFromHub = requireHubFunction('tokenizeQuery');
-const rankTalksByQuery = requireHubFunction('rankTalksByQuery');
-const buildSearchSnippet = requireHubFunction('buildSearchSnippet');
-const highlightSearchTextFromHub = requireHubFunction('highlightSearchText');
-const formatMeetingDateUniversal = requireHubFunction('formatMeetingDateUniversal');
-const sortCategoryEntries = requireHubFunction('sortCategoryEntries');
-const parseUrlState = requireHubFunction('parseUrlState');
-const parseNavigationState = requireHubFunction('parseNavigationState');
-const getPaperKeyTopicsFromHub = requireHubFunction('getPaperKeyTopics');
-const normalizePersonRecord = requireHubFunction('normalizePersonRecord');
-const rankAutocompleteEntries = requireHubFunction('rankAutocompleteEntries');
-const rankPaperRecordsByQuery = requireHubFunction('rankPaperRecordsByQuery');
-
-const PageShell = createPageShell();
-if (!PageShell || typeof PageShell !== 'object') {
-  throw new Error('LLVMHubUtils.createPageShell() returned an invalid object');
-}
-
-function requirePageShellMethod(name) {
-  const fn = PageShell[name];
-  if (typeof fn !== 'function') {
-    throw new Error(`PageShell.${name} is required by app.js`);
-  }
-  return fn.bind(PageShell);
-}
-
-const safeStorageGet = requirePageShellMethod('safeStorageGet');
-const safeStorageSet = requirePageShellMethod('safeStorageSet');
-const safeSessionGet = requirePageShellMethod('safeSessionGet');
-const safeSessionSet = requirePageShellMethod('safeSessionSet');
-const safeSessionRemove = requirePageShellMethod('safeSessionRemove');
-const initTheme = requirePageShellMethod('initTheme');
-const initTextSize = requirePageShellMethod('initTextSize');
-const initCustomizationMenu = requirePageShellMethod('initCustomizationMenu');
-const initMobileNavMenu = requirePageShellMethod('initMobileNavMenu');
-const initShareMenu = requirePageShellMethod('initShareMenu');
+const safeStorageGet = PageShell ? PageShell.safeStorageGet : () => null;
+const safeStorageSet = PageShell ? PageShell.safeStorageSet : () => {};
+const safeSessionGet = PageShell ? PageShell.safeSessionGet : () => null;
+const safeSessionSet = PageShell ? PageShell.safeSessionSet : () => {};
+const safeSessionRemove = PageShell ? PageShell.safeSessionRemove : () => {};
+const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
+const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
+const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
+const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
+const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
 
 function getTalkKeyTopics(talk, limit = Infinity) {
-  return getTalkKeyTopicsFromHub(talk, limit);
+  if (typeof HubUtils.getTalkKeyTopics === 'function') {
+    return HubUtils.getTalkKeyTopics(talk, limit);
+  }
+  const tags = Array.isArray(talk && talk.tags) ? talk.tags : [];
+  return Number.isFinite(limit) ? tags.slice(0, limit) : tags;
 }
 
 function rebuildTopicLabelLookup() {
@@ -134,11 +99,17 @@ function rebuildTopicLabelLookup() {
 }
 
 function normalizeTalks(rawTalks) {
-  return normalizeTalksFromHub(rawTalks);
+  if (typeof HubUtils.normalizeTalks === 'function') {
+    return HubUtils.normalizeTalks(rawTalks);
+  }
+  return Array.isArray(rawTalks) ? rawTalks : [];
 }
 
 function normalizePersonKey(value) {
-  return normalizePersonKeyFromHub(value);
+  if (typeof HubUtils.normalizePersonKey === 'function') {
+    return HubUtils.normalizePersonKey(value);
+  }
+  return String(value || '').trim().toLowerCase();
 }
 
 function samePersonName(a, b) {
@@ -146,7 +117,10 @@ function samePersonName(a, b) {
   const keyB = normalizePersonKey(b);
   if (!keyA || !keyB) return false;
   if (keyA === keyB) return true;
-  return arePersonMiddleVariants(a, b);
+  if (typeof HubUtils.arePersonMiddleVariants === 'function') {
+    return HubUtils.arePersonMiddleVariants(a, b);
+  }
+  return false;
 }
 
 async function loadData() {
@@ -176,6 +150,25 @@ async function loadData() {
 // ============================================================
 
 function buildSearchIndex() {
+  const uniqueTokens = (parts) => {
+    const seen = new Set();
+    const out = [];
+    for (const part of parts) {
+      const chunks = String(part || '')
+        .toLowerCase()
+        .split(/[^a-z0-9+#.]+/)
+        .map((chunk) => chunk.trim())
+        .filter((chunk) => chunk.length >= 2);
+      for (const chunk of chunks) {
+        if (!seen.has(chunk)) {
+          seen.add(chunk);
+          out.push(chunk);
+        }
+      }
+    }
+    return out;
+  };
+
   rebuildTopicLabelLookup();
   searchIndex = allTalks.map(talk => {
     const keyTopics = getTalkKeyTopics(talk);
@@ -187,12 +180,110 @@ function buildSearchIndex() {
       _tagsLower:    keyTopics.join(' ').toLowerCase(),
       _meetingLower: (talk.meetingName + ' ' + talk.meetingLocation + ' ' + talk.meetingDate).toLowerCase(),
       _year:         talk.meeting ? talk.meeting.slice(0, 4) : '',
+      _fuzzyTitle: uniqueTokens([talk.title]),
+      _fuzzySpeakers: uniqueTokens((talk.speakers || []).map((s) => s.name)),
+      _fuzzyTags: uniqueTokens(keyTopics),
+      _fuzzyMeeting: uniqueTokens([talk.meetingName, talk.meetingLocation, talk.meetingDate, talk.meeting]),
     };
   });
 }
 
 function tokenize(query) {
-  return tokenizeQueryFromHub(query);
+  if (typeof HubUtils.tokenizeQuery === 'function') {
+    return HubUtils.tokenizeQuery(query);
+  }
+  return [];
+}
+
+function scoreMatch(indexed, tokens) {
+  if (typeof HubUtils.scoreMatch === 'function') {
+    return HubUtils.scoreMatch(indexed, tokens);
+  }
+  return 0;
+}
+
+function isSubsequence(needle, haystack) {
+  let i = 0;
+  let j = 0;
+  while (i < needle.length && j < haystack.length) {
+    if (needle[i] === haystack[j]) i += 1;
+    j += 1;
+  }
+  return i === needle.length;
+}
+
+function boundedLevenshtein(a, b, maxDistance) {
+  const lenA = a.length;
+  const lenB = b.length;
+  if (Math.abs(lenA - lenB) > maxDistance) return maxDistance + 1;
+
+  let prev = new Array(lenB + 1);
+  let curr = new Array(lenB + 1);
+  for (let j = 0; j <= lenB; j += 1) prev[j] = j;
+
+  for (let i = 1; i <= lenA; i += 1) {
+    curr[0] = i;
+    let minInRow = curr[0];
+
+    for (let j = 1; j <= lenB; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(
+        prev[j] + 1,
+        curr[j - 1] + 1,
+        prev[j - 1] + cost,
+      );
+      if (curr[j] < minInRow) minInRow = curr[j];
+    }
+
+    if (minInRow > maxDistance) return maxDistance + 1;
+    const swap = prev;
+    prev = curr;
+    curr = swap;
+  }
+
+  return prev[lenB];
+}
+
+function fuzzyTokenScore(token, words) {
+  if (!token || !words || words.length === 0) return 0;
+  let best = 0;
+
+  for (const word of words) {
+    if (!word) continue;
+    if (word === token) return 20;
+    if (word.startsWith(token)) best = Math.max(best, 16);
+    else if (word.includes(token)) best = Math.max(best, 14);
+    else if (token.length >= 3 && isSubsequence(token, word)) best = Math.max(best, 11);
+
+    if (token.length >= 4) {
+      const maxDist = token.length >= 7 ? 2 : 1;
+      const dist = boundedLevenshtein(token, word, maxDist);
+      if (dist <= maxDist) {
+        best = Math.max(best, dist === 1 ? 10 : 8);
+      }
+    }
+  }
+
+  return best;
+}
+
+function fuzzyScoreTalk(indexedTalk, tokens) {
+  let total = 0;
+  for (const token of tokens) {
+    const titleScore = fuzzyTokenScore(token, indexedTalk._fuzzyTitle || []);
+    const speakerScore = fuzzyTokenScore(token, indexedTalk._fuzzySpeakers || []);
+    const tagScore = fuzzyTokenScore(token, indexedTalk._fuzzyTags || []);
+    const meetingScore = fuzzyTokenScore(token, indexedTalk._fuzzyMeeting || []);
+    const best = Math.max(
+      titleScore ? titleScore + 3 : 0,
+      speakerScore ? speakerScore + 2 : 0,
+      tagScore ? tagScore + 2 : 0,
+      meetingScore,
+    );
+    if (best <= 0) return 0; // AND semantics across query tokens
+    total += best;
+  }
+  return total;
 }
 
 // ============================================================
@@ -235,9 +326,37 @@ function filterAndSort() {
   let results = searchIndex;
   const tokens = state.query.length >= 2 ? tokenize(state.query) : [];
   searchMode = tokens.length > 0 ? 'exact' : 'browse';
+  const hasSharedTalkRanker = typeof HubUtils.rankTalksByQuery === 'function';
 
   if (tokens.length > 0) {
-    results = rankTalksByQuery(results, state.query);
+    if (hasSharedTalkRanker) {
+      results = HubUtils.rankTalksByQuery(results, state.query);
+    } else {
+      const scored = [];
+      for (const t of results) {
+        const s = scoreMatch(t, tokens);
+        if (s > 0) scored.push({ talk: t, score: s });
+      }
+      scored.sort((a, b) => b.score - a.score);
+      results = scored.map((x) => x.talk);
+
+      if (results.length === 0) {
+        const fuzzy = [];
+        for (const t of searchIndex) {
+          const score = fuzzyScoreTalk(t, tokens);
+          if (score > 0) fuzzy.push({ talk: t, score });
+        }
+        fuzzy.sort((a, b) => {
+          const scoreDiff = b.score - a.score;
+          if (scoreDiff !== 0) return scoreDiff;
+          const meetingDiff = String(b.talk.meeting || '').localeCompare(String(a.talk.meeting || ''));
+          if (meetingDiff !== 0) return meetingDiff;
+          return String(a.talk.title || '').localeCompare(String(b.talk.title || ''));
+        });
+        results = fuzzy.map((entry) => entry.talk);
+        if (results.length > 0) searchMode = 'fuzzy';
+      }
+    }
   }
 
   if (state.meeting) {
@@ -309,8 +428,8 @@ function buildContextSnippet(sourceText, query, maxLength = 300) {
   const text = stripSearchSourceText(sourceText);
   if (!text) return '';
 
-  if (query && query.length >= 2) {
-    const snippet = buildSearchSnippet(text, query, { maxLength });
+  if (query && query.length >= 2 && typeof HubUtils.buildSearchSnippet === 'function') {
+    const snippet = HubUtils.buildSearchSnippet(text, query, { maxLength });
     if (snippet) return snippet;
   }
 
@@ -321,8 +440,16 @@ function buildContextSnippet(sourceText, query, maxLength = 300) {
 }
 
 function highlightText(text, tokens) {
-  const queryOrTokens = state.query && state.query.trim() ? state.query : tokens;
-  return highlightSearchTextFromHub(text, queryOrTokens);
+  if (!tokens || tokens.length === 0) return escapeHtml(text);
+  let result = escapeHtml(text);
+  for (const token of tokens) {
+    const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    result = result.replace(
+      new RegExp(`(${escaped})`, 'gi'),
+      '<mark>$1</mark>'
+    );
+  }
+  return result;
 }
 
 function categoryLabel(cat) {
@@ -769,6 +896,7 @@ function renderResultCount(count) {
   else if (state.sortBy === 'oldest') parts.push('Sorted by oldest meeting');
   else if (state.sortBy === 'title') parts.push('Sorted by title');
   else parts.push(state.query ? 'Sorted by relevance' : 'Sorted by newest meeting');
+  if (searchMode === 'fuzzy') parts.push('Fuzzy match');
   contextEl.textContent = `· ${parts.join(' · ')}`;
 }
 
@@ -791,7 +919,9 @@ function buildMeetingOptions() {
     if (!slug || map.has(slug)) continue;
     const year = slug.slice(0, 4);
     const name = String(talk.meetingName || slug).trim() || slug;
-    const formattedDate = formatMeetingDateUniversal(talk.meetingDate || '');
+    const formattedDate = typeof HubUtils.formatMeetingDateUniversal === 'function'
+      ? HubUtils.formatMeetingDateUniversal(talk.meetingDate || '')
+      : String(talk.meetingDate || '').trim();
     const location = String(talk.meetingLocation || '').trim();
     const details = [formattedDate || year, location].filter(Boolean).join(' · ');
     const label = details ? `${name} — ${details}` : name;
@@ -859,7 +989,13 @@ function initFilters() {
     catCounts[c] = (catCounts[c] || 0) + 1;
   }
 
-  const cats = sortCategoryEntries(catCounts, CATEGORY_META);
+  const cats = typeof HubUtils.sortCategoryEntries === 'function'
+    ? HubUtils.sortCategoryEntries(catCounts, CATEGORY_META)
+    : Object.entries(catCounts).sort((a, b) => {
+      const ao = CATEGORY_META[a[0]]?.order ?? 99;
+      const bo = CATEGORY_META[b[0]]?.order ?? 99;
+      return ao - bo;
+    });
 
   const catContainer = document.getElementById('filter-categories');
   catContainer.innerHTML = cats.map(([cat, count]) => renderTalkTypeFilterChip(cat, count)).join('');
@@ -1223,18 +1359,36 @@ function syncUrl() {
 
 function loadStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  const parsed = parseUrlState(window.location.search, allTalks);
-  const legacyTag = parsed.tags && parsed.tags.length ? parsed.tags[0] : '';
-  state.query = parsed.query || legacyTag || '';
-  state.speaker = parsed.speaker || '';
-  state.meeting = parsed.meeting || '';
-  state.meetingName = parsed.meetingName || '';
-  state.categories = new Set(parsed.categories || []);
-  state.years = new Set(parsed.years || []);
-  state.hasVideo = !!parsed.hasVideo;
-  state.hasSlides = !!parsed.hasSlides;
-  const parsedSort = String(parsed.sort || '').trim().toLowerCase();
-  state.sortBy = TALK_SORT_MODES.has(parsedSort) ? parsedSort : 'relevance';
+  if (typeof HubUtils.parseUrlState === 'function') {
+    const parsed = HubUtils.parseUrlState(window.location.search, allTalks);
+    const legacyTag = parsed.tags && parsed.tags.length ? parsed.tags[0] : '';
+    state.query = parsed.query || legacyTag || '';
+    state.speaker = parsed.speaker || '';
+    state.meeting = parsed.meeting || '';
+    state.meetingName = parsed.meetingName || '';
+    state.categories = new Set(parsed.categories || []);
+    state.years = new Set(parsed.years || []);
+    state.hasVideo = !!parsed.hasVideo;
+    state.hasSlides = !!parsed.hasSlides;
+    const parsedSort = String(parsed.sort || '').trim().toLowerCase();
+    state.sortBy = TALK_SORT_MODES.has(parsedSort) ? parsedSort : 'relevance';
+  } else {
+    if (params.get('q')) state.query = params.get('q');
+    if (params.get('speaker')) state.speaker = params.get('speaker');
+    if (params.get('meeting')) {
+      state.meeting = params.get('meeting');
+      const sample = allTalks.find((talk) => talk.meeting === state.meeting);
+      state.meetingName = sample ? sample.meetingName : state.meeting;
+    }
+    if (params.get('category')) params.get('category').split(',').forEach((c) => state.categories.add(c.trim()));
+    if (params.get('year')) params.get('year').split(',').forEach((y) => state.years.add(y.trim()));
+    if (!state.query && params.get('tag')) {
+      const legacyTag = params.get('tag').split(',').map((t) => t.trim()).filter(Boolean)[0];
+      if (legacyTag) state.query = legacyTag;
+    }
+    state.hasVideo = params.get('video') === '1';
+    state.hasSlides = params.get('slides') === '1';
+  }
 
   const sortParam = String(params.get('sort') || '').trim().toLowerCase();
   state.sortBy = TALK_SORT_MODES.has(sortParam) ? sortParam : state.sortBy;
@@ -1304,7 +1458,16 @@ function restoreNavigationState() {
   if (!saved) return;
   safeSessionRemove('llvm-hub-search-state');
 
-  const s = parseNavigationState(saved);
+  let s = null;
+  if (typeof HubUtils.parseNavigationState === 'function') {
+    s = HubUtils.parseNavigationState(saved);
+  } else {
+    try {
+      s = JSON.parse(saved);
+    } catch {
+      s = null;
+    }
+  }
   if (!s) return;
 
   if (s.query) {
@@ -1873,12 +2036,30 @@ function buildTalkAutocompleteBase() {
 }
 
 function getPaperKeyTopics(paper, limit = Infinity) {
-  return getPaperKeyTopicsFromHub(paper, limit);
+  if (typeof HubUtils.getPaperKeyTopics === 'function') {
+    return HubUtils.getPaperKeyTopics(paper, limit);
+  }
+  const out = [];
+  const seen = new Set();
+  const add = (value) => {
+    const label = String(value || '').trim();
+    const key = label.toLowerCase();
+    if (!label || seen.has(key)) return;
+    seen.add(key);
+    out.push(label);
+  };
+  for (const tag of (paper && paper.tags) || []) add(tag);
+  for (const keyword of (paper && paper.keywords) || []) add(keyword);
+  if (!Number.isFinite(limit)) return out;
+  return out.slice(0, Math.max(0, Math.floor(limit)));
 }
 
 function normalizePaperAuthorName(rawAuthor) {
-  const normalized = normalizePersonRecord(rawAuthor);
-  return String((normalized && normalized.name) || '').trim();
+  if (typeof HubUtils.normalizePersonRecord === 'function') {
+    const normalized = HubUtils.normalizePersonRecord(rawAuthor);
+    return String((normalized && normalized.name) || '').trim();
+  }
+  return String((rawAuthor && rawAuthor.name) || '').trim();
 }
 
 function buildPaperSearchEntry(rawPaper) {
@@ -2038,13 +2219,20 @@ function buildAutocompleteIndex() {
 }
 
 function highlightMatch(text, query) {
-  return highlightSearchTextFromHub(text, query);
+  if (!query) return escapeHtml(text);
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return escapeHtml(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
 }
 
 function rankAutocompleteMatches(entries, query, limit) {
   const list = Array.isArray(entries) ? entries : [];
   const max = Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : list.length;
-  return rankAutocompleteEntries(list, query, { limit: max });
+  if (typeof HubUtils.rankAutocompleteEntries === 'function') {
+    return HubUtils.rankAutocompleteEntries(list, query, { limit: max });
+  }
+  const q = String(query || '').toLowerCase();
+  if (!q) return list.slice(0, max);
+  return list.filter((entry) => String(entry && entry.label || '').toLowerCase().includes(q)).slice(0, max);
 }
 
 function renderDropdown(query) {
@@ -2179,15 +2367,61 @@ function findPaperTitleEntry(value) {
   return findExactAutocompleteEntry(autocompleteIndex.papers, value);
 }
 
+function scorePaperMatch(indexedPaper, tokens) {
+  if (!tokens.length) return 0;
+
+  let total = 0;
+  for (const token of tokens) {
+    let tokenScore = 0;
+    const titleIdx = indexedPaper._titleLower.indexOf(token);
+    if (titleIdx !== -1) tokenScore += titleIdx === 0 ? 100 : 50;
+    if (indexedPaper._authorsLower.includes(token)) tokenScore += 34;
+    if (indexedPaper._topicsLower.includes(token)) tokenScore += 20;
+    if (indexedPaper._abstractLower.includes(token)) tokenScore += 12;
+    if (indexedPaper._publicationLower.includes(token)) tokenScore += 10;
+    if (indexedPaper._venueLower.includes(token)) tokenScore += 8;
+    if (indexedPaper._yearLower.includes(token)) tokenScore += 6;
+    if (tokenScore === 0) return 0;
+    total += tokenScore;
+  }
+
+  return total;
+}
+
 function countTalkMatchesForQuery(query) {
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
-  return rankTalksByQuery(searchIndex, query).length;
+
+  if (typeof HubUtils.rankTalksByQuery === 'function') {
+    return HubUtils.rankTalksByQuery(searchIndex, query).length;
+  }
+
+  let exactCount = 0;
+  for (const talk of searchIndex) {
+    if (scoreMatch(talk, tokens) > 0) exactCount += 1;
+  }
+  if (exactCount > 0) return exactCount;
+
+  let fuzzyCount = 0;
+  for (const talk of searchIndex) {
+    if (fuzzyScoreTalk(talk, tokens) > 0) fuzzyCount += 1;
+  }
+  return fuzzyCount;
 }
 
 function countPaperMatchesForQuery(query) {
   if (!paperSearchIndex.length) return 0;
-  return rankPaperRecordsByQuery(paperSearchIndex, query).length;
+  if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
+    return HubUtils.rankPaperRecordsByQuery(paperSearchIndex, query).length;
+  }
+  const tokens = tokenize(query);
+  if (!tokens.length) return 0;
+
+  let count = 0;
+  for (const paper of paperSearchIndex) {
+    if (scorePaperMatch(paper, tokens) > 0) count += 1;
+  }
+  return count;
 }
 
 function hasNonSearchFiltersApplied() {
