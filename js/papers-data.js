@@ -5,10 +5,6 @@
 (function () {
   let inMemoryCache = null;
   let inMemoryVersion = '';
-  let manifestCache = null;
-  let manifestLoadPromise = null;
-  const bundleCache = new Map();
-  const bundleLoadPromises = new Map();
 
   const MANIFEST_JSON_CANDIDATES = ['../papers/index.json', 'papers/index.json', './papers/index.json'];
 
@@ -80,13 +76,8 @@
     };
   }
 
-  function resetBundleCaches() {
-    bundleCache.clear();
-    bundleLoadPromises.clear();
-  }
-
   async function fetchJson(path) {
-    const resp = await fetch(path, { cache: 'default' });
+    const resp = await fetch(path, { cache: 'no-store' });
     if (!resp.ok) {
       throw new Error(`${path}: HTTP ${resp.status}`);
     }
@@ -98,7 +89,7 @@
   }
 
   async function fetchJsonWithMeta(path) {
-    const resp = await fetch(path, { cache: 'default' });
+    const resp = await fetch(path, { cache: 'no-store' });
     if (!resp.ok) {
       throw new Error(`${path}: HTTP ${resp.status}`);
     }
@@ -113,95 +104,21 @@
   }
 
   async function loadManifest() {
-    if (manifestCache) return manifestCache;
-    if (manifestLoadPromise) return manifestLoadPromise;
-
     const candidates = uniquePaths(MANIFEST_JSON_CANDIDATES);
-    manifestLoadPromise = (async () => {
-      const failures = [];
-      const baseRef = document.baseURI || window.location.href;
+    const failures = [];
+    const baseRef = document.baseURI || window.location.href;
 
-      for (const manifestRef of candidates) {
-        try {
-          const manifestUrl = resolveUrl(manifestRef, baseRef);
-          const { payload, url } = await fetchJsonWithMeta(manifestUrl || manifestRef);
-          const normalized = normalizeManifestJson(payload, url || manifestUrl || manifestRef);
-          if (inMemoryVersion && inMemoryVersion !== normalized.dataVersion) {
-            inMemoryCache = null;
-            inMemoryVersion = '';
-            resetBundleCaches();
-          }
-          manifestCache = normalized;
-          return normalized;
-        } catch (err) {
-          failures.push(String(err && err.message ? err.message : err));
-        }
+    for (const manifestRef of candidates) {
+      try {
+        const manifestUrl = resolveUrl(manifestRef, baseRef);
+        const { payload, url } = await fetchJsonWithMeta(manifestUrl || manifestRef);
+        return normalizeManifestJson(payload, url || manifestUrl || manifestRef);
+      } catch (err) {
+        failures.push(String(err && err.message ? err.message : err));
       }
-
-      throw new Error(`Could not load papers manifest from ${candidates.join(', ')} (${failures.join(' | ')})`);
-    })();
-
-    try {
-      return await manifestLoadPromise;
-    } finally {
-      manifestLoadPromise = null;
     }
-  }
 
-  async function loadPaperBundle(path) {
-    const cacheKey = String(path || '').trim();
-    if (!cacheKey) return null;
-    if (bundleCache.has(cacheKey)) return bundleCache.get(cacheKey);
-    if (bundleLoadPromises.has(cacheKey)) return bundleLoadPromises.get(cacheKey);
-
-    const loadPromise = (async () => {
-      const payload = await fetchJson(cacheKey);
-      const bundle = normalizePaperBundle(payload, cacheKey);
-      bundleCache.set(cacheKey, bundle);
-      return bundle;
-    })();
-
-    bundleLoadPromises.set(cacheKey, loadPromise);
-    try {
-      return await loadPromise;
-    } finally {
-      bundleLoadPromises.delete(cacheKey);
-    }
-  }
-
-  function scorePaperRefForId(path, paperId) {
-    const ref = String(path || '').toLowerCase();
-    const id = String(paperId || '').trim().toLowerCase();
-    if (!id) return 0;
-    if ((id.startsWith('manual-') || id.startsWith('doi-')) && ref.includes('manual-added')) return 200;
-    if (id.startsWith('blog-') && ref.includes('blog')) return 180;
-    if (id.startsWith('pubs-') && ref.includes('pubs')) return 180;
-    if (id.startsWith('openalex-') && ref.includes('openalex')) return 180;
-    if (ref.includes('combined-all-papers-deduped')) return 140;
-    if (ref.includes('combined')) return 120;
-    if (ref.includes('manual-added')) return 80;
-    return 0;
-  }
-
-  function orderPaperRefsForId(paperRefs, paperId) {
-    const refs = Array.isArray(paperRefs) ? [...paperRefs] : [];
-    refs.sort((a, b) => {
-      const scoreDiff = scorePaperRefForId(b, paperId) - scorePaperRefForId(a, paperId);
-      if (scoreDiff !== 0) return scoreDiff;
-      return String(a).localeCompare(String(b));
-    });
-    return refs;
-  }
-
-  function findPaperById(papers, paperId) {
-    if (!Array.isArray(papers)) return null;
-    const targetId = String(paperId || '').trim();
-    if (!targetId) return null;
-    for (const candidate of papers) {
-      if (!candidate || typeof candidate !== 'object') continue;
-      if (String(candidate.id || '').trim() === targetId) return candidate;
-    }
-    return null;
+    throw new Error(`Could not load papers manifest from ${candidates.join(', ')} (${failures.join(' | ')})`);
   }
 
   async function loadPaperData() {
@@ -212,9 +129,8 @@
 
     const bundles = await Promise.all(
       manifest.paperRefs.map(async (path) => {
-        const bundle = await loadPaperBundle(path);
-        if (bundle) return bundle;
-        return { source: null, papers: [] };
+        const payload = await fetchJson(path);
+        return normalizePaperBundle(payload, path);
       })
     );
 
@@ -231,41 +147,5 @@
     return inMemoryCache;
   }
 
-  async function loadPaperRecordById(paperId) {
-    const targetId = String(paperId || '').trim();
-    if (!targetId) return null;
-
-    const manifest = await loadManifest();
-    if (inMemoryCache && inMemoryVersion === manifest.dataVersion) {
-      const cachedPaper = findPaperById(inMemoryCache.papers, targetId);
-      if (cachedPaper) {
-        return {
-          paper: cachedPaper,
-          papers: inMemoryCache.papers,
-          source: null,
-          dataVersion: manifest.dataVersion,
-        };
-      }
-    }
-
-    const refs = orderPaperRefsForId(manifest.paperRefs, targetId);
-    for (const ref of refs) {
-      const bundle = await loadPaperBundle(ref);
-      if (!bundle) continue;
-      const paper = findPaperById(bundle.papers, targetId);
-      if (paper) {
-        return {
-          paper,
-          papers: bundle.papers,
-          source: bundle.source || null,
-          dataVersion: manifest.dataVersion,
-        };
-      }
-    }
-
-    return null;
-  }
-
   window.loadPaperData = loadPaperData;
-  window.loadPaperRecordById = loadPaperRecordById;
 })();

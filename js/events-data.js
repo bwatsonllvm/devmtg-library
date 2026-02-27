@@ -5,10 +5,6 @@
 (function () {
   let inMemoryCache = null;
   let inMemoryVersion = '';
-  let manifestCache = null;
-  let manifestLoadPromise = null;
-  const bundleCache = new Map();
-  const bundleLoadPromises = new Map();
 
   const MANIFEST_JSON_PATH = 'devmtg/events/index.json';
   const EVENTS_PREFIX = 'devmtg/events/';
@@ -64,11 +60,6 @@
     };
   }
 
-  function resetBundleCaches() {
-    bundleCache.clear();
-    bundleLoadPromises.clear();
-  }
-
   async function fetchJson(path) {
     const resp = await fetch(path, { cache: 'default' });
     if (!resp.ok) {
@@ -82,70 +73,8 @@
   }
 
   async function loadManifest() {
-    if (manifestCache) return manifestCache;
-    if (manifestLoadPromise) return manifestLoadPromise;
-
-    manifestLoadPromise = (async () => {
-      const manifestPayload = await fetchJson(MANIFEST_JSON_PATH);
-      const manifest = normalizeManifestJson(manifestPayload);
-      if (inMemoryVersion && inMemoryVersion !== manifest.dataVersion) {
-        inMemoryCache = null;
-        inMemoryVersion = '';
-        resetBundleCaches();
-      }
-      manifestCache = manifest;
-      return manifest;
-    })();
-
-    try {
-      return await manifestLoadPromise;
-    } finally {
-      manifestLoadPromise = null;
-    }
-  }
-
-  async function loadEventBundle(path) {
-    const cacheKey = String(path || '').trim();
-    if (!cacheKey) return null;
-    if (bundleCache.has(cacheKey)) return bundleCache.get(cacheKey);
-    if (bundleLoadPromises.has(cacheKey)) return bundleLoadPromises.get(cacheKey);
-
-    const loadPromise = (async () => {
-      const payload = await fetchJson(cacheKey);
-      const bundle = normalizeEventBundle(payload, cacheKey);
-      bundleCache.set(cacheKey, bundle);
-      return bundle;
-    })();
-
-    bundleLoadPromises.set(cacheKey, loadPromise);
-    try {
-      return await loadPromise;
-    } finally {
-      bundleLoadPromises.delete(cacheKey);
-    }
-  }
-
-  function normalizeTalkId(value) {
-    return String(value || '').trim();
-  }
-
-  function findTalkById(talks, talkId) {
-    const target = normalizeTalkId(talkId);
-    if (!target || !Array.isArray(talks)) return null;
-    for (const talk of talks) {
-      if (!talk || typeof talk !== 'object') continue;
-      if (normalizeTalkId(talk.id) === target) return talk;
-    }
-    return null;
-  }
-
-  function resolveEventRefByTalkId(talkId, eventRefs) {
-    const id = normalizeTalkId(talkId);
-    if (!id) return '';
-    const match = id.match(/^(\d{4}-\d{2})-\d+$/);
-    if (!match) return '';
-    const candidate = `${EVENTS_PREFIX}${match[1]}.json`;
-    return Array.isArray(eventRefs) && eventRefs.includes(candidate) ? candidate : '';
+    const manifestPayload = await fetchJson(MANIFEST_JSON_PATH);
+    return normalizeManifestJson(manifestPayload);
   }
 
   async function loadEventData() {
@@ -156,9 +85,8 @@
 
     const bundles = await Promise.all(
       manifest.eventRefs.map(async (path) => {
-        const bundle = await loadEventBundle(path);
-        if (bundle) return bundle;
-        return { meeting: null, talks: [] };
+        const payload = await fetchJson(path);
+        return normalizeEventBundle(payload, path);
       })
     );
 
@@ -175,46 +103,5 @@
     return inMemoryCache;
   }
 
-  async function loadTalkRecordById(talkId) {
-    const targetId = normalizeTalkId(talkId);
-    if (!targetId) return null;
-
-    const manifest = await loadManifest();
-    if (inMemoryCache && inMemoryVersion === manifest.dataVersion) {
-      const cachedTalk = findTalkById(inMemoryCache.talks, targetId);
-      if (cachedTalk) {
-        return {
-          talk: cachedTalk,
-          talks: inMemoryCache.talks,
-          meeting: null,
-          dataVersion: manifest.dataVersion,
-        };
-      }
-    }
-
-    const eventRefs = Array.isArray(manifest.eventRefs) ? manifest.eventRefs : [];
-    const prioritizedRef = resolveEventRefByTalkId(targetId, eventRefs);
-    const orderedRefs = prioritizedRef
-      ? [prioritizedRef, ...eventRefs.filter((ref) => ref !== prioritizedRef)]
-      : eventRefs;
-
-    for (const ref of orderedRefs) {
-      const bundle = await loadEventBundle(ref);
-      if (!bundle) continue;
-      const talk = findTalkById(bundle.talks, targetId);
-      if (talk) {
-        return {
-          talk,
-          talks: bundle.talks,
-          meeting: bundle.meeting || null,
-          dataVersion: manifest.dataVersion,
-        };
-      }
-    }
-
-    return null;
-  }
-
   window.loadEventData = loadEventData;
-  window.loadTalkRecordById = loadTalkRecordById;
 })();

@@ -799,19 +799,10 @@ function filterAndSort() {
   let entries = searchIndex.map((paper) => ({ paper, score: 0 }));
 
   if (tokens.length > 0) {
-    let rankedViaHub = null;
     if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-      try {
-        rankedViaHub = HubUtils.rankPaperRecordsByQuery(searchIndex, state.query);
-      } catch (error) {
-        // Keep page rendering even if shared ranking logic regresses.
-        console.error('[papers] rankPaperRecordsByQuery failed, falling back to local scorer.', error);
-      }
-    }
-
-    if (Array.isArray(rankedViaHub) && rankedViaHub.length > 0) {
-      const baseScore = rankedViaHub.length || 1;
-      entries = rankedViaHub.map((paper, index) => ({ paper, score: baseScore - index }));
+      const ranked = HubUtils.rankPaperRecordsByQuery(searchIndex, state.query);
+      const baseScore = ranked.length || 1;
+      entries = ranked.map((paper, index) => ({ paper, score: baseScore - index }));
     } else {
       const scored = [];
       for (const paper of searchIndex) {
@@ -933,12 +924,8 @@ function filterAndSort() {
 }
 
 function highlightText(text, tokens) {
-  const queryOrTokens = state.query && state.query.trim() ? state.query : tokens;
-  if (typeof HubUtils.highlightSearchText === 'function') {
-    return HubUtils.highlightSearchText(text, queryOrTokens);
-  }
-
   if (!tokens || tokens.length === 0) return escapeHtml(text);
+
   let result = escapeHtml(text);
   for (const token of tokens) {
     const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -2718,12 +2705,7 @@ function fuzzyScoreTalkMatch(indexedTalk, tokens) {
 function countTalkMatchesForQuery(query) {
   if (!talkSearchIndex.length) return 0;
   if (typeof HubUtils.rankTalksByQuery === 'function') {
-    try {
-      const ranked = HubUtils.rankTalksByQuery(talkSearchIndex, query);
-      if (Array.isArray(ranked)) return ranked.length;
-    } catch (error) {
-      console.error('[papers] rankTalksByQuery failed, falling back to local scorer.', error);
-    }
+    return HubUtils.rankTalksByQuery(talkSearchIndex, query).length;
   }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
@@ -2743,12 +2725,7 @@ function countTalkMatchesForQuery(query) {
 
 function countPaperMatchesForQuery(query) {
   if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-    try {
-      const ranked = HubUtils.rankPaperRecordsByQuery(searchIndex, query);
-      if (Array.isArray(ranked)) return ranked.length;
-    } catch (error) {
-      console.error('[papers] rankPaperRecordsByQuery failed, falling back to local scorer.', error);
-    }
+    return HubUtils.rankPaperRecordsByQuery(searchIndex, query).length;
   }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
@@ -2925,9 +2902,6 @@ function buildAutocompleteIndex() {
 }
 
 function highlightMatch(text, query) {
-  if (typeof HubUtils.highlightSearchText === 'function') {
-    return HubUtils.highlightSearchText(text, query);
-  }
   if (!query) return escapeHtml(text);
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return escapeHtml(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
