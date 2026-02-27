@@ -361,7 +361,7 @@
   <section class="search-hero search-hero--compact" aria-label="About the library">
     <div class="search-hero-shell about-hero-shell">
       <h1>About This Library</h1>
-      <p class="subtitle">A unified research index for LLVM talks, papers, blogs, docs, meetings, and people.</p>
+      <p class="subtitle">A research library for LLVM talks, papers, blogs, docs, and people.</p>
       <form class="search-box global-search-form about-hero-search" action="work.html" method="get" role="search" aria-label="Search All across talks, papers, blogs, docs, people, and key topics">
         <input type="hidden" name="mode" value="search">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -392,9 +392,7 @@
     <section class="about-section" aria-labelledby="about-overview-heading">
       <h2 id="about-overview-heading">What This Website Contains</h2>
       <p>
-        This library combines LLVM Developers' Meeting talks, LLVM-related research papers, LLVM Project Blog posts, wrapped LLVM/Clang/LLDB documentation, and a merged people index.
-        It is designed for both quick lookup and deep research workflows.
-        Docs support includes local wrapped docs landing/search routing, source attribution, and unified search indexing alongside talks/papers/blogs.
+        This research library combines LLVM Developers' Meeting talks, LLVM-related research papers, LLVM Project Blog posts, wrapped LLVM/Clang/LLDB documentation, and a merged people index. It is designed for both quick lookup and cross-reference research workflows. Docs support currently includes local wrapped docs landing/search routing, source attribution, and unified search indexing alongside talks/papers/blogs. The library updates nightly at 00:00 UTC.
       </p>
       <div class="about-stats-grid" aria-label="Library coverage">
         <article class="about-stat-card">
@@ -499,8 +497,10 @@
         <li><strong>Docs:</strong> synchronized from <code>llvm/llvm-project</code> docs paths into local wrapped docs roots (<code>docs/</code>, <code>docs/clang/</code>, <code>docs/lldb/</code>), then re-indexed for in-library docs search and global discoverability.</li>
         <li><strong>People:</strong> derived from talk speakers and paper authors, then merged across name variants to reduce duplicates.</li>
         <li><strong>Updates:</strong> generated from content deltas and shown newest-first, with links to in-library talk/paper/blog/docs pages.</li>
-        <li><strong>Scope:</strong> all indexed material is public; this site is a research index and does not replace canonical event schedules.</li>
-        <li>For official meeting announcements and schedules, see the <a href="https://llvm.org/devmtg/" target="_blank" rel="noopener">LLVM Developers' Meeting archive</a>.</li>
+        <li><strong>Refresh cadence:</strong> automated sync jobs run nightly at 00:00 UTC, so new upstream changes may appear later here.</li>
+        <li><strong>Scope and limits:</strong> all indexed material is public; this site is a research index and does not replace canonical LLVM project sources.</li>
+        <li><strong>Use official sources for authoritative status:</strong> <a href="https://llvm.org/docs/" target="_blank" rel="noopener">LLVM documentation</a> and the <a href="https://github.com/llvm/llvm-project" target="_blank" rel="noopener">llvm/llvm-project repository</a> should be treated as primary references.</li>
+        <li><strong>Meetings:</strong> for official meeting announcements and schedules, use the <a href="https://llvm.org/devmtg/" target="_blank" rel="noopener">LLVM Developers' Meeting archive</a>.</li>
       </ul>
     </section>
   </main>
