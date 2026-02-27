@@ -42,7 +42,6 @@ for f in \
   js/papers-data.js \
   js/papers.js \
   js/updates.js \
-  js/docs.js \
   js/shared/library-utils.js \
   js/data/autocomplete-index.json \
   templates/site-header.html \
