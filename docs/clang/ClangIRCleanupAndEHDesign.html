@@ -34,10 +34,63 @@
         
   <section id="clangir-cleanup-and-exception-handling-design">
 <h1>ClangIR Cleanup and Exception Handling Design<a class="headerlink" href="#clangir-cleanup-and-exception-handling-design" title="Link to this heading">¶</a></h1>
-<p>::: {.contents local=””}
-:::</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id6">Overview</a></p></li>
+<li><p><a class="reference internal" href="#high-level-cir-representation" id="id7">High-level CIR representation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#normal-and-eh-cleanups" id="id8">Normal and EH cleanups</a></p>
+<ul>
+<li><p><a class="reference internal" href="#implementation-notes" id="id9">Implementation notes</a></p></li>
+<li><p><a class="reference internal" href="#example-automatic-storage-object-cleanup" id="id10">Example: Automatic storage object cleanup</a></p></li>
+<li><p><a class="reference internal" href="#example-multiple-automatic-objects" id="id11">Example: Multiple automatic objects</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id12">Implementation notes</a></p></li>
+<li><p><a class="reference internal" href="#example-branch-through-cleanup" id="id13">Example: Branch through cleanup</a></p></li>
+<li><p><a class="reference internal" href="#example-eh-only-cleanup" id="id14">Example: EH-only cleanup</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#try-operations-and-exception-handling" id="id15">Try Operations and Exception Handling</a></p>
+<ul>
+<li><p><a class="reference internal" href="#example-simple-try-catch" id="id16">Example: Simple try-catch</a></p></li>
+<li><p><a class="reference internal" href="#example-try-catch-with-catch-all" id="id17">Example: Try-catch with catch all</a></p></li>
+<li><p><a class="reference internal" href="#example-try-catch-with-cleanup" id="id18">Example: Try-catch with cleanup</a></p></li>
+<li><p><a class="reference internal" href="#example-try-catch-within-a-cleanup-region" id="id19">Example: Try-catch within a cleanup region</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#partial-array-cleanup" id="id20">Partial Array Cleanup</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#cfg-flattening" id="id21">CFG Flattening</a></p>
+<ul>
+<li><p><a class="reference internal" href="#exception-handling" id="id22">Exception Handling</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id2" id="id23">Example: Try-catch with cleanup</a></p></li>
+<li><p><a class="reference internal" href="#example-cleanup-with-unhandled-exception" id="id24">Example: Cleanup with unhandled exception</a></p></li>
+<li><p><a class="reference internal" href="#example-shared-cleanups" id="id25">Example: Shared cleanups</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#abi-lowering" id="id26">ABI Lowering</a></p>
+<ul>
+<li><p><a class="reference internal" href="#itanium-abi-lowering" id="id27">Itanium ABI Lowering</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id3" id="id28">Example: Try-catch with cleanup</a></p></li>
+<li><p><a class="reference internal" href="#example-try-catch-with-multiple-catch-handlers" id="id29">Example: Try-catch with multiple catch handlers</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#microsoft-c-abi-lowering" id="id30">Microsoft C++ ABI Lowering</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id4" id="id31">Example: Try-catch with cleanup</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id32">Example: Try-catch with multiple catch handlers</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>This document describes the design for C++ cleanups and exception
 handling representation and lowering in the CIR dialect. The initial CIR
 generation will follow the general structure of the cleanup and
@@ -59,9 +112,9 @@ correspondence to the LLVM IR exception handling representation for a
 given target.</p>
 </section>
 <section id="high-level-cir-representation">
-<h2>High-level CIR representation<a class="headerlink" href="#high-level-cir-representation" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">High-level CIR representation</a><a class="headerlink" href="#high-level-cir-representation" title="Link to this heading">¶</a></h2>
 <section id="normal-and-eh-cleanups">
-<h3>Normal and EH cleanups<a class="headerlink" href="#normal-and-eh-cleanups" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Normal and EH cleanups</a><a class="headerlink" href="#normal-and-eh-cleanups" title="Link to this heading">¶</a></h3>
 <p>Scopes that require normal or EH cleanup will be represented using a new
 operation, <code class="docutils literal notranslate"><span class="pre">cir.cleanup.scope</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cir</span><span class="o">.</span><span class="n">cleanup</span><span class="o">.</span><span class="n">scope</span> <span class="p">{</span>
@@ -110,7 +163,7 @@ cleanup scope.</p>
 such as were used to represent calls within a cleanup scope in the
 ClangIR incubator project.</p>
 <section id="implementation-notes">
-<h4>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id9" role="doc-backlink">Implementation notes</a><a class="headerlink" href="#implementation-notes" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">cir.cleanup.scope</span></code> must be created when we call <code class="docutils literal notranslate"><span class="pre">pushCleanup</span></code>. We
 will need to set the insertion point at that time. When each cleanup
 block is popped, we will need to set the insertion point to immediately
@@ -118,7 +171,7 @@ following the cleanup scope operation. If <code class="docutils literal notransl
 it will pop cleanup blocks, which is good.</p>
 </section>
 <section id="example-automatic-storage-object-cleanup">
-<h4>Example: Automatic storage object cleanup<a class="headerlink" href="#example-automatic-storage-object-cleanup" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id10" role="doc-backlink">Example: Automatic storage object cleanup</a><a class="headerlink" href="#example-automatic-storage-object-cleanup" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">SomeClass</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
@@ -155,7 +208,7 @@ cleanup region, calling the destructor, before continuing to the return
 operation.</p>
 </section>
 <section id="example-multiple-automatic-objects">
-<h4>Example: Multiple automatic objects<a class="headerlink" href="#example-multiple-automatic-objects" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id11" role="doc-backlink">Example: Multiple automatic objects</a><a class="headerlink" href="#example-multiple-automatic-objects" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">SomeClass</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
@@ -209,7 +262,7 @@ cleanup scopes are visited, calling the destructor once in each cleanup
 scope, in reverse order of the object construction.</p>
 </section>
 <section id="id1">
-<h4>Implementation notes<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id12" role="doc-backlink">Implementation notes</a><a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
 <p>Branch through cleanups will be handled during flattening. In the
 structured CIR representation, an operation like <code class="docutils literal notranslate"><span class="pre">cir.break</span></code>,
 <code class="docutils literal notranslate"><span class="pre">cir.return</span></code>, or <code class="docutils literal notranslate"><span class="pre">cir.continue</span></code> has well-defined behavior. We will need
@@ -217,7 +270,7 @@ to define the semantics such that they include visiting the cleanup
 region before continuing to their currently defined destination.</p>
 </section>
 <section id="example-branch-through-cleanup">
-<h4>Example: Branch through cleanup<a class="headerlink" href="#example-branch-through-cleanup" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id13" role="doc-backlink">Example: Branch through cleanup</a><a class="headerlink" href="#example-branch-through-cleanup" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -304,7 +357,7 @@ on destination slots will be created, matching the LLVM IR control flow
 for cleanup block sharing.</p>
 </section>
 <section id="example-eh-only-cleanup">
-<h4>Example: EH-only cleanup<a class="headerlink" href="#example-eh-only-cleanup" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id14" role="doc-backlink">Example: EH-only cleanup</a><a class="headerlink" href="#example-eh-only-cleanup" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="w"> </span><span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
@@ -346,7 +399,7 @@ the destructor. Therefore, this cleanup handler is marked as eh_only.</p>
 </section>
 </section>
 <section id="try-operations-and-exception-handling">
-<h3>Try Operations and Exception Handling<a class="headerlink" href="#try-operations-and-exception-handling" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Try Operations and Exception Handling</a><a class="headerlink" href="#try-operations-and-exception-handling" title="Link to this heading">¶</a></h3>
 <p>Try-catch blocks will be represented, as they are in the ClangIR
 incubator project, using a <code class="docutils literal notranslate"><span class="pre">cir.try</span></code> operation.</p>
 <p>Each catch handler region and unwind region in a <code class="docutils literal notranslate"><span class="pre">cir.try</span></code> operation
@@ -388,7 +441,7 @@ be executed during normal execution, and one or more handler regions,
 which represent catch handlers or the fallback unwind for uncaught
 exceptions.</p>
 <section id="example-simple-try-catch">
-<h4>Example: Simple try-catch<a class="headerlink" href="#example-simple-try-catch" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id16" role="doc-backlink">Example: Simple try-catch</a><a class="headerlink" href="#example-simple-try-catch" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
@@ -435,7 +488,7 @@ exception at the next level, in this case, the handlers (if any) for the
 function that called <code class="docutils literal notranslate"><span class="pre">someFunc()</span></code>.</p>
 </section>
 <section id="example-try-catch-with-catch-all">
-<h4>Example: Try-catch with catch all<a class="headerlink" href="#example-try-catch-with-catch-all" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id17" role="doc-backlink">Example: Try-catch with catch all</a><a class="headerlink" href="#example-try-catch-with-catch-all" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
@@ -491,7 +544,7 @@ transferred to the catch all region, which also yields, continuing
 execution immediately after the try operation.</p>
 </section>
 <section id="example-try-catch-with-cleanup">
-<h4>Example: Try-catch with cleanup<a class="headerlink" href="#example-try-catch-with-cleanup" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id18" role="doc-backlink">Example: Try-catch with cleanup</a><a class="headerlink" href="#example-try-catch-with-cleanup" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
@@ -537,7 +590,7 @@ cleanup region will be executed before control is transferred to the
 catch handler.</p>
 </section>
 <section id="example-try-catch-within-a-cleanup-region">
-<h4>Example: Try-catch within a cleanup region<a class="headerlink" href="#example-try-catch-within-a-cleanup-region" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id19" role="doc-backlink">Example: Try-catch within a cleanup region</a><a class="headerlink" href="#example-try-catch-within-a-cleanup-region" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">SomeClass</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
@@ -599,7 +652,7 @@ operation.</p>
 </section>
 </section>
 <section id="partial-array-cleanup">
-<h3>Partial Array Cleanup<a class="headerlink" href="#partial-array-cleanup" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Partial Array Cleanup</a><a class="headerlink" href="#partial-array-cleanup" title="Link to this heading">¶</a></h3>
 <p>Partial array cleanup is a special case because the details of array
 construction and deletion are already encapsulated within high-level CIR
 operations. When an array of objects is constructed, the constructor for
@@ -678,7 +731,7 @@ destruction is handled in Clang’s LLVM IR codegen.</p>
 </section>
 </section>
 <section id="cfg-flattening">
-<h2>CFG Flattening<a class="headerlink" href="#cfg-flattening" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">CFG Flattening</a><a class="headerlink" href="#cfg-flattening" title="Link to this heading">¶</a></h2>
 <p>Before CIR can be lowered to the LLVM dialect, the CFG must be
 flattened. That is, functions must not contain nested regions, and all
 blocks in the function must belong to the parent region. This state is
@@ -691,7 +744,7 @@ pass. The flattening pass will implement the semantics for branching
 through cleanup regions using the same slot and dispatch mechanism used
 in Clang’s LLVM IR codegen.</p>
 <section id="exception-handling">
-<h3>Exception Handling<a class="headerlink" href="#exception-handling" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">Exception Handling</a><a class="headerlink" href="#exception-handling" title="Link to this heading">¶</a></h3>
 <p>Flattening the CIR for exception handling, including any cleanups that
 must be performed during exception unwinding, requires some specialized
 CIR operations. The operations that were used in the ClangIR incubator
@@ -759,7 +812,7 @@ from the block argument rather than a region argument, and the
 <code class="docutils literal notranslate"><span class="pre">cir.end_catch</span></code> operation appears directly in the catch block rather
 than within a <code class="docutils literal notranslate"><span class="pre">cir.cleanup.scope</span></code> cleanup region.</p>
 <section id="id2">
-<h4>Example: Try-catch with cleanup<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id23" role="doc-backlink">Example: Try-catch with cleanup</a><a class="headerlink" href="#id2" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
@@ -844,7 +897,7 @@ block <code class="docutils literal notranslate"><span class="pre">^bb4</span></
 dispatch block (<code class="docutils literal notranslate"><span class="pre">^bb5</span></code>).</p>
 </section>
 <section id="example-cleanup-with-unhandled-exception">
-<h4>Example: Cleanup with unhandled exception<a class="headerlink" href="#example-cleanup-with-unhandled-exception" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id24" role="doc-backlink">Example: Cleanup with unhandled exception</a><a class="headerlink" href="#example-cleanup-with-unhandled-exception" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">SomeClass</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
@@ -894,7 +947,7 @@ cleanup, but because we have no catch handler, we execute <code class="docutils 
 after the cleanup to unwind to the function that called <code class="docutils literal notranslate"><span class="pre">someFunc()</span></code>.</p>
 </section>
 <section id="example-shared-cleanups">
-<h4>Example: Shared cleanups<a class="headerlink" href="#example-shared-cleanups" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id25" role="doc-backlink">Example: Shared cleanups</a><a class="headerlink" href="#example-shared-cleanups" title="Link to this heading">¶</a></h4>
 <p><strong>C++</strong></p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">someFunc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -1046,7 +1099,7 @@ to the behavior of Clang’s LLVM IR codegen.</p>
 </section>
 </section>
 <section id="abi-lowering">
-<h2>ABI Lowering<a class="headerlink" href="#abi-lowering" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id26" role="doc-backlink">ABI Lowering</a><a class="headerlink" href="#abi-lowering" title="Link to this heading">¶</a></h2>
 <p>A new pass will be introduced to lower the flattened representation to
 lower the ABI-agnostic flattened CIR representation to an ABI-specific
 form. This will be a separate pass from the main CXXABI lowering pass,
@@ -1063,7 +1116,7 @@ Handling</a>.</p>
 <p>A personality function attribute will be added to functions that require
 it during the ABI lowering phase.</p>
 <section id="itanium-abi-lowering">
-<h3>Itanium ABI Lowering<a class="headerlink" href="#itanium-abi-lowering" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">Itanium ABI Lowering</a><a class="headerlink" href="#itanium-abi-lowering" title="Link to this heading">¶</a></h3>
 <p>The Itanium exception handling ABI representation replaces the
 <code class="docutils literal notranslate"><span class="pre">cir.eh.initiate</span></code> and <code class="docutils literal notranslate"><span class="pre">cir.eh.dispatch</span></code> operations with a
 <code class="docutils literal notranslate"><span class="pre">cir.eh.landingpad</span></code> operation and a series of <code class="docutils literal notranslate"><span class="pre">cir.compare</span></code> and
@@ -1080,7 +1133,7 @@ instruction. It may have a list of type IDs that the handler can catch
 (or null for “catch all”) or it may have the cleanup attribute if the
 handler performs cleanup but does not catch any exceptions.</p>
 <section id="id3">
-<h4>Example: Try-catch with cleanup<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id28" role="doc-backlink">Example: Try-catch with cleanup</a><a class="headerlink" href="#id3" title="Link to this heading">¶</a></h4>
 <p><strong>Flattened CIR</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cir.func @someFunc(){
   %0 = cir.alloca !rec_SomeClass, !cir.ptr&lt;!rec_SomeClass&gt;, [&quot;c&quot;, init]
@@ -1151,7 +1204,7 @@ all handler block (<code class="docutils literal notranslate"><span class="pre">
 normal continuation block (<code class="docutils literal notranslate"><span class="pre">^bb8</span></code>).</p>
 </section>
 <section id="example-try-catch-with-multiple-catch-handlers">
-<h4>Example: Try-catch with multiple catch handlers<a class="headerlink" href="#example-try-catch-with-multiple-catch-handlers" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id29" role="doc-backlink">Example: Try-catch with multiple catch handlers</a><a class="headerlink" href="#example-try-catch-with-multiple-catch-handlers" title="Link to this heading">¶</a></h4>
 <p><strong>Flattened CIR</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cir.func @someFunc(){
   cir.try_call @f() ^bb1, ^bb2
@@ -1226,7 +1279,7 @@ the normal continuation block (<code class="docutils literal notranslate"><span 
 </section>
 </section>
 <section id="microsoft-c-abi-lowering">
-<h3>Microsoft C++ ABI Lowering<a class="headerlink" href="#microsoft-c-abi-lowering" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">Microsoft C++ ABI Lowering</a><a class="headerlink" href="#microsoft-c-abi-lowering" title="Link to this heading">¶</a></h3>
 <p>The Microsoft C++ exception handling ABI representation drops the
 <code class="docutils literal notranslate"><span class="pre">cir.eh.initiate</span></code> operation and replaces the <code class="docutils literal notranslate"><span class="pre">cir.eh.dispatch</span></code> operation
 with <code class="docutils literal notranslate"><span class="pre">cir.eh.catchswitch</span></code> operation. The <code class="docutils literal notranslate"><span class="pre">cir.begin_cleanup</span></code> and
@@ -1277,7 +1330,7 @@ within this catch handler.</p>
 <code class="docutils literal notranslate"><span class="pre">cir.catchpad</span></code> operation which is completed by this operation and a
 block at which excution should be resumed.</p>
 <section id="id4">
-<h4>Example: Try-catch with cleanup<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id31" role="doc-backlink">Example: Try-catch with cleanup</a><a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
 <p><strong>Flattened CIR</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cir.func @someFunc() {
   %0 = cir.alloca !rec_SomeClass, !cir.ptr&lt;!rec_SomeClass&gt;, [&quot;c&quot;, init]
@@ -1336,7 +1389,7 @@ block at which excution should be resumed.</p>
 </div>
 </section>
 <section id="id5">
-<h4>Example: Try-catch with multiple catch handlers<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h4>
+<h4><a class="toc-backref" href="#id32" role="doc-backlink">Example: Try-catch with multiple catch handlers</a><a class="headerlink" href="#id5" title="Link to this heading">¶</a></h4>
 <p><strong>Flattened CIR</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cir.func @someFunc(){
   cir.try_call @f() ^bb1, ^bb2

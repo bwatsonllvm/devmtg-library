@@ -1651,7 +1651,6 @@
       "matchedAuthors": [
         "Antonio Barbalace",
         "Binoy Ravindran",
-        "Edson Lemos Horta",
         "Jiaxun Yang",
         "Maxime France-Pillois",
         "Zihan Huang"
@@ -9638,7 +9637,8 @@
         "Heterogeneous Acceleration"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -14456,7 +14456,12 @@
         "Unified Memory"
       ],
       "matchedAuthors": [
-        "Christos Kotselidis"
+        "Athanasios Stratikopoulos",
+        "Christos Kotselidis",
+        "Florin Blanaru",
+        "Juan Fumero",
+        "Sandhya Viswanathan",
+        "Steve Dohrmann"
       ],
       "matchedSubprojects": [
         "runtimes"
@@ -15283,7 +15288,8 @@
         "Heterogeneous Acceleration"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -18630,7 +18636,8 @@
         "Version"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl",
@@ -24102,7 +24109,8 @@
         "Portability"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl",

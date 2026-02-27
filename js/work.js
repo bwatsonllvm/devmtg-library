@@ -33,8 +33,8 @@ const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
 const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
 const UNIVERSAL_MAX_RESULTS = 1200;
-const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=9b2701561091';
-const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=74116e3da143';
+const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=947d14223f7d';
+const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=b6acc379d93c';
 const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=eba40672f6e7';
 const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
 
