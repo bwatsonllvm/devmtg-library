@@ -2,18 +2,57 @@
  * work.js — Unified talks + papers + blogs + docs + people view for search/entity pages.
  */
 
-const HubUtils = window.LLVMHubUtils || {};
-const PageShell = typeof HubUtils.createPageShell === 'function'
-  ? HubUtils.createPageShell()
-  : null;
+const HubUtils = window.LLVMHubUtils;
+if (!HubUtils || typeof HubUtils !== 'object') {
+  throw new Error('LLVMHubUtils is required before loading work.js');
+}
 
-const safeStorageGet = PageShell ? PageShell.safeStorageGet : () => null;
-const safeStorageSet = PageShell ? PageShell.safeStorageSet : () => {};
-const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
-const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
-const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
-const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
-const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
+function requireHubFunction(name) {
+  const fn = HubUtils[name];
+  if (typeof fn !== 'function') {
+    throw new Error(`LLVMHubUtils.${name} is required by work.js`);
+  }
+  return fn.bind(HubUtils);
+}
+
+const createPageShell = requireHubFunction('createPageShell');
+const normalizePersonKeyFromHub = requireHubFunction('normalizePersonKey');
+const arePersonMiddleVariants = requireHubFunction('arePersonMiddleVariants');
+const normalizePersonDisplayNameFromHub = requireHubFunction('normalizePersonDisplayName');
+const getTalkKeyTopicsFromHub = requireHubFunction('getTalkKeyTopics');
+const getPaperKeyTopicsFromHub = requireHubFunction('getPaperKeyTopics');
+const buildSearchSnippet = requireHubFunction('buildSearchSnippet');
+const normalizePersonRecord = requireHubFunction('normalizePersonRecord');
+const tokenizeQueryFromHub = requireHubFunction('tokenizeQuery');
+const buildSearchQueryModel = requireHubFunction('buildSearchQueryModel');
+const scoreTalkRecordByModel = requireHubFunction('scoreTalkRecordByModel');
+const scorePaperRecordByModel = requireHubFunction('scorePaperRecordByModel');
+const composeCrossTypeRelevance = requireHubFunction('composeCrossTypeRelevance');
+const rankTalksByQuery = requireHubFunction('rankTalksByQuery');
+const rankPaperRecordsByQuery = requireHubFunction('rankPaperRecordsByQuery');
+const buildPeopleIndex = requireHubFunction('buildPeopleIndex');
+const normalizeTalksFromHub = requireHubFunction('normalizeTalks');
+
+const PageShell = createPageShell();
+if (!PageShell || typeof PageShell !== 'object') {
+  throw new Error('LLVMHubUtils.createPageShell() returned an invalid object');
+}
+
+function requirePageShellMethod(name) {
+  const fn = PageShell[name];
+  if (typeof fn !== 'function') {
+    throw new Error(`PageShell.${name} is required by work.js`);
+  }
+  return fn.bind(PageShell);
+}
+
+const safeStorageGet = requirePageShellMethod('safeStorageGet');
+const safeStorageSet = requirePageShellMethod('safeStorageSet');
+const initTheme = requirePageShellMethod('initTheme');
+const initTextSize = requirePageShellMethod('initTextSize');
+const initCustomizationMenu = requirePageShellMethod('initCustomizationMenu');
+const initShareMenu = requirePageShellMethod('initShareMenu');
+const initMobileNavMenu = requirePageShellMethod('initMobileNavMenu');
 
 const TALK_BATCH_SIZE = 24;
 const PAPER_BATCH_SIZE = 24;
@@ -405,10 +444,7 @@ function normalizeSortMode(value) {
 }
 
 function normalizePersonKey(value) {
-  if (typeof HubUtils.normalizePersonKey === 'function') {
-    return HubUtils.normalizePersonKey(value);
-  }
-  return normalizeValue(value);
+  return normalizePersonKeyFromHub(value);
 }
 
 function samePersonName(a, b) {
@@ -416,17 +452,11 @@ function samePersonName(a, b) {
   const keyB = normalizePersonKey(b);
   if (!keyA || !keyB) return false;
   if (keyA === keyB) return true;
-  if (typeof HubUtils.arePersonMiddleVariants === 'function') {
-    return HubUtils.arePersonMiddleVariants(a, b);
-  }
-  return false;
+  return arePersonMiddleVariants(a, b);
 }
 
 function normalizePersonDisplayName(value) {
-  if (typeof HubUtils.normalizePersonDisplayName === 'function') {
-    return HubUtils.normalizePersonDisplayName(value);
-  }
-  return String(value || '').trim();
+  return normalizePersonDisplayNameFromHub(value);
 }
 
 function getPersonVariantNames(person) {
@@ -472,33 +502,11 @@ function normalizePublicationLabel(value) {
 }
 
 function getTalkKeyTopics(talk, limit = Infinity) {
-  if (typeof HubUtils.getTalkKeyTopics === 'function') {
-    return HubUtils.getTalkKeyTopics(talk, limit);
-  }
-  const tags = Array.isArray(talk && talk.tags) ? talk.tags : [];
-  return Number.isFinite(limit) ? tags.slice(0, limit) : tags;
+  return getTalkKeyTopicsFromHub(talk, limit);
 }
 
 function getPaperKeyTopics(paper, limit = Infinity) {
-  if (typeof HubUtils.getPaperKeyTopics === 'function') {
-    return HubUtils.getPaperKeyTopics(paper, limit);
-  }
-
-  const out = [];
-  const seen = new Set();
-
-  const add = (value) => {
-    const label = String(value || '').trim();
-    const key = normalizeTopicKey(label);
-    if (!label || !key || seen.has(key)) return;
-    seen.add(key);
-    out.push(label);
-  };
-
-  for (const tag of (paper.tags || [])) add(tag);
-  for (const keyword of (paper.keywords || [])) add(keyword);
-
-  return Number.isFinite(limit) ? out.slice(0, limit) : out;
+  return getPaperKeyTopicsFromHub(paper, limit);
 }
 
 function toTitleCaseSlug(slug) {
@@ -535,8 +543,8 @@ function buildContextSnippet(sourceText, query, maxLength = 320) {
   const text = stripSearchSourceText(sourceText);
   if (!text) return '';
 
-  if (query && query.length >= 2 && typeof HubUtils.buildSearchSnippet === 'function') {
-    const snippet = HubUtils.buildSearchSnippet(text, query, { maxLength });
+  if (query && query.length >= 2) {
+    const snippet = buildSearchSnippet(text, query, { maxLength });
     if (snippet) return snippet;
   }
 
@@ -1210,18 +1218,12 @@ function normalizePaperRecord(rawPaper) {
   paper.authors = Array.isArray(paper.authors)
     ? paper.authors
       .map((author) => {
-        if (typeof HubUtils.normalizePersonRecord === 'function') {
-          const normalized = HubUtils.normalizePersonRecord(author);
-          if (!normalized || !normalized.name) return null;
-          const affiliation = author && typeof author === 'object'
-            ? String(author.affiliation || '').trim()
-            : '';
-          return { name: normalized.name, affiliation };
-        }
-        if (!author || typeof author !== 'object') return null;
-        const name = String(author.name || '').trim();
-        if (!name) return null;
-        return { name };
+        const normalized = normalizePersonRecord(author);
+        if (!normalized || !normalized.name) return null;
+        const affiliation = author && typeof author === 'object'
+          ? String(author.affiliation || '').trim()
+          : '';
+        return { name: normalized.name, affiliation };
       })
       .filter(Boolean)
     : [];
@@ -1486,29 +1488,14 @@ function tokenizeQuery(query) {
   const cacheHit = QUERY_TOKEN_CACHE.get(raw);
   if (Array.isArray(cacheHit)) return cacheHit;
 
-  if (typeof HubUtils.tokenizeQuery === 'function') {
-    const tokens = HubUtils.tokenizeQuery(raw);
-    const resolved = Array.isArray(tokens) ? tokens : [];
-    if (QUERY_TOKEN_CACHE.size >= QUERY_TOKEN_CACHE_MAX) {
-      const oldest = QUERY_TOKEN_CACHE.keys().next().value;
-      if (oldest !== undefined) QUERY_TOKEN_CACHE.delete(oldest);
-    }
-    QUERY_TOKEN_CACHE.set(raw, resolved);
-    return resolved;
-  }
-  const tokens = [];
-  const re = /"([^"]+)"|(\S+)/g;
-  let match;
-  while ((match = re.exec(raw)) !== null) {
-    const token = (match[1] || match[2] || '').toLowerCase().trim();
-    if (token.length >= 2) tokens.push(token);
-  }
+  const tokens = tokenizeQueryFromHub(raw);
+  const resolved = Array.isArray(tokens) ? tokens : [];
   if (QUERY_TOKEN_CACHE.size >= QUERY_TOKEN_CACHE_MAX) {
     const oldest = QUERY_TOKEN_CACHE.keys().next().value;
     if (oldest !== undefined) QUERY_TOKEN_CACHE.delete(oldest);
   }
-  QUERY_TOKEN_CACHE.set(raw, tokens);
-  return tokens;
+  QUERY_TOKEN_CACHE.set(raw, resolved);
+  return resolved;
 }
 
 function normalizeSearchText(value) {
@@ -2033,9 +2020,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
   const rankedDocs = Array.isArray(docs) ? docs : [];
   const normalizedQuery = normalizeSearchText(query);
   const normalizedTokens = tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
-  const model = typeof HubUtils.buildSearchQueryModel === 'function'
-    ? HubUtils.buildSearchQueryModel(query, advancedOptions || undefined)
-    : null;
+  const model = buildSearchQueryModel(query, advancedOptions || undefined);
   const hasModel = !!(model && model.hasSearchConstraints);
   const narrowClauseCount = hasModel
     ? (Array.isArray(model.clauses) ? model.clauses.filter((clause) => clause && clause.isBroad !== true).length : 0)
@@ -2045,8 +2030,8 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
     : 0;
   const focusedIntent = hasModel && (narrowClauseCount >= 2 || requiredPhraseCount > 0);
   const highlySpecificIntent = hasModel && (narrowClauseCount >= 3 || requiredPhraseCount >= 1);
-  const canScoreTalkByModel = hasModel && typeof HubUtils.scoreTalkRecordByModel === 'function';
-  const canScorePaperByModel = hasModel && typeof HubUtils.scorePaperRecordByModel === 'function';
+  const canScoreTalkByModel = hasModel;
+  const canScorePaperByModel = hasModel;
   const canScorePeopleByModel = hasModel;
   const strict = [];
   const relaxed = [];
@@ -2103,20 +2088,20 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
 
       if (canScoreByModel) {
         const strictScore = kind === 'talk'
-          ? HubUtils.scoreTalkRecordByModel(record, model, { relaxed: false })
+          ? scoreTalkRecordByModel(record, model, { relaxed: false })
           : (kind === 'person'
             ? scorePersonRecordByModel(record, model, { relaxed: false })
-            : HubUtils.scorePaperRecordByModel(record, model, { relaxed: false }));
+            : scorePaperRecordByModel(record, model, { relaxed: false }));
         if (strictScore > 0) {
           pushEntry(strict, 'strict', kind, record, strictScore + titleBoost, index);
           return;
         }
 
         const relaxedScore = kind === 'talk'
-          ? HubUtils.scoreTalkRecordByModel(record, model, { relaxed: true })
+          ? scoreTalkRecordByModel(record, model, { relaxed: true })
           : (kind === 'person'
             ? scorePersonRecordByModel(record, model, { relaxed: true })
-            : HubUtils.scorePaperRecordByModel(record, model, { relaxed: true }));
+            : scorePaperRecordByModel(record, model, { relaxed: true }));
         if (relaxedScore > 0) {
           pushEntry(relaxed, 'relaxed', kind, record, relaxedScore + (titleBoost * 0.9), index);
           return;
@@ -2168,15 +2153,13 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
       if (!(raw > 0)) return { ...entry, score: 0 };
 
       const kindTopScore = Number(topByKind.get(entry.kind) || 0) || globalTopScore || raw;
-      const blendedScore = typeof HubUtils.composeCrossTypeRelevance === 'function'
-        ? HubUtils.composeCrossTypeRelevance(raw, {
-          kindTopScore,
-          globalTopScore: globalTopScore || raw,
-          rankIndex: Number(entry.rankIndex || 0),
-          tier: entry.tier || 'strict',
-          kind: entry.kind || '',
-        })
-        : raw;
+      const blendedScore = composeCrossTypeRelevance(raw, {
+        kindTopScore,
+        globalTopScore: globalTopScore || raw,
+        rankIndex: Number(entry.rankIndex || 0),
+        tier: entry.tier || 'strict',
+        kind: entry.kind || '',
+      });
 
       return {
         ...entry,
@@ -2228,86 +2211,21 @@ function indexTalkForSearch(talk) {
   };
 }
 
-function scorePaperForQuery(paper, tokens) {
-  if (!tokens.length) return 0;
-
-  let total = 0;
-  const title = String(paper.title || '').toLowerCase();
-  const authors = (paper.authors || []).map((author) => `${author.name || ''}`).join(' ').toLowerCase();
-  const abstractText = String(paper.abstract || '').toLowerCase();
-  const tags = (paper.tags || []).join(' ').toLowerCase();
-  const keywords = (paper.keywords || []).join(' ').toLowerCase();
-  const publication = String(paper.publication || '').toLowerCase();
-  const venue = String(paper.venue || '').toLowerCase();
-  const year = String(paper._year || '').toLowerCase();
-
-  for (const token of tokens) {
-    let tokenScore = 0;
-    const titleIdx = title.indexOf(token);
-    if (titleIdx !== -1) tokenScore += titleIdx === 0 ? 100 : 50;
-    if (authors.includes(token)) tokenScore += 34;
-    if (tags.includes(token)) tokenScore += 20;
-    if (keywords.includes(token)) tokenScore += 16;
-    if (abstractText.includes(token)) tokenScore += 12;
-    if (publication.includes(token)) tokenScore += 10;
-    if (venue.includes(token)) tokenScore += 8;
-    if (year.includes(token)) tokenScore += 6;
-    if (tokenScore === 0) return 0;
-    total += tokenScore;
-  }
-
-  const yearNumber = Number.parseInt(String(paper._year || ''), 10);
-  total += (Number.isFinite(yearNumber) ? yearNumber : 2002) * 0.01;
-  return total;
-}
-
 function rankTalksForQuery(talks, query, advancedOptions = null) {
   const indexedTalks = (talks || []).map(indexTalkForSearch);
   const tokens = tokenizeQuery(query);
   const hasAdvanced = hasAdvancedSearchOptions(advancedOptions || {});
   if (!tokens.length && !hasAdvanced) return indexedTalks.sort(compareTalksNewestFirst);
-
-  if (typeof HubUtils.rankTalksByQuery === 'function') {
-    return HubUtils.rankTalksByQuery(indexedTalks, query, { advanced: advancedOptions || undefined });
-  }
-
-  if (typeof HubUtils.scoreMatch === 'function') {
-    const scored = [];
-    for (const talk of indexedTalks) {
-      const score = HubUtils.scoreMatch(talk, tokens);
-      if (score > 0) scored.push({ talk, score });
-    }
-    scored.sort((a, b) => (b.score - a.score) || compareTalksNewestFirst(a.talk, b.talk));
-    return scored.map((entry) => entry.talk);
-  }
-
-  return indexedTalks.sort(compareTalksNewestFirst);
+  return rankTalksByQuery(indexedTalks, query, { advanced: advancedOptions || undefined });
 }
 
 function rankPapersForQuery(papers, query, advancedOptions = null) {
-  if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-    return HubUtils.rankPaperRecordsByQuery(papers, query, { advanced: advancedOptions || undefined });
-  }
-
-  const tokens = tokenizeQuery(query);
-  const hasAdvanced = hasAdvancedSearchOptions(advancedOptions || {});
-  if (!tokens.length && !hasAdvanced) return [...papers].sort(comparePapersNewestFirst);
-
-  const scored = [];
-  for (const paper of papers) {
-    const score = scorePaperForQuery(paper, tokens);
-    if (score > 0) scored.push({ paper, score });
-  }
-
-  scored.sort((a, b) => (b.score - a.score) || comparePapersNewestFirst(a.paper, b.paper));
-  return scored.map((entry) => entry.paper);
+  return rankPaperRecordsByQuery(papers, query, { advanced: advancedOptions || undefined });
 }
 
 function rankPeopleForQuery(people, query, advancedOptions = null) {
   const records = Array.isArray(people) ? [...people] : [];
-  const model = typeof HubUtils.buildSearchQueryModel === 'function'
-    ? HubUtils.buildSearchQueryModel(query, advancedOptions || undefined)
-    : null;
+  const model = buildSearchQueryModel(query, advancedOptions || undefined);
   const hasModel = !!(model && model.hasSearchConstraints);
   const compareScored = (a, b) =>
     (Number(b.score || 0) - Number(a.score || 0))
@@ -3453,9 +3371,7 @@ function initWorkHeroSearch() {
 }
 
 function buildPeopleRecordsWithMetadata(talks, papers, blogs) {
-  const basePeople = typeof HubUtils.buildPeopleIndex === 'function'
-    ? HubUtils.buildPeopleIndex(talks, [...papers, ...blogs])
-    : [];
+  const basePeople = buildPeopleIndex(talks, [...papers, ...blogs]);
   const statsByKey = new Map();
 
   const recordYear = (name, year) => {
@@ -3561,9 +3477,7 @@ async function init() {
       loadDocsUniversalRecords(),
     ]);
 
-    const talks = typeof HubUtils.normalizeTalks === 'function'
-      ? HubUtils.normalizeTalks(eventPayload.talks || [])
-      : (Array.isArray(eventPayload.talks) ? eventPayload.talks : []);
+    const talks = normalizeTalksFromHub(eventPayload.talks || []);
 
     const papers = Array.isArray(paperPayload.papers)
       ? paperPayload.papers.map(normalizePaperRecord).filter(Boolean)
