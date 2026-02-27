@@ -281,8 +281,8 @@ test('rankPaperRecordsByQuery favors tighter context over scattered matches', ()
       abstract: 'We present an MLIR pass pipeline scheduling strategy for transform dialect workflows.',
       authors: [{ name: 'Alice Smith' }],
       publication: 'Compiler Research',
-      year: 2022,
-      citationCount: 8,
+      year: 2024,
+      citationCount: 24,
       tags: ['mlir'],
     },
     {
@@ -292,8 +292,8 @@ test('rankPaperRecordsByQuery favors tighter context over scattered matches', ()
       content: 'Scheduling tradeoffs are described in a later appendix focused on deployment.',
       authors: [{ name: 'Bob Johnson' }],
       publication: 'Compiler Research',
-      year: 2025,
-      citationCount: 420,
+      year: 2024,
+      citationCount: 24,
       tags: ['mlir'],
     },
   ];
