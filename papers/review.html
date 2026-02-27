@@ -317,7 +317,7 @@
     }
   </style>
   <title>Review Queue - LLVM Research Library</title>
-  <meta name="description" content="Paper review queue with pull-request batched permanent confirmations.">
+  <meta name="description" content="Paper review queue with pull-request batched reviewed confirmations.">
   <link rel="icon" type="image/png" href="images/llvm-favicon.png">
   <link rel="shortcut icon" href="images/llvm-favicon.png">
   <link rel="apple-touch-icon" href="images/llvm-favicon.png">
@@ -465,7 +465,7 @@
         <h1>Paper Review Queue</h1>
         <p class="search-hero-title-aside">PR-batched verification flow</p>
       </div>
-      <p class="subtitle">Mark papers to stage a review batch. Permanent checkmarks are added only after the review PR merges.</p>
+      <p class="subtitle">Mark papers to stage a review batch. Reviewed checkmarks are added only after the review PR merges.</p>
       <div class="empty-state-actions" aria-label="Review actions">
         <a href="papers/" class="empty-action-btn">Back to Papers</a>
         <a href="papers/edit.html" class="empty-action-btn">Edit Paper</a>
@@ -479,7 +479,7 @@
       <section class="review-card">
         <div class="review-topbar">
           <div>
-            <div class="review-stats" id="review-stats">Pending 0 | Permanent 0 | Staged 0 | Total 0</div>
+            <div class="review-stats" id="review-stats">Pending 0 | Reviewed ✓ 0 | Staged 0 | Total 0</div>
             <div class="review-position" id="review-position">Queue position 0 of 0 pending</div>
           </div>
           <div class="review-actions">
@@ -520,7 +520,7 @@
 
         <section class="review-card" aria-labelledby="review-history-heading">
           <h2 id="review-history-heading">Review Batch</h2>
-          <p>Stage reviewed papers and optional field edits, submit one PR batch, and let permanent checkmarks update after merge.</p>
+          <p>Stage reviewed papers and optional field edits, submit one PR batch, and let reviewed checkmarks update after merge.</p>
           <div class="review-actions">
             <a class="review-btn" id="review-batch-workflow-link" href="#" target="_blank" rel="noopener noreferrer">Open Workflow</a>
             <button type="button" class="review-btn" id="review-batch-copy-btn">Copy gh Command</button>
@@ -530,7 +530,7 @@
           <div class="review-status" id="review-batch-status" role="status" aria-live="polite"></div>
           <h3>Staged For PR</h3>
           <ul class="review-recent-list" id="review-staged-list"></ul>
-          <h3>Permanently Reviewed</h3>
+          <h3>Reviewed ✓ (Merged)</h3>
           <ul class="review-recent-list" id="review-recent-list"></ul>
         </section>
       </div>
@@ -538,8 +538,8 @@
   </main>
 
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
-  <script src="js/papers-data.js?v=b7e926cee2db"></script>
+  <script src="js/papers-data.js?v=36d1fd6e40bb"></script>
   <script src="js/shared/global-search.js?v=6aee01784996"></script>
-  <script src="js/paper-review.js?v=165df736d0aa"></script>
+  <script src="js/paper-review.js?v=fcc4bc6c2522"></script>
 </body>
 </html>

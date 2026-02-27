@@ -1,6 +1,6 @@
 /*
  * paper-review.js
- * Staged paper-review queue: permanent checkmarks come only from merged PR data.
+ * Staged paper-review queue: reviewed checkmarks come only from merged PR data.
  */
 (function () {
   'use strict';
@@ -386,7 +386,7 @@
 
     for (const url of attempts) {
       try {
-        const response = await fetch(url, { cache: 'default' });
+        const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) {
           failures.push(`${url}: HTTP ${response.status}`);
           continue;
@@ -399,7 +399,7 @@
     }
 
     if (failures.length) {
-      setBatchStatus('Permanent review data is unavailable. Queue is using empty permanent state.', 'error');
+      setBatchStatus('Reviewed-checkmark data is unavailable. Queue is using empty reviewed state.', 'error');
     }
     return {};
   }
@@ -493,7 +493,7 @@
   function renderPermanentList() {
     const entries = permanentEntriesSorted().slice(0, RECENT_REVIEW_LIMIT);
     if (!entries.length) {
-      permanentList.innerHTML = '<li class="review-recent-empty">No permanently reviewed papers yet.</li>';
+      permanentList.innerHTML = '<li class="review-recent-empty">No reviewed papers yet.</li>';
       return;
     }
 
@@ -551,12 +551,12 @@
 
     const staged = Object.keys(state.staged).length;
     const pending = state.pending.length;
-    reviewStats.textContent = `Pending ${pending.toLocaleString()} | Permanent ${permanent.toLocaleString()} | Staged ${staged.toLocaleString()} | Total ${total.toLocaleString()}`;
+    reviewStats.textContent = `Pending ${pending.toLocaleString()} | Reviewed ✓ ${permanent.toLocaleString()} | Staged ${staged.toLocaleString()} | Total ${total.toLocaleString()}`;
 
     if (!pending) {
       reviewPosition.textContent = 'Queue complete';
       emptyCopy.textContent = staged
-        ? 'No pending papers remain. Submit your staged review PR batch to make checkmarks permanent.'
+        ? 'No pending papers remain. Submit your staged review PR batch to make reviewed checkmarks permanent.'
         : 'No pending papers remain.';
       return;
     }
@@ -764,7 +764,7 @@
       const returnMessage = consumeReturnMessage();
       if (returnMessage) setReviewStatus(returnMessage, 'success');
       else setReviewStatus('', '');
-      setBatchStatus('Permanent checkmarks are applied only after the review-batch PR is merged.', '');
+      setBatchStatus('Reviewed checkmarks are applied only after the review-batch PR is merged.', '');
     } catch (err) {
       const message = err && err.message ? err.message : 'Failed to initialize review queue.';
       setReviewStatus(message, 'error');
