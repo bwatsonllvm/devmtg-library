@@ -42,6 +42,14 @@ jobs:
           python3 scripts/check-docs-mirror-health.py \
             --repo-root . \
             --max-age-days 45
+      - name: Install Playwright (Chromium)
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Detail pages smoke test
+        env:
+          REQUIRE_DETAIL_SMOKE: "1"
+        run: node --test tests/detail-pages-smoke.test.cjs
       - name: Prepare site bundle
         run: |
           rm -rf _site

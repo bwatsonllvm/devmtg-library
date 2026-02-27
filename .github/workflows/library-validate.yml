@@ -11,7 +11,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -34,3 +34,13 @@ jobs:
 
       - name: Validate bundle
         run: scripts/validate-library-bundle.sh
+
+      - name: Install Playwright (Chromium)
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Detail pages smoke test
+        env:
+          REQUIRE_DETAIL_SMOKE: "1"
+        run: node --test tests/detail-pages-smoke.test.cjs
