@@ -1337,13 +1337,22 @@
   ]);
 
   const BEGINNER_INTENT_TOKENS = new Set([
-    'beginner', 'beginners', 'intro', 'introduction', 'newcomer', 'newcomers',
-    'starter', 'basics', 'tutorial', 'tutorials', 'learn',
+    'beginner', 'beginners', 'intro', 'introduction', 'introductory',
+    'newcomer', 'newcomers', 'starter', 'basics', 'tutorial', 'tutorials',
+    'learn', 'novice', 'novices', 'primer', 'onboarding', 'foundations',
   ]);
-  const BEGINNER_INTENT_PHRASE_RE = /\bfor beginners\b|\bgetting started\b|\bnew to\b|\bfirst steps?\b|\blearn llvm\b/;
+  const BEGINNER_STRONG_INTENT_TOKENS = new Set([
+    'beginner', 'beginners', 'newcomer', 'newcomers', 'starter', 'basics',
+    'tutorial', 'tutorials', 'learn', 'novice', 'novices', 'primer',
+    'onboarding', 'foundations',
+  ]);
+  const BEGINNER_INTRO_INTENT_TOKENS = new Set(['intro', 'introduction', 'introductory']);
+  const BEGINNER_INTENT_PHRASE_RE = /\bfor beginners\b|\bgetting started\b|\bnew to\b|\bfirst steps?\b|\blearn llvm\b|\bbeginner[- ]friendly\b|\bfor new contributors\b/;
+  const BEGINNER_INTRO_INTENT_PHRASE_RE = /\bintro(?:duction)?(?:\s+to)?\b/;
   const BEGINNER_SIGNAL_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasics\b|\bintro(?:duction)?\b|\bnew to\b|\bfirst steps?\b/;
-  const BEGINNER_STRONG_SIGNAL_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasics\b|\bnew to\b|\bfirst steps?\b|\bintroductory\b/;
-  const BEGINNER_AMBIGUOUS_SIGNAL_RE = /\bintro(?:duction)?\b/;
+  const BEGINNER_STRONG_SIGNAL_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasics\b|\bnew to\b|\bfirst steps?\b/;
+  const BEGINNER_INTRO_SIGNAL_RE = /\bintro(?:duction)?(?:\s+to)?\b|\bintroductory\b/;
+  const BEGINNER_AMBIGUOUS_SIGNAL_RE = BEGINNER_INTRO_SIGNAL_RE;
   const BEGINNER_ADVANCED_SIGNAL_RE = /\badvanced\b|\binternals?\b|\bdeep dive\b|\bexpert\b|\bproduction\b|\bstate of the art\b/;
   const BEGINNER_FALSE_POSITIVE_SIGNAL_RE = /\bbasic block(?:s)?\b|\bbasic-block(?:s)?\b/g;
   const FUNDAMENTALS_INTENT_TOKENS = new Set([
@@ -1425,10 +1434,16 @@
   };
 
   const SEARCH_TOKEN_SYNONYMS_RAW = {
-    beginner: ['intro', 'introduction', 'tutorial'],
-    beginners: ['beginner', 'intro', 'introduction', 'tutorial'],
-    intro: ['introduction', 'beginner', 'tutorial'],
-    introduction: ['intro', 'beginner'],
+    beginner: ['intro', 'introduction', 'introductory', 'tutorial', 'primer', 'novice'],
+    beginners: ['beginner', 'intro', 'introduction', 'introductory', 'tutorial', 'novice'],
+    intro: ['introduction', 'introductory', 'beginner', 'tutorial', 'primer', 'newcomer'],
+    introduction: ['intro', 'introductory', 'beginner', 'tutorial', 'primer', 'newcomer'],
+    introductory: ['intro', 'introduction', 'beginner', 'tutorial', 'primer'],
+    novice: ['beginner', 'introduction', 'tutorial', 'starter'],
+    novices: ['novice', 'beginner', 'introduction'],
+    primer: ['introduction', 'intro', 'beginner', 'tutorial'],
+    onboarding: ['beginner', 'introduction', 'tutorial', 'newcomer'],
+    foundations: ['fundamentals', 'introduction', 'beginner'],
     compiler: ['llvm', 'clang', 'toolchain', 'codegen'],
     compilers: ['compiler', 'llvm', 'clang'],
     clang: ['frontend', 'c++'],
@@ -2169,12 +2184,27 @@
       ...((parsed.includeFieldPhrases && parsed.includeFieldPhrases.type) || []),
     ];
 
+    const advancedResearchTokenIntent = intentTokens.some((token) => ADVANCED_RESEARCH_INTENT_TOKENS.has(token));
+    const advancedResearchPhraseIntent = intentTexts.some((value) => {
+      const text = String(value || '');
+      return text ? ADVANCED_RESEARCH_INTENT_PHRASE_RE.test(text) : false;
+    });
+    const advancedResearchRawIntent = advancedResearchTokenIntent || advancedResearchPhraseIntent;
+
     const beginnerTokenIntent = intentTokens.some((token) => BEGINNER_INTENT_TOKENS.has(token));
-    const beginnerPhraseIntent = intentTexts.some((value) => {
+    const beginnerStrongTokenIntent = intentTokens.some((token) => BEGINNER_STRONG_INTENT_TOKENS.has(token));
+    const beginnerIntroTokenIntent = intentTokens.some((token) => BEGINNER_INTRO_INTENT_TOKENS.has(token));
+    const beginnerStrongPhraseIntent = intentTexts.some((value) => {
       const text = String(value || '');
       return text ? BEGINNER_INTENT_PHRASE_RE.test(text) : false;
     });
-    const beginnerIntent = beginnerTokenIntent || beginnerPhraseIntent;
+    const beginnerIntroPhraseIntent = intentTexts.some((value) => {
+      const text = String(value || '');
+      return text ? BEGINNER_INTRO_INTENT_PHRASE_RE.test(text) : false;
+    });
+    const beginnerIntent = beginnerStrongTokenIntent
+      || beginnerStrongPhraseIntent
+      || ((beginnerTokenIntent || beginnerIntroTokenIntent || beginnerIntroPhraseIntent) && !advancedResearchRawIntent);
 
     const fundamentalsTokenIntent = intentTokens.some((token) => FUNDAMENTALS_INTENT_TOKENS.has(token));
     const fundamentalsPhraseIntent = intentTexts.some((value) => {
@@ -2183,12 +2213,8 @@
     });
     const fundamentalsIntent = beginnerIntent || fundamentalsTokenIntent || fundamentalsPhraseIntent;
 
-    const advancedResearchTokenIntent = intentTokens.some((token) => ADVANCED_RESEARCH_INTENT_TOKENS.has(token));
-    const advancedResearchPhraseIntent = intentTexts.some((value) => {
-      const text = String(value || '');
-      return text ? ADVANCED_RESEARCH_INTENT_PHRASE_RE.test(text) : false;
-    });
-    const advancedResearchIntent = (advancedResearchTokenIntent || advancedResearchPhraseIntent) && !beginnerIntent;
+    const advancedResearchIntent = advancedResearchRawIntent
+      && !(beginnerStrongTokenIntent || beginnerStrongPhraseIntent);
 
     const contextProfile = beginnerIntent
       ? 'beginner'
@@ -2935,6 +2961,108 @@
     return signal;
   }
 
+  function resolveRarityClauses(clauses) {
+    const source = Array.isArray(clauses) ? clauses : [];
+    if (!source.length) return [];
+
+    const narrow = source.filter((clause) => clause && clause.isBroad !== true);
+    const active = narrow.length ? narrow : source;
+    const seenTokens = new Set();
+    const out = [];
+    for (const clause of active) {
+      const token = normalizeSearchToken(clause && clause.token);
+      if (!token || seenTokens.has(token)) continue;
+      seenTokens.add(token);
+      out.push(clause);
+    }
+    return out;
+  }
+
+  function buildClauseRarityProfile(clauses, records, resolveDoc, fieldConfig, options = {}) {
+    const targetClauses = resolveRarityClauses(clauses);
+    const values = Array.isArray(records) ? records : [];
+    if (!targetClauses.length || !values.length || typeof resolveDoc !== 'function') return null;
+
+    const config = Array.isArray(fieldConfig) ? fieldConfig : [];
+    if (!config.length) return null;
+
+    const matchThreshold = Number.isFinite(options.matchThreshold) ? options.matchThreshold : 0.92;
+    const idfByToken = new Map();
+    const totalDocs = values.length;
+    let maxIdf = 0;
+
+    for (const clause of targetClauses) {
+      const token = normalizeSearchToken(clause && clause.token);
+      if (!token) continue;
+
+      let docFreq = 0;
+      for (const record of values) {
+        const doc = resolveDoc(record);
+        if (!doc || !doc.fields) continue;
+        const score = scoreClauseAgainstFields(clause, doc.fields, config);
+        if (score >= matchThreshold) docFreq += 1;
+      }
+
+      const idf = Math.log(1 + ((totalDocs - docFreq + 0.5) / (docFreq + 0.5)));
+      idfByToken.set(token, idf);
+      if (idf > maxIdf) maxIdf = idf;
+    }
+
+    return {
+      clauses: targetClauses,
+      idfByToken,
+      maxIdf,
+      totalDocs,
+      matchThreshold,
+    };
+  }
+
+  function computeClauseRarityBonus(doc, profile, fieldConfig, options = {}) {
+    if (!doc || !doc.fields || !profile || !(profile.idfByToken instanceof Map)) return 0;
+
+    const clauses = Array.isArray(profile.clauses) ? profile.clauses : [];
+    if (!clauses.length) return 0;
+    const config = Array.isArray(fieldConfig) ? fieldConfig : [];
+    if (!config.length) return 0;
+
+    const matchThreshold = Number.isFinite(options.matchThreshold)
+      ? options.matchThreshold
+      : (Number.isFinite(profile.matchThreshold) ? profile.matchThreshold : 0.92);
+    const maxIdf = Number(profile.maxIdf || 0);
+
+    let weightedMatched = 0;
+    let weightedTotal = 0;
+    let matchedCount = 0;
+    let matchedRare = 0;
+
+    for (const clause of clauses) {
+      const token = normalizeSearchToken(clause && clause.token);
+      if (!token) continue;
+
+      const idf = Number(profile.idfByToken.get(token) || 0);
+      const normalizedIdf = maxIdf > 0 ? idf / maxIdf : 0;
+      const clauseWeight = 0.36 + (normalizedIdf * 0.96);
+      weightedTotal += clauseWeight;
+
+      const clauseScore = scoreClauseAgainstFields(clause, doc.fields, config);
+      if (clauseScore < matchThreshold) continue;
+
+      matchedCount += 1;
+      if (normalizedIdf >= 0.64) matchedRare += 1;
+      weightedMatched += clauseWeight * Math.min(1.22, clauseScore / Math.max(1, matchThreshold));
+    }
+
+    if (!(weightedTotal > 0)) return 0;
+    if (!matchedCount) return clauses.length >= 3 ? -0.2 : -0.1;
+
+    const weightedCoverage = weightedMatched / weightedTotal;
+    const matchCoverage = matchedCount / clauses.length;
+    let bonus = weightedCoverage * (0.55 + (matchCoverage * 0.45));
+    if (matchedRare > 0) bonus += Math.min(0.28, matchedRare * 0.1);
+    if (clauses.length >= 3 && weightedCoverage < 0.34) bonus *= 0.84;
+    return Math.max(-0.35, Math.min(1.65, bonus));
+  }
+
   function scorePhraseEntriesAgainstFields(phraseEntries, fields, fieldConfig) {
     const source = Array.isArray(phraseEntries) ? phraseEntries : [];
     if (!source.length) return 0;
@@ -3421,11 +3549,15 @@
     ].filter(Boolean).join(' ');
     const tutorialTagged = /\btutorial(?:s)?\b/.test(tagText);
     const beginnerTagged = /\bbeginner(?:s)?\b|\bfor beginners\b|\bgetting started\b|\bbasics\b/.test(tagText);
+    const advancedSignal = BEGINNER_ADVANCED_SIGNAL_RE.test(cleanedText);
     const strongSignal = BEGINNER_STRONG_SIGNAL_RE.test(cleanedText) || tutorialTagged || beginnerTagged;
     if (strongSignal) return true;
 
+    const introSignal = BEGINNER_INTRO_SIGNAL_RE.test(cleanedText);
+    if (introSignal && !advancedSignal) return true;
+
     if (!BEGINNER_AMBIGUOUS_SIGNAL_RE.test(cleanedText)) return false;
-    if (BEGINNER_ADVANCED_SIGNAL_RE.test(cleanedText)) return false;
+    if (advancedSignal) return false;
     return BEGINNER_SIGNAL_RE.test(cleanedText);
   }
 
@@ -3933,10 +4065,33 @@
     const talkTrendScale = model.advancedResearchIntent
       ? 2.3
       : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.8 : 2.0);
+    const talkRarityFieldConfig = [
+      { key: 'title', weight: 1.42, fuzzy: true },
+      { key: 'tags', weight: 1.28, fuzzy: true },
+      { key: 'abstract', weight: 0.96, fuzzy: false },
+      { key: 'speakers', weight: 0.72, fuzzy: true },
+      { key: 'meeting', weight: 0.58, fuzzy: true },
+      { key: 'category', weight: 0.48, fuzzy: false },
+    ];
+    const talkRarityProfile = buildClauseRarityProfile(
+      model && model.clauses,
+      talks,
+      buildTalkSearchDoc,
+      talkRarityFieldConfig,
+      { matchThreshold: 0.94 }
+    );
 
     let scored = [];
     for (const talk of talks) {
       let score = scoreTalkWithModel(talk, model, false);
+      if (score > 0 && talkRarityProfile) {
+        const doc = buildTalkSearchDoc(talk);
+        const rarityBonus = computeClauseRarityBonus(doc, talkRarityProfile, talkRarityFieldConfig, {
+          matchThreshold: 1.04,
+        });
+        if (rarityBonus > 0) score *= 1 + (rarityBonus * 0.18);
+        else score *= 1 + Math.max(-0.12, rarityBonus * 0.3);
+      }
       if (score > 0 && talkTrendProfile) {
         const trendBonus = computeTopicTrendBonus(
           getTalkKeyTopics(talk, 12),
@@ -3954,6 +4109,14 @@
     if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const talk of talks) {
         let score = scoreTalkWithModel(talk, model, true);
+        if (score > 0 && talkRarityProfile) {
+          const doc = buildTalkSearchDoc(talk);
+          const rarityBonus = computeClauseRarityBonus(doc, talkRarityProfile, talkRarityFieldConfig, {
+            matchThreshold: 0.94,
+          });
+          if (rarityBonus > 0) score *= 1 + (rarityBonus * 0.14);
+          else score *= 1 + Math.max(-0.08, rarityBonus * 0.22);
+        }
         if (score > 0 && talkTrendProfile) {
           const trendBonus = computeTopicTrendBonus(
             getTalkKeyTopics(talk, 12),
@@ -4239,10 +4402,35 @@
     const paperTrendScale = model.advancedResearchIntent
       ? 2.55
       : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.9 : 2.2);
+    const paperRarityFieldConfig = [
+      { key: 'title', weight: 1.5, fuzzy: true },
+      { key: 'topics', weight: 1.36, fuzzy: true },
+      { key: 'abstract', weight: 1.02, fuzzy: false },
+      { key: 'content', weight: 0.9, fuzzy: false },
+      { key: 'publication', weight: 0.72, fuzzy: true },
+      { key: 'venue', weight: 0.66, fuzzy: true },
+      { key: 'authors', weight: 0.62, fuzzy: true },
+      { key: 'type', weight: 0.54, fuzzy: true },
+    ];
+    const paperRarityProfile = buildClauseRarityProfile(
+      model && model.clauses,
+      records,
+      buildPaperSearchDoc,
+      paperRarityFieldConfig,
+      { matchThreshold: 0.92 }
+    );
 
     let scored = [];
     for (const paper of records) {
       let score = scorePaperWithModel(paper, model, false);
+      if (score > 0 && paperRarityProfile) {
+        const doc = buildPaperSearchDoc(paper);
+        const rarityBonus = computeClauseRarityBonus(doc, paperRarityProfile, paperRarityFieldConfig, {
+          matchThreshold: 1.02,
+        });
+        if (rarityBonus > 0) score *= 1 + (rarityBonus * 0.22);
+        else score *= 1 + Math.max(-0.15, rarityBonus * 0.34);
+      }
       if (score > 0 && paperTrendProfile) {
         const trendBonus = computeTopicTrendBonus(
           getPaperKeyTopics(paper, 12),
@@ -4260,6 +4448,14 @@
     if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const paper of records) {
         let score = scorePaperWithModel(paper, model, true);
+        if (score > 0 && paperRarityProfile) {
+          const doc = buildPaperSearchDoc(paper);
+          const rarityBonus = computeClauseRarityBonus(doc, paperRarityProfile, paperRarityFieldConfig, {
+            matchThreshold: 0.92,
+          });
+          if (rarityBonus > 0) score *= 1 + (rarityBonus * 0.16);
+          else score *= 1 + Math.max(-0.1, rarityBonus * 0.26);
+        }
         if (score > 0 && paperTrendProfile) {
           const trendBonus = computeTopicTrendBonus(
             getPaperKeyTopics(paper, 12),

@@ -63,6 +63,17 @@ test('buildSearchQueryModel detects advanced research intent for deep technical 
   assert.equal(model.contextProfile, 'advanced-research');
 });
 
+test('buildSearchQueryModel treats introduction queries as beginner intent by default', () => {
+  const model = utils.buildSearchQueryModel('introduction to llvm');
+  assert.equal(model.beginnerIntent, true);
+});
+
+test('buildSearchQueryModel does not force beginner intent for advanced introduction queries', () => {
+  const model = utils.buildSearchQueryModel('introduction to llvm internals');
+  assert.equal(model.beginnerIntent, false);
+  assert.equal(model.advancedResearchIntent, true);
+});
+
 test('rankPaperRecordsByQuery prioritizes exact-title paper matches', () => {
   const papers = [
     {
@@ -415,6 +426,37 @@ test('rankTalksByQuery beginner intent favors true beginner talks over advanced 
   const ranked = utils.rankTalksByQuery(talks, 'llvm for beginners');
   assert.ok(ranked.length > 0);
   assert.equal(ranked[0].id, 'beginner-talk');
+});
+
+test('rankTalksByQuery maps introduction queries toward beginner-oriented talks', () => {
+  const talks = [
+    {
+      id: 'beginner-intro',
+      title: 'Introduction to LLVM for New Contributors',
+      abstract: 'A beginner-friendly introduction to core LLVM concepts for students and newcomers.',
+      category: 'tutorial',
+      _speakerLower: 'alex instructor',
+      _tagsLower: 'llvm beginner introduction tutorial newcomer',
+      _meetingLower: 'llvm developers meeting 2024',
+      _year: '2024',
+      meeting: 'LLVM Developers Meeting 2024',
+    },
+    {
+      id: 'advanced-intro',
+      title: 'Introduction to LLVM Internals',
+      abstract: 'Advanced deep dive into internals and production compiler architecture.',
+      category: 'technical-talk',
+      _speakerLower: 'pat expert',
+      _tagsLower: 'llvm introduction internals advanced',
+      _meetingLower: 'llvm developers meeting 2024',
+      _year: '2024',
+      meeting: 'LLVM Developers Meeting 2024',
+    },
+  ];
+
+  const ranked = utils.rankTalksByQuery(talks, 'llvm introduction');
+  assert.ok(ranked.length > 0);
+  assert.equal(ranked[0].id, 'beginner-intro');
 });
 
 test('buildSearchSnippet centers snippet on matched query text', () => {

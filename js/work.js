@@ -78,8 +78,9 @@ const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=
 const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=74116e3da143';
 const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=eba40672f6e7';
 const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
-const DOCS_BEGINNER_STRONG_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\bgetting started\b|\bbasics\b|\btutorial(?:s)?\b|\bintroductory\b/;
-const DOCS_BEGINNER_AMBIGUOUS_RE = /\bintro(?:duction)?\b/;
+const DOCS_BEGINNER_STRONG_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\bgetting started\b|\bbasics\b|\btutorial(?:s)?\b|\bbeginner[- ]friendly\b/;
+const DOCS_BEGINNER_INTRO_RE = /\bintro(?:duction)?(?:\s+to)?\b|\bintroductory\b/;
+const DOCS_BEGINNER_AMBIGUOUS_RE = DOCS_BEGINNER_INTRO_RE;
 const DOCS_BEGINNER_ADVANCED_RE = /\badvanced\b|\binternals?\b|\bdeep dive\b|\bexpert\b|\breference\b|\bspec(?:ification)?\b/;
 const DOCS_BEGINNER_FALSE_POSITIVE_RE = /\bbasic block(?:s)?\b|\bbasic-block(?:s)?\b/g;
 const DOCS_FUNDAMENTALS_SIGNAL_RE = /\bfundamentals?\b|\boverview\b|\btutorial(?:s)?\b|\bwalkthrough\b|\bguide\b|\blearn\b|\bintro(?:duction)?\b|\bgetting started\b|\bbasics\b/;
@@ -2034,6 +2035,91 @@ function compareUniversalEntries(a, b) {
   return getUniversalEntryTitle(a).localeCompare(getUniversalEntryTitle(b));
 }
 
+function resolveUniversalDiversityPlan(model, options = {}) {
+  if (!model || typeof model !== 'object') return null;
+  const highlySpecificIntent = options && options.highlySpecificIntent === true;
+
+  if (model.beginnerIntent || model.fundamentalsIntent) {
+    return {
+      headLimit: highlySpecificIntent ? 10 : 16,
+      sequence: ['docs', 'talk', 'docs', 'talk', 'paper', 'talk', 'docs', 'paper', 'person', 'blog', 'talk', 'docs'],
+    };
+  }
+
+  if (model.advancedResearchIntent) {
+    if (highlySpecificIntent) return null;
+    return {
+      headLimit: 10,
+      sequence: ['paper', 'paper', 'talk', 'paper', 'docs', 'blog', 'paper', 'talk', 'person', 'docs'],
+    };
+  }
+  return null;
+}
+
+function applyIntentAwareUniversalDiversity(entries, model, options = {}) {
+  const source = Array.isArray(entries) ? entries : [];
+  if (source.length < 6) return source;
+
+  const plan = resolveUniversalDiversityPlan(model, options);
+  if (!plan || !Array.isArray(plan.sequence) || !plan.sequence.length) return source;
+
+  const availableKinds = new Set(source.map((entry) => String(entry && entry.kind || '')).filter(Boolean));
+  if (availableKinds.size < 2) return source;
+  if ((model.beginnerIntent || model.fundamentalsIntent) && !(availableKinds.has('docs') || availableKinds.has('talk'))) {
+    return source;
+  }
+
+  const kindQueues = new Map();
+  source.forEach((entry, index) => {
+    const kind = String(entry && entry.kind || '');
+    if (!kind) return;
+    if (!kindQueues.has(kind)) kindQueues.set(kind, []);
+    kindQueues.get(kind).push({ entry, index });
+  });
+
+  const usedIndexes = new Set();
+  const diversifiedHead = [];
+  const headLimit = Math.min(Number(plan.headLimit || 0) || 0, source.length);
+  if (!(headLimit > 0)) return source;
+
+  const takeNextKind = (kind) => {
+    const queue = kindQueues.get(kind);
+    if (!Array.isArray(queue)) return null;
+    while (queue.length) {
+      const candidate = queue.shift();
+      if (!candidate || usedIndexes.has(candidate.index)) continue;
+      usedIndexes.add(candidate.index);
+      return candidate.entry;
+    }
+    return null;
+  };
+
+  const takeNextGlobal = () => {
+    for (let index = 0; index < source.length; index += 1) {
+      if (usedIndexes.has(index)) continue;
+      usedIndexes.add(index);
+      return source[index];
+    }
+    return null;
+  };
+
+  for (let cursor = 0; cursor < headLimit; cursor += 1) {
+    const preferredKind = plan.sequence[cursor % plan.sequence.length];
+    const picked = takeNextKind(preferredKind) || takeNextGlobal();
+    if (!picked) break;
+    diversifiedHead.push(picked);
+  }
+
+  if (!diversifiedHead.length) return source;
+
+  const out = [...diversifiedHead];
+  for (let index = 0; index < source.length; index += 1) {
+    if (usedIndexes.has(index)) continue;
+    out.push(source[index]);
+  }
+  return out;
+}
+
 function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs, query, advancedOptions = null) {
   const rankedTalks = Array.isArray(talks) ? talks : [];
   const rankedPapers = Array.isArray(papers) ? papers : [];
@@ -2219,7 +2305,9 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
 
   const topScore = Number(sorted[0].score || 0);
   if (!(topScore > 0)) {
-    return sorted.slice(0, Math.min(180, UNIVERSAL_MAX_RESULTS));
+    const fallbackSorted = sorted.slice(0, Math.min(180, UNIVERSAL_MAX_RESULTS));
+    const diversifiedFallback = applyIntentAwareUniversalDiversity(fallbackSorted, model, { highlySpecificIntent });
+    return diversifiedFallback.slice(0, UNIVERSAL_MAX_RESULTS);
   }
 
   const queryTokenCount = tokenizeQuery(query).length;
@@ -2238,7 +2326,9 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
   const threshold = Math.max(absoluteFloor, topScore * relativeFloor);
   const keepHead = highlySpecificIntent ? 80 : 120;
   const pruned = sorted.filter((entry, index) => index < keepHead || Number(entry.score || 0) >= threshold);
-  return (pruned.length ? pruned : sorted.slice(0, 180)).slice(0, UNIVERSAL_MAX_RESULTS);
+  const baseResults = (pruned.length ? pruned : sorted.slice(0, 180)).slice(0, UNIVERSAL_MAX_RESULTS);
+  const diversified = applyIntentAwareUniversalDiversity(baseResults, model, { highlySpecificIntent });
+  return diversified.slice(0, UNIVERSAL_MAX_RESULTS);
 }
 
 function indexTalkForSearch(talk) {
@@ -2380,9 +2470,11 @@ function docsHasBeginnerSignal(doc, blob) {
     .trim();
   if (!text) return false;
 
+  const advancedSignal = DOCS_BEGINNER_ADVANCED_RE.test(text);
   if (DOCS_BEGINNER_STRONG_RE.test(text)) return true;
+  if (DOCS_BEGINNER_INTRO_RE.test(text) && !advancedSignal) return true;
   if (!DOCS_BEGINNER_AMBIGUOUS_RE.test(text)) return false;
-  return !DOCS_BEGINNER_ADVANCED_RE.test(text);
+  return !advancedSignal;
 }
 
 function docsHasFundamentalsSignal(doc, blob) {
@@ -2567,8 +2659,11 @@ function scoreDocsRecordByQuery(doc, query, advancedOptions = null, queryModel =
   score += headingCountBoost;
   if (beginnerIntent) {
     const titleHeadings = `${title} ${headings}`;
+    const titleSummary = `${titleHeadings} ${summary}`;
+    const introSignal = DOCS_BEGINNER_INTRO_RE.test(titleSummary);
+    const advancedIntroSignal = DOCS_BEGINNER_ADVANCED_RE.test(titleSummary);
     if (DOCS_BEGINNER_STRONG_RE.test(titleHeadings)) score += 54;
-    else if (DOCS_BEGINNER_AMBIGUOUS_RE.test(`${titleHeadings} ${summary}`)) score += 16;
+    else if (introSignal && !advancedIntroSignal) score += 34;
   } else if (fundamentalsIntent) {
     if (fundamentalsSignal) score += 44;
     else score *= 0.86;
