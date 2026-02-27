@@ -287,9 +287,9 @@ test('rankPaperRecordsByQuery favors tighter context over scattered matches', ()
     },
     {
       id: 'scattered',
-      title: 'MLIR pipeline internals',
-      abstract: 'This work discusses pass manager architecture.',
-      content: 'Scheduling tradeoffs are described in a later appendix focused on deployment.',
+      title: 'Compiler internals overview',
+      abstract: 'This work discusses MLIR adoption and pass manager architecture.',
+      content: 'Pipeline tradeoffs are described in a later appendix focused on deployment. Scheduling appears in troubleshooting notes.',
       authors: [{ name: 'Bob Johnson' }],
       publication: 'Compiler Research',
       year: 2024,
