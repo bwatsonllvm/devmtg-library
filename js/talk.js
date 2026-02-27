@@ -12,6 +12,7 @@ const PageShell = typeof HubUtils.createPageShell === 'function'
   : null;
 
 const safeSessionGet = PageShell ? PageShell.safeSessionGet : () => null;
+const safeSessionRemove = PageShell ? PageShell.safeSessionRemove : () => {};
 const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
 const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
 const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
@@ -20,6 +21,7 @@ const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
 const TALK_NAV_CACHE_KEY = 'llvm-hub-nav-talk-record';
 const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
+const NAV_CACHE_MAX_BYTES = 64 * 1024;
 
 function uniqueNormalizedPaths(paths) {
   return [...new Set((Array.isArray(paths) ? paths : [])
@@ -166,8 +168,13 @@ function readCachedTalkRecord(talkId) {
 
   const nameCache = String(window.name || '');
   if (nameCache.startsWith(NAV_WINDOW_CACHE_PREFIX)) {
+    const rawPayload = nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length);
+    if (rawPayload.length > NAV_CACHE_MAX_BYTES) {
+      try { window.name = ''; } catch {}
+      return null;
+    }
     try {
-      const payload = JSON.parse(nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length));
+      const payload = JSON.parse(rawPayload);
       const talk = fromPayload(payload);
       if (talk) return talk;
     } catch {
@@ -177,6 +184,10 @@ function readCachedTalkRecord(talkId) {
 
   const raw = safeSessionGet(TALK_NAV_CACHE_KEY);
   if (!raw) return null;
+  if (raw.length > NAV_CACHE_MAX_BYTES) {
+    safeSessionRemove(TALK_NAV_CACHE_KEY);
+    return null;
+  }
   try {
     return fromPayload(JSON.parse(raw));
   } catch {
@@ -191,7 +202,6 @@ function cacheTalkNavigationRecord(talk) {
     kind: 'talk',
     id,
     savedAt: Date.now(),
-    talk,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;

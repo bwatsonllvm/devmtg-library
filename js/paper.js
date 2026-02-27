@@ -13,6 +13,9 @@ const copyTextToClipboard = PageShell
 const safeSessionGet = PageShell
   ? (key) => PageShell.safeSessionGet(key)
   : () => null;
+const safeSessionRemove = PageShell
+  ? (key) => PageShell.safeSessionRemove(key)
+  : () => {};
 const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
 const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
 const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
@@ -30,6 +33,7 @@ const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|o
 const PAPER_NAV_CACHE_KEY = 'llvm-hub-nav-paper-record';
 const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
+const NAV_CACHE_MAX_BYTES = 64 * 1024;
 const PAPER_TO_TALK_REDIRECTS = {
   'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
 };
@@ -357,8 +361,13 @@ function readCachedPaperRecord(paperId) {
 
   const nameCache = String(window.name || '');
   if (nameCache.startsWith(NAV_WINDOW_CACHE_PREFIX)) {
+    const rawPayload = nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length);
+    if (rawPayload.length > NAV_CACHE_MAX_BYTES) {
+      try { window.name = ''; } catch {}
+      return null;
+    }
     try {
-      const payload = JSON.parse(nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length));
+      const payload = JSON.parse(rawPayload);
       const paper = fromPayload(payload);
       if (paper) return paper;
     } catch {
@@ -368,6 +377,10 @@ function readCachedPaperRecord(paperId) {
 
   const raw = safeSessionGet(PAPER_NAV_CACHE_KEY);
   if (!raw) return null;
+  if (raw.length > NAV_CACHE_MAX_BYTES) {
+    safeSessionRemove(PAPER_NAV_CACHE_KEY);
+    return null;
+  }
   try {
     return fromPayload(JSON.parse(raw));
   } catch {
@@ -382,7 +395,6 @@ function cachePaperNavigationRecord(paper) {
     kind: 'paper',
     id,
     savedAt: Date.now(),
-    paper,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
