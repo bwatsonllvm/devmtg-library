@@ -78,7 +78,8 @@ const CONTENT_TYPE_META = {
 const ALL_WORK_PAGE_PATH = 'work.html';
 const BLOGS_PAGE_PATH = 'blogs/';
 const PAPERS_PAGE_PATH = 'papers/';
-const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations']);
+const UPDATES_LOG_PATH = 'updates/index.json';
+const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations', 'date-added']);
 const PAGE_SCOPE = (() => {
   const raw = normalizeFilterValue(document.body && document.body.dataset ? document.body.dataset.contentScope : '');
   return raw === BLOG_FILTER_VALUE ? BLOG_FILTER_VALUE : PAPER_FILTER_VALUE;
@@ -116,6 +117,102 @@ async function loadData() {
     return await window.loadPaperData();
   } catch {
     return { papers: [] };
+  }
+}
+
+let paperAddedAtMapPromise = null;
+
+function getPaperIdFromUpdateEntry(entry) {
+  if (!entry || typeof entry !== 'object') return '';
+
+  const direct = String(entry.paperId || '').trim();
+  if (direct) return direct;
+
+  const rawUrl = String(entry.url || '').trim();
+  if (!rawUrl) return '';
+  try {
+    const parsed = new URL(rawUrl, document.baseURI || window.location.href);
+    return String(parsed.searchParams.get('id') || '').trim();
+  } catch {
+    const match = rawUrl.match(/[?&]id=([^&]+)/);
+    if (!match || !match[1]) return '';
+    try {
+      return decodeURIComponent(match[1]).trim();
+    } catch {
+      return String(match[1]).trim();
+    }
+  }
+}
+
+function buildAddedAtMapFromUpdates(entries) {
+  const byId = new Map();
+  const values = Array.isArray(entries) ? entries : [];
+
+  for (const entry of values) {
+    if (!entry || typeof entry !== 'object') continue;
+    const kind = normalizeFilterValue(entry.kind);
+    if (kind !== 'paper' && kind !== 'blog') continue;
+
+    const paperId = getPaperIdFromUpdateEntry(entry);
+    if (!paperId) continue;
+
+    const loggedAtIso = normalizeIsoDateTime(entry.loggedAt || entry.date || entry.publishedDate);
+    if (!loggedAtIso) continue;
+
+    const loggedAtTs = Date.parse(loggedAtIso);
+    if (!Number.isFinite(loggedAtTs)) continue;
+
+    const current = byId.get(paperId);
+    if (!current || loggedAtTs < current.ts) {
+      byId.set(paperId, { iso: loggedAtIso, ts: loggedAtTs });
+    }
+  }
+
+  const out = new Map();
+  for (const [paperId, meta] of byId.entries()) {
+    if (!meta || !meta.iso) continue;
+    out.set(paperId, meta.iso);
+  }
+  return out;
+}
+
+async function loadPaperAddedAtMap() {
+  if (paperAddedAtMapPromise) return paperAddedAtMapPromise;
+
+  paperAddedAtMapPromise = (async () => {
+    try {
+      const response = await fetch(UPDATES_LOG_PATH, { cache: 'no-store' });
+      if (!response.ok) return new Map();
+      const payload = await response.json();
+      const entries = payload && typeof payload === 'object' ? payload.entries : [];
+      return buildAddedAtMapFromUpdates(entries);
+    } catch {
+      return new Map();
+    }
+  })();
+
+  return paperAddedAtMapPromise;
+}
+
+function applyAddedAtMapToPapers(papers, addedAtMap) {
+  const values = Array.isArray(papers) ? papers : [];
+  if (!addedAtMap || typeof addedAtMap.get !== 'function') return;
+
+  for (const paper of values) {
+    if (!paper || typeof paper !== 'object') continue;
+    const paperId = String(paper.id || '').trim();
+    if (!paperId) continue;
+
+    const mapIso = String(addedAtMap.get(paperId) || '').trim();
+    if (!mapIso) continue;
+    const mapTs = Date.parse(mapIso);
+    if (!Number.isFinite(mapTs)) continue;
+
+    const currentTs = Number.isFinite(paper._addedAtTs) ? paper._addedAtTs : 0;
+    if (!currentTs || mapTs < currentTs) {
+      paper._addedAt = mapIso;
+      paper._addedAtTs = mapTs;
+    }
   }
 }
 
@@ -318,6 +415,14 @@ function formatIsoDateLabel(value) {
   }).format(stamp);
 }
 
+function normalizeIsoDateTime(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  const stamp = new Date(raw);
+  if (Number.isNaN(stamp.getTime())) return '';
+  return stamp.toISOString();
+}
+
 function normalizePaperRecord(rawPaper) {
   if (!rawPaper || typeof rawPaper !== 'object') return null;
 
@@ -328,6 +433,16 @@ function normalizePaperRecord(rawPaper) {
   paper.year = String(paper.year || '').trim();
   paper.publishedDate = normalizeIsoDate(
     paper.publishedDate || paper.publishDate || paper.date || rawPaper.publishedDate || rawPaper.publishDate || rawPaper.date
+  );
+  paper.addedAt = normalizeIsoDateTime(
+    paper.addedAt
+    || paper.createdAt
+    || paper.indexedAt
+    || paper.ingestedAt
+    || rawPaper.addedAt
+    || rawPaper.createdAt
+    || rawPaper.indexedAt
+    || rawPaper.ingestedAt
   );
   const metadata = normalizePublicationAndVenue(paper.publication, paper.venue);
   paper.publication = metadata.publication;
@@ -373,6 +488,9 @@ function normalizePaperRecord(rawPaper) {
   paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
   paper._publishedDate = paper.publishedDate;
   paper._publishedDateLabel = formatIsoDateLabel(paper._publishedDate);
+  paper._addedAt = paper.addedAt;
+  paper._addedAtTs = paper._addedAt ? Date.parse(paper._addedAt) : Number.NaN;
+  if (!Number.isFinite(paper._addedAtTs)) paper._addedAtTs = 0;
   paper._citationCount = paper.citationCount;
   paper._titleLower = paper.title.toLowerCase();
   paper._authorLower = paper.authors.map((author) => `${author.name} ${author.affiliation || ''}`.trim()).join(' ').toLowerCase();
@@ -629,6 +747,14 @@ function comparePapersNewestFirst(a, b) {
   return String(a.id || '').localeCompare(String(b.id || ''));
 }
 
+function comparePapersDateAddedNewestFirst(a, b) {
+  const addedA = Number.isFinite(a && a._addedAtTs) ? a._addedAtTs : 0;
+  const addedB = Number.isFinite(b && b._addedAtTs) ? b._addedAtTs : 0;
+  const addedDiff = addedB - addedA;
+  if (addedDiff !== 0) return addedDiff;
+  return comparePapersNewestFirst(a, b);
+}
+
 function normalizeFilterValue(value) {
   return String(value || '').trim().toLowerCase();
 }
@@ -771,6 +897,14 @@ function filterAndSort() {
   }
 
   entries.sort((a, b) => {
+    if (state.sortBy === 'date-added') {
+      const addedDiff = comparePapersDateAddedNewestFirst(a.paper, b.paper);
+      if (addedDiff !== 0) return addedDiff;
+      const scoreDiff = b.score - a.score;
+      if (scoreDiff !== 0) return scoreDiff;
+      return 0;
+    }
+
     if (state.sortBy === 'year') {
       const yearDiff = comparePapersNewestFirst(a.paper, b.paper);
       if (yearDiff !== 0) return yearDiff;
@@ -1184,7 +1318,8 @@ function renderResultCount(count) {
   parts.push(activeFilterCount > 0
     ? `${activeFilterCount} filter${activeFilterCount === 1 ? '' : 's'} active`
     : 'All results');
-  if (state.sortBy === 'year') parts.push('Sorted by year');
+  if (state.sortBy === 'date-added') parts.push('Sorted by date added');
+  else if (state.sortBy === 'year') parts.push('Sorted by year');
   else if (state.sortBy === 'citations') parts.push('Sorted by citation count');
   else parts.push('Sorted by relevance');
   if (searchMode === 'fuzzy') parts.push('Fuzzy match');
@@ -3366,10 +3501,11 @@ window.filterByTag = filterByTag;
   initShareMenu();
   initViewControls();
 
-  const { papers } = await loadData();
+  const [{ papers }, addedAtMap] = await Promise.all([loadData(), loadPaperAddedAtMap()]);
   allPapers = Array.isArray(papers)
     ? papers.map(normalizePaperRecord).filter(Boolean)
     : [];
+  applyAddedAtMapToPapers(allPapers, addedAtMap);
   scopedPapers = allPapers.filter((paper) => matchesPageScope(paper));
 
   if (!allPapers.length) {
