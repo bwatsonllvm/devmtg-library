@@ -1501,23 +1501,72 @@
 
   const TALK_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const PAPER_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const SEARCH_TOKEN_NORMALIZE_CACHE_MAX = 2048;
+  const SEARCH_TOKEN_NORMALIZE_CACHE = new Map();
+  const SEARCH_SNIPPET_QUERY_MODEL_CACHE_MAX = 192;
+  const SEARCH_SNIPPET_QUERY_MODEL_CACHE = new Map();
 
-  function escapeRegExp(value) {
-    return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  function cacheGet(cache, key) {
+    if (!(cache instanceof Map) || !cache.has(key)) return null;
+    const value = cache.get(key);
+    cache.delete(key);
+    cache.set(key, value);
+    return value;
+  }
+
+  function cacheSet(cache, key, value, maxSize) {
+    if (!(cache instanceof Map)) return value;
+    if (cache.has(key)) cache.delete(key);
+    else if (cache.size >= maxSize) {
+      const oldest = cache.keys().next().value;
+      if (oldest !== undefined) cache.delete(oldest);
+    }
+    cache.set(key, value);
+    return value;
+  }
+
+  function getSnippetQueryModelCacheKey(queryOrTokens) {
+    if (typeof queryOrTokens === 'string') {
+      const text = queryOrTokens.trim();
+      return text ? `str:${text}` : '';
+    }
+    if (Array.isArray(queryOrTokens)) {
+      const parts = queryOrTokens.map((value) => String(value || '').trim()).filter(Boolean);
+      return parts.length ? `arr:${parts.join('\u0001')}` : '';
+    }
+    return '';
+  }
+
+  function resolveSnippetQueryModel(queryOrTokens) {
+    const cacheKey = getSnippetQueryModelCacheKey(queryOrTokens);
+    if (!cacheKey) return buildSearchQueryModel(queryOrTokens);
+    const cached = cacheGet(SEARCH_SNIPPET_QUERY_MODEL_CACHE, cacheKey);
+    if (cached) return cached;
+    const model = buildSearchQueryModel(queryOrTokens);
+    return cacheSet(SEARCH_SNIPPET_QUERY_MODEL_CACHE, cacheKey, model, SEARCH_SNIPPET_QUERY_MODEL_CACHE_MAX);
   }
 
   function normalizeSearchToken(value) {
-    const raw = stripDiacritics(String(value || '').toLowerCase())
+    const cacheKey = String(value || '');
+    const cached = cacheGet(SEARCH_TOKEN_NORMALIZE_CACHE, cacheKey);
+    if (typeof cached === 'string') return cached;
+
+    const raw = stripDiacritics(cacheKey.toLowerCase())
       .replace(/[’']/g, '')
       .trim();
-    if (!raw) return '';
+    if (!raw) return cacheSet(SEARCH_TOKEN_NORMALIZE_CACHE, cacheKey, '', SEARCH_TOKEN_NORMALIZE_CACHE_MAX);
     const compact = raw
       .replace(/&/g, ' and ')
       .replace(/[^a-z0-9+#.-]+/g, '')
       .replace(/^-+|-+$/g, '')
       .replace(/^\.+|\.+$/g, '');
-    if (!compact) return '';
-    return SEARCH_TOKEN_ALIAS_MAP[compact] || compact;
+    if (!compact) return cacheSet(SEARCH_TOKEN_NORMALIZE_CACHE, cacheKey, '', SEARCH_TOKEN_NORMALIZE_CACHE_MAX);
+    return cacheSet(
+      SEARCH_TOKEN_NORMALIZE_CACHE,
+      cacheKey,
+      SEARCH_TOKEN_ALIAS_MAP[compact] || compact,
+      SEARCH_TOKEN_NORMALIZE_CACHE_MAX
+    );
   }
 
   function normalizeSearchText(value) {
@@ -2019,6 +2068,8 @@
       anyPhraseSeen.add(normalizedPhrase);
       anyPhraseValues.push(normalizedPhrase);
     }
+    const requiredPhraseEntries = requiredPhraseValues.map((value) => ({ value, weight: 1 }));
+    const anyPhraseEntries = anyPhraseValues.map((value) => ({ value, weight: 1 }));
 
     if (normalizedQuery && normalizedQuery.includes(' ') && normalizedQuery.length <= 80 && !phraseSeen.has(normalizedQuery)) {
       phrases.push({ value: normalizedQuery, weight: 0.52 });
@@ -2041,7 +2092,9 @@
       fieldPhrases,
       excludeFieldPhrases,
       requiredPhrases: requiredPhraseValues,
+      requiredPhraseEntries,
       anyPhrases: anyPhraseValues,
+      anyPhraseEntries,
       excludePhrases,
       requiredClauseCount,
       phrases,
@@ -2095,7 +2148,7 @@
     if (!text) return '';
     if (text.length <= maxLength) return text;
 
-    const model = buildSearchQueryModel(queryOrTokens);
+    const model = resolveSnippetQueryModel(queryOrTokens);
     if ((!model || !Array.isArray(model.clauses) || !model.clauses.length) && !(model && model.normalizedQuery)) {
       return truncateSearchSnippet(text, maxLength);
     }
@@ -2136,22 +2189,22 @@
     };
 
     for (const phraseEntry of (model.phrases || [])) {
-      const phrase = normalizeSearchText(phraseEntry && phraseEntry.value);
+      const phrase = String(phraseEntry && phraseEntry.value || '').trim();
       if (!phrase || phrase.length < 2) continue;
       const phraseWeight = Number(phraseEntry && phraseEntry.weight) || 1;
       considerNeedle(phrase, 34 + (phraseWeight * 8));
     }
 
-    for (const phrase of (model.requiredPhrases || [])) {
-      const normalizedPhrase = normalizeSearchText(phrase);
-      if (!normalizedPhrase || normalizedPhrase.length < 2) continue;
-      considerNeedle(normalizedPhrase, 40);
+    for (const phraseEntry of (model.requiredPhraseEntries || [])) {
+      const phrase = String(phraseEntry && phraseEntry.value || '').trim();
+      if (!phrase || phrase.length < 2) continue;
+      considerNeedle(phrase, 40);
     }
 
-    for (const phrase of (model.anyPhrases || [])) {
-      const normalizedPhrase = normalizeSearchText(phrase);
-      if (!normalizedPhrase || normalizedPhrase.length < 2) continue;
-      considerNeedle(normalizedPhrase, 30);
+    for (const phraseEntry of (model.anyPhraseEntries || [])) {
+      const phrase = String(phraseEntry && phraseEntry.value || '').trim();
+      if (!phrase || phrase.length < 2) continue;
+      considerNeedle(phrase, 30);
     }
 
     for (const clause of (model.clauses || [])) {
@@ -2286,15 +2339,29 @@
     return best;
   }
 
+  function hasSpaceDelimitedMatch(text, term) {
+    if (!text || !term) return false;
+    let offset = 0;
+    while (offset < text.length) {
+      const index = text.indexOf(term, offset);
+      if (index < 0) break;
+      const startIndex = index - 1;
+      const endIndex = index + term.length;
+      const startBoundary = startIndex < 0 || text.charCodeAt(startIndex) === 32;
+      const endBoundary = endIndex >= text.length || text.charCodeAt(endIndex) === 32;
+      if (startBoundary && endBoundary) return true;
+      offset = index + 1;
+    }
+    return false;
+  }
+
   function computeFieldMatchScore(term, field, allowFuzzy = true) {
     if (!term || !field || !field.text) return 0;
     const text = field.text;
-    const escapedTerm = escapeRegExp(term);
-    const tokenBoundary = new RegExp(`(^|\\s)${escapedTerm}(\\s|$)`);
 
     if (text === term) return 1.12;
     if (text.startsWith(`${term} `) || text.startsWith(term)) return 1.02;
-    if (tokenBoundary.test(text)) return 0.94;
+    if (hasSpaceDelimitedMatch(text, term)) return 0.94;
     if (text.includes(term)) return 0.74;
     if (!allowFuzzy) return 0;
 
@@ -2558,7 +2625,7 @@
 
     if (Array.isArray(model.excludePhrases) && model.excludePhrases.length) {
       for (const rawPhrase of model.excludePhrases) {
-        const phrase = normalizeSearchText(rawPhrase);
+        const phrase = String(rawPhrase || '').trim();
         if (!phrase) continue;
         for (const key of allFieldKeys) {
           const field = fields[key];
@@ -2575,7 +2642,7 @@
         const targets = uniqueFieldKeys((fieldTargets && fieldTargets[field]) || []);
         if (!targets.length) continue;
         for (const phraseEntry of phrases) {
-          const phrase = normalizeSearchText(phraseEntry && phraseEntry.value);
+          const phrase = String(phraseEntry && phraseEntry.value || '').trim();
           if (!phrase) continue;
           for (const key of targets) {
             const targetField = fields[key];
@@ -2607,7 +2674,9 @@
     if (!evaluateFieldConstraintMap(model.fieldClauses, doc.fields, fieldTargets, { relaxed, threshold: relaxed ? 0.72 : 0.94, fuzzy: true })) return false;
     if (!evaluateFieldPhraseMap(model.fieldPhrases, doc.fields, fieldTargets, { relaxed, threshold: relaxed ? 0.64 : 0.86 })) return false;
 
-    const requiredPhraseEntries = toPhraseEntries(model.requiredPhrases || []);
+    const requiredPhraseEntries = Array.isArray(model.requiredPhraseEntries)
+      ? model.requiredPhraseEntries
+      : toPhraseEntries(model.requiredPhrases || []);
     if (requiredPhraseEntries.length) {
       const requiredPhraseResult = matchPhraseCollection(
         requiredPhraseEntries,
@@ -2619,7 +2688,9 @@
     }
 
     const anyClauses = Array.isArray(model.anyClauses) ? model.anyClauses : [];
-    const anyPhraseEntries = toPhraseEntries(model.anyPhrases || []);
+    const anyPhraseEntries = Array.isArray(model.anyPhraseEntries)
+      ? model.anyPhraseEntries
+      : toPhraseEntries(model.anyPhrases || []);
     if (anyClauses.length || anyPhraseEntries.length) {
       let matchedAny = false;
       if (anyClauses.length) {
@@ -2653,8 +2724,12 @@
     const hasClauses = Array.isArray(model.clauses) && model.clauses.length > 0;
     const hasAnyClauses = Array.isArray(model.anyClauses) && model.anyClauses.length > 0;
     const hasSoftPhrases = Array.isArray(model.phrases) && model.phrases.length > 0;
-    const requiredPhraseEntries = toPhraseEntries(model.requiredPhrases || []);
-    const anyPhraseEntries = toPhraseEntries(model.anyPhrases || []);
+    const requiredPhraseEntries = Array.isArray(model.requiredPhraseEntries)
+      ? model.requiredPhraseEntries
+      : toPhraseEntries(model.requiredPhrases || []);
+    const anyPhraseEntries = Array.isArray(model.anyPhraseEntries)
+      ? model.anyPhraseEntries
+      : toPhraseEntries(model.anyPhrases || []);
     const hasAnyPhrases = anyPhraseEntries.length > 0;
     const hasRequiredPhrases = requiredPhraseEntries.length > 0;
 
