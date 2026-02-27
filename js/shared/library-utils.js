@@ -1553,6 +1553,25 @@
   const PAPER_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const TALK_TOPIC_TREND_INDEX_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const PAPER_TOPIC_TREND_INDEX_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const TALK_COMBO_TREND_INDEX_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const PAPER_COMBO_TREND_INDEX_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const TALK_COMBO_SET_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const PAPER_COMBO_SET_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const QUERY_COMBO_PROFILE_CACHE_MAX = 64;
+  const QUERY_COMBO_PROFILE_CACHE = new Map();
+  const SEARCH_CONTEXT_COMBO_TOPIC_HINTS = Object.freeze({
+    llvm: ['pass', 'pipeline', 'optimization', 'codegen', 'frontend', 'backend', 'tutorial', 'introduction'],
+    clang: ['frontend', 'ast', 'libtooling', 'diagnostics', 'tidy', 'tutorial'],
+    mlir: ['dialect', 'transform', 'lowering', 'canonicalization', 'pipeline', 'scheduling', 'tutorial'],
+    lldb: ['debugger', 'debug', 'symbol', 'dwarf', 'breakpoint', 'expression'],
+    lld: ['linker', 'linking', 'relocation', 'lto', 'thinlto'],
+    circt: ['hardware', 'dialect', 'lowering', 'pipeline', 'scheduling'],
+    polly: ['polyhedral', 'optimization', 'scheduling', 'analysis'],
+    openmp: ['parallel', 'offload', 'runtime', 'threads'],
+    compilerrt: ['sanitizer', 'runtime', 'asan', 'ubsan', 'tsan'],
+    bolt: ['postlink', 'optimization', 'profiling'],
+    orcjit: ['jit', 'runtime', 'execution', 'linking'],
+  });
   const TOPIC_TREND_QUERY_EXPANSIONS_MAX = 8;
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE_MAX = 192;
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE = new Map();
@@ -3063,6 +3082,428 @@
     return Math.max(-0.35, Math.min(1.65, bonus));
   }
 
+  function buildTokenComboSet(tokens, options = {}) {
+    const source = Array.isArray(tokens) ? tokens : [];
+    if (!source.length) return new Set();
+
+    const minSize = Number.isFinite(options.minSize) ? Math.max(2, Math.floor(options.minSize)) : 2;
+    const maxSize = Number.isFinite(options.maxSize) ? Math.max(minSize, Math.floor(options.maxSize)) : 3;
+    const includeStopwordOnly = options.includeStopwordOnly === true;
+    const out = new Set();
+
+    const normalized = [];
+    for (const token of source) {
+      const value = normalizeSearchToken(token);
+      if (!value || value.length < 2) continue;
+      normalized.push(value);
+    }
+    if (!normalized.length) return out;
+
+    for (let start = 0; start < normalized.length; start += 1) {
+      for (let size = minSize; size <= maxSize; size += 1) {
+        const end = start + size;
+        if (end > normalized.length) break;
+        const slice = normalized.slice(start, end);
+        if (!slice.length) continue;
+
+        const hasSignalToken = slice.some((part) => !SEARCH_STOPWORDS.has(part));
+        if (!includeStopwordOnly && !hasSignalToken) continue;
+        out.add(slice.join(' '));
+      }
+    }
+    return out;
+  }
+
+  function buildDocComboSet(doc, fieldConfigs) {
+    if (!doc || !doc.fields) return new Set();
+    const config = Array.isArray(fieldConfigs) ? fieldConfigs : [];
+    const out = new Set();
+
+    for (const entry of config) {
+      const key = String(entry && entry.key || '');
+      if (!key) continue;
+      const field = doc.fields[key];
+      if (!field || !Array.isArray(field.words) || !field.words.length) continue;
+
+      const maxWords = Number.isFinite(entry && entry.maxWords) && entry.maxWords > 0
+        ? Math.floor(entry.maxWords)
+        : field.words.length;
+      const words = field.words.slice(0, maxWords);
+      const combos = buildTokenComboSet(words, { minSize: 2, maxSize: 3 });
+      for (const combo of combos) out.add(combo);
+    }
+    return out;
+  }
+
+  function resolveTalkComboSet(talk) {
+    if (!talk || typeof talk !== 'object') return new Set();
+    if (TALK_COMBO_SET_CACHE && TALK_COMBO_SET_CACHE.has(talk)) {
+      return TALK_COMBO_SET_CACHE.get(talk);
+    }
+
+    const doc = buildTalkSearchDoc(talk);
+    const combos = buildDocComboSet(doc, [
+      { key: 'title', maxWords: 24 },
+      { key: 'tags', maxWords: 32 },
+      { key: 'abstract', maxWords: 80 },
+      { key: 'meeting', maxWords: 18 },
+      { key: 'category', maxWords: 8 },
+    ]);
+    if (TALK_COMBO_SET_CACHE) TALK_COMBO_SET_CACHE.set(talk, combos);
+    return combos;
+  }
+
+  function resolvePaperComboSet(paper) {
+    if (!paper || typeof paper !== 'object') return new Set();
+    if (PAPER_COMBO_SET_CACHE && PAPER_COMBO_SET_CACHE.has(paper)) {
+      return PAPER_COMBO_SET_CACHE.get(paper);
+    }
+
+    const doc = buildPaperSearchDoc(paper);
+    const combos = buildDocComboSet(doc, [
+      { key: 'title', maxWords: 28 },
+      { key: 'topics', maxWords: 36 },
+      { key: 'type', maxWords: 12 },
+      { key: 'abstract', maxWords: 96 },
+      { key: 'content', maxWords: 180 },
+      { key: 'publication', maxWords: 24 },
+      { key: 'venue', maxWords: 20 },
+    ]);
+    if (PAPER_COMBO_SET_CACHE) PAPER_COMBO_SET_CACHE.set(paper, combos);
+    return combos;
+  }
+
+  function buildComboTrendIndex(records, kind = 'talk') {
+    const values = Array.isArray(records) ? records : [];
+    const comboStats = new Map();
+    let maxCount = 0;
+
+    for (const record of values) {
+      const combos = kind === 'paper'
+        ? resolvePaperComboSet(record)
+        : resolveTalkComboSet(record);
+      if (!(combos instanceof Set) || !combos.size) continue;
+
+      for (const combo of combos) {
+        const next = (comboStats.get(combo) || 0) + 1;
+        comboStats.set(combo, next);
+        if (next > maxCount) maxCount = next;
+      }
+    }
+
+    return {
+      comboStats,
+      maxCount,
+      totalRecords: values.length,
+    };
+  }
+
+  function resolveComboTrendIndex(records, kind = 'talk') {
+    const values = Array.isArray(records) ? records : [];
+    const cache = kind === 'paper'
+      ? PAPER_COMBO_TREND_INDEX_CACHE
+      : TALK_COMBO_TREND_INDEX_CACHE;
+    if (cache && cache.has(values)) return cache.get(values);
+
+    const index = buildComboTrendIndex(values, kind);
+    if (cache) cache.set(values, index);
+    return index;
+  }
+
+  function getQueryComboProfileCacheKey(model, comboTrendIndex, kind) {
+    const normalizedQuery = normalizeSearchText(model && model.normalizedQuery || '');
+    const context = normalizeSearchText(model && model.contextProfile || '');
+    const prefix = normalizeSearchText(kind || 'talk');
+    const comboCount = Number(comboTrendIndex && comboTrendIndex.comboStats instanceof Map
+      ? comboTrendIndex.comboStats.size
+      : 0);
+    const maxCount = Number(comboTrendIndex && comboTrendIndex.maxCount || 0);
+    const totalRecords = Number(comboTrendIndex && comboTrendIndex.totalRecords || 0);
+    if (!normalizedQuery) return '';
+    return `${prefix}|${context}|${normalizedQuery}|${totalRecords}|${comboCount}|${maxCount}`;
+  }
+
+  function collectQueryComboSignalTokens(model) {
+    const sourceModel = model && typeof model === 'object' ? model : null;
+    if (!sourceModel) return new Set();
+
+    const signalTokens = new Set();
+    const addToken = (value) => {
+      const token = normalizeSearchToken(value);
+      if (!token || token.length < 2 || SEARCH_STOPWORDS.has(token)) return;
+      signalTokens.add(token);
+    };
+    const addText = (value) => {
+      const normalized = normalizeSearchText(value);
+      if (!normalized) return;
+      for (const token of normalized.split(/\s+/)) addToken(token);
+    };
+
+    for (const token of (Array.isArray(sourceModel.rawTokens) ? sourceModel.rawTokens : [])) addToken(token);
+    for (const clause of (Array.isArray(sourceModel.clauses) ? sourceModel.clauses : [])) {
+      addToken(clause && clause.token);
+      for (const variant of (clause && Array.isArray(clause.variants) ? clause.variants : [])) {
+        if (!(Number(variant && variant.weight) >= 0.62)) continue;
+        addToken(variant && variant.term);
+      }
+    }
+    for (const clause of (Array.isArray(sourceModel.anyClauses) ? sourceModel.anyClauses : [])) {
+      addToken(clause && clause.token);
+    }
+    for (const phrase of (Array.isArray(sourceModel.requiredPhrases) ? sourceModel.requiredPhrases : [])) addText(phrase);
+    for (const phrase of (Array.isArray(sourceModel.anyPhrases) ? sourceModel.anyPhrases : [])) addText(phrase);
+    addText(sourceModel.normalizedQuery || '');
+
+    const contextProfile = normalizeSearchText(sourceModel.contextProfile || '');
+    const contextSeeds = contextProfile === 'beginner'
+      ? ['beginner', 'beginners', 'introduction', 'intro', 'tutorial', 'tutorials', 'getting', 'started', 'basics', 'foundations', 'guide']
+      : (
+        contextProfile === 'advanced research' || contextProfile === 'advanced-research'
+          ? ['advanced', 'internals', 'analysis', 'optimization', 'pipeline', 'dialect', 'lowering', 'benchmark', 'evaluation', 'polyhedral']
+          : (sourceModel.fundamentalsIntent ? ['fundamentals', 'overview', 'guide', 'walkthrough', 'tutorial', 'basics', 'introduction'] : [])
+      );
+    for (const seed of contextSeeds) addToken(seed);
+
+    for (const topic of (Array.isArray(sourceModel.subprojectTopics) ? sourceModel.subprojectTopics : [])) {
+      addText(topic);
+      const topicKey = normalizeTopicKey(topic);
+      const topicHints = topicKey ? (SEARCH_CONTEXT_COMBO_TOPIC_HINTS[topicKey] || []) : [];
+      for (const hint of topicHints) addToken(hint);
+    }
+    return signalTokens;
+  }
+
+  function collectQueryComboCandidates(model) {
+    if (!model || typeof model !== 'object') return [];
+    const seen = new Set();
+    const out = [];
+
+    const addTokens = (tokens) => {
+      const combos = buildTokenComboSet(tokens, { minSize: 2, maxSize: 3 });
+      for (const combo of combos) {
+        if (seen.has(combo)) continue;
+        seen.add(combo);
+        out.push(combo);
+      }
+    };
+
+    const rawTokens = Array.isArray(model.rawTokens) ? model.rawTokens : [];
+    if (rawTokens.length >= 2) addTokens(rawTokens);
+
+    const clauseTokens = Array.isArray(model.clauses)
+      ? model.clauses.map((clause) => normalizeSearchToken(clause && clause.token)).filter(Boolean)
+      : [];
+    if (clauseTokens.length >= 2) addTokens(clauseTokens);
+
+    const phraseSources = [
+      ...(Array.isArray(model.requiredPhrases) ? model.requiredPhrases : []),
+      ...(Array.isArray(model.anyPhrases) ? model.anyPhrases : []),
+      normalizeSearchText(model.normalizedQuery || ''),
+    ].filter(Boolean);
+    for (const phrase of phraseSources) {
+      const tokens = normalizeSearchText(phrase).split(/\s+/).filter(Boolean);
+      if (tokens.length >= 2) addTokens(tokens);
+    }
+
+    return out;
+  }
+
+  function buildQueryComboProfile(model, comboTrendIndex, kind = 'talk') {
+    if (!model || !comboTrendIndex || !(comboTrendIndex.comboStats instanceof Map)) return null;
+    const cacheKey = getQueryComboProfileCacheKey(model, comboTrendIndex, kind);
+    if (cacheKey) {
+      const cached = cacheGet(QUERY_COMBO_PROFILE_CACHE, cacheKey);
+      if (cached) return cached;
+    }
+
+    const candidates = collectQueryComboCandidates(model);
+    const querySignalTokens = collectQueryComboSignalTokens(model);
+    if (!candidates.length && !querySignalTokens.size) return null;
+
+    const entriesByCombo = new Map();
+    const addEntry = (combo, weight, count, source) => {
+      const key = normalizeSearchText(combo);
+      if (!key) return;
+      const normalizedWeight = Number(weight);
+      if (!Number.isFinite(normalizedWeight) || normalizedWeight <= 0) return;
+      const normalizedCount = Number(count);
+      const safeCount = Number.isFinite(normalizedCount) && normalizedCount > 0
+        ? normalizedCount
+        : 0;
+      const nextSource = source === 'direct' ? 'direct' : 'context';
+
+      const existing = entriesByCombo.get(key);
+      if (!existing) {
+        entriesByCombo.set(key, {
+          combo: key,
+          weight: normalizedWeight,
+          count: safeCount,
+          source: nextSource,
+        });
+        return;
+      }
+
+      if (safeCount > existing.count) existing.count = safeCount;
+      if (normalizedWeight > existing.weight) existing.weight = normalizedWeight;
+      if (nextSource === 'direct') existing.source = 'direct';
+    };
+
+    for (const combo of candidates) {
+      const count = Number(comboTrendIndex.comboStats.get(combo) || 0);
+      if (count < 1) continue;
+
+      const tokenCount = combo.split(' ').filter(Boolean).length;
+      if (tokenCount < 2) continue;
+      const rarityPenalty = comboTrendIndex.maxCount > 0
+        ? Math.min(0.6, count / Math.max(1, comboTrendIndex.maxCount))
+        : 0;
+      const supportScale = count >= 2 ? 1 : 0.72;
+      const sizeBoost = tokenCount >= 3 ? 1.28 : 1.08;
+      const weight = Math.max(0.16, Math.log1p(count + 1) * supportScale * sizeBoost * (1 - (rarityPenalty * 0.42)));
+      addEntry(combo, weight * 1.28, count, 'direct');
+    }
+
+    if (querySignalTokens.size) {
+      const totalRecords = Number(comboTrendIndex.totalRecords || 0);
+      const minSupport = totalRecords >= 48 ? 4 : (totalRecords >= 20 ? 3 : 2);
+
+      for (const [combo, rawCount] of comboTrendIndex.comboStats.entries()) {
+        const count = Number(rawCount || 0);
+        if (count < minSupport) continue;
+        if (entriesByCombo.has(combo)) continue;
+
+        const comboTokens = combo.split(/\s+/).filter(Boolean);
+        const tokenCount = comboTokens.length;
+        if (tokenCount < 2 || tokenCount > 3) continue;
+
+        let overlapCount = 0;
+        let informativeCount = 0;
+        for (const token of comboTokens) {
+          if (!SEARCH_STOPWORDS.has(token)) informativeCount += 1;
+          if (querySignalTokens.has(token)) overlapCount += 1;
+        }
+        if (!informativeCount || !overlapCount) continue;
+
+        const overlapRatio = overlapCount / tokenCount;
+        if (overlapCount < 2 && overlapRatio < 0.42) continue;
+
+        const rarityPenalty = comboTrendIndex.maxCount > 0
+          ? Math.min(0.66, count / Math.max(1, comboTrendIndex.maxCount))
+          : 0;
+        const overlapBoost = overlapCount >= 2 ? 1.24 : 0.9;
+        const specificityBoost = informativeCount === tokenCount ? 1.08 : 1;
+        const sizeBoost = tokenCount >= 3 ? 1.14 : 1;
+        const weight = Math.max(
+          0.1,
+          Math.log1p(count)
+            * (0.62 + (overlapRatio * 0.62))
+            * overlapBoost
+            * specificityBoost
+            * sizeBoost
+            * (1 - (rarityPenalty * 0.52))
+        );
+        addEntry(combo, weight, count, 'context');
+      }
+    }
+
+    const entries = [...entriesByCombo.values()];
+    if (!entries.length) return null;
+    entries.sort((a, b) => {
+      const sourceDiff = (b.source === 'direct' ? 1 : 0) - (a.source === 'direct' ? 1 : 0);
+      if (sourceDiff !== 0) return sourceDiff;
+      if (b.weight !== a.weight) return b.weight - a.weight;
+      if (b.count !== a.count) return b.count - a.count;
+      return a.combo.localeCompare(b.combo);
+    });
+    const capped = entries.slice(0, 14);
+
+    let totalWeight = 0;
+    let directWeight = 0;
+    let contextWeight = 0;
+    let directCount = 0;
+    let contextCount = 0;
+    for (const entry of capped) {
+      const weight = Number(entry.weight || 0);
+      if (!(weight > 0)) continue;
+      totalWeight += weight;
+      if (entry.source === 'direct') {
+        directWeight += weight;
+        directCount += 1;
+      } else {
+        contextWeight += weight;
+        contextCount += 1;
+      }
+    }
+    if (!entries.length || !(totalWeight > 0)) return null;
+
+    const profile = {
+      combos: capped,
+      totalWeight,
+      directWeight,
+      contextWeight,
+      directCount,
+      contextCount,
+      kind: normalizeSearchText(kind),
+    };
+
+    if (cacheKey) {
+      return cacheSet(QUERY_COMBO_PROFILE_CACHE, cacheKey, profile, QUERY_COMBO_PROFILE_CACHE_MAX);
+    }
+    return profile;
+  }
+
+  function computeComboContextAdjustment(recordCombos, queryComboProfile) {
+    const combos = recordCombos instanceof Set ? recordCombos : null;
+    const profile = queryComboProfile && typeof queryComboProfile === 'object' ? queryComboProfile : null;
+    if (!combos || !profile || !Array.isArray(profile.combos) || !profile.combos.length) return 0;
+
+    let matchedWeight = 0;
+    let matchedCount = 0;
+    let matchedDirectWeight = 0;
+    let matchedContextWeight = 0;
+    let matchedDirectCount = 0;
+    let matchedContextCount = 0;
+    for (const entry of profile.combos) {
+      const combo = entry && entry.combo;
+      if (!combo || !combos.has(combo)) continue;
+      matchedCount += 1;
+      const weight = Number(entry.weight || 0);
+      matchedWeight += weight;
+      if (entry.source === 'direct') {
+        matchedDirectCount += 1;
+        matchedDirectWeight += weight;
+      } else {
+        matchedContextCount += 1;
+        matchedContextWeight += weight;
+      }
+    }
+
+    const directCount = Number(profile.directCount || 0);
+    const contextCount = Number(profile.contextCount || 0);
+
+    if (!matchedCount) {
+      if (directCount > 0) return directCount >= 2 ? -0.28 : -0.14;
+      return contextCount >= 3 ? -0.14 : -0.06;
+    }
+
+    const totalWeight = Number(profile.totalWeight || 0);
+    if (!(totalWeight > 0)) return 0;
+
+    const directWeight = Number(profile.directWeight || 0);
+    const contextWeight = Number(profile.contextWeight || 0);
+    const weightedCoverage = matchedWeight / totalWeight;
+    const directCoverage = directWeight > 0 ? (matchedDirectWeight / directWeight) : 0;
+    const contextCoverage = contextWeight > 0 ? (matchedContextWeight / contextWeight) : 0;
+    const matchCoverage = matchedCount / profile.combos.length;
+
+    let adjustment = (weightedCoverage * 0.6) + (directCoverage * 0.46) + (contextCoverage * 0.24) + (matchCoverage * 0.2);
+    if (directCount > 0 && matchedDirectCount === directCount) adjustment += 0.14;
+    if (directCount > 0 && matchedDirectCount === 0) adjustment -= directCount >= 2 ? 0.18 : 0.1;
+    if (matchedDirectCount === 0 && matchedContextCount > 0) adjustment *= 0.86;
+    if (matchedCount === profile.combos.length) adjustment += 0.08;
+    return Math.max(-0.34, Math.min(1.24, adjustment));
+  }
+
   function scorePhraseEntriesAgainstFields(phraseEntries, fields, fieldConfig) {
     const source = Array.isArray(phraseEntries) ? phraseEntries : [];
     if (!source.length) return 0;
@@ -4065,6 +4506,8 @@
     const talkTrendScale = model.advancedResearchIntent
       ? 2.3
       : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.8 : 2.0);
+    const talkComboTrendIndex = resolveComboTrendIndex(talks, 'talk');
+    const talkComboProfile = buildQueryComboProfile(model, talkComboTrendIndex, 'talk');
     const talkRarityFieldConfig = [
       { key: 'title', weight: 1.42, fuzzy: true },
       { key: 'tags', weight: 1.28, fuzzy: true },
@@ -4084,6 +4527,11 @@
     let scored = [];
     for (const talk of talks) {
       let score = scoreTalkWithModel(talk, model, false);
+      if (score > 0 && talkComboProfile) {
+        const comboAdjustment = computeComboContextAdjustment(resolveTalkComboSet(talk), talkComboProfile);
+        if (comboAdjustment > 0) score *= 1 + (comboAdjustment * 0.24);
+        else score *= 1 + Math.max(-0.14, comboAdjustment * 0.32);
+      }
       if (score > 0 && talkRarityProfile) {
         const doc = buildTalkSearchDoc(talk);
         const rarityBonus = computeClauseRarityBonus(doc, talkRarityProfile, talkRarityFieldConfig, {
@@ -4109,6 +4557,11 @@
     if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const talk of talks) {
         let score = scoreTalkWithModel(talk, model, true);
+        if (score > 0 && talkComboProfile) {
+          const comboAdjustment = computeComboContextAdjustment(resolveTalkComboSet(talk), talkComboProfile);
+          if (comboAdjustment > 0) score *= 1 + (comboAdjustment * 0.18);
+          else score *= 1 + Math.max(-0.1, comboAdjustment * 0.24);
+        }
         if (score > 0 && talkRarityProfile) {
           const doc = buildTalkSearchDoc(talk);
           const rarityBonus = computeClauseRarityBonus(doc, talkRarityProfile, talkRarityFieldConfig, {
@@ -4402,6 +4855,8 @@
     const paperTrendScale = model.advancedResearchIntent
       ? 2.55
       : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.9 : 2.2);
+    const paperComboTrendIndex = resolveComboTrendIndex(records, 'paper');
+    const paperComboProfile = buildQueryComboProfile(model, paperComboTrendIndex, 'paper');
     const paperRarityFieldConfig = [
       { key: 'title', weight: 1.5, fuzzy: true },
       { key: 'topics', weight: 1.36, fuzzy: true },
@@ -4423,6 +4878,11 @@
     let scored = [];
     for (const paper of records) {
       let score = scorePaperWithModel(paper, model, false);
+      if (score > 0 && paperComboProfile) {
+        const comboAdjustment = computeComboContextAdjustment(resolvePaperComboSet(paper), paperComboProfile);
+        if (comboAdjustment > 0) score *= 1 + (comboAdjustment * 0.27);
+        else score *= 1 + Math.max(-0.16, comboAdjustment * 0.34);
+      }
       if (score > 0 && paperRarityProfile) {
         const doc = buildPaperSearchDoc(paper);
         const rarityBonus = computeClauseRarityBonus(doc, paperRarityProfile, paperRarityFieldConfig, {
@@ -4448,6 +4908,11 @@
     if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const paper of records) {
         let score = scorePaperWithModel(paper, model, true);
+        if (score > 0 && paperComboProfile) {
+          const comboAdjustment = computeComboContextAdjustment(resolvePaperComboSet(paper), paperComboProfile);
+          if (comboAdjustment > 0) score *= 1 + (comboAdjustment * 0.2);
+          else score *= 1 + Math.max(-0.12, comboAdjustment * 0.26);
+        }
         if (score > 0 && paperRarityProfile) {
           const doc = buildPaperSearchDoc(paper);
           const rarityBonus = computeClauseRarityBonus(doc, paperRarityProfile, paperRarityFieldConfig, {
