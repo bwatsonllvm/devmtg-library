@@ -260,12 +260,17 @@
       issueButton.setAttribute('aria-label', `${label} (opens in new tab)`);
       issueButton.setAttribute('target', '_blank');
       issueButton.setAttribute('rel', 'noopener noreferrer');
-      const textNodes = Array.from(issueButton.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE);
-      for (const node of textNodes) {
-        node.textContent = ` ${label}`;
-      }
       const inlineSpan = issueButton.querySelector('span[aria-hidden="true"]');
-      if (inlineSpan) inlineSpan.textContent = label;
+      if (inlineSpan) {
+        inlineSpan.textContent = label;
+        continue;
+      }
+
+      const icon = issueButton.querySelector('svg');
+      for (const node of Array.from(issueButton.childNodes)) {
+        if (node !== icon) node.remove();
+      }
+      issueButton.appendChild(document.createTextNode(` ${label}`));
     }
   }
 
