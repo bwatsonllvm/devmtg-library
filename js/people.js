@@ -1024,8 +1024,8 @@ function renderPersonCard(person, tokens) {
   const allWorkLink = `<a class="card-link-btn card-link-btn--video" href="${speakerWorkUrl}" aria-label="Open All Work for ${escapeHtml(person.name)}">
       <span aria-hidden="true">All Work</span>
     </a>`;
-  const reportIssueLink = `<a class="card-link-btn report-issue-link" href="${escapeHtml(buildPersonIssueUrl(person))}" target="_blank" rel="noopener noreferrer" aria-label="Report an issue for ${escapeHtml(person.name)} (opens in new tab)">
-      <span aria-hidden="true">Report issue</span>
+  const reportIssueLink = `<a class="card-link-btn report-issue-link" href="${escapeHtml(buildPersonIssueUrl(person))}" target="_blank" rel="noopener noreferrer" aria-label="Request edit for ${escapeHtml(person.name)} (opens in new tab)">
+      <span aria-hidden="true">Request Edit</span>
     </a>`;
 
   return `

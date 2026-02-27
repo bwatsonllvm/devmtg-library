@@ -23,7 +23,6 @@ const BLOG_SOURCE_SLUG_ALIASES = new Set([
 ]);
 const PAPERS_PAGE_PATH = 'papers/';
 const BLOGS_PAGE_PATH = 'blogs/';
-const ISSUE_BASE_URL = 'https://github.com/bwatsonllvm/library/issues/new';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 const PAPER_TO_TALK_REDIRECTS = {
   'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
@@ -295,27 +294,6 @@ function getListingPathForPaper(paper) {
 
 function getListingLabelForPaper(paper) {
   return isBlogPaper(paper) ? 'blogs' : 'papers';
-}
-
-function buildRequestEditIssueHref(paper) {
-  if (!paper || typeof paper !== 'object') return ISSUE_BASE_URL;
-  if (typeof window.buildLibraryIssueHref !== 'function') return ISSUE_BASE_URL;
-
-  const title = String(paper.title || '').trim();
-  return window.buildLibraryIssueHref({
-    pageType: 'Paper',
-    itemType: 'Paper',
-    requestType: 'Correct existing entry',
-    itemId: String(paper.id || '').trim(),
-    itemTitle: title,
-    issueTitle: `[Paper] Request Edit: ${title}`,
-    year: String(paper._year || '').trim(),
-    paperUrl: String(paper.paperUrl || '').trim(),
-    sourceUrl: String(paper.sourceUrl || '').trim(),
-    doi: String(paper.doi || '').trim(),
-    openalexId: String(paper.openalexId || '').trim(),
-    details: `Please update this ${isBlogPaper(paper) ? 'blog entry' : 'paper'} record.`,
-  });
 }
 
 function buildSpeakerWorkUrl(name, paper) {
@@ -1398,7 +1376,6 @@ function renderPaperDetail(paper, allPapers) {
   const openalexHref = sanitizeExternalUrl(paper.openalexId);
   const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
   const badgeLabel = blogEntry ? 'Blog' : 'Paper';
-  const requestEditHref = buildRequestEditIssueHref(paper);
 
   const infoParts = [];
   if (blogEntry && paper._publishedDateLabel) infoParts.push(paper._publishedDateLabel);
@@ -1447,14 +1424,9 @@ function renderPaperDetail(paper, allPapers) {
       </a>`);
   }
   links.push(`
-    <a href="${escapeHtml(requestEditHref)}" class="link-btn request-edit-link" id="request-edit-btn" target="_blank" rel="noopener noreferrer" aria-label="Request an edit for ${escapeHtml(paper.title)} (opens in new tab)">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-      Request Edit
-    </a>`);
-  links.push(`
-    <a href="https://github.com/bwatsonllvm/library/issues/new" class="link-btn report-issue-link" id="report-issue-btn" aria-label="Report an issue with this paper (opens in new tab)">
+    <a href="https://github.com/bwatsonllvm/library/issues/new" class="link-btn report-issue-link" id="report-issue-btn" aria-label="Request edit for this paper (opens in new tab)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      Report issue
+      Request Edit
     </a>`);
 
   const keyTopics = getPaperKeyTopics(paper, 18);

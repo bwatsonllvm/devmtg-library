@@ -93,6 +93,8 @@
   }
 
   function resolveRequestType(context, itemType) {
+    const explicit = normalizeText(context.requestType);
+    if (explicit) return explicit;
     if (itemType === 'Paper' && !normalizeText(context.itemId)) return 'Add missing paper';
     if (itemType === 'Talk' && !normalizeText(context.itemId)) return 'Add missing talk/slides/video';
     if (itemType === 'Person') return 'Correct person attribution';
@@ -146,7 +148,9 @@
   }
 
   function buildIssueButtonLabel(context) {
-    return 'Report issue';
+    const explicit = normalizeText(context.issueButtonLabel);
+    if (explicit) return explicit;
+    return 'Request Edit';
   }
 
   function createIssueButton(context) {
@@ -250,11 +254,18 @@
     if (!buttons.length) return;
 
     const href = buildIssueHref(context);
+    const label = buildIssueButtonLabel(context);
     for (const issueButton of buttons) {
       issueButton.href = href;
-      issueButton.setAttribute('aria-label', `${buildIssueButtonLabel(context)} (opens in new tab)`);
+      issueButton.setAttribute('aria-label', `${label} (opens in new tab)`);
       issueButton.setAttribute('target', '_blank');
       issueButton.setAttribute('rel', 'noopener noreferrer');
+      const textNodes = Array.from(issueButton.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE);
+      for (const node of textNodes) {
+        node.textContent = ` ${label}`;
+      }
+      const inlineSpan = issueButton.querySelector('span[aria-hidden="true"]');
+      if (inlineSpan) inlineSpan.textContent = label;
     }
   }
 
