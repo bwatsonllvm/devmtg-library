@@ -103,6 +103,19 @@ let searchResultCounts = {
   people: 0,
 };
 let docsDataLoadPromise = null;
+const QUERY_TOKEN_CACHE_MAX = 128;
+const QUERY_TOKEN_CACHE = new Map();
+const DOM_NODE_CACHE = new Map();
+
+function getNodeById(id) {
+  const key = String(id || '');
+  if (!key) return null;
+  const cached = DOM_NODE_CACHE.get(key);
+  if (cached && cached.isConnected) return cached;
+  const node = document.getElementById(key);
+  if (node) DOM_NODE_CACHE.set(key, node);
+  return node;
+}
 
 function ensureScript(src) {
   return new Promise((resolve, reject) => {
@@ -831,18 +844,18 @@ function getActiveFilterLabels() {
 }
 
 function syncScopeControlVisibility() {
-  const scopeToggle = document.getElementById('work-scope-toggle');
+  const scopeToggle = getNodeById('work-scope-toggle');
   if (!scopeToggle) return;
   scopeToggle.hidden = state.mode !== 'search';
 }
 
 function syncScopeControlCounts() {
-  const countAll = document.getElementById('work-scope-count-all');
-  const countTalks = document.getElementById('work-scope-count-talks');
-  const countPapers = document.getElementById('work-scope-count-papers');
-  const countBlogs = document.getElementById('work-scope-count-blogs');
-  const countDocs = document.getElementById('work-scope-count-docs');
-  const countPeople = document.getElementById('work-scope-count-people');
+  const countAll = getNodeById('work-scope-count-all');
+  const countTalks = getNodeById('work-scope-count-talks');
+  const countPapers = getNodeById('work-scope-count-papers');
+  const countBlogs = getNodeById('work-scope-count-blogs');
+  const countDocs = getNodeById('work-scope-count-docs');
+  const countPeople = getNodeById('work-scope-count-people');
   if (countAll) countAll.textContent = getSearchScopeCount('all').toLocaleString();
   if (countTalks) countTalks.textContent = getSearchScopeCount('talks').toLocaleString();
   if (countPapers) countPapers.textContent = getSearchScopeCount('papers').toLocaleString();
@@ -852,18 +865,18 @@ function syncScopeControlCounts() {
 }
 
 function syncScopeControls() {
-  const scopeToggle = document.getElementById('work-scope-toggle');
-  const scopeInput = document.getElementById('work-search-scope-input');
-  const timeInput = document.getElementById('work-search-time-input');
-  const yearFromInput = document.getElementById('work-search-year-from-input');
-  const yearToInput = document.getElementById('work-search-year-to-input');
-  const allWordsInput = document.getElementById('work-search-all-words-input');
-  const exactPhraseInput = document.getElementById('work-search-exact-phrase-input');
-  const anyWordsInput = document.getElementById('work-search-any-words-input');
-  const withoutWordsInput = document.getElementById('work-search-without-words-input');
-  const whereInput = document.getElementById('work-search-where-input');
-  const authorInput = document.getElementById('work-search-author-input');
-  const publicationInput = document.getElementById('work-search-publication-input');
+  const scopeToggle = getNodeById('work-scope-toggle');
+  const scopeInput = getNodeById('work-search-scope-input');
+  const timeInput = getNodeById('work-search-time-input');
+  const yearFromInput = getNodeById('work-search-year-from-input');
+  const yearToInput = getNodeById('work-search-year-to-input');
+  const allWordsInput = getNodeById('work-search-all-words-input');
+  const exactPhraseInput = getNodeById('work-search-exact-phrase-input');
+  const anyWordsInput = getNodeById('work-search-any-words-input');
+  const withoutWordsInput = getNodeById('work-search-without-words-input');
+  const whereInput = getNodeById('work-search-where-input');
+  const authorInput = getNodeById('work-search-author-input');
+  const publicationInput = getNodeById('work-search-publication-input');
   if (scopeInput) scopeInput.value = normalizeSearchScope(state.scope);
   if (timeInput) timeInput.value = state.mode === 'search' ? normalizeTimeFilter(state.timeFilter) : 'any';
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
@@ -892,7 +905,7 @@ function syncScopeControls() {
 }
 
 function initScopeControl() {
-  const scopeToggle = document.getElementById('work-scope-toggle');
+  const scopeToggle = getNodeById('work-scope-toggle');
   if (!scopeToggle) return;
 
   const buttons = [...scopeToggle.querySelectorAll('.work-scope-btn[data-work-scope]')];
@@ -930,11 +943,11 @@ function countActiveAdvancedFields() {
 
 function syncAdvancedFilterControlVisibility() {
   const searchMode = state.mode === 'search';
-  const timeSelect = document.getElementById('work-time-select');
+  const timeSelect = getNodeById('work-time-select');
   const timeLabel = document.querySelector('label[for="work-time-select"]');
-  const customRange = document.getElementById('work-custom-range');
-  const advancedToggle = document.getElementById('work-advanced-toggle');
-  const advancedPanel = document.getElementById('work-advanced-panel');
+  const customRange = getNodeById('work-custom-range');
+  const advancedToggle = getNodeById('work-advanced-toggle');
+  const advancedPanel = getNodeById('work-advanced-panel');
   const customVisible = searchMode && state.timeFilter === 'custom';
   const activeAdvancedCount = countActiveAdvancedFields();
   const advancedActive = activeAdvancedCount > 0;
@@ -962,18 +975,18 @@ function syncAdvancedFilterControlVisibility() {
 }
 
 function syncAdvancedFilterControls() {
-  const timeSelect = document.getElementById('work-time-select');
-  const yearFromInput = document.getElementById('work-year-from');
-  const yearToInput = document.getElementById('work-year-to');
-  const advancedAllWordsInput = document.getElementById('work-advanced-all-words');
-  const advancedExactPhraseInput = document.getElementById('work-advanced-exact-phrase');
-  const advancedAnyWordsInput = document.getElementById('work-advanced-any-words');
-  const advancedWithoutWordsInput = document.getElementById('work-advanced-without-words');
-  const advancedWhereInput = document.getElementById('work-advanced-where');
-  const advancedAuthorInput = document.getElementById('work-advanced-author');
-  const advancedPublicationInput = document.getElementById('work-advanced-publication');
-  const advancedYearFromInput = document.getElementById('work-advanced-year-from');
-  const advancedYearToInput = document.getElementById('work-advanced-year-to');
+  const timeSelect = getNodeById('work-time-select');
+  const yearFromInput = getNodeById('work-year-from');
+  const yearToInput = getNodeById('work-year-to');
+  const advancedAllWordsInput = getNodeById('work-advanced-all-words');
+  const advancedExactPhraseInput = getNodeById('work-advanced-exact-phrase');
+  const advancedAnyWordsInput = getNodeById('work-advanced-any-words');
+  const advancedWithoutWordsInput = getNodeById('work-advanced-without-words');
+  const advancedWhereInput = getNodeById('work-advanced-where');
+  const advancedAuthorInput = getNodeById('work-advanced-author');
+  const advancedPublicationInput = getNodeById('work-advanced-publication');
+  const advancedYearFromInput = getNodeById('work-advanced-year-from');
+  const advancedYearToInput = getNodeById('work-advanced-year-to');
   const normalizedYears = normalizeYearRange(state.yearFrom, state.yearTo);
   if (timeSelect) timeSelect.value = normalizeTimeFilter(state.timeFilter);
   if (yearFromInput) yearFromInput.value = normalizedYears.from > 0 ? String(normalizedYears.from) : '';
@@ -1021,21 +1034,21 @@ function applySearchFilterControls(options = {}) {
 }
 
 function initAdvancedFilterControls() {
-  const timeSelect = document.getElementById('work-time-select');
-  const yearFromInput = document.getElementById('work-year-from');
-  const yearToInput = document.getElementById('work-year-to');
-  const advancedToggle = document.getElementById('work-advanced-toggle');
-  const advancedAllWordsInput = document.getElementById('work-advanced-all-words');
-  const advancedExactPhraseInput = document.getElementById('work-advanced-exact-phrase');
-  const advancedAnyWordsInput = document.getElementById('work-advanced-any-words');
-  const advancedWithoutWordsInput = document.getElementById('work-advanced-without-words');
-  const advancedWhereInput = document.getElementById('work-advanced-where');
-  const advancedAuthorInput = document.getElementById('work-advanced-author');
-  const advancedPublicationInput = document.getElementById('work-advanced-publication');
-  const advancedYearFromInput = document.getElementById('work-advanced-year-from');
-  const advancedYearToInput = document.getElementById('work-advanced-year-to');
-  const advancedApplyBtn = document.getElementById('work-advanced-apply');
-  const advancedClearBtn = document.getElementById('work-advanced-clear');
+  const timeSelect = getNodeById('work-time-select');
+  const yearFromInput = getNodeById('work-year-from');
+  const yearToInput = getNodeById('work-year-to');
+  const advancedToggle = getNodeById('work-advanced-toggle');
+  const advancedAllWordsInput = getNodeById('work-advanced-all-words');
+  const advancedExactPhraseInput = getNodeById('work-advanced-exact-phrase');
+  const advancedAnyWordsInput = getNodeById('work-advanced-any-words');
+  const advancedWithoutWordsInput = getNodeById('work-advanced-without-words');
+  const advancedWhereInput = getNodeById('work-advanced-where');
+  const advancedAuthorInput = getNodeById('work-advanced-author');
+  const advancedPublicationInput = getNodeById('work-advanced-publication');
+  const advancedYearFromInput = getNodeById('work-advanced-year-from');
+  const advancedYearToInput = getNodeById('work-advanced-year-to');
+  const advancedApplyBtn = getNodeById('work-advanced-apply');
+  const advancedClearBtn = getNodeById('work-advanced-clear');
 
   if (timeSelect) {
     timeSelect.addEventListener('change', () => {
@@ -1436,14 +1449,33 @@ function sortPeopleResults(people) {
 }
 
 function tokenizeQuery(query) {
-  if (typeof HubUtils.tokenizeQuery === 'function') return HubUtils.tokenizeQuery(query);
+  const raw = String(query || '');
+  if (!raw.trim()) return [];
+  const cacheHit = QUERY_TOKEN_CACHE.get(raw);
+  if (Array.isArray(cacheHit)) return cacheHit;
+
+  if (typeof HubUtils.tokenizeQuery === 'function') {
+    const tokens = HubUtils.tokenizeQuery(raw);
+    const resolved = Array.isArray(tokens) ? tokens : [];
+    if (QUERY_TOKEN_CACHE.size >= QUERY_TOKEN_CACHE_MAX) {
+      const oldest = QUERY_TOKEN_CACHE.keys().next().value;
+      if (oldest !== undefined) QUERY_TOKEN_CACHE.delete(oldest);
+    }
+    QUERY_TOKEN_CACHE.set(raw, resolved);
+    return resolved;
+  }
   const tokens = [];
   const re = /"([^"]+)"|(\S+)/g;
   let match;
-  while ((match = re.exec(String(query || ''))) !== null) {
+  while ((match = re.exec(raw)) !== null) {
     const token = (match[1] || match[2] || '').toLowerCase().trim();
     if (token.length >= 2) tokens.push(token);
   }
+  if (QUERY_TOKEN_CACHE.size >= QUERY_TOKEN_CACHE_MAX) {
+    const oldest = QUERY_TOKEN_CACHE.keys().next().value;
+    if (oldest !== undefined) QUERY_TOKEN_CACHE.delete(oldest);
+  }
+  QUERY_TOKEN_CACHE.set(raw, tokens);
   return tokens;
 }
 
@@ -2604,10 +2636,17 @@ function matchesPaperEntity(paper, normalizedNeedle, normalizedTopicNeedle) {
     });
 }
 
-function renderEntityLinks(items, kind) {
+function resolveHighlightTokens(defaultQuery, overrideTokens = null) {
+  if (Array.isArray(overrideTokens)) return overrideTokens;
+  const query = String(defaultQuery || '').trim();
+  if (!query) return [];
+  return tokenizeQuery(query);
+}
+
+function renderEntityLinks(items, kind, tokensOverride = null) {
   if (!items || items.length === 0) return '';
 
-  const tokens = state.mode === 'search' ? tokenizeQuery(state.query) : [];
+  const tokens = resolveHighlightTokens(state.mode === 'search' ? state.query : '', tokensOverride);
 
   return items
     .map((label) => {
@@ -2619,19 +2658,19 @@ function renderEntityLinks(items, kind) {
     .join('<span class="speaker-btn-sep">, </span>');
 }
 
-function renderTagLinks(tags) {
+function renderTagLinks(tags, tokensOverride = null) {
   if (!tags || tags.length === 0) return '';
 
-  const tokens = state.mode === 'search' ? tokenizeQuery(state.query) : [];
+  const tokens = resolveHighlightTokens(state.mode === 'search' ? state.query : '', tokensOverride);
   const shown = tags.slice(0, 4);
   return `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${shown
     .map((tag) => `<a class="card-tag" href="${escapeHtml(buildWorkUrl('topic', tag))}">${highlightText(tag, tokens)}</a>`)
     .join('')}${tags.length > shown.length ? `<span class="card-tag card-tag--more" aria-hidden="true">+${tags.length - shown.length}</span>` : ''}</div></div>`;
 }
 
-function renderTalkCard(talk) {
+function renderTalkCard(talk, tokensOverride = null) {
   const query = state.mode === 'search' ? state.query : '';
-  const tokens = query ? tokenizeQuery(query) : [];
+  const tokens = resolveHighlightTokens(query, tokensOverride);
   const titleEsc = escapeHtml(talk.title || 'Untitled talk');
   const abstractPreview = buildContextSnippet(talk.abstract || '', query, 300);
   const thumbnailUrl = talk.videoId
@@ -2665,7 +2704,7 @@ function renderTalkCard(talk) {
   const speakerText = formatSpeakers(talk.speakers);
   const speakerLabel = speakerText ? ` by ${speakerText}` : '';
   const speakerNames = (talk.speakers || []).map((speaker) => speaker.name).filter(Boolean);
-  const speakersHtml = renderEntityLinks(speakerNames, 'speaker');
+  const speakersHtml = renderEntityLinks(speakerNames, 'speaker', tokens);
 
   return `
     <article class="talk-card">
@@ -2684,14 +2723,14 @@ function renderTalkCard(talk) {
         </div>
       </a>
       ${speakersHtml ? `<p class="card-speakers">${speakersHtml}</p>` : ''}
-      ${renderTagLinks(getTalkKeyTopics(talk, 8))}
+      ${renderTagLinks(getTalkKeyTopics(talk, 8), tokens)}
       ${hasActions ? `<div class="card-footer">${videoLinkHtml}${slidesLinkHtml}${githubLinkHtml}</div>` : ''}
     </article>`;
 }
 
-function renderPaperCard(paper) {
+function renderPaperCard(paper, tokensOverride = null) {
   const query = state.mode === 'search' ? state.query : '';
-  const tokens = query ? tokenizeQuery(query) : [];
+  const tokens = resolveHighlightTokens(query, tokensOverride);
   const blogEntry = isBlogPaper(paper);
   const listingFrom = blogEntry ? 'blogs' : 'papers';
   const titleEsc = escapeHtml(paper.title || 'Untitled paper');
@@ -2702,7 +2741,7 @@ function renderPaperCard(paper) {
   const abstractText = buildContextSnippet(previewSource, query, 340)
     || (blogEntry ? 'No blog excerpt available.' : 'No abstract available.');
   const authorNames = (paper.authors || []).map((author) => author.name).filter(Boolean);
-  const authorsHtml = renderEntityLinks(authorNames, 'speaker');
+  const authorsHtml = renderEntityLinks(authorNames, 'speaker', tokens);
   const topics = getPaperKeyTopics(paper, 8);
   const paperIsPdf = isDirectPdfUrl(paper.paperUrl || '');
   const sourceIsPdf = isDirectPdfUrl(paper.sourceUrl || '');
@@ -2743,14 +2782,14 @@ function renderPaperCard(paper) {
         </div>
       </a>
       ${authorsHtml ? `<p class="card-speakers paper-authors">${authorsHtml}</p>` : ''}
-      ${renderTagLinks(topics)}
+      ${renderTagLinks(topics, tokens)}
       ${(pdfLink || detailLink || paperLink || citationHtml) ? `<div class="card-footer">${pdfLink}${detailLink}${paperLink}${citationHtml}</div>` : ''}
     </article>`;
 }
 
-function renderPersonCard(person) {
+function renderPersonCard(person, tokensOverride = null) {
   const query = state.mode === 'search' ? state.query : state.value;
-  const tokens = query ? tokenizeQuery(query) : [];
+  const tokens = resolveHighlightTokens(query, tokensOverride);
   const titleEsc = escapeHtml(person.name || 'Unknown person');
   const variantNames = getPersonVariantNames(person).filter((name) => !samePersonName(name, person.name));
   const variantLinksHtml = variantNames
@@ -2819,9 +2858,9 @@ function renderPersonCard(person) {
     </article>`;
 }
 
-function renderDocsCard(doc) {
+function renderDocsCard(doc, tokensOverride = null) {
   const query = state.mode === 'search' ? state.query : '';
-  const tokens = query ? tokenizeQuery(query) : [];
+  const tokens = resolveHighlightTokens(query, tokensOverride);
   const titleEsc = escapeHtml(doc.title || 'Documentation');
   const chapter = String(doc.chapter || '').trim();
   const outline = String(doc.outline || '').trim();
@@ -2856,17 +2895,19 @@ function renderDocsCard(doc) {
     </article>`;
 }
 
-function renderUniversalCard(entry) {
+function renderUniversalCard(entry, tokensOverride = null) {
   if (!entry || typeof entry !== 'object') return '';
-  if (entry.kind === 'talk' && entry.talk) return renderTalkCard(entry.talk);
-  if (entry.kind === 'person' && entry.person) return renderPersonCard(entry.person);
-  if (entry.kind === 'docs' && entry.doc) return renderDocsCard(entry.doc);
-  if ((entry.kind === 'paper' || entry.kind === 'blog') && entry.paper) return renderPaperCard(entry.paper);
+  if (entry.kind === 'talk' && entry.talk) return renderTalkCard(entry.talk, tokensOverride);
+  if (entry.kind === 'person' && entry.person) return renderPersonCard(entry.person, tokensOverride);
+  if (entry.kind === 'docs' && entry.doc) return renderDocsCard(entry.doc, tokensOverride);
+  if ((entry.kind === 'paper' || entry.kind === 'blog') && entry.paper) return renderPaperCard(entry.paper, tokensOverride);
   return '';
 }
 
-function setEmptyState(gridId, label) {
-  const grid = document.getElementById(gridId);
+function setEmptyState(gridOrId, label) {
+  const grid = typeof gridOrId === 'string'
+    ? getNodeById(gridOrId)
+    : gridOrId;
   if (!grid) return;
   grid.setAttribute('aria-busy', 'false');
   const scopeValue = state.mode === 'search'
@@ -2876,190 +2917,148 @@ function setEmptyState(gridId, label) {
   grid.innerHTML = `<div class="work-empty-state">No ${escapeHtml(label)} found${scope}.</div>`;
 }
 
-function renderUniversalBatch(reset = false) {
-  const grid = document.getElementById('work-universal-grid');
-  const moreBtn = document.getElementById('work-universal-more');
-  if (!grid || !moreBtn) return;
+function renderBatch({
+  gridId,
+  moreBtnId,
+  items,
+  batchSize,
+  renderedCount,
+  reset = false,
+  emptyLabel,
+  moreLabel,
+  renderItem,
+  tokens = null,
+}) {
+  const grid = getNodeById(gridId);
+  const moreBtn = getNodeById(moreBtnId);
+  if (!grid || !moreBtn || typeof renderItem !== 'function') return renderedCount;
 
   if (reset) {
     grid.innerHTML = '';
-    renderedUniversalCount = 0;
+    renderedCount = 0;
   }
 
-  if (!filteredUniversal.length) {
+  const values = Array.isArray(items) ? items : [];
+  if (!values.length) {
     moreBtn.classList.add('hidden');
-    setEmptyState('work-universal-grid', 'results');
-    return;
+    setEmptyState(grid, emptyLabel);
+    return 0;
   }
 
-  const nextCount = Math.min(renderedUniversalCount + UNIVERSAL_BATCH_SIZE, filteredUniversal.length);
-  const html = filteredUniversal.slice(renderedUniversalCount, nextCount).map(renderUniversalCard).join('');
-  grid.insertAdjacentHTML('beforeend', html);
+  const nextCount = Math.min(renderedCount + batchSize, values.length);
+  let html = '';
+  for (let index = renderedCount; index < nextCount; index += 1) {
+    html += renderItem(values[index], tokens);
+  }
+  if (html) grid.insertAdjacentHTML('beforeend', html);
   grid.setAttribute('aria-busy', 'false');
-  renderedUniversalCount = nextCount;
 
-  const remaining = filteredUniversal.length - renderedUniversalCount;
+  const remaining = values.length - nextCount;
   if (remaining > 0) {
-    moreBtn.textContent = `Show more results (${remaining.toLocaleString()} left)`;
+    moreBtn.textContent = `Show more ${moreLabel} (${remaining.toLocaleString()} left)`;
     moreBtn.classList.remove('hidden');
   } else {
     moreBtn.classList.add('hidden');
   }
+
+  return nextCount;
+}
+
+function renderUniversalBatch(reset = false) {
+  const tokens = resolveHighlightTokens(state.mode === 'search' ? state.query : '', null);
+  renderedUniversalCount = renderBatch({
+    gridId: 'work-universal-grid',
+    moreBtnId: 'work-universal-more',
+    items: filteredUniversal,
+    batchSize: UNIVERSAL_BATCH_SIZE,
+    renderedCount: renderedUniversalCount,
+    reset,
+    emptyLabel: 'results',
+    moreLabel: 'results',
+    renderItem: renderUniversalCard,
+    tokens,
+  });
 }
 
 function renderTalkBatch(reset = false) {
-  const grid = document.getElementById('work-talks-grid');
-  const moreBtn = document.getElementById('work-talks-more');
-  if (!grid || !moreBtn) return;
-
-  if (reset) {
-    grid.innerHTML = '';
-    renderedTalkCount = 0;
-  }
-
-  if (!filteredTalks.length) {
-    moreBtn.classList.add('hidden');
-    setEmptyState('work-talks-grid', 'talks');
-    return;
-  }
-
-  const nextCount = Math.min(renderedTalkCount + TALK_BATCH_SIZE, filteredTalks.length);
-  const html = filteredTalks.slice(renderedTalkCount, nextCount).map(renderTalkCard).join('');
-  grid.insertAdjacentHTML('beforeend', html);
-  grid.setAttribute('aria-busy', 'false');
-  renderedTalkCount = nextCount;
-
-  const remaining = filteredTalks.length - renderedTalkCount;
-  if (remaining > 0) {
-    moreBtn.textContent = `Show more talks (${remaining.toLocaleString()} left)`;
-    moreBtn.classList.remove('hidden');
-  } else {
-    moreBtn.classList.add('hidden');
-  }
+  const tokens = resolveHighlightTokens(state.mode === 'search' ? state.query : '', null);
+  renderedTalkCount = renderBatch({
+    gridId: 'work-talks-grid',
+    moreBtnId: 'work-talks-more',
+    items: filteredTalks,
+    batchSize: TALK_BATCH_SIZE,
+    renderedCount: renderedTalkCount,
+    reset,
+    emptyLabel: 'talks',
+    moreLabel: 'talks',
+    renderItem: renderTalkCard,
+    tokens,
+  });
 }
 
 function renderPaperBatch(reset = false) {
-  const grid = document.getElementById('work-papers-grid');
-  const moreBtn = document.getElementById('work-papers-more');
-  if (!grid || !moreBtn) return;
-
-  if (reset) {
-    grid.innerHTML = '';
-    renderedPaperCount = 0;
-  }
-
-  if (!filteredPapers.length) {
-    moreBtn.classList.add('hidden');
-    setEmptyState('work-papers-grid', 'papers');
-    return;
-  }
-
-  const nextCount = Math.min(renderedPaperCount + PAPER_BATCH_SIZE, filteredPapers.length);
-  const html = filteredPapers.slice(renderedPaperCount, nextCount).map(renderPaperCard).join('');
-  grid.insertAdjacentHTML('beforeend', html);
-  grid.setAttribute('aria-busy', 'false');
-  renderedPaperCount = nextCount;
-
-  const remaining = filteredPapers.length - renderedPaperCount;
-  if (remaining > 0) {
-    moreBtn.textContent = `Show more papers (${remaining.toLocaleString()} left)`;
-    moreBtn.classList.remove('hidden');
-  } else {
-    moreBtn.classList.add('hidden');
-  }
+  const tokens = resolveHighlightTokens(state.mode === 'search' ? state.query : '', null);
+  renderedPaperCount = renderBatch({
+    gridId: 'work-papers-grid',
+    moreBtnId: 'work-papers-more',
+    items: filteredPapers,
+    batchSize: PAPER_BATCH_SIZE,
+    renderedCount: renderedPaperCount,
+    reset,
+    emptyLabel: 'papers',
+    moreLabel: 'papers',
+    renderItem: renderPaperCard,
+    tokens,
+  });
 }
 
 function renderBlogBatch(reset = false) {
-  const grid = document.getElementById('work-blogs-grid');
-  const moreBtn = document.getElementById('work-blogs-more');
-  if (!grid || !moreBtn) return;
-
-  if (reset) {
-    grid.innerHTML = '';
-    renderedBlogCount = 0;
-  }
-
-  if (!filteredBlogs.length) {
-    moreBtn.classList.add('hidden');
-    setEmptyState('work-blogs-grid', 'blogs');
-    return;
-  }
-
-  const nextCount = Math.min(renderedBlogCount + BLOG_BATCH_SIZE, filteredBlogs.length);
-  const html = filteredBlogs.slice(renderedBlogCount, nextCount).map(renderPaperCard).join('');
-  grid.insertAdjacentHTML('beforeend', html);
-  grid.setAttribute('aria-busy', 'false');
-  renderedBlogCount = nextCount;
-
-  const remaining = filteredBlogs.length - renderedBlogCount;
-  if (remaining > 0) {
-    moreBtn.textContent = `Show more blogs (${remaining.toLocaleString()} left)`;
-    moreBtn.classList.remove('hidden');
-  } else {
-    moreBtn.classList.add('hidden');
-  }
+  const tokens = resolveHighlightTokens(state.mode === 'search' ? state.query : '', null);
+  renderedBlogCount = renderBatch({
+    gridId: 'work-blogs-grid',
+    moreBtnId: 'work-blogs-more',
+    items: filteredBlogs,
+    batchSize: BLOG_BATCH_SIZE,
+    renderedCount: renderedBlogCount,
+    reset,
+    emptyLabel: 'blogs',
+    moreLabel: 'blogs',
+    renderItem: renderPaperCard,
+    tokens,
+  });
 }
 
 function renderDocsBatch(reset = false) {
-  const grid = document.getElementById('work-docs-grid');
-  const moreBtn = document.getElementById('work-docs-more');
-  if (!grid || !moreBtn) return;
-
-  if (reset) {
-    grid.innerHTML = '';
-    renderedDocsCount = 0;
-  }
-
-  if (!filteredDocs.length) {
-    moreBtn.classList.add('hidden');
-    setEmptyState('work-docs-grid', 'docs');
-    return;
-  }
-
-  const nextCount = Math.min(renderedDocsCount + DOCS_BATCH_SIZE, filteredDocs.length);
-  const html = filteredDocs.slice(renderedDocsCount, nextCount).map(renderDocsCard).join('');
-  grid.insertAdjacentHTML('beforeend', html);
-  grid.setAttribute('aria-busy', 'false');
-  renderedDocsCount = nextCount;
-
-  const remaining = filteredDocs.length - renderedDocsCount;
-  if (remaining > 0) {
-    moreBtn.textContent = `Show more docs (${remaining.toLocaleString()} left)`;
-    moreBtn.classList.remove('hidden');
-  } else {
-    moreBtn.classList.add('hidden');
-  }
+  const tokens = resolveHighlightTokens(state.mode === 'search' ? state.query : '', null);
+  renderedDocsCount = renderBatch({
+    gridId: 'work-docs-grid',
+    moreBtnId: 'work-docs-more',
+    items: filteredDocs,
+    batchSize: DOCS_BATCH_SIZE,
+    renderedCount: renderedDocsCount,
+    reset,
+    emptyLabel: 'docs',
+    moreLabel: 'docs',
+    renderItem: renderDocsCard,
+    tokens,
+  });
 }
 
 function renderPeopleBatch(reset = false) {
-  const grid = document.getElementById('work-people-grid');
-  const moreBtn = document.getElementById('work-people-more');
-  if (!grid || !moreBtn) return;
-
-  if (reset) {
-    grid.innerHTML = '';
-    renderedPeopleCount = 0;
-  }
-
-  if (!filteredPeople.length) {
-    moreBtn.classList.add('hidden');
-    setEmptyState('work-people-grid', 'people');
-    return;
-  }
-
-  const nextCount = Math.min(renderedPeopleCount + PEOPLE_BATCH_SIZE, filteredPeople.length);
-  const html = filteredPeople.slice(renderedPeopleCount, nextCount).map(renderPersonCard).join('');
-  grid.insertAdjacentHTML('beforeend', html);
-  grid.setAttribute('aria-busy', 'false');
-  renderedPeopleCount = nextCount;
-
-  const remaining = filteredPeople.length - renderedPeopleCount;
-  if (remaining > 0) {
-    moreBtn.textContent = `Show more people (${remaining.toLocaleString()} left)`;
-    moreBtn.classList.remove('hidden');
-  } else {
-    moreBtn.classList.add('hidden');
-  }
+  const tokenQuery = state.mode === 'search' ? state.query : state.value;
+  const tokens = resolveHighlightTokens(tokenQuery, null);
+  renderedPeopleCount = renderBatch({
+    gridId: 'work-people-grid',
+    moreBtnId: 'work-people-more',
+    items: filteredPeople,
+    batchSize: PEOPLE_BATCH_SIZE,
+    renderedCount: renderedPeopleCount,
+    reset,
+    emptyLabel: 'people',
+    moreLabel: 'people',
+    renderItem: renderPersonCard,
+    tokens,
+  });
 }
 
 function setWorkDocumentTitle(value) {
@@ -3068,16 +3067,16 @@ function setWorkDocumentTitle(value) {
 }
 
 function applyHeaderState() {
-  const titleEl = document.getElementById('work-title');
-  const subtitleEl = document.getElementById('work-subtitle');
-  const summaryEl = document.getElementById('work-results-summary');
-  const universalCountEl = document.getElementById('work-universal-count');
-  const talksCountEl = document.getElementById('work-talks-count');
-  const papersCountEl = document.getElementById('work-papers-count');
-  const blogsCountEl = document.getElementById('work-blogs-count');
-  const docsCountEl = document.getElementById('work-docs-count');
-  const peopleCountEl = document.getElementById('work-people-count');
-  const backLink = document.getElementById('work-back-link');
+  const titleEl = getNodeById('work-title');
+  const subtitleEl = getNodeById('work-subtitle');
+  const summaryEl = getNodeById('work-results-summary');
+  const universalCountEl = getNodeById('work-universal-count');
+  const talksCountEl = getNodeById('work-talks-count');
+  const papersCountEl = getNodeById('work-papers-count');
+  const blogsCountEl = getNodeById('work-blogs-count');
+  const docsCountEl = getNodeById('work-docs-count');
+  const peopleCountEl = getNodeById('work-people-count');
+  const backLink = getNodeById('work-back-link');
 
   const entityLabel = state.kind === 'speaker' ? 'Speaker' : 'Key Topic';
   const backHref = state.from === 'papers'
@@ -3208,7 +3207,7 @@ function applyHeaderState() {
 }
 
 function syncSortControl() {
-  const select = document.getElementById('work-sort-select');
+  const select = getNodeById('work-sort-select');
   if (!select) return;
   const relevanceOption = select.querySelector('option[value="relevance"]');
   const citationsOption = select.querySelector('option[value="citations"]');
@@ -3218,8 +3217,8 @@ function syncSortControl() {
 }
 
 function syncViewControls() {
-  const expandedBtn = document.getElementById('work-view-expanded');
-  const compactBtn = document.getElementById('work-view-compact');
+  const expandedBtn = getNodeById('work-view-expanded');
+  const compactBtn = getNodeById('work-view-compact');
   const isCompact = state.viewMode === 'compact';
 
   if (expandedBtn) {
@@ -3234,12 +3233,12 @@ function syncViewControls() {
 
 function syncSearchSectionVisibility() {
   const searchMode = state.mode === 'search';
-  const universalSection = document.getElementById('work-universal-section');
-  const talksSection = document.getElementById('work-talks-section');
-  const papersSection = document.getElementById('work-papers-section');
-  const blogsSection = document.getElementById('work-blogs-section');
-  const docsSection = document.getElementById('work-docs-section');
-  const peopleSection = document.getElementById('work-people-section');
+  const universalSection = getNodeById('work-universal-section');
+  const talksSection = getNodeById('work-talks-section');
+  const papersSection = getNodeById('work-papers-section');
+  const blogsSection = getNodeById('work-blogs-section');
+  const docsSection = getNodeById('work-docs-section');
+  const peopleSection = getNodeById('work-people-section');
 
   if (!searchMode) {
     if (universalSection) universalSection.classList.add('hidden');
@@ -3263,10 +3262,10 @@ function applyViewMode(mode, persist = true, refreshHeader = true) {
   state.viewMode = mode === 'compact' ? 'compact' : 'expanded';
   const gridClass = state.viewMode === 'compact' ? 'talks-list' : 'talks-grid';
   ['work-universal-grid', 'work-talks-grid', 'work-papers-grid', 'work-blogs-grid', 'work-docs-grid'].forEach((id) => {
-    const el = document.getElementById(id);
+    const el = getNodeById(id);
     if (el) el.className = gridClass;
   });
-  const peopleGrid = document.getElementById('work-people-grid');
+  const peopleGrid = getNodeById('work-people-grid');
   if (peopleGrid) {
     peopleGrid.className = `${gridClass} people-grid`;
   }
@@ -3315,7 +3314,7 @@ function rerenderWorkSections() {
 }
 
 function initSortControl() {
-  const select = document.getElementById('work-sort-select');
+  const select = getNodeById('work-sort-select');
   if (!select) return;
 
   select.addEventListener('change', () => {
@@ -3330,8 +3329,8 @@ function initSortControl() {
 }
 
 function initViewControls() {
-  const expandedBtn = document.getElementById('work-view-expanded');
-  const compactBtn = document.getElementById('work-view-compact');
+  const expandedBtn = getNodeById('work-view-expanded');
+  const compactBtn = getNodeById('work-view-compact');
 
   if (expandedBtn) {
     expandedBtn.addEventListener('click', () => {
@@ -3351,13 +3350,13 @@ function initViewControls() {
 }
 
 function renderError(message) {
-  const universalGrid = document.getElementById('work-universal-grid');
-  const talksGrid = document.getElementById('work-talks-grid');
-  const papersGrid = document.getElementById('work-papers-grid');
-  const blogsGrid = document.getElementById('work-blogs-grid');
-  const docsGrid = document.getElementById('work-docs-grid');
-  const peopleGrid = document.getElementById('work-people-grid');
-  const summaryEl = document.getElementById('work-results-summary');
+  const universalGrid = getNodeById('work-universal-grid');
+  const talksGrid = getNodeById('work-talks-grid');
+  const papersGrid = getNodeById('work-papers-grid');
+  const blogsGrid = getNodeById('work-blogs-grid');
+  const docsGrid = getNodeById('work-docs-grid');
+  const peopleGrid = getNodeById('work-people-grid');
+  const summaryEl = getNodeById('work-results-summary');
 
   if (summaryEl) summaryEl.textContent = 'Could not load work results';
 
@@ -3395,8 +3394,8 @@ function renderError(message) {
 }
 
 function initWorkHeroSearch() {
-  const input = document.getElementById('work-search-input');
-  const clearBtn = document.getElementById('work-search-clear');
+  const input = getNodeById('work-search-input');
+  const clearBtn = getNodeById('work-search-clear');
   if (!input || !clearBtn) return;
 
   const syncClear = () => {
@@ -3547,12 +3546,12 @@ async function init() {
     recomputeFilteredResults();
     rerenderWorkSections();
 
-    const talksMoreBtn = document.getElementById('work-talks-more');
-    const papersMoreBtn = document.getElementById('work-papers-more');
-    const blogsMoreBtn = document.getElementById('work-blogs-more');
-    const docsMoreBtn = document.getElementById('work-docs-more');
-    const peopleMoreBtn = document.getElementById('work-people-more');
-    const universalMoreBtn = document.getElementById('work-universal-more');
+    const talksMoreBtn = getNodeById('work-talks-more');
+    const papersMoreBtn = getNodeById('work-papers-more');
+    const blogsMoreBtn = getNodeById('work-blogs-more');
+    const docsMoreBtn = getNodeById('work-docs-more');
+    const peopleMoreBtn = getNodeById('work-people-more');
+    const universalMoreBtn = getNodeById('work-universal-more');
 
     if (universalMoreBtn) universalMoreBtn.addEventListener('click', () => renderUniversalBatch(false));
     if (talksMoreBtn) talksMoreBtn.addEventListener('click', () => renderTalkBatch(false));
