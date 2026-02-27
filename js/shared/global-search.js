@@ -142,6 +142,14 @@
     return path.endsWith('/work.html') || path.endsWith('/work');
   }
 
+  function isDetailViewPage() {
+    if (document.getElementById('talk-detail-root') || document.getElementById('paper-detail-root')) {
+      return true;
+    }
+    const path = String(window.location.pathname || '').toLowerCase();
+    return path.endsWith('/talks/talk.html') || path.endsWith('/papers/paper.html');
+  }
+
   function resolveScopeLabel(scope) {
     if (scope === 'talks') return 'Talks';
     if (scope === 'papers') return 'Papers';
@@ -1147,6 +1155,13 @@
     indexBuildPromise = (async () => {
       const loadedFromPrebuilt = await loadPrebuiltAutocompleteIndex();
       if (loadedFromPrebuilt) {
+        return autocompleteIndex;
+      }
+
+      // Avoid expensive corpus hydration on detail pages.
+      // If the prebuilt index is unavailable, keep suggestions empty instead of
+      // loading full talks/papers/docs datasets during detail-page navigation.
+      if (isDetailViewPage()) {
         return autocompleteIndex;
       }
 
