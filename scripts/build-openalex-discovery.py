@@ -1244,7 +1244,6 @@ def main() -> int:
         action="store_true",
         help="Also update papers/index.json (disabled by default in single-db pipeline).",
     )
-    parser.add_argument("--skip-manifest-update", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
 
     events_dir = Path(args.events_dir).resolve()
@@ -1612,7 +1611,7 @@ def main() -> int:
 
     manifest_changed = False
     effective_data_version = ""
-    should_update_manifest = bool(args.update_manifest) and not bool(args.skip_manifest_update)
+    should_update_manifest = bool(args.update_manifest)
     if not should_update_manifest:
         if index_json.exists():
             try:

@@ -204,9 +204,10 @@ def normalize_existing_reviews(payload: Any) -> list[dict[str, str]]:
         raise ValueError("papers/reviewed-papers.json must contain an object")
 
     raw_reviews = payload.get("reviews")
-    if not isinstance(raw_reviews, list):
-        legacy = payload.get("reviewedPapers")
-        raw_reviews = legacy if isinstance(legacy, list) else []
+    if raw_reviews is None:
+        raw_reviews = []
+    elif not isinstance(raw_reviews, list):
+        raise ValueError("papers/reviewed-papers.json .reviews must be an array when present")
 
     out: list[dict[str, str]] = []
     seen: set[str] = set()

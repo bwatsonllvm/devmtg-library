@@ -16,25 +16,6 @@ def _normalize_key(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", collapse_ws(value).lower())
 
 
-def _parse_all_tags_from_app_js(app_js_path: Path) -> list[str]:
-    text = app_js_path.read_text(encoding="utf-8")
-    match = re.search(r"const\s+ALL_TAGS\s*=\s*\[(.*?)\];", text, flags=re.DOTALL)
-    if not match:
-        return []
-
-    tags_raw = match.group(1)
-    tags: list[str] = []
-    seen: set[str] = set()
-    for single, double in re.findall(r"'([^']+)'|\"([^\"]+)\"", tags_raw):
-        tag = collapse_ws(single or double)
-        key = _normalize_key(tag)
-        if not key or key in seen:
-            continue
-        seen.add(key)
-        tags.append(tag)
-    return tags
-
-
 def _parse_key_topic_canonical_from_library_utils(app_js_path: Path) -> list[str]:
     library_utils_path = (app_js_path.parent / "shared" / "library-utils.js").resolve()
     if not library_utils_path.exists():
@@ -105,17 +86,12 @@ def load_canonical_tags(app_js_path: Path, events_dir: Path | None = None) -> li
 
     Priority:
       1) `papers/key-topic-canonical.json` (updater-owned canonical source)
-      2) `const ALL_TAGS = [...]` in app.js (legacy/static setup)
-      3) `KEY_TOPIC_CANONICAL` in `js/shared/library-utils.js`
-      4) unique tags inferred from `devmtg/events/*.json`
+      2) `KEY_TOPIC_CANONICAL` in `js/shared/library-utils.js`
+      3) unique tags inferred from `devmtg/events/*.json`
     """
     repo_root = app_js_path.parent.parent
     canonical_json = (repo_root / "papers" / "key-topic-canonical.json").resolve()
     tags = _parse_tags_from_json_file(canonical_json)
-    if tags:
-        return tags
-
-    tags = _parse_all_tags_from_app_js(app_js_path)
     if tags:
         return tags
 
@@ -125,9 +101,7 @@ def load_canonical_tags(app_js_path: Path, events_dir: Path | None = None) -> li
 
     candidate_events_dir = events_dir
     if candidate_events_dir is None:
-        devmtg_events = (repo_root / "devmtg" / "events").resolve()
-        legacy_events = (repo_root / "events").resolve()
-        candidate_events_dir = devmtg_events if devmtg_events.exists() else legacy_events
+        candidate_events_dir = (repo_root / "devmtg" / "events").resolve()
 
     inferred = _parse_tags_from_events(candidate_events_dir)
     if inferred:

@@ -295,8 +295,7 @@ def text_list(value: object) -> list[str]:
     elif isinstance(value, tuple):
         raw_values = list(value)
     elif isinstance(value, str):
-        # Support legacy comma-delimited values if present.
-        raw_values = re.split(r"[;,|]", value) if any(sep in value for sep in (",", ";", "|")) else [value]
+        raw_values = [value]
     else:
         return []
 
