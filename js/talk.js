@@ -17,6 +17,8 @@ const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
 const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
 const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
 const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
+const TALK_NAV_CACHE_KEY = 'llvm-hub-nav-talk-record';
+const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
 
 function normalizeTalks(rawTalks) {
   if (typeof HubUtils.normalizeTalks === 'function') {
@@ -32,6 +34,30 @@ async function loadTalks() {
   try {
     const { talks } = await window.loadEventData();
     return normalizeTalks(talks);
+  } catch {
+    return null;
+  }
+}
+
+function readCachedTalkRecord(talkId) {
+  const id = String(talkId || '').trim();
+  if (!id) return null;
+
+  const raw = safeSessionGet(TALK_NAV_CACHE_KEY);
+  if (!raw) return null;
+  try {
+    const payload = JSON.parse(raw);
+    const payloadId = String(payload && payload.id || '').trim();
+    if (payloadId !== id) return null;
+    const savedAt = Number(payload && payload.savedAt);
+    if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
+      return null;
+    }
+    const normalized = normalizeTalks([payload && payload.talk]);
+    const talk = Array.isArray(normalized) && normalized.length ? normalized[0] : null;
+    if (!talk) return null;
+    if (String(talk.id || '').trim() !== id) return null;
+    return talk;
   } catch {
     return null;
   }
@@ -670,6 +696,26 @@ async function init() {
     itemId: String(talkId || '').trim(),
   });
 
+  if (!talkId) {
+    renderNotFound(null);
+    setIssueContext({
+      itemTitle: 'Missing talk ID',
+      issueTitle: '[Talk] Missing talk ID',
+    });
+    initShareMenu();
+    return;
+  }
+
+  const cachedTalk = readCachedTalkRecord(talkId);
+  if (cachedTalk) {
+    document.title = `${cachedTalk.title} — LLVM Research Library`;
+    updateTalkSeoMetadata(cachedTalk);
+    renderTalkDetail(cachedTalk, []);
+    setIssueContextForTalk(cachedTalk);
+    initShareMenu();
+    return;
+  }
+
   const allTalks = await loadTalks();
 
   if (!allTalks) {
@@ -682,16 +728,6 @@ async function init() {
           <p>Ensure <code>devmtg/events/index.json</code> and <code>devmtg/events/*.json</code> are available and that <code>js/events-data.js</code> loads first.</p>
         </div>
       </div>`;
-    initShareMenu();
-    return;
-  }
-
-  if (!talkId) {
-    renderNotFound(null);
-    setIssueContext({
-      itemTitle: 'Missing talk ID',
-      issueTitle: '[Talk] Missing talk ID',
-    });
     initShareMenu();
     return;
   }

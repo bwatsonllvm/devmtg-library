@@ -77,7 +77,7 @@
   }
 
   async function fetchJson(path) {
-    const resp = await fetch(path, { cache: 'no-store' });
+    const resp = await fetch(path, { cache: 'default' });
     if (!resp.ok) {
       throw new Error(`${path}: HTTP ${resp.status}`);
     }
@@ -89,7 +89,7 @@
   }
 
   async function fetchJsonWithMeta(path) {
-    const resp = await fetch(path, { cache: 'no-store' });
+    const resp = await fetch(path, { cache: 'default' });
     if (!resp.ok) {
       throw new Error(`${path}: HTTP ${resp.status}`);
     }

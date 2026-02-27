@@ -10,6 +10,9 @@ const PageShell = typeof HubUtils.createPageShell === 'function'
 const copyTextToClipboard = PageShell
   ? (text) => PageShell.copyTextToClipboard(text)
   : async () => false;
+const safeSessionGet = PageShell
+  ? (key) => PageShell.safeSessionGet(key)
+  : () => null;
 const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
 const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
 const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
@@ -24,6 +27,8 @@ const BLOG_SOURCE_SLUG_ALIASES = new Set([
 const PAPERS_PAGE_PATH = 'papers/';
 const BLOGS_PAGE_PATH = 'blogs/';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
+const PAPER_NAV_CACHE_KEY = 'llvm-hub-nav-paper-record';
+const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
 const PAPER_TO_TALK_REDIRECTS = {
   'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
 };
@@ -215,6 +220,29 @@ async function loadPapers() {
   try {
     const { papers } = await window.loadPaperData();
     return normalizePapers(papers);
+  } catch {
+    return null;
+  }
+}
+
+function readCachedPaperRecord(paperId) {
+  const id = String(paperId || '').trim();
+  if (!id) return null;
+
+  const raw = safeSessionGet(PAPER_NAV_CACHE_KEY);
+  if (!raw) return null;
+  try {
+    const payload = JSON.parse(raw);
+    const payloadId = String(payload && payload.id || '').trim();
+    if (payloadId !== id) return null;
+    const savedAt = Number(payload && payload.savedAt);
+    if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
+      return null;
+    }
+    const paper = normalizePaperRecord(payload && payload.paper);
+    if (!paper) return null;
+    if (String(paper.id || '').trim() !== id) return null;
+    return paper;
   } catch {
     return null;
   }
@@ -1574,21 +1602,6 @@ async function init() {
     itemType: fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper',
     itemId: String(paperId || '').trim(),
   });
-  const allPapers = await loadPapers();
-
-  if (!allPapers) {
-    const root = document.getElementById('paper-detail-root');
-    root.innerHTML = `
-      <div class="talk-detail">
-        <div class="empty-state" role="alert">
-          <div class="empty-state-icon" aria-hidden="true">!</div>
-          <h2>Could not load data</h2>
-          <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available and that <code>js/papers-data.js</code> loads first.</p>
-        </div>
-      </div>`;
-    initShareMenu();
-    return;
-  }
 
   if (!paperId) {
     renderNotFound(null, fallbackListingPath);
@@ -1604,6 +1617,33 @@ async function init() {
   const migratedTalkId = PAPER_TO_TALK_REDIRECTS[String(paperId || '').trim()];
   if (migratedTalkId) {
     window.location.replace(`../talks/talk.html?id=${encodeURIComponent(migratedTalkId)}`);
+    return;
+  }
+
+  const cachedPaper = readCachedPaperRecord(paperId);
+  if (cachedPaper) {
+    document.title = `${cachedPaper.title} — LLVM Research Library`;
+    updatePaperSeoMetadata(cachedPaper);
+    syncHeaderNavForPaper(cachedPaper);
+    renderPaperDetail(cachedPaper, [cachedPaper]);
+    setIssueContextForPaper(cachedPaper);
+    initShareMenu();
+    return;
+  }
+
+  const allPapers = await loadPapers();
+
+  if (!allPapers) {
+    const root = document.getElementById('paper-detail-root');
+    root.innerHTML = `
+      <div class="talk-detail">
+        <div class="empty-state" role="alert">
+          <div class="empty-state-icon" aria-hidden="true">!</div>
+          <h2>Could not load data</h2>
+          <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available and that <code>js/papers-data.js</code> loads first.</p>
+        </div>
+      </div>`;
+    initShareMenu();
     return;
   }
 

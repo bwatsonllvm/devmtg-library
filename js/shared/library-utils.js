@@ -4509,28 +4509,38 @@
       return [...talks].sort((a, b) => String(b.meeting || '').localeCompare(String(a.meeting || '')));
     }
 
-    const talkTrendIndex = resolveTopicTrendIndex(talks, 'talk');
-    const talkTrendProfile = buildQueryTopicTrendProfile(model, talkTrendIndex);
-    const talkTrendScale = model.advancedResearchIntent
-      ? 2.3
-      : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.8 : 2.0);
-    const talkComboTrendIndex = resolveComboTrendIndex(talks, 'talk');
-    const talkComboProfile = buildQueryComboProfile(model, talkComboTrendIndex, 'talk');
-    const talkRarityFieldConfig = [
-      { key: 'title', weight: 1.42, fuzzy: true },
-      { key: 'tags', weight: 1.28, fuzzy: true },
-      { key: 'abstract', weight: 0.96, fuzzy: false },
-      { key: 'speakers', weight: 0.72, fuzzy: true },
-      { key: 'meeting', weight: 0.58, fuzzy: true },
-      { key: 'category', weight: 0.48, fuzzy: false },
-    ];
-    const talkRarityProfile = buildClauseRarityProfile(
-      model && model.clauses,
-      talks,
-      buildTalkSearchDoc,
-      talkRarityFieldConfig,
-      { matchThreshold: 0.94 }
-    );
+    // Guard expensive corpus-wide context signals on large collections to keep UI responsive.
+    const useAdvancedCorpusSignals = talks.length <= 320;
+    const talkTrendIndex = useAdvancedCorpusSignals ? resolveTopicTrendIndex(talks, 'talk') : null;
+    const talkTrendProfile = useAdvancedCorpusSignals ? buildQueryTopicTrendProfile(model, talkTrendIndex) : null;
+    const talkTrendScale = useAdvancedCorpusSignals
+      ? (
+        model.advancedResearchIntent
+          ? 2.3
+          : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.8 : 2.0)
+      )
+      : 0;
+    const talkComboTrendIndex = useAdvancedCorpusSignals ? resolveComboTrendIndex(talks, 'talk') : null;
+    const talkComboProfile = useAdvancedCorpusSignals ? buildQueryComboProfile(model, talkComboTrendIndex, 'talk') : null;
+    const talkRarityFieldConfig = useAdvancedCorpusSignals
+      ? [
+        { key: 'title', weight: 1.42, fuzzy: true },
+        { key: 'tags', weight: 1.28, fuzzy: true },
+        { key: 'abstract', weight: 0.96, fuzzy: false },
+        { key: 'speakers', weight: 0.72, fuzzy: true },
+        { key: 'meeting', weight: 0.58, fuzzy: true },
+        { key: 'category', weight: 0.48, fuzzy: false },
+      ]
+      : [];
+    const talkRarityProfile = useAdvancedCorpusSignals
+      ? buildClauseRarityProfile(
+        model && model.clauses,
+        talks,
+        buildTalkSearchDoc,
+        talkRarityFieldConfig,
+        { matchThreshold: 0.94 }
+      )
+      : null;
 
     let scored = [];
     for (const talk of talks) {
@@ -4858,30 +4868,40 @@
       });
     }
 
-    const paperTrendIndex = resolveTopicTrendIndex(records, 'paper');
-    const paperTrendProfile = buildQueryTopicTrendProfile(model, paperTrendIndex);
-    const paperTrendScale = model.advancedResearchIntent
-      ? 2.55
-      : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.9 : 2.2);
-    const paperComboTrendIndex = resolveComboTrendIndex(records, 'paper');
-    const paperComboProfile = buildQueryComboProfile(model, paperComboTrendIndex, 'paper');
-    const paperRarityFieldConfig = [
-      { key: 'title', weight: 1.5, fuzzy: true },
-      { key: 'topics', weight: 1.36, fuzzy: true },
-      { key: 'abstract', weight: 1.02, fuzzy: false },
-      { key: 'content', weight: 0.9, fuzzy: false },
-      { key: 'publication', weight: 0.72, fuzzy: true },
-      { key: 'venue', weight: 0.66, fuzzy: true },
-      { key: 'authors', weight: 0.62, fuzzy: true },
-      { key: 'type', weight: 0.54, fuzzy: true },
-    ];
-    const paperRarityProfile = buildClauseRarityProfile(
-      model && model.clauses,
-      records,
-      buildPaperSearchDoc,
-      paperRarityFieldConfig,
-      { matchThreshold: 0.92 }
-    );
+    // Guard expensive corpus-wide context signals on large collections to keep UI responsive.
+    const useAdvancedCorpusSignals = records.length <= 320;
+    const paperTrendIndex = useAdvancedCorpusSignals ? resolveTopicTrendIndex(records, 'paper') : null;
+    const paperTrendProfile = useAdvancedCorpusSignals ? buildQueryTopicTrendProfile(model, paperTrendIndex) : null;
+    const paperTrendScale = useAdvancedCorpusSignals
+      ? (
+        model.advancedResearchIntent
+          ? 2.55
+          : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.9 : 2.2)
+      )
+      : 0;
+    const paperComboTrendIndex = useAdvancedCorpusSignals ? resolveComboTrendIndex(records, 'paper') : null;
+    const paperComboProfile = useAdvancedCorpusSignals ? buildQueryComboProfile(model, paperComboTrendIndex, 'paper') : null;
+    const paperRarityFieldConfig = useAdvancedCorpusSignals
+      ? [
+        { key: 'title', weight: 1.5, fuzzy: true },
+        { key: 'topics', weight: 1.36, fuzzy: true },
+        { key: 'abstract', weight: 1.02, fuzzy: false },
+        { key: 'content', weight: 0.9, fuzzy: false },
+        { key: 'publication', weight: 0.72, fuzzy: true },
+        { key: 'venue', weight: 0.66, fuzzy: true },
+        { key: 'authors', weight: 0.62, fuzzy: true },
+        { key: 'type', weight: 0.54, fuzzy: true },
+      ]
+      : [];
+    const paperRarityProfile = useAdvancedCorpusSignals
+      ? buildClauseRarityProfile(
+        model && model.clauses,
+        records,
+        buildPaperSearchDoc,
+        paperRarityFieldConfig,
+        { matchThreshold: 0.92 }
+      )
+      : null;
 
     let scored = [];
     for (const paper of records) {

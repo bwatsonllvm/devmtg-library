@@ -80,6 +80,7 @@ const BLOGS_PAGE_PATH = 'blogs/';
 const PAPERS_PAGE_PATH = 'papers/';
 const UPDATES_LOG_PATH = 'updates/index.json';
 const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations', 'date-added']);
+const PAPER_NAV_CACHE_KEY = 'llvm-hub-nav-paper-record';
 const PAGE_SCOPE = (() => {
   const raw = normalizeFilterValue(document.body && document.body.dataset ? document.body.dataset.contentScope : '');
   return raw === BLOG_FILTER_VALUE ? BLOG_FILTER_VALUE : PAPER_FILTER_VALUE;
@@ -763,6 +764,29 @@ function samePersonName(a, b) {
     return HubUtils.arePersonMiddleVariants(a, b);
   }
   return false;
+}
+
+function resolvePaperIdFromHref(href) {
+  const raw = String(href || '').trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw, window.location.href);
+    return String(parsed.searchParams.get('id') || '').trim();
+  } catch {
+    return '';
+  }
+}
+
+function cachePaperNavigationRecordById(paperId) {
+  const id = String(paperId || '').trim();
+  if (!id) return;
+  const paper = allPapers.find((entry) => String((entry && entry.id) || '').trim() === id);
+  if (!paper) return;
+  safeSessionSet(PAPER_NAV_CACHE_KEY, JSON.stringify({
+    id,
+    savedAt: Date.now(),
+    paper,
+  }));
 }
 
 function normalizeTopicKey(value) {
@@ -3361,6 +3385,12 @@ function initCardFilterInteractions() {
       event.preventDefault();
       event.stopPropagation();
       filterByTag(tagButton.getAttribute('data-tag-filter'));
+      return;
+    }
+
+    const cardLink = event.target.closest('a.card-link-wrap');
+    if (cardLink && grid.contains(cardLink) && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
+      cachePaperNavigationRecordById(resolvePaperIdFromHref(cardLink.getAttribute('href') || ''));
     }
   });
 }
