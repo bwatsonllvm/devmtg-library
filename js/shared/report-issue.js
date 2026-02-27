@@ -166,7 +166,7 @@
       '<line x1="12" y1="7" x2="12" y2="13"/>',
       '<line x1="12" y1="17" x2="12.01" y2="17"/>',
       '</svg>',
-      buildIssueButtonLabel(context),
+      `<span aria-hidden="true" class="report-issue-label">${buildIssueButtonLabel(context)}</span>`,
     ].join('');
     return issueButton;
   }
@@ -210,6 +210,35 @@
     }
 
     linksBar.appendChild(createIssueButton(context));
+  }
+
+  function ensureIssueButtonLabel(issueButton, label) {
+    if (!issueButton) return;
+    let inlineSpan = issueButton.querySelector('span.report-issue-label[aria-hidden="true"]');
+    if (!inlineSpan) {
+      const legacyInlineSpan = issueButton.querySelector('span[aria-hidden="true"]');
+      if (legacyInlineSpan) {
+        legacyInlineSpan.classList.add('report-issue-label');
+        inlineSpan = legacyInlineSpan;
+      } else {
+        const icon = issueButton.querySelector('svg');
+        for (const node of Array.from(issueButton.childNodes)) {
+          if (node === icon) continue;
+          node.remove();
+        }
+        inlineSpan = document.createElement('span');
+        inlineSpan.className = 'report-issue-label';
+        inlineSpan.setAttribute('aria-hidden', 'true');
+        if (icon && icon.parentNode === issueButton) {
+          icon.insertAdjacentElement('afterend', inlineSpan);
+        } else {
+          issueButton.appendChild(inlineSpan);
+        }
+      }
+    }
+    if (inlineSpan.textContent !== label) {
+      inlineSpan.textContent = label;
+    }
   }
 
   function buildIssueHref(contextInput) {
@@ -256,21 +285,14 @@
     const href = buildIssueHref(context);
     const label = buildIssueButtonLabel(context);
     for (const issueButton of buttons) {
-      issueButton.href = href;
-      issueButton.setAttribute('aria-label', `${label} (opens in new tab)`);
-      issueButton.setAttribute('target', '_blank');
-      issueButton.setAttribute('rel', 'noopener noreferrer');
-      const inlineSpan = issueButton.querySelector('span[aria-hidden="true"]');
-      if (inlineSpan) {
-        inlineSpan.textContent = label;
-        continue;
+      if (issueButton.href !== href) issueButton.href = href;
+      const ariaLabel = `${label} (opens in new tab)`;
+      if (issueButton.getAttribute('aria-label') !== ariaLabel) {
+        issueButton.setAttribute('aria-label', ariaLabel);
       }
-
-      const icon = issueButton.querySelector('svg');
-      for (const node of Array.from(issueButton.childNodes)) {
-        if (node !== icon) node.remove();
-      }
-      issueButton.appendChild(document.createTextNode(` ${label}`));
+      if (issueButton.getAttribute('target') !== '_blank') issueButton.setAttribute('target', '_blank');
+      if (issueButton.getAttribute('rel') !== 'noopener noreferrer') issueButton.setAttribute('rel', 'noopener noreferrer');
+      ensureIssueButtonLabel(issueButton, label);
     }
   }
 
