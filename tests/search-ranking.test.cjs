@@ -37,6 +37,43 @@ test('buildSearchQueryModel keeps fielded operators scoped to their target field
   assert.ok(Array.isArray(model.fieldClauses.venue) && model.fieldClauses.venue.length > 0);
 });
 
+test('buildSearchQueryModel detects beginner intent from phrase-style queries', () => {
+  const model = utils.buildSearchQueryModel('getting started with llvm');
+  assert.equal(model.beginnerIntent, true);
+});
+
+test('buildSearchQueryModel does not treat basic-block queries as beginner intent', () => {
+  const model = utils.buildSearchQueryModel('llvm basic block optimization');
+  assert.equal(model.beginnerIntent, false);
+});
+
+test('buildSearchQueryModel infers fundamentals and LLVM subproject context', () => {
+  const model = utils.buildSearchQueryModel('clang and mlir fundamentals guide');
+  assert.equal(model.fundamentalsIntent, true);
+  assert.equal(model.advancedResearchIntent, false);
+  assert.equal(model.contextProfile, 'fundamentals');
+  assert.equal(model.subprojectIntent, true);
+  assert.ok(Array.isArray(model.subprojectTopics) && model.subprojectTopics.includes('Clang'));
+  assert.ok(Array.isArray(model.subprojectTopics) && model.subprojectTopics.includes('MLIR'));
+});
+
+test('buildSearchQueryModel detects advanced research intent for deep technical queries', () => {
+  const model = utils.buildSearchQueryModel('advanced mlir polyhedral scheduling research evaluation');
+  assert.equal(model.advancedResearchIntent, true);
+  assert.equal(model.contextProfile, 'advanced-research');
+});
+
+test('buildSearchQueryModel treats introduction queries as beginner intent by default', () => {
+  const model = utils.buildSearchQueryModel('introduction to llvm');
+  assert.equal(model.beginnerIntent, true);
+});
+
+test('buildSearchQueryModel does not force beginner intent for advanced introduction queries', () => {
+  const model = utils.buildSearchQueryModel('introduction to llvm internals');
+  assert.equal(model.beginnerIntent, false);
+  assert.equal(model.advancedResearchIntent, true);
+});
+
 test('rankPaperRecordsByQuery prioritizes exact-title paper matches', () => {
   const papers = [
     {
@@ -216,6 +253,119 @@ test('rankPaperRecordsByQuery enforces author/publication/year advanced filters'
   assert.deepEqual(ranked.map((paper) => paper.id), ['paper-a']);
 });
 
+test('rankPaperRecordsByQuery prioritizes subproject-aligned fundamentals matches', () => {
+  const papers = [
+    {
+      id: 'clang-guide',
+      title: 'Clang AST fundamentals guide',
+      abstract: 'A practical fundamentals tutorial for understanding Clang frontend architecture.',
+      authors: [{ name: 'Alice Smith' }],
+      publication: 'LLVM Tutorial Notes',
+      year: 2024,
+      tags: ['clang', 'frontend'],
+    },
+    {
+      id: 'lldb-guide',
+      title: 'LLDB debugger fundamentals guide',
+      abstract: 'A practical fundamentals tutorial for understanding LLDB debugger workflows.',
+      authors: [{ name: 'Bob Johnson' }],
+      publication: 'LLVM Tutorial Notes',
+      year: 2024,
+      tags: ['lldb', 'debugger'],
+    },
+  ];
+
+  const ranked = utils.rankPaperRecordsByQuery(papers, 'clang fundamentals guide');
+  assert.ok(ranked.length > 0);
+  assert.equal(ranked[0].id, 'clang-guide');
+});
+
+test('rankPaperRecordsByQuery advanced research intent favors research-heavy records', () => {
+  const papers = [
+    {
+      id: 'research-heavy',
+      title: 'Polyhedral scheduling research for MLIR pipelines',
+      abstract: 'We present benchmark-driven experimental evaluation and quantitative analysis of scheduling quality.',
+      authors: [{ name: 'R. Expert' }],
+      publication: 'Proceedings of LLVM Developers Meeting',
+      year: 2024,
+      tags: ['mlir', 'polyhedral'],
+    },
+    {
+      id: 'tutorial-heavy',
+      title: 'MLIR basics and getting started guide',
+      abstract: 'Beginner tutorial for students learning the MLIR transform dialect.',
+      authors: [{ name: 'T. Mentor' }],
+      publication: 'LLVM Tutorial Notes',
+      year: 2024,
+      tags: ['mlir', 'tutorial'],
+    },
+  ];
+
+  const ranked = utils.rankPaperRecordsByQuery(papers, 'advanced mlir polyhedral research evaluation');
+  assert.ok(ranked.length > 0);
+  assert.equal(ranked[0].id, 'research-heavy');
+});
+
+test('rankPaperRecordsByQuery uses key-topic trends to prioritize query-adjacent subprojects', () => {
+  const papers = [
+    {
+      id: 'trend-match',
+      title: 'Z MLIR pipeline scheduling with CIRCT',
+      abstract: 'MLIR pipeline scheduling strategy for lowering hardware-centric IR.',
+      authors: [{ name: 'Alice Smith' }],
+      publication: 'LLVM Developers Meeting',
+      year: 2024,
+      citationCount: 18,
+      tags: ['mlir', 'circt'],
+    },
+    {
+      id: 'off-trend',
+      title: 'A MLIR pipeline scheduling with LLDB',
+      abstract: 'MLIR pipeline scheduling strategy for lowering with debugger notes.',
+      authors: [{ name: 'Bob Johnson' }],
+      publication: 'LLVM Developers Meeting',
+      year: 2024,
+      citationCount: 18,
+      tags: ['mlir', 'lldb'],
+    },
+    {
+      id: 'support-1',
+      title: 'CIRCT scheduling passes over MLIR',
+      abstract: 'CIRCT and MLIR integration notes.',
+      authors: [{ name: 'C. Author' }],
+      publication: 'LLVM Workshop',
+      year: 2023,
+      citationCount: 5,
+      tags: ['mlir', 'circt'],
+    },
+    {
+      id: 'support-2',
+      title: 'Hardware lowering in CIRCT using MLIR',
+      abstract: 'MLIR to CIRCT lowering patterns.',
+      authors: [{ name: 'D. Author' }],
+      publication: 'LLVM Workshop',
+      year: 2023,
+      citationCount: 5,
+      tags: ['mlir', 'circt'],
+    },
+    {
+      id: 'support-3',
+      title: 'CIRCT pipeline construction from MLIR',
+      abstract: 'Pipeline construction with MLIR and CIRCT.',
+      authors: [{ name: 'E. Author' }],
+      publication: 'LLVM Workshop',
+      year: 2023,
+      citationCount: 5,
+      tags: ['mlir', 'circt'],
+    },
+  ];
+
+  const ranked = utils.rankPaperRecordsByQuery(papers, 'mlir pipeline scheduling');
+  assert.ok(ranked.length >= 2);
+  assert.equal(ranked[0].id, 'trend-match');
+});
+
 test('rankTalksByQuery prioritizes exact-title talks', () => {
   const talks = [
     {
@@ -247,6 +397,68 @@ test('rankTalksByQuery prioritizes exact-title talks', () => {
   assert.equal(ranked[0].id, 'exact-talk');
 });
 
+test('rankTalksByQuery beginner intent favors true beginner talks over advanced intros', () => {
+  const talks = [
+    {
+      id: 'beginner-talk',
+      title: 'LLVM for Beginners',
+      abstract: 'A practical getting started tutorial for students and early-career developers.',
+      category: 'tutorial',
+      _speakerLower: 'alex instructor',
+      _tagsLower: 'llvm beginner tutorial getting started',
+      _meetingLower: 'llvm developers meeting 2024',
+      _year: '2024',
+      meeting: 'LLVM Developers Meeting 2024',
+    },
+    {
+      id: 'advanced-intro',
+      title: 'Introduction to Basic Block Scheduling Internals',
+      abstract: 'Advanced deep dive into scheduling internals and production optimization behavior.',
+      category: 'technical-talk',
+      _speakerLower: 'pat expert',
+      _tagsLower: 'llvm scheduling internals advanced',
+      _meetingLower: 'llvm developers meeting 2024',
+      _year: '2024',
+      meeting: 'LLVM Developers Meeting 2024',
+    },
+  ];
+
+  const ranked = utils.rankTalksByQuery(talks, 'llvm for beginners');
+  assert.ok(ranked.length > 0);
+  assert.equal(ranked[0].id, 'beginner-talk');
+});
+
+test('rankTalksByQuery maps introduction queries toward beginner-oriented talks', () => {
+  const talks = [
+    {
+      id: 'beginner-intro',
+      title: 'Introduction to LLVM for New Contributors',
+      abstract: 'A beginner-friendly introduction to core LLVM concepts for students and newcomers.',
+      category: 'tutorial',
+      _speakerLower: 'alex instructor',
+      _tagsLower: 'llvm beginner introduction tutorial newcomer',
+      _meetingLower: 'llvm developers meeting 2024',
+      _year: '2024',
+      meeting: 'LLVM Developers Meeting 2024',
+    },
+    {
+      id: 'advanced-intro',
+      title: 'Introduction to LLVM Internals',
+      abstract: 'Advanced deep dive into internals and production compiler architecture.',
+      category: 'technical-talk',
+      _speakerLower: 'pat expert',
+      _tagsLower: 'llvm introduction internals advanced',
+      _meetingLower: 'llvm developers meeting 2024',
+      _year: '2024',
+      meeting: 'LLVM Developers Meeting 2024',
+    },
+  ];
+
+  const ranked = utils.rankTalksByQuery(talks, 'llvm introduction');
+  assert.ok(ranked.length > 0);
+  assert.equal(ranked[0].id, 'beginner-intro');
+});
+
 test('buildSearchSnippet centers snippet on matched query text', () => {
   const source =
     'This repository includes many resources. The section on MLIR tensor cores includes practical examples of code generation, scheduling, and optimization details that matter in production systems.';
@@ -254,6 +466,53 @@ test('buildSearchSnippet centers snippet on matched query text', () => {
 
   assert.ok(snippet.length <= 113); // Includes optional leading/trailing ellipsis.
   assert.match(snippet.toLowerCase(), /mlir|tensor|cores/);
+});
+
+test('highlightSearchText keeps contiguous phrases in one highlight block', () => {
+  const text = 'Chris Lattner presented an MLIR Transform Dialect update.';
+  const highlighted = utils.highlightSearchText(text, 'Chris Lattner');
+
+  assert.match(highlighted, /<mark>Chris Lattner<\/mark>/);
+  assert.doesNotMatch(highlighted, /<mark>Chris<\/mark>\s+<mark>Lattner<\/mark>/);
+});
+
+test('highlightSearchText keeps disjoint query terms as separate highlights', () => {
+  const text = 'Chris and the rest of the team included Lattner in the credits.';
+  const highlighted = utils.highlightSearchText(text, 'Chris Lattner');
+
+  assert.match(highlighted, /<mark>Chris<\/mark>/);
+  assert.match(highlighted, /<mark>Lattner<\/mark>/);
+  assert.doesNotMatch(highlighted, /<mark>Chris and the rest of the team included Lattner<\/mark>/);
+});
+
+test('rankPaperRecordsByQuery favors tighter context over scattered matches', () => {
+  const papers = [
+    {
+      id: 'tight-context',
+      title: 'Transform dialect implementation notes',
+      abstract: 'We present an MLIR pass pipeline scheduling strategy for transform dialect workflows.',
+      authors: [{ name: 'Alice Smith' }],
+      publication: 'Compiler Research',
+      year: 2024,
+      citationCount: 24,
+      tags: ['mlir'],
+    },
+    {
+      id: 'scattered',
+      title: 'Compiler internals overview',
+      abstract: 'This work discusses MLIR adoption and pass manager architecture.',
+      content: 'Pipeline tradeoffs are described in a later appendix focused on deployment. Scheduling appears in troubleshooting notes.',
+      authors: [{ name: 'Bob Johnson' }],
+      publication: 'Compiler Research',
+      year: 2024,
+      citationCount: 24,
+      tags: ['mlir'],
+    },
+  ];
+
+  const ranked = utils.rankPaperRecordsByQuery(papers, 'mlir pass pipeline scheduling');
+  assert.ok(ranked.length >= 2);
+  assert.equal(ranked[0].id, 'tight-context');
 });
 
 test('parseUrlState tolerates malformed URL encoding', () => {
