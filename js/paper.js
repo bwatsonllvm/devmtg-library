@@ -1,1583 +1,445 @@
 /**
- * paper.js — Paper detail page logic for LLVM Research Library
+ * paper.js - minimal paper/blog detail runtime.
  */
 
-const HubUtils = window.LLVMHubUtils || {};
-const PageShell = typeof HubUtils.createPageShell === 'function'
-  ? HubUtils.createPageShell()
-  : null;
+(function () {
+  const HubUtils = window.LLVMHubUtils || {};
+  const PageShell = typeof HubUtils.createPageShell === 'function'
+    ? HubUtils.createPageShell()
+    : null;
 
-const copyTextToClipboard = PageShell
-  ? (text) => PageShell.copyTextToClipboard(text)
-  : async () => false;
-const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
-const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
-const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
-const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
-const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
+  const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
+  const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
+  const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
+  const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
+  const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
 
-const BLOG_SOURCE_SLUG = 'llvm-blog-www';
-const BLOG_SOURCE_SLUG_ALIASES = new Set([
-  BLOG_SOURCE_SLUG,
-  'llvm-www-blog',
-]);
-const PAPERS_PAGE_PATH = 'papers/';
-const BLOGS_PAGE_PATH = 'blogs/';
-const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
-const PAPER_TO_TALK_REDIRECTS = {
-  'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
-};
+  const BLOGS_PAGE_PATH = 'blogs/';
+  const PAPERS_PAGE_PATH = 'papers/';
+  const BLOG_SOURCE_SLUGS = new Set(['llvm-blog-www', 'llvm-www-blog']);
+  const PAPER_TO_TALK_REDIRECTS = Object.freeze({});
 
-// ============================================================
-// Data Loading
-// ============================================================
-
-function cleanMetadataValue(value) {
-  const cleaned = String(value || '').replace(/\s+/g, ' ').trim();
-  if (!cleaned) return '';
-  const lowered = cleaned.toLowerCase();
-  if (['none', 'null', 'nan', 'n/a'].includes(lowered)) return '';
-  return cleaned;
-}
-
-function normalizePublicationLabel(value) {
-  const cleaned = cleanMetadataValue(value);
-  if (!cleaned) return '';
-  if (/^arxiv(?:\.org)?(?:\s*\(cornell university\))?$/i.test(cleaned)) {
-    return 'arXiv';
-  }
-  return cleaned;
-}
-
-function isDirectPdfUrl(url) {
-  return DIRECT_PDF_URL_RE.test(String(url || '').trim());
-}
-
-function normalizePublicationAndVenue(publication, venue) {
-  let normalizedPublication = normalizePublicationLabel(publication);
-  const rawVenueParts = String(venue || '')
-    .split('|')
-    .map((part) => normalizePublicationLabel(part))
-    .filter(Boolean);
-
-  let volume = '';
-  let issue = '';
-  const extras = [];
-
-  for (const part of rawVenueParts) {
-    const volumeMatch = part.match(/^Vol\.\s*(.+?)(?:\s*\(Issue\s*(.+?)\))?$/i);
-    if (volumeMatch) {
-      volume = cleanMetadataValue(volumeMatch[1] || '');
-      issue = cleanMetadataValue(volumeMatch[2] || '');
-      continue;
-    }
-
-    const issueMatch = part.match(/^Issue\s+(.+)$/i);
-    if (issueMatch) {
-      issue = cleanMetadataValue(issueMatch[1] || '');
-      continue;
-    }
-
-    extras.push(part);
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
-  if (!normalizedPublication && extras.length > 0) {
-    const first = extras[0];
-    if (!/^Vol\./i.test(first) && !/^Issue\b/i.test(first)) {
-      normalizedPublication = first;
-    }
-  }
-
-  const normalizedVenueParts = [];
-  if (normalizedPublication) normalizedVenueParts.push(normalizedPublication);
-  for (const part of extras) {
-    if (normalizedPublication && part.toLowerCase() === normalizedPublication.toLowerCase()) continue;
-    if (!normalizedVenueParts.some((existing) => existing.toLowerCase() === part.toLowerCase())) {
-      normalizedVenueParts.push(part);
-    }
-  }
-
-  if (volume) {
-    normalizedVenueParts.push(`Vol. ${volume}${issue ? ` (Issue ${issue})` : ''}`);
-  } else if (issue) {
-    normalizedVenueParts.push(`Issue ${issue}`);
-  }
-
-  return {
-    publication: normalizedPublication,
-    venue: normalizedVenueParts.join(' | '),
-  };
-}
-
-function normalizeIsoDate(value) {
-  const raw = String(value || '').trim();
-  if (!raw) return '';
-  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|[T\s])/);
-  if (!match) return '';
-  const year = Number.parseInt(match[1], 10);
-  const month = Number.parseInt(match[2], 10);
-  const day = Number.parseInt(match[3], 10);
-  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
-  if (month < 1 || month > 12 || day < 1 || day > 31) return '';
-  return `${match[1]}-${match[2]}-${match[3]}`;
-}
-
-function formatIsoDateLabel(value) {
-  const iso = normalizeIsoDate(value);
-  if (!iso) return '';
-  const [year, month, day] = iso.split('-').map((piece) => Number.parseInt(piece, 10));
-  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
-  const stamp = new Date(Date.UTC(year, month - 1, day));
-  return new Intl.DateTimeFormat(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  }).format(stamp);
-}
-
-function normalizePaperRecord(rawPaper) {
-  if (!rawPaper || typeof rawPaper !== 'object') return null;
-
-  const paper = { ...rawPaper };
-  paper.id = String(paper.id || '').trim();
-  paper.title = String(paper.title || '').trim();
-  paper.abstract = String(paper.abstract || '').trim();
-  paper.year = String(paper.year || '').trim();
-  paper.publishedDate = normalizeIsoDate(
-    paper.publishedDate || paper.publishDate || paper.date || rawPaper.publishedDate || rawPaper.publishDate || rawPaper.date
-  );
-  const metadata = normalizePublicationAndVenue(paper.publication, paper.venue);
-  paper.publication = metadata.publication;
-  paper.venue = metadata.venue;
-  paper.source = String(paper.source || '').trim();
-  paper.type = String(paper.type || '').trim();
-  paper.paperUrl = sanitizeExternalUrl(paper.paperUrl || '');
-  paper.sourceUrl = sanitizeExternalUrl(paper.sourceUrl || '');
-  paper.contentFormat = String(paper.contentFormat || paper.bodyFormat || '').trim().toLowerCase();
-  paper.content = String(paper.content || paper.body || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
-  paper.citationCount = parseCitationCount(rawPaper);
-  paper.openalexId = normalizeOpenAlexId(
-    paper.openalexId ||
-    paper.openAlexId ||
-    rawPaper.openalexId ||
-    rawPaper.openAlexId
-  );
-  paper.doi = extractDoi(rawPaper.doi) || extractDoi(paper.paperUrl) || extractDoi(paper.sourceUrl);
-
-  paper.authors = Array.isArray(paper.authors)
-    ? paper.authors
-      .map((author) => {
-        if (typeof HubUtils.normalizePersonRecord === 'function') {
-          const normalized = HubUtils.normalizePersonRecord(author);
-          if (!normalized || !normalized.name) return null;
-          const affiliation = author && typeof author === 'object'
-            ? String(author.affiliation || '').trim()
-            : '';
-          return { name: normalized.name, affiliation };
-        }
-        if (!author || typeof author !== 'object') return null;
-        const name = String(author.name || '').trim();
-        const affiliation = String(author.affiliation || '').trim();
-        if (!name) return null;
-        return { name, affiliation };
-      })
-      .filter(Boolean)
-    : [];
-
-  paper.tags = Array.isArray(paper.tags)
-    ? paper.tags.map((tag) => String(tag || '').trim()).filter(Boolean)
-    : [];
-  paper.keywords = Array.isArray(paper.keywords)
-    ? paper.keywords.map((keyword) => String(keyword || '').trim()).filter(Boolean)
-    : [];
-  if (!paper.keywords.length && paper.tags.length) {
-    paper.keywords = [...paper.tags];
-  }
-
-  if (!paper.id || !paper.title) return null;
-  paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
-  paper._publishedDate = paper.publishedDate;
-  paper._publishedDateLabel = formatIsoDateLabel(paper._publishedDate);
-  const normalizedType = paper.type.toLowerCase();
-  const normalizedSource = paper.source.toLowerCase();
-  paper._isBlog = BLOG_SOURCE_SLUG_ALIASES.has(normalizedSource) || normalizedType === 'blog-post' || normalizedType === 'blog';
-  return paper;
-}
-
-function normalizePapers(rawPapers) {
-  if (!Array.isArray(rawPapers)) return null;
-  return rawPapers.map(normalizePaperRecord).filter(Boolean);
-}
-
-async function loadPapers() {
-  if (typeof window.loadPaperData !== 'function') return null;
-  try {
-    const { papers } = await window.loadPaperData();
-    return normalizePapers(papers);
-  } catch {
-    return null;
-  }
-}
-
-// ============================================================
-// Helpers
-// ============================================================
-
-function escapeHtml(str) {
-  if (!str) return '';
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function sanitizeExternalUrl(value) {
-  const raw = String(value || '').trim();
-  if (!raw) return '';
-  try {
-    const parsed = new URL(raw, window.location.href);
-    const protocol = parsed.protocol.toLowerCase();
-    if (protocol === 'http:' || protocol === 'https:') {
-      return parsed.toString();
-    }
-  } catch {
-    return '';
-  }
-  return '';
-}
-
-function setIssueContext(context) {
-  if (typeof window.setLibraryIssueContext !== 'function') return;
-  if (!context || typeof context !== 'object') return;
-  window.setLibraryIssueContext(context);
-}
-
-function setIssueContextForPaper(paper) {
-  if (!paper || typeof paper !== 'object') return;
-  const itemType = isBlogPaper(paper) ? 'Blog' : 'Paper';
-  setIssueContext({
-    pageType: 'Paper',
-    itemType,
-    itemId: String(paper.id || '').trim(),
-    itemTitle: String(paper.title || '').trim(),
-    pageTitle: `${String(paper.title || '').trim()} — LLVM Research Library`,
-    year: String(paper._year || '').trim(),
-    paperUrl: String(paper.paperUrl || '').trim(),
-    sourceUrl: String(paper.sourceUrl || '').trim(),
-    doi: String(paper.doi || '').trim(),
-    openalexId: String(paper.openalexId || '').trim(),
-  });
-}
-
-function normalizePaperType(type) {
-  const raw = String(type || '').trim().toLowerCase();
-  if (!raw) return 'Paper';
-  if (raw === 'thesis') return 'Thesis';
-  if (raw === 'presentation-paper') return 'Presentation Paper';
-  if (raw === 'research-paper') return 'Research Paper';
-  return raw
-    .split(/[^a-z0-9]+/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-}
-
-function isBlogPaper(paper) {
-  return !!(paper && paper._isBlog);
-}
-
-function getListingPathForPaper(paper) {
-  return isBlogPaper(paper) ? BLOGS_PAGE_PATH : PAPERS_PAGE_PATH;
-}
-
-function getListingLabelForPaper(paper) {
-  return isBlogPaper(paper) ? 'blogs' : 'papers';
-}
-
-function buildSpeakerWorkUrl(name, paper) {
-  const params = new URLSearchParams();
-  params.set('mode', 'entity');
-  params.set('kind', 'speaker');
-  params.set('value', String(name || '').trim());
-  params.set('from', isBlogPaper(paper) ? 'blogs' : 'papers');
-  return `work.html?${params.toString()}`;
-}
-
-function setHeaderNavActive(link, active) {
-  if (!link) return;
-  link.classList.toggle('active', !!active);
-  if (active) link.setAttribute('aria-current', 'page');
-  else link.removeAttribute('aria-current');
-}
-
-function syncHeaderNavForPaper(paper) {
-  const blogEntry = isBlogPaper(paper);
-  const desktopPapers = document.getElementById('paper-nav-link-papers');
-  const desktopBlogs = document.getElementById('paper-nav-link-blogs');
-  const mobilePapers = document.getElementById('paper-nav-mobile-papers');
-  const mobileBlogs = document.getElementById('paper-nav-mobile-blogs');
-
-  setHeaderNavActive(desktopPapers, !blogEntry);
-  setHeaderNavActive(desktopBlogs, blogEntry);
-  setHeaderNavActive(mobilePapers, !blogEntry);
-  setHeaderNavActive(mobileBlogs, blogEntry);
-}
-
-function fallbackListingPathFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const from = String(params.get('from') || '').trim().toLowerCase();
-  return from === 'blogs' ? BLOGS_PAGE_PATH : PAPERS_PAGE_PATH;
-}
-
-function parseCitationCount(rawPaper) {
-  if (!rawPaper || typeof rawPaper !== 'object') return 0;
-
-  const fields = [
-    rawPaper.citationCount,
-    rawPaper.citation_count,
-    rawPaper.citedByCount,
-    rawPaper.cited_by_count,
-    rawPaper.citations,
-  ];
-
-  for (const value of fields) {
-    if (value === null || value === undefined || value === '') continue;
-    const parsed = Number.parseInt(String(value), 10);
-    if (Number.isFinite(parsed) && parsed > 0) return parsed;
-  }
-
-  return 0;
-}
-
-function normalizeOpenAlexId(value) {
-  const raw = String(value || '').trim();
-  if (!raw) return '';
-  if (/^https?:\/\/openalex\.org\/W\d+$/i.test(raw)) return raw;
-  if (/^W\d+$/i.test(raw)) return `https://openalex.org/${raw.toUpperCase()}`;
-  return '';
-}
-
-function extractDoi(value) {
-  const raw = String(value || '').trim();
-  if (!raw) return '';
-
-  const doiUrlMatch = raw.match(/https?:\/\/(?:dx\.)?doi\.org\/(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)/i);
-  if (doiUrlMatch && doiUrlMatch[1]) return doiUrlMatch[1];
-
-  const bareMatch = raw.match(/\b10\.\d{4,9}\/[-._;()/:A-Z0-9]+\b/i);
-  if (bareMatch && bareMatch[0]) return bareMatch[0];
-
-  return '';
-}
-
-function doiUrlFromValue(doi) {
-  const normalized = String(doi || '').trim();
-  if (!normalized) return '';
-  return `https://doi.org/${normalized}`;
-}
-
-function truncateText(value, maxLength = 180) {
-  const text = String(value || '').replace(/\s+/g, ' ').trim();
-  if (!text) return '';
-  if (text.length <= maxLength) return text;
-  return `${text.slice(0, maxLength - 1)}…`;
-}
-
-function normalizeKeywordKey(value) {
-  return String(value || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '');
-}
-
-function getPaperKeyTopics(paper, limit = Infinity) {
-  if (typeof HubUtils.getPaperKeyTopics === 'function') {
-    return HubUtils.getPaperKeyTopics(paper, limit);
-  }
-
-  const out = [];
-  const seen = new Set();
-
-  const add = (value) => {
-    const label = String(value || '').trim();
-    const key = normalizeKeywordKey(label);
-    if (!label || !key || seen.has(key)) return;
-    seen.add(key);
-    out.push(label);
-  };
-
-  for (const tag of (paper.tags || [])) add(tag);
-  for (const keyword of (paper.keywords || [])) add(keyword);
-
-  return Number.isFinite(limit) ? out.slice(0, limit) : out;
-}
-
-function makeBibtexKey(paper) {
-  const firstAuthor = (paper.authors && paper.authors[0] && paper.authors[0].name)
-    ? paper.authors[0].name
-    : 'paper';
-  const authorSlug = String(firstAuthor).toLowerCase().replace(/[^a-z0-9]/g, '');
-  const year = paper._year || 'xxxx';
-  const titleSlug = String(paper.title || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 16);
-  const stem = authorSlug || titleSlug || 'paper';
-  return `${stem}${year}${titleSlug ? `-${titleSlug}` : ''}`;
-}
-
-function escapeBibtexValue(value) {
-  return String(value || '')
-    .replace(/\\/g, '\\\\')
-    .replace(/\{/g, '\\{')
-    .replace(/\}/g, '\\}');
-}
-
-function buildBibtexEntry(paper) {
-  const type = paper.type === 'thesis' ? 'phdthesis' : 'article';
-  const fields = [];
-
-  fields.push(`title = {${escapeBibtexValue(paper.title)}}`);
-
-  if (paper.authors && paper.authors.length) {
-    const authorValue = paper.authors.map((author) => author.name).filter(Boolean).join(' and ');
-    if (authorValue) fields.push(`author = {${escapeBibtexValue(authorValue)}}`);
-  }
-  if (paper._year) fields.push(`year = {${escapeBibtexValue(paper._year)}}`);
-  if (paper.publication) fields.push(`journal = {${escapeBibtexValue(paper.publication)}}`);
-  if (paper.venue && paper.venue !== paper.publication) fields.push(`booktitle = {${escapeBibtexValue(paper.venue)}}`);
-  if (paper.doi) fields.push(`doi = {${escapeBibtexValue(paper.doi)}}`);
-  if (paper.paperUrl) fields.push(`url = {${escapeBibtexValue(paper.paperUrl)}}`);
-
-  const key = makeBibtexKey(paper);
-  return `@${type}{${key},\n  ${fields.join(',\n  ')}\n}`;
-}
-
-function upsertMetaTag(attrName, attrValue, content) {
-  if (!content) return;
-  const existing = Array.from(document.head.querySelectorAll(`meta[${attrName}]`))
-    .find((meta) => meta.getAttribute(attrName) === attrValue);
-  const el = existing || document.createElement('meta');
-  if (!existing) {
-    el.setAttribute(attrName, attrValue);
-    document.head.appendChild(el);
-  }
-  el.setAttribute('content', content);
-}
-
-function upsertCanonical(url) {
-  if (!url) return;
-  let link = document.head.querySelector('link[rel="canonical"]');
-  if (!link) {
-    link = document.createElement('link');
-    link.setAttribute('rel', 'canonical');
-    document.head.appendChild(link);
-  }
-  link.setAttribute('href', url);
-}
-
-function upsertJsonLd(scriptId, payload) {
-  if (!payload) return;
-  let script = document.getElementById(scriptId);
-  if (!script) {
-    script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.id = scriptId;
-    document.head.appendChild(script);
-  }
-  script.textContent = JSON.stringify(payload);
-}
-
-function updatePaperSeoMetadata(paper) {
-  const canonical = new URL(window.location.href);
-  canonical.search = '';
-  canonical.hash = '';
-  canonical.searchParams.set('id', paper.id);
-  const canonicalUrl = canonical.toString();
-  const descriptionSource = paper.abstract || paper.content || `${paper.title}.`;
-  const description = truncateText(
-    String(descriptionSource || '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim(),
-    180
-  ) || truncateText(`${paper.title}.`, 180);
-  const schemaType = isBlogPaper(paper) ? 'BlogPosting' : 'ScholarlyArticle';
-  const publishedStamp = paper._publishedDate || (paper._year ? `${paper._year}-01-01` : '');
-
-  upsertCanonical(canonicalUrl);
-  upsertMetaTag('name', 'description', description);
-
-  upsertMetaTag('property', 'og:type', 'article');
-  upsertMetaTag('property', 'og:site_name', "LLVM Research Library");
-  upsertMetaTag('property', 'og:title', paper.title);
-  upsertMetaTag('property', 'og:description', description);
-  upsertMetaTag('property', 'og:url', canonicalUrl);
-  if (publishedStamp) upsertMetaTag('property', 'article:published_time', publishedStamp);
-
-  upsertMetaTag('name', 'twitter:card', 'summary');
-  upsertMetaTag('name', 'twitter:title', paper.title);
-  upsertMetaTag('name', 'twitter:description', description);
-
-  const authors = (paper.authors || [])
-    .map((author) => String(author.name || '').trim())
-    .filter(Boolean);
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': schemaType,
-    headline: paper.title,
-    name: paper.title,
-    description,
-    author: authors.map((name) => ({ '@type': 'Person', name })),
-    datePublished: publishedStamp || undefined,
-    isPartOf: paper.publication ? { '@type': 'PublicationIssue', name: paper.publication } : undefined,
-    keywords: getPaperKeyTopics(paper).join(', ') || undefined,
-    url: canonicalUrl,
-    sameAs: paper.openalexId || undefined,
-    identifier: paper.doi
-      ? { '@type': 'PropertyValue', propertyID: 'DOI', value: paper.doi }
-      : undefined,
-    mainEntityOfPage: canonicalUrl,
-  };
-  upsertJsonLd('paper-jsonld', jsonLd);
-}
-
-// ============================================================
-// Abstract + Author Rendering
-// ============================================================
-
-function resolveContentUrl(rawUrl, baseUrl, { allowData = false } = {}) {
-  const value = String(rawUrl || '').trim();
-  if (!value) return '';
-  if (value.startsWith('#')) return value;
-
-  const lower = value.toLowerCase();
-  if (lower.startsWith('javascript:') || lower.startsWith('vbscript:')) return '';
-  if (lower.startsWith('data:')) return allowData ? value : '';
-  if (lower.startsWith('//')) return `https:${value}`;
-
-  try {
-    if (/^[a-z][a-z0-9+.-]*:/i.test(value)) {
-      const parsed = new URL(value);
-      const scheme = parsed.protocol.toLowerCase();
-      if (scheme === 'http:' || scheme === 'https:' || scheme === 'mailto:' || scheme === 'tel:') {
-        return parsed.toString();
-      }
+  function sanitizeExternalUrl(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    try {
+      const parsed = new URL(raw, window.location.href);
+      const protocol = parsed.protocol.toLowerCase();
+      if (protocol === 'http:' || protocol === 'https:') return parsed.toString();
+    } catch {
       return '';
     }
-
-    const base = baseUrl ? new URL(baseUrl, window.location.href) : new URL(window.location.href);
-    return new URL(value, base).toString();
-  } catch {
     return '';
   }
-}
 
-function appendClassName(el, className) {
-  if (!el || !className) return;
-  const existing = String(el.getAttribute('class') || '').trim();
-  if (!existing) {
-    el.setAttribute('class', className);
-    return;
-  }
-  const classes = new Set(existing.split(/\s+/).filter(Boolean));
-  classes.add(className);
-  el.setAttribute('class', [...classes].join(' '));
-}
-
-function applyLegacyStyleSemantics(el, styleValue) {
-  const style = String(styleValue || '').toLowerCase();
-  if (!style) return;
-  const tag = String(el.tagName || '').toLowerCase();
-  const monospace = /(monospace|courier|menlo|monaco|consolas|sfmono|ui-monospace)/.test(style);
-  const preformatted = /white-space\s*:\s*(pre|pre-wrap|pre-line)/.test(style);
-  const blockCode = /display\s*:\s*block\b/.test(style);
-  const hasCodeSurface = /background(?:-color)?\s*:/.test(style);
-  const headingLike = /font-size\s*:\s*(?:x-large|xx-large|larger|[2-9]\d(?:\.\d+)?px|1\.[6-9]\d*em|[2-9](?:\.\d+)?em)/.test(style);
-  const centered = /text-align\s*:\s*center\b/.test(style) || /margin(?:-left|-right)?\s*:\s*[^;]*\bauto\b/.test(style);
-
-  if (monospace) appendClassName(el, 'blog-inline-mono');
-  if (preformatted) appendClassName(el, 'blog-preformatted');
-  if (blockCode && (tag === 'code' || tag === 'span' || tag === 'div')) appendClassName(el, 'blog-code-block-inline');
-  if (hasCodeSurface && (tag === 'code' || tag === 'pre' || monospace)) appendClassName(el, 'blog-code-surface');
-  if (headingLike && (tag === 'span' || tag === 'div' || tag === 'p' || tag === 'strong' || tag === 'b')) appendClassName(el, 'blog-heading-like');
-  if (centered && (tag === 'div' || tag === 'p' || tag === 'figure')) appendClassName(el, 'blog-centered');
-}
-
-function normalizeLegacyCodeMarkup(fragmentRoot) {
-  if (!fragmentRoot || typeof fragmentRoot.querySelectorAll !== 'function') return;
-
-  fragmentRoot.querySelectorAll('pre').forEach((pre) => appendClassName(pre, 'blog-code-block'));
-  fragmentRoot.querySelectorAll('pre > code').forEach((code) => appendClassName(code, 'blog-code'));
-
-  fragmentRoot.querySelectorAll('code').forEach((code) => {
-    if (code.closest('pre')) return;
-    const hasLineBreak = /\n/.test(code.textContent || '') || !!code.querySelector('br');
-    const wantsBlock = hasLineBreak
-      || code.classList.contains('blog-preformatted')
-      || code.classList.contains('blog-code-block-inline');
-    if (!wantsBlock) return;
-
-    const pre = document.createElement('pre');
-    appendClassName(pre, 'blog-code-block');
-    if (code.classList.contains('blog-code-surface')) appendClassName(pre, 'blog-code-surface');
-
-    const nextCode = code.cloneNode(true);
-    appendClassName(nextCode, 'blog-code');
-    pre.appendChild(nextCode);
-    code.replaceWith(pre);
-  });
-}
-
-function sanitizeHtmlFragment(rawHtml, baseUrl) {
-  const template = document.createElement('template');
-  template.innerHTML = String(rawHtml || '');
-
-  const blocked = 'script,style,iframe,object,embed,form,meta,link,base'.split(',');
-  template.content.querySelectorAll(blocked.join(',')).forEach((node) => node.remove());
-
-  const allElements = template.content.querySelectorAll('*');
-  allElements.forEach((el) => {
-    for (const attr of [...el.attributes]) {
-      const name = attr.name.toLowerCase();
-      const value = attr.value;
-
-      if (name.startsWith('on') || name === 'srcdoc') {
-        el.removeAttribute(attr.name);
-        continue;
-      }
-
-      if (name === 'style') {
-        applyLegacyStyleSemantics(el, value);
-        el.removeAttribute(attr.name);
-        continue;
-      }
-
-      if (name === 'href' || name === 'xlink:href') {
-        const safe = resolveContentUrl(value, baseUrl, { allowData: false });
-        if (!safe) {
-          el.removeAttribute(attr.name);
-        } else {
-          if (name !== 'href') el.removeAttribute(attr.name);
-          el.setAttribute('href', safe);
-          if (el.tagName.toLowerCase() === 'a') {
-            el.setAttribute('target', '_blank');
-            el.setAttribute('rel', 'noopener noreferrer');
-          }
-        }
-        continue;
-      }
-
-      if (name === 'src') {
-        const safe = resolveContentUrl(value, baseUrl, { allowData: true });
-        if (!safe) el.removeAttribute(attr.name);
-        else el.setAttribute('src', safe);
-        continue;
-      }
-
-      if (name === 'srcset') {
-        el.removeAttribute(attr.name);
-      }
-    }
-  });
-
-  normalizeLegacyCodeMarkup(template.content);
-  return template.innerHTML;
-}
-
-function preserveInlineHtmlPlaceholders(text) {
-  const placeholders = [];
-  const inlineTagRe = /<\/?(mark|kbd|samp|sub|sup|br|em|strong|tt|ins|del)\b[^>]*>/gi;
-  const sanitizeInlineTag = (rawTag) => {
-    const match = String(rawTag || '').match(/^<\s*(\/?)\s*([a-z0-9-]+)\b[^>]*>$/i);
+  function normalizeIsoDate(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if (!match) return '';
-    const isClosing = !!match[1];
-    const tag = String(match[2] || '').toLowerCase();
-    if (!tag) return '';
-
-    if (isClosing) {
-      if (tag === 'br') return '';
-      return `</${tag}>`;
-    }
-
-    if (tag === 'br') return '<br>';
-    return `<${tag}>`;
-  };
-
-  const tokenizedText = String(text || '').replace(inlineTagRe, (rawTag) => {
-    const sanitizedTag = sanitizeInlineTag(rawTag);
-    if (!sanitizedTag) return '';
-    const placeholder = `@@BLOGHTMLTAG${placeholders.length}@@`;
-    placeholders.push({ placeholder, html: sanitizedTag });
-    return placeholder;
-  });
-  return { tokenizedText, placeholders };
-}
-
-function restoreInlineHtmlPlaceholders(text, placeholders) {
-  let output = String(text || '');
-  for (const entry of placeholders || []) {
-    output = output.split(entry.placeholder).join(entry.html);
+    const year = Number.parseInt(match[1], 10);
+    const month = Number.parseInt(match[2], 10);
+    const day = Number.parseInt(match[3], 10);
+    if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
+    if (month < 1 || month > 12 || day < 1 || day > 31) return '';
+    return `${match[1]}-${match[2]}-${match[3]}`;
   }
-  return output;
-}
 
-function normalizeReferenceLabel(label) {
-  return String(label || '').trim().replace(/\s+/g, ' ').toLowerCase();
-}
+  function formatIsoDateLabel(value) {
+    const iso = normalizeIsoDate(value);
+    if (!iso) return '';
+    const [year, month, day] = iso.split('-').map((part) => Number.parseInt(part, 10));
+    if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
+    const stamp = new Date(Date.UTC(year, month - 1, day));
+    return new Intl.DateTimeFormat(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    }).format(stamp);
+  }
 
-function extractMarkdownReferenceDefinitions(lines, baseUrl) {
-  const contentLines = [];
-  const references = new Map();
-  let codeFenceMarker = '';
-
-  for (const rawLine of lines || []) {
-    const line = String(rawLine || '');
-    const trimmed = line.trim();
-    const fenceMatch = trimmed.match(/^(```|~~~)/);
-
-    if (fenceMatch) {
-      if (codeFenceMarker) {
-        if (fenceMatch[1] === codeFenceMarker) codeFenceMarker = '';
-      } else {
-        codeFenceMarker = fenceMatch[1];
+  function normalizePeople(authors) {
+    const values = Array.isArray(authors) ? authors : [];
+    return values.map((author) => {
+      if (typeof HubUtils.normalizePersonRecord === 'function') {
+        const normalized = HubUtils.normalizePersonRecord(author);
+        if (!normalized || !normalized.name) return null;
+        const affiliation = author && typeof author === 'object'
+          ? String(author.affiliation || '').trim()
+          : '';
+        return { name: normalized.name, affiliation };
       }
-      contentLines.push(line);
-      continue;
-    }
-
-    if (codeFenceMarker) {
-      contentLines.push(line);
-      continue;
-    }
-
-    const refMatch = line.match(/^\s{0,3}\[([^\]]+)\]:\s*(\S+)(?:\s+(?:"([^"]*)"|'([^']*)'|\(([^)]+)\)))?\s*$/);
-    if (!refMatch) {
-      contentLines.push(line);
-      continue;
-    }
-
-    const key = normalizeReferenceLabel(refMatch[1]);
-    if (!key) continue;
-
-    let rawUrl = String(refMatch[2] || '').trim();
-    if (rawUrl.startsWith('<') && rawUrl.endsWith('>')) {
-      rawUrl = rawUrl.slice(1, -1).trim();
-    }
-    const safeUrl = resolveContentUrl(rawUrl, baseUrl, { allowData: false });
-    if (!safeUrl) continue;
-
-    const title = String(refMatch[3] || refMatch[4] || refMatch[5] || '').trim();
-    references.set(key, { url: safeUrl, title });
+      if (!author || typeof author !== 'object') return null;
+      const name = String(author.name || '').trim();
+      if (!name) return null;
+      return {
+        name,
+        affiliation: String(author.affiliation || '').trim(),
+      };
+    }).filter(Boolean);
   }
 
-  return { contentLines, references };
-}
-
-function getMarkdownReferenceLink(referenceMap, label) {
-  if (!(referenceMap instanceof Map)) return null;
-  const key = normalizeReferenceLabel(label);
-  if (!key) return null;
-  return referenceMap.get(key) || null;
-}
-
-function parseShortcodeArgs(rawArgs) {
-  const text = String(rawArgs || '');
-  const tokens = [];
-  let token = '';
-  let quote = '';
-  let escaped = false;
-
-  const pushToken = () => {
-    const value = token.trim();
-    if (value) tokens.push(value);
-    token = '';
-  };
-
-  for (const ch of text) {
-    if (escaped) {
-      token += ch;
-      escaped = false;
-      continue;
-    }
-
-    if (quote) {
-      if (ch === '\\') {
-        escaped = true;
-        continue;
-      }
-      if (ch === quote) {
-        quote = '';
-        continue;
-      }
-      token += ch;
-      continue;
-    }
-
-    if (ch === '"' || ch === '\'') {
-      quote = ch;
-      continue;
-    }
-
-    if (/\s/.test(ch)) {
-      pushToken();
-      continue;
-    }
-
-    token += ch;
-  }
-  pushToken();
-
-  const named = new Map();
-  const positional = [];
-
-  for (const rawToken of tokens) {
-    const eqIdx = rawToken.indexOf('=');
-    if (eqIdx > 0) {
-      const key = rawToken.slice(0, eqIdx).trim().toLowerCase();
-      const value = rawToken.slice(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
-      if (key && value) named.set(key, value);
-      continue;
-    }
-    positional.push(rawToken);
+  function extractDoi(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    const match = raw.match(/10\.\d{4,9}\/[\w.()\-;/:%+]+/i);
+    return match ? String(match[0]).trim() : '';
   }
 
-  return { named, positional };
-}
-
-function shortcodeNamedOrPositional(parsedArgs, key, positionalIndex = 0) {
-  if (!parsedArgs || typeof parsedArgs !== 'object') return '';
-  const named = parsedArgs.named instanceof Map ? parsedArgs.named : new Map();
-  const positional = Array.isArray(parsedArgs.positional) ? parsedArgs.positional : [];
-
-  const namedValue = String(named.get(String(key || '').toLowerCase()) || '').trim();
-  if (namedValue) return namedValue;
-
-  return String(positional[positionalIndex] || '').trim();
-}
-
-function renderHugoShortcodeLink(rawUrl, label, baseUrl) {
-  const safeUrl = resolveContentUrl(rawUrl, baseUrl, { allowData: false });
-  if (!safeUrl) return '';
-  const linkLabel = String(label || '').trim() || 'Open linked content';
-  return `<p class="hugo-shortcode-link"><a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(linkLabel)}</a></p>`;
-}
-
-function renderHugoFigureShortcode(rawArgs, baseUrl) {
-  const parsed = parseShortcodeArgs(rawArgs);
-  const rawSrc = shortcodeNamedOrPositional(parsed, 'src', 0);
-  const safeSrc = resolveContentUrl(rawSrc, baseUrl, { allowData: true });
-  if (!safeSrc) return '';
-
-  const caption = shortcodeNamedOrPositional(parsed, 'caption', 1);
-  const title = shortcodeNamedOrPositional(parsed, 'title', 2);
-  const alt = shortcodeNamedOrPositional(parsed, 'alt', 3) || caption || title;
-  const rawLink = shortcodeNamedOrPositional(parsed, 'link', 4);
-  const safeLink = resolveContentUrl(rawLink, baseUrl, { allowData: false });
-  const attr = shortcodeNamedOrPositional(parsed, 'attr', 5);
-  const rawAttrLink = shortcodeNamedOrPositional(parsed, 'attrlink', 6);
-  const safeAttrLink = resolveContentUrl(rawAttrLink, baseUrl, { allowData: false });
-
-  const imgHtml = `<img src="${escapeHtml(safeSrc)}" alt="${escapeHtml(alt || '')}" loading="lazy">`;
-  const mediaHtml = safeLink
-    ? `<a href="${escapeHtml(safeLink)}" target="_blank" rel="noopener noreferrer">${imgHtml}</a>`
-    : imgHtml;
-
-  const captionParts = [];
-  if (title) captionParts.push(escapeHtml(title));
-  if (caption && (!title || caption !== title)) captionParts.push(escapeHtml(caption));
-  if (attr) {
-    const sourceLink = safeAttrLink
-      ? `<a href="${escapeHtml(safeAttrLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(attr)}</a>`
-      : escapeHtml(attr);
-    captionParts.push(`Source: ${sourceLink}`);
+  function normalizeOpenAlexId(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    if (/^https?:\/\//i.test(raw)) return sanitizeExternalUrl(raw);
+    const cleaned = raw.replace(/^https?:\/\/openalex\.org\//i, '').replace(/^works\//i, '').trim();
+    if (!/^W\d+$/i.test(cleaned)) return '';
+    return `https://openalex.org/${cleaned.toUpperCase()}`;
   }
 
-  return `<figure class="hugo-figure">${mediaHtml}${captionParts.length ? `<figcaption>${captionParts.join(' · ')}</figcaption>` : ''}</figure>`;
-}
+  function normalizePaperRecord(raw) {
+    if (!raw || typeof raw !== 'object') return null;
 
-function renderHugoHighlightShortcode(rawArgs, rawCodeBody) {
-  const parsed = parseShortcodeArgs(rawArgs);
-  const language = (
-    shortcodeNamedOrPositional(parsed, 'lang', 0)
-    || shortcodeNamedOrPositional(parsed, 'language', 0)
-  ).replace(/[^A-Za-z0-9_+-]/g, '').toLowerCase();
-  const codeBody = String(rawCodeBody || '').replace(/^\n+/, '').replace(/\n+$/, '');
-  return `\n\`\`\`${language}\n${codeBody}\n\`\`\`\n`;
-}
+    const paper = { ...raw };
+    paper.id = String(paper.id || '').trim();
+    paper.title = String(paper.title || '').trim();
+    paper.abstract = String(paper.abstract || '').trim();
+    paper.year = String(paper.year || '').trim();
+    paper.publishedDate = normalizeIsoDate(paper.publishedDate || paper.publishDate || paper.date);
+    paper.publication = String(paper.publication || '').trim();
+    paper.venue = String(paper.venue || '').trim();
+    paper.source = String(paper.source || '').trim();
+    paper.sourceName = String(paper.sourceName || '').trim();
+    paper.type = String(paper.type || '').trim();
+    paper.paperUrl = sanitizeExternalUrl(paper.paperUrl || '');
+    paper.sourceUrl = sanitizeExternalUrl(paper.sourceUrl || '');
+    paper.contentFormat = String(paper.contentFormat || paper.bodyFormat || '').trim().toLowerCase();
+    paper.content = String(paper.content || paper.body || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+    paper.citationCount = Number.isFinite(Number(paper.citationCount)) ? Number(paper.citationCount) : 0;
+    paper.authors = normalizePeople(paper.authors);
+    paper.tags = Array.isArray(paper.tags) ? paper.tags.map((v) => String(v || '').trim()).filter(Boolean) : [];
+    paper.keywords = Array.isArray(paper.keywords) ? paper.keywords.map((v) => String(v || '').trim()).filter(Boolean) : [];
+    if (!paper.keywords.length && paper.tags.length) paper.keywords = [...paper.tags];
 
-function preserveMarkdownCodeFencePlaceholders(markdownText) {
-  const lines = String(markdownText || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-  const placeholders = [];
-  const outputLines = [];
-  let codeFenceMarker = '';
-  let codeFenceLines = [];
+    const doiCandidate = extractDoi(paper.doi) || extractDoi(paper.paperUrl) || extractDoi(paper.sourceUrl);
+    paper.doi = doiCandidate;
+    paper.openalexId = normalizeOpenAlexId(paper.openalexId || paper.openAlexId || '');
 
-  const flushCodeFence = () => {
-    if (!codeFenceLines.length) return;
-    const placeholder = `@@BLOGCODEFENCE${placeholders.length}@@`;
-    placeholders.push({ placeholder, content: codeFenceLines.join('\n') });
-    outputLines.push(placeholder);
-    codeFenceLines = [];
-  };
+    if (!paper.id || !paper.title) return null;
 
-  for (const line of lines) {
-    const trimmed = String(line || '').trim();
-    const fenceMatch = trimmed.match(/^(```|~~~)\s*.*$/);
+    paper._year = /^\d{4}$/.test(paper.year) ? paper.year : '';
+    paper._publishedDate = paper.publishedDate;
+    paper._publishedDateLabel = formatIsoDateLabel(paper._publishedDate);
 
-    if (codeFenceMarker) {
-      codeFenceLines.push(line);
-      if (fenceMatch && fenceMatch[1] === codeFenceMarker) {
-        codeFenceMarker = '';
-        flushCodeFence();
-      }
-      continue;
-    }
+    const normalizedType = String(paper.type || '').trim().toLowerCase();
+    const normalizedSource = String(paper.source || '').trim().toLowerCase();
+    paper._isBlog = BLOG_SOURCE_SLUGS.has(normalizedSource) || normalizedType === 'blog-post' || normalizedType === 'blog';
 
-    if (fenceMatch) {
-      codeFenceMarker = fenceMatch[1];
-      codeFenceLines = [line];
-      continue;
-    }
-
-    outputLines.push(line);
+    return paper;
   }
 
-  // Keep unterminated fences untouched.
-  if (codeFenceLines.length) outputLines.push(...codeFenceLines);
-  return { tokenizedText: outputLines.join('\n'), placeholders };
-}
-
-function restoreMarkdownCodeFencePlaceholders(text, placeholders) {
-  let output = String(text || '');
-  for (const entry of placeholders || []) {
-    output = output.split(entry.placeholder).join(entry.content);
+  function normalizePapers(rawPapers) {
+    if (!Array.isArray(rawPapers)) return [];
+    return rawPapers.map(normalizePaperRecord).filter(Boolean);
   }
-  return output;
-}
 
-function transformHugoShortcodes(markdownText, baseUrl) {
-  let output = String(markdownText || '');
-  if (!output) return '';
-
-  const { tokenizedText, placeholders } = preserveMarkdownCodeFencePlaceholders(output);
-  output = tokenizedText;
-
-  output = output.replace(/<!--\s*more\s*-->/gi, '');
-
-  output = output.replace(
-    /\{\{[%<]\s*highlight\s*([\s\S]*?)\s*[>%]\}\}([\s\S]*?)\{\{[%<]\s*\/\s*highlight\s*[>%]\}\}/gi,
-    (_, rawArgs, codeBody) => renderHugoHighlightShortcode(rawArgs, codeBody),
-  );
-
-  output = output.replace(/\{\{[%<]\s*figure\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, rawArgs) => {
-    const html = renderHugoFigureShortcode(rawArgs, baseUrl);
-    return html ? `\n${html}\n` : '\n';
-  });
-
-  output = output.replace(/\{\{[%<]\s*(youtube|vimeo|tweet)\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, kind, rawArgs) => {
-    const parsed = parseShortcodeArgs(rawArgs);
-    const key = String(kind || '').toLowerCase();
-    const id = shortcodeNamedOrPositional(parsed, 'id', 0) || shortcodeNamedOrPositional(parsed, key, 0);
-    if (!id) return '';
-
-    if (key === 'youtube') {
-      return renderHugoShortcodeLink(`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`, 'Watch on YouTube', baseUrl);
+  function getPaperTopics(paper, limit = Infinity) {
+    if (typeof HubUtils.getPaperKeyTopics === 'function') {
+      return HubUtils.getPaperKeyTopics(paper, limit);
     }
-    if (key === 'vimeo') {
-      return renderHugoShortcodeLink(`https://vimeo.com/${encodeURIComponent(id)}`, 'Watch on Vimeo', baseUrl);
+    const values = [
+      ...(Array.isArray(paper && paper.tags) ? paper.tags : []),
+      ...(Array.isArray(paper && paper.keywords) ? paper.keywords : []),
+    ];
+    const deduped = [...new Set(values.map((value) => String(value || '').trim()).filter(Boolean))];
+    return Number.isFinite(limit) ? deduped.slice(0, Math.max(0, Math.floor(limit))) : deduped;
+  }
+
+  function isBlogPaper(paper) {
+    return !!(paper && paper._isBlog);
+  }
+
+  function getListingPathForPaper(paper) {
+    return isBlogPaper(paper) ? BLOGS_PAGE_PATH : PAPERS_PAGE_PATH;
+  }
+
+  function getListingLabelForPaper(paper) {
+    return isBlogPaper(paper) ? 'blogs' : 'papers';
+  }
+
+  function fallbackListingPathFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const from = String(params.get('from') || '').trim().toLowerCase();
+    if (from === 'blogs' || from === 'blog') return BLOGS_PAGE_PATH;
+    return PAPERS_PAGE_PATH;
+  }
+
+  function buildSpeakerWorkUrl(name, paper) {
+    const speaker = String(name || '').trim();
+    if (!speaker) return 'work.html';
+    const from = isBlogPaper(paper) ? 'blogs' : 'papers';
+    return `work.html?kind=speaker&value=${encodeURIComponent(speaker)}&from=${from}`;
+  }
+
+  function setIssueContext(context) {
+    if (typeof window.setLibraryIssueContext !== 'function') return;
+    if (!context || typeof context !== 'object') return;
+    window.setLibraryIssueContext(context);
+  }
+
+  function setIssueContextForPaper(paper) {
+    if (!paper || typeof paper !== 'object') return;
+    setIssueContext({
+      pageType: 'Paper',
+      itemType: isBlogPaper(paper) ? 'Blog' : 'Paper',
+      itemId: String(paper.id || '').trim(),
+      itemTitle: String(paper.title || '').trim(),
+      pageTitle: `${String(paper.title || '').trim()} — LLVM Research Library`,
+      year: String(paper._year || '').trim(),
+      paperUrl: String(paper.paperUrl || '').trim(),
+      sourceUrl: String(paper.sourceUrl || '').trim(),
+      doi: String(paper.doi || '').trim(),
+      openalexId: String(paper.openalexId || '').trim(),
+    });
+  }
+
+  function upsertMeta(attrName, attrValue, content) {
+    if (!content) return;
+    const selector = `meta[${attrName}="${attrValue}"]`;
+    let node = document.head.querySelector(selector);
+    if (!node) {
+      node = document.createElement('meta');
+      node.setAttribute(attrName, attrValue);
+      document.head.appendChild(node);
     }
-    return renderHugoShortcodeLink(`https://x.com/i/web/status/${encodeURIComponent(id)}`, 'Open Tweet', baseUrl);
-  });
+    node.setAttribute('content', String(content));
+  }
 
-  output = output.replace(/\{\{[%<]\s*gist\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, rawArgs) => {
-    const parsed = parseShortcodeArgs(rawArgs);
-    const first = shortcodeNamedOrPositional(parsed, 'id', 0) || shortcodeNamedOrPositional(parsed, 'gist', 0);
-    const second = shortcodeNamedOrPositional(parsed, 'file', 1) || shortcodeNamedOrPositional(parsed, 'name', 1);
-    let gistUrl = '';
+  function updateSeo(paper) {
+    if (!paper || typeof paper !== 'object') return;
+    const title = String(paper.title || '').trim();
+    if (!title) return;
+    const description = String(paper.abstract || '').replace(/\s+/g, ' ').trim().slice(0, 260);
+    upsertMeta('name', 'description', description || `${title} details`);
+    upsertMeta('property', 'og:type', 'article');
+    upsertMeta('property', 'og:title', `${title} — LLVM Research Library`);
+    upsertMeta('property', 'og:description', description || title);
+    upsertMeta('property', 'og:url', window.location.href);
+    upsertMeta('name', 'twitter:card', 'summary');
+    upsertMeta('name', 'twitter:title', `${title} — LLVM Research Library`);
+    upsertMeta('name', 'twitter:description', description || title);
+  }
 
-    if (/^https?:\/\//i.test(first)) {
-      gistUrl = first;
-    } else if (first && second) {
-      gistUrl = `https://gist.github.com/${first}/${second}`;
-    } else if (first) {
-      gistUrl = `https://gist.github.com/${first}`;
-    }
+  function doiUrlFromValue(doi) {
+    const normalized = extractDoi(doi);
+    return normalized ? `https://doi.org/${normalized}` : '';
+  }
 
-    return renderHugoShortcodeLink(gistUrl, 'Open Gist', baseUrl);
-  });
+  async function loadPaperDetailContextById(paperId) {
+    const targetId = String(paperId || '').trim();
+    if (!targetId) return { loaded: true, paper: null, relatedPool: [] };
 
-  output = output.replace(/\{\{[%<]\s*(?:relref|ref)\s+([\s\S]*?)\s*[>%]\}\}/gi, (_, rawArgs) => {
-    const parsed = parseShortcodeArgs(rawArgs);
-    const target = shortcodeNamedOrPositional(parsed, 'path', 0) || shortcodeNamedOrPositional(parsed, 'url', 0);
-    const safeTarget = resolveContentUrl(target, baseUrl, { allowData: false });
-    return safeTarget || '';
-  });
-
-  // Drop unknown standalone shortcodes that would otherwise show as raw markup.
-  output = output.replace(/^\s*\{\{[%<][\s\S]*?[>%]\}\}\s*$/gm, '');
-  output = output.replace(/\n{3,}/g, '\n\n').trim();
-  return restoreMarkdownCodeFencePlaceholders(output, placeholders);
-}
-
-function isLikelyHugoBlogSource(paper) {
-  if (!paper || typeof paper !== 'object') return false;
-
-  const source = String(paper.source || '').trim().toLowerCase();
-  if (BLOG_SOURCE_SLUG_ALIASES.has(source)) return true;
-
-  const sourceUrl = String(paper.sourceUrl || '').trim();
-  if (/^https?:\/\/(?:www\.)?blog\.llvm\.org\//i.test(sourceUrl)) return true;
-
-  const paperUrl = String(paper.paperUrl || '').trim();
-  return /github\.com\/llvm\/(?:llvm-blog-www|llvm-www-blog)\b/i.test(paperUrl);
-}
-
-function formatInlineMarkdown(text, baseUrl, referenceMap) {
-  if (!text) return '';
-  const { tokenizedText, placeholders } = preserveInlineHtmlPlaceholders(text);
-  let html = escapeHtml(tokenizedText);
-
-  html = html.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g, (_, alt, url, title) => {
-    const safeUrl = resolveContentUrl(url, baseUrl, { allowData: true });
-    if (!safeUrl) return '';
-    const altText = escapeHtml(alt || '');
-    const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-    return `<img src="${escapeHtml(safeUrl)}" alt="${altText}" loading="lazy"${titleAttr}>`;
-  });
-
-  html = html.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g, (_, label, url, title) => {
-    const safeUrl = resolveContentUrl(url, baseUrl, { allowData: false });
-    if (!safeUrl) return escapeHtml(label || '');
-    const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-    return `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer"${titleAttr}>${escapeHtml(label || '')}</a>`;
-  });
-
-  html = html.replace(/!\[([^\]]*)\]\[([^\]]*)\]/g, (match, alt, label) => {
-    const refLabel = label || alt;
-    const ref = getMarkdownReferenceLink(referenceMap, refLabel);
-    if (!ref || !ref.url) return match;
-    const titleAttr = ref.title ? ` title="${escapeHtml(ref.title)}"` : '';
-    return `<img src="${escapeHtml(ref.url)}" alt="${escapeHtml(alt || '')}" loading="lazy"${titleAttr}>`;
-  });
-
-  html = html.replace(/\[([^\]]+)\]\[([^\]]*)\]/g, (match, label, refLabel) => {
-    const lookup = refLabel || label;
-    const ref = getMarkdownReferenceLink(referenceMap, lookup);
-    if (!ref || !ref.url) return match;
-    const titleAttr = ref.title ? ` title="${escapeHtml(ref.title)}"` : '';
-    return `<a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer"${titleAttr}>${escapeHtml(label || '')}</a>`;
-  });
-
-  html = html.replace(/\[([^\]]+)\]/g, (match, label, offset, fullText) => {
-    const previousChar = offset > 0 ? fullText.charAt(offset - 1) : '';
-    const nextChar = fullText.charAt(offset + match.length) || '';
-    if (previousChar === '!' || nextChar === '(') return match;
-
-    const ref = getMarkdownReferenceLink(referenceMap, label);
-    if (!ref || !ref.url) return match;
-    const titleAttr = ref.title ? ` title="${escapeHtml(ref.title)}"` : '';
-    return `<a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer"${titleAttr}>${escapeHtml(label || '')}</a>`;
-  });
-
-  html = html.replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`);
-  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
-  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-  html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
-  html = html.replace(/~~([^~]+)~~/g, '<del>$1</del>');
-
-  return restoreInlineHtmlPlaceholders(html, placeholders);
-}
-
-function renderMarkdownToHtml(markdownText, baseUrl) {
-  const rawLines = String(markdownText || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-  const { contentLines: lines, references } = extractMarkdownReferenceDefinitions(rawLines, baseUrl);
-  const out = [];
-  let paragraph = [];
-  let listType = '';
-  let listItems = [];
-  let codeFenceMarker = '';
-  let codeFenceLanguage = '';
-  let codeLines = [];
-  const htmlTagRe = /<\/?(a|p|div|span|img|h[1-6]|ul|ol|li|blockquote|table|thead|tbody|tr|td|th|pre|code|br|hr|details|summary|figure|figcaption|mark|kbd|samp)\b/i;
-
-  const flushParagraph = () => {
-    if (!paragraph.length) return;
-    const text = paragraph.join(' ').replace(/\s+/g, ' ').trim();
-    if (text) out.push(`<p>${formatInlineMarkdown(text, baseUrl, references)}</p>`);
-    paragraph = [];
-  };
-
-  const flushList = () => {
-    if (!listType || !listItems.length) {
-      listType = '';
-      listItems = [];
-      return;
-    }
-    out.push(`<${listType}>${listItems.map((item) => `<li>${formatInlineMarkdown(item, baseUrl, references)}</li>`).join('')}</${listType}>`);
-    listType = '';
-    listItems = [];
-  };
-
-  const flushCode = () => {
-    if (!codeFenceMarker) return;
-    const language = codeFenceLanguage.replace(/[^a-z0-9_+-]/gi, '').toLowerCase();
-    const classAttr = language ? ` class="language-${escapeHtml(language)}"` : '';
-    out.push(`<pre><code${classAttr}>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
-    codeFenceMarker = '';
-    codeFenceLanguage = '';
-    codeLines = [];
-  };
-
-  for (const rawLine of lines) {
-    const line = rawLine || '';
-    const trimmed = line.trim();
-
-    const fenceMatch = trimmed.match(/^(```|~~~)\s*([A-Za-z0-9_+-]*)\s*$/);
-    if (fenceMatch) {
-      if (codeFenceMarker) {
-        if (fenceMatch[1] === codeFenceMarker) {
-          flushCode();
-        } else {
-          codeLines.push(line);
+    if (typeof window.loadPaperRecordById === 'function') {
+      try {
+        const payload = await window.loadPaperRecordById(targetId);
+        if (!payload || typeof payload !== 'object') {
+          return { loaded: true, paper: null, relatedPool: [] };
         }
-      } else {
-        flushParagraph();
-        flushList();
-        codeFenceMarker = fenceMatch[1] || '';
-        codeFenceLanguage = fenceMatch[2] || '';
-        codeLines = [];
+        const paper = normalizePaperRecord(payload.paper);
+        const relatedPool = Array.isArray(payload.papers) ? payload.papers : [];
+        return { loaded: true, paper, relatedPool };
+      } catch {
+        // Fallback below.
       }
-      continue;
     }
 
-    if (codeFenceMarker) {
-      codeLines.push(line);
-      continue;
+    if (typeof window.loadPaperData !== 'function') {
+      return { loaded: false, paper: null, relatedPool: [] };
     }
 
-    if (!trimmed) {
-      flushParagraph();
-      flushList();
-      continue;
+    try {
+      const payload = await window.loadPaperData();
+      const papers = normalizePapers(payload && payload.papers);
+      const paper = papers.find((candidate) => candidate.id === targetId) || null;
+      return { loaded: true, paper, relatedPool: papers };
+    } catch {
+      return { loaded: false, paper: null, relatedPool: [] };
     }
-
-    if (/^<[^>]+>/.test(trimmed) && htmlTagRe.test(trimmed)) {
-      flushParagraph();
-      flushList();
-      out.push(sanitizeHtmlFragment(trimmed, baseUrl));
-      continue;
-    }
-
-    const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
-    if (headingMatch) {
-      flushParagraph();
-      flushList();
-      const level = headingMatch[1].length;
-      out.push(`<h${level}>${formatInlineMarkdown(headingMatch[2], baseUrl, references)}</h${level}>`);
-      continue;
-    }
-
-    if (/^([-*_])\1{2,}$/.test(trimmed)) {
-      flushParagraph();
-      flushList();
-      out.push('<hr>');
-      continue;
-    }
-
-    const unordered = trimmed.match(/^[-*+]\s+(.*)$/);
-    if (unordered) {
-      flushParagraph();
-      if (listType && listType !== 'ul') flushList();
-      listType = 'ul';
-      listItems.push(unordered[1]);
-      continue;
-    }
-
-    const ordered = trimmed.match(/^\d+[.)]\s+(.*)$/);
-    if (ordered) {
-      flushParagraph();
-      if (listType && listType !== 'ol') flushList();
-      listType = 'ol';
-      listItems.push(ordered[1]);
-      continue;
-    }
-
-    const quote = trimmed.match(/^>\s?(.*)$/);
-    if (quote) {
-      flushParagraph();
-      flushList();
-      out.push(`<blockquote><p>${formatInlineMarkdown(quote[1], baseUrl, references)}</p></blockquote>`);
-      continue;
-    }
-
-    paragraph.push(trimmed);
   }
 
-  flushCode();
-  flushParagraph();
-  flushList();
-
-  return out.join('\n');
-}
-
-function renderBlogContent(paper) {
-  let body = String(paper.content || '').trim();
-  if (!body) {
-    return '<p><em>Blog content unavailable in local cache. Use the links above to open the original post.</em></p>';
-  }
-  const format = String(paper.contentFormat || '').toLowerCase();
-  const baseUrl = paper.sourceUrl || paper.paperUrl || window.location.href;
-
-  if (format === 'html') {
-    return sanitizeHtmlFragment(body, baseUrl);
+  function renderAbstract(text) {
+    const normalized = String(text || '').trim();
+    if (!normalized) return '<p><em>No abstract available.</em></p>';
+    return normalized
+      .split(/\n{2,}|\r\n\r\n/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean)
+      .map((paragraph) => `<p>${escapeHtml(paragraph.replace(/\n/g, ' '))}</p>`)
+      .join('\n');
   }
 
-  if (isLikelyHugoBlogSource(paper)) {
-    const transformed = transformHugoShortcodes(body, baseUrl);
-    if (transformed) body = transformed;
+  function renderBlogContent(paper) {
+    const content = String(paper && paper.content || '').trim();
+    if (!content) return renderAbstract(paper && paper.abstract);
+    return content
+      .split(/\n{2,}|\r\n\r\n/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean)
+      .map((paragraph) => `<p>${escapeHtml(paragraph.replace(/\n/g, ' '))}</p>`)
+      .join('\n');
   }
 
-  return renderMarkdownToHtml(body, baseUrl);
-}
-
-function renderAbstract(abstract) {
-  if (!abstract) return '<p><em>No abstract available.</em></p>';
-
-  const paras = abstract
-    .split(/\n{2,}|\r\n\r\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-
-  return paras.map((para) => {
-    const lines = para.split(/\n/).map((line) => line.trim()).filter(Boolean);
-    const isList = lines.length > 1 && lines.every((line) => /^[-*•]/.test(line));
-    if (isList) {
-      const items = lines.map((line) => `<li>${escapeHtml(line.replace(/^[-*•]\s*/, ''))}</li>`).join('');
-      return `<ul>${items}</ul>`;
+  function renderAuthors(authors, paper) {
+    const values = Array.isArray(authors) ? authors : [];
+    if (!values.length) {
+      return '<p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">Author information not available.</p>';
     }
-    return `<p>${escapeHtml(para.replace(/\n/g, ' '))}</p>`;
-  }).join('\n');
-}
-
-function renderAuthors(authors, paper) {
-  if (!authors || authors.length === 0) {
-    return '<p style="color: var(--color-text-muted); font-size: var(--font-size-sm);">Author information not available.</p>';
+    return values.map((author) => {
+      const name = String(author && author.name || '').trim();
+      if (!name) return '';
+      const affiliation = String(author && author.affiliation || '').trim();
+      return `
+        <div class="speaker-chip">
+          <div>
+            <a href="${buildSpeakerWorkUrl(name, paper)}" class="speaker-name-link" aria-label="View talks and papers by ${escapeHtml(name)}">${escapeHtml(name)}</a>
+            ${affiliation ? `<br><span class="speaker-affiliation">${escapeHtml(affiliation)}</span>` : ''}
+          </div>
+        </div>`;
+    }).join('');
   }
 
-  return authors.map((author) => {
-    const name = escapeHtml(author.name);
-    const affiliation = author.affiliation
-      ? `<br><span class="speaker-affiliation">${escapeHtml(author.affiliation)}</span>`
-      : '';
-    return `
-      <div class="speaker-chip">
-        <div>
-          <a href="${buildSpeakerWorkUrl(author.name, paper)}" class="speaker-name-link" aria-label="View talks and papers by ${name}">${name}</a>
-          ${affiliation}
-        </div>
-      </div>`;
-  }).join('');
-}
+  function countTagOverlap(candidate, tagSet) {
+    if (!(tagSet instanceof Set) || !tagSet.size) return 0;
+    const values = [
+      ...(Array.isArray(candidate && candidate.tags) ? candidate.tags : []),
+      ...(Array.isArray(candidate && candidate.keywords) ? candidate.keywords : []),
+    ];
+    let overlap = 0;
+    for (const value of values) {
+      const normalized = String(value || '').trim().toLowerCase();
+      if (normalized && tagSet.has(normalized)) overlap += 1;
+    }
+    return overlap;
+  }
 
-// ============================================================
-// Related Papers
-// ============================================================
+  function getRelatedPapers(paper, relatedPool) {
+    const values = Array.isArray(relatedPool) ? relatedPool : [];
+    if (!values.length) return [];
 
-const _PAPER_PLACEHOLDER = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><polyline points="14 2 14 7 19 7"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="14" y2="17"/></svg>`;
+    const targetId = String(paper && paper.id || '').trim();
+    if (!targetId) return [];
 
-function getRelatedPapers(paper, allPapers) {
-  const MAX_TOTAL = 6;
-  const sameYear = allPapers
-    .filter((candidate) => candidate.id !== paper.id && candidate._year && candidate._year === paper._year)
-    .slice(0, 4);
-  const seen = new Set(sameYear.map((candidate) => candidate.id));
+    const targetIsBlog = isBlogPaper(paper);
+    const targetYear = String(paper && paper._year || '').trim();
+    const tagSet = new Set(
+      [
+        ...(Array.isArray(paper && paper.tags) ? paper.tags : []),
+        ...(Array.isArray(paper && paper.keywords) ? paper.keywords : []),
+      ]
+        .map((value) => String(value || '').trim().toLowerCase())
+        .filter(Boolean)
+    );
 
-  const tagSet = new Set((paper.tags || []).map((tag) => tag.toLowerCase()));
-  const tagRelated = allPapers
-    .filter((candidate) => candidate.id !== paper.id && !seen.has(candidate.id))
-    .map((candidate) => {
-      const overlap = (candidate.tags || []).filter((tag) => tagSet.has(String(tag || '').toLowerCase())).length;
-      return { candidate, overlap };
-    })
-    .filter((entry) => entry.overlap > 0)
-    .sort((a, b) => {
+    const MAX_SCAN = 8000;
+    const stride = values.length > MAX_SCAN ? Math.ceil(values.length / MAX_SCAN) : 1;
+
+    const scored = [];
+    const seenIds = new Set();
+    for (let index = 0; index < values.length; index += stride) {
+      const candidate = values[index];
+      if (!candidate || typeof candidate !== 'object') continue;
+      const id = String(candidate.id || '').trim();
+      if (!id || id === targetId || seenIds.has(id)) continue;
+      seenIds.add(id);
+
+      const normalized = normalizePaperRecord(candidate);
+      if (!normalized) continue;
+
+      const sameYear = !!(targetYear && normalized._year === targetYear);
+      const overlap = countTagOverlap(normalized, tagSet);
+      if (!sameYear && overlap < 1) continue;
+
+      let score = 0;
+      if (sameYear) score += 120;
+      score += overlap * 28;
+      if (isBlogPaper(normalized) === targetIsBlog) score += 10;
+      if (normalized._year) score += Number.parseInt(normalized._year, 10) * 0.001;
+
+      scored.push({ paper: normalized, score, overlap });
+    }
+
+    scored.sort((a, b) => {
+      const scoreDiff = b.score - a.score;
+      if (scoreDiff !== 0) return scoreDiff;
       const overlapDiff = b.overlap - a.overlap;
       if (overlapDiff !== 0) return overlapDiff;
-      const yearDiff = String(b.candidate._year || '').localeCompare(String(a.candidate._year || ''));
-      if (yearDiff !== 0) return yearDiff;
-      return String(a.candidate.title || '').localeCompare(String(b.candidate.title || ''));
-    })
-    .slice(0, Math.max(0, MAX_TOTAL - sameYear.length))
-    .map((entry) => entry.candidate);
-
-  return [...sameYear, ...tagRelated];
-}
-
-function renderRelatedCard(paper) {
-  const blogEntry = isBlogPaper(paper);
-  const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
-  const badgeLabel = blogEntry ? 'Blog' : 'Paper';
-  const listingPath = getListingPathForPaper(paper);
-  const listingLabel = getListingLabelForPaper(paper);
-  const keyTopics = getPaperKeyTopics(paper, 8);
-  const tagsHtml = keyTopics.length
-    ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${keyTopics.slice(0, 4).map((topic) =>
-        `<a href="${listingPath}?tag=${encodeURIComponent(topic)}" class="card-tag" aria-label="Browse ${listingLabel} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
-      ).join('')}${keyTopics.length > 4 ? `<span class="card-tag card-tag--more" aria-hidden="true">+${keyTopics.length - 4}</span>` : ''}</div></div>`
-    : '';
-  const speakerLinksHtml = (paper.authors || []).length
-    ? paper.authors.map((author) =>
-      `<a href="${buildSpeakerWorkUrl(author.name, paper)}" class="card-speaker-link" aria-label="View talks and papers by ${escapeHtml(author.name)}">${escapeHtml(author.name)}</a>`
-    ).join('<span class="speaker-btn-sep">, </span>')
-    : '';
-
-  const relatedLabel = `${escapeHtml(paper.title)}${speakerLinksHtml ? ` by ${escapeHtml((paper.authors || []).map((author) => author.name).join(', '))}` : ''}`;
-  const dateOrYear = blogEntry
-    ? escapeHtml(paper._publishedDateLabel || paper._year || 'Unknown date')
-    : escapeHtml(paper._year || 'Unknown year');
-
-  return `
-    <article class="talk-card paper-card">
-      <a href="papers/paper.html?id=${escapeHtml(paper.id)}&from=${blogEntry ? 'blogs' : 'papers'}" class="card-link-wrap" aria-label="${relatedLabel}">
-        <div class="card-thumbnail paper-thumbnail" aria-hidden="true">
-          <div class="card-thumbnail-placeholder paper-thumbnail-placeholder">
-            ${_PAPER_PLACEHOLDER}
-            <span class="paper-thumbnail-label">${escapeHtml(badgeLabel)}</span>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="badge ${badgeClass}">${escapeHtml(badgeLabel)}</span>
-            <span class="meeting-label">${dateOrYear}</span>
-          </div>
-          <p class="card-title">${escapeHtml(paper.title)}</p>
-        </div>
-      </a>
-      ${speakerLinksHtml ? `<p class="card-speakers">${speakerLinksHtml}</p>` : ''}
-      ${tagsHtml}
-    </article>`;
-}
-
-// ============================================================
-// Page Rendering
-// ============================================================
-
-function renderPaperDetail(paper, allPapers) {
-  const root = document.getElementById('paper-detail-root');
-  const blogEntry = isBlogPaper(paper);
-  const listingPath = getListingPathForPaper(paper);
-  const listingLabel = getListingLabelForPaper(paper);
-  const authorsHtml = renderAuthors(paper.authors, paper);
-  const citationCount = Number.isFinite(paper.citationCount) ? paper.citationCount : 0;
-  const doiUrl = doiUrlFromValue(paper.doi);
-  const paperHref = sanitizeExternalUrl(paper.paperUrl);
-  const sourceHref = sanitizeExternalUrl(paper.sourceUrl);
-  const doiHref = sanitizeExternalUrl(doiUrl);
-  const openalexHref = sanitizeExternalUrl(paper.openalexId);
-  const badgeClass = blogEntry ? 'badge-blog' : 'badge-paper';
-  const badgeLabel = blogEntry ? 'Blog' : 'Paper';
-
-  const infoParts = [];
-  if (blogEntry && paper._publishedDateLabel) infoParts.push(paper._publishedDateLabel);
-  else if (paper._year) infoParts.push(paper._year);
-  if (paper.publication) infoParts.push(paper.publication);
-  if (paper.venue && paper.venue !== paper.publication) infoParts.push(paper.venue);
-
-  const links = [];
-  const paperIsPdf = isDirectPdfUrl(paperHref);
-  const sourceIsPdf = isDirectPdfUrl(sourceHref);
-  if (paperHref) {
-    const linkLabel = blogEntry ? 'Open Repository Post' : (paperIsPdf ? 'Open PDF' : 'Open Paper');
-    links.push(`
-      <a href="${escapeHtml(paperHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(linkLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        ${escapeHtml(linkLabel)}
-      </a>`);
-  }
-  if (!blogEntry && sourceIsPdf && !paperIsPdf && sourceHref && sourceHref !== paperHref) {
-    const sourceLabel = 'Open PDF';
-    links.push(`
-      <a href="${escapeHtml(sourceHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        ${escapeHtml(sourceLabel)}
-      </a>`);
-  } else if (sourceHref) {
-    const sourceLabel = blogEntry ? 'Open Blog' : 'Source Listing';
-    links.push(`
-      <a href="${escapeHtml(sourceHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(sourceLabel)} for ${escapeHtml(paper.title)} (opens in new tab)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 1 0-7.07-7.07L10 6"/><path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.4a5 5 0 0 0 7.07 7.07L14 18"/></svg>
-        ${escapeHtml(sourceLabel)}
-      </a>`);
-  }
-  if (doiHref) {
-    links.push(`
-      <a href="${escapeHtml(doiHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open DOI for ${escapeHtml(paper.title)} (opens in new tab)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 0 0-7.07-7.07L10 6"/><path d="M14 11a5 5 0 0 0-7.07 0L5.52 12.4a5 5 0 1 0 7.07 7.07L14 18"/></svg>
-        DOI
-      </a>`);
-  }
-  if (openalexHref) {
-    links.push(`
-      <a href="${escapeHtml(openalexHref)}" class="link-btn" target="_blank" rel="noopener noreferrer" aria-label="Open OpenAlex record for ${escapeHtml(paper.title)} (opens in new tab)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
-        OpenAlex
-      </a>`);
-  }
-  links.push(`
-    <a href="https://github.com/bwatsonllvm/library/issues/new" class="link-btn report-issue-link" id="report-issue-btn" aria-label="Request edit for this paper (opens in new tab)">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      Request Edit
-    </a>`);
-
-  const keyTopics = getPaperKeyTopics(paper, 18);
-  const keyTopicsHtml = keyTopics.length
-    ? `<section class="tags-section" aria-label="Key Topics">
-        <div class="section-label" aria-hidden="true">Key Topics</div>
-        <div class="detail-tags">
-          ${keyTopics.map((topic) =>
-            `<a href="${listingPath}?tag=${encodeURIComponent(topic)}" class="detail-tag" aria-label="Browse ${listingLabel} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
-          ).join('')}
-        </div>
-      </section>`
-    : '';
-
-  const publicationHtml = paper.publication
-    ? `<section class="tags-section" aria-label="Publication">
-        <div class="section-label" aria-hidden="true">Publication</div>
-        <div class="detail-tags">
-          <a href="${listingPath}?q=${encodeURIComponent(paper.publication)}" class="detail-tag" aria-label="Search ${listingLabel} for ${escapeHtml(paper.publication)}">${escapeHtml(paper.publication)}</a>
-        </div>
-      </section>`
-    : '';
-
-  const metadataItems = [];
-  if (citationCount > 0) {
-    metadataItems.push(`<span class="detail-tag detail-tag--meta" aria-label="${citationCount.toLocaleString()} citation${citationCount === 1 ? '' : 's'}">Cited by ${citationCount.toLocaleString()}</span>`);
-  }
-  if (paper.doi && doiHref) {
-    metadataItems.push(`<a href="${escapeHtml(doiHref)}" class="detail-tag" target="_blank" rel="noopener noreferrer" aria-label="Open DOI ${escapeHtml(paper.doi)} (opens in new tab)">DOI: ${escapeHtml(paper.doi)}</a>`);
-  }
-  if (openalexHref) {
-    metadataItems.push(`<a href="${escapeHtml(openalexHref)}" class="detail-tag" target="_blank" rel="noopener noreferrer" aria-label="Open OpenAlex record (opens in new tab)">OpenAlex record</a>`);
-  }
-  metadataItems.push('<button type="button" class="detail-tag detail-tag--button" id="copy-bibtex-btn" aria-label="Copy BibTeX citation">Copy BibTeX</button>');
-  const citationMetaHtml = `
-    <section class="tags-section" aria-label="Citation metadata">
-      <div class="section-label" aria-hidden="true">Citation Data</div>
-      <div class="detail-tags">
-        ${metadataItems.join('')}
-      </div>
-    </section>`;
-
-  const related = getRelatedPapers(paper, allPapers);
-
-  root.innerHTML = `
-    <div class="talk-detail">
-      <a href="${listingPath}" class="back-btn" id="back-btn" aria-label="Back to all ${listingLabel}">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        <span aria-hidden="true">${escapeHtml(blogEntry ? 'All Blogs' : 'All Papers')}</span>
-      </a>
-
-      <div class="talk-header">
-        <div class="talk-header-meta">
-          <span class="badge ${badgeClass}">${badgeLabel}</span>
-          ${infoParts.length ? `<span class="meeting-info-badge">${escapeHtml(infoParts.join(' · '))}</span>` : ''}
-        </div>
-        <h1 class="talk-title">${escapeHtml(paper.title)}</h1>
-      </div>
-
-      <section class="speakers-section" aria-label="Authors">
-        <div class="section-label" aria-hidden="true">Authors</div>
-        <div class="speakers-list">${authorsHtml}</div>
-      </section>
-
-      ${links.length ? `<div class="links-bar" aria-label="Resources">${links.join('')}</div>` : ''}
-
-      <section class="abstract-section" aria-label="${blogEntry ? 'Blog post content' : 'Abstract'}">
-        <div class="section-label" aria-hidden="true">${blogEntry ? 'Article' : 'Abstract'}</div>
-        <div class="abstract-body${blogEntry ? ' blog-content' : ''}">
-          ${blogEntry ? renderBlogContent(paper) : renderAbstract(paper.abstract)}
-        </div>
-      </section>
-
-      ${citationMetaHtml}
-      ${publicationHtml}
-      ${keyTopicsHtml}
-    </div>
-
-    ${related.length ? `
-    <section class="related-section" aria-label="Related ${blogEntry ? 'content' : 'papers'}">
-      <h2>${blogEntry ? 'Related Content' : 'Related Papers'}</h2>
-      <div class="related-grid">
-        ${related.map((relatedPaper) => renderRelatedCard(relatedPaper)).join('')}
-      </div>
-    </section>` : ''}
-  `;
-
-  const backBtn = document.getElementById('back-btn');
-  if (backBtn) {
-    backBtn.addEventListener('click', (event) => {
-      if (window.history.length > 1) {
-        event.preventDefault();
-        window.history.back();
-      }
+      return String(a.paper.title || '').localeCompare(String(b.paper.title || ''));
     });
+
+    return scored.slice(0, 6).map((entry) => entry.paper);
   }
 
-  const copyBibtexBtn = document.getElementById('copy-bibtex-btn');
-  if (copyBibtexBtn) {
-    const defaultLabel = copyBibtexBtn.textContent;
-    copyBibtexBtn.addEventListener('click', async () => {
-      const copied = await copyTextToClipboard(buildBibtexEntry(paper));
-      copyBibtexBtn.textContent = copied ? 'BibTeX copied' : 'Copy failed';
-      window.setTimeout(() => {
-        copyBibtexBtn.textContent = defaultLabel;
-      }, 1600);
-    });
+  function renderRelatedCard(paper) {
+    const blogEntry = isBlogPaper(paper);
+    const listingPath = getListingPathForPaper(paper);
+    const label = `${String(paper.title || '').trim()}${paper.authors && paper.authors.length ? ` by ${paper.authors.map((author) => author.name).join(', ')}` : ''}`;
+    const dateOrYear = blogEntry
+      ? String(paper._publishedDateLabel || paper._year || 'Unknown date')
+      : String(paper._year || 'Unknown year');
+
+    return `
+      <article class="talk-card paper-card">
+        <a href="papers/paper.html?id=${encodeURIComponent(String(paper.id || '').trim())}&from=${blogEntry ? 'blogs' : 'papers'}" class="card-link-wrap" aria-label="${escapeHtml(label)}">
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="badge ${blogEntry ? 'badge-blog' : 'badge-paper'}">${blogEntry ? 'Blog' : 'Paper'}</span>
+              <span class="meeting-label">${escapeHtml(dateOrYear)}</span>
+            </div>
+            <p class="card-title">${escapeHtml(String(paper.title || '').trim())}</p>
+          </div>
+        </a>
+        ${(paper.authors || []).length
+          ? `<p class="card-speakers">${paper.authors.map((author) =>
+              `<a href="${buildSpeakerWorkUrl(author.name, paper)}" class="card-speaker-link" aria-label="View talks and papers by ${escapeHtml(author.name)}">${escapeHtml(author.name)}</a>`
+            ).join('<span class="speaker-btn-sep">, </span>')}</p>`
+          : ''}
+        ${getPaperTopics(paper, 8).length
+          ? `<div class="card-tags-wrap"><div class="card-tags" aria-label="Key Topics">${getPaperTopics(paper, 8).slice(0, 4).map((topic) =>
+              `<a href="${listingPath}?tag=${encodeURIComponent(topic)}" class="card-tag" aria-label="Browse ${getListingLabelForPaper(paper)} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
+            ).join('')}</div></div>`
+          : ''}
+      </article>`;
   }
-}
 
-function renderNotFound(id, listingPath = fallbackListingPathFromUrl()) {
-  const root = document.getElementById('paper-detail-root');
-  const listingLabel = listingPath === BLOGS_PAGE_PATH ? 'blogs' : 'papers';
-  const listingTitle = listingPath === BLOGS_PAGE_PATH ? 'All Blogs' : 'All Papers';
-  root.innerHTML = `
-    <div class="talk-detail">
-      <a href="${listingPath}" class="back-btn" aria-label="Back to all ${listingLabel}">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-        <span aria-hidden="true">${listingTitle}</span>
-      </a>
-      <div class="empty-state">
-        <div class="empty-state-icon" aria-hidden="true">!</div>
-        <h2>Paper not found</h2>
-        <p>No paper found with ID <code>${escapeHtml(id || '(none)')}</code>.</p>
-      </div>
-    </div>`;
-}
-
-// ============================================================
-// Init
-// ============================================================
-
-async function init() {
-  initTheme();
-  initTextSize();
-  initCustomizationMenu();
-  initMobileNavMenu();
-
-  const params = new URLSearchParams(window.location.search);
-  const paperId = params.get('id');
-  const fallbackListingPath = fallbackListingPathFromUrl();
-  syncHeaderNavForPaper({ _isBlog: fallbackListingPath === BLOGS_PAGE_PATH });
-  setIssueContext({
-    pageType: 'Paper',
-    itemType: fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper',
-    itemId: String(paperId || '').trim(),
-  });
-  const allPapers = await loadPapers();
-
-  if (!allPapers) {
+  function renderNotFound(id, listingPath) {
     const root = document.getElementById('paper-detail-root');
+    if (!root) return;
+    const label = listingPath === BLOGS_PAGE_PATH ? 'blogs' : 'papers';
+    const title = listingPath === BLOGS_PAGE_PATH ? 'All Blogs' : 'All Papers';
+    root.innerHTML = `
+      <div class="talk-detail">
+        <a href="${listingPath}" class="back-btn" aria-label="Back to all ${label}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          <span aria-hidden="true">${title}</span>
+        </a>
+        <div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true">!</div>
+          <h2>Paper not found</h2>
+          <p>No paper found with ID <code>${escapeHtml(id || '(none)')}</code>.</p>
+        </div>
+      </div>`;
+  }
+
+  function renderLoadError() {
+    const root = document.getElementById('paper-detail-root');
+    if (!root) return;
     root.innerHTML = `
       <div class="talk-detail">
         <div class="empty-state" role="alert">
@@ -1586,45 +448,159 @@ async function init() {
           <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available and that <code>js/papers-data.js</code> loads first.</p>
         </div>
       </div>`;
-    initShareMenu();
-    return;
   }
 
-  if (!paperId) {
-    renderNotFound(null, fallbackListingPath);
-    const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
+  function renderPaperDetail(paper, relatedPool) {
+    const root = document.getElementById('paper-detail-root');
+    if (!root) return;
+
+    const blogEntry = isBlogPaper(paper);
+    const listingPath = getListingPathForPaper(paper);
+    const listingLabel = getListingLabelForPaper(paper);
+
+    const infoParts = [];
+    if (blogEntry && paper._publishedDateLabel) infoParts.push(paper._publishedDateLabel);
+    else if (paper._year) infoParts.push(paper._year);
+    if (paper.publication) infoParts.push(paper.publication);
+    if (paper.venue && paper.venue !== paper.publication) infoParts.push(paper.venue);
+
+    const links = [];
+    if (paper.paperUrl) {
+      links.push(`<a href="${escapeHtml(paper.paperUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer">${blogEntry ? 'Open Repository Post' : 'Open Paper'}</a>`);
+    }
+    if (paper.sourceUrl && paper.sourceUrl !== paper.paperUrl) {
+      links.push(`<a href="${escapeHtml(paper.sourceUrl)}" class="link-btn" target="_blank" rel="noopener noreferrer">${blogEntry ? 'Open Blog' : 'Source Listing'}</a>`);
+    }
+    const doiHref = sanitizeExternalUrl(doiUrlFromValue(paper.doi));
+    if (doiHref) {
+      links.push(`<a href="${escapeHtml(doiHref)}" class="link-btn" target="_blank" rel="noopener noreferrer">DOI</a>`);
+    }
+    if (paper.openalexId) {
+      links.push(`<a href="${escapeHtml(paper.openalexId)}" class="link-btn" target="_blank" rel="noopener noreferrer">OpenAlex</a>`);
+    }
+
+    const topics = getPaperTopics(paper, 18);
+    const topicsHtml = topics.length
+      ? `<section class="tags-section" aria-label="Key Topics">
+          <div class="section-label" aria-hidden="true">Key Topics</div>
+          <div class="detail-tags">
+            ${topics.map((topic) =>
+              `<a href="${listingPath}?tag=${encodeURIComponent(topic)}" class="detail-tag" aria-label="Browse ${listingLabel} for key topic ${escapeHtml(topic)}">${escapeHtml(topic)}</a>`
+            ).join('')}
+          </div>
+        </section>`
+      : '';
+
+    const related = getRelatedPapers(paper, relatedPool);
+
+    root.innerHTML = `
+      <div class="talk-detail">
+        <a href="${listingPath}" class="back-btn" id="back-btn" aria-label="Back to all ${listingLabel}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          <span aria-hidden="true">${escapeHtml(blogEntry ? 'All Blogs' : 'All Papers')}</span>
+        </a>
+
+        <div class="talk-header">
+          <div class="talk-header-meta">
+            <span class="badge ${blogEntry ? 'badge-blog' : 'badge-paper'}">${blogEntry ? 'Blog' : 'Paper'}</span>
+            ${infoParts.length ? `<span class="meeting-info-badge">${escapeHtml(infoParts.join(' · '))}</span>` : ''}
+          </div>
+          <h1 class="talk-title">${escapeHtml(paper.title)}</h1>
+        </div>
+
+        <section class="speakers-section" aria-label="Authors">
+          <div class="section-label" aria-hidden="true">Authors</div>
+          <div class="speakers-list">${renderAuthors(paper.authors, paper)}</div>
+        </section>
+
+        ${links.length ? `<div class="links-bar" aria-label="Resources">${links.join('')}</div>` : ''}
+
+        <section class="abstract-section" aria-label="${blogEntry ? 'Blog post content' : 'Abstract'}">
+          <div class="section-label" aria-hidden="true">${blogEntry ? 'Article' : 'Abstract'}</div>
+          <div class="abstract-body${blogEntry ? ' blog-content' : ''}">
+            ${blogEntry ? renderBlogContent(paper) : renderAbstract(paper.abstract)}
+          </div>
+        </section>
+
+        ${topicsHtml}
+      </div>
+
+      ${related.length ? `
+      <section class="related-section" aria-label="Related ${blogEntry ? 'content' : 'papers'}">
+        <h2>${blogEntry ? 'Related Content' : 'Related Papers'}</h2>
+        <div class="related-grid">
+          ${related.map((item) => renderRelatedCard(item)).join('')}
+        </div>
+      </section>` : ''}`;
+
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+      backBtn.addEventListener('click', (event) => {
+        if (window.history.length > 1) {
+          event.preventDefault();
+          window.history.back();
+        }
+      });
+    }
+  }
+
+  async function init() {
+    initTheme();
+    initTextSize();
+    initCustomizationMenu();
+    initMobileNavMenu();
+
+    const params = new URLSearchParams(window.location.search);
+    const paperId = String(params.get('id') || '').trim();
+    const fallbackListingPath = fallbackListingPathFromUrl();
+
     setIssueContext({
-      itemTitle: `Missing ${missingItemLabel.toLowerCase()} ID`,
-      issueTitle: `[${missingItemLabel}] Missing ${missingItemLabel.toLowerCase()} ID`,
+      pageType: 'Paper',
+      itemType: fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper',
+      itemId: paperId,
     });
+
+    if (!paperId) {
+      renderNotFound(null, fallbackListingPath);
+      setIssueContext({
+        itemTitle: `Missing ${(fallbackListingPath === BLOGS_PAGE_PATH ? 'blog' : 'paper')} ID`,
+        issueTitle: `[${fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper'}] Missing ${(fallbackListingPath === BLOGS_PAGE_PATH ? 'blog' : 'paper')} ID`,
+      });
+      initShareMenu();
+      return;
+    }
+
+    const migratedTalkId = PAPER_TO_TALK_REDIRECTS[paperId];
+    if (migratedTalkId) {
+      window.location.replace(`../talks/talk.html?id=${encodeURIComponent(migratedTalkId)}`);
+      return;
+    }
+
+    const context = await loadPaperDetailContextById(paperId);
+    if (!context || context.loaded !== true) {
+      renderLoadError();
+      initShareMenu();
+      return;
+    }
+
+    const paper = context.paper;
+    if (!paper) {
+      renderNotFound(paperId, fallbackListingPath);
+      const typeLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
+      setIssueContext({
+        itemTitle: `Unknown ${typeLabel.toLowerCase()} ID: ${paperId}`,
+        issueTitle: `[${typeLabel}] Unknown ${typeLabel.toLowerCase()} ID: ${paperId}`,
+      });
+      initShareMenu();
+      return;
+    }
+
+    document.title = `${paper.title} — LLVM Research Library`;
+    updateSeo(paper);
+    renderPaperDetail(paper, context.relatedPool);
+    setIssueContextForPaper(paper);
     initShareMenu();
-    return;
   }
 
-  const migratedTalkId = PAPER_TO_TALK_REDIRECTS[String(paperId || '').trim()];
-  if (migratedTalkId) {
-    window.location.replace(`../talks/talk.html?id=${encodeURIComponent(migratedTalkId)}`);
-    return;
-  }
-
-  const paper = allPapers.find((candidate) => candidate.id === paperId);
-  if (!paper) {
-    renderNotFound(paperId, fallbackListingPath);
-    const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
-    setIssueContext({
-      itemTitle: `Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
-      issueTitle: `[${missingItemLabel}] Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
-    });
-    initShareMenu();
-    return;
-  }
-
-  document.title = `${paper.title} — LLVM Research Library`;
-  updatePaperSeoMetadata(paper);
-  syncHeaderNavForPaper(paper);
-  renderPaperDetail(paper, allPapers);
-  setIssueContextForPaper(paper);
-  initShareMenu();
-}
-
-init();
+  init();
+})();
