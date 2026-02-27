@@ -799,10 +799,19 @@ function filterAndSort() {
   let entries = searchIndex.map((paper) => ({ paper, score: 0 }));
 
   if (tokens.length > 0) {
+    let rankedViaHub = null;
     if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-      const ranked = HubUtils.rankPaperRecordsByQuery(searchIndex, state.query);
-      const baseScore = ranked.length || 1;
-      entries = ranked.map((paper, index) => ({ paper, score: baseScore - index }));
+      try {
+        rankedViaHub = HubUtils.rankPaperRecordsByQuery(searchIndex, state.query);
+      } catch (error) {
+        // Keep page rendering even if shared ranking logic regresses.
+        console.error('[papers] rankPaperRecordsByQuery failed, falling back to local scorer.', error);
+      }
+    }
+
+    if (Array.isArray(rankedViaHub) && rankedViaHub.length > 0) {
+      const baseScore = rankedViaHub.length || 1;
+      entries = rankedViaHub.map((paper, index) => ({ paper, score: baseScore - index }));
     } else {
       const scored = [];
       for (const paper of searchIndex) {
@@ -2709,7 +2718,12 @@ function fuzzyScoreTalkMatch(indexedTalk, tokens) {
 function countTalkMatchesForQuery(query) {
   if (!talkSearchIndex.length) return 0;
   if (typeof HubUtils.rankTalksByQuery === 'function') {
-    return HubUtils.rankTalksByQuery(talkSearchIndex, query).length;
+    try {
+      const ranked = HubUtils.rankTalksByQuery(talkSearchIndex, query);
+      if (Array.isArray(ranked)) return ranked.length;
+    } catch (error) {
+      console.error('[papers] rankTalksByQuery failed, falling back to local scorer.', error);
+    }
   }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
@@ -2729,7 +2743,12 @@ function countTalkMatchesForQuery(query) {
 
 function countPaperMatchesForQuery(query) {
   if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-    return HubUtils.rankPaperRecordsByQuery(searchIndex, query).length;
+    try {
+      const ranked = HubUtils.rankPaperRecordsByQuery(searchIndex, query);
+      if (Array.isArray(ranked)) return ranked.length;
+    } catch (error) {
+      console.error('[papers] rankPaperRecordsByQuery failed, falling back to local scorer.', error);
+    }
   }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;

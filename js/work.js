@@ -2349,11 +2349,22 @@ function rankTalksForQuery(talks, query, advancedOptions = null) {
   const tokens = tokenizeQuery(query);
   const hasAdvanced = hasAdvancedSearchOptions(advancedOptions || {});
   if (!tokens.length && !hasAdvanced) return indexedTalks.sort(compareTalksNewestFirst);
-  return rankTalksByQuery(indexedTalks, query, { advanced: advancedOptions || undefined });
+  try {
+    return rankTalksByQuery(indexedTalks, query, { advanced: advancedOptions || undefined });
+  } catch (error) {
+    console.error('[work] rankTalksByQuery failed, falling back to newest-first ordering.', error);
+    return indexedTalks.sort(compareTalksNewestFirst);
+  }
 }
 
 function rankPapersForQuery(papers, query, advancedOptions = null) {
-  return rankPaperRecordsByQuery(papers, query, { advanced: advancedOptions || undefined });
+  const values = Array.isArray(papers) ? papers : [];
+  try {
+    return rankPaperRecordsByQuery(values, query, { advanced: advancedOptions || undefined });
+  } catch (error) {
+    console.error('[work] rankPaperRecordsByQuery failed, falling back to newest-first ordering.', error);
+    return [...values].sort(comparePapersNewestFirst);
+  }
 }
 
 function rankPeopleForQuery(people, query, advancedOptions = null) {
