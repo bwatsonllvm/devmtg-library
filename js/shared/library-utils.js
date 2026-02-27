@@ -1428,6 +1428,8 @@
     swift: ['frontend', 'backend'],
     tutorial: ['beginner', 'intro'],
   };
+  const SEARCH_TOKEN_NORMALIZE_CACHE_MAX = 2048;
+  const SEARCH_TOKEN_NORMALIZE_CACHE = new Map();
 
   const SEARCH_TOKEN_SYNONYMS = {};
   for (const [sourceToken, rawSynonyms] of Object.entries(SEARCH_TOKEN_SYNONYMS_RAW)) {
@@ -1501,8 +1503,6 @@
 
   const TALK_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const PAPER_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
-  const SEARCH_TOKEN_NORMALIZE_CACHE_MAX = 2048;
-  const SEARCH_TOKEN_NORMALIZE_CACHE = new Map();
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE_MAX = 192;
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE = new Map();
 
