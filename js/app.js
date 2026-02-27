@@ -1314,11 +1314,13 @@ function resolveTalkIdFromHref(href) {
 function cacheTalkNavigationRecordById(talkId) {
   const id = String(talkId || '').trim();
   if (!id) return;
-  if (!allTalks.some((entry) => String((entry && entry.id) || '').trim() === id)) return;
+  const talk = allTalks.find((entry) => String((entry && entry.id) || '').trim() === id);
+  if (!talk) return;
   const payload = {
     kind: 'talk',
     id,
     savedAt: Date.now(),
+    talk,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;

@@ -780,11 +780,13 @@ function resolvePaperIdFromHref(href) {
 function cachePaperNavigationRecordById(paperId) {
   const id = String(paperId || '').trim();
   if (!id) return;
-  if (!allPapers.some((entry) => String((entry && entry.id) || '').trim() === id)) return;
+  const paper = allPapers.find((entry) => String((entry && entry.id) || '').trim() === id);
+  if (!paper) return;
   const payload = {
     kind: 'paper',
     id,
     savedAt: Date.now(),
+    paper,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;

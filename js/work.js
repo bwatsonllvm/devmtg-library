@@ -350,11 +350,13 @@ function resolveDetailLinkInfo(rawHref) {
 function cacheTalkNavigationRecordById(talkId) {
   const id = String(talkId || '').trim();
   if (!id) return;
-  if (!allTalkRecords.some((entry) => String((entry && entry.id) || '').trim() === id)) return;
+  const talk = allTalkRecords.find((entry) => String((entry && entry.id) || '').trim() === id);
+  if (!talk) return;
   const payload = {
     kind: 'talk',
     id,
     savedAt: Date.now(),
+    talk,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
@@ -366,13 +368,14 @@ function cacheTalkNavigationRecordById(talkId) {
 function cachePaperNavigationRecordById(paperId) {
   const id = String(paperId || '').trim();
   if (!id) return;
-  const hasRecord = allPaperRecords.some((entry) => String((entry && entry.id) || '').trim() === id)
-    || allBlogRecords.some((entry) => String((entry && entry.id) || '').trim() === id);
-  if (!hasRecord) return;
+  const paper = allPaperRecords.find((entry) => String((entry && entry.id) || '').trim() === id)
+    || allBlogRecords.find((entry) => String((entry && entry.id) || '').trim() === id);
+  if (!paper) return;
   const payload = {
     kind: 'paper',
     id,
     savedAt: Date.now(),
+    paper,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;

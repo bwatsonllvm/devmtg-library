@@ -397,6 +397,7 @@ function cachePaperNavigationRecord(paper) {
     kind: 'paper',
     id,
     savedAt: Date.now(),
+    paper,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;

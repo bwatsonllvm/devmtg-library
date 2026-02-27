@@ -204,6 +204,7 @@ function cacheTalkNavigationRecord(talk) {
     kind: 'talk',
     id,
     savedAt: Date.now(),
+    talk,
   };
   try {
     window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
