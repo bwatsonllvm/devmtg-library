@@ -298,13 +298,13 @@ function getListingLabelForPaper(paper) {
 
 function buildPaperAdminLinks(paper, fallbackUrl = '') {
   const paperId = String((paper && paper.id) || '').trim();
-  const editHref = paperId ? `papers/edit.html?id=${encodeURIComponent(paperId)}` : '';
+  const editHref = paperId ? `papers/edit.html?id=${encodeURIComponent(paperId)}&return_to=review` : '';
   const sourceUrl = sanitizeExternalUrl(paper && paper.sourceUrl);
   const paperUrl = sanitizeExternalUrl(paper && paper.paperUrl);
   const fallback = sanitizeExternalUrl(fallbackUrl);
   const updateSourceUrl = sourceUrl || paperUrl || fallback;
   const updateHref = (paperId && updateSourceUrl)
-    ? `papers/edit.html?id=${encodeURIComponent(paperId)}&source_url=${encodeURIComponent(updateSourceUrl)}`
+    ? `papers/edit.html?id=${encodeURIComponent(paperId)}&source_url=${encodeURIComponent(updateSourceUrl)}&return_to=review`
     : '';
   return { editHref, updateHref };
 }

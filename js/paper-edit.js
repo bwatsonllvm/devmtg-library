@@ -1,6 +1,6 @@
 /*
  * paper-edit.js
- * Load an existing paper, preview URL-derived diffs, and generate updates_json for edit workflow.
+ * Load an existing paper, preview URL-derived diffs, and generate review_batch_json.
  */
 (function () {
   'use strict';
@@ -216,14 +216,13 @@
   const REVIEW_RETURN_MESSAGE_KEY = 'llvm-hub-paper-review-return-message-v1';
 
   const repoSlug = detectRepoSlug();
-  const manualEditWorkflowUrl = `https://github.com/${repoSlug}/actions/workflows/manual-paper-edit-pr.yml`;
   const reviewBatchWorkflowUrl = `https://github.com/${repoSlug}/actions/workflows/paper-review-batch-pr.yml`;
-  workflowLink.href = manualEditWorkflowUrl;
+  workflowLink.href = reviewBatchWorkflowUrl;
 
   let paperCache = null;
   let originalPaper = null;
   let currentPaperId = '';
-  let currentUpdatesMinified = '{}';
+  let currentBatchJsonMinified = '[]';
   let pendingUrlCandidatePaper = null;
   let pendingUrlUpdates = {};
   let returnToReview = false;
@@ -435,7 +434,7 @@
 
       updatesJsonPre.textContent = '{}';
       commandPre.textContent = '';
-      currentUpdatesMinified = '{}';
+      currentBatchJsonMinified = '[]';
 
       clearUrlDiffPreview();
       setStatus(loadStatus, `Loaded ${currentPaperId}`, 'success');
@@ -461,37 +460,33 @@
     try {
       const updates = currentFormUpdates();
       const keys = Object.keys(updates);
-      if (!keys.length) {
-        setStatus(genStatus, 'No changes detected.', 'error');
-        return false;
-      }
-
-      const pretty = JSON.stringify(updates, null, 2);
-      currentUpdatesMinified = JSON.stringify(updates);
-      updatesJsonPre.textContent = pretty;
-      if (returnToReview) {
-        const batchPayload = JSON.stringify([{ id: currentPaperId, updates }]);
-        commandPre.textContent = `gh workflow run paper-review-batch-pr.yml --repo ${repoSlug} --ref main -f review_batch_json='${shellSingleQuote(batchPayload)}'`;
-      } else {
-        commandPre.textContent = `gh workflow run manual-paper-edit-pr.yml --repo ${repoSlug} --ref main -f paper_id='${shellSingleQuote(currentPaperId)}' -f updates_json='${shellSingleQuote(currentUpdatesMinified)}'`;
-      }
+      const entry = { id: currentPaperId };
+      if (keys.length) entry.updates = updates;
+      const batchPayload = [entry];
+      currentBatchJsonMinified = JSON.stringify(batchPayload);
+      updatesJsonPre.textContent = JSON.stringify(batchPayload, null, 2);
+      commandPre.textContent = `gh workflow run paper-review-batch-pr.yml --repo ${repoSlug} --ref main -f review_batch_json='${shellSingleQuote(currentBatchJsonMinified)}'`;
       outputCard.classList.remove('hidden');
-      setStatus(genStatus, `Generated updates_json with ${keys.length} changed field(s).`, 'success');
+      if (keys.length) {
+        setStatus(genStatus, `Generated review_batch_json with ${keys.length} changed field(s).`, 'success');
+      } else {
+        setStatus(genStatus, 'No field edits detected. Generated review_batch_json for reviewed checkmark only.', 'success');
+      }
       return true;
     } catch (err) {
-      setStatus(genStatus, err && err.message ? err.message : 'Failed to generate updates_json.', 'error');
+      setStatus(genStatus, err && err.message ? err.message : 'Failed to generate review_batch_json.', 'error');
       return false;
     }
   }
 
   async function copyJson() {
-    if (!currentUpdatesMinified || currentUpdatesMinified === '{}') {
-      setStatus(genStatus, 'Generate updates_json first.', 'error');
+    if (!currentBatchJsonMinified || currentBatchJsonMinified === '[]') {
+      setStatus(genStatus, 'Generate review_batch_json first.', 'error');
       return;
     }
     try {
-      await navigator.clipboard.writeText(currentUpdatesMinified);
-      setStatus(genStatus, 'updates_json copied.', 'success');
+      await navigator.clipboard.writeText(currentBatchJsonMinified);
+      setStatus(genStatus, 'review_batch_json copied.', 'success');
     } catch {
       setStatus(genStatus, 'Clipboard write failed. Copy from output box.', 'error');
     }
@@ -500,7 +495,7 @@
   async function copyCommand() {
     const command = collapseWs(commandPre.textContent || '');
     if (!command) {
-      setStatus(genStatus, 'Generate updates_json first.', 'error');
+      setStatus(genStatus, 'Generate review_batch_json first.', 'error');
       return;
     }
     try {
@@ -1142,9 +1137,9 @@
     setFormFromPaper(pendingUrlCandidatePaper);
     const ok = generateUpdatesPayload();
     if (ok) {
-      setStatus(urlStatus, `Applied ${Object.keys(pendingUrlUpdates).length} URL-derived field change(s) and generated updates_json.`, 'success');
+      setStatus(urlStatus, `Applied ${Object.keys(pendingUrlUpdates).length} URL-derived field change(s) and generated review_batch_json.`, 'success');
     } else {
-      setStatus(urlStatus, 'Applied URL changes to the form, but updates_json generation failed.', 'error');
+      setStatus(urlStatus, 'Applied URL changes to the form, but review_batch_json generation failed.', 'error');
     }
   }
 
@@ -1190,7 +1185,7 @@
 
     try {
       stageCurrentPaperForQueue();
-      window.location.href = 'papers/review.html';
+      window.location.href = new URL('papers/review.html', document.baseURI || window.location.href).toString();
     } catch (err) {
       setStatus(genStatus, err && err.message ? err.message : 'Could not stage this paper in the queue.', 'error');
     }
@@ -1203,15 +1198,14 @@
 
   if (returnToReview) {
     returnReviewBtn.classList.remove('hidden');
-    workflowLink.href = reviewBatchWorkflowUrl;
-    workflowLink.textContent = 'Open Review Batch Workflow';
-    submitHelp.innerHTML = 'Use <code>Confirm In Queue And Return</code> to stage this paper into the review batch payload.';
   } else {
     returnReviewBtn.classList.add('hidden');
-    workflowLink.href = manualEditWorkflowUrl;
-    workflowLink.textContent = 'Open Edit Workflow';
-    submitHelp.innerHTML = 'Paste <code>paper_id</code> and <code>updates_json</code> into the workflow inputs.';
   }
+  workflowLink.href = reviewBatchWorkflowUrl;
+  workflowLink.textContent = 'Open Review Batch Workflow';
+  submitHelp.innerHTML = returnToReview
+    ? 'Use <code>Confirm In Queue And Return</code> to stage this paper into the review queue.'
+    : 'Paste <code>review_batch_json</code> into the review-batch workflow input.';
 
   if (sourceUrlFromQuery) {
     urlInput.value = sourceUrlFromQuery;

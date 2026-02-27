@@ -468,7 +468,7 @@
       <p class="subtitle">Mark papers to stage a review batch. Reviewed checkmarks are added only after the review PR merges.</p>
       <div class="empty-state-actions" aria-label="Review actions">
         <a href="papers/" class="empty-action-btn">Back to Papers</a>
-        <a href="papers/edit.html" class="empty-action-btn">Edit Paper</a>
+        <a href="papers/edit.html?return_to=review" class="empty-action-btn">Edit Paper</a>
         <a href="papers/add-by-url.html" class="empty-action-btn">Add by URL</a>
       </div>
     </div>
@@ -522,9 +522,8 @@
           <h2 id="review-history-heading">Review Batch</h2>
           <p>Stage reviewed papers and optional field edits, submit one PR batch, and let reviewed checkmarks update after merge.</p>
           <div class="review-actions">
-            <a class="review-btn" id="review-batch-workflow-link" href="#" target="_blank" rel="noopener noreferrer">Open Workflow</a>
+            <button type="button" class="review-btn" id="review-batch-open-copy-btn">Open Workflow + Copy Batch JSON</button>
             <button type="button" class="review-btn" id="review-batch-copy-btn">Copy gh Command</button>
-            <button type="button" class="review-btn" id="review-batch-copy-json-btn">Copy Batch JSON</button>
           </div>
           <pre class="review-command-box" id="review-batch-command"></pre>
           <div class="review-status" id="review-batch-status" role="status" aria-live="polite"></div>
@@ -540,6 +539,6 @@
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/papers-data.js?v=36d1fd6e40bb"></script>
   <script src="js/shared/global-search.js?v=6aee01784996"></script>
-  <script src="js/paper-review.js?v=fcc4bc6c2522"></script>
+  <script src="js/paper-review.js?v=01e1f023a4cd"></script>
 </body>
 </html>

@@ -465,7 +465,7 @@
 
     <section class="paper-edit-card hidden" id="paper-edit-change-card" aria-labelledby="paper-edit-change-heading">
       <h2 id="paper-edit-change-heading">4. Make Changes</h2>
-      <p>Only changed fields are included in <code>updates_json</code>.</p>
+      <p>Only changed fields are included in <code>review_batch_json</code>.</p>
       <form id="paper-edit-form" novalidate>
         <div class="paper-edit-grid">
           <label class="paper-edit-field">
@@ -518,7 +518,7 @@
           </label>
         </div>
         <div class="paper-edit-actions">
-          <button type="button" class="paper-edit-btn primary" id="paper-edit-generate-btn">Generate updates_json</button>
+          <button type="button" class="paper-edit-btn primary" id="paper-edit-generate-btn">Generate review_batch_json</button>
           <button type="reset" class="paper-edit-btn" id="paper-edit-reset-btn">Reset to original</button>
           <button type="button" class="paper-edit-btn hidden" id="paper-edit-return-review-btn">Confirm In Queue And Return</button>
         </div>
@@ -531,17 +531,17 @@
       <pre class="paper-edit-pre" id="paper-edit-updates-json">{}</pre>
       <pre class="paper-edit-pre" id="paper-edit-command"></pre>
       <div class="paper-edit-actions">
-        <button type="button" class="paper-edit-btn" id="paper-edit-copy-json-btn">Copy updates_json</button>
+        <button type="button" class="paper-edit-btn" id="paper-edit-copy-json-btn">Copy review_batch_json</button>
         <button type="button" class="paper-edit-btn" id="paper-edit-copy-command-btn">Copy command</button>
-        <a class="paper-edit-btn" id="paper-edit-workflow-link" href="https://github.com/llvm/library/actions/workflows/manual-paper-edit-pr.yml" target="_blank" rel="noopener noreferrer">Open Workflow</a>
+        <a class="paper-edit-btn" id="paper-edit-workflow-link" href="https://github.com/llvm/library/actions/workflows/paper-review-batch-pr.yml" target="_blank" rel="noopener noreferrer">Open Review Batch Workflow</a>
       </div>
-      <p id="paper-edit-submit-help">Paste <code>paper_id</code> and <code>updates_json</code> into the workflow inputs.</p>
+      <p id="paper-edit-submit-help">Paste <code>review_batch_json</code> into the review-batch workflow input.</p>
     </section>
   </main>
 
   <script src="js/shared/library-utils.js?v=0c4adf30e2d0"></script>
   <script src="js/papers-data.js?v=36d1fd6e40bb"></script>
   <script src="js/shared/global-search.js?v=6aee01784996"></script>
-  <script src="js/paper-edit.js?v=dcc0cc9dcf9f"></script>
+  <script src="js/paper-edit.js?v=0d0a7d34af56"></script>
 </body>
 </html>

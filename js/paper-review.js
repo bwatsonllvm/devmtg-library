@@ -41,18 +41,17 @@
   const stagedList = document.getElementById('review-staged-list');
   const permanentList = document.getElementById('review-recent-list');
 
-  const batchWorkflowLink = document.getElementById('review-batch-workflow-link');
+  const batchOpenCopyBtn = document.getElementById('review-batch-open-copy-btn');
   const batchCommand = document.getElementById('review-batch-command');
   const batchCopyBtn = document.getElementById('review-batch-copy-btn');
-  const batchCopyJsonBtn = document.getElementById('review-batch-copy-json-btn');
   const batchStatus = document.getElementById('review-batch-status');
 
   if (
     !reviewShell || !reviewStats || !reviewPosition || !reviewStatus || !currentCard || !emptyCard ||
     !emptyCopy || !titleEl || !metaEl || !abstractEl || !authorsEl || !markBtn || !nextBtn ||
     !detailLink || !paperLink || !sourceLink || !editLink || !updateLink || !clearStagedBtn ||
-    !clearStagedEmptyBtn || !stagedList || !permanentList || !batchWorkflowLink || !batchCommand ||
-    !batchCopyBtn || !batchCopyJsonBtn || !batchStatus
+    !clearStagedEmptyBtn || !stagedList || !permanentList || !batchOpenCopyBtn || !batchCommand ||
+    !batchCopyBtn || !batchStatus
   ) {
     return;
   }
@@ -300,7 +299,7 @@
 
   function buildPaperAdminLinks(paper) {
     const paperId = collapseWs((paper && paper.id) || '');
-    const editHref = paperId ? `papers/edit.html?id=${encodeURIComponent(paperId)}` : '';
+    const editHref = paperId ? `papers/edit.html?id=${encodeURIComponent(paperId)}&return_to=review` : '';
     const sourceUrl = sanitizeExternalUrl(paper && paper.sourceUrl);
     const paperUrl = sanitizeExternalUrl(paper && paper.paperUrl);
     const updateSourceUrl = sourceUrl || paperUrl;
@@ -525,21 +524,22 @@
     return `gh workflow run paper-review-batch-pr.yml --repo ${state.repoSlug} --ref main -f review_batch_json='${shellSingleQuote(encodedBatch)}'`;
   }
 
-  function renderBatchControls() {
-    const workflowUrl = `https://github.com/${state.repoSlug}/actions/workflows/paper-review-batch-pr.yml`;
-    batchWorkflowLink.href = workflowUrl;
+  function reviewBatchWorkflowUrl() {
+    return `https://github.com/${state.repoSlug}/actions/workflows/paper-review-batch-pr.yml`;
+  }
 
+  function renderBatchControls() {
     const stagedBatch = stagedBatchEntriesForCommand();
     if (!stagedBatch.length) {
       batchCommand.textContent = `gh workflow run paper-review-batch-pr.yml --repo ${state.repoSlug} --ref main -f review_batch_json='[{"id":"openalex-w1234567890"}]'`;
+      batchOpenCopyBtn.disabled = true;
       batchCopyBtn.disabled = true;
-      batchCopyJsonBtn.disabled = true;
       return;
     }
 
     batchCommand.textContent = buildBatchCommandFromEntries(stagedBatch);
+    batchOpenCopyBtn.disabled = false;
     batchCopyBtn.disabled = false;
-    batchCopyJsonBtn.disabled = false;
   }
 
   function renderStats() {
@@ -690,7 +690,7 @@
     }
   }
 
-  async function copyBatchJson() {
+  async function openWorkflowAndCopyBatchJson() {
     const entries = stagedBatchEntriesForCommand();
     if (!entries.length) {
       setBatchStatus('Stage at least one reviewed paper first.', 'error');
@@ -699,9 +699,10 @@
 
     try {
       await navigator.clipboard.writeText(JSON.stringify(entries));
-      setBatchStatus('review_batch_json copied.', 'success');
+      window.open(reviewBatchWorkflowUrl(), '_blank', 'noopener');
+      setBatchStatus('review_batch_json copied. Workflow opened in a new tab.', 'success');
     } catch {
-      setBatchStatus('Clipboard write failed. Copy batch JSON manually.', 'error');
+      setBatchStatus('Clipboard write failed. Copy batch JSON manually before running workflow.', 'error');
     }
   }
 
@@ -776,8 +777,8 @@
   nextBtn.addEventListener('click', moveToNext);
   clearStagedBtn.addEventListener('click', clearStagedBatch);
   clearStagedEmptyBtn.addEventListener('click', clearStagedBatch);
+  batchOpenCopyBtn.addEventListener('click', openWorkflowAndCopyBatchJson);
   batchCopyBtn.addEventListener('click', copyBatchCommand);
-  batchCopyJsonBtn.addEventListener('click', copyBatchJson);
   stagedList.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
@@ -787,8 +788,8 @@
     removeFromStaged(id);
   });
 
+  batchOpenCopyBtn.disabled = true;
   batchCopyBtn.disabled = true;
-  batchCopyJsonBtn.disabled = true;
   reviewShell.classList.remove('hidden');
   init();
 })();
