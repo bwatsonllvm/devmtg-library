@@ -244,18 +244,6 @@ function sanitizeExternalUrl(value) {
   return '';
 }
 
-function buildPaperAdminLinks(paper) {
-  const paperId = String((paper && paper.id) || '').trim();
-  const editHref = paperId ? `papers/edit.html?id=${encodeURIComponent(paperId)}&return_to=review` : '';
-  const sourceUrl = sanitizeExternalUrl(paper && paper.sourceUrl);
-  const paperUrl = sanitizeExternalUrl(paper && paper.paperUrl);
-  const updateSourceUrl = sourceUrl || paperUrl;
-  const updateHref = (paperId && updateSourceUrl)
-    ? `papers/edit.html?id=${encodeURIComponent(paperId)}&source_url=${encodeURIComponent(updateSourceUrl)}&return_to=review`
-    : '';
-  return { editHref, updateHref };
-}
-
 function cleanMetadataValue(value) {
   const cleaned = String(value || '').replace(/\s+/g, ' ').trim();
   if (!cleaned) return '';
@@ -1042,13 +1030,6 @@ function renderPaperCard(paper, tokens) {
   const paperLink = (paperHref && !directPdfHref)
     ? `<a href="${escapeHtml(paperHref)}" class="card-link-btn card-link-btn--video" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paperActionLabel)} for ${titleEsc} (opens in new tab)"><span aria-hidden="true">${escapeHtml(paperActionLabel)}</span></a>`
     : '';
-  const adminLinks = buildPaperAdminLinks(paper);
-  const editLink = adminLinks.editHref
-    ? `<a href="${escapeHtml(adminLinks.editHref)}" class="card-link-btn" aria-label="Edit record for ${titleEsc}"><span aria-hidden="true">Edit</span></a>`
-    : '';
-  const updateByUrlLink = adminLinks.updateHref
-    ? `<a href="${escapeHtml(adminLinks.updateHref)}" class="card-link-btn" aria-label="Update record by URL for ${titleEsc}"><span aria-hidden="true">Update URL</span></a>`
-    : '';
 
   const citationCount = Number.isFinite(paper._citationCount) ? paper._citationCount : 0;
   const citationHtml = citationCount > 0
@@ -1077,7 +1058,7 @@ function renderPaperCard(paper, tokens) {
       </a>
       <p class="card-speakers paper-authors">${renderAuthorButtons(paper.authors || [], tokens)}</p>
       ${tagsHtml}
-      ${(pdfLink || detailLink || paperLink || editLink || updateByUrlLink || citationHtml) ? `<div class="card-footer">${pdfLink}${detailLink}${paperLink}${editLink}${updateByUrlLink}${citationHtml}</div>` : ''}
+      ${(pdfLink || detailLink || paperLink || citationHtml) ? `<div class="card-footer">${pdfLink}${detailLink}${paperLink}${citationHtml}</div>` : ''}
     </article>`;
 }
 

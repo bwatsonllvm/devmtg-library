@@ -21,10 +21,7 @@ for f in \
   talks/events.html \
   talks/talk.html \
   papers/index.html \
-  papers/add-by-url.html \
   papers/add.html \
-  papers/edit.html \
-  papers/review.html \
   papers/paper.html \
   blogs/index.html \
   people/index.html \
@@ -41,9 +38,6 @@ for f in \
   js/meetings.js \
   js/talk.js \
   js/paper.js \
-  js/paper-add-by-url.js \
-  js/paper-edit.js \
-  js/paper-review.js \
   js/paper-manual-add.js \
   js/papers-data.js \
   js/papers.js \
@@ -64,7 +58,6 @@ done
 [ -f "$PAPERS_ROOT/index.json" ] || fail "Missing required file: papers/index.json"
 [ -f "$PAPERS_ROOT/key-topic-canonical.json" ] || fail "Missing required file: papers/key-topic-canonical.json"
 [ -f "$PAPERS_ROOT/manual-added-papers.json" ] || fail "Missing required file: papers/manual-added-papers.json"
-[ -f "$PAPERS_ROOT/reviewed-papers.json" ] || fail "Missing required file: papers/reviewed-papers.json"
 
 # Validate generated viewer artifacts are synchronized.
 scripts/build-viewer-artifacts.sh --check
@@ -276,10 +269,7 @@ ruby -e '
     talks/events.html
     talks/talk.html
     papers/index.html
-    papers/add-by-url.html
     papers/add.html
-    papers/edit.html
-    papers/review.html
     papers/paper.html
     blogs/index.html
     people/index.html
