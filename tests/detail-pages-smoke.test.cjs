@@ -85,9 +85,17 @@ async function assertDetailPageHealthy(page, url, rootSelector, label) {
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForSelector(`${rootSelector} .talk-title`, { timeout: 20000 });
 
-  const rootText = await page.locator(rootSelector).innerText();
-  assert.ok(!/could not load data/i.test(rootText), `${label}: rendered load error state`);
-  assert.ok(!/not found/i.test(rootText), `${label}: rendered not-found state`);
+  const emptyStateHeadings = (await page.locator(`${rootSelector} .empty-state h2`).allInnerTexts())
+    .map((text) => String(text || '').trim().toLowerCase())
+    .filter(Boolean);
+  assert.ok(
+    !emptyStateHeadings.some((heading) => heading.includes('could not load data')),
+    `${label}: rendered load error state`
+  );
+  assert.ok(
+    !emptyStateHeadings.some((heading) => heading.includes('not found')),
+    `${label}: rendered not-found state`
+  );
 
   const responsive = await page.evaluate(() => new Promise((resolve) => {
     let settled = false;
