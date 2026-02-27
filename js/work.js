@@ -78,6 +78,32 @@ const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=
 const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=74116e3da143';
 const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=eba40672f6e7';
 const DOCS_UNIVERSAL_SEARCH_LIMIT = 420;
+const DOCS_BEGINNER_STRONG_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\bgetting started\b|\bbasics\b|\btutorial(?:s)?\b|\bintroductory\b/;
+const DOCS_BEGINNER_AMBIGUOUS_RE = /\bintro(?:duction)?\b/;
+const DOCS_BEGINNER_ADVANCED_RE = /\badvanced\b|\binternals?\b|\bdeep dive\b|\bexpert\b|\breference\b|\bspec(?:ification)?\b/;
+const DOCS_BEGINNER_FALSE_POSITIVE_RE = /\bbasic block(?:s)?\b|\bbasic-block(?:s)?\b/g;
+const DOCS_FUNDAMENTALS_SIGNAL_RE = /\bfundamentals?\b|\boverview\b|\btutorial(?:s)?\b|\bwalkthrough\b|\bguide\b|\blearn\b|\bintro(?:duction)?\b|\bgetting started\b|\bbasics\b/;
+const DOCS_ADVANCED_RESEARCH_SIGNAL_RE = /\badvanced\b|\binternals?\b|\bdeep dive\b|\breference\b|\bspec(?:ification)?\b|\bresearch\b|\bbenchmark(?:ing)?\b|\bevaluation\b|\banalysis\b|\bstate of the art\b/;
+const DOCS_SUBPROJECT_TOPIC_PATTERNS = Object.freeze({
+  LLVM: /\bllvm\b/,
+  Clang: /\bclang(?:d)?\b/,
+  'clang-tools-extra': /\bclang[- ]tools[- ]extra\b|\bclang[- ](?:tidy|format|query)\b/,
+  MLIR: /\bmlir\b|\bmulti[- ]level intermediate representation\b/,
+  Flang: /\bflang\b/,
+  LLD: /\blld\b/,
+  LLDB: /\blldb\b/,
+  CIRCT: /\bcirct\b/,
+  Polly: /\bpolly\b/,
+  OpenMP: /\bopenmp\b|\blibomp\b/,
+  'compiler-rt': /\bcompiler[- ]?rt\b|\blibfuzzer\b/,
+  'libc++': /\blibc\+\+\b/,
+  'libc++abi': /\blibc\+\+abi\b|\blibcxxabi\b/,
+  libc: /\blibc\b/,
+  BOLT: /\bbolt\b/,
+  'orc-rt': /\borc[- ]?rt\b/,
+  'ORC JIT': /\borc(?:\s*jit)?\b/,
+  ClangIR: /\bclangir\b|\bclang\s+ir\b/,
+});
 
 const state = {
   mode: 'entity', // 'entity' | 'search'
@@ -2029,6 +2055,27 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
   const canScoreTalkByModel = hasModel;
   const canScorePaperByModel = hasModel;
   const canScorePeopleByModel = hasModel;
+  const resolveIntentKindMultiplier = (kind) => {
+    if (!hasModel) return 1;
+
+    let multiplier = 1;
+    if (model.beginnerIntent || model.fundamentalsIntent) {
+      if (kind === 'docs') multiplier *= 1.14;
+      else if (kind === 'talk') multiplier *= 1.08;
+      else if (kind === 'paper' || kind === 'blog') multiplier *= 0.96;
+    }
+
+    if (model.advancedResearchIntent) {
+      if (kind === 'paper' || kind === 'blog') multiplier *= 1.14;
+      else if (kind === 'talk') multiplier *= 1.06;
+      else if (kind === 'docs') multiplier *= 0.86;
+    }
+
+    if (model.subprojectIntent && kind === 'person') {
+      multiplier *= 0.94;
+    }
+    return multiplier;
+  };
   const strict = [];
   const relaxed = [];
   const fallback = [];
@@ -2159,7 +2206,7 @@ function buildUniversalResultsFromRankedLists(talks, papers, blogs, people, docs
 
       return {
         ...entry,
-        score: blendedScore > 0 ? blendedScore : raw,
+        score: (blendedScore > 0 ? blendedScore : raw) * resolveIntentKindMultiplier(entry.kind),
       };
     });
   }
@@ -2323,6 +2370,84 @@ function docsScopedBlob(doc, whereMode) {
   return [doc._titleLower, doc._headingsLower, doc._summaryLower, doc._chapterLower, doc._searchLower].join(' ').trim();
 }
 
+function docsHasBeginnerSignal(doc, blob) {
+  const title = String(doc && doc._titleLower || '');
+  const headings = String(doc && doc._headingsLower || '');
+  const summary = String(doc && doc._summaryLower || '');
+  const chapter = String(doc && doc._chapterLower || '');
+  const text = `${title} ${headings} ${summary} ${chapter} ${String(blob || '')}`
+    .replace(DOCS_BEGINNER_FALSE_POSITIVE_RE, ' ')
+    .trim();
+  if (!text) return false;
+
+  if (DOCS_BEGINNER_STRONG_RE.test(text)) return true;
+  if (!DOCS_BEGINNER_AMBIGUOUS_RE.test(text)) return false;
+  return !DOCS_BEGINNER_ADVANCED_RE.test(text);
+}
+
+function docsHasFundamentalsSignal(doc, blob) {
+  const title = String(doc && doc._titleLower || '');
+  const headings = String(doc && doc._headingsLower || '');
+  const summary = String(doc && doc._summaryLower || '');
+  const chapter = String(doc && doc._chapterLower || '');
+  const text = `${title} ${headings} ${summary} ${chapter} ${String(blob || '')}`
+    .replace(DOCS_BEGINNER_FALSE_POSITIVE_RE, ' ')
+    .trim();
+  if (!text) return false;
+  if (!DOCS_FUNDAMENTALS_SIGNAL_RE.test(text)) return false;
+  if (!DOCS_ADVANCED_RESEARCH_SIGNAL_RE.test(text)) return true;
+  return /\bfundamentals?\b|\boverview\b|\btutorial(?:s)?\b|\bwalkthrough\b|\bguide\b|\bgetting started\b|\bbasics\b|\blearn\b/.test(text);
+}
+
+function docsHasAdvancedResearchSignal(doc, blob) {
+  const title = String(doc && doc._titleLower || '');
+  const headings = String(doc && doc._headingsLower || '');
+  const summary = String(doc && doc._summaryLower || '');
+  const chapter = String(doc && doc._chapterLower || '');
+  const text = `${title} ${headings} ${summary} ${chapter} ${String(blob || '')}`.trim();
+  if (!text) return false;
+  if (DOCS_ADVANCED_RESEARCH_SIGNAL_RE.test(text)) return true;
+  return /\breference\b|\bspec(?:ification)?\b/.test(headings);
+}
+
+function docsSubprojectCoverage(model, doc, blob) {
+  const subprojectTopics = Array.isArray(model && model.subprojectTopics)
+    ? model.subprojectTopics
+    : [];
+  if (!subprojectTopics.length) {
+    return { matchedCount: 0, totalCount: 0, coverage: 0 };
+  }
+
+  const title = String(doc && doc._titleLower || '');
+  const headings = String(doc && doc._headingsLower || '');
+  const summary = String(doc && doc._summaryLower || '');
+  const chapter = String(doc && doc._chapterLower || '');
+  const slug = String(doc && doc._slugLower || '');
+  const text = `${title} ${headings} ${summary} ${chapter} ${slug} ${String(blob || '')}`;
+  if (!text) {
+    return { matchedCount: 0, totalCount: subprojectTopics.length, coverage: 0 };
+  }
+
+  let matchedCount = 0;
+  for (const topic of subprojectTopics) {
+    const pattern = DOCS_SUBPROJECT_TOPIC_PATTERNS[topic];
+    if (pattern && pattern.test(text)) {
+      matchedCount += 1;
+      continue;
+    }
+    const fallbackNeedle = normalizeSearchText(topic);
+    if (fallbackNeedle && text.includes(fallbackNeedle)) {
+      matchedCount += 1;
+    }
+  }
+
+  return {
+    matchedCount,
+    totalCount: subprojectTopics.length,
+    coverage: subprojectTopics.length ? matchedCount / subprojectTopics.length : 0,
+  };
+}
+
 function countMatchedQueryTokens(tokens, blob) {
   if (!Array.isArray(tokens) || !tokens.length || !blob) return 0;
   let matched = 0;
@@ -2344,7 +2469,7 @@ function matchesAdvancedTextConstraint(value, blob, mode = 'all') {
   return terms.every((term) => blob.includes(term));
 }
 
-function scoreDocsRecordByQuery(doc, query, advancedOptions = null) {
+function scoreDocsRecordByQuery(doc, query, advancedOptions = null, queryModel = null) {
   if (!doc || typeof doc !== 'object') return 0;
   if (!docsFiltersSupported(advancedOptions)) return 0;
 
@@ -2352,6 +2477,23 @@ function scoreDocsRecordByQuery(doc, query, advancedOptions = null) {
   const where = normalizeAdvancedWhere(options.where || 'anywhere');
   const blob = docsScopedBlob(doc, where);
   if (!blob) return 0;
+  const model = queryModel && typeof queryModel === 'object'
+    ? queryModel
+    : buildSearchQueryModel(query, options || undefined);
+  const beginnerIntent = !!(model && model.beginnerIntent);
+  const fundamentalsIntent = !!(model && model.fundamentalsIntent);
+  const advancedResearchIntent = !!(model && model.advancedResearchIntent);
+  const subprojectIntent = !!(model && model.subprojectIntent);
+  const hasNarrowSubprojectIntent = !!(
+    subprojectIntent
+    && Array.isArray(model && model.subprojectTopics)
+    && model.subprojectTopics.some((topic) => normalizeSearchText(topic) !== normalizeSearchText('LLVM'))
+  );
+  const fundamentalsSignal = fundamentalsIntent ? docsHasFundamentalsSignal(doc, blob) : false;
+  const advancedSignal = advancedResearchIntent ? docsHasAdvancedResearchSignal(doc, blob) : false;
+  const topicCoverage = subprojectIntent
+    ? docsSubprojectCoverage(model, doc, blob)
+    : { matchedCount: 0, totalCount: 0, coverage: 0 };
 
   if (!matchesAdvancedTextConstraint(options.allWords, blob, 'all')) return 0;
   if (!matchesAdvancedTextConstraint(options.anyWords, blob, 'any')) return 0;
@@ -2361,9 +2503,16 @@ function scoreDocsRecordByQuery(doc, query, advancedOptions = null) {
   if (exactPhrase && !blob.includes(exactPhrase)) return 0;
 
   const normalizedQuery = normalizeSearchText(query);
-  const queryTokens = tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
+  const clauseTokens = Array.isArray(model && model.clauses)
+    ? model.clauses.map((clause) => normalizeSearchText(clause && clause.token)).filter(Boolean)
+    : [];
+  const queryTokens = clauseTokens.length
+    ? clauseTokens
+    : tokenizeQuery(query).map((token) => normalizeSearchText(token)).filter(Boolean);
   const hasTextIntent = !!(normalizedQuery || queryTokens.length || exactPhrase || normalizeSearchText(options.allWords));
   if (!hasTextIntent) return 0;
+  if (beginnerIntent && !docsHasBeginnerSignal(doc, blob)) return 0;
+  if (hasNarrowSubprojectIntent && topicCoverage.matchedCount < 1) return 0;
 
   const matchedTokens = countMatchedQueryTokens(queryTokens, blob);
   if (queryTokens.length) {
@@ -2416,6 +2565,28 @@ function scoreDocsRecordByQuery(doc, query, advancedOptions = null) {
 
   const headingCountBoost = Math.min(16, (Array.isArray(doc.headings) ? doc.headings.length : 0) * 2);
   score += headingCountBoost;
+  if (beginnerIntent) {
+    const titleHeadings = `${title} ${headings}`;
+    if (DOCS_BEGINNER_STRONG_RE.test(titleHeadings)) score += 54;
+    else if (DOCS_BEGINNER_AMBIGUOUS_RE.test(`${titleHeadings} ${summary}`)) score += 16;
+  } else if (fundamentalsIntent) {
+    if (fundamentalsSignal) score += 44;
+    else score *= 0.86;
+  }
+
+  if (advancedResearchIntent) {
+    if (advancedSignal) score += 54;
+    else score *= 0.72;
+    if (fundamentalsSignal && !advancedSignal) score *= 0.9;
+  }
+
+  if (subprojectIntent && topicCoverage.matchedCount > 0) {
+    const baseBoost = hasNarrowSubprojectIntent ? 30 : 14;
+    const coverageBoost = hasNarrowSubprojectIntent ? 42 : 20;
+    score += baseBoost + (topicCoverage.coverage * coverageBoost);
+  } else if (subprojectIntent && topicCoverage.matchedCount < 1) {
+    score *= hasNarrowSubprojectIntent ? 0.8 : 0.93;
+  }
   return score;
 }
 
@@ -2437,9 +2608,10 @@ function rankDocsForQuery(docs, query, advancedOptions = null) {
     return [...entries].sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
   }
 
+  const model = buildSearchQueryModel(query, advancedOptions || undefined);
   const scored = [];
   for (const doc of entries) {
-    const score = scoreDocsRecordByQuery(doc, query, advancedOptions);
+    const score = scoreDocsRecordByQuery(doc, query, advancedOptions, model);
     if (score > 0) scored.push({ doc, score });
   }
 

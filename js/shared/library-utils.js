@@ -1338,9 +1338,55 @@
 
   const BEGINNER_INTENT_TOKENS = new Set([
     'beginner', 'beginners', 'intro', 'introduction', 'newcomer', 'newcomers',
-    'starter', 'start', 'starting', 'basics', 'basic', 'learn',
+    'starter', 'basics', 'tutorial', 'tutorials', 'learn',
   ]);
-  const BEGINNER_SIGNAL_RE = /\bbeginner(?:s)?\b|\bintro(?:duction)?\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasic(?:s)?\b/;
+  const BEGINNER_INTENT_PHRASE_RE = /\bfor beginners\b|\bgetting started\b|\bnew to\b|\bfirst steps?\b|\blearn llvm\b/;
+  const BEGINNER_SIGNAL_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasics\b|\bintro(?:duction)?\b|\bnew to\b|\bfirst steps?\b/;
+  const BEGINNER_STRONG_SIGNAL_RE = /\bbeginner(?:s)?\b|\bfor beginners\b|\btutorial(?:s)?\b|\bgetting started\b|\bbasics\b|\bnew to\b|\bfirst steps?\b|\bintroductory\b/;
+  const BEGINNER_AMBIGUOUS_SIGNAL_RE = /\bintro(?:duction)?\b/;
+  const BEGINNER_ADVANCED_SIGNAL_RE = /\badvanced\b|\binternals?\b|\bdeep dive\b|\bexpert\b|\bproduction\b|\bstate of the art\b/;
+  const BEGINNER_FALSE_POSITIVE_SIGNAL_RE = /\bbasic block(?:s)?\b|\bbasic-block(?:s)?\b/g;
+  const FUNDAMENTALS_INTENT_TOKENS = new Set([
+    'fundamental', 'fundamentals', 'overview', 'tutorial', 'tutorials',
+    'guide', 'walkthrough', 'learn', 'learning',
+  ]);
+  const FUNDAMENTALS_INTENT_PHRASE_RE = /\bllvm fundamentals?\b|\bcompiler fundamentals?\b|\bhow llvm works\b|\blearning llvm\b|\blearn llvm\b/;
+  const FUNDAMENTALS_SIGNAL_RE = /\bfundamentals?\b|\boverview\b|\btutorial(?:s)?\b|\bwalkthrough\b|\bguide\b|\blearn\b|\bintro(?:duction)?\b|\bgetting started\b|\bbasics\b/;
+  const ADVANCED_RESEARCH_INTENT_TOKENS = new Set([
+    'advanced', 'internals', 'architecture', 'research', 'benchmark', 'evaluation',
+    'polyhedral', 'formal', 'proof', 'novel', 'survey', 'publication', 'papers',
+    'theory', 'experimental', 'quantitative', 'analysis',
+  ]);
+  const ADVANCED_RESEARCH_INTENT_PHRASE_RE = /\bstate of the art\b|\bdeep dive\b|\bformal verification\b|\bcompiler research\b|\bexperimental evaluation\b|\bprogram analysis\b|\bperformance analysis\b|\bnovel (?:approach|method|technique)\b|\bpolyhedral\b/;
+  const ADVANCED_RESEARCH_SIGNAL_RE = /\badvanced\b|\binternals?\b|\bdeep dive\b|\bresearch\b|\bbenchmark(?:ing)?\b|\bevaluation\b|\banalysis\b|\bpolyhedral\b|\bformal\b|\bnovel\b|\bstate of the art\b|\bsurvey\b|\bpublication\b/;
+  const LLVM_SUBPROJECT_TOPICS = new Set([
+    'LLVM',
+    'llvm-libgcc',
+    'Clang',
+    'clang-tools-extra',
+    'MLIR',
+    'Flang',
+    'flang-rt',
+    'LLD',
+    'LLDB',
+    'CIRCT',
+    'Polly',
+    'OpenMP',
+    'offload',
+    'compiler-rt',
+    'runtimes',
+    'libc++',
+    'libc++abi',
+    'libc',
+    'libclc',
+    'libsycl',
+    'libunwind',
+    'BOLT',
+    'orc-rt',
+    'ORC JIT',
+    'ClangIR',
+    'cross-project-tests',
+  ]);
   const SEARCH_BROAD_TOKENS = new Set([
     'llvm', 'compiler', 'compilers', 'toolchain', 'project', 'projects',
     'research', 'talk', 'talks', 'paper', 'papers', 'blog', 'blogs',
@@ -1490,6 +1536,9 @@
 
   const TALK_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const PAPER_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const TALK_TOPIC_TREND_INDEX_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const PAPER_TOPIC_TREND_INDEX_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  const TOPIC_TREND_QUERY_EXPANSIONS_MAX = 8;
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE_MAX = 192;
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE = new Map();
   const SEARCH_HIGHLIGHT_NEEDLE_CACHE_MAX = 192;
@@ -1958,10 +2007,31 @@
       return {
         token,
         isBroad: SEARCH_BROAD_TOKENS.has(token),
+        isBeginnerClause: BEGINNER_INTENT_TOKENS.has(token),
         specificity: 1 + Math.min(0.75, Math.max(0, token.length - 2) * 0.08),
         variants: [...variantMap.entries()].map(([term, weight]) => ({ term, weight })),
       };
     });
+  }
+
+  function collectCanonicalTopicsFromQuery(seedValues, textValues) {
+    const seeds = [];
+    for (const value of (seedValues || [])) {
+      const token = normalizeSearchText(value);
+      if (token) seeds.push(token);
+    }
+
+    const text = (textValues || [])
+      .map((value) => normalizeSearchText(value))
+      .filter(Boolean)
+      .join(' ');
+
+    return collectCanonicalTopics(seeds, text);
+  }
+
+  function computeSubprojectTopicsFromQuery(seedValues, textValues) {
+    const topics = collectCanonicalTopicsFromQuery(seedValues, textValues);
+    return topics.filter((topic) => LLVM_SUBPROJECT_TOPICS.has(topic));
   }
 
   function buildSearchQueryModel(input, options = {}) {
@@ -2085,11 +2155,67 @@
     const requiredPhraseEntries = requiredPhraseValues.map((value) => ({ value, weight: 1 }));
     const anyPhraseEntries = anyPhraseValues.map((value) => ({ value, weight: 1 }));
 
-    const beginnerIntent = [...tokens, ...anyTokens].some((token) => BEGINNER_INTENT_TOKENS.has(token));
+    const intentTokens = [
+      ...tokens,
+      ...anyTokens,
+      ...((parsed.includeFieldTerms && parsed.includeFieldTerms.topics) || []),
+      ...((parsed.includeFieldTerms && parsed.includeFieldTerms.type) || []),
+    ];
+    const intentTexts = [
+      normalizedQuery,
+      ...requiredPhraseValues,
+      ...anyPhraseValues,
+      ...((parsed.includeFieldPhrases && parsed.includeFieldPhrases.topics) || []),
+      ...((parsed.includeFieldPhrases && parsed.includeFieldPhrases.type) || []),
+    ];
+
+    const beginnerTokenIntent = intentTokens.some((token) => BEGINNER_INTENT_TOKENS.has(token));
+    const beginnerPhraseIntent = intentTexts.some((value) => {
+      const text = String(value || '');
+      return text ? BEGINNER_INTENT_PHRASE_RE.test(text) : false;
+    });
+    const beginnerIntent = beginnerTokenIntent || beginnerPhraseIntent;
+
+    const fundamentalsTokenIntent = intentTokens.some((token) => FUNDAMENTALS_INTENT_TOKENS.has(token));
+    const fundamentalsPhraseIntent = intentTexts.some((value) => {
+      const text = String(value || '');
+      return text ? FUNDAMENTALS_INTENT_PHRASE_RE.test(text) : false;
+    });
+    const fundamentalsIntent = beginnerIntent || fundamentalsTokenIntent || fundamentalsPhraseIntent;
+
+    const advancedResearchTokenIntent = intentTokens.some((token) => ADVANCED_RESEARCH_INTENT_TOKENS.has(token));
+    const advancedResearchPhraseIntent = intentTexts.some((value) => {
+      const text = String(value || '');
+      return text ? ADVANCED_RESEARCH_INTENT_PHRASE_RE.test(text) : false;
+    });
+    const advancedResearchIntent = (advancedResearchTokenIntent || advancedResearchPhraseIntent) && !beginnerIntent;
+
+    const contextProfile = beginnerIntent
+      ? 'beginner'
+      : (advancedResearchIntent ? 'advanced-research' : (fundamentalsIntent ? 'fundamentals' : 'general'));
+
+    const queryTopics = collectCanonicalTopicsFromQuery(
+      [
+        ...intentTokens,
+        ...requiredPhraseValues,
+        ...anyPhraseValues,
+      ],
+      intentTexts
+    );
+    const subprojectTopics = computeSubprojectTopicsFromQuery(
+      [
+        ...intentTokens,
+        ...requiredPhraseValues,
+        ...anyPhraseValues,
+      ],
+      intentTexts
+    );
+    const subprojectTopicKeys = subprojectTopics.map((topic) => normalizeTopicKey(topic));
+
     if (normalizedQuery && normalizedQuery.includes(' ') && normalizedQuery.length <= 80 && !phraseSeen.has(normalizedQuery)) {
       const implicitPhraseWeight = beginnerIntent
         ? 0.52
-        : (tokens.length >= 3 ? 0.74 : 0.64);
+        : (tokens.length >= 4 ? 1.02 : (tokens.length === 3 ? 0.82 : 0.64));
       phrases.push({ value: normalizedQuery, weight: implicitPhraseWeight });
       phraseSeen.add(normalizedQuery);
     }
@@ -2117,6 +2243,13 @@
       phrases,
       normalizedQuery,
       beginnerIntent,
+      fundamentalsIntent,
+      advancedResearchIntent,
+      contextProfile,
+      queryTopics,
+      subprojectTopics,
+      subprojectTopicKeys,
+      subprojectIntent: subprojectTopics.length > 0,
       whereScope,
       yearRange: normalizeYearRange(parsed.yearRange || {}),
       hasFilters: hasFieldConstraints(fieldClauses)
@@ -2681,7 +2814,8 @@
       for (const config of fieldConfig) {
         const field = fields[config.key];
         if (!field || !field.text) continue;
-        const fieldBaseScore = computeFieldMatchScore(term, field, config.fuzzy !== false);
+        const allowFuzzy = (config.fuzzy !== false) && clause.isBeginnerClause !== true;
+        const fieldBaseScore = computeFieldMatchScore(term, field, allowFuzzy);
         if (fieldBaseScore <= 0) continue;
         const weightedScore = fieldBaseScore * (config.weight || 1);
         if (weightedScore > bestVariantScore) bestVariantScore = weightedScore;
@@ -2771,18 +2905,34 @@
     if (targetClauses.length < 2) return 0;
 
     let bestSignal = 0;
+    let aggregateSignal = 0;
+    let aggregateWeight = 0;
+    let fieldsWithSignal = 0;
+    const combinedFieldText = [];
     for (const config of configs) {
       const fieldKey = String(config && config.key || '');
       const field = sourceFields[fieldKey];
       if (!field || !field.text) continue;
+      combinedFieldText.push(field.text);
       const signal = computeClauseContextSignalForField(targetClauses, field.text);
       if (!(signal > 0)) continue;
 
       const weight = Number(config && config.weight) || 1;
       const weightedSignal = signal * (1 + Math.min(0.58, Math.log1p(Math.max(0.25, weight)) * 0.22));
       if (weightedSignal > bestSignal) bestSignal = weightedSignal;
+      aggregateSignal += signal * Math.max(0.25, weight);
+      aggregateWeight += Math.max(0.25, weight);
+      fieldsWithSignal += 1;
     }
-    return bestSignal;
+
+    const averagedSignal = aggregateWeight > 0 ? (aggregateSignal / aggregateWeight) : 0;
+    const combinedSignal = computeClauseContextSignalForField(targetClauses, combinedFieldText.join(' . '));
+    let signal = Math.max(bestSignal, (averagedSignal * 0.9) + (combinedSignal * 0.7));
+
+    if (fieldsWithSignal > 1 && targetClauses.length >= 3) {
+      signal *= 1 - Math.min(0.28, (fieldsWithSignal - 1) * 0.1);
+    }
+    return signal;
   }
 
   function scorePhraseEntriesAgainstFields(phraseEntries, fields, fieldConfig) {
@@ -3210,11 +3360,13 @@
       if (contextSignal > 0) {
         const contextBoost = model.beginnerIntent ? 0.12 : (focusedContextIntent ? 0.31 : 0.18);
         total *= 1 + (contextSignal * contextBoost);
-        if (focusedContextIntent && !relaxed && narrowClauseCount >= 3 && contextSignal < 0.34) {
-          total *= 0.88;
+        if (focusedContextIntent && !relaxed && narrowClauseCount >= 3) {
+          if (contextSignal < 0.24) total *= 0.7;
+          else if (contextSignal < 0.34) total *= 0.82;
+          else if (contextSignal < 0.46) total *= 0.9;
         }
       } else if (focusedContextIntent && !relaxed && narrowClauseCount >= 3) {
-        total *= 0.9;
+        total *= 0.74;
       }
     }
 
@@ -3258,7 +3410,302 @@
       fields.venue && fields.venue.text,
     ].filter(Boolean).join(' ');
     if (!text) return false;
-    return BEGINNER_SIGNAL_RE.test(text);
+    const cleanedText = text.replace(BEGINNER_FALSE_POSITIVE_SIGNAL_RE, ' ');
+    if (!cleanedText.trim()) return false;
+
+    const tagText = [
+      fields.tags && fields.tags.text,
+      fields.topics && fields.topics.text,
+      fields.type && fields.type.text,
+      fields.category && fields.category.text,
+    ].filter(Boolean).join(' ');
+    const tutorialTagged = /\btutorial(?:s)?\b/.test(tagText);
+    const beginnerTagged = /\bbeginner(?:s)?\b|\bfor beginners\b|\bgetting started\b|\bbasics\b/.test(tagText);
+    const strongSignal = BEGINNER_STRONG_SIGNAL_RE.test(cleanedText) || tutorialTagged || beginnerTagged;
+    if (strongSignal) return true;
+
+    if (!BEGINNER_AMBIGUOUS_SIGNAL_RE.test(cleanedText)) return false;
+    if (BEGINNER_ADVANCED_SIGNAL_RE.test(cleanedText)) return false;
+    return BEGINNER_SIGNAL_RE.test(cleanedText);
+  }
+
+  function buildDocContextText(doc, options = {}) {
+    const fields = doc && doc.fields ? doc.fields : {};
+    const includeContent = options.includeContent !== false;
+    return [
+      fields.title && fields.title.text,
+      fields.tags && fields.tags.text,
+      fields.topics && fields.topics.text,
+      fields.type && fields.type.text,
+      fields.abstract && fields.abstract.text,
+      includeContent ? (fields.content && fields.content.text) : '',
+      fields.category && fields.category.text,
+      fields.publication && fields.publication.text,
+      fields.venue && fields.venue.text,
+    ].filter(Boolean).join(' ');
+  }
+
+  function hasFundamentalsSignal(doc) {
+    const text = buildDocContextText(doc, { includeContent: true })
+      .replace(BEGINNER_FALSE_POSITIVE_SIGNAL_RE, ' ')
+      .trim();
+    if (!text) return false;
+    if (!FUNDAMENTALS_SIGNAL_RE.test(text)) return false;
+    if (!ADVANCED_RESEARCH_SIGNAL_RE.test(text)) return true;
+    return /\bfundamentals?\b|\boverview\b|\bgetting started\b|\btutorial(?:s)?\b|\bguide\b|\bwalkthrough\b|\bbasics\b|\bintro(?:duction)?\b|\blearn\b/.test(text);
+  }
+
+  function hasAdvancedResearchSignal(doc) {
+    const fields = doc && doc.fields ? doc.fields : {};
+    const text = buildDocContextText(doc, { includeContent: true });
+    if (!text) return false;
+    if (ADVANCED_RESEARCH_SIGNAL_RE.test(text)) return true;
+    const venueText = [
+      fields.publication && fields.publication.text,
+      fields.venue && fields.venue.text,
+    ].filter(Boolean).join(' ');
+    if (!venueText) return false;
+    const researchVenue = /\bproceedings\b|\bjournal\b|\bconference\b|\bworkshop\b|\bsymposium\b|\btransactions\b|\barxiv\b/.test(venueText);
+    const researchBody = /\bevaluation\b|\bbenchmark(?:ing)?\b|\banalysis\b|\bresults?\b|\binternals?\b|\bnovel\b/.test(text);
+    return researchVenue && researchBody;
+  }
+
+  function computeSubprojectCoverage(model, topicValues, fallbackText = '') {
+    const queryKeys = Array.isArray(model && model.subprojectTopicKeys)
+      ? model.subprojectTopicKeys
+      : [];
+    if (!queryKeys.length) {
+      return { matchedCount: 0, totalCount: 0, coverage: 0 };
+    }
+
+    const topics = collectCanonicalTopics(topicValues, fallbackText);
+    if (!topics.length) {
+      return { matchedCount: 0, totalCount: queryKeys.length, coverage: 0 };
+    }
+
+    const topicKeySet = new Set(topics.map((topic) => normalizeTopicKey(topic)));
+    let matchedCount = 0;
+    for (const topicKey of queryKeys) {
+      if (topicKeySet.has(topicKey)) matchedCount += 1;
+    }
+    return {
+      matchedCount,
+      totalCount: queryKeys.length,
+      coverage: queryKeys.length ? matchedCount / queryKeys.length : 0,
+    };
+  }
+
+  function normalizeTopicKeyList(values) {
+    const out = [];
+    const seen = new Set();
+    for (const value of (values || [])) {
+      const key = normalizeTopicKey(value);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(key);
+    }
+    return out;
+  }
+
+  function topicTrendRecencyWeight(year) {
+    const numeric = Number(year);
+    if (!Number.isFinite(numeric) || numeric <= 0) return 0.42;
+    const bounded = Math.max(2005, Math.min(2035, Math.floor(numeric)));
+    return 0.42 + (((bounded - 2005) / 30) * 0.9);
+  }
+
+  function addTopicTrendCoOccurrence(coOccurrence, topicKeys) {
+    const keys = normalizeTopicKeyList(topicKeys);
+    if (keys.length < 2) return;
+
+    for (let i = 0; i < keys.length; i += 1) {
+      const left = keys[i];
+      for (let j = i + 1; j < keys.length; j += 1) {
+        const right = keys[j];
+        if (!left || !right || left === right) continue;
+
+        let leftMap = coOccurrence.get(left);
+        if (!leftMap) {
+          leftMap = new Map();
+          coOccurrence.set(left, leftMap);
+        }
+        leftMap.set(right, (leftMap.get(right) || 0) + 1);
+
+        let rightMap = coOccurrence.get(right);
+        if (!rightMap) {
+          rightMap = new Map();
+          coOccurrence.set(right, rightMap);
+        }
+        rightMap.set(left, (rightMap.get(left) || 0) + 1);
+      }
+    }
+  }
+
+  function buildTopicTrendIndex(records, kind = 'talk') {
+    const values = Array.isArray(records) ? records : [];
+    const topicStats = new Map();
+    const coOccurrence = new Map();
+    let maxCount = 0;
+    let maxRecency = 0;
+
+    for (const record of values) {
+      const topics = kind === 'paper'
+        ? getPaperKeyTopics(record, 12)
+        : getTalkKeyTopics(record, 12);
+      const topicKeys = normalizeTopicKeyList(topics);
+      if (!topicKeys.length) continue;
+
+      const year = kind === 'paper'
+        ? parseYearNumber((record && (record._year || record.year || record.publishedDate || record.publishDate || record.date)) || '')
+        : parseYearNumber((record && (record._year || record.meeting || record.meetingDate || record.date)) || '');
+      const recency = topicTrendRecencyWeight(year);
+
+      for (const key of topicKeys) {
+        const prev = topicStats.get(key) || { count: 0, recency: 0 };
+        const next = {
+          count: prev.count + 1,
+          recency: prev.recency + recency,
+        };
+        topicStats.set(key, next);
+        if (next.count > maxCount) maxCount = next.count;
+        if (next.recency > maxRecency) maxRecency = next.recency;
+      }
+
+      addTopicTrendCoOccurrence(coOccurrence, topicKeys);
+    }
+
+    return {
+      topicStats,
+      coOccurrence,
+      maxCount,
+      maxRecency,
+      totalRecords: values.length,
+    };
+  }
+
+  function resolveTopicTrendIndex(records, kind = 'talk') {
+    const values = Array.isArray(records) ? records : [];
+    const cache = kind === 'paper'
+      ? PAPER_TOPIC_TREND_INDEX_CACHE
+      : TALK_TOPIC_TREND_INDEX_CACHE;
+    if (cache && cache.has(values)) return cache.get(values);
+
+    const index = buildTopicTrendIndex(values, kind);
+    if (cache) cache.set(values, index);
+    return index;
+  }
+
+  function isBroadQueryTopicKey(topicKey) {
+    const key = String(topicKey || '');
+    return key === normalizeTopicKey('LLVM');
+  }
+
+  function collectQueryTopicKeys(model) {
+    if (!model || typeof model !== 'object') return [];
+    const subprojectTopicKeys = normalizeTopicKeyList(model.subprojectTopics);
+    if (subprojectTopicKeys.length) return subprojectTopicKeys;
+    return normalizeTopicKeyList(model.queryTopics);
+  }
+
+  function buildQueryTopicTrendProfile(model, trendIndex) {
+    const queryTopicKeys = collectQueryTopicKeys(model);
+    if (!queryTopicKeys.length || !trendIndex || !(trendIndex.topicStats instanceof Map)) return null;
+
+    const queryKeySet = new Set(queryTopicKeys);
+    const weights = new Map();
+    let hasNarrowQueryTopics = false;
+
+    for (const queryKey of queryTopicKeys) {
+      if (!isBroadQueryTopicKey(queryKey)) hasNarrowQueryTopics = true;
+      weights.set(queryKey, 1);
+    }
+
+    const expansionLimit = hasNarrowQueryTopics
+      ? TOPIC_TREND_QUERY_EXPANSIONS_MAX
+      : Math.max(2, Math.floor(TOPIC_TREND_QUERY_EXPANSIONS_MAX / 2));
+
+    for (const queryKey of queryTopicKeys) {
+      const queryStat = trendIndex.topicStats.get(queryKey);
+      if (!queryStat || queryStat.count < 1) continue;
+      const related = trendIndex.coOccurrence.get(queryKey);
+      if (!(related instanceof Map) || !related.size) continue;
+
+      const candidates = [];
+      for (const [otherKey, count] of related.entries()) {
+        if (!otherKey || queryKeySet.has(otherKey) || count < 1) continue;
+        const otherStat = trendIndex.topicStats.get(otherKey);
+        if (!otherStat || otherStat.count < 1) continue;
+        const denominator = Math.sqrt(queryStat.count * otherStat.count);
+        if (!(denominator > 0)) continue;
+        const association = count / denominator;
+        if (association < 0.18) continue;
+
+        const popularity = trendIndex.maxCount > 0
+          ? otherStat.count / trendIndex.maxCount
+          : 0;
+        const adjustedAssociation = association * (1 - Math.min(0.62, popularity * 0.62));
+        if (adjustedAssociation <= 0.12) continue;
+        candidates.push({ otherKey, adjustedAssociation });
+      }
+
+      candidates.sort((a, b) => b.adjustedAssociation - a.adjustedAssociation);
+      for (let i = 0; i < candidates.length && i < expansionLimit; i += 1) {
+        const candidate = candidates[i];
+        const adjustedWeight = Math.min(
+          0.82,
+          Math.max(0.18, candidate.adjustedAssociation * (hasNarrowQueryTopics ? 1.3 : 0.95))
+        );
+        const previous = Number(weights.get(candidate.otherKey) || 0);
+        if (adjustedWeight > previous) weights.set(candidate.otherKey, adjustedWeight);
+      }
+    }
+
+    return {
+      queryTopicKeys,
+      queryKeySet,
+      weights,
+      hasNarrowQueryTopics,
+    };
+  }
+
+  function computeTopicTrendBonus(topicValues, trendProfile, trendIndex) {
+    if (!trendProfile || !(trendProfile.weights instanceof Map) || !trendProfile.weights.size) return 0;
+    if (!trendIndex || !(trendIndex.topicStats instanceof Map)) return 0;
+
+    const topicKeys = normalizeTopicKeyList(topicValues);
+    if (!topicKeys.length) {
+      return trendProfile.hasNarrowQueryTopics ? -0.4 : -0.12;
+    }
+
+    let matchedCount = 0;
+    let directMatchCount = 0;
+    let signal = 0;
+    for (const topicKey of topicKeys) {
+      const queryWeight = Number(trendProfile.weights.get(topicKey) || 0);
+      if (!(queryWeight > 0)) continue;
+      matchedCount += 1;
+      if (trendProfile.queryKeySet.has(topicKey)) directMatchCount += 1;
+
+      const stat = trendIndex.topicStats.get(topicKey);
+      const popularity = stat && trendIndex.maxCount > 0
+        ? stat.count / trendIndex.maxCount
+        : 0;
+      const recency = stat && trendIndex.maxRecency > 0
+        ? stat.recency / trendIndex.maxRecency
+        : 0;
+      const trendStrength = (popularity * 0.62) + (recency * 0.38);
+      signal += queryWeight * (0.56 + (trendStrength * 0.84));
+    }
+
+    if (!matchedCount) {
+      return trendProfile.hasNarrowQueryTopics ? -0.5 : -0.15;
+    }
+
+    const coverage = matchedCount / Math.max(1, trendProfile.queryTopicKeys.length);
+    let bonus = signal * (0.42 + (coverage * 0.78));
+    if (directMatchCount > 0) bonus += Math.min(2.2, directMatchCount * 0.95);
+    if (trendProfile.hasNarrowQueryTopics && coverage < 0.34) bonus *= 0.86;
+    return bonus;
   }
 
   function scoreTalkWithModel(indexedTalk, model, relaxed = false) {
@@ -3320,6 +3767,21 @@
     let total = base;
     const beginnerSignal = model.beginnerIntent ? hasBeginnerSignal(doc) : false;
     if (model.beginnerIntent && !beginnerSignal) return 0;
+    const fundamentalsSignal = model.fundamentalsIntent ? hasFundamentalsSignal(doc) : false;
+    const advancedSignal = model.advancedResearchIntent ? hasAdvancedResearchSignal(doc) : false;
+    const topicCoverage = model.subprojectIntent
+      ? computeSubprojectCoverage(
+        model,
+        getTalkKeyTopics(indexedTalk),
+        `${indexedTalk.title || ''} ${indexedTalk.abstract || ''} ${(indexedTalk.tags || []).join(' ')} ${(indexedTalk.keywords || []).join(' ')}`
+      )
+      : { matchedCount: 0, totalCount: 0, coverage: 0 };
+    const hasNarrowSubprojectIntent = !!(
+      model.subprojectIntent
+      && Array.isArray(model.subprojectTopics)
+      && model.subprojectTopics.some((topic) => normalizeTopicKey(topic) !== normalizeTopicKey('LLVM'))
+    );
+
     if (doc.year) {
       total += Math.max(0, doc.year - 2006) * 0.14;
     }
@@ -3327,6 +3789,30 @@
       if (doc.fields.tags.text.includes('beginner')) total += 11;
       if (doc.fields.category.text.includes('tutorial')) total += 5;
       if (beginnerSignal) total += 4;
+    } else if (model.fundamentalsIntent) {
+      if (fundamentalsSignal) total += 7;
+      if (beginnerSignal) total += 4;
+      if (!fundamentalsSignal && !beginnerSignal && !relaxed) total *= 0.84;
+      if (advancedSignal && !fundamentalsSignal && !beginnerSignal) total *= 0.9;
+    }
+
+    if (model.advancedResearchIntent) {
+      if (advancedSignal) total += 9;
+      else if (!relaxed) total *= 0.76;
+      else total *= 0.86;
+      if (fundamentalsSignal && !advancedSignal) total *= 0.92;
+    }
+
+    if (model.subprojectIntent) {
+      if (topicCoverage.matchedCount > 0) {
+        const baseBoost = hasNarrowSubprojectIntent ? 8 : 4;
+        const coverageBoost = hasNarrowSubprojectIntent ? 14 : 8;
+        total += baseBoost + (topicCoverage.coverage * coverageBoost);
+      } else if (!relaxed) {
+        total *= hasNarrowSubprojectIntent ? 0.74 : 0.9;
+      } else {
+        total *= hasNarrowSubprojectIntent ? 0.86 : 0.94;
+      }
     }
     return total;
   }
@@ -3442,15 +3928,43 @@
       return [...talks].sort((a, b) => String(b.meeting || '').localeCompare(String(a.meeting || '')));
     }
 
+    const talkTrendIndex = resolveTopicTrendIndex(talks, 'talk');
+    const talkTrendProfile = buildQueryTopicTrendProfile(model, talkTrendIndex);
+    const talkTrendScale = model.advancedResearchIntent
+      ? 2.3
+      : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.8 : 2.0);
+
     let scored = [];
     for (const talk of talks) {
-      const score = scoreTalkWithModel(talk, model, false);
+      let score = scoreTalkWithModel(talk, model, false);
+      if (score > 0 && talkTrendProfile) {
+        const trendBonus = computeTopicTrendBonus(
+          getTalkKeyTopics(talk, 12),
+          talkTrendProfile,
+          talkTrendIndex
+        );
+        if (trendBonus !== 0) {
+          score += trendBonus * talkTrendScale;
+          if (trendBonus < 0) score *= 0.97;
+        }
+      }
       if (score > 0) scored.push({ talk, score });
     }
 
     if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const talk of talks) {
-        const score = scoreTalkWithModel(talk, model, true);
+        let score = scoreTalkWithModel(talk, model, true);
+        if (score > 0 && talkTrendProfile) {
+          const trendBonus = computeTopicTrendBonus(
+            getTalkKeyTopics(talk, 12),
+            talkTrendProfile,
+            talkTrendIndex
+          );
+          if (trendBonus !== 0) {
+            score += trendBonus * (talkTrendScale * 0.9);
+            if (trendBonus < 0) score *= 0.98;
+          }
+        }
         if (score > 0) scored.push({ talk, score });
       }
     }
@@ -3590,10 +4104,44 @@
     let total = base;
     const beginnerSignal = model.beginnerIntent ? hasBeginnerSignal(doc) : false;
     if (model.beginnerIntent && !beginnerSignal) return 0;
+    const fundamentalsSignal = model.fundamentalsIntent ? hasFundamentalsSignal(doc) : false;
+    const advancedSignal = model.advancedResearchIntent ? hasAdvancedResearchSignal(doc) : false;
+    const topicCoverage = model.subprojectIntent
+      ? computeSubprojectCoverage(
+        model,
+        getPaperKeyTopics(paper),
+        `${paper.title || ''} ${paper.abstract || ''} ${paper.publication || ''} ${paper.venue || ''} ${(paper.tags || []).join(' ')} ${(paper.keywords || []).join(' ')}`
+      )
+      : { matchedCount: 0, totalCount: 0, coverage: 0 };
+    const hasNarrowSubprojectIntent = !!(
+      model.subprojectIntent
+      && Array.isArray(model.subprojectTopics)
+      && model.subprojectTopics.some((topic) => normalizeTopicKey(topic) !== normalizeTopicKey('LLVM'))
+    );
+
     if (doc.year) total += Math.max(0, doc.year - 2000) * 0.12;
     if (doc.citationCount > 0) total += Math.min(8, Math.log1p(doc.citationCount) * 1.3);
     if (model.beginnerIntent && doc.fields.topics.text.includes('beginner')) total += 8;
     if (model.beginnerIntent && beginnerSignal) total += 4;
+    if (!model.beginnerIntent && model.fundamentalsIntent) {
+      if (fundamentalsSignal) total += 7;
+      if (!fundamentalsSignal && !relaxed) total *= 0.84;
+      if (advancedSignal && !fundamentalsSignal) total *= 0.92;
+    }
+    if (model.advancedResearchIntent) {
+      if (advancedSignal) total += 10;
+      else if (!relaxed) total *= 0.74;
+      else total *= 0.84;
+      if (fundamentalsSignal && !advancedSignal) total *= 0.9;
+    }
+    if (model.subprojectIntent) {
+      if (topicCoverage.matchedCount > 0) {
+        const baseBoost = hasNarrowSubprojectIntent ? 8 : 4;
+        const coverageBoost = hasNarrowSubprojectIntent ? 16 : 9;
+        total += baseBoost + (topicCoverage.coverage * coverageBoost);
+      } else if (!relaxed) total *= hasNarrowSubprojectIntent ? 0.76 : 0.9;
+      else total *= hasNarrowSubprojectIntent ? 0.88 : 0.95;
+    }
     return total;
   }
 
@@ -3686,15 +4234,43 @@
       });
     }
 
+    const paperTrendIndex = resolveTopicTrendIndex(records, 'paper');
+    const paperTrendProfile = buildQueryTopicTrendProfile(model, paperTrendIndex);
+    const paperTrendScale = model.advancedResearchIntent
+      ? 2.55
+      : ((model.beginnerIntent || model.fundamentalsIntent) ? 1.9 : 2.2);
+
     let scored = [];
     for (const paper of records) {
-      const score = scorePaperWithModel(paper, model, false);
+      let score = scorePaperWithModel(paper, model, false);
+      if (score > 0 && paperTrendProfile) {
+        const trendBonus = computeTopicTrendBonus(
+          getPaperKeyTopics(paper, 12),
+          paperTrendProfile,
+          paperTrendIndex
+        );
+        if (trendBonus !== 0) {
+          score += trendBonus * paperTrendScale;
+          if (trendBonus < 0) score *= 0.97;
+        }
+      }
       if (score > 0) scored.push({ paper, score });
     }
 
     if (!scored.length && (model.clauses.length >= 2 || model.hasFilters)) {
       for (const paper of records) {
-        const score = scorePaperWithModel(paper, model, true);
+        let score = scorePaperWithModel(paper, model, true);
+        if (score > 0 && paperTrendProfile) {
+          const trendBonus = computeTopicTrendBonus(
+            getPaperKeyTopics(paper, 12),
+            paperTrendProfile,
+            paperTrendIndex
+          );
+          if (trendBonus !== 0) {
+            score += trendBonus * (paperTrendScale * 0.9);
+            if (trendBonus < 0) score *= 0.98;
+          }
+        }
         if (score > 0) scored.push({ paper, score });
       }
     }
