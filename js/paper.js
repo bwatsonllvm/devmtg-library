@@ -220,6 +220,34 @@ async function loadPapers() {
   }
 }
 
+async function loadPaperDetailContextById(paperId) {
+  const targetId = String(paperId || '').trim();
+  if (!targetId) {
+    return { loaded: true, paper: null, relatedPool: [] };
+  }
+
+  if (typeof window.loadPaperRecordById === 'function') {
+    try {
+      const payload = await window.loadPaperRecordById(targetId);
+      if (!payload || typeof payload !== 'object') {
+        return { loaded: true, paper: null, relatedPool: [] };
+      }
+      const paper = normalizePaperRecord(payload.paper);
+      const relatedPool = Array.isArray(payload.papers) ? payload.papers : [];
+      return { loaded: true, paper, relatedPool };
+    } catch {
+      // Fall through to legacy full-corpus loader.
+    }
+  }
+
+  const allPapers = await loadPapers();
+  if (!allPapers) {
+    return { loaded: false, paper: null, relatedPool: [] };
+  }
+  const paper = allPapers.find((candidate) => candidate.id === targetId) || null;
+  return { loaded: true, paper, relatedPool: allPapers };
+}
+
 // ============================================================
 // Helpers
 // ============================================================
@@ -1285,32 +1313,90 @@ function renderAuthors(authors, paper) {
 
 const _PAPER_PLACEHOLDER = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><polyline points="14 2 14 7 19 7"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="14" y2="17"/></svg>`;
 
-function getRelatedPapers(paper, allPapers) {
+function countTagOverlap(candidate, tagSet) {
+  if (!(tagSet instanceof Set) || !tagSet.size) return 0;
+  const candidateTags = [];
+  if (Array.isArray(candidate && candidate.tags)) candidateTags.push(...candidate.tags);
+  if (Array.isArray(candidate && candidate.keywords)) candidateTags.push(...candidate.keywords);
+  let overlap = 0;
+  for (const tag of candidateTags) {
+    const normalized = String(tag || '').trim().toLowerCase();
+    if (!normalized) continue;
+    if (tagSet.has(normalized)) overlap += 1;
+  }
+  return overlap;
+}
+
+function rawPaperLooksLikeBlog(candidate) {
+  const normalizedType = String(candidate && candidate.type || '').trim().toLowerCase();
+  const normalizedSource = String(candidate && candidate.source || '').trim().toLowerCase();
+  return BLOG_SOURCE_SLUG_ALIASES.has(normalizedSource) || normalizedType === 'blog-post' || normalizedType === 'blog';
+}
+
+function getRelatedPapers(paper, relatedPool) {
+  if (!Array.isArray(relatedPool) || !relatedPool.length) return [];
   const MAX_TOTAL = 6;
-  const sameYear = allPapers
-    .filter((candidate) => candidate.id !== paper.id && candidate._year && candidate._year === paper._year)
-    .slice(0, 4);
-  const seen = new Set(sameYear.map((candidate) => candidate.id));
+  const MAX_SCAN = 12000;
+  const targetId = String(paper && paper.id || '').trim();
+  if (!targetId) return [];
 
-  const tagSet = new Set((paper.tags || []).map((tag) => tag.toLowerCase()));
-  const tagRelated = allPapers
-    .filter((candidate) => candidate.id !== paper.id && !seen.has(candidate.id))
-    .map((candidate) => {
-      const overlap = (candidate.tags || []).filter((tag) => tagSet.has(String(tag || '').toLowerCase())).length;
-      return { candidate, overlap };
-    })
-    .filter((entry) => entry.overlap > 0)
-    .sort((a, b) => {
-      const overlapDiff = b.overlap - a.overlap;
-      if (overlapDiff !== 0) return overlapDiff;
-      const yearDiff = String(b.candidate._year || '').localeCompare(String(a.candidate._year || ''));
-      if (yearDiff !== 0) return yearDiff;
-      return String(a.candidate.title || '').localeCompare(String(b.candidate.title || ''));
-    })
-    .slice(0, Math.max(0, MAX_TOTAL - sameYear.length))
-    .map((entry) => entry.candidate);
+  const targetYear = String(paper && paper._year || '').trim();
+  const targetIsBlog = isBlogPaper(paper);
+  const tagSet = new Set(
+    [...(paper && Array.isArray(paper.tags) ? paper.tags : []), ...(paper && Array.isArray(paper.keywords) ? paper.keywords : [])]
+      .map((tag) => String(tag || '').trim().toLowerCase())
+      .filter(Boolean)
+  );
 
-  return [...sameYear, ...tagRelated];
+  const scored = [];
+  const seenIds = new Set();
+  const stride = relatedPool.length > MAX_SCAN
+    ? Math.ceil(relatedPool.length / MAX_SCAN)
+    : 1;
+  for (let index = 0; index < relatedPool.length; index += stride) {
+    const candidate = relatedPool[index];
+    if (!candidate || typeof candidate !== 'object') continue;
+    const candidateId = String(candidate.id || '').trim();
+    if (!candidateId || candidateId === targetId || seenIds.has(candidateId)) continue;
+    seenIds.add(candidateId);
+
+    const candidateTitle = String(candidate.title || '').trim();
+    if (!candidateTitle) continue;
+
+    const candidateYear = /^\d{4}$/.test(String(candidate.year || '').trim())
+      ? String(candidate.year || '').trim()
+      : '';
+    const sameYear = !!(targetYear && candidateYear === targetYear);
+    const overlap = countTagOverlap(candidate, tagSet);
+    if (!sameYear && overlap < 1) continue;
+
+    let score = 0;
+    if (sameYear) score += 110;
+    score += overlap * 24;
+    if (rawPaperLooksLikeBlog(candidate) === targetIsBlog) score += 8;
+    if (candidateYear) score += Number.parseInt(candidateYear, 10) * 0.001;
+
+    scored.push({ candidate, score, overlap, candidateYear });
+  }
+
+  scored.sort((a, b) => {
+    const scoreDiff = b.score - a.score;
+    if (scoreDiff !== 0) return scoreDiff;
+    const overlapDiff = b.overlap - a.overlap;
+    if (overlapDiff !== 0) return overlapDiff;
+    const yearDiff = String(b.candidateYear || '').localeCompare(String(a.candidateYear || ''));
+    if (yearDiff !== 0) return yearDiff;
+    return String(a.candidate.title || '').localeCompare(String(b.candidate.title || ''));
+  });
+
+  const related = [];
+  for (const entry of scored) {
+    const normalized = normalizePaperRecord(entry.candidate);
+    if (!normalized) continue;
+    related.push(normalized);
+    if (related.length >= MAX_TOTAL) break;
+  }
+  return related;
 }
 
 function renderRelatedCard(paper) {
@@ -1362,7 +1448,7 @@ function renderRelatedCard(paper) {
 // Page Rendering
 // ============================================================
 
-function renderPaperDetail(paper, allPapers) {
+function renderPaperDetail(paper, relatedPool) {
   const root = document.getElementById('paper-detail-root');
   const blogEntry = isBlogPaper(paper);
   const listingPath = getListingPathForPaper(paper);
@@ -1469,7 +1555,7 @@ function renderPaperDetail(paper, allPapers) {
       </div>
     </section>`;
 
-  const related = getRelatedPapers(paper, allPapers);
+  const related = getRelatedPapers(paper, relatedPool);
 
   root.innerHTML = `
     <div class="talk-detail">
@@ -1574,22 +1660,6 @@ async function init() {
     itemType: fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper',
     itemId: String(paperId || '').trim(),
   });
-  const allPapers = await loadPapers();
-
-  if (!allPapers) {
-    const root = document.getElementById('paper-detail-root');
-    root.innerHTML = `
-      <div class="talk-detail">
-        <div class="empty-state" role="alert">
-          <div class="empty-state-icon" aria-hidden="true">!</div>
-          <h2>Could not load data</h2>
-          <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available and that <code>js/papers-data.js</code> loads first.</p>
-        </div>
-      </div>`;
-    initShareMenu();
-    return;
-  }
-
   if (!paperId) {
     renderNotFound(null, fallbackListingPath);
     const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
@@ -1607,7 +1677,22 @@ async function init() {
     return;
   }
 
-  const paper = allPapers.find((candidate) => candidate.id === paperId);
+  const detailContext = await loadPaperDetailContextById(paperId);
+  if (!detailContext || detailContext.loaded !== true) {
+    const root = document.getElementById('paper-detail-root');
+    root.innerHTML = `
+      <div class="talk-detail">
+        <div class="empty-state" role="alert">
+          <div class="empty-state-icon" aria-hidden="true">!</div>
+          <h2>Could not load data</h2>
+          <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available and that <code>js/papers-data.js</code> loads first.</p>
+        </div>
+      </div>`;
+    initShareMenu();
+    return;
+  }
+
+  const paper = detailContext.paper;
   if (!paper) {
     renderNotFound(paperId, fallbackListingPath);
     const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
@@ -1622,7 +1707,7 @@ async function init() {
   document.title = `${paper.title} — LLVM Research Library`;
   updatePaperSeoMetadata(paper);
   syncHeaderNavForPaper(paper);
-  renderPaperDetail(paper, allPapers);
+  renderPaperDetail(paper, detailContext.relatedPool);
   setIssueContextForPaper(paper);
   initShareMenu();
 }

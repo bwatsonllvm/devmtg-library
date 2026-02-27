@@ -37,6 +37,37 @@ async function loadTalks() {
   }
 }
 
+async function loadTalkDetailContextById(talkId) {
+  const targetId = String(talkId || '').trim();
+  if (!targetId) {
+    return { loaded: true, talk: null, relatedPool: [] };
+  }
+
+  if (typeof window.loadTalkRecordById === 'function') {
+    try {
+      const payload = await window.loadTalkRecordById(targetId);
+      if (!payload || typeof payload !== 'object') {
+        return { loaded: true, talk: null, relatedPool: [] };
+      }
+      const normalizedTalk = normalizeTalks([payload.talk]);
+      const talk = Array.isArray(normalizedTalk) && normalizedTalk.length ? normalizedTalk[0] : null;
+      const relatedPool = normalizeTalks(payload.talks);
+      return {
+        loaded: true,
+        talk,
+        relatedPool: Array.isArray(relatedPool) ? relatedPool : [],
+      };
+    } catch {
+      // Fall back to full loader.
+    }
+  }
+
+  const talks = await loadTalks();
+  if (!talks) return { loaded: false, talk: null, relatedPool: [] };
+  const talk = talks.find((candidate) => candidate.id === targetId) || null;
+  return { loaded: true, talk, relatedPool: talks };
+}
+
 // ============================================================
 // Helpers
 // ============================================================
@@ -670,9 +701,18 @@ async function init() {
     itemId: String(talkId || '').trim(),
   });
 
-  const allTalks = await loadTalks();
+  if (!talkId) {
+    renderNotFound(null);
+    setIssueContext({
+      itemTitle: 'Missing talk ID',
+      issueTitle: '[Talk] Missing talk ID',
+    });
+    initShareMenu();
+    return;
+  }
 
-  if (!allTalks) {
+  const detailContext = await loadTalkDetailContextById(talkId);
+  if (!detailContext || detailContext.loaded !== true) {
     const root = document.getElementById('talk-detail-root');
     root.innerHTML = `
       <div class="talk-detail">
@@ -686,17 +726,7 @@ async function init() {
     return;
   }
 
-  if (!talkId) {
-    renderNotFound(null);
-    setIssueContext({
-      itemTitle: 'Missing talk ID',
-      issueTitle: '[Talk] Missing talk ID',
-    });
-    initShareMenu();
-    return;
-  }
-
-  const talk = allTalks.find(t => t.id === talkId);
+  const talk = detailContext.talk;
   if (!talk) {
     renderNotFound(talkId);
     setIssueContext({
@@ -711,7 +741,7 @@ async function init() {
   document.title = `${talk.title} — LLVM Research Library`;
   updateTalkSeoMetadata(talk);
 
-  renderTalkDetail(talk, allTalks);
+  renderTalkDetail(talk, detailContext.relatedPool);
   setIssueContextForTalk(talk);
   initShareMenu();
 }
