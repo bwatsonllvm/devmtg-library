@@ -350,6 +350,7 @@ function resolveDetailLinkInfo(rawHref) {
 function cacheTalkNavigationRecordById(talkId) {
   const id = String(talkId || '').trim();
   if (!id) return;
+  if (!allTalkRecords.some((entry) => String((entry && entry.id) || '').trim() === id)) return;
   const payload = {
     kind: 'talk',
     id,
@@ -365,6 +366,9 @@ function cacheTalkNavigationRecordById(talkId) {
 function cachePaperNavigationRecordById(paperId) {
   const id = String(paperId || '').trim();
   if (!id) return;
+  const hasRecord = allPaperRecords.some((entry) => String((entry && entry.id) || '').trim() === id)
+    || allBlogRecords.some((entry) => String((entry && entry.id) || '').trim() === id);
+  if (!hasRecord) return;
   const payload = {
     kind: 'paper',
     id,

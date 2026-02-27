@@ -1314,6 +1314,7 @@ function resolveTalkIdFromHref(href) {
 function cacheTalkNavigationRecordById(talkId) {
   const id = String(talkId || '').trim();
   if (!id) return;
+  if (!allTalks.some((entry) => String((entry && entry.id) || '').trim() === id)) return;
   const payload = {
     kind: 'talk',
     id,

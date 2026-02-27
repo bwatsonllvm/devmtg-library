@@ -353,7 +353,9 @@ function readCachedPaperRecord(paperId) {
     if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
       return null;
     }
-    const paper = normalizePaperRecord(payload && payload.paper);
+    const cachedPaper = payload && payload.paper;
+    if (!cachedPaper || typeof cachedPaper !== 'object') return null;
+    const paper = normalizePaperRecord(cachedPaper);
     if (!paper) return null;
     if (String(paper.id || '').trim() !== id) return null;
     return paper;

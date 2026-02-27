@@ -780,6 +780,7 @@ function resolvePaperIdFromHref(href) {
 function cachePaperNavigationRecordById(paperId) {
   const id = String(paperId || '').trim();
   if (!id) return;
+  if (!allPapers.some((entry) => String((entry && entry.id) || '').trim() === id)) return;
   const payload = {
     kind: 'paper',
     id,

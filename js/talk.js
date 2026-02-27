@@ -159,7 +159,9 @@ function readCachedTalkRecord(talkId) {
     if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
       return null;
     }
-    const normalized = normalizeTalks([payload && payload.talk]);
+    const cachedTalk = payload && payload.talk;
+    if (!cachedTalk || typeof cachedTalk !== 'object') return null;
+    const normalized = normalizeTalks([cachedTalk]);
     const talk = Array.isArray(normalized) && normalized.length ? normalized[0] : null;
     if (!talk) return null;
     if (String(talk.id || '').trim() !== id) return null;
