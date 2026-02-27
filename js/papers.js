@@ -2439,8 +2439,7 @@ function loadStateFromUrl() {
   }
 
   const requestedContentType = normalizeFilterValue(String(params.get('content') || '').split(',')[0] || '');
-  const legacySourceParam = normalizeFilterValue(params.get('source'));
-  const requestedScope = (requestedContentType === BLOG_FILTER_VALUE || BLOG_SOURCE_SLUGS.has(legacySourceParam) || legacySourceParam === BLOG_FILTER_VALUE)
+  const requestedScope = requestedContentType === BLOG_FILTER_VALUE
     ? BLOG_FILTER_VALUE
     : (requestedContentType === PAPER_FILTER_VALUE ? PAPER_FILTER_VALUE : '');
   if (requestedScope && requestedScope !== PAGE_SCOPE) {
@@ -2451,11 +2450,6 @@ function loadStateFromUrl() {
     const redirectUrl = redirectParams.toString() ? `${redirectPath}?${redirectParams.toString()}` : redirectPath;
     window.location.replace(redirectUrl);
     return;
-  }
-
-  if (!state.query) {
-    const legacyPublication = String(params.get('publication') || params.get('venue') || '').trim();
-    if (legacyPublication) state.query = legacyPublication;
   }
 
   const tagParam = String(params.get('tag') || '').trim();

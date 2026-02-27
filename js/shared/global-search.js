@@ -870,13 +870,6 @@
     form.dataset.globalSearchAdvancedReady = 'true';
   }
 
-  function pickFirstCsvValue(value) {
-    return String(value || '')
-      .split(',')
-      .map((part) => part.trim())
-      .filter(Boolean)[0] || '';
-  }
-
   function deriveInitialQuery(params) {
     const mode = String(params.get('mode') || '').trim().toLowerCase();
     if (mode === 'search') {
@@ -895,7 +888,7 @@
       if (value) return value;
     }
 
-    return pickFirstCsvValue(params.get('tag'));
+    return '';
   }
 
   function normalizeTalks(rawTalks) {

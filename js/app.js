@@ -1361,8 +1361,7 @@ function loadStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
   if (typeof HubUtils.parseUrlState === 'function') {
     const parsed = HubUtils.parseUrlState(window.location.search, allTalks);
-    const legacyTag = parsed.tags && parsed.tags.length ? parsed.tags[0] : '';
-    state.query = parsed.query || legacyTag || '';
+    state.query = parsed.query || '';
     state.speaker = parsed.speaker || '';
     state.meeting = parsed.meeting || '';
     state.meetingName = parsed.meetingName || '';
@@ -1382,10 +1381,6 @@ function loadStateFromUrl() {
     }
     if (params.get('category')) params.get('category').split(',').forEach((c) => state.categories.add(c.trim()));
     if (params.get('year')) params.get('year').split(',').forEach((y) => state.years.add(y.trim()));
-    if (!state.query && params.get('tag')) {
-      const legacyTag = params.get('tag').split(',').map((t) => t.trim()).filter(Boolean)[0];
-      if (legacyTag) state.query = legacyTag;
-    }
     state.hasVideo = params.get('video') === '1';
     state.hasSlides = params.get('slides') === '1';
   }
@@ -1477,8 +1472,6 @@ function restoreNavigationState() {
   if (s.speaker)    state.speaker   = s.speaker;
   if (s.categories) s.categories.forEach(c => state.categories.add(c));
   if (s.years)      s.years.forEach(y => state.years.add(y));
-  // Legacy back-state support from older sessions
-  if (!state.query && s.tags && s.tags.length) state.query = s.tags[0];
   if (s.hasVideo)   state.hasVideo  = true;
   if (s.hasSlides)  state.hasSlides = true;
   const restoredSort = String(s.sortBy || s.sort || '').trim().toLowerCase();

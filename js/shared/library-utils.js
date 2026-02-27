@@ -5087,7 +5087,6 @@
       meetingName,
       categories: normalizeTalkCategoryList(parseCsvParam(params.category)),
       years: parseCsvParam(params.year),
-      tags: parseCsvParam(params.tag),
       sort: isNonEmptyString(params.sort) ? params.sort.trim().toLowerCase() : '',
       hasVideo: params.video === '1' || params.video === 'true',
       hasSlides: params.slides === '1' || params.slides === 'true',
@@ -5110,7 +5109,6 @@
       speaker: isNonEmptyString(parsed.speaker) ? normalizeSpeakerName(parsed.speaker) : '',
       categories: normalizeTalkCategoryList(Array.isArray(parsed.categories) ? parsed.categories.filter(isNonEmptyString) : []),
       years: Array.isArray(parsed.years) ? parsed.years.filter(isNonEmptyString) : [],
-      tags: Array.isArray(parsed.tags) ? parsed.tags.filter(isNonEmptyString) : [],
       sortBy: isNonEmptyString(parsed.sortBy)
         ? parsed.sortBy.trim().toLowerCase()
         : (isNonEmptyString(parsed.sort) ? parsed.sort.trim().toLowerCase() : ''),
