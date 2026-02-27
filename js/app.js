@@ -83,6 +83,7 @@ const arePersonMiddleVariants = requireHubFunction('arePersonMiddleVariants');
 const tokenizeQueryFromHub = requireHubFunction('tokenizeQuery');
 const rankTalksByQuery = requireHubFunction('rankTalksByQuery');
 const buildSearchSnippet = requireHubFunction('buildSearchSnippet');
+const highlightSearchTextFromHub = requireHubFunction('highlightSearchText');
 const formatMeetingDateUniversal = requireHubFunction('formatMeetingDateUniversal');
 const sortCategoryEntries = requireHubFunction('sortCategoryEntries');
 const parseUrlState = requireHubFunction('parseUrlState');
@@ -320,16 +321,8 @@ function buildContextSnippet(sourceText, query, maxLength = 300) {
 }
 
 function highlightText(text, tokens) {
-  if (!tokens || tokens.length === 0) return escapeHtml(text);
-  let result = escapeHtml(text);
-  for (const token of tokens) {
-    const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    result = result.replace(
-      new RegExp(`(${escaped})`, 'gi'),
-      '<mark>$1</mark>'
-    );
-  }
-  return result;
+  const queryOrTokens = state.query && state.query.trim() ? state.query : tokens;
+  return highlightSearchTextFromHub(text, queryOrTokens);
 }
 
 function categoryLabel(cat) {
@@ -2045,9 +2038,7 @@ function buildAutocompleteIndex() {
 }
 
 function highlightMatch(text, query) {
-  if (!query) return escapeHtml(text);
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return escapeHtml(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+  return highlightSearchTextFromHub(text, query);
 }
 
 function rankAutocompleteMatches(entries, query, limit) {

@@ -1492,6 +1492,8 @@
   const PAPER_SEARCH_DOC_CACHE = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE_MAX = 192;
   const SEARCH_SNIPPET_QUERY_MODEL_CACHE = new Map();
+  const SEARCH_HIGHLIGHT_NEEDLE_CACHE_MAX = 192;
+  const SEARCH_HIGHLIGHT_NEEDLE_CACHE = new Map();
 
   function cacheGet(cache, key) {
     if (!(cache instanceof Map) || !cache.has(key)) return null;
@@ -2083,12 +2085,15 @@
     const requiredPhraseEntries = requiredPhraseValues.map((value) => ({ value, weight: 1 }));
     const anyPhraseEntries = anyPhraseValues.map((value) => ({ value, weight: 1 }));
 
+    const beginnerIntent = [...tokens, ...anyTokens].some((token) => BEGINNER_INTENT_TOKENS.has(token));
     if (normalizedQuery && normalizedQuery.includes(' ') && normalizedQuery.length <= 80 && !phraseSeen.has(normalizedQuery)) {
-      phrases.push({ value: normalizedQuery, weight: 0.52 });
+      const implicitPhraseWeight = beginnerIntent
+        ? 0.52
+        : (tokens.length >= 3 ? 0.74 : 0.64);
+      phrases.push({ value: normalizedQuery, weight: implicitPhraseWeight });
       phraseSeen.add(normalizedQuery);
     }
 
-    const beginnerIntent = [...tokens, ...anyTokens].some((token) => BEGINNER_INTENT_TOKENS.has(token));
     const hasNarrowClauses = clauses.some((clause) => !clause.isBroad);
     const requiredClauseCount = hasNarrowClauses
       ? clauses.filter((clause) => !clause.isBroad).length
@@ -2166,9 +2171,18 @@
     }
 
     const haystack = text.toLowerCase();
-    let bestIndex = -1;
-    let bestLength = 0;
-    let bestScore = -Infinity;
+    const candidates = [];
+    const candidateSeen = new Set();
+
+    const recordCandidate = (index, length, score) => {
+      if (!Number.isFinite(index) || index < 0) return;
+      if (!Number.isFinite(length) || length <= 0) return;
+      if (!Number.isFinite(score)) return;
+      const key = `${index}:${length}`;
+      if (candidateSeen.has(key)) return;
+      candidateSeen.add(key);
+      candidates.push({ index, length, score });
+    };
 
     const considerNeedle = (rawNeedle, baseScore) => {
       const rawValue = String(rawNeedle || '').trim().toLowerCase();
@@ -2177,6 +2191,8 @@
         ? collapseWhitespace(rawValue)
         : normalizeSearchToken(rawValue);
       if (!needle || needle.length < 2) return;
+
+      let matches = 0;
       let offset = 0;
       while (offset < haystack.length) {
         const index = haystack.indexOf(needle, offset);
@@ -2188,15 +2204,11 @@
         const endBoundary = /[^a-z0-9+#.]/.test(after);
         const boundaryBonus = (startBoundary ? 1.8 : 0) + (endBoundary ? 1.8 : 0);
         const score = baseScore + (needle.length * 0.22) + boundaryBonus - (index * 0.00035);
-
-        if (score > bestScore) {
-          bestScore = score;
-          bestIndex = index;
-          bestLength = needle.length;
-        }
+        recordCandidate(index, needle.length, score);
 
         offset = index + needle.length;
-        if (startBoundary && endBoundary) break;
+        matches += 1;
+        if (matches >= 36) break;
       }
     };
 
@@ -2236,30 +2248,297 @@
       considerNeedle(clause.token, 18 + ((clause.specificity || 1) * 1.4));
     }
 
-    if (bestIndex < 0) {
+    if (!candidates.length) {
       return truncateSearchSnippet(text, maxLength);
     }
 
-    const center = bestIndex + Math.floor(bestLength / 2);
-    let start = Math.max(0, center - Math.floor(maxLength / 2));
-    let end = Math.min(text.length, start + maxLength);
-    if (end - start < maxLength) start = Math.max(0, end - maxLength);
+    const clauseNeedles = [];
+    const clauseNeedleSeen = new Set();
+    for (const clause of (model.clauses || [])) {
+      const token = normalizeSearchToken(clause && clause.token);
+      if (!token || clauseNeedleSeen.has(token)) continue;
+      clauseNeedleSeen.add(token);
+      clauseNeedles.push(token);
+    }
+    for (const clause of (model.anyClauses || [])) {
+      const token = normalizeSearchToken(clause && clause.token);
+      if (!token || clauseNeedleSeen.has(token)) continue;
+      clauseNeedleSeen.add(token);
+      clauseNeedles.push(token);
+    }
+    const phraseNeedles = [];
+    const phraseNeedleSeen = new Set();
+    const appendPhraseNeedle = (value) => {
+      const phrase = normalizeSearchText(value);
+      if (!phrase || !phrase.includes(' ') || phraseNeedleSeen.has(phrase)) return;
+      phraseNeedleSeen.add(phrase);
+      phraseNeedles.push(phrase);
+    };
+    for (const phraseEntry of (model.requiredPhraseEntries || [])) appendPhraseNeedle(phraseEntry && phraseEntry.value);
+    for (const phraseEntry of (model.anyPhraseEntries || [])) appendPhraseNeedle(phraseEntry && phraseEntry.value);
+    for (const phraseEntry of (model.phrases || [])) appendPhraseNeedle(phraseEntry && phraseEntry.value);
 
-    if (start > 0) {
-      const nextSpace = text.indexOf(' ', start);
-      if (nextSpace !== -1 && nextSpace - start <= 24) start = nextSpace + 1;
+    const alignSnippetWindow = (center) => {
+      let start = Math.max(0, center - Math.floor(maxLength / 2));
+      let end = Math.min(text.length, start + maxLength);
+      if (end - start < maxLength) start = Math.max(0, end - maxLength);
+
+      if (start > 0) {
+        const nextSpace = text.indexOf(' ', start);
+        if (nextSpace !== -1 && nextSpace - start <= 24) start = nextSpace + 1;
+      }
+
+      if (end < text.length) {
+        const prevSpace = text.lastIndexOf(' ', end);
+        if (prevSpace > start + Math.floor(maxLength * 0.55)) end = prevSpace;
+      }
+      return { start, end };
+    };
+
+    const scoreSnippetWindow = (start, end, baseScore) => {
+      const windowText = haystack.slice(start, end);
+      if (!windowText) return baseScore;
+
+      let clauseHits = 0;
+      for (const token of clauseNeedles) {
+        if (hasSpaceDelimitedMatch(windowText, token) || windowText === token) clauseHits += 1;
+      }
+
+      let phraseHits = 0;
+      for (const phrase of phraseNeedles) {
+        if (windowText.includes(phrase)) phraseHits += 1;
+      }
+
+      const clauseCoverage = clauseNeedles.length ? (clauseHits / clauseNeedles.length) : 0;
+      const phraseCoverage = phraseNeedles.length ? (phraseHits / phraseNeedles.length) : 0;
+
+      return baseScore
+        + (clauseHits * 3.2)
+        + (phraseHits * 6.8)
+        + (clauseCoverage * 10.6)
+        + (phraseCoverage * 15.2)
+        - (start * 0.00022);
+    };
+
+    let bestWindow = null;
+    let bestWindowScore = -Infinity;
+    for (const candidate of candidates) {
+      const center = candidate.index + Math.floor(candidate.length / 2);
+      const window = alignSnippetWindow(center);
+      const windowScore = scoreSnippetWindow(window.start, window.end, candidate.score);
+      if (windowScore <= bestWindowScore) continue;
+      bestWindowScore = windowScore;
+      bestWindow = window;
     }
 
-    if (end < text.length) {
-      const prevSpace = text.lastIndexOf(' ', end);
-      if (prevSpace > start + Math.floor(maxLength * 0.55)) end = prevSpace;
-    }
+    if (!bestWindow) return truncateSearchSnippet(text, maxLength);
 
-    let snippet = text.slice(start, end).trim();
+    let snippet = text.slice(bestWindow.start, bestWindow.end).trim();
     if (!snippet) return truncateSearchSnippet(text, maxLength);
-    if (start > 0) snippet = `...${snippet}`;
-    if (end < text.length) snippet = `${snippet}...`;
+    if (bestWindow.start > 0) snippet = `...${snippet}`;
+    if (bestWindow.end < text.length) snippet = `${snippet}...`;
     return snippet;
+  }
+
+  function escapeSearchHighlightHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function escapeSearchRegex(value) {
+    return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function isSearchBoundaryChar(char) {
+    return !char || /[^a-z0-9+#.]/.test(char);
+  }
+
+  function findBoundaryTermRanges(text, rawTerm, options = {}) {
+    const source = String(text || '');
+    const term = String(rawTerm || '').toLowerCase();
+    if (!source || !term) return [];
+
+    const maxMatches = Number.isFinite(options.maxMatches) && options.maxMatches > 0
+      ? Math.floor(options.maxMatches)
+      : Number.POSITIVE_INFINITY;
+    const haystack = source.toLowerCase();
+    const ranges = [];
+    let offset = 0;
+    while (offset < haystack.length && ranges.length < maxMatches) {
+      const index = haystack.indexOf(term, offset);
+      if (index < 0) break;
+      const before = index > 0 ? haystack[index - 1] : ' ';
+      const after = index + term.length < haystack.length ? haystack[index + term.length] : ' ';
+      if (isSearchBoundaryChar(before) && isSearchBoundaryChar(after)) {
+        ranges.push({ start: index, end: index + term.length });
+      }
+      offset = index + 1;
+    }
+    return ranges;
+  }
+
+  function findPhraseRanges(text, rawPhrase, options = {}) {
+    const source = String(text || '');
+    const phrase = normalizeSearchText(rawPhrase);
+    if (!source || !phrase || !phrase.includes(' ')) return [];
+
+    const parts = phrase.split(/\s+/).filter(Boolean);
+    if (parts.length < 2) return [];
+
+    const maxMatches = Number.isFinite(options.maxMatches) && options.maxMatches > 0
+      ? Math.floor(options.maxMatches)
+      : Number.POSITIVE_INFINITY;
+    const body = parts.map((part) => escapeSearchRegex(part)).join('\\s+');
+    const regex = new RegExp(`(^|[^a-z0-9+#.])(${body})(?=$|[^a-z0-9+#.])`, 'gi');
+    const ranges = [];
+    let match;
+    while ((match = regex.exec(source)) !== null && ranges.length < maxMatches) {
+      const prefix = match[1] || '';
+      const phraseValue = match[2] || '';
+      const start = match.index + prefix.length;
+      const end = start + phraseValue.length;
+      ranges.push({ start, end });
+      if (match[0].length === 0) regex.lastIndex += 1;
+    }
+    return ranges;
+  }
+
+  function collectHighlightNeedlesFromModel(model) {
+    const phraseNeedles = [];
+    const tokenNeedles = [];
+    const phraseSeen = new Set();
+    const tokenSeen = new Set();
+
+    const appendPhrase = (value) => {
+      const normalized = normalizeSearchText(value);
+      if (!normalized || !normalized.includes(' ') || phraseSeen.has(normalized)) return;
+      phraseSeen.add(normalized);
+      phraseNeedles.push(normalized);
+    };
+    const appendToken = (value) => {
+      const normalized = normalizeSearchToken(value);
+      if (!normalized || normalized.length < 2 || tokenSeen.has(normalized)) return;
+      tokenSeen.add(normalized);
+      tokenNeedles.push(normalized);
+    };
+
+    for (const entry of (model && model.requiredPhraseEntries) || []) appendPhrase(entry && entry.value);
+    for (const entry of (model && model.anyPhraseEntries) || []) appendPhrase(entry && entry.value);
+    for (const entry of (model && model.phrases) || []) appendPhrase(entry && entry.value);
+    appendPhrase(model && model.normalizedQuery);
+
+    for (const clause of (model && model.clauses) || []) appendToken(clause && clause.token);
+    for (const clause of (model && model.anyClauses) || []) appendToken(clause && clause.token);
+
+    if (!phraseNeedles.length) {
+      const rawTokens = Array.isArray(model && model.rawTokens) ? model.rawTokens : [];
+      if (rawTokens.length >= 2) appendPhrase(rawTokens.join(' '));
+    }
+
+    phraseNeedles.sort((a, b) => b.length - a.length);
+    tokenNeedles.sort((a, b) => b.length - a.length);
+
+    return { phraseNeedles, tokenNeedles };
+  }
+
+  function resolveHighlightNeedles(queryOrTokens) {
+    const modelLike = !!(
+      queryOrTokens
+      && typeof queryOrTokens === 'object'
+      && !Array.isArray(queryOrTokens)
+      && (
+        Array.isArray(queryOrTokens.clauses)
+        || Array.isArray(queryOrTokens.rawTokens)
+        || typeof queryOrTokens.normalizedQuery === 'string'
+      )
+    );
+    const cacheKey = modelLike ? '' : getSnippetQueryModelCacheKey(queryOrTokens);
+    if (cacheKey) {
+      const cached = cacheGet(SEARCH_HIGHLIGHT_NEEDLE_CACHE, cacheKey);
+      if (cached) return cached;
+    }
+
+    const model = modelLike ? queryOrTokens : resolveSnippetQueryModel(queryOrTokens);
+    const needles = collectHighlightNeedlesFromModel(model);
+    if (cacheKey) {
+      return cacheSet(SEARCH_HIGHLIGHT_NEEDLE_CACHE, cacheKey, needles, SEARCH_HIGHLIGHT_NEEDLE_CACHE_MAX);
+    }
+    return needles;
+  }
+
+  function mergeHighlightRanges(text, ranges) {
+    const source = String(text || '');
+    const entries = Array.isArray(ranges) ? ranges : [];
+    if (!source || !entries.length) return [];
+
+    const sorted = entries
+      .map((entry) => ({
+        start: Number.isFinite(entry && entry.start) ? Math.max(0, Math.floor(entry.start)) : 0,
+        end: Number.isFinite(entry && entry.end) ? Math.max(0, Math.floor(entry.end)) : 0,
+      }))
+      .filter((entry) => entry.end > entry.start && entry.start < source.length)
+      .sort((a, b) => a.start - b.start || a.end - b.end);
+    if (!sorted.length) return [];
+
+    const merged = [sorted[0]];
+    const gapJoinRe = /^[\s\u00A0\-–—_/,:;()]+$/;
+    for (let i = 1; i < sorted.length; i += 1) {
+      const current = sorted[i];
+      const last = merged[merged.length - 1];
+      if (current.start <= last.end) {
+        if (current.end > last.end) last.end = current.end;
+        continue;
+      }
+
+      const gap = source.slice(last.end, current.start);
+      if (gap && gapJoinRe.test(gap)) {
+        last.end = Math.max(last.end, current.end);
+        continue;
+      }
+
+      merged.push(current);
+    }
+
+    for (const range of merged) {
+      if (range.end > source.length) range.end = source.length;
+    }
+    return merged;
+  }
+
+  function highlightSearchText(text, queryOrTokens) {
+    const source = String(text || '');
+    if (!source) return '';
+
+    const needles = resolveHighlightNeedles(queryOrTokens);
+    const phraseNeedles = Array.isArray(needles && needles.phraseNeedles) ? needles.phraseNeedles : [];
+    const tokenNeedles = Array.isArray(needles && needles.tokenNeedles) ? needles.tokenNeedles : [];
+    if (!phraseNeedles.length && !tokenNeedles.length) {
+      return escapeSearchHighlightHtml(source);
+    }
+
+    const ranges = [];
+    for (const phrase of phraseNeedles) {
+      ranges.push(...findPhraseRanges(source, phrase, { maxMatches: 24 }));
+    }
+    for (const token of tokenNeedles) {
+      ranges.push(...findBoundaryTermRanges(source, token, { maxMatches: 32 }));
+    }
+
+    const merged = mergeHighlightRanges(source, ranges);
+    if (!merged.length) return escapeSearchHighlightHtml(source);
+
+    let out = '';
+    let cursor = 0;
+    for (const range of merged) {
+      out += escapeSearchHighlightHtml(source.slice(cursor, range.start));
+      out += `<mark>${escapeSearchHighlightHtml(source.slice(range.start, range.end))}</mark>`;
+      cursor = range.end;
+    }
+    if (cursor < source.length) out += escapeSearchHighlightHtml(source.slice(cursor));
+    return out;
   }
 
   function parseYearNumber(value) {
@@ -2413,6 +2692,97 @@
     }
 
     return bestClauseScore;
+  }
+
+  function findBestClauseMatchRangeInField(clause, fieldText) {
+    if (!clause || !Array.isArray(clause.variants) || !clause.variants.length) return null;
+    const text = String(fieldText || '');
+    if (!text) return null;
+
+    let best = null;
+    for (const variant of clause.variants) {
+      const term = normalizeSearchToken(variant && variant.term);
+      const weight = Number(variant && variant.weight) || 0;
+      if (!term || weight <= 0) continue;
+
+      const matches = findBoundaryTermRanges(text, term, { maxMatches: 1 });
+      if (!matches.length) continue;
+
+      const match = matches[0];
+      const score = (term.length * 0.24) + (weight * 1.6);
+      if (!best || score > best.score || (score === best.score && match.start < best.start)) {
+        best = {
+          start: match.start,
+          end: match.end,
+          score,
+        };
+      }
+    }
+
+    return best;
+  }
+
+  function computeClauseContextSignalForField(clauses, fieldText) {
+    const source = Array.isArray(clauses) ? clauses : [];
+    const text = String(fieldText || '');
+    if (!source.length || !text) return 0;
+
+    const matches = [];
+    for (const clause of source) {
+      const match = findBestClauseMatchRangeInField(clause, text);
+      if (match) matches.push(match);
+    }
+    if (matches.length < 2) return 0;
+
+    matches.sort((a, b) => a.start - b.start || a.end - b.end);
+
+    const clauseCount = source.length;
+    const matchedCount = matches.length;
+    const coverage = matchedCount / clauseCount;
+    const span = Math.max(1, matches[matches.length - 1].end - matches[0].start);
+    const avgSpanPerMatch = span / matchedCount;
+    const compactness = 1 / (1 + Math.max(0, avgSpanPerMatch - 18) / 28);
+
+    let adjacencyPairs = 0;
+    for (let i = 1; i < matches.length; i += 1) {
+      const prev = matches[i - 1];
+      const next = matches[i];
+      const gapLength = next.start - prev.end;
+      if (gapLength < 0 || gapLength > 28) continue;
+      const gapText = text.slice(prev.end, next.start);
+      if (/[.!?]/.test(gapText)) continue;
+      adjacencyPairs += 1;
+    }
+    const adjacency = matches.length > 1 ? adjacencyPairs / (matches.length - 1) : 0;
+
+    let signal = (coverage * 0.54) + (compactness * 0.30) + (adjacency * 0.16);
+    if (coverage < 0.5) signal *= 0.68;
+    return Math.max(0, Math.min(1.35, signal));
+  }
+
+  function computeQueryContextSignal(model, fields, fieldConfig) {
+    const sourceFields = fields && typeof fields === 'object' ? fields : {};
+    const configs = Array.isArray(fieldConfig) ? fieldConfig : [];
+    const clauses = Array.isArray(model && model.clauses) ? model.clauses : [];
+    if (!configs.length || clauses.length < 2) return 0;
+
+    const narrowClauses = clauses.filter((clause) => clause && clause.isBroad !== true);
+    const targetClauses = narrowClauses.length >= 2 ? narrowClauses : clauses;
+    if (targetClauses.length < 2) return 0;
+
+    let bestSignal = 0;
+    for (const config of configs) {
+      const fieldKey = String(config && config.key || '');
+      const field = sourceFields[fieldKey];
+      if (!field || !field.text) continue;
+      const signal = computeClauseContextSignalForField(targetClauses, field.text);
+      if (!(signal > 0)) continue;
+
+      const weight = Number(config && config.weight) || 1;
+      const weightedSignal = signal * (1 + Math.min(0.58, Math.log1p(Math.max(0.25, weight)) * 0.22));
+      if (weightedSignal > bestSignal) bestSignal = weightedSignal;
+    }
+    return bestSignal;
   }
 
   function scorePhraseEntriesAgainstFields(phraseEntries, fields, fieldConfig) {
@@ -2744,6 +3114,10 @@
       : toPhraseEntries(model.anyPhrases || []);
     const hasAnyPhrases = anyPhraseEntries.length > 0;
     const hasRequiredPhrases = requiredPhraseEntries.length > 0;
+    const narrowClauseCount = hasClauses
+      ? model.clauses.filter((clause) => clause && clause.isBroad !== true).length
+      : 0;
+    const focusedContextIntent = !model.beginnerIntent && (narrowClauseCount >= 2 || hasRequiredPhrases);
 
     if (!hasClauses && !hasAnyClauses && !hasSoftPhrases && !hasAnyPhrases && !hasRequiredPhrases) return 0;
     if (!fieldConfig.length && !phraseFieldConfig.length) return 0;
@@ -2829,6 +3203,19 @@
         phraseBonus += bestPhraseField * weight;
       }
       total += phraseBonus * 1.8;
+    }
+
+    if (hasClauses && fieldConfig.length) {
+      const contextSignal = Math.max(0, Math.min(1.45, computeQueryContextSignal(model, doc.fields, fieldConfig)));
+      if (contextSignal > 0) {
+        const contextBoost = model.beginnerIntent ? 0.12 : (focusedContextIntent ? 0.31 : 0.18);
+        total *= 1 + (contextSignal * contextBoost);
+        if (focusedContextIntent && !relaxed && narrowClauseCount >= 3 && contextSignal < 0.34) {
+          total *= 0.88;
+        }
+      } else if (focusedContextIntent && !relaxed && narrowClauseCount >= 3) {
+        total *= 0.9;
+      }
     }
 
     return total;
@@ -4508,6 +4895,7 @@
     formatMeetingDateUniversal,
     getPaperKeyTopics,
     getTalkKeyTopics,
+    highlightSearchText,
     isYouTubeVideoId,
     normalizeAffiliation,
     normalizeAffiliationKey,

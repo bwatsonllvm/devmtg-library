@@ -942,6 +942,9 @@
   }
 
   function highlightMatch(text, query) {
+    if (typeof HubUtils.highlightSearchText === 'function') {
+      return HubUtils.highlightSearchText(text, query);
+    }
     if (!query) return escapeHtml(text);
     const escaped = String(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     return escapeHtml(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');

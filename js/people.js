@@ -166,6 +166,11 @@ function normalizeViewMode(value) {
 }
 
 function highlightText(text, tokens) {
+  const queryOrTokens = state.query && state.query.trim() ? state.query : tokens;
+  if (typeof HubUtils.highlightSearchText === 'function') {
+    return HubUtils.highlightSearchText(text, queryOrTokens);
+  }
+
   let html = escapeHtml(text);
   for (const token of (tokens || [])) {
     const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -604,6 +609,9 @@ function buildAutocompleteIndex() {
 }
 
 function highlightMatch(text, query) {
+  if (typeof HubUtils.highlightSearchText === 'function') {
+    return HubUtils.highlightSearchText(text, query);
+  }
   if (!query) return escapeHtml(text);
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return escapeHtml(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');

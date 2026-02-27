@@ -22,6 +22,7 @@ const normalizePersonDisplayNameFromHub = requireHubFunction('normalizePersonDis
 const getTalkKeyTopicsFromHub = requireHubFunction('getTalkKeyTopics');
 const getPaperKeyTopicsFromHub = requireHubFunction('getPaperKeyTopics');
 const buildSearchSnippet = requireHubFunction('buildSearchSnippet');
+const highlightSearchTextFromHub = requireHubFunction('highlightSearchText');
 const normalizePersonRecord = requireHubFunction('normalizePersonRecord');
 const tokenizeQueryFromHub = requireHubFunction('tokenizeQuery');
 const buildSearchQueryModel = requireHubFunction('buildSearchQueryModel');
@@ -520,13 +521,8 @@ function isDirectPdfUrl(url) {
 }
 
 function highlightText(text, tokens) {
-  if (!tokens || tokens.length === 0) return escapeHtml(text);
-  let result = escapeHtml(text);
-  for (const token of tokens) {
-    const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    result = result.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
-  }
-  return result;
+  const queryOrTokens = state.query && state.query.trim() ? state.query : tokens;
+  return highlightSearchTextFromHub(text, queryOrTokens);
 }
 
 function stripSearchSourceText(value) {

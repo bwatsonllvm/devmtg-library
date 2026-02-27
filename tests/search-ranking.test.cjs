@@ -256,6 +256,53 @@ test('buildSearchSnippet centers snippet on matched query text', () => {
   assert.match(snippet.toLowerCase(), /mlir|tensor|cores/);
 });
 
+test('highlightSearchText keeps contiguous phrases in one highlight block', () => {
+  const text = 'Chris Lattner presented an MLIR Transform Dialect update.';
+  const highlighted = utils.highlightSearchText(text, 'Chris Lattner');
+
+  assert.match(highlighted, /<mark>Chris Lattner<\/mark>/);
+  assert.doesNotMatch(highlighted, /<mark>Chris<\/mark>\s+<mark>Lattner<\/mark>/);
+});
+
+test('highlightSearchText keeps disjoint query terms as separate highlights', () => {
+  const text = 'Chris and the rest of the team included Lattner in the credits.';
+  const highlighted = utils.highlightSearchText(text, 'Chris Lattner');
+
+  assert.match(highlighted, /<mark>Chris<\/mark>/);
+  assert.match(highlighted, /<mark>Lattner<\/mark>/);
+  assert.doesNotMatch(highlighted, /<mark>Chris and the rest of the team included Lattner<\/mark>/);
+});
+
+test('rankPaperRecordsByQuery favors tighter context over scattered matches', () => {
+  const papers = [
+    {
+      id: 'tight-context',
+      title: 'Transform dialect implementation notes',
+      abstract: 'We present an MLIR pass pipeline scheduling strategy for transform dialect workflows.',
+      authors: [{ name: 'Alice Smith' }],
+      publication: 'Compiler Research',
+      year: 2022,
+      citationCount: 8,
+      tags: ['mlir'],
+    },
+    {
+      id: 'scattered',
+      title: 'MLIR pipeline internals',
+      abstract: 'This work discusses pass manager architecture.',
+      content: 'Scheduling tradeoffs are described in a later appendix focused on deployment.',
+      authors: [{ name: 'Bob Johnson' }],
+      publication: 'Compiler Research',
+      year: 2025,
+      citationCount: 420,
+      tags: ['mlir'],
+    },
+  ];
+
+  const ranked = utils.rankPaperRecordsByQuery(papers, 'mlir pass pipeline scheduling');
+  assert.ok(ranked.length >= 2);
+  assert.equal(ranked[0].id, 'tight-context');
+});
+
 test('parseUrlState tolerates malformed URL encoding', () => {
   assert.doesNotThrow(() => {
     const parsed = utils.parseUrlState('?q=%E0%A4%A&speaker=Alice%20Smith', []);
