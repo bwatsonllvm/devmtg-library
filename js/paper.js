@@ -28,6 +28,7 @@ const PAPERS_PAGE_PATH = 'papers/';
 const BLOGS_PAGE_PATH = 'blogs/';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
 const PAPER_NAV_CACHE_KEY = 'llvm-hub-nav-paper-record';
+const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
 const PAPER_TO_TALK_REDIRECTS = {
   'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
@@ -225,16 +226,108 @@ async function loadPapers() {
   }
 }
 
+async function loadPaperRecordByIdViaWorker(paperId) {
+  const id = String(paperId || '').trim();
+  if (!id) return null;
+  if (
+    typeof Worker !== 'function'
+    || typeof Blob !== 'function'
+    || typeof URL === 'undefined'
+    || typeof URL.createObjectURL !== 'function'
+  ) {
+    return null;
+  }
+
+  const baseUrl = new URL('../', window.location.href).toString();
+  const workerSource = `
+self.onmessage = async function(event) {
+  var data = event && event.data ? event.data : {};
+  var targetId = String(data.id || '').trim();
+  var baseUrl = String(data.baseUrl || '');
+  if (!targetId || !baseUrl) {
+    self.postMessage({ paper: null });
+    return;
+  }
+  function normalizePaperPath(raw) {
+    var value = String(raw || '').trim().replace(/^\\/+/, '');
+    if (!value) return '';
+    if (value.indexOf('papers/') === 0) return value;
+    if (value.indexOf('../papers/') === 0) return value.slice('../'.length);
+    return 'papers/' + value;
+  }
+  try {
+    var manifestUrl = new URL('papers/index.json', baseUrl).toString();
+    var manifestResp = await fetch(manifestUrl, { cache: 'default' });
+    if (!manifestResp.ok) throw new Error('manifest fetch failed');
+    var manifest = await manifestResp.json();
+    var files = Array.isArray(manifest && manifest.paperFiles)
+      ? manifest.paperFiles
+      : (Array.isArray(manifest && manifest.files) ? manifest.files : []);
+
+    for (var i = 0; i < files.length; i += 1) {
+      var normalizedPath = normalizePaperPath(files[i]);
+      if (!normalizedPath) continue;
+      var fileUrl = new URL(normalizedPath, baseUrl).toString();
+      var fileResp = await fetch(fileUrl, { cache: 'default' });
+      if (!fileResp.ok) continue;
+      var bundle = await fileResp.json();
+      var papers = Array.isArray(bundle && bundle.papers) ? bundle.papers : [];
+      for (var j = 0; j < papers.length; j += 1) {
+        var paper = papers[j];
+        if (String(paper && paper.id || '').trim() === targetId) {
+          self.postMessage({ paper: paper });
+          return;
+        }
+      }
+    }
+    self.postMessage({ paper: null });
+  } catch (error) {
+    self.postMessage({ error: String(error && error.message ? error.message : error) });
+  }
+};
+`;
+
+  let blobUrl = '';
+  try {
+    blobUrl = URL.createObjectURL(new Blob([workerSource], { type: 'application/javascript' }));
+    const worker = new Worker(blobUrl);
+    return await new Promise((resolve) => {
+      const timeout = window.setTimeout(() => {
+        try { worker.terminate(); } catch {}
+        resolve(null);
+      }, 20000);
+
+      worker.onmessage = (event) => {
+        window.clearTimeout(timeout);
+        try { worker.terminate(); } catch {}
+        const payload = event && event.data ? event.data : {};
+        const paper = normalizePaperRecord(payload && payload.paper);
+        resolve(paper || null);
+      };
+      worker.onerror = () => {
+        window.clearTimeout(timeout);
+        try { worker.terminate(); } catch {}
+        resolve(null);
+      };
+      worker.postMessage({ id, baseUrl });
+    });
+  } catch {
+    return null;
+  } finally {
+    if (blobUrl) {
+      try { URL.revokeObjectURL(blobUrl); } catch {}
+    }
+  }
+}
+
 function readCachedPaperRecord(paperId) {
   const id = String(paperId || '').trim();
   if (!id) return null;
 
-  const raw = safeSessionGet(PAPER_NAV_CACHE_KEY);
-  if (!raw) return null;
-  try {
-    const payload = JSON.parse(raw);
+  const fromPayload = (payload) => {
     const payloadId = String(payload && payload.id || '').trim();
     if (payloadId !== id) return null;
+    if (String(payload && payload.kind || '').trim().toLowerCase() === 'talk') return null;
     const savedAt = Number(payload && payload.savedAt);
     if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
       return null;
@@ -243,8 +336,52 @@ function readCachedPaperRecord(paperId) {
     if (!paper) return null;
     if (String(paper.id || '').trim() !== id) return null;
     return paper;
+  };
+
+  const nameCache = String(window.name || '');
+  if (nameCache.startsWith(NAV_WINDOW_CACHE_PREFIX)) {
+    try {
+      const payload = JSON.parse(nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length));
+      const paper = fromPayload(payload);
+      if (paper) return paper;
+    } catch {
+      // Ignore malformed window.name cache payload.
+    }
+  }
+
+  const raw = safeSessionGet(PAPER_NAV_CACHE_KEY);
+  if (!raw) return null;
+  try {
+    return fromPayload(JSON.parse(raw));
   } catch {
     return null;
+  }
+}
+
+function cachePaperNavigationRecord(paper) {
+  const id = String(paper && paper.id || '').trim();
+  if (!id) return;
+  const payload = {
+    kind: 'paper',
+    id,
+    savedAt: Date.now(),
+    paper,
+  };
+  try {
+    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
+  } catch {
+    // Ignore window.name write failures.
+  }
+}
+
+function resolvePaperIdFromHref(href) {
+  const raw = String(href || '').trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw, window.location.href);
+    return String(parsed.searchParams.get('id') || '').trim();
+  } catch {
+    return '';
   }
 }
 
@@ -1563,6 +1700,20 @@ function renderPaperDetail(paper, allPapers) {
       }, 1600);
     });
   }
+
+  root.addEventListener('click', (event) => {
+    if (!event || event.defaultPrevented) return;
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    const link = event.target && typeof event.target.closest === 'function'
+      ? event.target.closest('a.card-link-wrap[href]')
+      : null;
+    if (!link) return;
+    const nextId = resolvePaperIdFromHref(link.getAttribute('href') || '');
+    if (!nextId) return;
+    const nextPaper = (Array.isArray(allPapers) ? allPapers : [])
+      .find((candidate) => String((candidate && candidate.id) || '').trim() === nextId);
+    if (nextPaper) cachePaperNavigationRecord(nextPaper);
+  });
 }
 
 function renderNotFound(id, listingPath = fallbackListingPathFromUrl()) {
@@ -1627,6 +1778,17 @@ async function init() {
     syncHeaderNavForPaper(cachedPaper);
     renderPaperDetail(cachedPaper, [cachedPaper]);
     setIssueContextForPaper(cachedPaper);
+    initShareMenu();
+    return;
+  }
+
+  const workerPaper = await loadPaperRecordByIdViaWorker(paperId);
+  if (workerPaper) {
+    document.title = `${workerPaper.title} — LLVM Research Library`;
+    updatePaperSeoMetadata(workerPaper);
+    syncHeaderNavForPaper(workerPaper);
+    renderPaperDetail(workerPaper, [workerPaper]);
+    setIssueContextForPaper(workerPaper);
     initShareMenu();
     return;
   }

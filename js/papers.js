@@ -80,7 +80,7 @@ const BLOGS_PAGE_PATH = 'blogs/';
 const PAPERS_PAGE_PATH = 'papers/';
 const UPDATES_LOG_PATH = 'updates/index.json';
 const PAPER_SORT_MODES = new Set(['relevance', 'year', 'citations', 'date-added']);
-const PAPER_NAV_CACHE_KEY = 'llvm-hub-nav-paper-record';
+const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const PAGE_SCOPE = (() => {
   const raw = normalizeFilterValue(document.body && document.body.dataset ? document.body.dataset.contentScope : '');
   return raw === BLOG_FILTER_VALUE ? BLOG_FILTER_VALUE : PAPER_FILTER_VALUE;
@@ -782,11 +782,17 @@ function cachePaperNavigationRecordById(paperId) {
   if (!id) return;
   const paper = allPapers.find((entry) => String((entry && entry.id) || '').trim() === id);
   if (!paper) return;
-  safeSessionSet(PAPER_NAV_CACHE_KEY, JSON.stringify({
+  const payload = {
+    kind: 'paper',
     id,
     savedAt: Date.now(),
     paper,
-  }));
+  };
+  try {
+    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
+  } catch {
+    // Ignore window.name write failures.
+  }
 }
 
 function normalizeTopicKey(value) {

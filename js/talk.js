@@ -18,6 +18,7 @@ const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu(
 const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
 const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
 const TALK_NAV_CACHE_KEY = 'llvm-hub-nav-talk-record';
+const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
 
 function normalizeTalks(rawTalks) {
@@ -39,16 +40,110 @@ async function loadTalks() {
   }
 }
 
+async function loadTalkRecordByIdViaWorker(talkId) {
+  const id = String(talkId || '').trim();
+  if (!id) return null;
+  if (
+    typeof Worker !== 'function'
+    || typeof Blob !== 'function'
+    || typeof URL === 'undefined'
+    || typeof URL.createObjectURL !== 'function'
+  ) {
+    return null;
+  }
+
+  const baseUrl = new URL('../', window.location.href).toString();
+  const workerSource = `
+self.onmessage = async function(event) {
+  var data = event && event.data ? event.data : {};
+  var targetId = String(data.id || '').trim();
+  var baseUrl = String(data.baseUrl || '');
+  if (!targetId || !baseUrl) {
+    self.postMessage({ talk: null });
+    return;
+  }
+  function normalizeEventPath(raw) {
+    var value = String(raw || '').trim().replace(/^\\/+/, '');
+    if (!value) return '';
+    if (value.indexOf('devmtg/events/') === 0) return value;
+    if (value.indexOf('events/') === 0) return 'devmtg/events/' + value.slice('events/'.length);
+    return 'devmtg/events/' + value;
+  }
+  try {
+    var manifestUrl = new URL('devmtg/events/index.json', baseUrl).toString();
+    var manifestResp = await fetch(manifestUrl, { cache: 'default' });
+    if (!manifestResp.ok) throw new Error('manifest fetch failed');
+    var manifest = await manifestResp.json();
+    var files = Array.isArray(manifest && manifest.eventFiles)
+      ? manifest.eventFiles
+      : (Array.isArray(manifest && manifest.events) ? manifest.events.map(function(item) {
+          return item && (item.file || item.path) || '';
+        }) : []);
+
+    for (var i = 0; i < files.length; i += 1) {
+      var normalizedPath = normalizeEventPath(files[i]);
+      if (!normalizedPath) continue;
+      var fileUrl = new URL(normalizedPath, baseUrl).toString();
+      var fileResp = await fetch(fileUrl, { cache: 'default' });
+      if (!fileResp.ok) continue;
+      var bundle = await fileResp.json();
+      var talks = Array.isArray(bundle && bundle.talks) ? bundle.talks : [];
+      for (var j = 0; j < talks.length; j += 1) {
+        var talk = talks[j];
+        if (String(talk && talk.id || '').trim() === targetId) {
+          self.postMessage({ talk: talk });
+          return;
+        }
+      }
+    }
+    self.postMessage({ talk: null });
+  } catch (error) {
+    self.postMessage({ error: String(error && error.message ? error.message : error) });
+  }
+};
+`;
+
+  let blobUrl = '';
+  try {
+    blobUrl = URL.createObjectURL(new Blob([workerSource], { type: 'application/javascript' }));
+    const worker = new Worker(blobUrl);
+    return await new Promise((resolve) => {
+      const timeout = window.setTimeout(() => {
+        try { worker.terminate(); } catch {}
+        resolve(null);
+      }, 15000);
+
+      worker.onmessage = (event) => {
+        window.clearTimeout(timeout);
+        try { worker.terminate(); } catch {}
+        const payload = event && event.data ? event.data : {};
+        const normalized = normalizeTalks([payload && payload.talk]);
+        resolve(Array.isArray(normalized) && normalized.length ? normalized[0] : null);
+      };
+      worker.onerror = () => {
+        window.clearTimeout(timeout);
+        try { worker.terminate(); } catch {}
+        resolve(null);
+      };
+      worker.postMessage({ id, baseUrl });
+    });
+  } catch {
+    return null;
+  } finally {
+    if (blobUrl) {
+      try { URL.revokeObjectURL(blobUrl); } catch {}
+    }
+  }
+}
+
 function readCachedTalkRecord(talkId) {
   const id = String(talkId || '').trim();
   if (!id) return null;
 
-  const raw = safeSessionGet(TALK_NAV_CACHE_KEY);
-  if (!raw) return null;
-  try {
-    const payload = JSON.parse(raw);
+  const fromPayload = (payload) => {
     const payloadId = String(payload && payload.id || '').trim();
     if (payloadId !== id) return null;
+    if (String(payload && payload.kind || '').trim().toLowerCase() === 'paper') return null;
     const savedAt = Number(payload && payload.savedAt);
     if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
       return null;
@@ -58,8 +153,52 @@ function readCachedTalkRecord(talkId) {
     if (!talk) return null;
     if (String(talk.id || '').trim() !== id) return null;
     return talk;
+  };
+
+  const nameCache = String(window.name || '');
+  if (nameCache.startsWith(NAV_WINDOW_CACHE_PREFIX)) {
+    try {
+      const payload = JSON.parse(nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length));
+      const talk = fromPayload(payload);
+      if (talk) return talk;
+    } catch {
+      // Ignore malformed window.name cache payload.
+    }
+  }
+
+  const raw = safeSessionGet(TALK_NAV_CACHE_KEY);
+  if (!raw) return null;
+  try {
+    return fromPayload(JSON.parse(raw));
   } catch {
     return null;
+  }
+}
+
+function cacheTalkNavigationRecord(talk) {
+  const id = String(talk && talk.id || '').trim();
+  if (!id) return;
+  const payload = {
+    kind: 'talk',
+    id,
+    savedAt: Date.now(),
+    talk,
+  };
+  try {
+    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
+  } catch {
+    // Ignore window.name write failures.
+  }
+}
+
+function resolveTalkIdFromHref(href) {
+  const raw = String(href || '').trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw, window.location.href);
+    return String(parsed.searchParams.get('id') || '').trim();
+  } catch {
+    return '';
   }
 }
 
@@ -655,6 +794,20 @@ function renderTalkDetail(talk, allTalks) {
       window.history.back();
     }
   });
+
+  root.addEventListener('click', (event) => {
+    if (!event || event.defaultPrevented) return;
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    const link = event.target && typeof event.target.closest === 'function'
+      ? event.target.closest('a.card-link-wrap[href]')
+      : null;
+    if (!link) return;
+    const nextId = resolveTalkIdFromHref(link.getAttribute('href') || '');
+    if (!nextId) return;
+    const nextTalk = (Array.isArray(allTalks) ? allTalks : [])
+      .find((candidate) => String((candidate && candidate.id) || '').trim() === nextId);
+    if (nextTalk) cacheTalkNavigationRecord(nextTalk);
+  });
 }
 
 // ============================================================
@@ -712,6 +865,16 @@ async function init() {
     updateTalkSeoMetadata(cachedTalk);
     renderTalkDetail(cachedTalk, []);
     setIssueContextForTalk(cachedTalk);
+    initShareMenu();
+    return;
+  }
+
+  const workerTalk = await loadTalkRecordByIdViaWorker(talkId);
+  if (workerTalk) {
+    document.title = `${workerTalk.title} — LLVM Research Library`;
+    updateTalkSeoMetadata(workerTalk);
+    renderTalkDetail(workerTalk, []);
+    setIssueContextForTalk(workerTalk);
     initShareMenu();
     return;
   }

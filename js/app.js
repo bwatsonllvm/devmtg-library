@@ -27,7 +27,7 @@ const ALL_WORK_PAGE_PATH = 'work.html';
 const MAX_TOPIC_FILTERS = 220;
 const MIN_TOPIC_FILTER_COUNT = 2;
 const TALK_SORT_MODES = new Set(['relevance', 'newest', 'oldest', 'title']);
-const TALK_NAV_CACHE_KEY = 'llvm-hub-nav-talk-record';
+const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 
 const state = {
   query: '',
@@ -1316,11 +1316,17 @@ function cacheTalkNavigationRecordById(talkId) {
   if (!id) return;
   const talk = allTalks.find((entry) => String((entry && entry.id) || '').trim() === id);
   if (!talk) return;
-  safeSessionSet(TALK_NAV_CACHE_KEY, JSON.stringify({
+  const payload = {
+    kind: 'talk',
     id,
     savedAt: Date.now(),
     talk,
-  }));
+  };
+  try {
+    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
+  } catch {
+    // Ignore window.name write failures.
+  }
 }
 
 function restoreNavigationState() {

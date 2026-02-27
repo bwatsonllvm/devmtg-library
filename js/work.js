@@ -49,7 +49,6 @@ function requirePageShellMethod(name) {
 
 const safeStorageGet = requirePageShellMethod('safeStorageGet');
 const safeStorageSet = requirePageShellMethod('safeStorageSet');
-const safeSessionSet = requirePageShellMethod('safeSessionSet');
 const initTheme = requirePageShellMethod('initTheme');
 const initTextSize = requirePageShellMethod('initTextSize');
 const initCustomizationMenu = requirePageShellMethod('initCustomizationMenu');
@@ -75,8 +74,7 @@ const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
 const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
 const UNIVERSAL_MAX_RESULTS = 1200;
-const TALK_NAV_CACHE_KEY = 'llvm-hub-nav-talk-record';
-const PAPER_NAV_CACHE_KEY = 'llvm-hub-nav-paper-record';
+const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=9b2701561091';
 const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=74116e3da143';
 const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=eba40672f6e7';
@@ -354,11 +352,17 @@ function cacheTalkNavigationRecordById(talkId) {
   if (!id) return;
   const talk = allTalkRecords.find((entry) => String((entry && entry.id) || '').trim() === id);
   if (!talk) return;
-  safeSessionSet(TALK_NAV_CACHE_KEY, JSON.stringify({
+  const payload = {
+    kind: 'talk',
     id,
     savedAt: Date.now(),
     talk,
-  }));
+  };
+  try {
+    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
+  } catch {
+    // Ignore window.name write failures.
+  }
 }
 
 function cachePaperNavigationRecordById(paperId) {
@@ -367,11 +371,17 @@ function cachePaperNavigationRecordById(paperId) {
   const paper = allPaperRecords.find((entry) => String((entry && entry.id) || '').trim() === id)
     || allBlogRecords.find((entry) => String((entry && entry.id) || '').trim() === id);
   if (!paper) return;
-  safeSessionSet(PAPER_NAV_CACHE_KEY, JSON.stringify({
+  const payload = {
+    kind: 'paper',
     id,
     savedAt: Date.now(),
     paper,
-  }));
+  };
+  try {
+    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
+  } catch {
+    // Ignore window.name write failures.
+  }
 }
 
 function initDetailNavigationCache() {
