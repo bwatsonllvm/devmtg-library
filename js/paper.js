@@ -34,6 +34,46 @@ const PAPER_TO_TALK_REDIRECTS = {
   'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
 };
 
+function uniqueNormalizedPaths(paths) {
+  return [...new Set((Array.isArray(paths) ? paths : [])
+    .map((value) => String(value || '').trim())
+    .filter(Boolean))];
+}
+
+function normalizePaperPath(raw) {
+  const value = String(raw || '').trim().replace(/^\/+/, '');
+  if (!value) return '';
+  if (value.startsWith('papers/')) return value;
+  if (value.startsWith('../papers/')) return value.slice('../'.length);
+  return `papers/${value}`;
+}
+
+function buildPaperRecordPathCandidates(paperId) {
+  const id = String(paperId || '').trim().toLowerCase();
+  if (!id) return [];
+  if (id.startsWith('blog-')) {
+    return ['papers/llvm-blog-posts.json'];
+  }
+  if (id.startsWith('openalex-')) {
+    return ['papers/openalex-llvm-query.json', 'papers/openalex-discovered.json'];
+  }
+  if (id.startsWith('pubs-')) {
+    return ['papers/llvm-org-pubs.json'];
+  }
+  if (id.startsWith('manual-') || id.startsWith('doi-')) {
+    return ['papers/manual-added-papers.json'];
+  }
+  return [];
+}
+
+function resolveWorkerScriptUrl(relativePath) {
+  try {
+    return new URL(String(relativePath || ''), document.baseURI || window.location.href).toString();
+  } catch {
+    return '';
+  }
+}
+
 // ============================================================
 // Data Loading
 // ============================================================
@@ -211,91 +251,24 @@ function normalizePaperRecord(rawPaper) {
   return paper;
 }
 
-function normalizePapers(rawPapers) {
-  if (!Array.isArray(rawPapers)) return null;
-  return rawPapers.map(normalizePaperRecord).filter(Boolean);
-}
-
-async function loadPapers() {
-  if (typeof window.loadPaperData !== 'function') return null;
-  try {
-    const { papers } = await window.loadPaperData();
-    return normalizePapers(papers);
-  } catch {
-    return null;
-  }
-}
-
 async function loadPaperRecordByIdViaWorker(paperId) {
   const id = String(paperId || '').trim();
   if (!id) return null;
-  if (
-    typeof Worker !== 'function'
-    || typeof Blob !== 'function'
-    || typeof URL === 'undefined'
-    || typeof URL.createObjectURL !== 'function'
-  ) {
+  if (typeof Worker !== 'function') {
     return null;
   }
 
   const baseUrl = new URL('../', window.location.href).toString();
-  const workerSource = `
-self.onmessage = async function(event) {
-  var data = event && event.data ? event.data : {};
-  var targetId = String(data.id || '').trim();
-  var baseUrl = String(data.baseUrl || '');
-  if (!targetId || !baseUrl) {
-    self.postMessage({ paper: null });
-    return;
-  }
-  function normalizePaperPath(raw) {
-    var value = String(raw || '').trim().replace(/^\\/+/, '');
-    if (!value) return '';
-    if (value.indexOf('papers/') === 0) return value;
-    if (value.indexOf('../papers/') === 0) return value.slice('../'.length);
-    return 'papers/' + value;
-  }
-  try {
-    var manifestUrl = new URL('papers/index.json', baseUrl).toString();
-    var manifestResp = await fetch(manifestUrl, { cache: 'default' });
-    if (!manifestResp.ok) throw new Error('manifest fetch failed');
-    var manifest = await manifestResp.json();
-    var files = Array.isArray(manifest && manifest.paperFiles)
-      ? manifest.paperFiles
-      : (Array.isArray(manifest && manifest.files) ? manifest.files : []);
+  const workerUrl = resolveWorkerScriptUrl('js/workers/paper-record-worker.js');
+  if (!workerUrl) return null;
 
-    for (var i = 0; i < files.length; i += 1) {
-      var normalizedPath = normalizePaperPath(files[i]);
-      if (!normalizedPath) continue;
-      var fileUrl = new URL(normalizedPath, baseUrl).toString();
-      var fileResp = await fetch(fileUrl, { cache: 'default' });
-      if (!fileResp.ok) continue;
-      var bundle = await fileResp.json();
-      var papers = Array.isArray(bundle && bundle.papers) ? bundle.papers : [];
-      for (var j = 0; j < papers.length; j += 1) {
-        var paper = papers[j];
-        if (String(paper && paper.id || '').trim() === targetId) {
-          self.postMessage({ paper: paper });
-          return;
-        }
-      }
-    }
-    self.postMessage({ paper: null });
-  } catch (error) {
-    self.postMessage({ error: String(error && error.message ? error.message : error) });
-  }
-};
-`;
-
-  let blobUrl = '';
   try {
-    blobUrl = URL.createObjectURL(new Blob([workerSource], { type: 'application/javascript' }));
-    const worker = new Worker(blobUrl);
+    const worker = new Worker(workerUrl);
     return await new Promise((resolve) => {
       const timeout = window.setTimeout(() => {
         try { worker.terminate(); } catch {}
         resolve(null);
-      }, 20000);
+      }, 45000);
 
       worker.onmessage = (event) => {
         window.clearTimeout(timeout);
@@ -309,15 +282,59 @@ self.onmessage = async function(event) {
         try { worker.terminate(); } catch {}
         resolve(null);
       };
-      worker.postMessage({ id, baseUrl });
+      worker.postMessage({
+        id,
+        baseUrl,
+        candidatePaths: buildPaperRecordPathCandidates(id),
+      });
     });
   } catch {
     return null;
-  } finally {
-    if (blobUrl) {
-      try { URL.revokeObjectURL(blobUrl); } catch {}
+  }
+}
+
+async function loadPaperRecordByIdDirect(paperId) {
+  const id = String(paperId || '').trim();
+  if (!id) return { paper: null, loadedAny: false };
+  const result = { paper: null, loadedAny: false };
+
+  const fetchJson = async (path) => {
+    try {
+      const response = await fetch(path, { cache: 'default' });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch {
+      return null;
+    }
+  };
+
+  const manifest = await fetchJson('papers/index.json');
+  if (manifest && typeof manifest === 'object') result.loadedAny = true;
+  const manifestPaths = Array.isArray(manifest && manifest.paperFiles)
+    ? manifest.paperFiles.map(normalizePaperPath)
+    : (Array.isArray(manifest && manifest.files)
+      ? manifest.files.map(normalizePaperPath)
+      : []);
+
+  const candidatePaths = uniqueNormalizedPaths([
+    ...buildPaperRecordPathCandidates(id),
+    ...manifestPaths,
+  ]);
+
+  for (const path of candidatePaths) {
+    const bundle = await fetchJson(path);
+    if (!bundle || !Array.isArray(bundle.papers)) continue;
+    result.loadedAny = true;
+    const raw = bundle.papers.find((entry) => String((entry && entry.id) || '').trim() === id);
+    if (!raw) continue;
+    const paper = normalizePaperRecord(raw);
+    if (paper) {
+      result.paper = paper;
+      return result;
     }
   }
+
+  return result;
 }
 
 function readCachedPaperRecord(paperId) {
@@ -1734,6 +1751,18 @@ function renderNotFound(id, listingPath = fallbackListingPathFromUrl()) {
     </div>`;
 }
 
+function renderLoadError() {
+  const root = document.getElementById('paper-detail-root');
+  root.innerHTML = `
+    <div class="talk-detail">
+      <div class="empty-state" role="alert">
+        <div class="empty-state-icon" aria-hidden="true">!</div>
+        <h2>Could not load data</h2>
+        <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available.</p>
+      </div>
+    </div>`;
+}
+
 // ============================================================
 // Init
 // ============================================================
@@ -1793,38 +1822,27 @@ async function init() {
     return;
   }
 
-  const allPapers = await loadPapers();
-
-  if (!allPapers) {
-    const root = document.getElementById('paper-detail-root');
-    root.innerHTML = `
-      <div class="talk-detail">
-        <div class="empty-state" role="alert">
-          <div class="empty-state-icon" aria-hidden="true">!</div>
-          <h2>Could not load data</h2>
-          <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available and that <code>js/papers-data.js</code> loads first.</p>
-        </div>
-      </div>`;
+  const directResult = await loadPaperRecordByIdDirect(paperId);
+  if (!directResult || !directResult.paper) {
+    if (!directResult || !directResult.loadedAny) {
+      renderLoadError();
+    } else {
+      renderNotFound(paperId, fallbackListingPath);
+      const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
+      setIssueContext({
+        itemTitle: `Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
+        issueTitle: `[${missingItemLabel}] Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
+      });
+    }
     initShareMenu();
     return;
   }
 
-  const paper = allPapers.find((candidate) => candidate.id === paperId);
-  if (!paper) {
-    renderNotFound(paperId, fallbackListingPath);
-    const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
-    setIssueContext({
-      itemTitle: `Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
-      issueTitle: `[${missingItemLabel}] Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
-    });
-    initShareMenu();
-    return;
-  }
-
+  const paper = directResult.paper;
   document.title = `${paper.title} — LLVM Research Library`;
   updatePaperSeoMetadata(paper);
   syncHeaderNavForPaper(paper);
-  renderPaperDetail(paper, allPapers);
+  renderPaperDetail(paper, [paper]);
   setIssueContextForPaper(paper);
   initShareMenu();
 }

@@ -21,6 +21,39 @@ const TALK_NAV_CACHE_KEY = 'llvm-hub-nav-talk-record';
 const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
 
+function uniqueNormalizedPaths(paths) {
+  return [...new Set((Array.isArray(paths) ? paths : [])
+    .map((value) => String(value || '').trim())
+    .filter(Boolean))];
+}
+
+function normalizeEventPath(raw) {
+  const value = String(raw || '').trim().replace(/^\/+/, '');
+  if (!value) return '';
+  if (value.startsWith('devmtg/events/')) return value;
+  if (value.startsWith('events/')) return `devmtg/events/${value.slice('events/'.length)}`;
+  return `devmtg/events/${value}`;
+}
+
+function buildTalkRecordPathCandidates(talkId) {
+  const id = String(talkId || '').trim();
+  if (!id) return [];
+  const out = [];
+  const dayMatch = id.match(/^(\d{4}-\d{2}-\d{2})-/);
+  if (dayMatch && dayMatch[1]) out.push(`devmtg/events/${dayMatch[1]}.json`);
+  const monthMatch = id.match(/^(\d{4}-\d{2})-/);
+  if (monthMatch && monthMatch[1]) out.push(`devmtg/events/${monthMatch[1]}.json`);
+  return uniqueNormalizedPaths(out);
+}
+
+function resolveWorkerScriptUrl(relativePath) {
+  try {
+    return new URL(String(relativePath || ''), document.baseURI || window.location.href).toString();
+  } catch {
+    return '';
+  }
+}
+
 function normalizeTalks(rawTalks) {
   if (typeof HubUtils.normalizeTalks === 'function') {
     return HubUtils.normalizeTalks(rawTalks);
@@ -28,90 +61,24 @@ function normalizeTalks(rawTalks) {
   return Array.isArray(rawTalks) ? rawTalks : null;
 }
 
-async function loadTalks() {
-  if (typeof window.loadEventData !== 'function') {
-    return null;
-  }
-  try {
-    const { talks } = await window.loadEventData();
-    return normalizeTalks(talks);
-  } catch {
-    return null;
-  }
-}
-
 async function loadTalkRecordByIdViaWorker(talkId) {
   const id = String(talkId || '').trim();
   if (!id) return null;
-  if (
-    typeof Worker !== 'function'
-    || typeof Blob !== 'function'
-    || typeof URL === 'undefined'
-    || typeof URL.createObjectURL !== 'function'
-  ) {
+  if (typeof Worker !== 'function') {
     return null;
   }
 
   const baseUrl = new URL('../', window.location.href).toString();
-  const workerSource = `
-self.onmessage = async function(event) {
-  var data = event && event.data ? event.data : {};
-  var targetId = String(data.id || '').trim();
-  var baseUrl = String(data.baseUrl || '');
-  if (!targetId || !baseUrl) {
-    self.postMessage({ talk: null });
-    return;
-  }
-  function normalizeEventPath(raw) {
-    var value = String(raw || '').trim().replace(/^\\/+/, '');
-    if (!value) return '';
-    if (value.indexOf('devmtg/events/') === 0) return value;
-    if (value.indexOf('events/') === 0) return 'devmtg/events/' + value.slice('events/'.length);
-    return 'devmtg/events/' + value;
-  }
-  try {
-    var manifestUrl = new URL('devmtg/events/index.json', baseUrl).toString();
-    var manifestResp = await fetch(manifestUrl, { cache: 'default' });
-    if (!manifestResp.ok) throw new Error('manifest fetch failed');
-    var manifest = await manifestResp.json();
-    var files = Array.isArray(manifest && manifest.eventFiles)
-      ? manifest.eventFiles
-      : (Array.isArray(manifest && manifest.events) ? manifest.events.map(function(item) {
-          return item && (item.file || item.path) || '';
-        }) : []);
+  const workerUrl = resolveWorkerScriptUrl('js/workers/talk-record-worker.js');
+  if (!workerUrl) return null;
 
-    for (var i = 0; i < files.length; i += 1) {
-      var normalizedPath = normalizeEventPath(files[i]);
-      if (!normalizedPath) continue;
-      var fileUrl = new URL(normalizedPath, baseUrl).toString();
-      var fileResp = await fetch(fileUrl, { cache: 'default' });
-      if (!fileResp.ok) continue;
-      var bundle = await fileResp.json();
-      var talks = Array.isArray(bundle && bundle.talks) ? bundle.talks : [];
-      for (var j = 0; j < talks.length; j += 1) {
-        var talk = talks[j];
-        if (String(talk && talk.id || '').trim() === targetId) {
-          self.postMessage({ talk: talk });
-          return;
-        }
-      }
-    }
-    self.postMessage({ talk: null });
-  } catch (error) {
-    self.postMessage({ error: String(error && error.message ? error.message : error) });
-  }
-};
-`;
-
-  let blobUrl = '';
   try {
-    blobUrl = URL.createObjectURL(new Blob([workerSource], { type: 'application/javascript' }));
-    const worker = new Worker(blobUrl);
+    const worker = new Worker(workerUrl);
     return await new Promise((resolve) => {
       const timeout = window.setTimeout(() => {
         try { worker.terminate(); } catch {}
         resolve(null);
-      }, 15000);
+      }, 45000);
 
       worker.onmessage = (event) => {
         window.clearTimeout(timeout);
@@ -125,15 +92,57 @@ self.onmessage = async function(event) {
         try { worker.terminate(); } catch {}
         resolve(null);
       };
-      worker.postMessage({ id, baseUrl });
+      worker.postMessage({
+        id,
+        baseUrl,
+        candidatePaths: buildTalkRecordPathCandidates(id),
+      });
     });
   } catch {
     return null;
-  } finally {
-    if (blobUrl) {
-      try { URL.revokeObjectURL(blobUrl); } catch {}
+  }
+}
+
+async function loadTalkRecordByIdDirect(talkId) {
+  const id = String(talkId || '').trim();
+  if (!id) return { talk: null, loadedAny: false };
+  const result = { talk: null, loadedAny: false };
+  const fetchJson = async (path) => {
+    try {
+      const response = await fetch(path, { cache: 'default' });
+      if (!response.ok) return null;
+      return await response.json();
+    } catch {
+      return null;
+    }
+  };
+
+  const manifest = await fetchJson('devmtg/events/index.json');
+  if (manifest && typeof manifest === 'object') result.loadedAny = true;
+  const manifestPaths = Array.isArray(manifest && manifest.eventFiles)
+    ? manifest.eventFiles.map(normalizeEventPath)
+    : (Array.isArray(manifest && manifest.events)
+      ? manifest.events.map((entry) => normalizeEventPath(entry && (entry.file || entry.path)))
+      : []);
+
+  const candidatePaths = uniqueNormalizedPaths([
+    ...buildTalkRecordPathCandidates(id),
+    ...manifestPaths,
+  ]);
+
+  for (const path of candidatePaths) {
+    const bundle = await fetchJson(path);
+    if (!bundle || !Array.isArray(bundle.talks)) continue;
+    result.loadedAny = true;
+    const normalizedTalks = normalizeTalks(bundle.talks) || [];
+    const talk = normalizedTalks.find((entry) => String((entry && entry.id) || '').trim() === id);
+    if (talk) {
+      result.talk = talk;
+      return result;
     }
   }
+
+  return result;
 }
 
 function readCachedTalkRecord(talkId) {
@@ -831,6 +840,18 @@ function renderNotFound(id) {
     </div>`;
 }
 
+function renderLoadError() {
+  const root = document.getElementById('talk-detail-root');
+  root.innerHTML = `
+    <div class="talk-detail">
+      <div class="empty-state" role="alert">
+        <div class="empty-state-icon" aria-hidden="true">⚠️</div>
+        <h2>Could not load data</h2>
+        <p>Ensure <code>devmtg/events/index.json</code> and <code>devmtg/events/*.json</code> are available.</p>
+      </div>
+    </div>`;
+}
+
 // ============================================================
 // Init
 // ============================================================
@@ -879,38 +900,27 @@ async function init() {
     return;
   }
 
-  const allTalks = await loadTalks();
-
-  if (!allTalks) {
-    const root = document.getElementById('talk-detail-root');
-    root.innerHTML = `
-      <div class="talk-detail">
-        <div class="empty-state" role="alert">
-          <div class="empty-state-icon" aria-hidden="true">⚠️</div>
-          <h2>Could not load data</h2>
-          <p>Ensure <code>devmtg/events/index.json</code> and <code>devmtg/events/*.json</code> are available and that <code>js/events-data.js</code> loads first.</p>
-        </div>
-      </div>`;
+  const directResult = await loadTalkRecordByIdDirect(talkId);
+  if (!directResult || !directResult.talk) {
+    if (!directResult || !directResult.loadedAny) {
+      renderLoadError();
+    } else {
+      renderNotFound(talkId);
+      setIssueContext({
+        itemTitle: `Unknown talk ID: ${talkId}`,
+        issueTitle: `[Talk] Unknown talk ID: ${talkId}`,
+      });
+    }
     initShareMenu();
     return;
   }
-
-  const talk = allTalks.find(t => t.id === talkId);
-  if (!talk) {
-    renderNotFound(talkId);
-    setIssueContext({
-      itemTitle: `Unknown talk ID: ${talkId}`,
-      issueTitle: `[Talk] Unknown talk ID: ${talkId}`,
-    });
-    initShareMenu();
-    return;
-  }
+  const talk = directResult.talk;
 
   // Update page title
   document.title = `${talk.title} — LLVM Research Library`;
   updateTalkSeoMetadata(talk);
 
-  renderTalkDetail(talk, allTalks);
+  renderTalkDetail(talk, []);
   setIssueContextForTalk(talk);
   initShareMenu();
 }
