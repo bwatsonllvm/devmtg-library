@@ -84,6 +84,8 @@
   const ADVANCED_FIELD_SET = new Set(ADVANCED_FIELDS);
   const ADVANCED_WHERE_VALUES = new Set(['anywhere', 'title', 'abstract']);
   const SEARCH_SCOPE_VALUES = new Set(['all', 'talks', 'papers', 'blogs', 'docs', 'people']);
+  const SEARCH_SORT_VALUES = new Set(['relevance', 'newest', 'oldest', 'title', 'citations']);
+  const DEFAULT_SEARCH_SORT = 'relevance';
   const ADVANCED_FIELDS_BY_CONTEXT = {
     all: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'publication', 'yearFrom', 'yearTo'],
     talks: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where', 'author', 'yearFrom', 'yearTo'],
@@ -135,6 +137,12 @@
     const normalized = String(value || '').trim().toLowerCase();
     if (SEARCH_SCOPE_VALUES.has(normalized)) return normalized;
     return SEARCH_SCOPE_VALUES.has(fallback) ? fallback : 'all';
+  }
+
+  function normalizeSort(value, fallback = DEFAULT_SEARCH_SORT) {
+    const normalized = String(value || '').trim().toLowerCase();
+    if (SEARCH_SORT_VALUES.has(normalized)) return normalized;
+    return SEARCH_SORT_VALUES.has(fallback) ? fallback : DEFAULT_SEARCH_SORT;
   }
 
   function isWorkSearchPage() {
@@ -373,6 +381,10 @@
     const scopeInput = ensureHiddenInput(form, 'scope', defaultScope);
     if (scopeInput) {
       scopeInput.value = normalizeScope(scopeInput.value, defaultScope);
+    }
+    const sortInput = ensureHiddenInput(form, 'sort', DEFAULT_SEARCH_SORT);
+    if (sortInput) {
+      sortInput.value = normalizeSort(sortInput.value, DEFAULT_SEARCH_SORT);
     }
     for (const field of ADVANCED_FIELDS) {
       const fallback = field === 'where' ? 'anywhere' : '';
@@ -841,6 +853,8 @@
       sanitizeAdvancedFieldsForContext(form);
       const modeInput = form.querySelector('input[type="hidden"][name="mode"]');
       if (modeInput) modeInput.value = 'search';
+      const sortInput = form.querySelector('input[type="hidden"][name="sort"]');
+      if (sortInput) sortInput.value = DEFAULT_SEARCH_SORT;
       const scopeInput = form.querySelector('input[type="hidden"][name="scope"]');
       if (scopeInput) scopeInput.value = normalizeScope(scopeInput.value, defaultScope);
       const submitType = String(form.dataset.searchSubmitType || 'query').trim().toLowerCase();

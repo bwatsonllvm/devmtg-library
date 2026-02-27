@@ -3228,6 +3228,7 @@
     if (!sourceModel) return new Set();
 
     const signalTokens = new Set();
+    const rawTokenCount = Array.isArray(sourceModel.rawTokens) ? sourceModel.rawTokens.length : 0;
     const addToken = (value) => {
       const token = normalizeSearchToken(value);
       if (!token || token.length < 2 || SEARCH_STOPWORDS.has(token)) return;
@@ -3254,15 +3255,22 @@
     for (const phrase of (Array.isArray(sourceModel.anyPhrases) ? sourceModel.anyPhrases : [])) addText(phrase);
     addText(sourceModel.normalizedQuery || '');
 
+    for (const topic of (Array.isArray(sourceModel.queryTopics) ? sourceModel.queryTopics : [])) {
+      addText(topic);
+    }
+
     const contextProfile = normalizeSearchText(sourceModel.contextProfile || '');
-    const contextSeeds = contextProfile === 'beginner'
-      ? ['beginner', 'beginners', 'introduction', 'intro', 'tutorial', 'tutorials', 'getting', 'started', 'basics', 'foundations', 'guide']
-      : (
-        contextProfile === 'advanced research' || contextProfile === 'advanced-research'
-          ? ['advanced', 'internals', 'analysis', 'optimization', 'pipeline', 'dialect', 'lowering', 'benchmark', 'evaluation', 'polyhedral']
-          : (sourceModel.fundamentalsIntent ? ['fundamentals', 'overview', 'guide', 'walkthrough', 'tutorial', 'basics', 'introduction'] : [])
-      );
-    for (const seed of contextSeeds) addToken(seed);
+    const shouldAddContextSeeds = rawTokenCount <= 2 && signalTokens.size < 7;
+    if (shouldAddContextSeeds) {
+      const contextSeeds = contextProfile === 'beginner'
+        ? ['beginner', 'beginners', 'introduction', 'intro', 'tutorial', 'tutorials', 'getting', 'started', 'basics', 'foundations', 'guide']
+        : (
+          contextProfile === 'advanced research' || contextProfile === 'advanced-research'
+            ? ['advanced', 'internals', 'analysis', 'optimization', 'pipeline', 'dialect', 'lowering', 'benchmark', 'evaluation', 'polyhedral']
+            : (sourceModel.fundamentalsIntent ? ['fundamentals', 'overview', 'guide', 'walkthrough', 'tutorial', 'basics', 'introduction'] : [])
+        );
+      for (const seed of contextSeeds) addToken(seed);
+    }
 
     for (const topic of (Array.isArray(sourceModel.subprojectTopics) ? sourceModel.subprojectTopics : [])) {
       addText(topic);
