@@ -94,16 +94,6 @@
     docs: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'where'],
     people: ['allWords', 'exactPhrase', 'anyWords', 'withoutWords', 'author', 'publication', 'yearFrom', 'yearTo'],
   };
-  const LEGACY_GLOBAL_SEARCH_LABELS = new Set([
-    'Search talks, papers, and people',
-    'Search talks, papers, blogs, and people',
-    'Global search across talks, papers, and people',
-    'Global search across talks, papers, people, and key topics',
-    'Global search across talks, papers, blogs, and people',
-    'Global search across talks, papers, blogs, people, and key topics',
-    'Search All across talks, papers, blogs, people, and key topics',
-  ]);
-
   const autocompleteIndex = {
     topics: [],
     people: [],
@@ -1591,10 +1581,7 @@
       form.setAttribute('aria-label', GLOBAL_SEARCH_LABEL);
     }
 
-    const currentLabel = String(input.getAttribute('aria-label') || '').trim();
-    if (!currentLabel || LEGACY_GLOBAL_SEARCH_LABELS.has(currentLabel)) {
-      input.setAttribute('aria-label', GLOBAL_SEARCH_LABEL);
-    }
+    input.setAttribute('aria-label', GLOBAL_SEARCH_LABEL);
     if (!input.getAttribute('title')) {
       input.setAttribute('title', GLOBAL_SEARCH_LABEL);
     }

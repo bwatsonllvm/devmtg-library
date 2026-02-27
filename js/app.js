@@ -62,28 +62,62 @@ const CATEGORY_META = {
 // Data Loading
 // ============================================================
 
-const HubUtils = window.LLVMHubUtils || {};
-const PageShell = typeof HubUtils.createPageShell === 'function'
-  ? HubUtils.createPageShell()
-  : null;
+const HubUtils = window.LLVMHubUtils;
+if (!HubUtils || typeof HubUtils !== 'object') {
+  throw new Error('LLVMHubUtils is required before loading app.js');
+}
 
-const safeStorageGet = PageShell ? PageShell.safeStorageGet : () => null;
-const safeStorageSet = PageShell ? PageShell.safeStorageSet : () => {};
-const safeSessionGet = PageShell ? PageShell.safeSessionGet : () => null;
-const safeSessionSet = PageShell ? PageShell.safeSessionSet : () => {};
-const safeSessionRemove = PageShell ? PageShell.safeSessionRemove : () => {};
-const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
-const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
-const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
-const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
-const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
+function requireHubFunction(name) {
+  const fn = HubUtils[name];
+  if (typeof fn !== 'function') {
+    throw new Error(`LLVMHubUtils.${name} is required by app.js`);
+  }
+  return fn.bind(HubUtils);
+}
+
+const createPageShell = requireHubFunction('createPageShell');
+const getTalkKeyTopicsFromHub = requireHubFunction('getTalkKeyTopics');
+const normalizeTalksFromHub = requireHubFunction('normalizeTalks');
+const normalizePersonKeyFromHub = requireHubFunction('normalizePersonKey');
+const arePersonMiddleVariantsFromHub = requireHubFunction('arePersonMiddleVariants');
+const tokenizeQueryFromHub = requireHubFunction('tokenizeQuery');
+const rankTalksByQuery = requireHubFunction('rankTalksByQuery');
+const buildSearchSnippet = requireHubFunction('buildSearchSnippet');
+const formatMeetingDateUniversal = requireHubFunction('formatMeetingDateUniversal');
+const sortCategoryEntries = requireHubFunction('sortCategoryEntries');
+const parseUrlState = requireHubFunction('parseUrlState');
+const parseNavigationState = requireHubFunction('parseNavigationState');
+const getPaperKeyTopicsFromHub = requireHubFunction('getPaperKeyTopics');
+const normalizePersonRecordFromHub = requireHubFunction('normalizePersonRecord');
+const rankAutocompleteEntries = requireHubFunction('rankAutocompleteEntries');
+const rankPaperRecordsByQuery = requireHubFunction('rankPaperRecordsByQuery');
+
+const PageShell = createPageShell();
+if (!PageShell || typeof PageShell !== 'object') {
+  throw new Error('LLVMHubUtils.createPageShell() returned an invalid object');
+}
+
+function requirePageShellMethod(name) {
+  const fn = PageShell[name];
+  if (typeof fn !== 'function') {
+    throw new Error(`PageShell.${name} is required by app.js`);
+  }
+  return fn.bind(PageShell);
+}
+
+const safeStorageGet = requirePageShellMethod('safeStorageGet');
+const safeStorageSet = requirePageShellMethod('safeStorageSet');
+const safeSessionGet = requirePageShellMethod('safeSessionGet');
+const safeSessionSet = requirePageShellMethod('safeSessionSet');
+const safeSessionRemove = requirePageShellMethod('safeSessionRemove');
+const initTheme = requirePageShellMethod('initTheme');
+const initTextSize = requirePageShellMethod('initTextSize');
+const initCustomizationMenu = requirePageShellMethod('initCustomizationMenu');
+const initMobileNavMenu = requirePageShellMethod('initMobileNavMenu');
+const initShareMenu = requirePageShellMethod('initShareMenu');
 
 function getTalkKeyTopics(talk, limit = Infinity) {
-  if (typeof HubUtils.getTalkKeyTopics === 'function') {
-    return HubUtils.getTalkKeyTopics(talk, limit);
-  }
-  const tags = Array.isArray(talk && talk.tags) ? talk.tags : [];
-  return Number.isFinite(limit) ? tags.slice(0, limit) : tags;
+  return getTalkKeyTopicsFromHub(talk, limit);
 }
 
 function rebuildTopicLabelLookup() {
@@ -99,17 +133,11 @@ function rebuildTopicLabelLookup() {
 }
 
 function normalizeTalks(rawTalks) {
-  if (typeof HubUtils.normalizeTalks === 'function') {
-    return HubUtils.normalizeTalks(rawTalks);
-  }
-  return Array.isArray(rawTalks) ? rawTalks : [];
+  return normalizeTalksFromHub(rawTalks);
 }
 
 function normalizePersonKey(value) {
-  if (typeof HubUtils.normalizePersonKey === 'function') {
-    return HubUtils.normalizePersonKey(value);
-  }
-  return String(value || '').trim().toLowerCase();
+  return normalizePersonKeyFromHub(value);
 }
 
 function samePersonName(a, b) {
@@ -117,10 +145,7 @@ function samePersonName(a, b) {
   const keyB = normalizePersonKey(b);
   if (!keyA || !keyB) return false;
   if (keyA === keyB) return true;
-  if (typeof HubUtils.arePersonMiddleVariants === 'function') {
-    return HubUtils.arePersonMiddleVariants(a, b);
-  }
-  return false;
+  return arePersonMiddleVariantsFromHub(a, b);
 }
 
 async function loadData() {
@@ -189,17 +214,7 @@ function buildSearchIndex() {
 }
 
 function tokenize(query) {
-  if (typeof HubUtils.tokenizeQuery === 'function') {
-    return HubUtils.tokenizeQuery(query);
-  }
-  return [];
-}
-
-function scoreMatch(indexed, tokens) {
-  if (typeof HubUtils.scoreMatch === 'function') {
-    return HubUtils.scoreMatch(indexed, tokens);
-  }
-  return 0;
+  return tokenizeQueryFromHub(query);
 }
 
 function isSubsequence(needle, haystack) {
@@ -326,36 +341,24 @@ function filterAndSort() {
   let results = searchIndex;
   const tokens = state.query.length >= 2 ? tokenize(state.query) : [];
   searchMode = tokens.length > 0 ? 'exact' : 'browse';
-  const hasSharedTalkRanker = typeof HubUtils.rankTalksByQuery === 'function';
-
   if (tokens.length > 0) {
-    if (hasSharedTalkRanker) {
-      results = HubUtils.rankTalksByQuery(results, state.query);
-    } else {
-      const scored = [];
-      for (const t of results) {
-        const s = scoreMatch(t, tokens);
-        if (s > 0) scored.push({ talk: t, score: s });
-      }
-      scored.sort((a, b) => b.score - a.score);
-      results = scored.map((x) => x.talk);
+    results = rankTalksByQuery(results, state.query);
 
-      if (results.length === 0) {
-        const fuzzy = [];
-        for (const t of searchIndex) {
-          const score = fuzzyScoreTalk(t, tokens);
-          if (score > 0) fuzzy.push({ talk: t, score });
-        }
-        fuzzy.sort((a, b) => {
-          const scoreDiff = b.score - a.score;
-          if (scoreDiff !== 0) return scoreDiff;
-          const meetingDiff = String(b.talk.meeting || '').localeCompare(String(a.talk.meeting || ''));
-          if (meetingDiff !== 0) return meetingDiff;
-          return String(a.talk.title || '').localeCompare(String(b.talk.title || ''));
-        });
-        results = fuzzy.map((entry) => entry.talk);
-        if (results.length > 0) searchMode = 'fuzzy';
+    if (results.length === 0) {
+      const fuzzy = [];
+      for (const t of searchIndex) {
+        const score = fuzzyScoreTalk(t, tokens);
+        if (score > 0) fuzzy.push({ talk: t, score });
       }
+      fuzzy.sort((a, b) => {
+        const scoreDiff = b.score - a.score;
+        if (scoreDiff !== 0) return scoreDiff;
+        const meetingDiff = String(b.talk.meeting || '').localeCompare(String(a.talk.meeting || ''));
+        if (meetingDiff !== 0) return meetingDiff;
+        return String(a.talk.title || '').localeCompare(String(b.talk.title || ''));
+      });
+      results = fuzzy.map((entry) => entry.talk);
+      if (results.length > 0) searchMode = 'fuzzy';
     }
   }
 
@@ -428,8 +431,8 @@ function buildContextSnippet(sourceText, query, maxLength = 300) {
   const text = stripSearchSourceText(sourceText);
   if (!text) return '';
 
-  if (query && query.length >= 2 && typeof HubUtils.buildSearchSnippet === 'function') {
-    const snippet = HubUtils.buildSearchSnippet(text, query, { maxLength });
+  if (query && query.length >= 2) {
+    const snippet = buildSearchSnippet(text, query, { maxLength });
     if (snippet) return snippet;
   }
 
@@ -919,9 +922,7 @@ function buildMeetingOptions() {
     if (!slug || map.has(slug)) continue;
     const year = slug.slice(0, 4);
     const name = String(talk.meetingName || slug).trim() || slug;
-    const formattedDate = typeof HubUtils.formatMeetingDateUniversal === 'function'
-      ? HubUtils.formatMeetingDateUniversal(talk.meetingDate || '')
-      : String(talk.meetingDate || '').trim();
+    const formattedDate = formatMeetingDateUniversal(talk.meetingDate || '');
     const location = String(talk.meetingLocation || '').trim();
     const details = [formattedDate || year, location].filter(Boolean).join(' · ');
     const label = details ? `${name} — ${details}` : name;
@@ -989,13 +990,7 @@ function initFilters() {
     catCounts[c] = (catCounts[c] || 0) + 1;
   }
 
-  const cats = typeof HubUtils.sortCategoryEntries === 'function'
-    ? HubUtils.sortCategoryEntries(catCounts, CATEGORY_META)
-    : Object.entries(catCounts).sort((a, b) => {
-      const ao = CATEGORY_META[a[0]]?.order ?? 99;
-      const bo = CATEGORY_META[b[0]]?.order ?? 99;
-      return ao - bo;
-    });
+  const cats = sortCategoryEntries(catCounts, CATEGORY_META);
 
   const catContainer = document.getElementById('filter-categories');
   catContainer.innerHTML = cats.map(([cat, count]) => renderTalkTypeFilterChip(cat, count)).join('');
@@ -1359,31 +1354,17 @@ function syncUrl() {
 
 function loadStateFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  if (typeof HubUtils.parseUrlState === 'function') {
-    const parsed = HubUtils.parseUrlState(window.location.search, allTalks);
-    state.query = parsed.query || '';
-    state.speaker = parsed.speaker || '';
-    state.meeting = parsed.meeting || '';
-    state.meetingName = parsed.meetingName || '';
-    state.categories = new Set(parsed.categories || []);
-    state.years = new Set(parsed.years || []);
-    state.hasVideo = !!parsed.hasVideo;
-    state.hasSlides = !!parsed.hasSlides;
-    const parsedSort = String(parsed.sort || '').trim().toLowerCase();
-    state.sortBy = TALK_SORT_MODES.has(parsedSort) ? parsedSort : 'relevance';
-  } else {
-    if (params.get('q')) state.query = params.get('q');
-    if (params.get('speaker')) state.speaker = params.get('speaker');
-    if (params.get('meeting')) {
-      state.meeting = params.get('meeting');
-      const sample = allTalks.find((talk) => talk.meeting === state.meeting);
-      state.meetingName = sample ? sample.meetingName : state.meeting;
-    }
-    if (params.get('category')) params.get('category').split(',').forEach((c) => state.categories.add(c.trim()));
-    if (params.get('year')) params.get('year').split(',').forEach((y) => state.years.add(y.trim()));
-    state.hasVideo = params.get('video') === '1';
-    state.hasSlides = params.get('slides') === '1';
-  }
+  const parsed = parseUrlState(window.location.search, allTalks);
+  state.query = parsed.query || '';
+  state.speaker = parsed.speaker || '';
+  state.meeting = parsed.meeting || '';
+  state.meetingName = parsed.meetingName || '';
+  state.categories = new Set(parsed.categories || []);
+  state.years = new Set(parsed.years || []);
+  state.hasVideo = !!parsed.hasVideo;
+  state.hasSlides = !!parsed.hasSlides;
+  const parsedSort = String(parsed.sort || '').trim().toLowerCase();
+  state.sortBy = TALK_SORT_MODES.has(parsedSort) ? parsedSort : 'relevance';
 
   const sortParam = String(params.get('sort') || '').trim().toLowerCase();
   state.sortBy = TALK_SORT_MODES.has(sortParam) ? sortParam : state.sortBy;
@@ -1453,16 +1434,7 @@ function restoreNavigationState() {
   if (!saved) return;
   safeSessionRemove('llvm-hub-search-state');
 
-  let s = null;
-  if (typeof HubUtils.parseNavigationState === 'function') {
-    s = HubUtils.parseNavigationState(saved);
-  } else {
-    try {
-      s = JSON.parse(saved);
-    } catch {
-      s = null;
-    }
-  }
+  const s = parseNavigationState(saved);
   if (!s) return;
 
   if (s.query) {
@@ -2029,30 +2001,12 @@ function buildTalkAutocompleteBase() {
 }
 
 function getPaperKeyTopics(paper, limit = Infinity) {
-  if (typeof HubUtils.getPaperKeyTopics === 'function') {
-    return HubUtils.getPaperKeyTopics(paper, limit);
-  }
-  const out = [];
-  const seen = new Set();
-  const add = (value) => {
-    const label = String(value || '').trim();
-    const key = label.toLowerCase();
-    if (!label || seen.has(key)) return;
-    seen.add(key);
-    out.push(label);
-  };
-  for (const tag of (paper && paper.tags) || []) add(tag);
-  for (const keyword of (paper && paper.keywords) || []) add(keyword);
-  if (!Number.isFinite(limit)) return out;
-  return out.slice(0, Math.max(0, Math.floor(limit)));
+  return getPaperKeyTopicsFromHub(paper, limit);
 }
 
 function normalizePaperAuthorName(rawAuthor) {
-  if (typeof HubUtils.normalizePersonRecord === 'function') {
-    const normalized = HubUtils.normalizePersonRecord(rawAuthor);
-    return String((normalized && normalized.name) || '').trim();
-  }
-  return String((rawAuthor && rawAuthor.name) || '').trim();
+  const normalized = normalizePersonRecordFromHub(rawAuthor);
+  return String((normalized && normalized.name) || '').trim();
 }
 
 function buildPaperSearchEntry(rawPaper) {
@@ -2220,12 +2174,7 @@ function highlightMatch(text, query) {
 function rankAutocompleteMatches(entries, query, limit) {
   const list = Array.isArray(entries) ? entries : [];
   const max = Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : list.length;
-  if (typeof HubUtils.rankAutocompleteEntries === 'function') {
-    return HubUtils.rankAutocompleteEntries(list, query, { limit: max });
-  }
-  const q = String(query || '').toLowerCase();
-  if (!q) return list.slice(0, max);
-  return list.filter((entry) => String(entry && entry.label || '').toLowerCase().includes(q)).slice(0, max);
+  return rankAutocompleteEntries(list, query, { limit: max });
 }
 
 function renderDropdown(query) {
@@ -2385,15 +2334,8 @@ function countTalkMatchesForQuery(query) {
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
 
-  if (typeof HubUtils.rankTalksByQuery === 'function') {
-    return HubUtils.rankTalksByQuery(searchIndex, query).length;
-  }
-
-  let exactCount = 0;
-  for (const talk of searchIndex) {
-    if (scoreMatch(talk, tokens) > 0) exactCount += 1;
-  }
-  if (exactCount > 0) return exactCount;
+  const ranked = rankTalksByQuery(searchIndex, query);
+  if (ranked.length) return ranked.length;
 
   let fuzzyCount = 0;
   for (const talk of searchIndex) {
@@ -2404,17 +2346,7 @@ function countTalkMatchesForQuery(query) {
 
 function countPaperMatchesForQuery(query) {
   if (!paperSearchIndex.length) return 0;
-  if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-    return HubUtils.rankPaperRecordsByQuery(paperSearchIndex, query).length;
-  }
-  const tokens = tokenize(query);
-  if (!tokens.length) return 0;
-
-  let count = 0;
-  for (const paper of paperSearchIndex) {
-    if (scorePaperMatch(paper, tokens) > 0) count += 1;
-  }
-  return count;
+  return rankPaperRecordsByQuery(paperSearchIndex, query).length;
 }
 
 function hasNonSearchFiltersApplied() {

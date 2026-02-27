@@ -21,6 +21,53 @@ const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu(
 const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
 const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
 
+
+const normalizePublicationFromHub = typeof HubUtils.normalizePublication === 'function'
+  ? HubUtils.normalizePublication.bind(HubUtils)
+  : null;
+const normalizeAffiliationFromHub = typeof HubUtils.normalizeAffiliation === 'function'
+  ? HubUtils.normalizeAffiliation.bind(HubUtils)
+  : null;
+const normalizeAffiliationKeyFromHub = typeof HubUtils.normalizeAffiliationKey === 'function'
+  ? HubUtils.normalizeAffiliationKey.bind(HubUtils)
+  : null;
+const normalizePublicationKeyFromHub = typeof HubUtils.normalizePublicationKey === 'function'
+  ? HubUtils.normalizePublicationKey.bind(HubUtils)
+  : null;
+const normalizePersonRecordFromHub = typeof HubUtils.normalizePersonRecord === 'function'
+  ? HubUtils.normalizePersonRecord.bind(HubUtils)
+  : null;
+const tokenizeQueryFromHub = typeof HubUtils.tokenizeQuery === 'function'
+  ? HubUtils.tokenizeQuery.bind(HubUtils)
+  : null;
+const normalizePersonKeyFromHub = typeof HubUtils.normalizePersonKey === 'function'
+  ? HubUtils.normalizePersonKey.bind(HubUtils)
+  : null;
+const arePersonMiddleVariantsFromHub = typeof HubUtils.arePersonMiddleVariants === 'function'
+  ? HubUtils.arePersonMiddleVariants.bind(HubUtils)
+  : null;
+const getPaperKeyTopicsFromHub = typeof HubUtils.getPaperKeyTopics === 'function'
+  ? HubUtils.getPaperKeyTopics.bind(HubUtils)
+  : null;
+const rankPaperRecordsByQueryFromHub = typeof HubUtils.rankPaperRecordsByQuery === 'function'
+  ? HubUtils.rankPaperRecordsByQuery.bind(HubUtils)
+  : null;
+const buildSearchSnippetFromHub = typeof HubUtils.buildSearchSnippet === 'function'
+  ? HubUtils.buildSearchSnippet.bind(HubUtils)
+  : null;
+const normalizeTalksFromHub = typeof HubUtils.normalizeTalks === 'function'
+  ? HubUtils.normalizeTalks.bind(HubUtils)
+  : null;
+const getTalkKeyTopicsFromHub = typeof HubUtils.getTalkKeyTopics === 'function'
+  ? HubUtils.getTalkKeyTopics.bind(HubUtils)
+  : null;
+const scoreMatchFromHub = typeof HubUtils.scoreMatch === 'function'
+  ? HubUtils.scoreMatch.bind(HubUtils)
+  : null;
+const rankTalksByQueryFromHub = typeof HubUtils.rankTalksByQuery === 'function'
+  ? HubUtils.rankTalksByQuery.bind(HubUtils)
+  : null;
+
 let allPapers = [];
 let searchIndex = [];
 let viewMode = 'grid'; // 'grid' | 'list'
@@ -255,8 +302,8 @@ function cleanMetadataValue(value) {
 function normalizePublicationLabel(value) {
   let cleaned = cleanMetadataValue(value);
   if (!cleaned) return '';
-  if (typeof HubUtils.normalizePublication === 'function') {
-    const normalized = HubUtils.normalizePublication(cleaned);
+  if (normalizePublicationFromHub) {
+    const normalized = normalizePublicationFromHub(cleaned);
     cleaned = cleanMetadataValue(normalized || cleaned);
   }
   if (/^arxiv(?:\.org)?(?:\s*\(cornell university\))?$/i.test(cleaned)) {
@@ -268,23 +315,23 @@ function normalizePublicationLabel(value) {
 function normalizeAffiliationLabel(value) {
   let cleaned = cleanMetadataValue(value);
   if (!cleaned) return '';
-  if (typeof HubUtils.normalizeAffiliation === 'function') {
-    const normalized = HubUtils.normalizeAffiliation(cleaned);
+  if (normalizeAffiliationFromHub) {
+    const normalized = normalizeAffiliationFromHub(cleaned);
     cleaned = cleanMetadataValue(normalized || cleaned);
   }
   return cleaned;
 }
 
 function normalizeAffiliationKey(value) {
-  if (typeof HubUtils.normalizeAffiliationKey === 'function') {
-    return HubUtils.normalizeAffiliationKey(value);
+  if (normalizeAffiliationKeyFromHub) {
+    return normalizeAffiliationKeyFromHub(value);
   }
   return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
 }
 
 function normalizePublicationKey(value) {
-  if (typeof HubUtils.normalizePublicationKey === 'function') {
-    return HubUtils.normalizePublicationKey(value);
+  if (normalizePublicationKeyFromHub) {
+    return normalizePublicationKeyFromHub(value);
   }
   return normalizeFilterValue(value).replace(/[^a-z0-9]+/g, '');
 }
@@ -444,8 +491,8 @@ function normalizePaperRecord(rawPaper) {
   paper.authors = Array.isArray(paper.authors)
     ? paper.authors
       .map((author) => {
-        if (typeof HubUtils.normalizePersonRecord === 'function') {
-          const normalized = HubUtils.normalizePersonRecord(author);
+        if (normalizePersonRecordFromHub) {
+          const normalized = normalizePersonRecordFromHub(author);
           if (!normalized || !normalized.name) return null;
           const affiliation = author && typeof author === 'object'
             ? String(author.affiliation || '').trim()
@@ -581,8 +628,8 @@ function buildSearchIndex() {
 }
 
 function tokenize(query) {
-  if (typeof HubUtils.tokenizeQuery === 'function') {
-    return HubUtils.tokenizeQuery(query);
+  if (tokenizeQueryFromHub) {
+    return tokenizeQueryFromHub(query);
   }
 
   const tokens = [];
@@ -748,8 +795,8 @@ function normalizeFilterValue(value) {
 }
 
 function normalizePersonKey(value) {
-  if (typeof HubUtils.normalizePersonKey === 'function') {
-    return HubUtils.normalizePersonKey(value);
+  if (normalizePersonKeyFromHub) {
+    return normalizePersonKeyFromHub(value);
   }
   return normalizeFilterValue(value);
 }
@@ -759,8 +806,8 @@ function samePersonName(a, b) {
   const keyB = normalizePersonKey(b);
   if (!keyA || !keyB) return false;
   if (keyA === keyB) return true;
-  if (typeof HubUtils.arePersonMiddleVariants === 'function') {
-    return HubUtils.arePersonMiddleVariants(a, b);
+  if (arePersonMiddleVariantsFromHub) {
+    return arePersonMiddleVariantsFromHub(a, b);
   }
   return false;
 }
@@ -772,8 +819,8 @@ function normalizeTopicKey(value) {
 }
 
 function getPaperKeyTopics(paper, limit = Infinity) {
-  if (typeof HubUtils.getPaperKeyTopics === 'function') {
-    return HubUtils.getPaperKeyTopics(paper, limit);
+  if (getPaperKeyTopicsFromHub) {
+    return getPaperKeyTopicsFromHub(paper, limit);
   }
 
   const out = [];
@@ -799,8 +846,8 @@ function filterAndSort() {
   let entries = searchIndex.map((paper) => ({ paper, score: 0 }));
 
   if (tokens.length > 0) {
-    if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-      const ranked = HubUtils.rankPaperRecordsByQuery(searchIndex, state.query);
+    if (rankPaperRecordsByQueryFromHub) {
+      const ranked = rankPaperRecordsByQueryFromHub(searchIndex, state.query);
       const baseScore = ranked.length || 1;
       entries = ranked.map((paper, index) => ({ paper, score: baseScore - index }));
     } else {
@@ -948,8 +995,8 @@ function buildContextSnippet(sourceText, query, maxLength = 340) {
   const text = stripSearchSourceText(sourceText);
   if (!text) return '';
 
-  if (query && query.length >= 2 && typeof HubUtils.buildSearchSnippet === 'function') {
-    const snippet = HubUtils.buildSearchSnippet(text, query, { maxLength });
+  if (query && query.length >= 2 && buildSearchSnippetFromHub) {
+    const snippet = buildSearchSnippetFromHub(text, query, { maxLength });
     if (snippet) return snippet;
   }
 
@@ -2593,15 +2640,15 @@ function buildTopicEntries(talkCounts, paperCounts) {
 }
 
 function normalizeTalks(rawTalks) {
-  if (typeof HubUtils.normalizeTalks === 'function') {
-    return HubUtils.normalizeTalks(rawTalks);
+  if (normalizeTalksFromHub) {
+    return normalizeTalksFromHub(rawTalks);
   }
   return Array.isArray(rawTalks) ? rawTalks : [];
 }
 
 function getTalkKeyTopics(talk, limit = Infinity) {
-  if (typeof HubUtils.getTalkKeyTopics === 'function') {
-    return HubUtils.getTalkKeyTopics(talk, limit);
+  if (getTalkKeyTopicsFromHub) {
+    return getTalkKeyTopicsFromHub(talk, limit);
   }
   const tags = Array.isArray(talk && talk.tags) ? talk.tags : [];
   return Number.isFinite(limit) ? tags.slice(0, limit) : tags;
@@ -2658,8 +2705,8 @@ function buildTalkSearchEntry(talk) {
 }
 
 function scoreTalkSearchMatch(indexedTalk, tokens) {
-  if (typeof HubUtils.scoreMatch === 'function') {
-    return HubUtils.scoreMatch(indexedTalk, tokens);
+  if (scoreMatchFromHub) {
+    return scoreMatchFromHub(indexedTalk, tokens);
   }
 
   let total = 0;
@@ -2698,8 +2745,8 @@ function fuzzyScoreTalkMatch(indexedTalk, tokens) {
 
 function countTalkMatchesForQuery(query) {
   if (!talkSearchIndex.length) return 0;
-  if (typeof HubUtils.rankTalksByQuery === 'function') {
-    return HubUtils.rankTalksByQuery(talkSearchIndex, query).length;
+  if (rankTalksByQueryFromHub) {
+    return rankTalksByQueryFromHub(talkSearchIndex, query).length;
   }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
@@ -2718,8 +2765,8 @@ function countTalkMatchesForQuery(query) {
 }
 
 function countPaperMatchesForQuery(query) {
-  if (typeof HubUtils.rankPaperRecordsByQuery === 'function') {
-    return HubUtils.rankPaperRecordsByQuery(searchIndex, query).length;
+  if (rankPaperRecordsByQueryFromHub) {
+    return rankPaperRecordsByQueryFromHub(searchIndex, query).length;
   }
   const tokens = tokenize(query);
   if (!tokens.length) return 0;
