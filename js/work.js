@@ -27,6 +27,7 @@ const WORK_SORT_MODES = new Set(['relevance', 'newest', 'oldest', 'title', 'cita
 const WORK_VIEW_MODES = new Set(['expanded', 'compact']);
 const WORK_VIEW_STORAGE_KEY = 'llvm-hub-work-view';
 const WORK_SEARCH_SCOPES = new Set(['all', 'talks', 'papers', 'blogs', 'docs', 'people']);
+const WORK_FROM_VALUES = new Set(['talks', 'papers', 'blogs', 'people', 'work']);
 const WORK_TIME_FILTERS = new Set(['any', 'since-2026', 'since-2025', 'since-2022', 'custom']);
 const WORK_ADVANCED_WHERE_MODES = new Set(['anywhere', 'title', 'abstract']);
 const WORK_YEAR_MIN = 1990;
@@ -122,7 +123,7 @@ function ensureScript(src) {
     const existing = [...document.querySelectorAll('script[src]')]
       .find((script) => {
         const scriptSrc = script.getAttribute('src') || '';
-        return scriptSrc === src || scriptSrc.startsWith(`${src.split('?')[0]}?`);
+        return scriptSrcMatches(scriptSrc, src);
       });
     if (existing) {
       if (existing.dataset.loaded === 'true') {
@@ -146,57 +147,89 @@ function ensureScript(src) {
   });
 }
 
+function getScriptSrcVariants(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return { full: '', base: '' };
+  try {
+    const parsed = new URL(raw, window.location.href);
+    const full = parsed.toString();
+    parsed.search = '';
+    parsed.hash = '';
+    return { full, base: parsed.toString() };
+  } catch {
+    const noHash = raw.split('#')[0];
+    return { full: noHash, base: noHash.split('?')[0] };
+  }
+}
+
+function scriptSrcMatches(candidateSrc, targetSrc) {
+  const candidate = getScriptSrcVariants(candidateSrc);
+  const target = getScriptSrcVariants(targetSrc);
+  if (!candidate.full || !target.full) return false;
+  return candidate.full === target.full || (candidate.base && candidate.base === target.base);
+}
+
+function isDocsUniversalPayload(payload) {
+  return !!(payload && Array.isArray(payload.entries));
+}
+
+function readDocsUniversalPayload(globalName) {
+  const payload = window[globalName];
+  return isDocsUniversalPayload(payload) ? payload : null;
+}
+
+async function loadDocsUniversalPayloadFromScript(src, globalName) {
+  try {
+    await ensureScript(src);
+    if (isDocsUniversalPayload(window.LLVMDocsUniversalSearchIndex)) {
+      window[globalName] = window.LLVMDocsUniversalSearchIndex;
+    }
+  } catch {
+    // Continue; docs search can still operate with whichever indexes loaded.
+  }
+  return readDocsUniversalPayload(globalName);
+}
+
 async function loadDocsUniversalRecords() {
   if (docsDataLoadPromise) return docsDataLoadPromise;
 
   docsDataLoadPromise = (async () => {
-    if (!(window.LLVMCoreDocsUniversalSearchIndex && Array.isArray(window.LLVMCoreDocsUniversalSearchIndex.entries))) {
-      try {
-        await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
-        if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
-          window.LLVMCoreDocsUniversalSearchIndex = window.LLVMDocsUniversalSearchIndex;
-        }
-      } catch {
-        // Continue; docs search can still operate with whichever indexes loaded.
-      }
+    let llvmPayload = readDocsUniversalPayload('LLVMCoreDocsUniversalSearchIndex');
+    let clangPayload = readDocsUniversalPayload('LLVMClangDocsUniversalSearchIndex');
+    let lldbPayload = readDocsUniversalPayload('LLVMLLDBDocsUniversalSearchIndex');
+
+    if (!llvmPayload) {
+      llvmPayload = await loadDocsUniversalPayloadFromScript(
+        DOCS_UNIVERSAL_INDEX_SRC,
+        'LLVMCoreDocsUniversalSearchIndex'
+      );
     }
 
-    if (!(window.LLVMClangDocsUniversalSearchIndex && Array.isArray(window.LLVMClangDocsUniversalSearchIndex.entries))) {
-      try {
-        await ensureScript(CLANG_DOCS_UNIVERSAL_INDEX_SRC);
-        if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
-          window.LLVMClangDocsUniversalSearchIndex = window.LLVMDocsUniversalSearchIndex;
-        }
-      } catch {
-        // Continue with LLVM Core docs only when Clang index is unavailable.
-      }
+    if (!clangPayload) {
+      clangPayload = await loadDocsUniversalPayloadFromScript(
+        CLANG_DOCS_UNIVERSAL_INDEX_SRC,
+        'LLVMClangDocsUniversalSearchIndex'
+      );
     }
 
-    if (!(window.LLVMLLDBDocsUniversalSearchIndex && Array.isArray(window.LLVMLLDBDocsUniversalSearchIndex.entries))) {
-      try {
-        await ensureScript(LLDB_DOCS_UNIVERSAL_INDEX_SRC);
-        if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
-          window.LLVMLLDBDocsUniversalSearchIndex = window.LLVMDocsUniversalSearchIndex;
-        }
-      } catch {
-        // Continue with whichever docs corpora are available.
-      }
+    if (!lldbPayload) {
+      lldbPayload = await loadDocsUniversalPayloadFromScript(
+        LLDB_DOCS_UNIVERSAL_INDEX_SRC,
+        'LLVMLLDBDocsUniversalSearchIndex'
+      );
     }
 
-    const llvmPayload = window.LLVMCoreDocsUniversalSearchIndex;
-    const clangPayload = window.LLVMClangDocsUniversalSearchIndex;
-    const lldbPayload = window.LLVMLLDBDocsUniversalSearchIndex;
-    if (llvmPayload && Array.isArray(llvmPayload.entries)) {
+    if (llvmPayload) {
       window.LLVMDocsUniversalSearchIndex = llvmPayload;
     }
 
-    const llvmEntries = (llvmPayload && Array.isArray(llvmPayload.entries))
+    const llvmEntries = llvmPayload
       ? llvmPayload.entries.map((entry, index) => normalizeDocsRecord(entry, index, 'docs'))
       : [];
-    const clangEntries = (clangPayload && Array.isArray(clangPayload.entries))
+    const clangEntries = clangPayload
       ? clangPayload.entries.map((entry, index) => normalizeDocsRecord(entry, index + llvmEntries.length, 'docs/clang'))
       : [];
-    const lldbEntries = (lldbPayload && Array.isArray(lldbPayload.entries))
+    const lldbEntries = lldbPayload
       ? lldbPayload.entries.map((entry, index) => normalizeDocsRecord(entry, index + llvmEntries.length + clangEntries.length, 'docs/lldb'))
       : [];
 
@@ -657,8 +690,7 @@ function parseStateFromUrl() {
   const publicationParam = normalizeAdvancedText(params.get('publication'));
   const modeParam = normalizeValue(params.get('mode'));
   const fromParam = normalizeValue(params.get('from'));
-  const FROM_VALUES = new Set(['talks', 'papers', 'blogs', 'people', 'work']);
-  const from = FROM_VALUES.has(fromParam) ? fromParam : 'talks';
+  const from = WORK_FROM_VALUES.has(fromParam) ? fromParam : 'talks';
   const hasEntityContext = Boolean(valueParam || kindParam);
   const explicitEntityMode = modeParam === 'entity';
   const hasAdvancedQueryContext = !!(

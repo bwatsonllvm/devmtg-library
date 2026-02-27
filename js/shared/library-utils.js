@@ -1431,20 +1431,7 @@
   const SEARCH_TOKEN_NORMALIZE_CACHE_MAX = 2048;
   const SEARCH_TOKEN_NORMALIZE_CACHE = new Map();
 
-  const SEARCH_TOKEN_SYNONYMS = {};
-  for (const [sourceToken, rawSynonyms] of Object.entries(SEARCH_TOKEN_SYNONYMS_RAW)) {
-    const source = normalizeSearchToken(sourceToken);
-    if (!source) continue;
-    const dedup = [];
-    const seen = new Set();
-    for (const candidate of rawSynonyms) {
-      const normalized = normalizeSearchToken(candidate);
-      if (!normalized || normalized === source || seen.has(normalized)) continue;
-      seen.add(normalized);
-      dedup.push(normalized);
-    }
-    if (dedup.length) SEARCH_TOKEN_SYNONYMS[source] = dedup;
-  }
+  let SEARCH_TOKEN_SYNONYMS = null;
 
   const SEARCH_QUERY_FIELD_ALIASES = {
     title: 'title',
@@ -1567,6 +1554,31 @@
       SEARCH_TOKEN_ALIAS_MAP[compact] || compact,
       SEARCH_TOKEN_NORMALIZE_CACHE_MAX
     );
+  }
+
+  function buildSearchTokenSynonyms() {
+    const normalizedSynonyms = {};
+    for (const [sourceToken, rawSynonyms] of Object.entries(SEARCH_TOKEN_SYNONYMS_RAW)) {
+      const source = normalizeSearchToken(sourceToken);
+      if (!source) continue;
+      const dedup = [];
+      const seen = new Set();
+      for (const candidate of rawSynonyms) {
+        const normalized = normalizeSearchToken(candidate);
+        if (!normalized || normalized === source || seen.has(normalized)) continue;
+        seen.add(normalized);
+        dedup.push(normalized);
+      }
+      if (dedup.length) normalizedSynonyms[source] = dedup;
+    }
+    return normalizedSynonyms;
+  }
+
+  function getSearchTokenSynonymsForNormalizedToken(token) {
+    const normalized = String(token || '');
+    if (!normalized) return [];
+    if (!SEARCH_TOKEN_SYNONYMS) SEARCH_TOKEN_SYNONYMS = buildSearchTokenSynonyms();
+    return SEARCH_TOKEN_SYNONYMS[normalized] || [];
   }
 
   function normalizeSearchText(value) {
@@ -1933,7 +1945,7 @@
       const stripped = token.replace(/[^a-z0-9]+/g, '');
       if (stripped && stripped !== token) addVariant(stripped, 0.74);
 
-      const synonyms = SEARCH_TOKEN_SYNONYMS[token] || [];
+      const synonyms = getSearchTokenSynonymsForNormalizedToken(token);
       for (const synonym of synonyms) {
         const normalizedSynonym = normalizeSearchToken(synonym);
         if (!normalizedSynonym) continue;

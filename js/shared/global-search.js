@@ -1034,7 +1034,7 @@
       const existing = [...document.querySelectorAll('script[src]')]
         .find((script) => {
           const scriptSrc = script.getAttribute('src') || '';
-          return scriptSrc === src || scriptSrc.startsWith(`${src}?`);
+          return scriptSrcMatches(scriptSrc, src);
         });
       if (existing) {
         if (existing.dataset.loaded === 'true') {
@@ -1058,65 +1058,83 @@
     });
   }
 
+  function getScriptSrcVariants(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return { full: '', base: '' };
+    try {
+      const parsed = new URL(raw, window.location.href);
+      const full = parsed.toString();
+      parsed.search = '';
+      parsed.hash = '';
+      return { full, base: parsed.toString() };
+    } catch {
+      const noHash = raw.split('#')[0];
+      return { full: noHash, base: noHash.split('?')[0] };
+    }
+  }
+
+  function scriptSrcMatches(candidateSrc, targetSrc) {
+    const candidate = getScriptSrcVariants(candidateSrc);
+    const target = getScriptSrcVariants(targetSrc);
+    if (!candidate.full || !target.full) return false;
+    return candidate.full === target.full || (candidate.base && candidate.base === target.base);
+  }
+
+  function isDocsUniversalPayload(payload) {
+    return !!(payload && Array.isArray(payload.entries));
+  }
+
+  function readDocsUniversalPayload(globalName) {
+    const payload = window[globalName];
+    return isDocsUniversalPayload(payload) ? payload : null;
+  }
+
+  async function loadDocsUniversalPayloadFromScript(src, globalName) {
+    try {
+      await ensureScript(src);
+      if (isDocsUniversalPayload(window.LLVMDocsUniversalSearchIndex)) {
+        window[globalName] = window.LLVMDocsUniversalSearchIndex;
+      }
+    } catch {
+      // Continue; docs autocomplete can still run with any available corpus.
+    }
+    return readDocsUniversalPayload(globalName);
+  }
+
   async function ensureDocsIndexLoader() {
     if (docsIndexLoadPromise) return docsIndexLoadPromise;
 
     docsIndexLoadPromise = (async () => {
-      let llvmPayload = (window.LLVMCoreDocsUniversalSearchIndex && Array.isArray(window.LLVMCoreDocsUniversalSearchIndex.entries))
-        ? window.LLVMCoreDocsUniversalSearchIndex
-        : null;
-      let clangPayload = (window.LLVMClangDocsUniversalSearchIndex && Array.isArray(window.LLVMClangDocsUniversalSearchIndex.entries))
-        ? window.LLVMClangDocsUniversalSearchIndex
-        : null;
-      let lldbPayload = (window.LLVMLLDBDocsUniversalSearchIndex && Array.isArray(window.LLVMLLDBDocsUniversalSearchIndex.entries))
-        ? window.LLVMLLDBDocsUniversalSearchIndex
-        : null;
+      let llvmPayload = readDocsUniversalPayload('LLVMCoreDocsUniversalSearchIndex');
+      let clangPayload = readDocsUniversalPayload('LLVMClangDocsUniversalSearchIndex');
+      let lldbPayload = readDocsUniversalPayload('LLVMLLDBDocsUniversalSearchIndex');
 
       if (!llvmPayload) {
-        try {
-          await ensureScript(DOCS_UNIVERSAL_INDEX_SRC);
-          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
-            llvmPayload = window.LLVMDocsUniversalSearchIndex;
-            window.LLVMCoreDocsUniversalSearchIndex = llvmPayload;
-          }
-        } catch {
-          // Continue; docs autocomplete can still run with any available corpus.
-        }
+        llvmPayload = await loadDocsUniversalPayloadFromScript(
+          DOCS_UNIVERSAL_INDEX_SRC,
+          'LLVMCoreDocsUniversalSearchIndex'
+        );
       }
 
       if (!clangPayload) {
-        try {
-          await ensureScript(CLANG_DOCS_UNIVERSAL_INDEX_SRC);
-          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
-            clangPayload = window.LLVMDocsUniversalSearchIndex;
-            window.LLVMClangDocsUniversalSearchIndex = clangPayload;
-          }
-        } catch {
-          // Continue with LLVM Core docs only when Clang index is unavailable.
-        }
+        clangPayload = await loadDocsUniversalPayloadFromScript(
+          CLANG_DOCS_UNIVERSAL_INDEX_SRC,
+          'LLVMClangDocsUniversalSearchIndex'
+        );
       }
 
       if (!lldbPayload) {
-        try {
-          await ensureScript(LLDB_DOCS_UNIVERSAL_INDEX_SRC);
-          if (window.LLVMDocsUniversalSearchIndex && Array.isArray(window.LLVMDocsUniversalSearchIndex.entries)) {
-            lldbPayload = window.LLVMDocsUniversalSearchIndex;
-            window.LLVMLLDBDocsUniversalSearchIndex = lldbPayload;
-          }
-        } catch {
-          // Continue with available docs corpora.
-        }
+        lldbPayload = await loadDocsUniversalPayloadFromScript(
+          LLDB_DOCS_UNIVERSAL_INDEX_SRC,
+          'LLVMLLDBDocsUniversalSearchIndex'
+        );
       }
 
       if (llvmPayload) {
         window.LLVMDocsUniversalSearchIndex = llvmPayload;
       }
 
-      return !!(
-        (llvmPayload && Array.isArray(llvmPayload.entries))
-        || (clangPayload && Array.isArray(clangPayload.entries))
-        || (lldbPayload && Array.isArray(lldbPayload.entries))
-      );
+      return !!(llvmPayload || clangPayload || lldbPayload);
     })().catch(() => false);
 
     return docsIndexLoadPromise;
