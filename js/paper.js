@@ -10,12 +10,6 @@ const PageShell = typeof HubUtils.createPageShell === 'function'
 const copyTextToClipboard = PageShell
   ? (text) => PageShell.copyTextToClipboard(text)
   : async () => false;
-const safeSessionGet = PageShell
-  ? (key) => PageShell.safeSessionGet(key)
-  : () => null;
-const safeSessionRemove = PageShell
-  ? (key) => PageShell.safeSessionRemove(key)
-  : () => {};
 const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
 const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
 const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
@@ -30,53 +24,9 @@ const BLOG_SOURCE_SLUG_ALIASES = new Set([
 const PAPERS_PAGE_PATH = 'papers/';
 const BLOGS_PAGE_PATH = 'blogs/';
 const DIRECT_PDF_URL_RE = /\.pdf(?:$|[?#])|\/pdf(?:$|[/?#])|[?&](?:format|type|output)=pdf(?:$|[&#])|[?&]filename=[^&#]*\.pdf(?:$|[&#])/i;
-const PAPER_NAV_CACHE_KEY = 'llvm-hub-nav-paper-record';
-const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
-const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
-const NAV_CACHE_MAX_BYTES = 64 * 1024;
 const PAPER_TO_TALK_REDIRECTS = {
   'pubs-2007-llvm-2-0-and-beyond': '2007-07-25-001',
 };
-
-function uniqueNormalizedPaths(paths) {
-  return [...new Set((Array.isArray(paths) ? paths : [])
-    .map((value) => String(value || '').trim())
-    .filter(Boolean))];
-}
-
-function normalizePaperPath(raw) {
-  const value = String(raw || '').trim().replace(/^\/+/, '');
-  if (!value) return '';
-  if (value.startsWith('papers/')) return value;
-  if (value.startsWith('../papers/')) return value.slice('../'.length);
-  return `papers/${value}`;
-}
-
-function buildPaperRecordPathCandidates(paperId) {
-  const id = String(paperId || '').trim().toLowerCase();
-  if (!id) return [];
-  if (id.startsWith('blog-')) {
-    return ['papers/llvm-blog-posts.json'];
-  }
-  if (id.startsWith('openalex-')) {
-    return ['papers/openalex-llvm-query.json', 'papers/openalex-discovered.json'];
-  }
-  if (id.startsWith('pubs-')) {
-    return ['papers/llvm-org-pubs.json'];
-  }
-  if (id.startsWith('manual-') || id.startsWith('doi-')) {
-    return ['papers/manual-added-papers.json'];
-  }
-  return [];
-}
-
-function resolveWorkerScriptUrl(relativePath) {
-  try {
-    return new URL(String(relativePath || ''), document.baseURI || window.location.href).toString();
-  } catch {
-    return '';
-  }
-}
 
 // ============================================================
 // Data Loading
@@ -255,165 +205,18 @@ function normalizePaperRecord(rawPaper) {
   return paper;
 }
 
-async function loadPaperRecordByIdViaWorker(paperId) {
-  const id = String(paperId || '').trim();
-  if (!id) return null;
-  if (typeof Worker !== 'function') {
-    return null;
-  }
-
-  const baseUrl = new URL('../', window.location.href).toString();
-  const workerUrl = resolveWorkerScriptUrl('js/workers/paper-record-worker.js');
-  if (!workerUrl) return null;
-
-  try {
-    const worker = new Worker(workerUrl);
-    return await new Promise((resolve) => {
-      const timeout = window.setTimeout(() => {
-        try { worker.terminate(); } catch {}
-        resolve(null);
-      }, 45000);
-
-      worker.onmessage = (event) => {
-        window.clearTimeout(timeout);
-        try { worker.terminate(); } catch {}
-        const payload = event && event.data ? event.data : {};
-        const paper = normalizePaperRecord(payload && payload.paper);
-        resolve(paper || null);
-      };
-      worker.onerror = () => {
-        window.clearTimeout(timeout);
-        try { worker.terminate(); } catch {}
-        resolve(null);
-      };
-      worker.postMessage({
-        id,
-        baseUrl,
-        candidatePaths: buildPaperRecordPathCandidates(id),
-      });
-    });
-  } catch {
-    return null;
-  }
+function normalizePapers(rawPapers) {
+  if (!Array.isArray(rawPapers)) return null;
+  return rawPapers.map(normalizePaperRecord).filter(Boolean);
 }
 
-async function loadPaperRecordByIdDirect(paperId) {
-  const id = String(paperId || '').trim();
-  if (!id) return { paper: null, loadedAny: false };
-  const result = { paper: null, loadedAny: false };
-
-  const fetchJson = async (path) => {
-    try {
-      const response = await fetch(path, { cache: 'default' });
-      if (!response.ok) return null;
-      return await response.json();
-    } catch {
-      return null;
-    }
-  };
-
-  const manifest = await fetchJson('papers/index.json');
-  if (manifest && typeof manifest === 'object') result.loadedAny = true;
-  const manifestPaths = Array.isArray(manifest && manifest.paperFiles)
-    ? manifest.paperFiles.map(normalizePaperPath)
-    : (Array.isArray(manifest && manifest.files)
-      ? manifest.files.map(normalizePaperPath)
-      : []);
-
-  const candidatePaths = uniqueNormalizedPaths([
-    ...buildPaperRecordPathCandidates(id),
-    ...manifestPaths,
-  ]);
-
-  for (const path of candidatePaths) {
-    const bundle = await fetchJson(path);
-    if (!bundle || !Array.isArray(bundle.papers)) continue;
-    result.loadedAny = true;
-    const raw = bundle.papers.find((entry) => String((entry && entry.id) || '').trim() === id);
-    if (!raw) continue;
-    const paper = normalizePaperRecord(raw);
-    if (paper) {
-      result.paper = paper;
-      return result;
-    }
-  }
-
-  return result;
-}
-
-function readCachedPaperRecord(paperId) {
-  const id = String(paperId || '').trim();
-  if (!id) return null;
-
-  const fromPayload = (payload) => {
-    const payloadId = String(payload && payload.id || '').trim();
-    if (payloadId !== id) return null;
-    if (String(payload && payload.kind || '').trim().toLowerCase() === 'talk') return null;
-    const savedAt = Number(payload && payload.savedAt);
-    if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
-      return null;
-    }
-    const cachedPaper = payload && payload.paper;
-    if (!cachedPaper || typeof cachedPaper !== 'object') return null;
-    const paper = normalizePaperRecord(cachedPaper);
-    if (!paper) return null;
-    if (String(paper.id || '').trim() !== id) return null;
-    return paper;
-  };
-
-  const nameCache = String(window.name || '');
-  if (nameCache.startsWith(NAV_WINDOW_CACHE_PREFIX)) {
-    const rawPayload = nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length);
-    if (rawPayload.length > NAV_CACHE_MAX_BYTES) {
-      try { window.name = ''; } catch {}
-      return null;
-    }
-    try {
-      const payload = JSON.parse(rawPayload);
-      const paper = fromPayload(payload);
-      if (paper) return paper;
-    } catch {
-      // Ignore malformed window.name cache payload.
-    }
-  }
-
-  const raw = safeSessionGet(PAPER_NAV_CACHE_KEY);
-  if (!raw) return null;
-  if (raw.length > NAV_CACHE_MAX_BYTES) {
-    safeSessionRemove(PAPER_NAV_CACHE_KEY);
-    return null;
-  }
+async function loadPapers() {
+  if (typeof window.loadPaperData !== 'function') return null;
   try {
-    return fromPayload(JSON.parse(raw));
+    const { papers } = await window.loadPaperData();
+    return normalizePapers(papers);
   } catch {
     return null;
-  }
-}
-
-function cachePaperNavigationRecord(paper) {
-  const id = String(paper && paper.id || '').trim();
-  if (!id) return;
-  const payload = {
-    kind: 'paper',
-    id,
-    savedAt: Date.now(),
-    paper,
-  };
-  try {
-    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
-  } catch {
-    // Ignore window.name write failures.
-  }
-}
-
-function resolvePaperIdFromHref(href) {
-  const raw = String(href || '').trim();
-  if (!raw) return '';
-  try {
-    const parsed = new URL(raw, window.location.href);
-    return String(parsed.searchParams.get('id') || '').trim();
-  } catch {
-    return '';
   }
 }
 
@@ -1732,20 +1535,6 @@ function renderPaperDetail(paper, allPapers) {
       }, 1600);
     });
   }
-
-  root.addEventListener('click', (event) => {
-    if (!event || event.defaultPrevented) return;
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    const link = event.target && typeof event.target.closest === 'function'
-      ? event.target.closest('a.card-link-wrap[href]')
-      : null;
-    if (!link) return;
-    const nextId = resolvePaperIdFromHref(link.getAttribute('href') || '');
-    if (!nextId) return;
-    const nextPaper = (Array.isArray(allPapers) ? allPapers : [])
-      .find((candidate) => String((candidate && candidate.id) || '').trim() === nextId);
-    if (nextPaper) cachePaperNavigationRecord(nextPaper);
-  });
 }
 
 function renderNotFound(id, listingPath = fallbackListingPathFromUrl()) {
@@ -1762,18 +1551,6 @@ function renderNotFound(id, listingPath = fallbackListingPathFromUrl()) {
         <div class="empty-state-icon" aria-hidden="true">!</div>
         <h2>Paper not found</h2>
         <p>No paper found with ID <code>${escapeHtml(id || '(none)')}</code>.</p>
-      </div>
-    </div>`;
-}
-
-function renderLoadError() {
-  const root = document.getElementById('paper-detail-root');
-  root.innerHTML = `
-    <div class="talk-detail">
-      <div class="empty-state" role="alert">
-        <div class="empty-state-icon" aria-hidden="true">!</div>
-        <h2>Could not load data</h2>
-        <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available.</p>
       </div>
     </div>`;
 }
@@ -1797,6 +1574,21 @@ async function init() {
     itemType: fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper',
     itemId: String(paperId || '').trim(),
   });
+  const allPapers = await loadPapers();
+
+  if (!allPapers) {
+    const root = document.getElementById('paper-detail-root');
+    root.innerHTML = `
+      <div class="talk-detail">
+        <div class="empty-state" role="alert">
+          <div class="empty-state-icon" aria-hidden="true">!</div>
+          <h2>Could not load data</h2>
+          <p>Ensure <code>papers/index.json</code> and <code>papers/*.json</code> are available and that <code>js/papers-data.js</code> loads first.</p>
+        </div>
+      </div>`;
+    initShareMenu();
+    return;
+  }
 
   if (!paperId) {
     renderNotFound(null, fallbackListingPath);
@@ -1815,49 +1607,22 @@ async function init() {
     return;
   }
 
-  const cachedPaper = readCachedPaperRecord(paperId);
-  if (cachedPaper) {
-    document.title = `${cachedPaper.title} — LLVM Research Library`;
-    updatePaperSeoMetadata(cachedPaper);
-    syncHeaderNavForPaper(cachedPaper);
-    renderPaperDetail(cachedPaper, [cachedPaper]);
-    setIssueContextForPaper(cachedPaper);
+  const paper = allPapers.find((candidate) => candidate.id === paperId);
+  if (!paper) {
+    renderNotFound(paperId, fallbackListingPath);
+    const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
+    setIssueContext({
+      itemTitle: `Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
+      issueTitle: `[${missingItemLabel}] Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
+    });
     initShareMenu();
     return;
   }
 
-  const workerPaper = await loadPaperRecordByIdViaWorker(paperId);
-  if (workerPaper) {
-    document.title = `${workerPaper.title} — LLVM Research Library`;
-    updatePaperSeoMetadata(workerPaper);
-    syncHeaderNavForPaper(workerPaper);
-    renderPaperDetail(workerPaper, [workerPaper]);
-    setIssueContextForPaper(workerPaper);
-    initShareMenu();
-    return;
-  }
-
-  const directResult = await loadPaperRecordByIdDirect(paperId);
-  if (!directResult || !directResult.paper) {
-    if (!directResult || !directResult.loadedAny) {
-      renderLoadError();
-    } else {
-      renderNotFound(paperId, fallbackListingPath);
-      const missingItemLabel = fallbackListingPath === BLOGS_PAGE_PATH ? 'Blog' : 'Paper';
-      setIssueContext({
-        itemTitle: `Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
-        issueTitle: `[${missingItemLabel}] Unknown ${missingItemLabel.toLowerCase()} ID: ${paperId}`,
-      });
-    }
-    initShareMenu();
-    return;
-  }
-
-  const paper = directResult.paper;
   document.title = `${paper.title} — LLVM Research Library`;
   updatePaperSeoMetadata(paper);
   syncHeaderNavForPaper(paper);
-  renderPaperDetail(paper, [paper]);
+  renderPaperDetail(paper, allPapers);
   setIssueContextForPaper(paper);
   initShareMenu();
 }

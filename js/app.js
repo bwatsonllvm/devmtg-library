@@ -27,7 +27,6 @@ const ALL_WORK_PAGE_PATH = 'work.html';
 const MAX_TOPIC_FILTERS = 220;
 const MIN_TOPIC_FILTER_COUNT = 2;
 const TALK_SORT_MODES = new Set(['relevance', 'newest', 'oldest', 'title']);
-const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 
 const state = {
   query: '',
@@ -1300,35 +1299,6 @@ function saveNavigationState() {
   }));
 }
 
-function resolveTalkIdFromHref(href) {
-  const raw = String(href || '').trim();
-  if (!raw) return '';
-  try {
-    const parsed = new URL(raw, window.location.href);
-    return String(parsed.searchParams.get('id') || '').trim();
-  } catch {
-    return '';
-  }
-}
-
-function cacheTalkNavigationRecordById(talkId) {
-  const id = String(talkId || '').trim();
-  if (!id) return;
-  const talk = allTalks.find((entry) => String((entry && entry.id) || '').trim() === id);
-  if (!talk) return;
-  const payload = {
-    kind: 'talk',
-    id,
-    savedAt: Date.now(),
-    talk,
-  };
-  try {
-    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
-  } catch {
-    // Ignore window.name write failures.
-  }
-}
-
 function restoreNavigationState() {
   const saved = safeSessionGet('llvm-hub-search-state');
   if (!saved) return;
@@ -2520,7 +2490,6 @@ function initCardNavigation() {
 
     const cardLink = e.target.closest('a.card-link-wrap');
     if (cardLink && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-      cacheTalkNavigationRecordById(resolveTalkIdFromHref(cardLink.getAttribute('href') || ''));
       saveNavigationState();
     }
   });

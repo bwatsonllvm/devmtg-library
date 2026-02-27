@@ -74,7 +74,6 @@ const WORK_YEAR_MIN = 1990;
 const WORK_YEAR_MAX = 2100;
 const UNIVERSAL_FALLBACK_PER_KIND_LIMIT = 240;
 const UNIVERSAL_MAX_RESULTS = 1200;
-const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
 const DOCS_UNIVERSAL_INDEX_SRC = 'docs/_static/docs-universal-search-index.js?v=9b2701561091';
 const CLANG_DOCS_UNIVERSAL_INDEX_SRC = 'docs/clang/_static/docs-universal-search-index.js?v=74116e3da143';
 const LLDB_DOCS_UNIVERSAL_INDEX_SRC = 'docs/lldb/_static/docs-universal-search-index.js?v=eba40672f6e7';
@@ -329,83 +328,6 @@ function sanitizeExternalUrl(value) {
     return '';
   }
   return '';
-}
-
-function resolveDetailLinkInfo(rawHref) {
-  const href = String(rawHref || '').trim();
-  if (!href) return { kind: '', id: '' };
-  try {
-    const parsed = new URL(href, window.location.href);
-    const pathname = parsed.pathname.toLowerCase();
-    const id = String(parsed.searchParams.get('id') || '').trim();
-    if (!id) return { kind: '', id: '' };
-    if (pathname.endsWith('/talks/talk.html')) return { kind: 'talk', id };
-    if (pathname.endsWith('/papers/paper.html')) return { kind: 'paper', id };
-  } catch {
-    return { kind: '', id: '' };
-  }
-  return { kind: '', id: '' };
-}
-
-function cacheTalkNavigationRecordById(talkId) {
-  const id = String(talkId || '').trim();
-  if (!id) return;
-  const talk = allTalkRecords.find((entry) => String((entry && entry.id) || '').trim() === id);
-  if (!talk) return;
-  const payload = {
-    kind: 'talk',
-    id,
-    savedAt: Date.now(),
-    talk,
-  };
-  try {
-    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
-  } catch {
-    // Ignore window.name write failures.
-  }
-}
-
-function cachePaperNavigationRecordById(paperId) {
-  const id = String(paperId || '').trim();
-  if (!id) return;
-  const paper = allPaperRecords.find((entry) => String((entry && entry.id) || '').trim() === id)
-    || allBlogRecords.find((entry) => String((entry && entry.id) || '').trim() === id);
-  if (!paper) return;
-  const payload = {
-    kind: 'paper',
-    id,
-    savedAt: Date.now(),
-    paper,
-  };
-  try {
-    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
-  } catch {
-    // Ignore window.name write failures.
-  }
-}
-
-function initDetailNavigationCache() {
-  const body = document.body;
-  if (!body || body.dataset.workDetailNavBound === '1') return;
-  body.dataset.workDetailNavBound = '1';
-
-  document.addEventListener('click', (event) => {
-    if (!event || event.defaultPrevented) return;
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    const link = event.target && typeof event.target.closest === 'function'
-      ? event.target.closest('a.card-link-wrap[href]')
-      : null;
-    if (!link) return;
-
-    const detail = resolveDetailLinkInfo(link.getAttribute('href') || '');
-    if (detail.kind === 'talk') {
-      cacheTalkNavigationRecordById(detail.id);
-      return;
-    }
-    if (detail.kind === 'paper') {
-      cachePaperNavigationRecordById(detail.id);
-    }
-  });
 }
 
 function setIssueContext(context) {
@@ -3783,7 +3705,6 @@ async function init() {
   initMobileNavMenu();
   initShareMenu();
   initWorkHeroSearch();
-  initDetailNavigationCache();
   parseStateFromUrl();
   initScopeControl();
   initAdvancedFilterControls();

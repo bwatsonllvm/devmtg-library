@@ -12,49 +12,11 @@ const PageShell = typeof HubUtils.createPageShell === 'function'
   : null;
 
 const safeSessionGet = PageShell ? PageShell.safeSessionGet : () => null;
-const safeSessionRemove = PageShell ? PageShell.safeSessionRemove : () => {};
 const initTheme = PageShell ? () => PageShell.initTheme() : () => {};
 const initTextSize = PageShell ? () => PageShell.initTextSize() : () => {};
 const initCustomizationMenu = PageShell ? () => PageShell.initCustomizationMenu() : () => {};
 const initMobileNavMenu = PageShell ? () => PageShell.initMobileNavMenu() : () => {};
 const initShareMenu = PageShell ? () => PageShell.initShareMenu() : () => {};
-const TALK_NAV_CACHE_KEY = 'llvm-hub-nav-talk-record';
-const NAV_WINDOW_CACHE_PREFIX = 'llvm-hub-nav-cache:';
-const NAV_RECORD_MAX_AGE_MS = 1000 * 60 * 30;
-const NAV_CACHE_MAX_BYTES = 64 * 1024;
-
-function uniqueNormalizedPaths(paths) {
-  return [...new Set((Array.isArray(paths) ? paths : [])
-    .map((value) => String(value || '').trim())
-    .filter(Boolean))];
-}
-
-function normalizeEventPath(raw) {
-  const value = String(raw || '').trim().replace(/^\/+/, '');
-  if (!value) return '';
-  if (value.startsWith('devmtg/events/')) return value;
-  if (value.startsWith('events/')) return `devmtg/events/${value.slice('events/'.length)}`;
-  return `devmtg/events/${value}`;
-}
-
-function buildTalkRecordPathCandidates(talkId) {
-  const id = String(talkId || '').trim();
-  if (!id) return [];
-  const out = [];
-  const dayMatch = id.match(/^(\d{4}-\d{2}-\d{2})-/);
-  if (dayMatch && dayMatch[1]) out.push(`devmtg/events/${dayMatch[1]}.json`);
-  const monthMatch = id.match(/^(\d{4}-\d{2})-/);
-  if (monthMatch && monthMatch[1]) out.push(`devmtg/events/${monthMatch[1]}.json`);
-  return uniqueNormalizedPaths(out);
-}
-
-function resolveWorkerScriptUrl(relativePath) {
-  try {
-    return new URL(String(relativePath || ''), document.baseURI || window.location.href).toString();
-  } catch {
-    return '';
-  }
-}
 
 function normalizeTalks(rawTalks) {
   if (typeof HubUtils.normalizeTalks === 'function') {
@@ -63,164 +25,15 @@ function normalizeTalks(rawTalks) {
   return Array.isArray(rawTalks) ? rawTalks : null;
 }
 
-async function loadTalkRecordByIdViaWorker(talkId) {
-  const id = String(talkId || '').trim();
-  if (!id) return null;
-  if (typeof Worker !== 'function') {
-    return null;
-  }
-
-  const baseUrl = new URL('../', window.location.href).toString();
-  const workerUrl = resolveWorkerScriptUrl('js/workers/talk-record-worker.js');
-  if (!workerUrl) return null;
-
-  try {
-    const worker = new Worker(workerUrl);
-    return await new Promise((resolve) => {
-      const timeout = window.setTimeout(() => {
-        try { worker.terminate(); } catch {}
-        resolve(null);
-      }, 45000);
-
-      worker.onmessage = (event) => {
-        window.clearTimeout(timeout);
-        try { worker.terminate(); } catch {}
-        const payload = event && event.data ? event.data : {};
-        const normalized = normalizeTalks([payload && payload.talk]);
-        resolve(Array.isArray(normalized) && normalized.length ? normalized[0] : null);
-      };
-      worker.onerror = () => {
-        window.clearTimeout(timeout);
-        try { worker.terminate(); } catch {}
-        resolve(null);
-      };
-      worker.postMessage({
-        id,
-        baseUrl,
-        candidatePaths: buildTalkRecordPathCandidates(id),
-      });
-    });
-  } catch {
-    return null;
-  }
-}
-
-async function loadTalkRecordByIdDirect(talkId) {
-  const id = String(talkId || '').trim();
-  if (!id) return { talk: null, loadedAny: false };
-  const result = { talk: null, loadedAny: false };
-  const fetchJson = async (path) => {
-    try {
-      const response = await fetch(path, { cache: 'default' });
-      if (!response.ok) return null;
-      return await response.json();
-    } catch {
-      return null;
-    }
-  };
-
-  const manifest = await fetchJson('devmtg/events/index.json');
-  if (manifest && typeof manifest === 'object') result.loadedAny = true;
-  const manifestPaths = Array.isArray(manifest && manifest.eventFiles)
-    ? manifest.eventFiles.map(normalizeEventPath)
-    : (Array.isArray(manifest && manifest.events)
-      ? manifest.events.map((entry) => normalizeEventPath(entry && (entry.file || entry.path)))
-      : []);
-
-  const candidatePaths = uniqueNormalizedPaths([
-    ...buildTalkRecordPathCandidates(id),
-    ...manifestPaths,
-  ]);
-
-  for (const path of candidatePaths) {
-    const bundle = await fetchJson(path);
-    if (!bundle || !Array.isArray(bundle.talks)) continue;
-    result.loadedAny = true;
-    const normalizedTalks = normalizeTalks(bundle.talks) || [];
-    const talk = normalizedTalks.find((entry) => String((entry && entry.id) || '').trim() === id);
-    if (talk) {
-      result.talk = talk;
-      return result;
-    }
-  }
-
-  return result;
-}
-
-function readCachedTalkRecord(talkId) {
-  const id = String(talkId || '').trim();
-  if (!id) return null;
-
-  const fromPayload = (payload) => {
-    const payloadId = String(payload && payload.id || '').trim();
-    if (payloadId !== id) return null;
-    if (String(payload && payload.kind || '').trim().toLowerCase() === 'paper') return null;
-    const savedAt = Number(payload && payload.savedAt);
-    if (Number.isFinite(savedAt) && savedAt > 0 && (Date.now() - savedAt) > NAV_RECORD_MAX_AGE_MS) {
-      return null;
-    }
-    const cachedTalk = payload && payload.talk;
-    if (!cachedTalk || typeof cachedTalk !== 'object') return null;
-    const normalized = normalizeTalks([cachedTalk]);
-    const talk = Array.isArray(normalized) && normalized.length ? normalized[0] : null;
-    if (!talk) return null;
-    if (String(talk.id || '').trim() !== id) return null;
-    return talk;
-  };
-
-  const nameCache = String(window.name || '');
-  if (nameCache.startsWith(NAV_WINDOW_CACHE_PREFIX)) {
-    const rawPayload = nameCache.slice(NAV_WINDOW_CACHE_PREFIX.length);
-    if (rawPayload.length > NAV_CACHE_MAX_BYTES) {
-      try { window.name = ''; } catch {}
-      return null;
-    }
-    try {
-      const payload = JSON.parse(rawPayload);
-      const talk = fromPayload(payload);
-      if (talk) return talk;
-    } catch {
-      // Ignore malformed window.name cache payload.
-    }
-  }
-
-  const raw = safeSessionGet(TALK_NAV_CACHE_KEY);
-  if (!raw) return null;
-  if (raw.length > NAV_CACHE_MAX_BYTES) {
-    safeSessionRemove(TALK_NAV_CACHE_KEY);
+async function loadTalks() {
+  if (typeof window.loadEventData !== 'function') {
     return null;
   }
   try {
-    return fromPayload(JSON.parse(raw));
+    const { talks } = await window.loadEventData();
+    return normalizeTalks(talks);
   } catch {
     return null;
-  }
-}
-
-function cacheTalkNavigationRecord(talk) {
-  const id = String(talk && talk.id || '').trim();
-  if (!id) return;
-  const payload = {
-    kind: 'talk',
-    id,
-    savedAt: Date.now(),
-    talk,
-  };
-  try {
-    window.name = `${NAV_WINDOW_CACHE_PREFIX}${JSON.stringify(payload)}`;
-  } catch {
-    // Ignore window.name write failures.
-  }
-}
-
-function resolveTalkIdFromHref(href) {
-  const raw = String(href || '').trim();
-  if (!raw) return '';
-  try {
-    const parsed = new URL(raw, window.location.href);
-    return String(parsed.searchParams.get('id') || '').trim();
-  } catch {
-    return '';
   }
 }
 
@@ -816,20 +629,6 @@ function renderTalkDetail(talk, allTalks) {
       window.history.back();
     }
   });
-
-  root.addEventListener('click', (event) => {
-    if (!event || event.defaultPrevented) return;
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    const link = event.target && typeof event.target.closest === 'function'
-      ? event.target.closest('a.card-link-wrap[href]')
-      : null;
-    if (!link) return;
-    const nextId = resolveTalkIdFromHref(link.getAttribute('href') || '');
-    if (!nextId) return;
-    const nextTalk = (Array.isArray(allTalks) ? allTalks : [])
-      .find((candidate) => String((candidate && candidate.id) || '').trim() === nextId);
-    if (nextTalk) cacheTalkNavigationRecord(nextTalk);
-  });
 }
 
 // ============================================================
@@ -853,18 +652,6 @@ function renderNotFound(id) {
     </div>`;
 }
 
-function renderLoadError() {
-  const root = document.getElementById('talk-detail-root');
-  root.innerHTML = `
-    <div class="talk-detail">
-      <div class="empty-state" role="alert">
-        <div class="empty-state-icon" aria-hidden="true">⚠️</div>
-        <h2>Could not load data</h2>
-        <p>Ensure <code>devmtg/events/index.json</code> and <code>devmtg/events/*.json</code> are available.</p>
-      </div>
-    </div>`;
-}
-
 // ============================================================
 // Init
 // ============================================================
@@ -883,6 +670,22 @@ async function init() {
     itemId: String(talkId || '').trim(),
   });
 
+  const allTalks = await loadTalks();
+
+  if (!allTalks) {
+    const root = document.getElementById('talk-detail-root');
+    root.innerHTML = `
+      <div class="talk-detail">
+        <div class="empty-state" role="alert">
+          <div class="empty-state-icon" aria-hidden="true">⚠️</div>
+          <h2>Could not load data</h2>
+          <p>Ensure <code>devmtg/events/index.json</code> and <code>devmtg/events/*.json</code> are available and that <code>js/events-data.js</code> loads first.</p>
+        </div>
+      </div>`;
+    initShareMenu();
+    return;
+  }
+
   if (!talkId) {
     renderNotFound(null);
     setIssueContext({
@@ -893,47 +696,22 @@ async function init() {
     return;
   }
 
-  const cachedTalk = readCachedTalkRecord(talkId);
-  if (cachedTalk) {
-    document.title = `${cachedTalk.title} — LLVM Research Library`;
-    updateTalkSeoMetadata(cachedTalk);
-    renderTalkDetail(cachedTalk, []);
-    setIssueContextForTalk(cachedTalk);
+  const talk = allTalks.find(t => t.id === talkId);
+  if (!talk) {
+    renderNotFound(talkId);
+    setIssueContext({
+      itemTitle: `Unknown talk ID: ${talkId}`,
+      issueTitle: `[Talk] Unknown talk ID: ${talkId}`,
+    });
     initShareMenu();
     return;
   }
-
-  const workerTalk = await loadTalkRecordByIdViaWorker(talkId);
-  if (workerTalk) {
-    document.title = `${workerTalk.title} — LLVM Research Library`;
-    updateTalkSeoMetadata(workerTalk);
-    renderTalkDetail(workerTalk, []);
-    setIssueContextForTalk(workerTalk);
-    initShareMenu();
-    return;
-  }
-
-  const directResult = await loadTalkRecordByIdDirect(talkId);
-  if (!directResult || !directResult.talk) {
-    if (!directResult || !directResult.loadedAny) {
-      renderLoadError();
-    } else {
-      renderNotFound(talkId);
-      setIssueContext({
-        itemTitle: `Unknown talk ID: ${talkId}`,
-        issueTitle: `[Talk] Unknown talk ID: ${talkId}`,
-      });
-    }
-    initShareMenu();
-    return;
-  }
-  const talk = directResult.talk;
 
   // Update page title
   document.title = `${talk.title} — LLVM Research Library`;
   updateTalkSeoMetadata(talk);
 
-  renderTalkDetail(talk, []);
+  renderTalkDetail(talk, allTalks);
   setIssueContextForTalk(talk);
   initShareMenu();
 }
