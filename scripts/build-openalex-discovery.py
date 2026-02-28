@@ -1153,6 +1153,135 @@ def pick_identity_keys(record: dict) -> tuple[str, str]:
     return openalex_key, doi_key
 
 
+def has_named_authors(value) -> bool:
+    if not isinstance(value, list):
+        return False
+    for item in value:
+        if isinstance(item, dict) and collapse_ws(str(item.get("name", ""))):
+            return True
+    return False
+
+
+def discovery_record_match_keys(record: dict) -> list[str]:
+    keys: set[str] = set()
+
+    openalex_key, doi_key = pick_identity_keys(record)
+    if openalex_key:
+        keys.add(f"oa:{openalex_key}")
+    if doi_key:
+        keys.add(f"doi:{doi_key}")
+
+    year = collapse_ws(str(record.get("year", "")))
+    title_key = normalize_title_key(strip_tags(str(record.get("title", ""))))
+    if year and title_key:
+        keys.add(f"title:{year}:{title_key}")
+
+    record_id = collapse_ws(str(record.get("id", ""))).lower()
+    if record_id:
+        keys.add(f"id:{record_id}")
+
+    return sorted(keys)
+
+
+def build_existing_discovery_index(records: list[dict]) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        for key in discovery_record_match_keys(record):
+            out.setdefault(key, []).append(record)
+    return out
+
+
+def _copy_scalar_field_from_existing(out: dict, existing: dict, field: str) -> bool:
+    existing_value = existing.get(field, "")
+    existing_text = collapse_ws(str(existing_value))
+    if not existing_text:
+        return False
+    current_text = collapse_ws(str(out.get(field, "")))
+    if current_text == existing_text:
+        return False
+    out[field] = existing_value
+    return True
+
+
+def _copy_list_field_from_existing(out: dict, existing: dict, field: str) -> bool:
+    raw = existing.get(field)
+
+    if field == "authors":
+        authors = normalize_author_entries(raw)
+        if not has_named_authors(authors):
+            return False
+        if normalize_author_entries(out.get(field)) == authors:
+            return False
+        out[field] = authors
+        return True
+
+    values = normalize_string_list(raw)
+    if not values:
+        return False
+    if normalize_string_list(out.get(field)) == values:
+        return False
+    out[field] = values
+    return True
+
+
+def pick_existing_discovery_match(record: dict, index: dict[str, list[dict]]) -> dict | None:
+    keys = discovery_record_match_keys(record)
+    if not keys:
+        return None
+
+    candidates: list[dict] = []
+    seen_ids: set[int] = set()
+    for key in keys:
+        for candidate in index.get(key, []):
+            ptr = id(candidate)
+            if ptr in seen_ids:
+                continue
+            seen_ids.add(ptr)
+            candidates.append(candidate)
+    if not candidates:
+        return None
+
+    key_set = set(keys)
+
+    def score(item: dict) -> tuple[int, int, int, int]:
+        shared = len(key_set & set(discovery_record_match_keys(item)))
+        named_authors = 1 if has_named_authors(item.get("authors")) else 0
+        has_abstract = 1 if collapse_ws(str(item.get("abstract", ""))) else 0
+        has_source_link = 1 if sanitize_http_url(str(item.get("sourceUrl", ""))) else 0
+        return (shared, named_authors, has_abstract, has_source_link)
+
+    return max(candidates, key=score)
+
+
+def overlay_discovery_record_with_existing(record: dict, existing: dict) -> bool:
+    changed = False
+
+    for field in [
+        "title",
+        "year",
+        "publishedDate",
+        "publication",
+        "venue",
+        "type",
+        "abstract",
+        "paperUrl",
+        "sourceUrl",
+        "openalexId",
+        "doi",
+        "citationCount",
+    ]:
+        if _copy_scalar_field_from_existing(record, existing, field):
+            changed = True
+
+    for field in ["authors", "tags", "keywords", "matchedAuthors", "matchedSubprojects"]:
+        if _copy_list_field_from_existing(record, existing, field):
+            changed = True
+
+    return changed
+
+
 def allocate_paper_id(preferred_id: str, openalex_id: str, title: str, used_ids: set[str]) -> str:
     chosen = collapse_ws(preferred_id)
     if chosen and chosen not in used_ids:
@@ -1240,6 +1369,12 @@ def main() -> int:
         help="Disable retention of existing openalex-discovered records when queries are partial.",
     )
     parser.add_argument(
+        "--preserve-existing-metadata",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Keep existing curated metadata for rediscovered OpenAlex works (default: enabled).",
+    )
+    parser.add_argument(
         "--update-manifest",
         action="store_true",
         help="Also update papers/index.json (disabled by default in single-db pipeline).",
@@ -1279,6 +1414,11 @@ def main() -> int:
         []
         if args.no_retain_existing
         else load_existing_discovery_bundle(output_bundle_path)
+    )
+    existing_discovery_index = (
+        build_existing_discovery_index(existing_discovery_papers)
+        if args.preserve_existing_metadata and existing_discovery_papers
+        else {}
     )
 
     all_works: dict[str, dict] = {}
@@ -1386,6 +1526,8 @@ def main() -> int:
     kept_doi_keys: set[str] = set()
     retained_existing_count = 0
     retained_existing_skipped = 0
+    overlayed_existing_metadata_count = 0
+    overlayed_existing_metadata_updates = 0
 
     for work in all_works.values():
         openalex_type = collapse_ws(str(work.get("type", ""))).lower()
@@ -1448,30 +1590,41 @@ def main() -> int:
         tags_for_paper = topics["tags"]
         keywords_for_paper = topics["keywords"]
 
-        paper_id = allocate_paper_id("", openalex_id, title, used_ids)
+        discovered_record = {
+            "source": "openalex-discovery",
+            "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+            "title": title,
+            "authors": authors,
+            "year": year,
+            "publication": publication,
+            "venue": venue,
+            "type": classify_type(openalex_type),
+            "abstract": abstract or "No abstract available in discovery metadata.",
+            "paperUrl": paper_url,
+            "sourceUrl": source_url,
+            "openalexId": openalex_id,
+            "doi": doi_key,
+            "tags": tags_for_paper,
+            "keywords": keywords_for_paper,
+            "matchedAuthors": matched,
+            "matchedSubprojects": matched_subprojects,
+        }
 
-        out_papers.append(
-            {
-                "id": paper_id,
-                "source": "openalex-discovery",
-                "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
-                "title": title,
-                "authors": authors,
-                "year": year,
-                "publication": publication,
-                "venue": venue,
-                "type": classify_type(openalex_type),
-                "abstract": abstract or "No abstract available in discovery metadata.",
-                "paperUrl": paper_url,
-                "sourceUrl": source_url,
-                "openalexId": openalex_id,
-                "doi": doi_key,
-                "tags": tags_for_paper,
-                "keywords": keywords_for_paper,
-                "matchedAuthors": matched,
-                "matchedSubprojects": matched_subprojects,
-            }
+        existing_match = (
+            pick_existing_discovery_match(discovered_record, existing_discovery_index)
+            if existing_discovery_index
+            else None
         )
+        if existing_match:
+            overlayed_existing_metadata_count += 1
+            if overlay_discovery_record_with_existing(discovered_record, existing_match):
+                overlayed_existing_metadata_updates += 1
+
+        preferred_id = collapse_ws(str(existing_match.get("id", ""))) if existing_match else ""
+        paper_id = allocate_paper_id(preferred_id, openalex_id, title, used_ids)
+        discovered_record["id"] = paper_id
+
+        out_papers.append(discovered_record)
         kept_title_keys.add(title_key)
         if openalex_work_key:
             kept_openalex_keys.add(openalex_work_key)
@@ -1637,6 +1790,9 @@ def main() -> int:
     print(f"OpenAlex requests: {total_requests}")
     print(f"Unique works fetched: {len(all_works)}")
     print(f"Retained from previous bundle: {retained_existing_count}")
+    print(f"OpenAlex metadata restoration enabled: {'yes' if args.preserve_existing_metadata else 'no'}")
+    print(f"OpenAlex discovered records matched to existing metadata: {overlayed_existing_metadata_count}")
+    print(f"OpenAlex discovered records restored from existing metadata: {overlayed_existing_metadata_updates}")
     print(f"Skipped from previous bundle: {retained_existing_skipped}")
     print(f"Discovered papers written: {len(out_papers)} -> {output_bundle_path}")
     print(f"Bundle changed: {'yes' if bundle_changed else 'no'}")

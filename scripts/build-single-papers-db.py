@@ -203,6 +203,7 @@ SOURCE_PRIORITY = {
     "llvm-org-pubs": 150,
 }
 MANUAL_BUNDLE_NAME = "manual-added-papers.json"
+PROTECTED_METADATA_SOURCE_GROUPS = {"llvm-org-pubs", "llvm-blog-www", "openalex"}
 PUBLICATION_ALIAS_MAP: dict[str, str] = {
     "proceedingsofacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
     "proceedingsoftheacmonprogramminglanguages": "Proceedings of the ACM on Programming Languages",
@@ -215,6 +216,28 @@ PUBLICATION_ALIAS_MAP: dict[str, str] = {
 
 def collapse_ws(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
+
+
+def normalize_source_slug(value: str) -> str:
+    slug = collapse_ws(value).lower().replace("_", "-")
+    slug = re.sub(r"[^a-z0-9-]+", "-", slug)
+    slug = re.sub(r"-{2,}", "-", slug).strip("-")
+    return slug
+
+
+def source_group(value: str) -> str:
+    slug = normalize_source_slug(value)
+    if slug in {"llvm-org-pubs", "llvm-www", "llvm-www-pubs"}:
+        return "llvm-org-pubs"
+    if slug in {"llvm-blog-www", "llvm-www-blog"}:
+        return "llvm-blog-www"
+    if slug.startswith("openalex"):
+        return "openalex"
+    return slug
+
+
+def is_protected_metadata_source(value: str) -> bool:
+    return source_group(value) in PROTECTED_METADATA_SOURCE_GROUPS
 
 
 def strip_diacritics(value: str) -> str:
@@ -1306,6 +1329,159 @@ def merge_records(base: dict, incoming: dict) -> dict:
     return out
 
 
+def has_named_authors(value) -> bool:
+    if not isinstance(value, list):
+        return False
+    for item in value:
+        if isinstance(item, dict) and collapse_ws(str(item.get("name", ""))):
+            return True
+    return False
+
+
+def _clean_string_list(value) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return dedupe_list([str(v) for v in value if collapse_ws(str(v))])
+
+
+def _copy_scalar_field_from_existing(out: dict, existing: dict, field: str) -> bool:
+    existing_value = existing.get(field, "")
+    existing_text = collapse_ws(str(existing_value))
+    if not existing_text:
+        return False
+    if field == "abstract" and is_placeholder_abstract(existing_text):
+        return False
+
+    current_text = collapse_ws(str(out.get(field, "")))
+    if field == "abstract" and is_placeholder_abstract(current_text) and not is_placeholder_abstract(existing_text):
+        out[field] = existing_value
+        return True
+
+    if current_text != existing_text:
+        out[field] = existing_value
+        return True
+    return False
+
+
+def _copy_list_field_from_existing(out: dict, existing: dict, field: str) -> bool:
+    raw_value = existing.get(field)
+    if field == "authors":
+        if not has_named_authors(raw_value):
+            return False
+        if out.get(field) == raw_value:
+            return False
+        out[field] = copy.deepcopy(raw_value)
+        return True
+
+    clean_values = _clean_string_list(raw_value)
+    if not clean_values:
+        return False
+    if _clean_string_list(out.get(field)) == clean_values:
+        return False
+    out[field] = clean_values
+    return True
+
+
+def _record_match_keys(record: dict) -> list[str]:
+    keys = set(record_identity_keys(record))
+    paper_id = collapse_ws(str(record.get("id", ""))).lower()
+    if paper_id:
+        keys.add(f"id:{paper_id}")
+    return sorted(keys)
+
+
+def load_existing_output_records(output_path: Path) -> list[dict]:
+    if not output_path.exists():
+        return []
+    try:
+        payload = load_json(output_path)
+    except Exception:
+        return []
+    papers = payload.get("papers") if isinstance(payload, dict) else None
+    if not isinstance(papers, list):
+        return []
+    return [copy.deepcopy(paper) for paper in papers if isinstance(paper, dict)]
+
+
+def _build_record_index(records: list[dict]) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {}
+    for record in records:
+        for key in _record_match_keys(record):
+            out.setdefault(key, []).append(record)
+    return out
+
+
+def _pick_existing_match(record: dict, record_index: dict[str, list[dict]]) -> dict | None:
+    candidates: list[dict] = []
+    seen_ids: set[int] = set()
+    for key in _record_match_keys(record):
+        for item in record_index.get(key, []):
+            ptr = id(item)
+            if ptr in seen_ids:
+                continue
+            seen_ids.add(ptr)
+            candidates.append(item)
+    if not candidates:
+        return None
+
+    expected_source = normalize_source_slug(str(record.get("source", "")))
+    expected_group = source_group(expected_source)
+
+    def key(item: dict):
+        candidate_source = normalize_source_slug(str(item.get("source", "")))
+        return (
+            1 if source_group(candidate_source) == expected_group else 0,
+            1 if candidate_source == expected_source else 0,
+            score_record(item),
+        )
+
+    return max(candidates, key=key)
+
+
+def overlay_protected_metadata_from_existing(papers: list[dict], existing_records: list[dict]) -> tuple[int, int]:
+    if not papers or not existing_records:
+        return 0, 0
+
+    index = _build_record_index(existing_records)
+    matched = 0
+    updated = 0
+    for paper in papers:
+        if not is_protected_metadata_source(str(paper.get("source", ""))):
+            continue
+
+        existing = _pick_existing_match(paper, index)
+        if not existing:
+            continue
+        if source_group(str(existing.get("source", ""))) != source_group(str(paper.get("source", ""))):
+            continue
+
+        matched += 1
+        changed = False
+        for field in [
+            "title",
+            "abstract",
+            "year",
+            "publishedDate",
+            "publication",
+            "venue",
+            "type",
+            "contentFormat",
+            "content",
+            "paperUrl",
+            "sourceUrl",
+            "doi",
+        ]:
+            if _copy_scalar_field_from_existing(paper, existing, field):
+                changed = True
+        for field in ["authors", "tags", "keywords", "matchedAuthors", "matchedSubprojects"]:
+            if _copy_list_field_from_existing(paper, existing, field):
+                changed = True
+        if changed:
+            updated += 1
+
+    return matched, updated
+
+
 def _chunks(values: list[str], size: int) -> Iterable[list[str]]:
     for i in range(0, len(values), size):
         yield values[i : i + size]
@@ -1533,15 +1709,33 @@ def apply_openalex_refresh(
 
         current_title = collapse_ws(str(paper.get("title", "")))
         current_abs = collapse_ws(str(paper.get("abstract", "")))
+        current_year = collapse_ws(str(paper.get("year", "")))
+        protect_existing = is_protected_metadata_source(str(paper.get("source", "")))
 
-        if should_replace_text_with_candidate(
+        if protect_existing:
+            if openalex_title and (
+                not current_title
+                or (looks_non_english(current_title, threshold=0.35) and not looks_non_english(openalex_title, threshold=0.35))
+            ):
+                paper["title"] = openalex_title
+                current_title = collapse_ws(openalex_title)
+        elif should_replace_text_with_candidate(
             current_title,
             openalex_title,
             threshold=0.35,
         ):
             paper["title"] = openalex_title
             current_title = collapse_ws(openalex_title)
-        if should_replace_text_with_candidate(
+
+        if protect_existing:
+            if openalex_abs and (
+                not current_abs
+                or is_placeholder_abstract(current_abs)
+                or (looks_non_english(current_abs, threshold=0.45) and not looks_non_english(openalex_abs, threshold=0.45))
+            ):
+                paper["abstract"] = openalex_abs
+                current_abs = collapse_ws(openalex_abs)
+        elif should_replace_text_with_candidate(
             current_abs,
             openalex_abs,
             threshold=0.45,
@@ -1549,24 +1743,35 @@ def apply_openalex_refresh(
         ):
             paper["abstract"] = openalex_abs
             current_abs = collapse_ws(openalex_abs)
-        if openalex_authors:
+
+        if openalex_authors and (not protect_existing or not has_named_authors(paper.get("authors"))):
             paper["authors"] = openalex_authors
+
         if re.fullmatch(r"\d{4}", openalex_year):
-            paper["year"] = openalex_year
-        if publication:
+            if not protect_existing or not re.fullmatch(r"\d{4}", current_year):
+                paper["year"] = openalex_year
+
+        if publication and (not protect_existing or not collapse_ws(str(paper.get("publication", "")))):
             paper["publication"] = publication
-        if venue:
+
+        if venue and (not protect_existing or not collapse_ws(str(paper.get("venue", "")))):
             paper["venue"] = venue
-        if paper_url:
+
+        if paper_url and (not protect_existing or not sanitize_http_url(str(paper.get("paperUrl", "")))):
             paper["paperUrl"] = paper_url
-        if source_url:
+
+        if source_url and (not protect_existing or not sanitize_http_url(str(paper.get("sourceUrl", "")))):
             paper["sourceUrl"] = source_url
-        if doi:
+
+        if doi and (not protect_existing or not normalize_doi(str(paper.get("doi", "")))):
             paper["doi"] = doi
+
         if citation_count is not None:
             paper["citationCount"] = max(0, citation_count)
-        if paper_type:
+
+        if paper_type and (not protect_existing or not collapse_ws(str(paper.get("type", "")))):
             paper["type"] = paper_type
+
         paper["openalexId"] = canonical_openalex_url(short_id)
 
         if not enable_landing_fallback:
@@ -1850,6 +2055,17 @@ def main() -> int:
 
     deduped = dedupe_records(source_records)
     print(f"Records after dedupe: {len(deduped)}", flush=True)
+
+    existing_output_records = load_existing_output_records(output_path)
+    protected_overlay_matches = 0
+    protected_overlay_updates = 0
+    if existing_output_records:
+        protected_overlay_matches, protected_overlay_updates = overlay_protected_metadata_from_existing(
+            deduped,
+            existing_output_records,
+        )
+    print(f"Protected-source records matched to previous canonical bundle: {protected_overlay_matches}", flush=True)
+    print(f"Protected-source records restored from previous metadata: {protected_overlay_updates}", flush=True)
 
     openalex_ids = sorted(
         {

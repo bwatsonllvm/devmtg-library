@@ -50,6 +50,7 @@ jobs:
             --output papers/llvm-blog-posts.json \
             --cache-dir papers/.cache/llvm-blog \
             --blog-base-url "https://blog.llvm.org/" \
+            --preserve-existing-metadata \
             --github-token "${GITHUB_TOKEN}"
 
       - name: Sanitize URL-bearing fields

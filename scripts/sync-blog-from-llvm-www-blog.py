@@ -434,6 +434,181 @@ def load_json(path: Path):
         return {}
 
 
+def has_named_authors(value) -> bool:
+    if not isinstance(value, list):
+        return False
+    for item in value:
+        if isinstance(item, dict) and collapse_ws(str(item.get("name", ""))):
+            return True
+    return False
+
+
+def normalize_identity_url(value: str) -> str:
+    safe = sanitize_http_url(value)
+    if not safe:
+        return ""
+    parsed = urllib.parse.urlparse(safe)
+    host = (parsed.hostname or "").strip().lower().rstrip(".")
+    if not host:
+        return ""
+    path = re.sub(r"/{2,}", "/", parsed.path or "/")
+    if path != "/" and path.endswith("/"):
+        path = path[:-1]
+    return f"{host}{path}".lower()
+
+
+def _blog_record_match_keys(record: dict) -> list[str]:
+    keys: set[str] = set()
+
+    record_id = collapse_ws(str(record.get("id", ""))).lower()
+    if record_id:
+        keys.add(f"id:{record_id}")
+
+    source_url_key = normalize_identity_url(str(record.get("sourceUrl", "")))
+    if source_url_key:
+        keys.add(f"source:{source_url_key}")
+
+    paper_url_key = normalize_identity_url(str(record.get("paperUrl", "")))
+    if paper_url_key:
+        keys.add(f"paper:{paper_url_key}")
+
+    year = collapse_ws(str(record.get("year", "")))
+    title_key = normalize_key(str(record.get("title", "")))
+    if year and title_key:
+        keys.add(f"title:{year}:{title_key}")
+
+    return sorted(keys)
+
+
+def _build_existing_blog_index(records: list[dict]) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        for key in _blog_record_match_keys(record):
+            out.setdefault(key, []).append(record)
+    return out
+
+
+def _clean_string_list(value) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in value:
+        clean = collapse_ws(str(item))
+        if not clean:
+            continue
+        key = normalize_key(clean)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(clean)
+    return out
+
+
+def _copy_scalar_field_from_existing(out: dict, existing: dict, field: str) -> bool:
+    existing_value = existing.get(field, "")
+    existing_text = collapse_ws(str(existing_value))
+    if not existing_text:
+        return False
+    current_text = collapse_ws(str(out.get(field, "")))
+    if current_text == existing_text:
+        return False
+    out[field] = existing_value
+    return True
+
+
+def _copy_list_field_from_existing(out: dict, existing: dict, field: str) -> bool:
+    raw = existing.get(field)
+    if field == "authors":
+        if not has_named_authors(raw):
+            return False
+        if out.get(field) == raw:
+            return False
+        out[field] = json.loads(json.dumps(raw, ensure_ascii=False))
+        return True
+
+    values = _clean_string_list(raw)
+    if not values:
+        return False
+    if _clean_string_list(out.get(field)) == values:
+        return False
+    out[field] = values
+    return True
+
+
+def _pick_existing_blog_match(record: dict, index: dict[str, list[dict]]) -> dict | None:
+    current_keys = _blog_record_match_keys(record)
+    if not current_keys:
+        return None
+
+    candidates: list[dict] = []
+    seen_ids: set[int] = set()
+    for key in current_keys:
+        for candidate in index.get(key, []):
+            ptr = id(candidate)
+            if ptr in seen_ids:
+                continue
+            seen_ids.add(ptr)
+            candidates.append(candidate)
+    if not candidates:
+        return None
+
+    key_set = set(current_keys)
+
+    def score(item: dict) -> tuple[int, int, int]:
+        shared = len(key_set & set(_blog_record_match_keys(item)))
+        named_authors = 1 if has_named_authors(item.get("authors")) else 0
+        has_abstract = 1 if collapse_ws(str(item.get("abstract", ""))) else 0
+        return (shared, named_authors, has_abstract)
+
+    return max(candidates, key=score)
+
+
+def overlay_existing_blog_metadata(papers: list[dict], existing_records: list[dict]) -> tuple[int, int]:
+    if not papers or not existing_records:
+        return 0, 0
+
+    index = _build_existing_blog_index(existing_records)
+    matched = 0
+    updated = 0
+
+    for paper in papers:
+        existing = _pick_existing_blog_match(paper, index)
+        if not existing:
+            continue
+
+        matched += 1
+        changed = False
+
+        for field in [
+            "title",
+            "year",
+            "publishedDate",
+            "publication",
+            "venue",
+            "type",
+            "abstract",
+            "paperUrl",
+            "sourceUrl",
+            "openalexId",
+            "doi",
+            "citationCount",
+        ]:
+            if _copy_scalar_field_from_existing(paper, existing, field):
+                changed = True
+
+        for field in ["authors", "tags", "keywords", "matchedAuthors", "matchedSubprojects"]:
+            if _copy_list_field_from_existing(paper, existing, field):
+                changed = True
+
+        if changed:
+            updated += 1
+
+    return matched, updated
+
+
 def save_json_if_changed(path: Path, payload) -> bool:
     text = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
     existing = path.read_text(encoding="utf-8") if path.exists() else ""
@@ -673,6 +848,12 @@ def main() -> int:
     parser.add_argument("--user-agent", default=DEFAULT_USER_AGENT)
     parser.add_argument("--github-token", default=os.environ.get("GITHUB_TOKEN", ""))
     parser.add_argument("--timeout", type=int, default=120)
+    parser.add_argument(
+        "--preserve-existing-metadata",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Keep existing curated metadata when records are re-synced (default: enabled).",
+    )
     args = parser.parse_args()
 
     repo = collapse_ws(args.repo)
@@ -731,6 +912,12 @@ def main() -> int:
         include_legacy_html=not args.exclude_legacy_html,
     )
 
+    metadata_matches = 0
+    metadata_restored = 0
+    existing_records = existing_bundle.get("papers") if isinstance(existing_bundle.get("papers"), list) else []
+    if args.preserve_existing_metadata and existing_records:
+        metadata_matches, metadata_restored = overlay_existing_blog_metadata(bundle.get("papers", []), existing_records)
+
     changed = save_json_if_changed(output_path, bundle)
     print(f"Repository: {repo}@{ref}", flush=True)
     print(f"Tarball: {tar_path}", flush=True)
@@ -738,6 +925,9 @@ def main() -> int:
     print(f"Tarball etag: {etag or '(missing)'}", flush=True)
     print(f"Source path revision: {latest_source_revision or '(unknown)'}", flush=True)
     print(f"Blog posts exported: {len(bundle.get('papers', []))}", flush=True)
+    print(f"Blog metadata restoration enabled: {'yes' if args.preserve_existing_metadata else 'no'}", flush=True)
+    print(f"Blog posts matched to existing metadata: {metadata_matches}", flush=True)
+    print(f"Blog posts restored from existing metadata: {metadata_restored}", flush=True)
     print(f"Posts skipped: {skipped}", flush=True)
     print(f"Output bundle: {output_path}", flush=True)
     print(f"Output changed: {'yes' if changed else 'no'}", flush=True)

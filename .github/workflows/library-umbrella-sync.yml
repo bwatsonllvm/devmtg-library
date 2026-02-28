@@ -55,6 +55,7 @@ jobs:
             --output papers/llvm-blog-posts.json \
             --cache-dir papers/.cache/llvm-blog \
             --blog-base-url "https://blog.llvm.org/" \
+            --preserve-existing-metadata \
             --github-token "${GITHUB_TOKEN}"
 
       - name: Sanitize URL-bearing fields
@@ -116,6 +117,7 @@ jobs:
             --skip-author-queries \
             --max-pages-per-keyword 5 \
             --per-page 200 \
+            --preserve-existing-metadata \
             --mailto "llvm-library-bot@users.noreply.github.com"
 
       - name: Build OpenAlex update summary (Markdown)

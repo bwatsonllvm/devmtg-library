@@ -42,6 +42,7 @@ jobs:
             --skip-author-queries \
             --max-pages-per-keyword 5 \
             --per-page 200 \
+            --preserve-existing-metadata \
             --mailto "llvm-library-bot@users.noreply.github.com"
 
       - name: Build OpenAlex update summary (Markdown)
