@@ -7,11 +7,11 @@
     "tag": "llvmorg-22.1.0",
     "version": "22.1.0"
   },
-  "sourceHeadRevision": "aa3d6b37c7945bfb4c261dd994689de2a2de25bf",
+  "sourceHeadRevision": "2430410b7d879fce3db76c21bb8c60ed22abd0b5",
   "sourcePath": "llvm/docs",
   "sourceRef": "main",
   "sourceRepo": "llvm/llvm-project",
-  "sourceRevision": "cd68939326ed073ad6d50e034310cc295eddd72e",
+  "sourceRevision": "2430410b7d879fce3db76c21bb8c60ed22abd0b5",
   "sourceUrl": "https://llvm.org/docs/",
-  "syncedAt": "2026-02-26T14:15:12Z"
+  "syncedAt": "2026-02-28T16:30:57Z"
 }

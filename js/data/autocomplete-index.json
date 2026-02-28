@@ -2,15 +2,15 @@
   "meta": {
     "source": "scripts/generate-autocomplete-index.py",
     "talkCount": 1643,
-    "paperCount": 3586,
+    "paperCount": 3588,
     "entryCount": {
       "topics": 800,
       "people": 6000,
       "talks": 1566,
-      "papers": 3506,
+      "papers": 3508,
       "docs": 4500
     },
-    "generatedAt": "2026-02-27T00:50:23Z"
+    "generatedAt": "2026-02-28T16:37:20Z"
   },
   "topics": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "label": "Optimizations",
-      "count": 1253
+      "count": 1255
     },
     {
       "label": "Clang",
@@ -59,7 +59,7 @@
     },
     {
       "label": "LLVM",
-      "count": 388
+      "count": 392
     },
     {
       "label": "Programming Languages",
@@ -139,7 +139,7 @@
     },
     {
       "label": "Polly",
-      "count": 86
+      "count": 88
     },
     {
       "label": "Loop transformations",
@@ -490,6 +490,10 @@
       "count": 5
     },
     {
+      "label": "Library",
+      "count": 5
+    },
+    {
       "label": "Memory Errors",
       "count": 5
     },
@@ -583,10 +587,6 @@
     },
     {
       "label": "JITLink",
-      "count": 4
-    },
-    {
-      "label": "Library",
       "count": 4
     },
     {
@@ -3252,6 +3252,10 @@
       "count": 25
     },
     {
+      "label": "Giovanni Agosta",
+      "count": 22
+    },
+    {
       "label": "Guido Araújo",
       "count": 22
     },
@@ -3262,10 +3266,6 @@
     {
       "label": "William S. Moses",
       "count": 22
-    },
-    {
-      "label": "Giovanni Agosta",
-      "count": 21
     },
     {
       "label": "Kristof Beyls",
@@ -3692,6 +3692,10 @@
       "count": 9
     },
     {
+      "label": "Stefano Cherubin",
+      "count": 9
+    },
+    {
       "label": "Steve Zdancewic",
       "count": 9
     },
@@ -3857,10 +3861,6 @@
     },
     {
       "label": "Stefan Mangard",
-      "count": 8
-    },
-    {
-      "label": "Stefano Cherubin",
       "count": 8
     },
     {
@@ -11201,6 +11201,10 @@
     },
     {
       "label": "Mateus Felipe Tymburibá Ferreira",
+      "count": 2
+    },
+    {
+      "label": "Mato Poslon",
       "count": 2
     },
     {
@@ -25464,10 +25468,6 @@
       "count": 1
     },
     {
-      "label": "Mato Poslon",
-      "count": 1
-    },
-    {
       "label": "Mats Petersson",
       "count": 1
     },
@@ -36216,6 +36216,10 @@
       "count": 1
     },
     {
+      "label": "Classification Models Paralelisation",
+      "count": 1
+    },
+    {
       "label": "Classification of Obfuscation Techniques in LLVM IR: Machine Learning on Vector Representations",
       "count": 1
     },
@@ -40873,6 +40877,10 @@
     },
     {
       "label": "libRoadRunner: a high performance SBML simulation and analysis library",
+      "count": 1
+    },
+    {
+      "label": "libVersioningCompiler: An easy-to-use library for dynamic generation and invocation of multiple code versions",
       "count": 1
     },
     {
