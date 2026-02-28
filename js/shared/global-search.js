@@ -346,11 +346,18 @@
     const out = [];
 
     if (defaultScope !== 'all') {
+      const scopeOptions = [
+        { value: 'all', label: 'All content' },
+        { value: 'talks', label: 'Talks only' },
+        { value: 'papers', label: 'Papers only' },
+        { value: 'blogs', label: 'Blogs only' },
+        { value: 'docs', label: 'Docs only' },
+        { value: 'people', label: 'People only' },
+      ];
       out.push(`<label class="global-search-advanced-field">
           <span>Search scope</span>
           <select class="global-search-advanced-input" data-advanced-field="scope" aria-label="Search scope">
-            <option value="${defaultScope}">${resolveScopeLabel(defaultScope)} only</option>
-            <option value="all">All content</option>
+            ${scopeOptions.map((option) => `<option value="${option.value}"${option.value === defaultScope ? ' selected' : ''}>${option.label}</option>`).join('')}
           </select>
         </label>`);
     }

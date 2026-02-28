@@ -1514,7 +1514,7 @@ function updateHeroSubtitle() {
   } else if (state.activeTag && state.query && !state.meeting) {
     el.innerHTML = `Showing all talks for key topic <strong>${escapeHtml(state.activeTag)}</strong>`;
   } else {
-    el.innerHTML = `Search All is primary. Browse <strong id="total-count">${allTalks.length.toLocaleString()}</strong> talks from 2007 to present with filters below.`;
+    el.innerHTML = `Browse <strong id="total-count">${allTalks.length.toLocaleString()}</strong> talks from 2007 to present with filters below.`;
   }
 }
 

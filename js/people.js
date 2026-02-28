@@ -1168,7 +1168,7 @@ function render() {
   } else {
     subtitle.innerHTML = filterSummary
       ? `Browsing <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles filtered by ${filterSummary}.`
-      : `Search All is primary. Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
+      : `Browse <strong>${allPeople.length.toLocaleString()}</strong> unified speaker/author profiles with filters below.`;
   }
 
   if (!people.length) {

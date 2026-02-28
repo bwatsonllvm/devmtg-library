@@ -1379,7 +1379,7 @@ function updateHeroSubtitle(resultsCount) {
   }
 
   if (resultsCount === total) {
-    el.innerHTML = `Search All is primary. Browse <strong>${total.toLocaleString()}</strong> ${escapeHtml(plural)} with filters below.`;
+    el.innerHTML = `Browse <strong>${total.toLocaleString()}</strong> ${escapeHtml(plural)} with filters below.`;
     return;
   }
 
