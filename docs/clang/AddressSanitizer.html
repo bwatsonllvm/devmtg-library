@@ -234,8 +234,15 @@ size, but not as much as <code class="docutils literal notranslate"><span class=
 <p>AddressSanitizer can detect overflows in containers with custom allocators
 (such as std::vector) where the library developers have added calls into the
 AddressSanitizer runtime to indicate which memory is poisoned etc.</p>
-<p>In environments where not all the process binaries can be recompiled with
-AddressSanitizer enabled, these checks can cause false positives.</p>
+<dl class="simple">
+<dt>Note that this feature is prone to false positives:</dt><dd><ul class="simple">
+<li><p>Partially poisoning objects on stack, e.g. for small string optimization, can
+cause both false positives and negatives.</p></li>
+<li><p>If the binary is partially AddressSanitizer instrumented, these
+checks can cause false positives.</p></li>
+</ul>
+</dd>
+</dl>
 <p>See <a class="reference internal" href="#disabling-container-overflow-checks">Disabling container overflow checks</a> for details on suppressing checks.</p>
 </section>
 <section id="memory-leak-detection">

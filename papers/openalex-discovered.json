@@ -1651,7 +1651,6 @@
       "matchedAuthors": [
         "Antonio Barbalace",
         "Binoy Ravindran",
-        "Edson Lemos Horta",
         "Jiaxun Yang",
         "Maxime France-Pillois",
         "Zihan Huang"
@@ -9638,7 +9637,8 @@
         "Heterogeneous Acceleration"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -12809,6 +12809,7 @@
       "type": "research-paper",
       "abstract": "Interest in metaprogramming, reflection, and compile-time evaluation continues to inspire and foster innovation among the users and designers of the C++ programming language. Regretably, the impact on compile-times of such features can be significant; and outside of build systems, multi-core parallelism is unable to bring down compilation times of individual translation units. We present ClangOz, a novel Clang-based research compiler that addresses this issue by evaluating annotated constant expressions in parallel, thereby reducing compilation times. Prior benchmarks analysed parallel map operations, but were unable to consider reduction operations. Thus we also introduce parallel reduction functionality, alongside two additional benchmark programs.",
       "paperUrl": "https://doi.org/10.1016/j.cola.2024.101298",
+      "sourceUrl": "https://openalex.org/W4403286085",
       "openalexId": "https://openalex.org/W4403286085",
       "doi": "10.1016/j.cola.2024.101298",
       "tags": [
@@ -14456,7 +14457,12 @@
         "Unified Memory"
       ],
       "matchedAuthors": [
-        "Christos Kotselidis"
+        "Athanasios Stratikopoulos",
+        "Christos Kotselidis",
+        "Florin Blanaru",
+        "Juan Fumero",
+        "Sandhya Viswanathan",
+        "Steve Dohrmann"
       ],
       "matchedSubprojects": [
         "runtimes"
@@ -15283,7 +15289,8 @@
         "Heterogeneous Acceleration"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl"
@@ -18630,7 +18637,8 @@
         "Version"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl",
@@ -24102,7 +24110,8 @@
         "Portability"
       ],
       "matchedAuthors": [
-        "Carlos García"
+        "Carlos García",
+        "Youssef Faqir-Rhazoui"
       ],
       "matchedSubprojects": [
         "libsycl",
