@@ -4699,9 +4699,9 @@ a <a class="reference internal" href="#poisonvalues"><span class="std std-ref">p
 +/-Inf. If an argument is +/-Inf, or the result would be +/-Inf, it
 produces a <a class="reference internal" href="#poisonvalues"><span class="std std-ref">poison value</span></a> instead.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">nsz</span></code></dt><dd><p>No Signed Zeros - Allow optimizations to treat the sign of a zero
-argument or zero result as insignificant. This does not imply that -0.0
-is poison and/or guaranteed to not exist in the operation.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">nsz</span></code></dt><dd><p>No Signed Zeros - Unless otherwise mentioned, the sign bit of 0.0 or -0.0
+input operands can be non-deterministically flipped. This does not imply
+that -0.0 is poison and/or guaranteed to not exist in the operation.</p>
 </dd>
 </dl>
 <p>Note: For <a class="reference internal" href="#i-phi"><span class="std std-ref">phi</span></a>, <a class="reference internal" href="#i-select"><span class="std std-ref">select</span></a>, and <a class="reference internal" href="#i-call"><span class="std std-ref">call</span></a>
@@ -28553,7 +28553,7 @@ if possible.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-28.
+      Last updated on 2026-03-02.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

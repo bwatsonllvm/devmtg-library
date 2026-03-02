@@ -374,7 +374,7 @@ assumed to be supported.</p></li>
 <li><p>Support for libfbsdvmcore has been removed. As a result, FreeBSD kernel dump debugging is now only
 available on FreeBSD hosts. Live kernel debugging through the GDB remote protocol is still available
 from any platform.</p></li>
-<li><p>Support for ARM and PPC64le has been added.</p></li>
+<li><p>Support for ARM, PPC64le, and RISCV64 has been added.</p></li>
 <li><p>The crashed thread is now automatically selected on start.</p></li>
 <li><p>Threads are listed in incrmental order by pid then by tid.</p></li>
 <li><p>Unread kernel messages saved in msgbufp are now printed when lldb starts. This information is printed only
@@ -390,6 +390,7 @@ writes to a kernel dump will still fail when the setting is false.</p></li>
 <h3><a class="toc-backref" href="#id36" role="doc-backlink">Linux</a><a class="headerlink" href="#linux" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>On Arm Linux, the tpidruro register can now be read. Writing to this register is not supported.</p></li>
+<li><p>Thread local variables are now supported on Arm Linux if the program being debugged is using glibc.</p></li>
 </ul>
 </section>
 </section>
@@ -449,7 +450,7 @@ us via the <a class="reference external" href="https://discourse.llvm.org">Disco
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-02-28.
+      Last updated on 2026-03-02.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

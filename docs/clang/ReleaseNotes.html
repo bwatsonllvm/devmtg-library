@@ -39,52 +39,52 @@
 <h1>Clang  Release Notes<a class="headerlink" href="#clang-release-releasenotestitle" title="Link to this heading">¶</a></h1>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#introduction" id="id44">Introduction</a></p></li>
-<li><p><a class="reference internal" href="#potentially-breaking-changes" id="id45">Potentially Breaking Changes</a></p>
+<li><p><a class="reference internal" href="#introduction" id="id47">Introduction</a></p></li>
+<li><p><a class="reference internal" href="#potentially-breaking-changes" id="id48">Potentially Breaking Changes</a></p>
 <ul>
-<li><p><a class="reference internal" href="#c-c-language-potentially-breaking-changes" id="id46">C/C++ Language Potentially Breaking Changes</a></p></li>
-<li><p><a class="reference internal" href="#c-specific-potentially-breaking-changes" id="id47">C++ Specific Potentially Breaking Changes</a></p></li>
-<li><p><a class="reference internal" href="#abi-changes-in-this-version" id="id48">ABI Changes in This Version</a></p></li>
-<li><p><a class="reference internal" href="#ast-dumping-potentially-breaking-changes" id="id49">AST Dumping Potentially Breaking Changes</a></p></li>
-<li><p><a class="reference internal" href="#clang-frontend-potentially-breaking-changes" id="id50">Clang Frontend Potentially Breaking Changes</a></p></li>
-<li><p><a class="reference internal" href="#clang-python-bindings-potentially-breaking-changes" id="id51">Clang Python Bindings Potentially Breaking Changes</a></p></li>
+<li><p><a class="reference internal" href="#c-c-language-potentially-breaking-changes" id="id49">C/C++ Language Potentially Breaking Changes</a></p></li>
+<li><p><a class="reference internal" href="#c-specific-potentially-breaking-changes" id="id50">C++ Specific Potentially Breaking Changes</a></p></li>
+<li><p><a class="reference internal" href="#abi-changes-in-this-version" id="id51">ABI Changes in This Version</a></p></li>
+<li><p><a class="reference internal" href="#ast-dumping-potentially-breaking-changes" id="id52">AST Dumping Potentially Breaking Changes</a></p></li>
+<li><p><a class="reference internal" href="#clang-frontend-potentially-breaking-changes" id="id53">Clang Frontend Potentially Breaking Changes</a></p></li>
+<li><p><a class="reference internal" href="#clang-python-bindings-potentially-breaking-changes" id="id54">Clang Python Bindings Potentially Breaking Changes</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#what-s-new-in-clang-release" id="id52">What’s New in Clang ?</a></p>
+<li><p><a class="reference internal" href="#what-s-new-in-clang-release" id="id55">What’s New in Clang ?</a></p>
 <ul>
-<li><p><a class="reference internal" href="#c-language-changes" id="id53">C++ Language Changes</a></p></li>
-<li><p><a class="reference internal" href="#id3" id="id54">C Language Changes</a></p></li>
-<li><p><a class="reference internal" href="#non-comprehensive-list-of-changes-in-this-release" id="id55">Non-comprehensive list of changes in this release</a></p></li>
-<li><p><a class="reference internal" href="#new-compiler-flags" id="id56">New Compiler Flags</a></p></li>
-<li><p><a class="reference internal" href="#deprecated-compiler-flags" id="id57">Deprecated Compiler Flags</a></p></li>
-<li><p><a class="reference internal" href="#modified-compiler-flags" id="id58">Modified Compiler Flags</a></p></li>
-<li><p><a class="reference internal" href="#removed-compiler-flags" id="id59">Removed Compiler Flags</a></p></li>
-<li><p><a class="reference internal" href="#attribute-changes-in-clang" id="id60">Attribute Changes in Clang</a></p></li>
-<li><p><a class="reference internal" href="#improvements-to-clang-s-diagnostics" id="id61">Improvements to Clang’s diagnostics</a></p></li>
-<li><p><a class="reference internal" href="#improvements-to-clang-s-time-trace" id="id62">Improvements to Clang’s time-trace</a></p></li>
-<li><p><a class="reference internal" href="#improvements-to-coverage-mapping" id="id63">Improvements to Coverage Mapping</a></p></li>
-<li><p><a class="reference internal" href="#bug-fixes-in-this-version" id="id64">Bug Fixes in This Version</a></p></li>
-<li><p><a class="reference internal" href="#openacc-specific-changes" id="id65">OpenACC Specific Changes</a></p></li>
-<li><p><a class="reference internal" href="#target-specific-changes" id="id66">Target Specific Changes</a></p></li>
-<li><p><a class="reference internal" href="#dwarf-support-in-clang" id="id67">DWARF Support in Clang</a></p></li>
-<li><p><a class="reference internal" href="#floating-point-support-in-clang" id="id68">Floating Point Support in Clang</a></p></li>
-<li><p><a class="reference internal" href="#fixed-point-support-in-clang" id="id69">Fixed Point Support in Clang</a></p></li>
-<li><p><a class="reference internal" href="#ast-matchers" id="id70">AST Matchers</a></p></li>
-<li><p><a class="reference internal" href="#clang-format" id="id71">clang-format</a></p></li>
-<li><p><a class="reference internal" href="#libclang" id="id72">libclang</a></p></li>
-<li><p><a class="reference internal" href="#code-completion" id="id73">Code Completion</a></p></li>
-<li><p><a class="reference internal" href="#static-analyzer" id="id74">Static Analyzer</a></p></li>
-<li><p><a class="reference internal" href="#sanitizers" id="id75">Sanitizers</a></p></li>
-<li><p><a class="reference internal" href="#python-binding-changes" id="id76">Python Binding Changes</a></p></li>
-<li><p><a class="reference internal" href="#openmp-support" id="id77">OpenMP Support</a></p></li>
+<li><p><a class="reference internal" href="#c-language-changes" id="id56">C++ Language Changes</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id57">C Language Changes</a></p></li>
+<li><p><a class="reference internal" href="#non-comprehensive-list-of-changes-in-this-release" id="id58">Non-comprehensive list of changes in this release</a></p></li>
+<li><p><a class="reference internal" href="#new-compiler-flags" id="id59">New Compiler Flags</a></p></li>
+<li><p><a class="reference internal" href="#deprecated-compiler-flags" id="id60">Deprecated Compiler Flags</a></p></li>
+<li><p><a class="reference internal" href="#modified-compiler-flags" id="id61">Modified Compiler Flags</a></p></li>
+<li><p><a class="reference internal" href="#removed-compiler-flags" id="id62">Removed Compiler Flags</a></p></li>
+<li><p><a class="reference internal" href="#attribute-changes-in-clang" id="id63">Attribute Changes in Clang</a></p></li>
+<li><p><a class="reference internal" href="#improvements-to-clang-s-diagnostics" id="id64">Improvements to Clang’s diagnostics</a></p></li>
+<li><p><a class="reference internal" href="#improvements-to-clang-s-time-trace" id="id65">Improvements to Clang’s time-trace</a></p></li>
+<li><p><a class="reference internal" href="#improvements-to-coverage-mapping" id="id66">Improvements to Coverage Mapping</a></p></li>
+<li><p><a class="reference internal" href="#bug-fixes-in-this-version" id="id67">Bug Fixes in This Version</a></p></li>
+<li><p><a class="reference internal" href="#openacc-specific-changes" id="id68">OpenACC Specific Changes</a></p></li>
+<li><p><a class="reference internal" href="#target-specific-changes" id="id69">Target Specific Changes</a></p></li>
+<li><p><a class="reference internal" href="#dwarf-support-in-clang" id="id70">DWARF Support in Clang</a></p></li>
+<li><p><a class="reference internal" href="#floating-point-support-in-clang" id="id71">Floating Point Support in Clang</a></p></li>
+<li><p><a class="reference internal" href="#fixed-point-support-in-clang" id="id72">Fixed Point Support in Clang</a></p></li>
+<li><p><a class="reference internal" href="#ast-matchers" id="id73">AST Matchers</a></p></li>
+<li><p><a class="reference internal" href="#clang-format" id="id74">clang-format</a></p></li>
+<li><p><a class="reference internal" href="#libclang" id="id75">libclang</a></p></li>
+<li><p><a class="reference internal" href="#code-completion" id="id76">Code Completion</a></p></li>
+<li><p><a class="reference internal" href="#static-analyzer" id="id77">Static Analyzer</a></p></li>
+<li><p><a class="reference internal" href="#sanitizers" id="id78">Sanitizers</a></p></li>
+<li><p><a class="reference internal" href="#python-binding-changes" id="id79">Python Binding Changes</a></p></li>
+<li><p><a class="reference internal" href="#openmp-support" id="id80">OpenMP Support</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#additional-information" id="id78">Additional Information</a></p></li>
+<li><p><a class="reference internal" href="#additional-information" id="id81">Additional Information</a></p></li>
 </ul>
 </nav>
 <p>Written by the <a class="reference external" href="https://llvm.org/">LLVM Team</a></p>
 <section id="introduction">
-<h2><a class="toc-backref" href="#id44" role="doc-backlink">Introduction</a><a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id47" role="doc-backlink">Introduction</a><a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>This document contains the release notes for the Clang C/C++/Objective-C
 frontend, part of the LLVM Compiler Infrastructure, release . Here we
 describe the status of Clang in some detail, including major
@@ -98,19 +98,19 @@ latest release, please see the <a class="reference external" href="https://clang
 <a class="reference external" href="https://llvm.org">LLVM Web Site</a>.</p>
 </section>
 <section id="potentially-breaking-changes">
-<h2><a class="toc-backref" href="#id45" role="doc-backlink">Potentially Breaking Changes</a><a class="headerlink" href="#potentially-breaking-changes" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id48" role="doc-backlink">Potentially Breaking Changes</a><a class="headerlink" href="#potentially-breaking-changes" title="Link to this heading">¶</a></h2>
 <section id="c-c-language-potentially-breaking-changes">
-<h3><a class="toc-backref" href="#id46" role="doc-backlink">C/C++ Language Potentially Breaking Changes</a><a class="headerlink" href="#c-c-language-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id49" role="doc-backlink">C/C++ Language Potentially Breaking Changes</a><a class="headerlink" href="#c-c-language-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
 </section>
 <section id="c-specific-potentially-breaking-changes">
-<h3><a class="toc-backref" href="#id47" role="doc-backlink">C++ Specific Potentially Breaking Changes</a><a class="headerlink" href="#c-specific-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id50" role="doc-backlink">C++ Specific Potentially Breaking Changes</a><a class="headerlink" href="#c-specific-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Clang now more aggressively optimizes away stores to objects after they are
 dead. This behavior can be disabled with <code class="docutils literal notranslate"><span class="pre">-fno-lifetime-dse</span></code>.</p></li>
 </ul>
 </section>
 <section id="abi-changes-in-this-version">
-<h3><a class="toc-backref" href="#id48" role="doc-backlink">ABI Changes in This Version</a><a class="headerlink" href="#abi-changes-in-this-version" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id51" role="doc-backlink">ABI Changes in This Version</a><a class="headerlink" href="#abi-changes-in-this-version" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed incorrect struct layout for <code class="docutils literal notranslate"><span class="pre">_BitInt</span></code> bitfields wider than 255 bits
 on MSVC targets. Internal bitfield tracking fields were changed from
@@ -119,7 +119,7 @@ break for such structs compared to earlier Clang versions.</p></li>
 </ul>
 </section>
 <section id="ast-dumping-potentially-breaking-changes">
-<h3><a class="toc-backref" href="#id49" role="doc-backlink">AST Dumping Potentially Breaking Changes</a><a class="headerlink" href="#ast-dumping-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id52" role="doc-backlink">AST Dumping Potentially Breaking Changes</a><a class="headerlink" href="#ast-dumping-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>The JSON AST dump now includes all fields from <code class="docutils literal notranslate"><span class="pre">AvailabilityAttr</span></code>: <code class="docutils literal notranslate"><span class="pre">platform</span></code>,
 <code class="docutils literal notranslate"><span class="pre">introduced</span></code>, <code class="docutils literal notranslate"><span class="pre">deprecated</span></code>, <code class="docutils literal notranslate"><span class="pre">obsoleted</span></code>, <code class="docutils literal notranslate"><span class="pre">unavailable</span></code>, <code class="docutils literal notranslate"><span class="pre">message</span></code>,
@@ -128,7 +128,7 @@ fields were missing from the JSON output.</p></li>
 </ul>
 </section>
 <section id="clang-frontend-potentially-breaking-changes">
-<h3><a class="toc-backref" href="#id50" role="doc-backlink">Clang Frontend Potentially Breaking Changes</a><a class="headerlink" href="#clang-frontend-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id53" role="doc-backlink">Clang Frontend Potentially Breaking Changes</a><a class="headerlink" href="#clang-frontend-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>HIPSPV toolchain: <cite>–offload-targets=spirv{32,64}</cite> option is
 deprecated and will be removed when the new offload driver becomes
@@ -142,7 +142,7 @@ libraries will need to be recompiled, or used with
 </ul>
 </section>
 <section id="clang-python-bindings-potentially-breaking-changes">
-<h3><a class="toc-backref" href="#id51" role="doc-backlink">Clang Python Bindings Potentially Breaking Changes</a><a class="headerlink" href="#clang-python-bindings-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id54" role="doc-backlink">Clang Python Bindings Potentially Breaking Changes</a><a class="headerlink" href="#clang-python-bindings-potentially-breaking-changes" title="Link to this heading">¶</a></h3>
 <ul>
 <li><p>Remove <code class="docutils literal notranslate"><span class="pre">CompletionString.Availability</span></code>. No libclang interfaces returned instances of it.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">CompletionString.availability</span></code> now returns instances of <code class="docutils literal notranslate"><span class="pre">CompletionString.AvailabilityKindCompat</span></code>.</p>
@@ -175,9 +175,9 @@ with objects of other classes.</p></li>
 </section>
 </section>
 <section id="what-s-new-in-clang-release">
-<h2><a class="toc-backref" href="#id52" role="doc-backlink">What’s New in Clang ?</a><a class="headerlink" href="#what-s-new-in-clang-release" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id55" role="doc-backlink">What’s New in Clang ?</a><a class="headerlink" href="#what-s-new-in-clang-release" title="Link to this heading">¶</a></h2>
 <section id="c-language-changes">
-<h3><a class="toc-backref" href="#id53" role="doc-backlink">C++ Language Changes</a><a class="headerlink" href="#c-language-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id56" role="doc-backlink">C++ Language Changes</a><a class="headerlink" href="#c-language-changes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">__is_trivially_equality_comparable</span></code> no longer returns false for all enum types. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/132672">#132672</a>)</p></li>
 </ul>
@@ -201,7 +201,7 @@ with objects of other classes.</p></li>
 </section>
 </section>
 <section id="id3">
-<h3><a class="toc-backref" href="#id54" role="doc-backlink">C Language Changes</a><a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id57" role="doc-backlink">C Language Changes</a><a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <section id="c2y-feature-support">
 <h4>C2y Feature Support<a class="headerlink" href="#c2y-feature-support" title="Link to this heading">¶</a></h4>
 </section>
@@ -213,7 +213,7 @@ with objects of other classes.</p></li>
 </section>
 </section>
 <section id="non-comprehensive-list-of-changes-in-this-release">
-<h3><a class="toc-backref" href="#id55" role="doc-backlink">Non-comprehensive list of changes in this release</a><a class="headerlink" href="#non-comprehensive-list-of-changes-in-this-release" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id58" role="doc-backlink">Non-comprehensive list of changes in this release</a><a class="headerlink" href="#non-comprehensive-list-of-changes-in-this-release" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">__builtin_stdc_rotate_left</span></code> and <code class="docutils literal notranslate"><span class="pre">__builtin_stdc_rotate_right</span></code>
 for bit rotation of unsigned integers including <code class="docutils literal notranslate"><span class="pre">_BitInt</span></code> types. Rotation
@@ -228,7 +228,7 @@ extends bit-reversal support to all standard integers type, including
 </ul>
 </section>
 <section id="new-compiler-flags">
-<h3><a class="toc-backref" href="#id56" role="doc-backlink">New Compiler Flags</a><a class="headerlink" href="#new-compiler-flags" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id59" role="doc-backlink">New Compiler Flags</a><a class="headerlink" href="#new-compiler-flags" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>New option <code class="docutils literal notranslate"><span class="pre">-fms-anonymous-structs</span></code> / <code class="docutils literal notranslate"><span class="pre">-fno-ms-anonymous-structs</span></code> added
 to enable or disable Microsoft’s anonymous struct/union extension without
@@ -246,10 +246,10 @@ to emit the CFG metadata, but disable adding checks.</p></li>
 </ul>
 </section>
 <section id="deprecated-compiler-flags">
-<h3><a class="toc-backref" href="#id57" role="doc-backlink">Deprecated Compiler Flags</a><a class="headerlink" href="#deprecated-compiler-flags" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id60" role="doc-backlink">Deprecated Compiler Flags</a><a class="headerlink" href="#deprecated-compiler-flags" title="Link to this heading">¶</a></h3>
 </section>
 <section id="modified-compiler-flags">
-<h3><a class="toc-backref" href="#id58" role="doc-backlink">Modified Compiler Flags</a><a class="headerlink" href="#modified-compiler-flags" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id61" role="doc-backlink">Modified Compiler Flags</a><a class="headerlink" href="#modified-compiler-flags" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>The <cite>-mno-outline</cite> and <cite>-moutline</cite> compiler flags are now allowed on RISC-V and X86, which both support the machine outliner.</p></li>
 <li><p>The <cite>-mno-outline</cite> flag will now add the <cite>nooutline</cite> IR attribute, so that
@@ -257,10 +257,10 @@ to emit the CFG metadata, but disable adding checks.</p></li>
 </ul>
 </section>
 <section id="removed-compiler-flags">
-<h3><a class="toc-backref" href="#id59" role="doc-backlink">Removed Compiler Flags</a><a class="headerlink" href="#removed-compiler-flags" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id62" role="doc-backlink">Removed Compiler Flags</a><a class="headerlink" href="#removed-compiler-flags" title="Link to this heading">¶</a></h3>
 </section>
 <section id="attribute-changes-in-clang">
-<h3><a class="toc-backref" href="#id60" role="doc-backlink">Attribute Changes in Clang</a><a class="headerlink" href="#attribute-changes-in-clang" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id63" role="doc-backlink">Attribute Changes in Clang</a><a class="headerlink" href="#attribute-changes-in-clang" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Added new attribute <code class="docutils literal notranslate"><span class="pre">stack_protector_ignore</span></code> to opt specific local variables out of
 the analysis which determines if a function should get a stack protector.  A function
@@ -275,7 +275,7 @@ specifier for each behavior kind via <cite>__ob_wrap</cite> and <cite>__ob_trap<
 </ul>
 </section>
 <section id="improvements-to-clang-s-diagnostics">
-<h3><a class="toc-backref" href="#id61" role="doc-backlink">Improvements to Clang’s diagnostics</a><a class="headerlink" href="#improvements-to-clang-s-diagnostics" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id64" role="doc-backlink">Improvements to Clang’s diagnostics</a><a class="headerlink" href="#improvements-to-clang-s-diagnostics" title="Link to this heading">¶</a></h3>
 <ul>
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">-Wlifetime-safety</span></code> to enable lifetime safety analysis,
 a CFG-based intra-procedural analysis that detects use-after-free and related
@@ -340,10 +340,10 @@ the destination buffer(dynamically allocated) in the len parameter(<a class="ref
 </ul>
 </section>
 <section id="improvements-to-clang-s-time-trace">
-<h3><a class="toc-backref" href="#id62" role="doc-backlink">Improvements to Clang’s time-trace</a><a class="headerlink" href="#improvements-to-clang-s-time-trace" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id65" role="doc-backlink">Improvements to Clang’s time-trace</a><a class="headerlink" href="#improvements-to-clang-s-time-trace" title="Link to this heading">¶</a></h3>
 </section>
 <section id="improvements-to-coverage-mapping">
-<h3><a class="toc-backref" href="#id63" role="doc-backlink">Improvements to Coverage Mapping</a><a class="headerlink" href="#improvements-to-coverage-mapping" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id66" role="doc-backlink">Improvements to Coverage Mapping</a><a class="headerlink" href="#improvements-to-coverage-mapping" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>[MC/DC] Nested expressions are handled as individual MC/DC expressions.</p></li>
 <li><p>“Single byte coverage” now supports branch coverage and can be used
@@ -351,7 +351,7 @@ together with <code class="docutils literal notranslate"><span class="pre">-fcov
 </ul>
 </section>
 <section id="bug-fixes-in-this-version">
-<h3><a class="toc-backref" href="#id64" role="doc-backlink">Bug Fixes in This Version</a><a class="headerlink" href="#bug-fixes-in-this-version" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id67" role="doc-backlink">Bug Fixes in This Version</a><a class="headerlink" href="#bug-fixes-in-this-version" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed atomic boolean compound assignment; the conversion back to atomic bool would be miscompiled. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/33210">#33210</a>)</p></li>
 <li><p>Fixed a failed assertion in the preprocessor when <code class="docutils literal notranslate"><span class="pre">__has_embed</span></code> parameters are missing parentheses. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/175088">#175088</a>)</p></li>
@@ -360,6 +360,7 @@ together with <code class="docutils literal notranslate"><span class="pre">-fcov
 <li><p>Fixes an assertion failure when evaluating <code class="docutils literal notranslate"><span class="pre">__underlying_type</span></code> on enum redeclarations. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/177943">#177943</a>)</p></li>
 <li><p>Fixed an assertion failure caused by nested macro expansion during header-name lexing (<code class="docutils literal notranslate"><span class="pre">__has_embed(__has_include)</span></code>). (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/178635">#178635</a>)</p></li>
 <li><p>Clang now outputs relative paths of embeds for dependency output. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/161950">#161950</a>)</p></li>
+<li><p>Fix the result type of a binary operation where both operands are ‘void’ l-values. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/111300">#111300</a>)</p></li>
 <li><p>Fixed an assertion failure when evaluating <code class="docutils literal notranslate"><span class="pre">_Countof</span></code> on invalid <code class="docutils literal notranslate"><span class="pre">void</span></code>-typed operands. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/180893">#180893</a>)</p></li>
 <li><p>Fixed an assertion failure in the serialized diagnostic printer when it is destroyed without calling <code class="docutils literal notranslate"><span class="pre">finish()</span></code>. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/140433">#140433</a>)</p></li>
 <li><p>Fixed an assertion failure caused by error recovery while extending a nested name specifier with results from ordinary lookup. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/181470">#181470</a>)</p></li>
@@ -367,6 +368,9 @@ together with <code class="docutils literal notranslate"><span class="pre">-fcov
 </ul>
 <section id="bug-fixes-to-compiler-builtins">
 <h4>Bug Fixes to Compiler Builtins<a class="headerlink" href="#bug-fixes-to-compiler-builtins" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Fixed a crash when calling <cite>__builtin_allow_sanitize_check</cite> with no arguments. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/183927">#183927</a>)</p></li>
+</ul>
 </section>
 <section id="bug-fixes-to-attribute-support">
 <h4>Bug Fixes to Attribute Support<a class="headerlink" href="#bug-fixes-to-attribute-support" title="Link to this heading">¶</a></h4>
@@ -384,6 +388,7 @@ together with <code class="docutils literal notranslate"><span class="pre">-fcov
 template parameters when one of its parameters is also a pack. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/181166">#181166</a>)</p></li>
 <li><p>Fixed a crash when a default argument is passed to an explicit object parameter. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/176639">#176639</a>)</p></li>
 <li><p>Fixed a crash when diagnosing an invalid static member function with an explicit object parameter (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/177741">#177741</a>)</p></li>
+<li><p>Fixed a crash when pack expansions are used as arguments for non-pack parameters of built-in templates. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/180307">#180307</a>)</p></li>
 <li><p>Fixed a bug where captured variables in non-mutable lambdas were incorrectly treated as mutable
 when used inside decltype in the return type. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/180460">#180460</a>)</p></li>
 <li><p>Fixed a crash when evaluating uninitialized GCC vector/ext_vector_type vectors in <code class="docutils literal notranslate"><span class="pre">constexpr</span></code>. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/180044">#180044</a>)</p></li>
@@ -418,10 +423,10 @@ generic lambda. (<a class="reference external" href="https://github.com/llvm/llv
 </section>
 </section>
 <section id="openacc-specific-changes">
-<h3><a class="toc-backref" href="#id65" role="doc-backlink">OpenACC Specific Changes</a><a class="headerlink" href="#openacc-specific-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id68" role="doc-backlink">OpenACC Specific Changes</a><a class="headerlink" href="#openacc-specific-changes" title="Link to this heading">¶</a></h3>
 </section>
 <section id="target-specific-changes">
-<h3><a class="toc-backref" href="#id66" role="doc-backlink">Target Specific Changes</a><a class="headerlink" href="#target-specific-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id69" role="doc-backlink">Target Specific Changes</a><a class="headerlink" href="#target-specific-changes" title="Link to this heading">¶</a></h3>
 <section id="amdgpu-support">
 <h4>AMDGPU Support<a class="headerlink" href="#amdgpu-support" title="Link to this heading">¶</a></h4>
 <ul class="simple">
@@ -495,23 +500,23 @@ compiler.</p></li>
 </section>
 </section>
 <section id="dwarf-support-in-clang">
-<h3><a class="toc-backref" href="#id67" role="doc-backlink">DWARF Support in Clang</a><a class="headerlink" href="#dwarf-support-in-clang" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id70" role="doc-backlink">DWARF Support in Clang</a><a class="headerlink" href="#dwarf-support-in-clang" title="Link to this heading">¶</a></h3>
 </section>
 <section id="floating-point-support-in-clang">
-<h3><a class="toc-backref" href="#id68" role="doc-backlink">Floating Point Support in Clang</a><a class="headerlink" href="#floating-point-support-in-clang" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id71" role="doc-backlink">Floating Point Support in Clang</a><a class="headerlink" href="#floating-point-support-in-clang" title="Link to this heading">¶</a></h3>
 </section>
 <section id="fixed-point-support-in-clang">
-<h3><a class="toc-backref" href="#id69" role="doc-backlink">Fixed Point Support in Clang</a><a class="headerlink" href="#fixed-point-support-in-clang" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id72" role="doc-backlink">Fixed Point Support in Clang</a><a class="headerlink" href="#fixed-point-support-in-clang" title="Link to this heading">¶</a></h3>
 </section>
 <section id="ast-matchers">
-<h3><a class="toc-backref" href="#id70" role="doc-backlink">AST Matchers</a><a class="headerlink" href="#ast-matchers" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id73" role="doc-backlink">AST Matchers</a><a class="headerlink" href="#ast-matchers" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">functionTypeLoc</span></code> matcher for matching <code class="docutils literal notranslate"><span class="pre">FunctionTypeLoc</span></code>.</p></li>
 <li><p>Add missing support for <code class="docutils literal notranslate"><span class="pre">TraversalKind</span></code> in some <code class="docutils literal notranslate"><span class="pre">addMatcher()</span></code> overloads.</p></li>
 </ul>
 </section>
 <section id="clang-format">
-<h3><a class="toc-backref" href="#id71" role="doc-backlink">clang-format</a><a class="headerlink" href="#clang-format" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id74" role="doc-backlink">clang-format</a><a class="headerlink" href="#clang-format" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">ObjCSpaceAfterMethodDeclarationPrefix</span></code> option to control space between the
 ‘-‘/’+’ and the return type in Objective-C method declarations</p></li>
@@ -522,7 +527,7 @@ per-operator break rules and minimum chain length gating via <code class="docuti
 </ul>
 </section>
 <section id="libclang">
-<h3><a class="toc-backref" href="#id72" role="doc-backlink">libclang</a><a class="headerlink" href="#libclang" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id75" role="doc-backlink">libclang</a><a class="headerlink" href="#libclang" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Visit constraints of <cite>auto</cite> type to properly visit concept usages (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/166580">#166580</a>)</p></li>
 <li><p>Visit switch initializer statements (<a class="reference external" href="https://bugs.kde.org/show_bug.cgi?id=415537#c2">https://bugs.kde.org/show_bug.cgi?id=415537#c2</a>)</p></li>
@@ -530,20 +535,20 @@ per-operator break rules and minimum chain length gating via <code class="docuti
 </ul>
 </section>
 <section id="code-completion">
-<h3><a class="toc-backref" href="#id73" role="doc-backlink">Code Completion</a><a class="headerlink" href="#code-completion" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id76" role="doc-backlink">Code Completion</a><a class="headerlink" href="#code-completion" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed a crash in code completion when using a C-Style cast with a parenthesized
 operand in Objective-C++ mode. (<a class="reference external" href="https://github.com/llvm/llvm-project/issues/180125">#180125</a>)</p></li>
 </ul>
 </section>
 <section id="static-analyzer">
-<h3><a class="toc-backref" href="#id74" role="doc-backlink">Static Analyzer</a><a class="headerlink" href="#static-analyzer" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id77" role="doc-backlink">Static Analyzer</a><a class="headerlink" href="#static-analyzer" title="Link to this heading">¶</a></h3>
 </section>
 <section id="sanitizers">
-<span id="release-notes-sanitizers"></span><h3><a class="toc-backref" href="#id75" role="doc-backlink">Sanitizers</a><a class="headerlink" href="#sanitizers" title="Link to this heading">¶</a></h3>
+<span id="release-notes-sanitizers"></span><h3><a class="toc-backref" href="#id78" role="doc-backlink">Sanitizers</a><a class="headerlink" href="#sanitizers" title="Link to this heading">¶</a></h3>
 </section>
 <section id="python-binding-changes">
-<h3><a class="toc-backref" href="#id76" role="doc-backlink">Python Binding Changes</a><a class="headerlink" href="#python-binding-changes" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id79" role="doc-backlink">Python Binding Changes</a><a class="headerlink" href="#python-binding-changes" title="Link to this heading">¶</a></h3>
 <ul>
 <li><p>Add deprecation warnings to <code class="docutils literal notranslate"><span class="pre">CompletionChunk.isKind...</span></code> methods.
 These will be removed in a future release. Existing uses should be adapted
@@ -561,7 +566,7 @@ so it can be used the same as <code class="docutils literal notranslate"><span c
 </ul>
 </section>
 <section id="openmp-support">
-<h3><a class="toc-backref" href="#id77" role="doc-backlink">OpenMP Support</a><a class="headerlink" href="#openmp-support" title="Link to this heading">¶</a></h3>
+<h3><a class="toc-backref" href="#id80" role="doc-backlink">OpenMP Support</a><a class="headerlink" href="#openmp-support" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Added support for <code class="docutils literal notranslate"><span class="pre">transparent</span></code> clause in task and taskloop directives.</p></li>
 <li><p>Added support for <code class="docutils literal notranslate"><span class="pre">use_device_ptr</span></code> clause to accept an optional
@@ -573,7 +578,7 @@ so it can be used the same as <code class="docutils literal notranslate"><span c
 </section>
 </section>
 <section id="additional-information">
-<h2><a class="toc-backref" href="#id78" role="doc-backlink">Additional Information</a><a class="headerlink" href="#additional-information" title="Link to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id81" role="doc-backlink">Additional Information</a><a class="headerlink" href="#additional-information" title="Link to this heading">¶</a></h2>
 <p>A wide variety of additional information is available on the <a class="reference external" href="https://clang.llvm.org/">Clang web
 page</a>. The web page contains versions of the
 API documentation which are up-to-date with the Git version of

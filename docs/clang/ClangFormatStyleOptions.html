@@ -149,7 +149,7 @@ the configuration (without a prefix: <code class="docutils literal notranslate">
 <p>This option is supported only in the <strong class="program">clang-format</strong> configuration
 (both within <code class="docutils literal notranslate"><span class="pre">-style='{...}'</span></code> and the <code class="docutils literal notranslate"><span class="pre">.clang-format</span></code> file).</p>
 <p>Possible values:</p>
-<ul>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">LLVM</span></code>
 A style complying with the <a class="reference external" href="https://llvm.org/docs/CodingStandards.html">LLVM coding standards</a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Google</span></code>
@@ -168,11 +168,13 @@ A style complying with the <a class="reference external" href="https://www.gnu.o
 Not a real style, but allows to use the <code class="docutils literal notranslate"><span class="pre">.clang-format</span></code> file from the
 parent directory (or its parent if there is none). If there is no parent
 file found it falls back to the <code class="docutils literal notranslate"><span class="pre">fallback</span></code> style, and applies the changes
-to that.</p>
-<p>With this option you can overwrite some parts of your main style for your
-subdirectories. This is also possible through the command line, e.g.:
-<code class="docutils literal notranslate"><span class="pre">--style={BasedOnStyle:</span> <span class="pre">InheritParentConfig,</span> <span class="pre">ColumnLimit:</span> <span class="pre">20}</span></code></p>
-</li>
+to that. With this option you can overwrite some parts of your main style
+for your subdirectories. This is also possible through the command line,
+e.g.:
+<code class="docutils literal notranslate"><span class="pre">--style={BasedOnStyle:</span> <span class="pre">InheritParentConfig,</span> <span class="pre">ColumnLimit:</span> <span class="pre">20}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InheritParentConfig=&lt;directory-path&gt;</span></code>
+Same as the above except that the inheritance is redirected to
+<code class="docutils literal notranslate"><span class="pre">&lt;directory-path&gt;</span></code>. This is only supported in configuration files.</p></li>
 </ul>
 </dd>
 </dl>

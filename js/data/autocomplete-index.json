@@ -2,28 +2,28 @@
   "meta": {
     "source": "scripts/generate-autocomplete-index.py",
     "talkCount": 1643,
-    "paperCount": 3588,
+    "paperCount": 3590,
     "entryCount": {
       "topics": 800,
       "people": 6000,
       "talks": 1566,
-      "papers": 3508,
+      "papers": 3510,
       "docs": 4500
     },
-    "generatedAt": "2026-02-28T16:37:20Z"
+    "generatedAt": "2026-03-02T22:14:02Z"
   },
   "topics": [
     {
       "label": "Performance",
-      "count": 1997
+      "count": 2001
     },
     {
       "label": "Optimizations",
-      "count": 1255
+      "count": 1259
     },
     {
       "label": "Clang",
-      "count": 941
+      "count": 943
     },
     {
       "label": "IR",
@@ -31,7 +31,7 @@
     },
     {
       "label": "MLIR",
-      "count": 592
+      "count": 594
     },
     {
       "label": "Infrastructure",
@@ -39,7 +39,7 @@
     },
     {
       "label": "GPU",
-      "count": 510
+      "count": 512
     },
     {
       "label": "Backend",
@@ -87,7 +87,7 @@
     },
     {
       "label": "ML",
-      "count": 221
+      "count": 223
     },
     {
       "label": "JIT",
@@ -422,6 +422,10 @@
       "count": 8
     },
     {
+      "label": "Kernel",
+      "count": 7
+    },
+    {
       "label": "Binaries",
       "count": 6
     },
@@ -430,15 +434,19 @@
       "count": 6
     },
     {
+      "label": "Compiler Optimization",
+      "count": 6
+    },
+    {
+      "label": "Control Flow",
+      "count": 6
+    },
+    {
       "label": "Deep Learning",
       "count": 6
     },
     {
       "label": "JIT Compilation",
-      "count": 6
-    },
-    {
-      "label": "Kernel",
       "count": 6
     },
     {
@@ -463,14 +471,6 @@
     },
     {
       "label": "ARM",
-      "count": 5
-    },
-    {
-      "label": "Compiler Optimization",
-      "count": 5
-    },
-    {
-      "label": "Control Flow",
       "count": 5
     },
     {
@@ -798,6 +798,10 @@
       "count": 3
     },
     {
+      "label": "Thesis",
+      "count": 3
+    },
+    {
       "label": "Unified Memory",
       "count": 3
     },
@@ -983,6 +987,10 @@
     },
     {
       "label": "Convert",
+      "count": 2
+    },
+    {
+      "label": "Core Processors",
       "count": 2
     },
     {
@@ -1311,6 +1319,10 @@
     },
     {
       "label": "Indexing Expressions",
+      "count": 2
+    },
+    {
+      "label": "Indirect Memory Accesses",
       "count": 2
     },
     {
@@ -1778,6 +1790,10 @@
       "count": 2
     },
     {
+      "label": "Sparse Computations",
+      "count": 2
+    },
+    {
       "label": "Sparse Format Customization",
       "count": 2
     },
@@ -1871,10 +1887,6 @@
     },
     {
       "label": "Tensors",
-      "count": 2
-    },
-    {
-      "label": "Thesis",
       "count": 2
     },
     {
@@ -2410,6 +2422,10 @@
       "count": 1
     },
     {
+      "label": "Automated Compilation",
+      "count": 1
+    },
+    {
       "label": "Automated Customized Bug",
       "count": 1
     },
@@ -2814,6 +2830,10 @@
       "count": 1
     },
     {
+      "label": "CGRA Hybrid",
+      "count": 1
+    },
+    {
       "label": "Cgrv Opt",
       "count": 1
     },
@@ -3191,26 +3211,6 @@
     },
     {
       "label": "Compiler Guided",
-      "count": 1
-    },
-    {
-      "label": "Compiler Infrastructures",
-      "count": 1
-    },
-    {
-      "label": "Compiler Optimization Flags",
-      "count": 1
-    },
-    {
-      "label": "Compiler Optimization Reports",
-      "count": 1
-    },
-    {
-      "label": "Compiler Optimizations",
-      "count": 1
-    },
-    {
-      "label": "Compiler Optimizations Meet",
       "count": 1
     }
   ],
@@ -6312,6 +6312,10 @@
       "count": 3
     },
     {
+      "label": "Bangtian Liu",
+      "count": 3
+    },
+    {
       "label": "Baojiang Cui",
       "count": 3
     },
@@ -8661,10 +8665,6 @@
     },
     {
       "label": "B. Gaeke",
-      "count": 2
-    },
-    {
-      "label": "Bangtian Liu",
       "count": 2
     },
     {
@@ -12785,6 +12785,10 @@
     },
     {
       "label": "Tianyi Liu",
+      "count": 2
+    },
+    {
+      "label": "Tianyi Yu",
       "count": 2
     },
     {
@@ -27210,10 +27214,6 @@
     {
       "label": "Nuno Neves",
       "count": 1
-    },
-    {
-      "label": "Nuno P. Lopes (Microsoft Research",
-      "count": 1
     }
   ],
   "talks": [
@@ -35168,6 +35168,10 @@
       "count": 1
     },
     {
+      "label": "Automated Compilation Framework for RISC-V + CGRA Systems",
+      "count": 1
+    },
+    {
       "label": "Automated Compilation Framework for Scratchpad-based Real-Time Systems",
       "count": 1
     },
@@ -43093,6 +43097,10 @@
     },
     {
       "label": "Optimizing Function Layout for Mobile Applications",
+      "count": 1
+    },
+    {
+      "label": "Optimizing Irregular Computations on Parallel Processors",
       "count": 1
     },
     {
