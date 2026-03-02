@@ -66,9 +66,9 @@
   }
 
   const LIBRARY_ROOT_PATH = resolveLibraryRootPath();
-  const AUTOCOMPLETE_INDEX_SRC = resolveAssetUrl('js/data/autocomplete-index.json?v=4944fe0f1551');
-  const DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/_static/docs-universal-search-index.js?v=6b04b0591e68');
-  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/clang/_static/docs-universal-search-index.js?v=28b9b08fd109');
+  const AUTOCOMPLETE_INDEX_SRC = resolveAssetUrl('js/data/autocomplete-index.json?v=126c17951f8c');
+  const DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/_static/docs-universal-search-index.js?v=d7aeb38c5f36');
+  const CLANG_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/clang/_static/docs-universal-search-index.js?v=415d2180d88f');
   const LLDB_DOCS_UNIVERSAL_INDEX_SRC = resolveAssetUrl('docs/lldb/_static/docs-universal-search-index.js?v=eba40672f6e7');
   const ADVANCED_FIELDS = [
     'allWords',
