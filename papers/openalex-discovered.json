@@ -3977,7 +3977,6 @@
       "id": "openalex-w4414790426"
     },
     {
-      "id": "openalex-w4411225413",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Measuring and interpreting performances of HPC applications with dependent tasks",
@@ -4032,7 +4031,8 @@
       "matchedSubprojects": [
         "llvm",
         "openmp"
-      ]
+      ],
+      "id": "openalex-w4411225413"
     },
     {
       "source": "openalex-discovery",
@@ -10328,6 +10328,55 @@
         "llvm"
       ],
       "id": "openalex-w4402426700"
+    },
+    {
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Optimizing Irregular Computations on Parallel Processors",
+      "authors": [
+        {
+          "name": "Bangtian Liu",
+          "affiliation": ""
+        }
+      ],
+      "year": "2024",
+      "publication": "TSpace",
+      "venue": "TSpace",
+      "type": "thesis",
+      "abstract": "Parallel processors, such as multi-core processors, many-core processors, and multi-node systems, are widely employed in scientific computing and machine learning applications to meet their ever growing computing demands. However, the underlying computations in these applications have irregularities in both their memory access and their control flow. Irregular computations make performance optimization challenging on parallel processors due to their data-dependent memory accesses, e.g. the indirect memory accesses (e.g., A[B[i]]) in sparse computations. Additionally, control flow dependencies that arise in irregular computations poses limitations to parallelization. Therefore, while currently parallel processors are used to efficiently optimize the performance of applications with regular computation patterns and predictable control flow, novel algorithms and software systems have to be developed to tackle the optimization of applications with irregular patterns. The first focus of this thesis is the optimization of irregular computations caused by indirect memory accesses. Specifically, the indirect memory accesses that frequently appear in sparse computation. Such indirection is caused by the specialized sparse data structures used in these computations and that only store the non-zeros. This thesis presents a set of parallel algorithms and code transformations for sparse computations to overcome the challenges arising from indirect memory accesses on numerous parallel processors, including multi-core CPU, GPU, and Cloud-based distributed platforms. We optimize sparse tensor computations and achieve up to 3.7× and 6.9×speedup compared to the state-of-the-art implementations on GPU and Cloud-based distributed platforms, respectively. We also developed a framework for data-sparse computations called MatRox, MatRox-generated code achieves up to 6.0× speedup over existing library implementations. This thesis also focuses on the irregular computations caused by dynamic control flow. Dynamic control flow, such as if-statements, is common and can lead to irregular computations in real applications. For example, Partial Differential Equation (PDE) solvers process elements guarded with boundary check conditions which are unpredictable and data-dependent. We present a set of compiler optimization techniques to handle dynamic control flows. Our compiler optimization techniques are implemented is a tool called VecRC, which achieves geometric mean speedups of 1.20×, 1.19× and 1.06× over GCC, Clang and ICC on real benchmark code.",
+      "paperUrl": "http://hdl.handle.net/1807/138080",
+      "openalexId": "https://openalex.org/W7133014196",
+      "doi": "",
+      "tags": [
+        "Clang",
+        "Optimizations",
+        "Performance",
+        "GPU",
+        "ML"
+      ],
+      "keywords": [
+        "Clang",
+        "Optimizations",
+        "Performance",
+        "GPU",
+        "ML",
+        "Irregular Computations Caused",
+        "Indirect Memory Accesses",
+        "Parallel Processors",
+        "Control Flow",
+        "Sparse Computations",
+        "Compiler Optimization",
+        "Thesis",
+        "Core Processors",
+        "Distributed Platforms"
+      ],
+      "matchedAuthors": [
+        "Bangtian Liu"
+      ],
+      "matchedSubprojects": [
+        "clang"
+      ],
+      "id": "openalex-w7133014196"
     },
     {
       "source": "openalex-discovery",
@@ -20254,6 +20303,46 @@
         "clang"
       ],
       "id": "openalex-w4362704755"
+    },
+    {
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Automated Compilation Framework for RISC-V + CGRA Systems",
+      "authors": [
+        {
+          "name": "Tianyi Yu",
+          "affiliation": ""
+        }
+      ],
+      "year": "2023",
+      "publication": "TSpace",
+      "venue": "TSpace",
+      "type": "thesis",
+      "abstract": "Course-Grained Reconfigurable Architectures (CGRAs) are programmable hardware platforms with coarse-grained programmable logic blocks and word-wide configurable interconnect. In this thesis, we present a high-level compilation framework for the processor + CGRA hybrid systems, where a CGRA is used in tandem with the processor for application acceleration. The input to the framework is a C-language program. The output is a compiled executable for a RISC-V processor, and an optimized dataflow graph (DFG) kernel for acceleration on the CGRA. We utilize the powerful MLIR compiler representation to realize such optimization, mainly targeting sequential rectangular loop access patterns and leveraging the spatial parallelism of the CGRA. We take inspiration from ScaleHLS, which is a compiler exploration framework for high-level synthesis (HLS) on FPGAs. In an experimental study, we show the impact of our kernel optimizations on CGRA performance. Our automatic exploration compiler pass is able to raise kernel throughput, while increasing kernel mappbility. With our automatic generation framework, we aim to take the burden off users from manually crafting both the assembly and kernel representation to run an application on a RISC-V+CGRA hybrid system, thereby raising designer productivity and reducing cost.",
+      "paperUrl": "http://hdl.handle.net/1807/128261",
+      "openalexId": "https://openalex.org/W7132898413",
+      "doi": "",
+      "tags": [
+        "MLIR",
+        "Optimizations",
+        "Performance"
+      ],
+      "keywords": [
+        "MLIR",
+        "Optimizations",
+        "Performance",
+        "CGRA Hybrid",
+        "Kernel",
+        "Processor",
+        "Automated Compilation"
+      ],
+      "matchedAuthors": [
+        "Tianyi Yu"
+      ],
+      "matchedSubprojects": [
+        "mlir"
+      ],
+      "id": "openalex-w7132898413"
     },
     {
       "source": "openalex-discovery",
@@ -36465,6 +36554,7 @@
       "id": "openalex-w2915190469"
     },
     {
+      "id": "openalex-w2795396442",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "libVersioningCompiler: An easy-to-use library for dynamic generation and invocation of multiple code versions",
@@ -36503,8 +36593,7 @@
       ],
       "matchedSubprojects": [
         "llvm"
-      ],
-      "id": "openalex-w2795396442"
+      ]
     },
     {
       "source": "openalex-discovery",
