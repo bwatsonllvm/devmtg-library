@@ -3977,6 +3977,7 @@
       "id": "openalex-w4414790426"
     },
     {
+      "id": "openalex-w4411225413",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Measuring and interpreting performances of HPC applications with dependent tasks",
@@ -4031,8 +4032,7 @@
       "matchedSubprojects": [
         "llvm",
         "openmp"
-      ],
-      "id": "openalex-w4411225413"
+      ]
     },
     {
       "source": "openalex-discovery",
@@ -25533,6 +25533,7 @@
       "id": "openalex-w4285048973"
     },
     {
+      "id": "openalex-w4311649166",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Assessing Application Efficiency and Performance Portability in Single-Source Programming for Heterogeneous Parallel Systems",
@@ -25586,8 +25587,7 @@
       ],
       "matchedSubprojects": [
         "openmp"
-      ],
-      "id": "openalex-w4311649166"
+      ]
     },
     {
       "source": "openalex-discovery",

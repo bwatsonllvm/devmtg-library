@@ -1090,7 +1090,7 @@ with variable names, because none of them start with a prefix character
 </div>
 <p>And the hard way:</p>
 <div class="highlight-llvm notranslate"><div class="highlight"><pre><span></span><span class="nv nv-Anonymous">%0</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="nv">%X</span><span class="p">,</span><span class="w"> </span><span class="nv">%X</span><span class="w">           </span><span class="c">; yields i32:%0</span>
-<span class="nv nv-Anonymous">%1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="nv nv-Anonymous">%0</span><span class="p">,</span><span class="w"> </span><span class="nv nv-Anonymous">%0</span><span class="w">           </span><span class="err">/</span><span class="p">*</span><span class="w"> </span><span class="err">yields</span><span class="w"> </span><span class="nl">i32:</span><span class="nv nv-Anonymous">%1</span><span class="w"> </span><span class="p">*</span><span class="err">/</span>
+<span class="nv nv-Anonymous">%1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="nv nv-Anonymous">%0</span><span class="p">,</span><span class="w"> </span><span class="nv nv-Anonymous">%0</span><span class="w">           </span><span class="c">; yields i32:%1</span>
 <span class="nv">%result</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="nv nv-Anonymous">%1</span><span class="p">,</span><span class="w"> </span><span class="nv nv-Anonymous">%1</span>
 </pre></div>
 </div>
@@ -2820,6 +2820,17 @@ zeroed.</p></li>
 <p>The first three options are mutually exclusive, and the remaining options
 describe more details of how the function behaves. The remaining options
 are invalid for “free”-type functions.</p>
+<p>Calls to functions annotated with <code class="docutils literal notranslate"><span class="pre">allockind</span></code> are subject to allocation
+elision: Calls to allocator functions can be removed, and the allocation
+served from a “virtual” allocator instead. Notably, this is allowed even if
+the allocator calls have side-effects. In other words, for each allocation
+there is a non-deterministic choice between calling the allocator as usual,
+or using a virtual, side-effect-free allocator instead.</p>
+<p>If multiple allocation functions operate on the same allocation,
+allocation elision is only allowed for pairs of “alloc” and “free” with the
+same <code class="docutils literal notranslate"><span class="pre">&quot;alloc-family&quot;</span></code> attribute. For this purpose, a “realloc” call may
+be decomposed into “alloc” and “free” operations, as long as at least one
+of them will be elided.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">&quot;alloc-variant-zeroed&quot;=&quot;FUNCTION&quot;</span></code></dt><dd><p>This attribute indicates that another function is equivalent to an allocator function,
 but returns zeroed memory. The function must have “zeroed” allocation behavior,
@@ -3107,9 +3118,9 @@ occurs inside a cycle in the dynamic call graph.
 For example:</p>
 </dd>
 </dl>
-<div class="highlight-llvm notranslate"><div class="highlight"><pre><span></span><span class="err">fn</span><span class="w"> </span><span class="err">-</span><span class="p">&gt;</span><span class="w"> </span><span class="err">other_fn</span><span class="w"> </span><span class="err">-</span><span class="p">&gt;</span><span class="w"> </span><span class="err">fn</span><span class="w">       </span><span class="c">; fn is not norecurse</span>
-<span class="err">other_fn</span><span class="w"> </span><span class="err">-</span><span class="p">&gt;</span><span class="w"> </span><span class="err">fn</span><span class="w"> </span><span class="err">-</span><span class="p">&gt;</span><span class="w"> </span><span class="err">other_fn</span><span class="w"> </span><span class="c">; fn is not norecurse</span>
-<span class="err">fn</span><span class="w"> </span><span class="err">-</span><span class="p">&gt;</span><span class="w"> </span><span class="err">other_fn</span><span class="w"> </span><span class="err">-</span><span class="p">&gt;</span><span class="w"> </span><span class="err">other_fn</span><span class="w"> </span><span class="c">; fn is norecurse</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fn -&gt; other_fn -&gt; fn       ; fn is not norecurse
+other_fn -&gt; fn -&gt; other_fn ; fn is not norecurse
+fn -&gt; other_fn -&gt; other_fn ; fn is norecurse
 </pre></div>
 </div>
 <dl id="langref-willreturn">
@@ -28553,7 +28564,7 @@ if possible.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-03-02.
+      Last updated on 2026-03-04.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
