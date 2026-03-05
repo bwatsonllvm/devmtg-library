@@ -3977,7 +3977,6 @@
       "id": "openalex-w4414790426"
     },
     {
-      "id": "openalex-w4411225413",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Measuring and interpreting performances of HPC applications with dependent tasks",
@@ -4032,7 +4031,8 @@
       "matchedSubprojects": [
         "llvm",
         "openmp"
-      ]
+      ],
+      "id": "openalex-w4411225413"
     },
     {
       "source": "openalex-discovery",
@@ -12779,6 +12779,66 @@
         "mlir"
       ],
       "id": "openalex-w4403223049"
+    },
+    {
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Comparison of Vectorization Capabilities of Different Compilers for X86 and ARM CPUs",
+      "authors": [
+        {
+          "name": "Nazmus Sakib",
+          "affiliation": "New Mexico State University"
+        },
+        {
+          "name": "Tarun Prabhu",
+          "affiliation": "Los Alamos National Laboratory"
+        },
+        {
+          "name": "Nandakishore Santhi",
+          "affiliation": "Los Alamos National Laboratory"
+        },
+        {
+          "name": "John Shalf",
+          "affiliation": "Lawrence Berkeley National Laboratory"
+        },
+        {
+          "name": "Abdel‐Hameed A. Badawy",
+          "affiliation": "New Mexico State University"
+        }
+      ],
+      "year": "2024",
+      "publication": "2024 IEEE High Performance Extreme Computing Conference (HPEC)",
+      "venue": "2024 IEEE High Performance Extreme Computing Conference (HPEC)",
+      "type": "research-paper",
+      "abstract": "Most modern processors contain vector units that simultaneously perform the same arithmetic operation over multiple sets of operands. The ability of compilers to automatically vectorize code is critical to effectively using these units. Understanding this capability is important for anyone writing compute-intensive, high-performance, and portable code. We tested the ability of several compilers to vectorize code on x86 and ARM. We used the TSVC2 suite, with modifications that made it more representative of real-world code. On x86, GCC reported 54% of the loops in the suite as having been vectorized, ICX reported 50%, and Clang, 46%. On ARM, GCC reported 56% of the loops as having been vectorized, ACFL reported 54%, and Clang, 47%. We found that the vectorized code did not always outperform the unvectorized code. In some cases, given two very similar vectorizable loops, a compiler would vectorize one but not the other. We also report cases where a compiler vectorized a loop on only one of the two platforms. Based on our experiments, we cannot definitively say if any one compiler is significantly better than the others at vectorizing code on any given platform.",
+      "paperUrl": "https://doi.org/10.1109/hpec62836.2024.10938481",
+      "openalexId": "https://openalex.org/W4409132036",
+      "doi": "10.1109/hpec62836.2024.10938481",
+      "tags": [
+        "Clang",
+        "Autovectorization",
+        "Performance"
+      ],
+      "keywords": [
+        "Clang",
+        "Autovectorization",
+        "Performance",
+        "ARM",
+        "Vectorize",
+        "GCC Reported",
+        "Vectorization Capabilities"
+      ],
+      "matchedAuthors": [
+        "Abdel‐Hameed A. Badawy",
+        "John Shalf",
+        "Nandakishore Santhi",
+        "Nazmus Sakib",
+        "Tarun Prabhu"
+      ],
+      "matchedSubprojects": [
+        "clang"
+      ],
+      "id": "openalex-w4409132036"
     },
     {
       "source": "openalex-discovery",

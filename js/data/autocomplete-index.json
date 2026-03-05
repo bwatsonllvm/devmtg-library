@@ -2,7 +2,7 @@
   "meta": {
     "source": "scripts/generate-autocomplete-index.py",
     "talkCount": 1643,
-    "paperCount": 3590,
+    "paperCount": 3591,
     "entryCount": {
       "topics": 800,
       "people": 6000,
@@ -10,12 +10,12 @@
       "papers": 3510,
       "docs": 4500
     },
-    "generatedAt": "2026-03-02T22:14:02Z"
+    "generatedAt": "2026-03-05T02:00:55Z"
   },
   "topics": [
     {
       "label": "Performance",
-      "count": 2001
+      "count": 2003
     },
     {
       "label": "Optimizations",
@@ -23,7 +23,7 @@
     },
     {
       "label": "Clang",
-      "count": 943
+      "count": 945
     },
     {
       "label": "IR",
@@ -99,7 +99,7 @@
     },
     {
       "label": "Autovectorization",
-      "count": 154
+      "count": 156
     },
     {
       "label": "CUDA",
@@ -426,6 +426,10 @@
       "count": 7
     },
     {
+      "label": "ARM",
+      "count": 6
+    },
+    {
       "label": "Binaries",
       "count": 6
     },
@@ -468,10 +472,6 @@
     {
       "label": "Undefined Behavior",
       "count": 6
-    },
-    {
-      "label": "ARM",
-      "count": 5
     },
     {
       "label": "Dataflow Analysis",
@@ -1222,6 +1222,10 @@
       "count": 2
     },
     {
+      "label": "GCC Reported",
+      "count": 2
+    },
+    {
       "label": "GHC",
       "count": 2
     },
@@ -1947,6 +1951,14 @@
     },
     {
       "label": "vectorization",
+      "count": 2
+    },
+    {
+      "label": "Vectorization Capabilities",
+      "count": 2
+    },
+    {
+      "label": "Vectorize",
       "count": 2
     },
     {
@@ -3199,18 +3211,6 @@
     },
     {
       "label": "Compiler Front Ends",
-      "count": 1
-    },
-    {
-      "label": "Compiler Fuzzing",
-      "count": 1
-    },
-    {
-      "label": "Compiler Generated Feedback",
-      "count": 1
-    },
-    {
-      "label": "Compiler Guided",
       "count": 1
     }
   ],
@@ -4860,6 +4860,10 @@
       "count": 5
     },
     {
+      "label": "Nandakishore Santhi",
+      "count": 5
+    },
+    {
       "label": "Nathan Keynes",
       "count": 5
     },
@@ -5054,6 +5058,10 @@
     {
       "label": "Álvaro Cebrián Juan",
       "count": 5
+    },
+    {
+      "label": "Abdel‐Hameed A. Badawy",
+      "count": 4
     },
     {
       "label": "Abhishek Tripathi",
@@ -5688,10 +5696,6 @@
       "count": 4
     },
     {
-      "label": "Nandakishore Santhi",
-      "count": 4
-    },
-    {
       "label": "Neil Hickey",
       "count": 4
     },
@@ -6093,10 +6097,6 @@
     },
     {
       "label": "Aart J. C. Bik",
-      "count": 3
-    },
-    {
-      "label": "Abdel‐Hameed A. Badawy",
       "count": 3
     },
     {
@@ -7853,6 +7853,10 @@
     },
     {
       "label": "Tao Zhang",
+      "count": 3
+    },
+    {
+      "label": "Tarun Prabhu",
       "count": 3
     },
     {
@@ -10376,6 +10380,10 @@
       "count": 2
     },
     {
+      "label": "John Shalf",
+      "count": 2
+    },
+    {
       "label": "John Tinnerholm",
       "count": 2
     },
@@ -11477,6 +11485,10 @@
     },
     {
       "label": "Navdeep Katel",
+      "count": 2
+    },
+    {
+      "label": "Nazmus Sakib",
       "count": 2
     },
     {
@@ -12689,10 +12701,6 @@
     },
     {
       "label": "Tarique Islam",
-      "count": 2
-    },
-    {
-      "label": "Tarun Prabhu",
       "count": 2
     },
     {
@@ -22428,10 +22436,6 @@
       "count": 1
     },
     {
-      "label": "John Shalf",
-      "count": 1
-    },
-    {
       "label": "John Törnblom",
       "count": 1
     },
@@ -26849,10 +26853,6 @@
     },
     {
       "label": "Nazanin Calagar",
-      "count": 1
-    },
-    {
-      "label": "Nazmus Sakib",
       "count": 1
     },
     {
@@ -36453,7 +36453,7 @@
     },
     {
       "label": "Comparison of Vectorization Capabilities of Different Compilers for X86 and ARM CPUs",
-      "count": 1
+      "count": 2
     },
     {
       "label": "COMPASS: A Community-driven Parallelization Advisor for Sequential Software",
