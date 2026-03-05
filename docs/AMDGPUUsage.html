@@ -3849,13 +3849,13 @@ the specified range is incompatible with the function’s
 bounds by the workgroup size takes precedence.</p></td>
 </tr>
 <tr class="row-odd"><td><p>“amdgpu-ieee” true/false.</p></td>
-<td><p>GFX6-GFX11 Only
+<td><p>GFX6-GFX11 (Except GFX1170) Only
 Specify whether the function expects the IEEE field of the
 mode register to be set on entry. Overrides the default for
 the calling convention.</p></td>
 </tr>
 <tr class="row-even"><td><p>“amdgpu-dx10-clamp” true/false.</p></td>
-<td><p>GFX6-GFX11 Only
+<td><p>GFX6-GFX11 (Except GFX1170) Only
 Specify whether the function expects the DX10_CLAMP field of
 the mode register to be set on entry. Overrides the default
 for the calling convention.</p></td>
@@ -8905,7 +8905,7 @@ filling in
 <p>WG_RR_EN</p>
 </td>
 <td><dl>
-<dt>GFX9-GFX11</dt><dd><p>Wavefront starts execution
+<dt>GFX9-GFX11 (except GFX1170)</dt><dd><p>Wavefront starts execution
 with DX10 clamp mode
 enabled. Used by the vector
 ALU to force DX10 style
@@ -8915,6 +8915,8 @@ otherwise pass NaN
 through).</p>
 <p>Used by CP to set up
 <code class="docutils literal notranslate"><span class="pre">COMPUTE_PGM_RSRC1.DX10_CLAMP</span></code>.</p>
+</dd>
+<dt>GFX1170</dt><dd><p>Reserved. Must be 0.</p>
 </dd>
 <dt>GFX12</dt><dd><p>If 1, wavefronts are scheduled
 in a round-robin fashion with
@@ -32598,13 +32600,17 @@ Possible values are defined in
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.amdhsa_dx10_clamp</span></code></p></td>
 <td><p>1</p></td>
-<td><p>GFX6-GFX11</p></td>
+<td><p>GFX6-GFX11
+(except
+GFX1170)</p></td>
 <td><p>Controls ENABLE_DX10_CLAMP in
 <a class="reference internal" href="#amdgpu-amdhsa-compute-pgm-rsrc1-gfx6-gfx12-table"><span class="std std-ref">compute_pgm_rsrc1 for GFX6-GFX12</span></a>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.amdhsa_ieee_mode</span></code></p></td>
 <td><p>1</p></td>
-<td><p>GFX6-GFX11</p></td>
+<td><p>GFX6-GFX11
+(except
+GFX1170)</p></td>
 <td><p>Controls ENABLE_IEEE_MODE in
 <a class="reference internal" href="#amdgpu-amdhsa-compute-pgm-rsrc1-gfx6-gfx12-table"><span class="std std-ref">compute_pgm_rsrc1 for GFX6-GFX12</span></a>.</p></td>
 </tr>
@@ -33043,7 +33049,7 @@ effort required to accurately calculate GPR usage.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-03-04.
+      Last updated on 2026-03-05.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
