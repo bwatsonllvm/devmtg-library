@@ -462,7 +462,7 @@ unless any section has different VMA and LMAs.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-llvm-objdump-symbolize-operands">
-<span class="sig-name descname"><span class="pre">--symbolize-operands</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-llvm-objdump-symbolize-operands" title="Link to this definition">¶</a></dt>
+<span id="cmdoption-llvm-objdump-no-symbolize-operands"></span><span class="sig-name descname"><span class="pre">--symbolize-operands</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--no-symbolize-operands</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-llvm-objdump-symbolize-operands" title="Link to this definition">¶</a></dt>
 <dd><p>When disassembling, symbolize a branch target operand to print a label instead of a real address.</p>
 <p>When printing a PC-relative global symbol reference, print it as an offset from the leading symbol.</p>
 <p>When a bb-address-map section is present (i.e., the object file is built with
@@ -471,7 +471,8 @@ instead. If a pgo-analysis-map is present alongside the bb-address-map, any
 available analyses are printed after the relevant block label. By default,
 any analysis with a special representation (i.e. BlockFrequency,
 BranchProbability, etc) are printed as raw hex values.</p>
-<p>Only supported for AArch64, BPF, PowerPC, RISC-V, and X86.</p>
+<p>Only supported for AArch64, BPF, PowerPC, RISC-V, and X86. Enabled by default
+for BPF; use <code class="docutils literal notranslate"><span class="pre">--no-symbolize-operands</span></code> to disable.</p>
 <dl class="simple">
 <dt>Example:</dt><dd><p>A non-symbolized branch instruction with a local target and pc-relative memory access like</p>
 </dd>
@@ -779,7 +780,7 @@ differently when used with <code class="docutils literal notranslate"><span clas
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-03-05.
+      Last updated on 2026-03-06.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
