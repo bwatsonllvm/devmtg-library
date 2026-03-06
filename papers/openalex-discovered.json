@@ -36614,7 +36614,6 @@
       "id": "openalex-w2915190469"
     },
     {
-      "id": "openalex-w2795396442",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "libVersioningCompiler: An easy-to-use library for dynamic generation and invocation of multiple code versions",
@@ -36653,7 +36652,8 @@
       ],
       "matchedSubprojects": [
         "llvm"
-      ]
+      ],
+      "id": "openalex-w2795396442"
     },
     {
       "source": "openalex-discovery",
