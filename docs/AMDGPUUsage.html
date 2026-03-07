@@ -4150,10 +4150,10 @@ saved by the callee for inactive lanes when using WWM (a notable exception is
 when the llvm.amdgcn.init.whole.wave intrinsic is used in the function - in this
 case the backend assumes that there are no inactive lanes upon entry; any inactive
 lanes that need to be preserved must be explicitly present in the IR).</p>
-<p>Wave scratch is “empty” at function boundaries. There is no stack pointer input
-or output value, but functions are free to use scratch starting from an initial
-stack pointer. Calls to <code class="docutils literal notranslate"><span class="pre">amdgpu_gfx</span></code> functions are allowed and behave like they
-do in <code class="docutils literal notranslate"><span class="pre">amdgpu_cs</span></code> functions.</p>
+<p>Chain functions receive a stack pointer from their caller (in s32), similar to
+<code class="docutils literal notranslate"><span class="pre">amdgpu_gfx</span></code> functions. If needed, the frame pointer is s33 and the base pointer
+is s34. Calls to <code class="docutils literal notranslate"><span class="pre">amdgpu_gfx</span></code> functions are allowed and behave like they do in
+<code class="docutils literal notranslate"><span class="pre">amdgpu_cs</span></code> functions.</p>
 <p>A function may have multiple exits (e.g. one chain exit and one plain <code class="docutils literal notranslate"><span class="pre">ret</span> <span class="pre">void</span></code>
 for when the wave ends), but all <code class="docutils literal notranslate"><span class="pre">llvm.amdgcn.cs.chain</span></code> exits must be in
 uniform control flow.</p>
@@ -33049,7 +33049,7 @@ effort required to accurately calculate GPR usage.</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2003-2026, LLVM Project.
-      Last updated on 2026-03-06.
+      Last updated on 2026-03-07.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>

@@ -393,6 +393,59 @@
     {
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Nugget: Portable Program Snippets",
+      "authors": [
+        {
+          "name": "Zhantong Qiu",
+          "affiliation": "University of California, Davis"
+        },
+        {
+          "name": "Rico Amslinger",
+          "affiliation": "University of California, Davis"
+        },
+        {
+          "name": "Jason Lowe-Power",
+          "affiliation": "University of California, Davis"
+        }
+      ],
+      "year": "2026",
+      "publication": "2026 IEEE International Symposium on High Performance Computer Architecture (HPCA)",
+      "venue": "2026 IEEE International Symposium on High Performance Computer Architecture (HPCA)",
+      "type": "research-paper",
+      "abstract": "Evaluating architectural ideas on realistic workloads is increasingly challenging due to the prohibitive cost of detailed simulation and the lack of portable sampling tools. Existing targeted sampling techniques are often tied to specific binaries, incur significant overhead, and make rapid validation across systems infeasible. To address these limitations, we introduce Nugget, a flexible framework that enables portable sampling across simulators, hardware, architectural differences, and libraries. Nugget leverages LLVM IR to perform binary-independent interval analysis, then generates lightweight, cross-platform executable snippets, nuggets, that can be validated natively on real hardware before use in simulation. This approach decouples samples from specific binaries, dramatically reduces analysis overhead, and allows researchers to iterate on sampling methodologies while efficiently validating samples across diverse systems.",
+      "paperUrl": "https://doi.org/10.1109/hpca68181.2026.11408606",
+      "openalexId": "https://openalex.org/W7133542714",
+      "doi": "10.1109/hpca68181.2026.11408606",
+      "tags": [
+        "LLVM",
+        "IR",
+        "Performance",
+        "Libraries"
+      ],
+      "keywords": [
+        "LLVM",
+        "IR",
+        "Performance",
+        "Libraries",
+        "Intermediate Representation",
+        "Nugget Portable Program",
+        "Portable Sampling",
+        "Specific Binaries",
+        "Hardware",
+        "Portable Program Snippets"
+      ],
+      "matchedAuthors": [
+        "Jason Lowe-Power",
+        "Zhantong Qiu"
+      ],
+      "matchedSubprojects": [
+        "llvm"
+      ],
+      "id": "openalex-w7133542714"
+    },
+    {
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "MLIR-Forge: A Modular Framework for Language Smiths",
       "authors": [
         {
@@ -9436,6 +9489,7 @@
       "id": "openalex-w4399911292"
     },
     {
+      "id": "openalex-w4393965191",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "SoftBound+CETS Revisited",
@@ -9463,6 +9517,7 @@
       "type": "research-paper",
       "abstract": "Memory safety issues, including buffer overflows and use-after-free errors, continue to pose significant security threats in C/C++ programs, necessitating robust defenses and detection mechanisms. Despite advancements in memory-safe languages like Rust, transitioning legacy codebases often remains impractical, highlighting the need for effective memory safety tools for existing C/C++ code. This paper revisits SoftBound+CETS, an influential combination of two software-only memory safety solutions for C programs, more than a decade after its initial introduction. We present an updated SoftBound+CETS prototype, now compatible with LLVM 12, offering enhanced C language compatibility, interoperability with uninstrumented code, and sub-object bounds checking. Our evaluation, utilizing the SPEC CPU 2017 benchmark suite and the Juliet Test Suite, demonstrates the prototype's improved effectiveness in detecting memory errors with a performance and memory overhead of less than 2x. This is comparable to the widely used but less capable sanitizer ASan. Our future work aims to further reduce overheads and expand compatibility with C++ code and newer LLVM versions. This research highlights the viability of SoftBound+CETS as a comprehensive and practical tool for improving memory safety in legacy C applications, providing a valuable asset for developers and researchers focused on software security.",
       "paperUrl": "https://doi.org/10.1145/3642974.3652285",
+      "sourceUrl": "https://openalex.org/W4393965191",
       "openalexId": "https://openalex.org/W4393965191",
       "doi": "10.1145/3642974.3652285",
       "tags": [
@@ -9491,8 +9546,7 @@
       "matchedSubprojects": [
         "addresssanitizer",
         "llvm"
-      ],
-      "id": "openalex-w4393965191"
+      ]
     },
     {
       "source": "openalex-discovery",
@@ -10575,7 +10629,6 @@
       ]
     },
     {
-      "id": "openalex-w4392964311",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Modern High-Level Synthesis: Improving Productivity with a Multi-level Approach",
@@ -10624,7 +10677,8 @@
       ],
       "matchedSubprojects": [
         "mlir"
-      ]
+      ],
+      "id": "openalex-w4392964311"
     },
     {
       "source": "openalex-discovery",
@@ -11722,6 +11776,7 @@
       "id": "openalex-w4394769544"
     },
     {
+      "id": "openalex-w4395686515",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Forklift: An Extensible Neural Lifter",
@@ -11783,8 +11838,7 @@
       ],
       "matchedSubprojects": [
         "llvm"
-      ],
-      "id": "openalex-w4395686515"
+      ]
     },
     {
       "source": "openalex-discovery",
@@ -16828,7 +16882,6 @@
       "id": "openalex-w4385496093"
     },
     {
-      "id": "openalex-w4388581324",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "OpenMP Kernel Language Extensions for Performance Portable GPU Codes",
@@ -16884,7 +16937,8 @@
       ],
       "matchedSubprojects": [
         "openmp"
-      ]
+      ],
+      "id": "openalex-w4388581324"
     },
     {
       "source": "openalex-discovery",
@@ -16999,6 +17053,59 @@
         "openmp"
       ],
       "id": "openalex-w4384573107"
+    },
+    {
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "MemPool: A Scalable Manycore Architecture With a Low-Latency Shared L1 Memory",
+      "authors": [
+        {
+          "name": "Samuel Riedel",
+          "affiliation": "ETH Zurich"
+        },
+        {
+          "name": "Matheus Cavalcante",
+          "affiliation": "ETH Zurich"
+        },
+        {
+          "name": "Renzo Andri",
+          "affiliation": "ETH Zurich"
+        },
+        {
+          "name": "Luca Benini",
+          "affiliation": "ETH Zurich"
+        }
+      ],
+      "year": "2023",
+      "publication": "IEEE Transactions on Computers, 72 (12)",
+      "venue": "IEEE Transactions on Computers, 72 (12)",
+      "type": "research-paper",
+      "abstract": "Shared L1 memory clusters are a common architectural pattern (e.g., in GPGPUs) for building efficient and flexible multi-processing-element (PE) engines. However, it is a common belief that these tightly-coupled clusters would not scale beyond a few tens of PEs. In this work, we tackle scaling shared L1 clusters to hundreds of PEs while supporting a flexible and productive programming model and maintaining high efficiency. We present MemPool, a manycore system with 256 RV32IMAXpulpimg \"Snitch\" cores featuring application-tunable functional units. We designed and implemented an efficient low-latency PE to L1-memory interconnect, an optimized instruction path to ensure each PE's independent execution, and a powerful DMA engine and system interconnect to stream data in and out. MemPool is easy to program, with all the cores sharing a global view of a large, multi-banked, L1 scratchpad memory, accessible within at most five cycles in the absence of conflicts. We provide multiple runtimes to program MemPool at different abstraction levels and illustrate its versatility with a wide set of applications. MemPool runs at 600 MHz (60 gate delays) in typical conditions (TT/0.80 V/25 °C) in 22 nm FDX technology and achieves a performance of up to 229 GOPS or 180 GOPS/W with less than 2% of execution stalls.",
+      "paperUrl": "https://arxiv.org/pdf/2303.17742",
+      "sourceUrl": "https://doi.org/10.3929/ethz-b-000643341",
+      "openalexId": "https://openalex.org/W4362508564",
+      "doi": "10.3929/ethz-b-000643341",
+      "tags": [
+        "runtimes",
+        "Performance"
+      ],
+      "keywords": [
+        "runtimes",
+        "Performance",
+        "Mempool",
+        "Memory",
+        "Clusters",
+        "Scalable Manycore Architecture",
+        "Latency Shared"
+      ],
+      "matchedAuthors": [
+        "Luca Benini",
+        "Samuel Riedel"
+      ],
+      "matchedSubprojects": [
+        "runtimes"
+      ],
+      "id": "openalex-w4362508564"
     },
     {
       "source": "openalex-discovery",
@@ -18578,6 +18685,63 @@
     {
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Fine-grained adaptive parallelism for automotive systems through AMALTHEA and OpenMP",
+      "authors": [
+        {
+          "name": "Adrian Munera",
+          "affiliation": "Universitat Politècnica de Catalunya"
+        },
+        {
+          "name": "Sara Royuela",
+          "affiliation": "Universitat Politècnica de Catalunya"
+        },
+        {
+          "name": "Michael Pressler",
+          "affiliation": "Robert Bosch (Germany)"
+        },
+        {
+          "name": "Harald Mackamul",
+          "affiliation": "Robert Bosch (Germany)"
+        },
+        {
+          "name": "Dirk Ziegenbein",
+          "affiliation": "Robert Bosch (Germany)"
+        },
+        {
+          "name": "Eduardo Quiñones",
+          "affiliation": "Barcelona Supercomputing Center"
+        }
+      ],
+      "year": "2023",
+      "publication": "Journal of Systems Architecture",
+      "venue": "Journal of Systems Architecture | Vol. 146",
+      "type": "research-paper",
+      "abstract": "No abstract available in discovery metadata.",
+      "paperUrl": "https://upcommons.upc.edu/bitstreams/a66b496c-4d33-4209-8d92-62e3f6fc43bf/download",
+      "sourceUrl": "https://doi.org/10.1016/j.sysarc.2023.103034",
+      "openalexId": "https://openalex.org/W4389138244",
+      "doi": "10.1016/j.sysarc.2023.103034",
+      "tags": [
+        "OpenMP"
+      ],
+      "keywords": [
+        "OpenMP",
+        "Fine Grained Adaptive",
+        "Grained Adaptive Parallelism"
+      ],
+      "matchedAuthors": [
+        "Adrian Munera",
+        "Eduardo Quiñones",
+        "Sara Royuela"
+      ],
+      "matchedSubprojects": [
+        "openmp"
+      ],
+      "id": "openalex-w4389138244"
+    },
+    {
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Filtering and Ranking of Code Regions for Parallelization via Hotspot Detection and OpenMP Overhead Analysis",
       "authors": [
         {
@@ -18644,6 +18808,56 @@
         "openmp"
       ],
       "id": "openalex-w4388581145"
+    },
+    {
+      "source": "openalex-discovery",
+      "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
+      "title": "Facile: Fast, Accurate, and Interpretable Basic-Block Throughput Prediction",
+      "authors": [
+        {
+          "name": "Andreas Abel",
+          "affiliation": "Saarland University"
+        },
+        {
+          "name": "Shrey Sharma",
+          "affiliation": "Saarland University"
+        },
+        {
+          "name": "Jan Reineke",
+          "affiliation": "Saarland University"
+        }
+      ],
+      "year": "2023",
+      "publication": "2023 IEEE International Symposium on Workload Characterization (IISWC)",
+      "venue": "2023 IEEE International Symposium on Workload Characterization (IISWC)",
+      "type": "research-paper",
+      "abstract": "Basic-block throughput models such as uiCA, IACA, GRANITE, Ithemal, llvm-mca, OSACA, or CQA guide optimizing compilers and help performance engineers identify and eliminate bottlenecks. For this purpose, basic-block throughput models should ideally be fast, accurate, and interpretable.Recent advances have significantly improved accuracy: uiCA, the state-of-the-art model, achieves an error of about 1% relative to measurements across a wide range of microarchitectures. The computational efficiency of throughput models, which is equally important for widespread adoption, especially in compilers, has so far received little attention.In this paper, we introduce Facile, an analytical throughput model that is fast, accurate, and interpretable. Facile analyzes different potential bottlenecks independently and analytically. Due to its compositional nature, Facile’s predictions directly pinpoint the bottlenecks. We evaluate Facile on a wide range of microarchitectures and show that it is almost two orders of magnitude faster than existing models while achieving state-of-the-art accuracy.",
+      "paperUrl": "https://arxiv.org/pdf/2310.13212",
+      "sourceUrl": "https://doi.org/10.1109/iiswc59245.2023.00023",
+      "openalexId": "https://openalex.org/W4387891338",
+      "doi": "10.1109/iiswc59245.2023.00023",
+      "tags": [
+        "LLVM",
+        "Performance"
+      ],
+      "keywords": [
+        "LLVM",
+        "Performance",
+        "Basic Block Throughput",
+        "Facile",
+        "Facile Fast Accurate",
+        "Interpretable Basic Block",
+        "Bottlenecks",
+        "Wide Range",
+        "Block Throughput Prediction"
+      ],
+      "matchedAuthors": [
+        "Shrey Sharma"
+      ],
+      "matchedSubprojects": [
+        "llvm"
+      ],
+      "id": "openalex-w4387891338"
     },
     {
       "source": "openalex-discovery",
@@ -24875,6 +25089,7 @@
       ]
     },
     {
+      "id": "openalex-w4309797313",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "CryptOpt: Verified Compilation with Randomized Program Search for Cryptographic Primitives (full version)",
@@ -24971,8 +25186,7 @@
       ],
       "matchedSubprojects": [
         "clang"
-      ],
-      "id": "openalex-w4309797313"
+      ]
     },
     {
       "source": "openalex-discovery",
@@ -34907,6 +35121,7 @@
       ]
     },
     {
+      "id": "openalex-w2954495824",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "StackVault: Protection from Untrusted Functions",
@@ -34967,8 +35182,7 @@
       ],
       "matchedSubprojects": [
         "llvm"
-      ],
-      "id": "openalex-w2954495824"
+      ]
     },
     {
       "source": "openalex-discovery",
@@ -35880,6 +36094,7 @@
       "id": "openalex-w2984365163"
     },
     {
+      "id": "openalex-w2795671832",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "Combinatorial Register Allocation and Instruction Scheduling",
@@ -35940,8 +36155,7 @@
       ],
       "matchedSubprojects": [
         "llvm"
-      ],
-      "id": "openalex-w2795671832"
+      ]
     },
     {
       "source": "openalex-discovery",
@@ -36614,6 +36828,7 @@
       "id": "openalex-w2915190469"
     },
     {
+      "id": "openalex-w2795396442",
       "source": "openalex-discovery",
       "sourceName": "OpenAlex Discovery (seeded by LLVM speakers/authors)",
       "title": "libVersioningCompiler: An easy-to-use library for dynamic generation and invocation of multiple code versions",
@@ -36652,8 +36867,7 @@
       ],
       "matchedSubprojects": [
         "llvm"
-      ],
-      "id": "openalex-w2795396442"
+      ]
     },
     {
       "source": "openalex-discovery",
