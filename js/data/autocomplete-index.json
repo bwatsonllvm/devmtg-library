@@ -2,20 +2,20 @@
   "meta": {
     "source": "scripts/generate-autocomplete-index.py",
     "talkCount": 1643,
-    "paperCount": 3591,
+    "paperCount": 3595,
     "entryCount": {
       "topics": 800,
       "people": 6000,
       "talks": 1566,
-      "papers": 3510,
+      "papers": 3514,
       "docs": 4500
     },
-    "generatedAt": "2026-03-05T02:00:55Z"
+    "generatedAt": "2026-03-07T01:53:32Z"
   },
   "topics": [
     {
       "label": "Performance",
-      "count": 2003
+      "count": 2009
     },
     {
       "label": "Optimizations",
@@ -27,7 +27,7 @@
     },
     {
       "label": "IR",
-      "count": 766
+      "count": 768
     },
     {
       "label": "MLIR",
@@ -59,7 +59,7 @@
     },
     {
       "label": "LLVM",
-      "count": 392
+      "count": 396
     },
     {
       "label": "Programming Languages",
@@ -79,11 +79,11 @@
     },
     {
       "label": "OpenMP",
-      "count": 252
+      "count": 254
     },
     {
       "label": "Libraries",
-      "count": 230
+      "count": 232
     },
     {
       "label": "ML",
@@ -123,7 +123,7 @@
     },
     {
       "label": "Intermediate Representation",
-      "count": 113
+      "count": 114
     },
     {
       "label": "Rust",
@@ -162,12 +162,12 @@
       "count": 61
     },
     {
-      "label": "LTO",
+      "label": "Hardware",
       "count": 61
     },
     {
-      "label": "Hardware",
-      "count": 60
+      "label": "LTO",
+      "count": 61
     },
     {
       "label": "GSoC",
@@ -182,11 +182,11 @@
       "count": 56
     },
     {
-      "label": "Fuzzing",
-      "count": 48
+      "label": "runtimes",
+      "count": 50
     },
     {
-      "label": "runtimes",
+      "label": "Fuzzing",
       "count": 48
     },
     {
@@ -215,7 +215,7 @@
     },
     {
       "label": "Memory",
-      "count": 28
+      "count": 29
     },
     {
       "label": "Compilation",
@@ -942,6 +942,10 @@
       "count": 2
     },
     {
+      "label": "Clusters",
+      "count": 2
+    },
+    {
       "label": "code property graph",
       "count": 2
     },
@@ -1614,6 +1618,10 @@
       "count": 2
     },
     {
+      "label": "Portable Sampling",
+      "count": 2
+    },
+    {
       "label": "Power Consumption",
       "count": 2
     },
@@ -1815,6 +1823,10 @@
     },
     {
       "label": "Sparsity",
+      "count": 2
+    },
+    {
+      "label": "Specific Binaries",
       "count": 2
     },
     {
@@ -2538,6 +2550,10 @@
       "count": 1
     },
     {
+      "label": "Basic Block Throughput",
+      "count": 1
+    },
+    {
       "label": "Basic Linear Algebra",
       "count": 1
     },
@@ -2610,6 +2626,10 @@
       "count": 1
     },
     {
+      "label": "Block Throughput Prediction",
+      "count": 1
+    },
+    {
       "label": "Blocked Stencil Computations",
       "count": 1
     },
@@ -2643,6 +2663,10 @@
     },
     {
       "label": "Bottleneck",
+      "count": 1
+    },
+    {
+      "label": "Bottlenecks",
       "count": 1
     },
     {
@@ -2994,10 +3018,6 @@
       "count": 1
     },
     {
-      "label": "Clusters",
-      "count": 1
-    },
-    {
       "label": "Cmake Scripts",
       "count": 1
     },
@@ -3191,26 +3211,6 @@
     },
     {
       "label": "Compiler Extension",
-      "count": 1
-    },
-    {
-      "label": "Compiler Fault Localization",
-      "count": 1
-    },
-    {
-      "label": "Compiler Faults",
-      "count": 1
-    },
-    {
-      "label": "Compiler Flow",
-      "count": 1
-    },
-    {
-      "label": "Compiler Foundation",
-      "count": 1
-    },
-    {
-      "label": "Compiler Front Ends",
       "count": 1
     }
   ],
@@ -3676,6 +3676,10 @@
       "count": 9
     },
     {
+      "label": "Sara Royuela",
+      "count": 9
+    },
+    {
       "label": "Serge Guelton",
       "count": 9
     },
@@ -3852,10 +3856,6 @@
       "count": 8
     },
     {
-      "label": "Sara Royuela",
-      "count": 8
-    },
-    {
       "label": "Simon W. Moore",
       "count": 8
     },
@@ -3953,6 +3953,10 @@
     },
     {
       "label": "Dinakar Dhurjati",
+      "count": 7
+    },
+    {
+      "label": "Eduardo Quiñones",
       "count": 7
     },
     {
@@ -4244,10 +4248,6 @@
       "count": 6
     },
     {
-      "label": "Eduardo Quiñones",
-      "count": 6
-    },
-    {
       "label": "F. Merz",
       "count": 6
     },
@@ -4325,6 +4325,10 @@
     },
     {
       "label": "Lingli Wang",
+      "count": 6
+    },
+    {
+      "label": "Luca Benini",
       "count": 6
     },
     {
@@ -4501,6 +4505,10 @@
     },
     {
       "label": "Abraham Chan",
+      "count": 5
+    },
+    {
+      "label": "Adrian Munera",
       "count": 5
     },
     {
@@ -4800,10 +4808,6 @@
       "count": 5
     },
     {
-      "label": "Luca Benini",
-      "count": 5
-    },
-    {
       "label": "Luis Esteve",
       "count": 5
     },
@@ -5073,10 +5077,6 @@
     },
     {
       "label": "Academias It",
-      "count": 4
-    },
-    {
-      "label": "Adrian Munera",
       "count": 4
     },
     {
@@ -6901,6 +6901,10 @@
     },
     {
       "label": "Jarmo Takala",
+      "count": 3
+    },
+    {
+      "label": "Jason Lowe-Power",
       "count": 3
     },
     {
@@ -10160,10 +10164,6 @@
       "count": 2
     },
     {
-      "label": "Jason Lowe-Power",
-      "count": 2
-    },
-    {
       "label": "Javier Ron",
       "count": 2
     },
@@ -12236,6 +12236,10 @@
       "count": 2
     },
     {
+      "label": "Samuel Riedel",
+      "count": 2
+    },
+    {
       "label": "Samuel T. King",
       "count": 2
     },
@@ -12421,6 +12425,10 @@
     },
     {
       "label": "Shravan Narayan",
+      "count": 2
+    },
+    {
+      "label": "Shrey Sharma",
       "count": 2
     },
     {
@@ -13537,6 +13545,10 @@
     },
     {
       "label": "Zerksis Umrigar",
+      "count": 2
+    },
+    {
+      "label": "Zhantong Qiu",
       "count": 2
     },
     {
@@ -14793,6 +14805,10 @@
     },
     {
       "label": "Andrea Somaini",
+      "count": 1
+    },
+    {
+      "label": "Andreas Abel",
       "count": 1
     },
     {
@@ -17900,6 +17916,10 @@
       "count": 1
     },
     {
+      "label": "Dirk Ziegenbein",
+      "count": 1
+    },
+    {
       "label": "Divya Shanmughan",
       "count": 1
     },
@@ -20232,6 +20252,10 @@
       "count": 1
     },
     {
+      "label": "Harald Mackamul",
+      "count": 1
+    },
+    {
       "label": "Harmen L. A. van der Spek",
       "count": 1
     },
@@ -21421,6 +21445,10 @@
     },
     {
       "label": "Jan Mühlig",
+      "count": 1
+    },
+    {
+      "label": "Jan Reineke",
       "count": 1
     },
     {
@@ -25448,6 +25476,10 @@
       "count": 1
     },
     {
+      "label": "Matheus Cavalcante",
+      "count": 1
+    },
+    {
       "label": "Matheus Izvekov",
       "count": 1
     },
@@ -26005,6 +26037,10 @@
     },
     {
       "label": "Michael Parker",
+      "count": 1
+    },
+    {
+      "label": "Michael Pressler",
       "count": 1
     },
     {
@@ -27177,42 +27213,6 @@
     },
     {
       "label": "Nordin Zakaria",
-      "count": 1
-    },
-    {
-      "label": "Noriaki Sakamoto",
-      "count": 1
-    },
-    {
-      "label": "Noriaki Yoshiura",
-      "count": 1
-    },
-    {
-      "label": "Norihisa Fujita",
-      "count": 1
-    },
-    {
-      "label": "Norman A. Rink",
-      "count": 1
-    },
-    {
-      "label": "Norman Rink",
-      "count": 1
-    },
-    {
-      "label": "Nour Daoud",
-      "count": 1
-    },
-    {
-      "label": "Nozima Murodova",
-      "count": 1
-    },
-    {
-      "label": "Nuno Machado",
-      "count": 1
-    },
-    {
-      "label": "Nuno Neves",
       "count": 1
     }
   ],
@@ -38768,6 +38768,10 @@
       "count": 1
     },
     {
+      "label": "Facile: Fast, Accurate, and Interpretable Basic-Block Throughput Prediction",
+      "count": 1
+    },
+    {
       "label": "Facilitating Bug Detection for OpenMP Offloading Applications",
       "count": 1
     },
@@ -38937,6 +38941,10 @@
     },
     {
       "label": "Finding, Measuring, and Reducing Inefficiencies in Contemporary Computer Systems",
+      "count": 1
+    },
+    {
+      "label": "Fine-grained adaptive parallelism for automotive systems through AMALTHEA and OpenMP",
       "count": 1
     },
     {
@@ -42204,6 +42212,10 @@
       "count": 1
     },
     {
+      "label": "MemPool: A Scalable Manycore Architecture With a Low-Latency Shared L1 Memory",
+      "count": 1
+    },
+    {
       "label": "Merlin: Multi-tier Optimization of eBPF Code for Performance and Compactness",
       "count": 1
     },
@@ -42725,6 +42737,10 @@
     },
     {
       "label": "NSan: a floating-point numerical sanitizer",
+      "count": 1
+    },
+    {
+      "label": "Nugget: Portable Program Snippets",
       "count": 1
     },
     {
@@ -50004,6 +50020,11 @@
       "label": "ClangFormat (LLVM Core)",
       "count": 1,
       "url": "docs/clang/ClangFormat.html"
+    },
+    {
+      "label": "ClangIR ABI Lowering - Design Document (Clang)",
+      "count": 1,
+      "url": "docs/clang/ClangIRABILowering.html"
     },
     {
       "label": "ClangIR Cleanup and Exception Handling Design (Clang)",
@@ -70017,11 +70038,6 @@
     },
     {
       "label": "LLDB: FileSpecList.cpp Source File (LLDB)",
-      "count": 1,
-      "url": "docs/lldb/cpp_reference/FileSpecList_8cpp_source.html"
-    },
-    {
-      "label": "LLDB: FileSpecList.cpp Source File (LLVM Core)",
       "count": 1,
       "url": "docs/lldb/cpp_reference/FileSpecList_8cpp_source.html"
     }
